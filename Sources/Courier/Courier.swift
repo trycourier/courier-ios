@@ -49,11 +49,25 @@ open class Courier: NSObject {
      * This key can be found here
      * https://app.courier.com/settings/api-keys
      */
-    public var authorizationKey: String? = nil
+    public var authorizationKey: String? = nil {
+        didSet {
+            
+            // Clear
+            self.user = nil
+        }
+    }
     
     private override init() {
         super.init()
     }
+    
+    /**
+     * Operation queue
+     */
+    public lazy var queue = SimultaneousOperationsQueue(
+        numberOfSimultaneousActions: 1,
+        dispatchQueueLabel: "CourierQueue"
+    )
     
     /**
      * Courier APIs
@@ -62,10 +76,92 @@ open class Courier: NSObject {
     private lazy var tokenRepository = TokenRepository()
     
     /**
-     * Sets the user to one you have in Courier Studio
+     * Updates the current courier user
+     * This should be something that you update with your other user objects
      */
-    public func updateUser(user: CourierUser) {
-        userRepository.updateUser(user: user)?.resume()
+    public var user: CourierUser? = nil {
+        didSet {
+            
+            // Remove the user if needed
+            guard let user = user else {
+                return
+            }
+            
+            // Update the user stored in Courier
+            updateUser(user: user)
+            
+            // Update the current device token in Courier
+            if let token = self.apnsToken {
+                updateDeviceToken(token: token)
+            }
+            
+        }
+    }
+    
+    internal func updateUser(user: CourierUser) {
+        
+        debugPrint("Updating Courier User")
+        debugPrint(user)
+        
+        let update = self.userRepository.updateUser(user: user) {
+            debugPrint("Courier User Updated")
+        }
+        
+        update?.resume()
+        
+    }
+    
+    /**
+     * The token issued by Apple to receive tokens on this device
+     * Can only be set by the Courier SDK, but can be read by external packages
+     */
+    public internal(set) var apnsToken: String? = nil {
+        didSet {
+            
+            // Remove the token if needed
+            guard let token = apnsToken else {
+                return
+            }
+            
+            // Update the token on the user
+            updateDeviceToken(token: token)
+            
+        }
+    }
+    
+    /**
+     * Upserts the new token to Courier
+     */
+    internal func updateDeviceToken(token: String) {
+        
+        debugPrint("📲 Apple Device Token")
+        debugPrint(token)
+        
+        // Ensure we have a user id
+        guard let userId = self.user?.id else {
+            debugPrint("User missing. Can't update token.")
+            return
+        }
+        
+        debugPrint("Updating Courier Token")
+        
+        let update = self.tokenRepository.refreshDeviceToken(userId: userId, provider: CourierProvider.apns, deviceToken: token) {
+            debugPrint("Updated Courier Token")
+        }
+        
+        update?.resume()
+        
+    }
+    
+    // MARK: Auth
+    
+    public func signOut(completion: @escaping () -> Void) {
+        // TODO: Handle this
+    }
+    
+    @available(iOS 13.0.0, *)
+    public func signOut() async throws {
+        // TODO: Handle this
     }
     
     // MARK: Getters
@@ -131,22 +227,6 @@ open class Courier: NSObject {
     public static func requestNotificationPermissions() async throws -> UNAuthorizationStatus {
         try await userNotificationCenter.requestAuthorization(options: permissionAuthorizationOptions)
         return try await getNotificationAuthorizationStatus()
-    }
-    
-    /**
-     * Upserts the new token to Courier
-     */
-    internal func updateDeviceToken(deviceToken: Data) {
-        
-        let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        print("📲 Apple Device Token: \(token)")
-        
-        tokenRepository.refreshDeviceToken(
-            userId: "test_user_from_swift",
-            provider: CourierProvider.apns,
-            deviceToken: token
-        )?.resume()
-        
     }
     
 }

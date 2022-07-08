@@ -35,7 +35,7 @@ struct Test: Decodable {
 @available(iOS 10.0.0, *)
 class TokenRepository: Repository {
     
-    func refreshDeviceToken(userId: String, provider: CourierProvider, deviceToken: String) -> URLSessionDataTask? {
+    func refreshDeviceToken(userId: String, provider: CourierProvider, deviceToken: String, onSuccess: @escaping () -> Void) -> URLSessionDataTask? {
         
         guard let authKey = Courier.shared.authorizationKey else {
             print("Courier Authorization Key is missing")
@@ -93,6 +93,8 @@ class TokenRepository: Repository {
                 
                 let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
                 print(json)
+                
+                onSuccess()
                 
 //                let user = try JSONDecoder().decode(Test.self, from: data)
 //                print(user)

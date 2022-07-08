@@ -58,7 +58,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Courier.shared.updateDeviceToken(deviceToken: deviceToken)
+        Courier.shared.apnsToken = deviceToken.string
     }
     
     // MARK: Messaging
