@@ -23,4 +23,21 @@ final class CourierTests: XCTestCase {
         
     }
     
+    @available(iOS 10.0.0, *)
+    func testSignOut() throws {
+        
+        print("Testing Signout")
+        
+        let expectation = self.expectation(description: "Updating User")
+        
+        Courier.shared.signOut {
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 10)
+        
+        print("Signout Complete")
+        
+    }
+    
 }

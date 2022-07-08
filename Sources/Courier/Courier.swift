@@ -156,7 +156,26 @@ open class Courier: NSObject {
     // MARK: Auth
     
     public func signOut(completion: @escaping () -> Void) {
-        // TODO: Handle this
+        
+        // Ensure we have a user id
+        guard let userId = self.user?.id else {
+            return
+        }
+        
+        // Delete the existing token
+        if let apnsToken = self.apnsToken {
+            
+            let delete = self.tokenRepository.deleteToken(userId: userId, deviceToken: apnsToken) {
+                print("Token deleted")
+            }
+            
+            delete?.resume()
+            
+        }
+        
+        // Clear user
+        self.user = nil
+        
     }
     
     @available(iOS 13.0.0, *)
