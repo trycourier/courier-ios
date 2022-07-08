@@ -132,17 +132,17 @@ class TokenRepository: Repository {
 //            ]
 //        )
         
-        let body = try? JSONEncoder().encode([
-//            "token": deviceToken,
-//            "provider_key": provider.rawValue
-        ])
-        
-        if let jsonString = String(data: body!, encoding: .utf8) {
-            print(jsonString)
-        }
+//        let body = try? JSONEncoder().encode([
+////            "token": deviceToken,
+////            "provider_key": provider.rawValue
+//        ])
+//
+//        if let jsonString = String(data: body!, encoding: .utf8) {
+//            print(jsonString)
+//        }
 
         request.httpMethod = "DELETE"
-        request.httpBody = body
+//        request.httpBody = body
 
         // Create the HTTP request
         return session.dataTask(with: request) { (data, response, error) in

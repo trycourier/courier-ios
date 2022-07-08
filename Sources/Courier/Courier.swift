@@ -1,42 +1,42 @@
-/*
-
- ______  ______  __  __  ______  __  ______  ______
-/\  ___\/\  __ \/\ \/\ \/\  == \/\ \/\  ___\/\  == \
-\ \ \___\ \ \/\ \ \ \_\ \ \  __<\ \ \ \  __\\ \  __<
- \ \_____\ \_____\ \_____\ \_\ \_\ \_\ \_____\ \_\ \_\
-  \/_____/\/_____/\/_____/\/_/ /_/\/_/\/_____/\/_/ /_/
- 
- 
- Before you begin:
- 
- 1. Generate APNS key (https://developer.apple.com/account/resources/authkeys/add)
- 2. Download the key
- 3. Enter details of APNS key here (https://app.courier.com/channels/apn)
- 
- ---
- 
- Enable Push Notifications Entitlement:
- 
- 1. Open your Xcode project file
- 2. Select your Target
- 3. Click "Signing & Capabilities"
- 4. Click the "+" (found to the left of "All")
- 5. Type "Push Notifications"
- 6. Press Enter
- 
- ---
- 
- Follow the docs here to get everything running:
- 
- Documentation: https://docs.courier.com/asdf
- 
- 
- */
-
 import UIKit
 
 @available(iOS 10.0.0, *)
 open class Courier: NSObject {
+    
+    /*
+
+     ______  ______  __  __  ______  __  ______  ______
+    /\  ___\/\  __ \/\ \/\ \/\  == \/\ \/\  ___\/\  == \
+    \ \ \___\ \ \/\ \ \ \_\ \ \  __<\ \ \ \  __\\ \  __<
+     \ \_____\ \_____\ \_____\ \_\ \_\ \_\ \_____\ \_\ \_\
+      \/_____/\/_____/\/_____/\/_/ /_/\/_/\/_____/\/_/ /_/
+     
+     
+     Before you begin:
+     
+     1. Generate APNS key (https://developer.apple.com/account/resources/authkeys/add)
+     2. Download the key
+     3. Enter details of APNS key here (https://app.courier.com/channels/apn)
+     
+     ---
+     
+     Enable Push Notifications Entitlement:
+     
+     1. Open your Xcode project file
+     2. Select your Target
+     3. Click "Signing & Capabilities"
+     4. Click the "+" (found to the left of "All")
+     5. Type "Push Notifications"
+     6. Press Enter
+     
+     ---
+     
+     Follow the docs here to get everything running:
+     
+     Documentation: https://docs.courier.com/asdf
+     
+     
+     */
     
     /**
      * Singleton reference to the SDK
