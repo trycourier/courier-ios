@@ -10,7 +10,7 @@ import Foundation
 @available(iOS 10.0.0, *)
 class UserRepository: Repository {
     
-    func updateUser(user: CourierUser, onSuccess: @escaping () -> Void) -> URLSessionDataTask? {
+    func updateUser(user: CourierUser, onSuccess: @escaping () -> Void) -> CourierTask? {
         
         guard let authKey = Courier.shared.authorizationKey else {
             print("Courier Authorization Key is missing")
@@ -42,7 +42,7 @@ class UserRepository: Repository {
         request.httpBody = body
 
         // Create the HTTP request
-        return session.dataTask(with: request) { (data, response, error) in
+        return CourierTask(with: request) { (data, response, error) in
             
             let status = (response as! HTTPURLResponse).statusCode
             print(status)

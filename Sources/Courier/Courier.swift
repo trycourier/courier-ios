@@ -64,10 +64,12 @@ open class Courier: NSObject {
     /**
      * Operation queue
      */
-    public lazy var queue = SimultaneousOperationsQueue(
-        numberOfSimultaneousActions: 1,
-        dispatchQueueLabel: "CourierQueue"
-    )
+//    public lazy var queue = SimultaneousOperationsQueue(
+//        numberOfSimultaneousActions: 1,
+//        dispatchQueueLabel: "CourierQueue"
+//    )
+    
+    internal let taskManager = CourierTaskManager()
     
     /**
      * Courier APIs
@@ -107,7 +109,9 @@ open class Courier: NSObject {
             debugPrint("Courier User Updated")
         }
         
-        update?.resume()
+        taskManager.add(task: update!)
+        
+//        update?.start()
         
     }
     

@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "courier",
+      "kind" : "localSourceControl",
+      "location" : "/Users/mike/Desktop/mobile-sdk/Courier",
+      "state" : {
+        "branch" : "master",
+        "revision" : "177a42e10ef0180a139ad9f5e136e4179f657f5f"
+      }
+    }
+  ],
+  "version" : 2
+}
