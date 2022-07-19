@@ -17,142 +17,77 @@ struct Test: Decodable {
 @available(iOS 10.0.0, *)
 class TokenRepository: Repository {
     
-    func refreshDeviceToken(userId: String, provider: CourierProvider, deviceToken: String, onSuccess: @escaping () -> Void) -> URLSessionDataTask? {
+    func updatePushNotificationToken(userId: String, provider: CourierProvider, deviceToken: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
         
         guard let authKey = Courier.shared.authorizationKey else {
             print("Courier Authorization Key is missing")
             return nil
         }
 
-        let url = URL(string: "https://api.courier.com/users/\(userId)/tokens/\(deviceToken)")!
-         
-        print(url)
-        
+        let url = URL(string: "\(baseUrl)/users/\(userId)/tokens/\(deviceToken)")!
         var request = URLRequest(url: url)
-
-        // Configure request authentication
-        request.setValue(
-            "Bearer \(authKey)",
-            forHTTPHeaderField: "Authorization"
-        )
-
-//        let body = try? JSONSerialization.data(
-//            withJSONObject: [
-//                "token": deviceToken,
-//                "provider_key": provider.rawValue
-//            ]
-//        )
-        
-        let body = try? JSONEncoder().encode([
-//            "token": deviceToken,
+        request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "PUT"
+        request.httpBody = try? JSONEncoder().encode([
             "provider_key": provider.rawValue
         ])
         
-        if let jsonString = String(data: body!, encoding: .utf8) {
-            print(jsonString)
-        }
-
-        request.httpMethod = "PUT"
-        request.httpBody = body
-
-        // Create the HTTP request
-        return session.dataTask(with: request) { (data, response, error) in
-            
-            let status = (response as! HTTPURLResponse).statusCode
-            print(status)
-            
-            if let error = error {
-                // ERROR
-                return
-            }
-            
-            guard let data = data else {
-                // ERROR
-                return
-            }
+        return CourierTask(with: request) { (data, response, error) in
             
             do {
                 
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
-                print(json)
+                let status = (response as! HTTPURLResponse).statusCode
+                if (status != 200 && status != 204) {
+                    onFailure()
+                    return
+                }
                 
+                let res = try JSONDecoder().decode(CourierResponse.self, from: data ?? Data())
+                debugPrint(res)
                 onSuccess()
                 
-//                let user = try JSONDecoder().decode(Test.self, from: data)
-//                print(user)
             } catch {
-                // ERROR
+                
+                debugPrint(error)
+                onFailure()
+                
             }
             
         }
 
     }
     
-    func deleteToken(userId: String, deviceToken: String, onSuccess: @escaping () -> Void) -> URLSessionDataTask? {
+    func deleteToken(userId: String, deviceToken: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
         
         guard let authKey = Courier.shared.authorizationKey else {
             print("Courier Authorization Key is missing")
             return nil
         }
 
-        let url = URL(string: "https://api.courier.com/users/\(userId)/tokens/\(deviceToken)")!
-         
-        print(url)
-        
+        let url = URL(string: "\(baseUrl)/users/\(userId)/tokens/\(deviceToken)")!
         var request = URLRequest(url: url)
-
-        // Configure request authentication
-        request.setValue(
-            "Bearer \(authKey)",
-            forHTTPHeaderField: "Authorization"
-        )
-
-//        let body = try? JSONSerialization.data(
-//            withJSONObject: [
-//                "token": deviceToken,
-//                "provider_key": provider.rawValue
-//            ]
-//        )
-        
-//        let body = try? JSONEncoder().encode([
-////            "token": deviceToken,
-////            "provider_key": provider.rawValue
-//        ])
-//
-//        if let jsonString = String(data: body!, encoding: .utf8) {
-//            print(jsonString)
-//        }
-
+        request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "DELETE"
-//        request.httpBody = body
 
-        // Create the HTTP request
-        return session.dataTask(with: request) { (data, response, error) in
-            
-            let status = (response as! HTTPURLResponse).statusCode
-            print(status)
-            
-            if let error = error {
-                // ERROR
-                return
-            }
-            
-            guard let data = data else {
-                // ERROR
-                return
-            }
+        return CourierTask(with: request) { (data, response, error) in
             
             do {
                 
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
-                print(json)
+                let status = (response as! HTTPURLResponse).statusCode
+                if (status != 200) {
+                    onFailure()
+                    return
+                }
                 
+                let res = try JSONDecoder().decode(CourierResponse.self, from: data ?? Data())
+                debugPrint(res)
                 onSuccess()
                 
-//                let user = try JSONDecoder().decode(Test.self, from: data)
-//                print(user)
             } catch {
-                // ERROR
+                
+                debugPrint(error)
+                onFailure()
+                
             }
             
         }

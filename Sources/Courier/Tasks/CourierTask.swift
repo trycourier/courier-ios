@@ -15,10 +15,37 @@ class CourierTask {
     var task: URLSessionDataTask? = nil
     
     init(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
-        task = session.dataTask(with: request) { (data, response, error) in
-            completionHandler(data, response, error)
-            self.onComplete?()
+        
+        debugPrint("📡 New Request")
+        debugPrint("URL: \(request.url?.absoluteString ?? "")")
+        debugPrint("Method: \(request.httpMethod ?? "")")
+        
+        if let json = String(data: request.httpBody ?? Data(), encoding: .utf8) {
+            debugPrint("Body: \(json)")
         }
+        
+        task = session.dataTask(with: request) { (data, response, error) in
+            
+            // Display status
+            let status = (response as! HTTPURLResponse).statusCode
+            debugPrint("Status: \(status)")
+            
+            do {
+                let json = try JSONSerialization.jsonObject(with: data ?? Data(), options: []) as? [String : Any]
+                debugPrint("JSON: \(String(describing: json))")
+            } catch {
+                debugPrint(error)
+            }
+            
+            // Handle completion
+            completionHandler(data, response, error)
+            
+            if (status == 200) {
+                self.onComplete?()
+            }
+            
+        }
+        
     }
     
     func start() {

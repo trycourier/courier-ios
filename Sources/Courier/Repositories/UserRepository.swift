@@ -18,57 +18,30 @@ class UserRepository: Repository {
         }
 
         let url = URL(string: "\(baseUrl)/profiles/\(user.id)")!
-        
-        print(url)
-        
         var request = URLRequest(url: url)
-
-        request.setValue(
-            "Bearer \(authKey)",
-            forHTTPHeaderField: "Authorization"
-        )
-
+        request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "PUT"
         request.httpBody = try? JSONEncoder().encode(user.toProfile)
-        
-        if let jsonString = String(data: request.httpBody!, encoding: .utf8) {
-            print(jsonString)
-        }
 
         return CourierTask(with: request) { (data, response, error) in
             
-            let status = (response as! HTTPURLResponse).statusCode
-            print("Status Code: \(status)")
-            
-            guard let data = data else {
-                onFailure()
-                return
-            }
-            
             do {
                 
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
-                print(json)
-                
+                let status = (response as! HTTPURLResponse).statusCode
                 if (status != 200) {
-                    
-                    if let error = error {
-                        onFailure()
-                        return
-                    }
-                    
                     onFailure()
                     return
-                    
                 }
                 
+                let res = try JSONDecoder().decode(CourierResponse.self, from: data ?? Data())
+                debugPrint(res)
                 onSuccess()
                 
-//                let user = try JSONDecoder().decode(Test.self, from: data)
-//                print(user)
             } catch {
+                
                 debugPrint(error)
                 onFailure()
+                
             }
             
         }

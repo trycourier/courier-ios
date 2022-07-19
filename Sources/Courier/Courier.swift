@@ -3,6 +3,8 @@ import UIKit
 @available(iOS 10.0.0, *)
 open class Courier: NSObject {
     
+    // MARK: Courier
+    
     /*
 
      ______  ______  __  __  ______  __  ______  ______
@@ -37,6 +39,8 @@ open class Courier: NSObject {
      
      
      */
+    
+    // MARK: Init
     
     /**
      * Singleton reference to the SDK
@@ -92,7 +96,7 @@ open class Courier: NSObject {
             
             // Update the current device token in Courier
             if let token = self.apnsToken {
-                updateDeviceToken(token)
+                updateAPNSToken(token)
             }
             
         }
@@ -100,7 +104,7 @@ open class Courier: NSObject {
     
     internal func updateUser(_ user: CourierUser) {
         
-        debugPrint("📡 Updating Courier User")
+        debugPrint("⚠️ Updating Courier User")
         debugPrint(user)
         
         let update = self.userRepository.updateUser(
@@ -113,8 +117,6 @@ open class Courier: NSObject {
             }
         )
         
-        // Add tasks to manager
-        // Should not be nil
         if let task = update {
             taskManager.add(task)
         }
@@ -134,7 +136,7 @@ open class Courier: NSObject {
             }
             
             // Update the token on the user
-            updateDeviceToken(token)
+            updateAPNSToken(token)
             
         }
     }
@@ -142,61 +144,89 @@ open class Courier: NSObject {
     /**
      * Upserts the new token to Courier
      */
-    internal func updateDeviceToken(_ token: String) {
+    internal func updateAPNSToken(_ token: String) {
         
         debugPrint("📲 Apple Device Token")
         debugPrint(token)
         
         // Ensure we have a user id
         guard let userId = self.user?.id else {
-            debugPrint("User missing. Can't update token.")
+            debugPrint("Courier User is missing. Can't update device token. Ensure you have a user set before submitting the token.")
             return
         }
         
-        debugPrint("Updating Courier Token")
+        debugPrint("⚠️ Updating Courier Token")
         
-        let update = self.tokenRepository.refreshDeviceToken(userId: userId, provider: CourierProvider.apns, deviceToken: token) {
-            debugPrint("Updated Courier Token")
+        let update = self.tokenRepository.updatePushNotificationToken(
+            userId: userId,
+            provider: CourierProvider.apns,
+            deviceToken: token,
+            onSuccess: {
+                debugPrint("✅ Courier User Token Updated")
+            },
+            onFailure: {
+                debugPrint("❌ Courier User Token Update Failed")
+            }
+        )
+        
+        if let task = update {
+            taskManager.add(task)
         }
         
-        update?.resume()
-        
+    }
+    
+    // MARK: Getters
+    
+    private static var userNotificationCenter: UNUserNotificationCenter {
+        get { UNUserNotificationCenter.current() }
     }
     
     // MARK: Auth
     
     public func signOut(completion: @escaping () -> Void) {
         
+        debugPrint("⚠️ Signing Courier User out")
+        
         // Ensure we have a user id
         guard let userId = self.user?.id else {
+            completion()
             return
         }
         
         // Delete the existing token
         if let apnsToken = self.apnsToken {
             
-            let delete = self.tokenRepository.deleteToken(userId: userId, deviceToken: apnsToken) {
-                print("Token deleted")
+            let delete = self.tokenRepository.deleteToken(
+                userId: userId,
+                deviceToken: apnsToken,
+                onSuccess: { [weak self] in
+                    
+                    debugPrint("✅ Courier User Token Deleted")
+                    
+                    self?.user = nil
+                    completion()
+                    
+                },
+                onFailure: {
+                    debugPrint("❌ Courier User Token Delete Failed")
+                }
+            )
+            
+            if let task = delete {
+                taskManager.add(task)
             }
             
-            delete?.resume()
-            
         }
-        
-        // Clear user
-        self.user = nil
         
     }
     
     @available(iOS 13.0.0, *)
     public func signOut() async throws {
-        // TODO: Handle this
-    }
-    
-    // MARK: Getters
-    
-    private static var userNotificationCenter: UNUserNotificationCenter {
-        get { return UNUserNotificationCenter.current() }
+        return await withCheckedContinuation { continuation in
+            signOut {
+                continuation.resume()
+            }
+        }
     }
     
     // MARK: Permissions

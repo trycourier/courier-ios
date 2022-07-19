@@ -4,13 +4,17 @@ import XCTest
 @available(iOS 10.0.0, *)
 final class CourierTests: XCTestCase {
     
-    override func setUp() async throws {
+    func testA() throws {
+
+        print("🔬 Testing SDK init")
+        
         Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
+
     }
     
-    func testSetUser() throws {
+    func testB() throws {
 
-        print("Setting User")
+        print("🔬 Testing Setting User")
 
         let expectation = self.expectation(description: "Updated User")
 
@@ -56,41 +60,40 @@ final class CourierTests: XCTestCase {
 
         wait(for: [expectation], timeout: 10)
 
-        print("User Set")
+    }
+    
+    func testC() throws {
+
+        print("🔬 Testing Token Update")
+
+        let expectation = self.expectation(description: "Updating User APNS Token")
+        
+        Courier.shared.taskManager.allTasksCompleted = {
+            expectation.fulfill()
+        }
+        
+        // This is just a random UUID for a token
+        // This is only here to ensure the updating requests work as expected
+        let randomToken = UUID().uuidString
+
+        Courier.shared.updateAPNSToken(randomToken)
+
+        wait(for: [expectation], timeout: 10)
 
     }
     
-//    func testNotificationPermissions() throws {
-//
-//        print("Setting User")
-//
-//        let expectation = self.expectation(description: "Updated User")
-//
-//        Courier.requestNotificationPermissions { status in
-//            print(status)
-//        }
-//
-//        wait(for: [expectation], timeout: 10)
-//
-//        print("User Set")
-//
-//    }
-    
-//    @available(iOS 10.0.0, *)
-//    func testSignOut() throws {
-//
-//        print("Testing Signout")
-//
-//        let expectation = self.expectation(description: "Updating User")
-//
-//        Courier.shared.signOut {
-//            expectation.fulfill()
-//        }
-//
-//        wait(for: [expectation], timeout: 10)
-//
-//        print("Signout Complete")
-//
-//    }
+    func testD() throws {
+
+        print("🔬 Testing Sign Out")
+
+        let expectation = self.expectation(description: "Signing Out User")
+
+        Courier.shared.signOut {
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 10)
+
+    }
     
 }
