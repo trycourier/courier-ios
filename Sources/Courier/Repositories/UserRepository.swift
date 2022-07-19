@@ -23,12 +23,12 @@ class UserRepository: Repository {
         request.httpMethod = "PUT"
         request.httpBody = try? JSONEncoder().encode(user.toProfile)
 
-        return CourierTask(with: request) { (data, response, error) in
+        return CourierTask(with: request) { (validCodes, data, response, error) in
             
             do {
                 
                 let status = (response as! HTTPURLResponse).statusCode
-                if (status != 200) {
+                if (!validCodes.contains(status)) {
                     onFailure()
                     return
                 }

@@ -74,9 +74,7 @@ final class CourierTests: XCTestCase {
         
         // This is just a random UUID for a token
         // This is only here to ensure the updating requests work as expected
-        let randomToken = UUID().uuidString
-
-        Courier.shared.updateAPNSToken(randomToken)
+        Courier.shared.apnsToken = UUID().uuidString
 
         wait(for: [expectation], timeout: 10)
 

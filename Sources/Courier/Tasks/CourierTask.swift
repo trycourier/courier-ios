@@ -14,7 +14,7 @@ class CourierTask {
     var onComplete: (() -> Void)? = nil
     var task: URLSessionDataTask? = nil
     
-    init(with request: URLRequest, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    init(with request: URLRequest, validCodes: [Int] = [200], completionHandler: @escaping ([Int], Data?, URLResponse?, Error?) -> Void) {
         
         debugPrint("📡 New Request")
         debugPrint("URL: \(request.url?.absoluteString ?? "")")
@@ -38,9 +38,10 @@ class CourierTask {
             }
             
             // Handle completion
-            completionHandler(data, response, error)
+            completionHandler(validCodes, data, response, error)
             
-            if (status == 200) {
+            // Can complete
+            if (validCodes.contains(status)) {
                 self.onComplete?()
             }
             

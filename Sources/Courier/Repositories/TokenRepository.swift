@@ -32,26 +32,15 @@ class TokenRepository: Repository {
             "provider_key": provider.rawValue
         ])
         
-        return CourierTask(with: request) { (data, response, error) in
+        return CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
             
-            do {
-                
-                let status = (response as! HTTPURLResponse).statusCode
-                if (status != 200 && status != 204) {
-                    onFailure()
-                    return
-                }
-                
-                let res = try JSONDecoder().decode(CourierResponse.self, from: data ?? Data())
-                debugPrint(res)
-                onSuccess()
-                
-            } catch {
-                
-                debugPrint(error)
+            let status = (response as! HTTPURLResponse).statusCode
+            if (!validCodes.contains(status)) {
                 onFailure()
-                
+                return
             }
+            
+            onSuccess()
             
         }
 
@@ -69,26 +58,15 @@ class TokenRepository: Repository {
         request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "DELETE"
 
-        return CourierTask(with: request) { (data, response, error) in
+        return CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
             
-            do {
-                
-                let status = (response as! HTTPURLResponse).statusCode
-                if (status != 200) {
-                    onFailure()
-                    return
-                }
-                
-                let res = try JSONDecoder().decode(CourierResponse.self, from: data ?? Data())
-                debugPrint(res)
-                onSuccess()
-                
-            } catch {
-                
-                debugPrint(error)
+            let status = (response as! HTTPURLResponse).statusCode
+            if (!validCodes.contains(status)) {
                 onFailure()
-                
+                return
             }
+            
+            onSuccess()
             
         }
 

@@ -130,13 +130,9 @@ open class Courier: NSObject {
     public internal(set) var apnsToken: String? = nil {
         didSet {
             
-            // Remove the token if needed
-            guard let token = apnsToken else {
-                return
+            if let token = apnsToken {
+                updateAPNSToken(token)
             }
-            
-            // Update the token on the user
-            updateAPNSToken(token)
             
         }
     }
@@ -195,6 +191,9 @@ open class Courier: NSObject {
         
         // Delete the existing token
         if let apnsToken = self.apnsToken {
+            
+            debugPrint("Current Courier APNS Token")
+            debugPrint(apnsToken)
             
             let delete = self.tokenRepository.deleteToken(
                 userId: userId,
