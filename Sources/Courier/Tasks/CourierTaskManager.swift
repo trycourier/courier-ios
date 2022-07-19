@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CourierTaskManager.swift
 //  
 //
 //  Created by Michael Miller on 7/18/22.
@@ -9,37 +9,37 @@ import Foundation
 
 class CourierTaskManager {
     
-    var onTasksCompleted: (() -> Void)?
+    var allTasksCompleted: (() -> Void)?
     
     private(set) var isRunning = false
     
     public var tasks: [String : CourierTask] = [:]
     
-    func add(task: CourierTask) {
+    func add(_ task: CourierTask) {
         
+        // Create an id for the task
         let id = UUID().uuidString
         
+        // Add task to manager
         tasks[id] = task
         
+        // Handle completion of the task
         task.onComplete = { [weak self] in
             
-            print("Task completed")
-            print(self?.tasks)
+            guard let self = self else { return }
             
-            self?.tasks.removeValue(forKey: id)
-            print("Task removed")
+            // Remove the task from the manager
+            self.tasks.removeValue(forKey: id)
             
-            if (self?.tasks.isEmpty == true) {
-                self?.onTasksCompleted?()
+            // Call global completion callback
+            if (self.tasks.isEmpty == true) {
+                self.allTasksCompleted?()
             }
             
         }
         
+        // Start the new task
         task.start()
-        
-//        if (!isRunning) {
-//            isRunning = true
-//        }
         
     }
     

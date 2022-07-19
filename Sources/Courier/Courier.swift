@@ -62,13 +62,8 @@ open class Courier: NSObject {
     }
     
     /**
-     * Operation queue
+     * Task Manager
      */
-//    public lazy var queue = SimultaneousOperationsQueue(
-//        numberOfSimultaneousActions: 1,
-//        dispatchQueueLabel: "CourierQueue"
-//    )
-    
     internal let taskManager = CourierTaskManager()
     
     /**
@@ -79,7 +74,10 @@ open class Courier: NSObject {
     
     /**
      * Updates the current courier user
-     * This should be something that you update with your other user objects
+     * This should be something that you update with your other user managed values
+     *
+     * When updating this user, it will update all values in Courier.
+     * Please be user you have all the values you would like for this user set here.
      */
     public var user: CourierUser? = nil {
         didSet {
@@ -90,28 +88,36 @@ open class Courier: NSObject {
             }
             
             // Update the user stored in Courier
-            updateUser(user: user)
+            updateUser(user)
             
             // Update the current device token in Courier
             if let token = self.apnsToken {
-                updateDeviceToken(token: token)
+                updateDeviceToken(token)
             }
             
         }
     }
     
-    internal func updateUser(user: CourierUser) {
+    internal func updateUser(_ user: CourierUser) {
         
-        debugPrint("Updating Courier User")
+        debugPrint("📡 Updating Courier User")
         debugPrint(user)
         
-        let update = self.userRepository.updateUser(user: user) {
-            debugPrint("Courier User Updated")
+        let update = self.userRepository.updateUser(
+            user: user,
+            onSuccess: {
+                debugPrint("✅ Courier User Updated")
+            },
+            onFailure: {
+                debugPrint("❌ Courier User Update Failed")
+            }
+        )
+        
+        // Add tasks to manager
+        // Should not be nil
+        if let task = update {
+            taskManager.add(task)
         }
-        
-        taskManager.add(task: update!)
-        
-//        update?.start()
         
     }
     
@@ -128,7 +134,7 @@ open class Courier: NSObject {
             }
             
             // Update the token on the user
-            updateDeviceToken(token: token)
+            updateDeviceToken(token)
             
         }
     }
@@ -136,7 +142,7 @@ open class Courier: NSObject {
     /**
      * Upserts the new token to Courier
      */
-    internal func updateDeviceToken(token: String) {
+    internal func updateDeviceToken(_ token: String) {
         
         debugPrint("📲 Apple Device Token")
         debugPrint(token)

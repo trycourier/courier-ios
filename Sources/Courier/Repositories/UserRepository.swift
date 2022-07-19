@@ -10,14 +10,14 @@ import Foundation
 @available(iOS 10.0.0, *)
 class UserRepository: Repository {
     
-    func updateUser(user: CourierUser, onSuccess: @escaping () -> Void) -> CourierTask? {
+    func updateUser(user: CourierUser, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
         
         guard let authKey = Courier.shared.authorizationKey else {
             print("Courier Authorization Key is missing")
             return nil
         }
 
-        let url = URL(string: "https://api.courier.com/profiles/\(user.id)")!
+        let url = URL(string: "\(baseUrl)/profiles/\(user.id)")!
         
         print(url)
         
@@ -27,33 +27,22 @@ class UserRepository: Repository {
             "Bearer \(authKey)",
             forHTTPHeaderField: "Authorization"
         )
-        
-        let body = try? JSONEncoder().encode([
-            "profile": [
-                "email": "mike@mikemiller.design"
-            ]
-        ])
-        
-        if let jsonString = String(data: body!, encoding: .utf8) {
-            print(jsonString)
-        }
 
         request.httpMethod = "PUT"
-        request.httpBody = body
+        request.httpBody = try? JSONEncoder().encode(user.toProfile)
+        
+        if let jsonString = String(data: request.httpBody!, encoding: .utf8) {
+            print(jsonString)
+        }
 
         // Create the HTTP request
         return CourierTask(with: request) { (data, response, error) in
             
             let status = (response as! HTTPURLResponse).statusCode
-            print(status)
-            
-            if let error = error {
-                // ERROR
-                return
-            }
+            print("Status Code: \(status)")
             
             guard let data = data else {
-                // ERROR
+                onFailure()
                 return
             }
             
@@ -62,12 +51,25 @@ class UserRepository: Repository {
                 let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
                 print(json)
                 
+                if (status != 200) {
+                    
+                    if let error = error {
+                        onFailure()
+                        return
+                    }
+                    
+                    onFailure()
+                    return
+                    
+                }
+                
                 onSuccess()
                 
 //                let user = try JSONDecoder().decode(Test.self, from: data)
 //                print(user)
             } catch {
-                // ERROR
+                debugPrint(error)
+                onFailure()
             }
             
         }

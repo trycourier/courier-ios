@@ -3,58 +3,67 @@ import XCTest
 
 final class CourierTests: XCTestCase {
     
-//    @available(iOS 10.0.0, *)
-//    func testQueue() throws {
-//        
-//        let expectation = self.expectation(description: "Test")
-//        
-//        print("Testing Queue")
-//        
-//        let taskManager = CourierTaskManager()
-//        
-//        taskManager.onTasksCompleted = {
-//            print("Tasks completed")
-//            expectation.fulfill()
-//        }
-//        
-//        for i in 0...5 {
-//            
-//            let task = CourierTask(
-//                onSuccess: {
-//                    print("Handler called onSuccess \(i)")
-//                },
-//                onFailure: {
-//                    print("Handler called onFailure \(i)")
-//                })
-//            
-//            taskManager.add(task: task)
-//            
-//        }
-//        
-//        wait(for: [expectation], timeout: 10)
-//        
-//        print("Queue Tested")
-//        
-//    }
-    
     @available(iOS 10.0.0, *)
-    func testLaunch() throws {
+    func testSetAuthKey() throws {
 
         print("Starting SDK")
 
-        let expectation = self.expectation(description: "Updating User")
+        Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
 
-        Courier.shared.taskManager.onTasksCompleted = {
-            print("Tasks completed")
+        print("SDK Started")
+
+    }
+    
+    @available(iOS 10.0.0, *)
+    func testSetUser() throws {
+
+        print("Setting User")
+
+        let expectation = self.expectation(description: "Updated User")
+
+        Courier.shared.taskManager.allTasksCompleted = {
             expectation.fulfill()
         }
-
-        Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
-        Courier.shared.user = CourierUser(id: "example_user")
+        
+        let address = CourierAddress(
+            formatted: "some_format",
+            street_address: "1234 Fake Street",
+            locality: "en-us",
+            region: "east",
+            postal_code: "55555",
+            country: "us"
+        )
+        
+        Courier.shared.user = CourierUser(
+            id: "example_1",
+            email: "example@email.com",
+            email_verified: false,
+            phone_number: "5555555555",
+            phone_number_verified: false,
+            picture: "something.com",
+            birthdate: "1/23/4567",
+            gender: "gender",
+            profile: "profile_name",
+            sub: "sub_name",
+            name: "Name",
+            nickname: "Nickname",
+            preferred_name: "Preferred Name",
+            preferred_username: "Preferred Username",
+            given_name: "Given Name",
+            middle_name: "Middle Name",
+            family_name: "Family Name",
+            first_name: "First Name",
+            last_name: "Last Name",
+            website: "Website",
+            locale: "Locale",
+            zoneinfo: "Zoneinfo",
+            updated_at: "Updated at now",
+            address: address
+        )
 
         wait(for: [expectation], timeout: 10)
 
-        print("SDK Started")
+        print("User Set")
 
     }
     

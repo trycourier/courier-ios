@@ -22,7 +22,6 @@ class CourierTask {
     }
     
     func start() {
-        print("Starting task")
         task?.resume()
     }
     

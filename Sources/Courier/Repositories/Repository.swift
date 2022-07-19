@@ -9,6 +9,10 @@ import Foundation
 
 class Repository {
     
+    var baseUrl: String {
+        get { "https://api.courier.com" }
+    }
+    
     var session: URLSession {
         get { URLSession.shared }
     }
