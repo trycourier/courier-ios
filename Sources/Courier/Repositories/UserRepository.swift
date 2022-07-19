@@ -1,6 +1,6 @@
 //
 //  UserRepository.swift
-//  Messaging
+//  
 //
 //  Created by Michael Miller on 7/7/22.
 //
@@ -35,7 +35,6 @@ class UserRepository: Repository {
             print(jsonString)
         }
 
-        // Create the HTTP request
         return CourierTask(with: request) { (data, response, error) in
             
             let status = (response as! HTTPURLResponse).statusCode

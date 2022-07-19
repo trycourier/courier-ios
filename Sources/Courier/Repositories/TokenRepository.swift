@@ -1,29 +1,11 @@
 //
 //  TokenRepository.swift
-//  Messaging
+//
 //
 //  Created by Michael Miller on 7/7/22.
 //
 
 import Foundation
-
-//// Dependencies to install:
-//// $ npm install node-fetch --save
-//
-//const fetch = require('node-fetch');
-//
-//const options = {
-//  method: 'PUT',
-//  headers: {
-//    Accept: 'application/json',
-//    Authorization: 'Bearer pk_prod_BXT66ACTJZMY78HG7H936QFPR034'
-//  },
-//};
-//
-//fetch('https://api.courier.com/users/user-1234/tokens', options)
-//  .then(response => response.json())
-//  .then(response => console.log(response))
-//  .catch(err => console.error(err));
 
 struct Test: Decodable {
     let userId: Int

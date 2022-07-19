@@ -1,20 +1,13 @@
 import XCTest
 @testable import Courier
 
+@available(iOS 10.0.0, *)
 final class CourierTests: XCTestCase {
     
-    @available(iOS 10.0.0, *)
-    func testSetAuthKey() throws {
-
-        print("Starting SDK")
-
+    override func setUp() async throws {
         Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
-
-        print("SDK Started")
-
     }
     
-    @available(iOS 10.0.0, *)
     func testSetUser() throws {
 
         print("Setting User")
@@ -35,7 +28,7 @@ final class CourierTests: XCTestCase {
         )
         
         Courier.shared.user = CourierUser(
-            id: "example_1",
+            id: "example_id",
             email: "example@email.com",
             email_verified: false,
             phone_number: "5555555555",
@@ -44,7 +37,7 @@ final class CourierTests: XCTestCase {
             birthdate: "1/23/4567",
             gender: "gender",
             profile: "profile_name",
-            sub: "sub_name",
+            sub: "sub",
             name: "Name",
             nickname: "Nickname",
             preferred_name: "Preferred Name",
@@ -66,6 +59,22 @@ final class CourierTests: XCTestCase {
         print("User Set")
 
     }
+    
+//    func testNotificationPermissions() throws {
+//
+//        print("Setting User")
+//
+//        let expectation = self.expectation(description: "Updated User")
+//
+//        Courier.requestNotificationPermissions { status in
+//            print(status)
+//        }
+//
+//        wait(for: [expectation], timeout: 10)
+//
+//        print("User Set")
+//
+//    }
     
 //    @available(iOS 10.0.0, *)
 //    func testSignOut() throws {
