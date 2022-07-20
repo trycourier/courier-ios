@@ -14,7 +14,7 @@ class AppDelegate: CourierDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
-        Courier.shared.user = CourierUser(id: "ryan")
+        Courier.shared.user = CourierUser(id: "mike")
         
         Courier.requestNotificationPermissions { status in
             print(status.rawValue)
