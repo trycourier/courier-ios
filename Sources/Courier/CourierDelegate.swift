@@ -34,27 +34,23 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         get { return UIApplication.shared }
     }
     
-    private var appState: UIApplication.State {
-        get { return app.applicationState }
-    }
-    
     // MARK: Messaging
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let message = notification.request.content.userInfo
-        pushNotificationReceivedInForeground(message: message, showForegroundNotificationAs: completionHandler)
+        pushNotificationReceivedInForeground(message: message, presentAs: completionHandler)
     }
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let message = response.notification.request.content.userInfo
-        pushNotificationOpened(message: message, appState: appState)
+        pushNotificationOpened(message: message)
         completionHandler()
     }
     
-    // TODO: Token Management
+    // MARK: Token Management
 
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Unable to register for remote notifications: \(error.localizedDescription)")
+        debugPrint("Unable to register for remote notifications: \(error.localizedDescription)")
     }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -64,8 +60,8 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     // MARK: Messaging
 
     @available(iOS 10.0, *)
-    open func pushNotificationReceivedInForeground(message: [AnyHashable : Any], showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {}
+    open func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs presentForegroundNotificationOptions: @escaping (UNNotificationPresentationOptions) -> Void) {}
     
-    open func pushNotificationOpened(message: [AnyHashable : Any], appState: UIApplication.State) {}
+    open func pushNotificationOpened(message: [AnyHashable : Any]) {}
     
 }

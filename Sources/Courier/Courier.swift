@@ -42,6 +42,10 @@ open class Courier: NSObject {
     
     // MARK: Init
     
+    private override init() {
+        super.init()
+    }
+    
     /**
      * Singleton reference to the SDK
      * Please ensure you use this to maintain state
@@ -58,11 +62,8 @@ open class Courier: NSObject {
             
             // Clear
             self.user = nil
+            
         }
-    }
-    
-    private override init() {
-        super.init()
     }
     
     /**
@@ -75,6 +76,14 @@ open class Courier: NSObject {
      */
     private lazy var userRepository = UserRepository()
     private lazy var tokenRepository = TokenRepository()
+    
+    // MARK: Getters
+    
+    private static var userNotificationCenter: UNUserNotificationCenter {
+        get { UNUserNotificationCenter.current() }
+    }
+    
+    // MARK: User Management
     
     /**
      * Updates the current courier user
@@ -123,62 +132,6 @@ open class Courier: NSObject {
         
     }
     
-    /**
-     * The token issued by Apple to receive tokens on this device
-     * Can only be set by the Courier SDK, but can be read by external packages
-     */
-    public internal(set) var apnsToken: String? = nil {
-        didSet {
-            
-            if let token = apnsToken {
-                updateAPNSToken(token)
-            }
-            
-        }
-    }
-    
-    /**
-     * Upserts the new token to Courier
-     */
-    internal func updateAPNSToken(_ token: String) {
-        
-        debugPrint("📲 Apple Device Token")
-        debugPrint(token)
-        
-        // Ensure we have a user id
-        guard let userId = self.user?.id else {
-            debugPrint("Courier User is missing. Can't update device token. Ensure you have a user set before submitting the token.")
-            return
-        }
-        
-        debugPrint("⚠️ Updating Courier Token")
-        
-        let update = self.tokenRepository.updatePushNotificationToken(
-            userId: userId,
-            provider: CourierProvider.apns,
-            deviceToken: token,
-            onSuccess: {
-                debugPrint("✅ Courier User Token Updated")
-            },
-            onFailure: {
-                debugPrint("❌ Courier User Token Update Failed")
-            }
-        )
-        
-        if let task = update {
-            taskManager.add(task)
-        }
-        
-    }
-    
-    // MARK: Getters
-    
-    private static var userNotificationCenter: UNUserNotificationCenter {
-        get { UNUserNotificationCenter.current() }
-    }
-    
-    // MARK: Auth
-    
     public func signOut(completion: @escaping () -> Void) {
         
         debugPrint("⚠️ Signing Courier User out")
@@ -226,6 +179,91 @@ open class Courier: NSObject {
                 continuation.resume()
             }
         }
+    }
+    
+    // MARK: Token Management
+    
+    /**
+     * The token issued by Apple to receive tokens on this device
+     * Can only be set by the Courier SDK, but can be read by external packages
+     */
+    public internal(set) var apnsToken: String? = nil {
+        didSet {
+            
+            if let token = apnsToken {
+                updateAPNSToken(token)
+            }
+            
+        }
+    }
+    
+    /**
+     * Upserts the APN token in Courier for the current user
+     */
+    internal func updateAPNSToken(_ token: String) {
+        
+        debugPrint("📲 Apple Device Token")
+        debugPrint(token)
+        
+        // Ensure we have a user id
+        guard let userId = self.user?.id else {
+            debugPrint("Courier User is missing. Can't update device token. Ensure you have a user set before submitting the token.")
+            return
+        }
+        
+        debugPrint("⚠️ Updating Courier Token")
+        
+        let update = self.tokenRepository.updatePushNotificationToken(
+            userId: userId,
+            provider: CourierProvider.apns,
+            deviceToken: token,
+            onSuccess: {
+                debugPrint("✅ Courier User Token Updated")
+            },
+            onFailure: {
+                debugPrint("❌ Courier User Token Update Failed")
+            }
+        )
+        
+        if let task = update {
+            taskManager.add(task)
+        }
+        
+    }
+    
+    /**
+     * Upserts the FCM token in Courier for the current user
+     * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
+     */
+    public func updateFCMToken(_ token: String) {
+        
+        debugPrint("🔥 Firebase Cloud Messaging Token")
+        debugPrint(token)
+        
+        // Ensure we have a user id
+        guard let userId = self.user?.id else {
+            debugPrint("Courier User is missing. Can't update device token. Ensure you have a user set before submitting the token.")
+            return
+        }
+        
+        debugPrint("⚠️ Updating Courier Token")
+        
+        let update = self.tokenRepository.updatePushNotificationToken(
+            userId: userId,
+            provider: CourierProvider.fcm,
+            deviceToken: token,
+            onSuccess: {
+                debugPrint("✅ Courier User Token Updated")
+            },
+            onFailure: {
+                debugPrint("❌ Courier User Token Update Failed")
+            }
+        )
+        
+        if let task = update {
+            taskManager.add(task)
+        }
+        
     }
     
     // MARK: Permissions

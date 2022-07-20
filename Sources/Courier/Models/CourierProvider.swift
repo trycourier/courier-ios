@@ -8,6 +8,6 @@
 public enum CourierProvider: String {
     case apns = "apn"
     case fcm = "firebase-fcm"
-    case expo = "expo"
-    case oneSignal = "onesignal"
+//    case expo = "expo"
+//    case oneSignal = "onesignal"
 }
