@@ -1,8 +1,8 @@
 //
 //  ViewController.swift
-//  Swift_XIB_Example
+//  Swift+Storyboard+APNS
 //
-//  Created by Michael Miller on 7/20/22.
+//  Created by Michael Miller on 7/21/22.
 //
 
 import UIKit
@@ -38,10 +38,10 @@ extension ViewController {
     
     private func refreshUser() {
         if (Courier.shared.user != nil) {
-            userStatusLabel.text = "User is signed in:\n\(Courier.shared.user!.id)"
+            userStatusLabel.text = "User is signed in with userId:\n\n\(Courier.shared.user!.id)"
             userStatusButton.setTitle("Sign Out", for: .normal)
         } else {
-            userStatusLabel.text = "User is signed out"
+            userStatusLabel.text = "User is signed out.\n\nClick 'Sign In' to sync APNS token to Courier"
             userStatusButton.setTitle("Sign In", for: .normal)
         }
     }
@@ -80,7 +80,7 @@ extension ViewController {
             country: "us"
         )
         
-        Courier.shared.user = CourierUser(
+        let user = CourierUser(
             id: randomId,
             email: "example@email.com",
             email_verified: false,
@@ -107,7 +107,18 @@ extension ViewController {
             address: address
         )
         
-        refreshUser()
+        Task.init {
+            
+            userStatusLabel.text = "Signing in..."
+            userStatusButton.isHidden = true
+            
+            try await Courier.shared.setUser(user)
+            
+            refreshUser()
+            
+            userStatusButton.isHidden = false
+            
+        }
         
     }
     
@@ -119,7 +130,7 @@ extension ViewController {
     
     private func updateUIForStatus(status: UNAuthorizationStatus) {
         
-        notificationStatusLabel.text = "Notification Permission:\n\(status.prettyText)"
+        notificationStatusLabel.text = "Notification Permission:\n\n\(status.prettyText)"
         
         if (status == .notDetermined) {
             notificationButton.setTitle("Request Notification Permission", for: .normal)
@@ -156,27 +167,3 @@ extension ViewController {
     }
     
 }
-
-extension UNAuthorizationStatus {
-    
-    var prettyText: String {
-        get {
-            switch (self) {
-            case .notDetermined:
-                return "Not Determined"
-            case .denied:
-                return "Denied"
-            case .authorized:
-                return "Authorized"
-            case .provisional:
-                return "Provisional"
-            case .ephemeral:
-                return "Ephemeral"
-            @unknown default:
-                return "Unknown"
-            }
-        }
-    }
-    
-}
-
