@@ -155,43 +155,64 @@ open class Courier: NSObject {
         debugPrint("⚠️ Signing Courier User out")
         
         // Delete the existing token
-        if let apnsToken = self.apnsToken {
-            
-            debugPrint("Current Courier APNS Token")
-            debugPrint(apnsToken)
-            
-            let delete = removeTokenTask(
-                apnsToken,
-                onSuccess: { [weak self] in
-                    self?.user = nil
-                    onSuccess?()
-                },
-                onFailure: {
-                    onFailure?()
-                })
-            
-            delete?.start()
-            
+        guard let apnsToken = self.apnsToken else {
+            onSuccess?()
+            return
         }
+        
+        var didFail = false
+        let group = DispatchGroup()
         
         if let fcmToken = self.fcmToken {
             
             debugPrint("Current Courier FCM Token")
             debugPrint(fcmToken)
             
+            // Start a task to complete removing fcm token
+            group.enter()
+            
             let delete = removeTokenTask(
                 fcmToken,
-                onSuccess: { [weak self] in
-                    self?.user = nil
-                    onSuccess?()
+                onSuccess: {
+                    group.leave()
                 },
                 onFailure: {
-                    onFailure?()
+                    didFail = true
+                    group.leave()
                 })
             
             delete?.start()
             
         }
+        
+        debugPrint("Current Courier APNS Token")
+        debugPrint(apnsToken)
+        
+        // Start task to remove apns token
+        group.enter()
+        let delete = removeTokenTask(
+            apnsToken,
+            onSuccess: {
+                group.leave()
+            },
+            onFailure: {
+                didFail = true
+                group.leave()
+            })
+        
+        delete?.start()
+        
+        user = nil
+        
+        // Hold until token deletion complete
+        group.wait()
+        
+        if (didFail) {
+            onFailure?()
+            return
+        }
+        
+        onSuccess?()
         
     }
     

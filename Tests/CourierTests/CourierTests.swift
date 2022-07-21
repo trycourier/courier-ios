@@ -152,6 +152,7 @@ final class CourierTests: XCTestCase {
 
         wait(for: [expectation], timeout: 10)
         
+        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
         XCTAssertEqual(didSucceed, true)
 

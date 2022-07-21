@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Swift+Storyboard+APNS
+//  Swift+Storyboard+FCM
 //
 //  Created by Michael Miller on 7/21/22.
 //
@@ -10,7 +10,7 @@ import Courier
 
 class ViewController: UIViewController {
     
-    let userId = "example_user_with_apns"
+    let userId = "example_user_with_fcm"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
@@ -43,7 +43,7 @@ extension ViewController {
             userStatusLabel.text = "User is signed in with userId:\n\n\(Courier.shared.user!.id)"
             userStatusButton.setTitle("Sign Out", for: .normal)
         } else {
-            userStatusLabel.text = "User is signed out.\n\nClick 'Sign In' to sync APNS token to Courier"
+            userStatusLabel.text = "User is signed out.\n\nClick 'Sign In' to sync FCM token to Courier"
             userStatusButton.setTitle("Sign In", for: .normal)
         }
     }
