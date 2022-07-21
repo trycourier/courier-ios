@@ -409,4 +409,20 @@ open class Courier: NSObject {
         return try await getNotificationAuthorizationStatus()
     }
     
+    // MARK: Testing
+    
+    public static func sendTestMessage(userId: String, title: String, message: String) {
+        TestRepository().sendTestPush(
+            userId: userId,
+            title: title,
+            message: message,
+            onSuccess: {
+                debugPrint("✅ Test message sent")
+            },
+            onFailure: {
+                debugPrint("❌ Test message failed")
+            }
+        )?.start()
+    }
+    
 }

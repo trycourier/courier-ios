@@ -7,13 +7,6 @@
 
 import Foundation
 
-struct Test: Decodable {
-    let userId: Int
-    let id: Int
-    let title: String
-    let completed: Bool
-}
-
 @available(iOS 10.0.0, *)
 class TokenRepository: Repository {
     
