@@ -200,11 +200,11 @@ extension ViewController {
                 return
             }
             
-            Courier.sendTestMessage(
-                userId: userId,
-                title: "Hi! 👋",
-                message: "Chrip Chirp!"
-            )
+            testMessageButton.isEnabled = false
+            
+            await Courier.sendTestMessage(userId: userId, title: "Hi! 👋", message: "Chrip Chirp!")
+            
+            testMessageButton.isEnabled = true
             
         }
         
