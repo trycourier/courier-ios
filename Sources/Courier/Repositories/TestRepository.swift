@@ -8,7 +8,7 @@
 import Foundation
 
 @available(iOS 10.0.0, *)
-class TestRepository: Repository {
+internal class TestRepository: Repository {
     
     private struct MessageBody: Codable {
         let message: Message
@@ -51,7 +51,7 @@ class TestRepository: Repository {
         let isProduction: Bool
     }
     
-    func sendTestPush(userId: String, title: String, message: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
+    internal func sendTestPush(userId: String, title: String, message: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
         
         guard let authKey = Courier.shared.authorizationKey else {
             print("Courier Authorization Key is missing")

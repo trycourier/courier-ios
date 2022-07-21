@@ -10,7 +10,7 @@ import Courier
 
 class ViewController: UIViewController {
     
-    let userId = "example_user_with_fcm"
+    let userId = "example_user_1"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
@@ -24,11 +24,17 @@ class ViewController: UIViewController {
         requestNotificationPermissions()
     }
     
+    @IBOutlet weak var testMessageButton: UIButton!
+    @IBAction func testMessageAction(_ sender: Any) {
+        sendTestMessage()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         refreshUser()
         refreshNotificationPermission()
+        refreshTestButtonState()
         
     }
 
@@ -39,6 +45,7 @@ class ViewController: UIViewController {
 extension ViewController {
     
     private func refreshUser() {
+        
         if (Courier.shared.user != nil) {
             userStatusLabel.text = "User is signed in with userId:\n\n\(Courier.shared.user!.id)"
             userStatusButton.setTitle("Sign Out", for: .normal)
@@ -46,6 +53,9 @@ extension ViewController {
             userStatusLabel.text = "User is signed out.\n\nClick 'Sign In' to sync FCM token to Courier"
             userStatusButton.setTitle("Sign In", for: .normal)
         }
+        
+        refreshTestButtonState()
+        
     }
     
     private func performUserButtonAction() {
@@ -139,6 +149,8 @@ extension ViewController {
             notificationButton.isHidden = true
         }
         
+        refreshTestButtonState()
+        
     }
     
     private func refreshNotificationPermission() {
@@ -162,6 +174,41 @@ extension ViewController {
             let status = try await Courier.requestNotificationPermissions()
             updateUIForStatus(status: status)
             
+        }
+        
+    }
+    
+}
+
+// MARK: Example Test Push Setup
+
+extension ViewController {
+    
+    private func refreshTestButtonState() {
+        
+        testMessageButton.setTitle("Send Test Message", for: .normal)
+        testMessageButton.isHidden = true
+        
+        Task.init {
+            
+            let status = try await Courier.getNotificationAuthorizationStatus()
+            
+            if (status == .authorized && Courier.shared.user != nil) {
+                testMessageButton.isHidden = false
+            }
+            
+        }
+        
+    }
+    
+    private func sendTestMessage() {
+        
+        if let userId = Courier.shared.user?.id {
+            Courier.sendTestMessage(
+                userId: userId,
+                title: "Hi! 👋",
+                message: "Chrip Chirp!"
+            )
         }
         
     }
