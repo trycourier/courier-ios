@@ -21,7 +21,7 @@ class AppDelegate: CourierDelegate {
         
         // Courier Pieces
         Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
-        Courier.shared.user = CourierUser(id: "mike")
+        Courier.shared.user = CourierUser(id: "fcm_user_1")
         
         Courier.requestNotificationPermissions { status in
             print(status.rawValue)
@@ -30,13 +30,13 @@ class AppDelegate: CourierDelegate {
         return true
     }
 
-    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
+    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("Push Received")
         print(message)
         showForegroundNotificationAs([.badge, .list, .sound, .banner])
     }
 
-    override func pushNotificationOpened(message: [AnyHashable : Any], appState: UIApplication.State) {
+    override func pushNotificationOpened(message: [AnyHashable : Any]) {
         print("Push Opened")
         print(message)
     }
@@ -46,11 +46,10 @@ class AppDelegate: CourierDelegate {
 extension AppDelegate: MessagingDelegate {
   
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-      
       if let token = fcmToken {
           print("Firebase registration token: \(token)")
+          Courier.shared.updateFCMToken(token)
       }
-      
   }
 
 }

@@ -40,10 +40,7 @@ class CourierTask {
             // Handle completion
             completionHandler(validCodes, data, response, error)
             
-            // Can complete
-            if (validCodes.contains(status)) {
-                self.onComplete?()
-            }
+            self.onComplete?()
             
         }
         

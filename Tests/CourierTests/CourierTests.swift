@@ -4,20 +4,53 @@ import XCTest
 @available(iOS 10.0.0, *)
 final class CourierTests: XCTestCase {
     
+    let authKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
+    let apnsToken = "282D849F-2AF8-4ECB-BBFD-EC3F96DD59D4"
+    let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9"
+    let userId = "example_id"
+    
     func testA() throws {
 
         print("🔬 Testing SDK init")
         
-        Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
+        Courier.shared.authorizationKey = authKey
+        
+        XCTAssertEqual(Courier.shared.authorizationKey, authKey)
 
     }
     
     func testB() throws {
 
+        print("🔬 Testing Setting Token before User")
+
+        let expectation = self.expectation(description: "Token not set")
+        
+        var didSucceed = false
+        
+        Courier.shared.setAPNSToken(
+            apnsToken,
+            onSuccess: {
+                didSucceed = true
+                expectation.fulfill()
+            },
+            onFailure: {
+                didSucceed = false
+                expectation.fulfill()
+            })
+
+        wait(for: [expectation], timeout: 10)
+        
+        XCTAssertEqual(Courier.shared.user?.id, nil)
+        XCTAssertEqual(didSucceed, false)
+
+    }
+    
+    func testC() throws {
+
         print("🔬 Testing Setting User")
 
         let expectation = self.expectation(description: "Updated User")
-
+        
         Courier.shared.taskManager.allTasksCompleted = {
             expectation.fulfill()
         }
@@ -31,8 +64,8 @@ final class CourierTests: XCTestCase {
             country: "us"
         )
         
-        Courier.shared.user = CourierUser(
-            id: "example_id",
+        let user = CourierUser(
+            id: userId,
             email: "example@email.com",
             email_verified: false,
             phone_number: "5555555555",
@@ -57,40 +90,97 @@ final class CourierTests: XCTestCase {
             updated_at: "Updated at now",
             address: address
         )
+        
+        Courier.shared.setUser(user)
 
         wait(for: [expectation], timeout: 10)
-
-    }
-    
-    func testC() throws {
-
-        print("🔬 Testing Token Update")
-
-        let expectation = self.expectation(description: "Updating User APNS Token")
         
-        Courier.shared.taskManager.allTasksCompleted = {
-            expectation.fulfill()
-        }
+        // Remove the task listener
+        Courier.shared.taskManager.allTasksCompleted = nil
         
-        // This is just a random UUID for a token
-        // This is only here to ensure the updating requests work as expected
-        Courier.shared.apnsToken = UUID().uuidString
-
-        wait(for: [expectation], timeout: 10)
+        XCTAssertEqual(Courier.shared.user?.id, userId)
+        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
 
     }
     
     func testD() throws {
 
+        print("🔬 Testing APNS Token Update")
+
+        let expectation = self.expectation(description: "Updating User APNS Token")
+        
+        var didSucceed = false
+        
+        Courier.shared.setAPNSToken(
+            apnsToken,
+            userId: userId,
+            onSuccess: {
+                didSucceed = true
+                expectation.fulfill()
+            },
+            onFailure: {
+                didSucceed = false
+                expectation.fulfill()
+            })
+
+        wait(for: [expectation], timeout: 10)
+        
+        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(didSucceed, true)
+
+    }
+    
+    func testE() throws {
+
+        print("🔬 Testing FCM Token Update")
+
+        let expectation = self.expectation(description: "Updating User FCM Token")
+        
+        var didSucceed = false
+        
+        Courier.shared.setFCMToken(
+            fcmToken,
+            userId: userId,
+            onSuccess: {
+                didSucceed = true
+                expectation.fulfill()
+            },
+            onFailure: {
+                didSucceed = false
+                expectation.fulfill()
+            })
+
+        wait(for: [expectation], timeout: 10)
+        
+        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
+        XCTAssertEqual(didSucceed, true)
+
+    }
+    
+    func testF() throws {
+
         print("🔬 Testing Sign Out")
 
         let expectation = self.expectation(description: "Signing Out User")
+        
+        var didSucceed = false
 
-        Courier.shared.signOut {
-            expectation.fulfill()
-        }
+        Courier.shared.signOut(
+            onSuccess: {
+                didSucceed = true
+                expectation.fulfill()
+            },
+            onFailure: {
+                didSucceed = false
+                expectation.fulfill()
+            })
 
         wait(for: [expectation], timeout: 10)
+        
+        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
+        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(Courier.shared.user?.id, nil)
+        XCTAssertEqual(didSucceed, true)
 
     }
     

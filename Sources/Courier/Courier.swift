@@ -86,43 +86,33 @@ open class Courier: NSObject {
     // MARK: User Management
     
     /**
-     * Updates the current courier user
-     * This should be something that you update with your other user managed values
-     *
-     * When updating this user, it will update all values in Courier.
-     * Please be user you have all the values you would like for this user set here.
+     * A read only value for the current Courier user
      */
-    public var user: CourierUser? = nil {
-        didSet {
-            
-            // Remove the user if needed
-            guard let user = user else {
-                return
-            }
-            
-            // Update the user stored in Courier
-            updateUser(user)
-            
-            // Update the current device token in Courier
-            if let token = self.apnsToken {
-                updateAPNSToken(token)
-            }
-            
-        }
-    }
+    public private(set) var user: CourierUser? = nil
     
-    internal func updateUser(_ user: CourierUser) {
+    /**
+     * Function used to set the current Courier user
+     * You should consider using this in areas where you update your local user's state
+     */
+    public func setUser(_ user: CourierUser, onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
         
         debugPrint("⚠️ Updating Courier User")
         debugPrint(user)
         
+        // Return token if needed
+        refreshCourierPushToken(userId: user.id)
+        
+        // Update the user
         let update = self.userRepository.updateUser(
             user: user,
-            onSuccess: {
+            onSuccess: { [weak self] in
                 debugPrint("✅ Courier User Updated")
+                self?.user = user
+                onSuccess?()
             },
             onFailure: {
                 debugPrint("❌ Courier User Update Failed")
+                onFailure?()
             }
         )
         
@@ -132,15 +122,36 @@ open class Courier: NSObject {
         
     }
     
-    public func signOut(completion: @escaping () -> Void) {
+    private func refreshCourierPushToken(userId: String) {
+        
+        if let apnsToken = self.apnsToken {
+            setAPNSToken(apnsToken, userId: userId)
+        }
+        
+        if let fcmToken = self.fcmToken {
+            setFCMToken(fcmToken, userId: userId)
+        }
+        
+    }
+    
+    @available(iOS 13.0.0, *)
+    public func setUser(_ user: CourierUser) async throws {
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+            setUser(
+                user,
+                onSuccess: { continuation.resume() },
+                onFailure: { continuation.resume(throwing: CourierError.userSetFailed) })
+        })
+    }
+    
+    /**
+     * Function to sign the current Courier user out
+     * You should call this when your user signs out
+     * It will remove the current tokens used for this user in Courier so they do not receive pushes they should not get
+     */
+    public func signOut(onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
         
         debugPrint("⚠️ Signing Courier User out")
-        
-        // Ensure we have a user id
-        guard let userId = self.user?.id else {
-            completion()
-            return
-        }
         
         // Delete the existing token
         if let apnsToken = self.apnsToken {
@@ -148,21 +159,36 @@ open class Courier: NSObject {
             debugPrint("Current Courier APNS Token")
             debugPrint(apnsToken)
             
-            let delete = self.tokenRepository.deleteToken(
-                userId: userId,
-                deviceToken: apnsToken,
+            let delete = removeTokenTask(
+                apnsToken,
                 onSuccess: { [weak self] in
-                    
-                    debugPrint("✅ Courier User Token Deleted")
-                    
                     self?.user = nil
-                    completion()
-                    
+                    onSuccess?()
                 },
                 onFailure: {
-                    debugPrint("❌ Courier User Token Delete Failed")
-                }
-            )
+                    onFailure?()
+                })
+            
+            if let task = delete {
+                taskManager.add(task)
+            }
+            
+        }
+        
+        if let fcmToken = self.fcmToken {
+            
+            debugPrint("Current Courier FCM Token")
+            debugPrint(fcmToken)
+            
+            let delete = removeTokenTask(
+                fcmToken,
+                onSuccess: { [weak self] in
+                    self?.user = nil
+                    onSuccess?()
+                },
+                onFailure: {
+                    onFailure?()
+                })
             
             if let task = delete {
                 taskManager.add(task)
@@ -174,40 +200,50 @@ open class Courier: NSObject {
     
     @available(iOS 13.0.0, *)
     public func signOut() async throws {
-        return await withCheckedContinuation { continuation in
-            signOut {
-                continuation.resume()
-            }
-        }
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+            signOut(
+                onSuccess: { continuation.resume() },
+                onFailure: { continuation.resume(throwing: CourierError.userSetFailed) })
+        })
     }
     
     // MARK: Token Management
+    
+    private func removeTokenTask(_ token: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
+        
+        guard let userId = user?.id else {
+            return nil
+        }
+        
+        return self.tokenRepository.deleteToken(
+            userId: userId,
+            deviceToken: token,
+            onSuccess: onSuccess,
+            onFailure: onFailure
+        )
+        
+    }
     
     /**
      * The token issued by Apple to receive tokens on this device
      * Can only be set by the Courier SDK, but can be read by external packages
      */
-    public internal(set) var apnsToken: String? = nil {
-        didSet {
-            
-            if let token = apnsToken {
-                updateAPNSToken(token)
-            }
-            
-        }
-    }
+    public private(set) var apnsToken: String? = nil
     
     /**
      * Upserts the APN token in Courier for the current user
      */
-    internal func updateAPNSToken(_ token: String) {
+    internal func setAPNSToken(_ token: String, userId: String? = nil, onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
+        
+        // Stash the token for later
+        apnsToken = token
         
         debugPrint("📲 Apple Device Token")
         debugPrint(token)
         
-        // Ensure we have a user id
-        guard let userId = self.user?.id else {
-            debugPrint("Courier User is missing. Can't update device token. Ensure you have a user set before submitting the token.")
+        guard let userId = userId else {
+            debugPrint("❌ UserId not set. Cannot update Courier push token.")
+            onFailure?()
             return
         }
         
@@ -219,9 +255,11 @@ open class Courier: NSObject {
             deviceToken: token,
             onSuccess: {
                 debugPrint("✅ Courier User Token Updated")
+                onSuccess?()
             },
             onFailure: {
                 debugPrint("❌ Courier User Token Update Failed")
+                onFailure?()
             }
         )
         
@@ -232,17 +270,25 @@ open class Courier: NSObject {
     }
     
     /**
+     * The current firebase token associated with this user
+     */
+    public internal(set) var fcmToken: String? = nil
+    
+    /**
      * Upserts the FCM token in Courier for the current user
      * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
      */
-    public func updateFCMToken(_ token: String) {
+    public func setFCMToken(_ token: String, userId: String? = nil, onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
+        
+        // Stash the token for later
+        fcmToken = token
         
         debugPrint("🔥 Firebase Cloud Messaging Token")
         debugPrint(token)
         
-        // Ensure we have a user id
-        guard let userId = self.user?.id else {
-            debugPrint("Courier User is missing. Can't update device token. Ensure you have a user set before submitting the token.")
+        guard let userId = userId else {
+            debugPrint("❌ UserId not set. Cannot update Courier push token.")
+            onFailure?()
             return
         }
         
@@ -254,9 +300,11 @@ open class Courier: NSObject {
             deviceToken: token,
             onSuccess: {
                 debugPrint("✅ Courier User Token Updated")
+                onSuccess?()
             },
             onFailure: {
                 debugPrint("❌ Courier User Token Update Failed")
+                onFailure?()
             }
         )
         
