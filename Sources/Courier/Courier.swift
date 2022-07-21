@@ -411,23 +411,24 @@ open class Courier: NSObject {
     
     // MARK: Testing
     
-    public static func sendTestMessage(userId: String, title: String, message: String, onSuccess: @escaping (String) -> Void, onFailure: @escaping () -> Void) {
+    public static func sendTestMessage(userId: String, title: String, message: String, onSuccess: ((String) -> Void)? = nil, onFailure: (() -> Void)? = nil) {
         TestRepository().sendTestPush(
             userId: userId,
             title: title,
             message: message,
             onSuccess: { requestId in
                 debugPrint("✅ Test push sent")
-                onSuccess(requestId)
+                onSuccess?(requestId)
             },
             onFailure: {
                 debugPrint("❌ Test push failed")
-                onFailure()
+                onFailure?()
             }
         )?.start()
     }
     
     @available(iOS 13.0.0, *)
+    @discardableResult
     public static func sendTestMessage(userId: String, title: String, message: String) async throws -> String {
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             Courier.sendTestMessage(
