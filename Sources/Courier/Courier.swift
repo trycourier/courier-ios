@@ -99,12 +99,13 @@ open class Courier: NSObject {
             user: user,
             onSuccess: { [weak self] in
                 
+                // Update the local user
                 debugPrint("✅ Courier User Updated")
                 self?.user = user
                 
                 // Refresh token
-                if let onSuccess = onSuccess {
-                    self?.refreshCourierPushToken(userId: user.id, onComplete: onSuccess)
+                self?.refreshCourierPushToken(userId: user.id) {
+                    onSuccess?()
                 }
                 
             },
