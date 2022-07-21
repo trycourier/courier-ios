@@ -428,7 +428,7 @@ open class Courier: NSObject {
     }
     
     @available(iOS 13.0.0, *)
-    public func sendTestMessage(userId: String, title: String, message: String) async throws -> String {
+    public static func sendTestMessage(userId: String, title: String, message: String) async throws -> String {
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             Courier.sendTestMessage(
                 userId: userId,
