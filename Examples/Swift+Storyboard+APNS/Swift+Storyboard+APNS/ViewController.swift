@@ -10,7 +10,7 @@ import Courier
 
 class ViewController: UIViewController {
     
-    let userId = "example_user_fcm"
+    let userId = "example_user_apns"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
