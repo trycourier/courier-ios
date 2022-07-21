@@ -34,7 +34,6 @@ class ViewController: UIViewController {
         
         refreshUser()
         refreshNotificationPermission()
-        refreshTestButtonState()
         
     }
 
@@ -53,8 +52,6 @@ extension ViewController {
             userStatusLabel.text = "User is signed out.\n\nClick 'Sign In' to sync FCM token to Courier"
             userStatusButton.setTitle("Sign In", for: .normal)
         }
-        
-        refreshTestButtonState()
         
     }
     
@@ -149,8 +146,6 @@ extension ViewController {
             notificationButton.isHidden = true
         }
         
-        refreshTestButtonState()
-        
     }
     
     private func refreshNotificationPermission() {
@@ -184,31 +179,33 @@ extension ViewController {
 
 extension ViewController {
     
-    private func refreshTestButtonState() {
+    private func sendTestMessage() {
         
-        testMessageButton.setTitle("Send Test Message", for: .normal)
-        testMessageButton.isHidden = true
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        guard let userId = Courier.shared.user?.id else {
+            appDelegate.showMessageAlert(title: "User is not signed in", message: "")
+            return
+        }
         
         Task.init {
             
             let status = try await Courier.getNotificationAuthorizationStatus()
-            
-            if (status == .authorized && Courier.shared.user != nil) {
-                testMessageButton.isHidden = false
+
+            if (status != .authorized) {
+                appDelegate.showMessageAlert(
+                    title: "Notification Permissions not allowed",
+                    message: "You will not receive a notification until notification permissions are allowed"
+                )
+                return
             }
             
-        }
-        
-    }
-    
-    private func sendTestMessage() {
-        
-        if let userId = Courier.shared.user?.id {
             Courier.sendTestMessage(
                 userId: userId,
                 title: "Hi! 👋",
                 message: "Chrip Chirp!"
             )
+            
         }
         
     }

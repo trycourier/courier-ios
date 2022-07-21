@@ -10,4 +10,5 @@ import Foundation
 enum CourierError: Error {
     case userSetFailed
     case userSignOutFailed
+    case testPushSendFailed
 }

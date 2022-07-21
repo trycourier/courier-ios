@@ -24,9 +24,9 @@ extension UIApplication {
 
 extension AppDelegate {
     
-    func showMessageAlert(title: String, message: [AnyHashable : Any]) {
+    func showMessageAlert(title: String, message: String) {
         if let window = UIApplication.shared.currentWindow {
-            let alert = UIAlertController(title: title, message: "\(message)", preferredStyle: .alert)
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default))
             window.rootViewController?.present(alert, animated: true, completion: nil)
         }

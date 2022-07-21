@@ -51,7 +51,11 @@ internal class TestRepository: Repository {
         let isProduction: Bool
     }
     
-    internal func sendTestPush(userId: String, title: String, message: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
+    private struct MessageResponse: Codable {
+        let requestId: String
+    }
+    
+    internal func sendTestPush(userId: String, title: String, message: String, onSuccess: @escaping (String) -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
         
         guard let authKey = Courier.shared.authorizationKey else {
             print("Courier Authorization Key is missing")
@@ -98,7 +102,15 @@ internal class TestRepository: Repository {
                 return
             }
             
-            onSuccess()
+            do {
+                let res = try JSONDecoder().decode(MessageResponse.self, from: data ?? Data())
+                debugPrint("New Courier message sent. View logs here:")
+                debugPrint("https://app.courier.com/logs/messages?message=\(res.requestId)")
+                onSuccess(res.requestId)
+            } catch {
+                debugPrint(error)
+                onFailure()
+            }
             
         }
 
