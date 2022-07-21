@@ -94,44 +94,68 @@ open class Courier: NSObject {
         debugPrint("⚠️ Updating Courier User")
         debugPrint(user)
         
+        var didFail = false
+        let group = DispatchGroup()
+        
         // Update the user
+        group.enter()
         let update = self.userRepository.updateUser(
             user: user,
             onSuccess: { [weak self] in
-                
-                // Update the local user
                 debugPrint("✅ Courier User Updated")
                 self?.user = user
-                
-                // Refresh token
-                self?.refreshCourierPushToken(userId: user.id) {
-                    onSuccess?()
-                }
-                
+                group.leave()
             },
             onFailure: {
                 debugPrint("❌ Courier User Update Failed")
+                group.leave()
                 onFailure?()
             }
         )
         
+        // Update apns token
+        if let token = self.apnsToken {
+            
+            group.enter()
+            self.setAPNSToken(
+                token,
+                userId: user.id,
+                onSuccess: {
+                    group.leave()
+                },
+                onFailure: {
+                    didFail = true
+                    group.leave()
+                })
+            
+        }
+        
+        // Update fcm token
+        if let token = self.fcmToken {
+            
+            group.enter()
+            self.setFCMToken(
+                token,
+                userId: user.id,
+                onSuccess: {
+                    group.leave()
+                },
+                onFailure: {
+                    didFail = true
+                    group.leave()
+                })
+            
+        }
+        
         update?.start()
         
-    }
-    
-    private func refreshCourierPushToken(userId: String, onComplete: @escaping () -> Void) {
-        
-        if let apnsToken = self.apnsToken {
-            setAPNSToken(apnsToken, userId: userId, onSuccess: onComplete, onFailure: onComplete)
-            return
+        group.notify(queue: DispatchQueue.global()) {
+            if (didFail) {
+                onFailure?()
+            } else {
+                onSuccess?()
+            }
         }
-        
-        if let fcmToken = self.fcmToken {
-            setFCMToken(fcmToken, userId: userId, onSuccess: onComplete, onFailure: onComplete)
-            return
-        }
-        
-        onComplete()
         
     }
     
@@ -204,15 +228,13 @@ open class Courier: NSObject {
         
         user = nil
         
-        // Hold until token deletion complete
-        group.wait()
-        
-        if (didFail) {
-            onFailure?()
-            return
+        group.notify(queue: DispatchQueue.global()) {
+            if (didFail) {
+                onFailure?()
+            } else {
+                onSuccess?()
+            }
         }
-        
-        onSuccess?()
         
     }
     

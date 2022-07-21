@@ -21,7 +21,7 @@ final class CourierTests: XCTestCase {
     
     func testB() throws {
 
-        print("🔬 Testing Setting Token before User")
+        print("🔬 Testing Setting APNS Token before User")
 
         let expectation = self.expectation(description: "Token not set")
         
@@ -46,6 +46,32 @@ final class CourierTests: XCTestCase {
     }
     
     func testC() throws {
+
+        print("🔬 Testing Setting FCM Token before User")
+
+        let expectation = self.expectation(description: "Token not set")
+        
+        var didSucceed = false
+        
+        Courier.shared.setFCMToken(
+            apnsToken,
+            onSuccess: {
+                didSucceed = true
+                expectation.fulfill()
+            },
+            onFailure: {
+                didSucceed = false
+                expectation.fulfill()
+            })
+
+        wait(for: [expectation], timeout: 10)
+        
+        XCTAssertEqual(Courier.shared.user?.id, nil)
+        XCTAssertEqual(didSucceed, false)
+
+    }
+    
+    func testD() throws {
 
         print("🔬 Testing Setting User")
 
@@ -103,7 +129,7 @@ final class CourierTests: XCTestCase {
 
     }
     
-    func testD() throws {
+    func testE() throws {
 
         print("🔬 Testing APNS Token Update")
 
@@ -130,7 +156,7 @@ final class CourierTests: XCTestCase {
 
     }
     
-    func testE() throws {
+    func testF() throws {
 
         print("🔬 Testing FCM Token Update")
 
@@ -158,7 +184,7 @@ final class CourierTests: XCTestCase {
 
     }
     
-    func testF() throws {
+    func testG() throws {
 
         print("🔬 Testing Sign Out")
 
