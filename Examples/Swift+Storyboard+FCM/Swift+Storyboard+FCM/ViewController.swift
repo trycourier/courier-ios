@@ -181,32 +181,29 @@ extension ViewController {
     
     private func sendTestMessage() {
         
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
-        guard let userId = Courier.shared.user?.id else {
-            appDelegate.showMessageAlert(title: "User is not signed in", message: "")
-            return
-        }
-        
         Task.init {
-            
-            let status = try await Courier.getNotificationAuthorizationStatus()
-
-            if (status != .authorized) {
-                appDelegate.showMessageAlert(
-                    title: "Notification Permissions not allowed",
-                    message: "You will not receive a notification until notification permissions are allowed"
-                )
-                return
-            }
             
             testMessageButton.isEnabled = false
             
-            let requestId = try await Courier.sendTestMessage(
+            // Request push notifications if they are not requested
+            let status = try await Courier.requestNotificationPermissions()
+            updateUIForStatus(status: status)
+            
+            // Send the test
+            try await Courier.sendTestMessage(
                 userId: userId,
                 title: "Hi! 👋",
                 message: "Chrip Chirp!"
             )
+            
+            // Check if Courier has a user already signed in
+            if (Courier.shared.user?.id == nil) {
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.showMessageAlert(
+                    title: "You are not signed in",
+                    message: "Courier will try and send push notifications to this user id, but you will not receive it on this device."
+                )
+            }
             
             testMessageButton.isEnabled = true
             
