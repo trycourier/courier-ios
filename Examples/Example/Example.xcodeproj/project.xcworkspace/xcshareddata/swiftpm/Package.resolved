@@ -24,7 +24,7 @@
       "location" : "/Users/mike/Desktop/mobile-sdk/Courier",
       "state" : {
         "branch" : "master",
-        "revision" : "33f72e2369234ce045b414515a05324fb7d4d306"
+        "revision" : "c38efab8595d062f58b8984b58ff62e115f335b9"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleDataTransport.git",
       "state" : {
-        "revision" : "b905c49326b72211531ed9d7baa02d724828a8dc",
-        "version" : "9.1.4"
+        "revision" : "5056b15c5acbb90cd214fe4d6138bdf5a740e5a8",
+        "version" : "9.2.0"
       }
     },
     {
