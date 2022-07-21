@@ -21,7 +21,7 @@ class AppDelegate: CourierDelegate {
         
         // Courier Pieces
         Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
-        Courier.shared.user = CourierUser(id: "fcm_user_1")
+        Courier.shared.setUser(CourierUser(id: "fcm_user_1"))
         
         Courier.requestNotificationPermissions { status in
             print(status.rawValue)
@@ -48,7 +48,7 @@ extension AppDelegate: MessagingDelegate {
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
       if let token = fcmToken {
           print("Firebase registration token: \(token)")
-          Courier.shared.updateFCMToken(token)
+          Courier.shared.setFCMToken(token)
       }
   }
 

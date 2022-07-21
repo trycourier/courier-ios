@@ -51,10 +51,6 @@ final class CourierTests: XCTestCase {
 
         let expectation = self.expectation(description: "Updated User")
         
-        Courier.shared.taskManager.allTasksCompleted = {
-            expectation.fulfill()
-        }
-        
         let address = CourierAddress(
             formatted: "some_format",
             street_address: "1234 Fake Street",
@@ -91,12 +87,16 @@ final class CourierTests: XCTestCase {
             address: address
         )
         
-        Courier.shared.setUser(user)
+        Courier.shared.setUser(
+            user,
+            onSuccess: {
+                expectation.fulfill()
+            },
+            onFailure: {
+                expectation.fulfill()
+            })
 
         wait(for: [expectation], timeout: 10)
-        
-        // Remove the task listener
-        Courier.shared.taskManager.allTasksCompleted = nil
         
         XCTAssertEqual(Courier.shared.user?.id, userId)
         XCTAssertEqual(Courier.shared.apnsToken, apnsToken)

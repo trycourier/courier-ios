@@ -67,11 +67,6 @@ open class Courier: NSObject {
     }
     
     /**
-     * Task Manager
-     */
-    internal let taskManager = CourierTaskManager()
-    
-    /**
      * Courier APIs
      */
     private lazy var userRepository = UserRepository()
@@ -99,16 +94,19 @@ open class Courier: NSObject {
         debugPrint("⚠️ Updating Courier User")
         debugPrint(user)
         
-        // Return token if needed
-        refreshCourierPushToken(userId: user.id)
-        
         // Update the user
         let update = self.userRepository.updateUser(
             user: user,
             onSuccess: { [weak self] in
+                
                 debugPrint("✅ Courier User Updated")
                 self?.user = user
-                onSuccess?()
+                
+                // Refresh token
+                if let onSuccess = onSuccess {
+                    self?.refreshCourierPushToken(userId: user.id, onComplete: onSuccess)
+                }
+                
             },
             onFailure: {
                 debugPrint("❌ Courier User Update Failed")
@@ -116,21 +114,23 @@ open class Courier: NSObject {
             }
         )
         
-        if let task = update {
-            taskManager.add(task)
-        }
+        update?.start()
         
     }
     
-    private func refreshCourierPushToken(userId: String) {
+    private func refreshCourierPushToken(userId: String, onComplete: @escaping () -> Void) {
         
         if let apnsToken = self.apnsToken {
-            setAPNSToken(apnsToken, userId: userId)
+            setAPNSToken(apnsToken, userId: userId, onSuccess: onComplete, onFailure: onComplete)
+            return
         }
         
         if let fcmToken = self.fcmToken {
-            setFCMToken(fcmToken, userId: userId)
+            setFCMToken(fcmToken, userId: userId, onSuccess: onComplete, onFailure: onComplete)
+            return
         }
+        
+        onComplete()
         
     }
     
@@ -169,9 +169,7 @@ open class Courier: NSObject {
                     onFailure?()
                 })
             
-            if let task = delete {
-                taskManager.add(task)
-            }
+            delete?.start()
             
         }
         
@@ -190,9 +188,7 @@ open class Courier: NSObject {
                     onFailure?()
                 })
             
-            if let task = delete {
-                taskManager.add(task)
-            }
+            delete?.start()
             
         }
         
@@ -241,7 +237,7 @@ open class Courier: NSObject {
         debugPrint("📲 Apple Device Token")
         debugPrint(token)
         
-        guard let userId = userId else {
+        guard let id = userId ?? user?.id else {
             debugPrint("❌ UserId not set. Cannot update Courier push token.")
             onFailure?()
             return
@@ -250,7 +246,7 @@ open class Courier: NSObject {
         debugPrint("⚠️ Updating Courier Token")
         
         let update = self.tokenRepository.updatePushNotificationToken(
-            userId: userId,
+            userId: id,
             provider: CourierProvider.apns,
             deviceToken: token,
             onSuccess: {
@@ -263,9 +259,7 @@ open class Courier: NSObject {
             }
         )
         
-        if let task = update {
-            taskManager.add(task)
-        }
+        update?.start()
         
     }
     
@@ -286,7 +280,7 @@ open class Courier: NSObject {
         debugPrint("🔥 Firebase Cloud Messaging Token")
         debugPrint(token)
         
-        guard let userId = userId else {
+        guard let id = userId ?? user?.id else {
             debugPrint("❌ UserId not set. Cannot update Courier push token.")
             onFailure?()
             return
@@ -295,7 +289,7 @@ open class Courier: NSObject {
         debugPrint("⚠️ Updating Courier Token")
         
         let update = self.tokenRepository.updatePushNotificationToken(
-            userId: userId,
+            userId: id,
             provider: CourierProvider.fcm,
             deviceToken: token,
             onSuccess: {
@@ -308,9 +302,7 @@ open class Courier: NSObject {
             }
         )
         
-        if let task = update {
-            taskManager.add(task)
-        }
+        update?.start()
         
     }
     
