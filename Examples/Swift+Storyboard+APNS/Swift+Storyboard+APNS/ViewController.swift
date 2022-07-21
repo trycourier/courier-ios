@@ -10,7 +10,7 @@ import Courier
 
 class ViewController: UIViewController {
     
-    let userId = "example_user_with_apns"
+    let userId = "example_user_fcm"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
@@ -22,6 +22,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var notificationButton: UIButton!
     @IBAction func notificationRequestAction(_ sender: Any) {
         requestNotificationPermissions()
+    }
+    
+    @IBOutlet weak var testMessageButton: UIButton!
+    @IBAction func testMessageAction(_ sender: Any) {
+        sendTestMessage()
     }
     
     override func viewDidLoad() {
@@ -161,6 +166,44 @@ extension ViewController {
             
             let status = try await Courier.requestNotificationPermissions()
             updateUIForStatus(status: status)
+            
+        }
+        
+    }
+    
+}
+
+// MARK: Example Test Push Setup
+
+extension ViewController {
+    
+    private func sendTestMessage() {
+        
+        Task.init {
+            
+            testMessageButton.isEnabled = false
+            
+            // Request push notifications if they are not requested
+            let status = try await Courier.requestNotificationPermissions()
+            updateUIForStatus(status: status)
+            
+            // Send the test
+            try await Courier.sendTestMessage(
+                userId: userId,
+                title: "Hi! 👋",
+                message: "Chrip Chirp!"
+            )
+            
+            // Check if Courier has a user already signed in
+            if (Courier.shared.user?.id == nil) {
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.showMessageAlert(
+                    title: "You are not signed in",
+                    message: "Courier will try and send push notifications to this user id, but you will not receive it on this device."
+                )
+            }
+            
+            testMessageButton.isEnabled = true
             
         }
         

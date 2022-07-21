@@ -36,7 +36,7 @@ class AppDelegate: CourierDelegate {
         showForegroundNotificationAs([.list, .badge, .banner, .sound])
         
         // ⚠️ For demo purposes only
-        showMessageAlert(title: "Push Received", message: message)
+        showMessageAlert(title: "Push Received", message: "\(message)")
         
     }
     
@@ -46,7 +46,7 @@ class AppDelegate: CourierDelegate {
         print(message)
         
         // ⚠️ For demo purposes only
-        showMessageAlert(title: "Push Opened", message: message)
+        showMessageAlert(title: "Push Opened", message: "\(message)")
         
     }
 

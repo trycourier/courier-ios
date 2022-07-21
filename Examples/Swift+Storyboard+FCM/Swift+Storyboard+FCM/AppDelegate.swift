@@ -28,7 +28,7 @@ class AppDelegate: CourierDelegate {
         
         // Initialize the Courier SDK by setting your authorization key
         // 6. Get your api key from here: https://app.courier.com/settings/api-keys
-        Courier.shared.authorizationKey = "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP"
+        Courier.shared.authorizationKey = your_auth_key
         
         return true
     }

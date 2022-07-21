@@ -16,66 +16,79 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="yPl-fa-uug">
-                                <rect key="frame" x="20" y="64" width="374" height="778"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Jaf-ke-aAO">
+                                <rect key="frame" x="20" y="64" width="374" height="226"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Jmj-N4-NSq">
-                                        <rect key="frame" x="0.0" y="0.0" width="374" height="379"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="85t-vj-GiZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="62"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZLp-ns-rGn">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="189.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P0h-9l-hzf">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="268-eG-x7N">
-                                                <rect key="frame" x="0.0" y="189.5" width="374" height="189.5"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yiw-zJ-XoF">
+                                                <rect key="frame" x="0.0" y="31" width="374" height="31"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                                 <connections>
-                                                    <action selector="userButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="crG-DE-8c9"/>
+                                                    <action selector="notificationRequestAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nvU-Cc-2u0"/>
                                                 </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="placeholderTextColor"/>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="R6V-Ce-ba9">
-                                        <rect key="frame" x="0.0" y="399" width="374" height="379"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="HHC-Bg-hYS">
+                                        <rect key="frame" x="0.0" y="82" width="374" height="62"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tTQ-dS-5Zj">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="189.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rR2-Dr-qa6">
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="100" id="TOo-QI-Jm7"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VOV-Ox-nmv">
-                                                <rect key="frame" x="0.0" y="189.5" width="374" height="189.5"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ocC-18-Nsr">
+                                                <rect key="frame" x="0.0" y="31" width="374" height="31"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                                 <connections>
-                                                    <action selector="notificationRequestAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eBL-3P-tQQ"/>
+                                                    <action selector="userButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gSi-ZK-S9P"/>
                                                 </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="placeholderTextColor"/>
                                     </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bv5-gN-PUG">
+                                        <rect key="frame" x="0.0" y="164" width="374" height="62"/>
+                                        <color key="backgroundColor" red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Send Test Push Notification"/>
+                                        <connections>
+                                            <action selector="testMessageAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UgQ-vZ-CaD"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="yPl-fa-uug" secondAttribute="bottom" constant="20" id="NWC-hg-WdV"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="yPl-fa-uug" secondAttribute="trailing" constant="20" id="Q6n-kv-Ch6"/>
-                            <constraint firstItem="yPl-fa-uug" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="XD0-ci-vqw"/>
-                            <constraint firstItem="yPl-fa-uug" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="w17-Pd-1kb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Jaf-ke-aAO" secondAttribute="trailing" constant="20" id="2OI-jK-Gld"/>
+                            <constraint firstItem="Jaf-ke-aAO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="6ve-K3-RDe"/>
+                            <constraint firstItem="Jaf-ke-aAO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="IbP-fc-hAg"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Jaf-ke-aAO" secondAttribute="bottom" constant="20" id="LE0-FA-9ZV"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="notificationButton" destination="VOV-Ox-nmv" id="rhJ-bA-aed"/>
-                        <outlet property="notificationStatusLabel" destination="tTQ-dS-5Zj" id="teT-Si-8Iv"/>
-                        <outlet property="userStatusButton" destination="268-eG-x7N" id="dhM-Bo-rMb"/>
-                        <outlet property="userStatusLabel" destination="ZLp-ns-rGn" id="9HP-px-BHB"/>
+                        <outlet property="notificationButton" destination="yiw-zJ-XoF" id="Ntt-3n-5xg"/>
+                        <outlet property="notificationStatusLabel" destination="P0h-9l-hzf" id="FVx-35-Qbt"/>
+                        <outlet property="testMessageButton" destination="bv5-gN-PUG" id="v5P-zb-08Y"/>
+                        <outlet property="userStatusButton" destination="ocC-18-Nsr" id="YEz-K2-Jc2"/>
+                        <outlet property="userStatusLabel" destination="rR2-Dr-qa6" id="tat-g1-3eN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
