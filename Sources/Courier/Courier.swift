@@ -181,25 +181,19 @@ open class Courier: NSObject {
         
         debugPrint("⚠️ Signing Courier User out")
         
-        // Delete the existing token
-        guard let apnsToken = self.apnsToken else {
-            onSuccess?()
-            return
-        }
-        
         var didFail = false
         let group = DispatchGroup()
         
-        if let fcmToken = self.fcmToken {
+        if let token = self.fcmToken {
             
             debugPrint("Current Courier FCM Token")
-            debugPrint(fcmToken)
+            debugPrint(token)
             
             // Start a task to complete removing fcm token
             group.enter()
             
             let delete = removeTokenTask(
-                fcmToken,
+                token,
                 onSuccess: {
                     group.leave()
                 },
@@ -212,23 +206,28 @@ open class Courier: NSObject {
             
         }
         
-        debugPrint("Current Courier APNS Token")
-        debugPrint(apnsToken)
+        if let token = apnsToken {
+         
+            debugPrint("Current Courier APNS Token")
+            debugPrint(token)
+            
+            // Start task to remove apns token
+            group.enter()
+            let delete = removeTokenTask(
+                token,
+                onSuccess: {
+                    group.leave()
+                },
+                onFailure: {
+                    didFail = true
+                    group.leave()
+                })
+            
+            delete?.start()
+            
+        }
         
-        // Start task to remove apns token
-        group.enter()
-        let delete = removeTokenTask(
-            apnsToken,
-            onSuccess: {
-                group.leave()
-            },
-            onFailure: {
-                didFail = true
-                group.leave()
-            })
-        
-        delete?.start()
-        
+        currentUserId = nil
         user = nil
         
         group.notify(queue: DispatchQueue.global()) {
