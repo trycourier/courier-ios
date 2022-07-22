@@ -6,7 +6,7 @@ Courier helps you spend less time building notification infrastructure, and more
 
 &emsp;
 
-## **Installation (5 Steps)**
+## **Installation (6 Steps)**
 
 The following steps will get the Courier iOS SDK setup and allow support for sending push notifications from Courier to your device.
 
