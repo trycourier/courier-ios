@@ -80,6 +80,8 @@ open class Courier: NSObject {
     
     // MARK: User Management
     
+    private var currentUserId: String? = nil
+    
     /**
      * A read only value for the current Courier user
      */
@@ -93,6 +95,9 @@ open class Courier: NSObject {
         
         debugPrint("⚠️ Updating Courier User")
         debugPrint(user)
+        
+        // Set the current user id
+        currentUserId = user.id
         
         var didFail = false
         let group = DispatchGroup()
@@ -119,7 +124,6 @@ open class Courier: NSObject {
             group.enter()
             self.setAPNSToken(
                 token,
-                userId: user.id,
                 onSuccess: {
                     group.leave()
                 },
@@ -136,7 +140,6 @@ open class Courier: NSObject {
             group.enter()
             self.setFCMToken(
                 token,
-                userId: user.id,
                 onSuccess: {
                     group.leave()
                 },
@@ -273,7 +276,7 @@ open class Courier: NSObject {
     /**
      * Upserts the APN token in Courier for the current user
      */
-    internal func setAPNSToken(_ token: String, userId: String? = nil, onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
+    internal func setAPNSToken(_ token: String, onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
         
         // Stash the token for later
         apnsToken = token
@@ -281,8 +284,8 @@ open class Courier: NSObject {
         debugPrint("📲 Apple Device Token")
         debugPrint(token)
         
-        guard let id = userId ?? user?.id else {
-            debugPrint("❌ UserId not set. Cannot update Courier push token.")
+        guard let userId = currentUserId else {
+            debugPrint("❌ UserId not set. Set a user id to update the push token.")
             onFailure?()
             return
         }
@@ -290,7 +293,7 @@ open class Courier: NSObject {
         debugPrint("⚠️ Updating Courier Token")
         
         let update = self.tokenRepository.updatePushNotificationToken(
-            userId: id,
+            userId: userId,
             provider: CourierProvider.apns,
             deviceToken: token,
             onSuccess: {
@@ -316,7 +319,7 @@ open class Courier: NSObject {
      * Upserts the FCM token in Courier for the current user
      * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
      */
-    public func setFCMToken(_ token: String, userId: String? = nil, onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
+    public func setFCMToken(_ token: String, onSuccess: (() -> Void)? = nil, onFailure: (() -> Void)? = nil) {
         
         // Stash the token for later
         fcmToken = token
@@ -324,8 +327,8 @@ open class Courier: NSObject {
         debugPrint("🔥 Firebase Cloud Messaging Token")
         debugPrint(token)
         
-        guard let id = userId ?? user?.id else {
-            debugPrint("❌ UserId not set. Cannot update Courier push token.")
+        guard let userId = currentUserId else {
+            debugPrint("❌ UserId not set. Set a user id to update the push token.")
             onFailure?()
             return
         }
@@ -333,7 +336,7 @@ open class Courier: NSObject {
         debugPrint("⚠️ Updating Courier Token")
         
         let update = self.tokenRepository.updatePushNotificationToken(
-            userId: id,
+            userId: userId,
             provider: CourierProvider.fcm,
             deviceToken: token,
             onSuccess: {

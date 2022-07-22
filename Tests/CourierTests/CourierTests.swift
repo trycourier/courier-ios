@@ -139,7 +139,6 @@ final class CourierTests: XCTestCase {
         
         Courier.shared.setAPNSToken(
             apnsToken,
-            userId: userId,
             onSuccess: {
                 didSucceed = true
                 expectation.fulfill()
@@ -166,7 +165,6 @@ final class CourierTests: XCTestCase {
         
         Courier.shared.setFCMToken(
             fcmToken,
-            userId: userId,
             onSuccess: {
                 didSucceed = true
                 expectation.fulfill()
