@@ -142,6 +142,7 @@ class ViewController: UIViewController {
             let userId = "example_user_id"
 
             // Create a user in courier
+            // This should be called everytime your user's authentication state changes
             let user = CourierUser(id: userId)
             try await Courier.shared.setUser(user)
 
@@ -162,3 +163,15 @@ class ViewController: UIViewController {
 
 }
 ```
+
+### **6. Signing Users Out**
+
+Best user experience practice is to synchronize the current user's push notification tokens and the user's state. 
+
+To handle this with Courier, simply:
+
+1. Call `Courier.shared.setUser(...)` when your user signs into your app
+2. Call `Courier.shared.signOut()` when your user signs out if your app
+
+If you do not call `Courier.shared.signOut()` it is possible that user's that sign out will still receive push notifications as if they are signed in.
+
