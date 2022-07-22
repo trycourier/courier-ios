@@ -45,7 +45,7 @@ class AppDelegate: CourierDelegate {
         Courier.shared.authorizationKey = your_auth_key
 
         ...
-        
+
     }
 
     ...
@@ -73,8 +73,8 @@ class AppDelegate: CourierDelegate {
 1. Add the following to your `AppDelegate` to support push notifications
 
 ```swift
-
 ...
+import Courier
 
 class AppDelegate: CourierDelegate {
 
