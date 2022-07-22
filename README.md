@@ -45,8 +45,7 @@ class AppDelegate: CourierDelegate {
         Courier.shared.authorizationKey = your_auth_key
 
         ...
-
-        return true
+        
     }
 
     ...
@@ -81,7 +80,7 @@ class AppDelegate: CourierDelegate {
 
     ...
 
-        override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
+    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         print("Push Received")
         print(message)
