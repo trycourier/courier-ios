@@ -7,62 +7,103 @@
 
 import Foundation
 
-@available(iOS 10.0.0, *)
 class TokenRepository: Repository {
     
-    func updatePushNotificationToken(userId: String, provider: CourierProvider, deviceToken: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
+    func putUserToken(userId: String?, provider: CourierProvider, deviceToken: String?) async throws {
         
-        guard let authKey = Courier.shared.authorizationKey else {
-            print("Courier Authorization Key is missing")
-            return nil
-        }
-
-        let url = URL(string: "\(baseUrl)/users/\(userId)/tokens/\(deviceToken)")!
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "PUT"
-        request.httpBody = try? JSONEncoder().encode([
-            "provider_key": provider.rawValue
-        ])
+        debugPrint("Putting Messaging Token")
         
-        return CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
             
-            let status = (response as! HTTPURLResponse).statusCode
-            if (!validCodes.contains(status)) {
-                onFailure()
+            guard let accessToken = Courier.shared.accessToken else {
+                print("Courier Access Token is missing")
+                continuation.resume(throwing: CourierError.noAccessTokenFound)
                 return
             }
             
-            onSuccess()
+            guard let userId = userId else {
+                print("No user id found")
+                continuation.resume(throwing: CourierError.noUserIdFound)
+                return
+            }
             
-        }
+            guard let messagingToken = deviceToken else {
+                print("\(provider.rawValue) token is nil")
+                continuation.resume()
+                return
+            }
 
+            let url = URL(string: "\(baseUrl)/users/\(userId)/tokens/\(messagingToken)")!
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            request.httpMethod = "PUT"
+            request.httpBody = try? JSONEncoder().encode([
+                "provider_key": provider.rawValue
+            ])
+            
+            let task = CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
+                
+                let status = (response as! HTTPURLResponse).statusCode
+                if (!validCodes.contains(status)) {
+                    continuation.resume(throwing: CourierError.requestError)
+                    return
+                }
+                
+                continuation.resume()
+                
+            }
+            
+            task.start()
+            
+        })
+        
     }
     
-    func deleteToken(userId: String, deviceToken: String, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
+    func deleteToken(userId: String?, deviceToken: String?) async throws {
         
-        guard let authKey = Courier.shared.authorizationKey else {
-            print("Courier Authorization Key is missing")
-            return nil
-        }
-
-        let url = URL(string: "\(baseUrl)/users/\(userId)/tokens/\(deviceToken)")!
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "DELETE"
-
-        return CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
+        debugPrint("Deleting Messaging Token")
+        
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
             
-            let status = (response as! HTTPURLResponse).statusCode
-            if (!validCodes.contains(status)) {
-                onFailure()
+            guard let accessToken = Courier.shared.accessToken else {
+                print("Courier Access Token is missing")
+                continuation.resume(throwing: CourierError.noAccessTokenFound)
                 return
             }
             
-            onSuccess()
+            guard let userId = userId else {
+                print("No user id found")
+                continuation.resume(throwing: CourierError.noUserIdFound)
+                return
+            }
             
-        }
+            guard let messagingToken = deviceToken else {
+                print("Device token is nil")
+                continuation.resume()
+                return
+            }
 
+            let url = URL(string: "\(baseUrl)/users/\(userId)/tokens/\(messagingToken)")!
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            request.httpMethod = "DELETE"
+            
+            let task = CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
+                
+                let status = (response as! HTTPURLResponse).statusCode
+                if (!validCodes.contains(status)) {
+                    continuation.resume(throwing: CourierError.requestError)
+                    return
+                }
+                
+                continuation.resume()
+                
+            }
+            
+            task.start()
+            
+        })
+        
     }
     
 }

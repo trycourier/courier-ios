@@ -1,5 +1,5 @@
 //
-//  CourierUser.swift
+//  CourierUserProfile.swift
 // 
 //
 //  Created by Michael Miller on 7/7/22.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CourierUser: Codable {
+public struct CourierUserProfile: Codable {
     
     public let id: String
     public let email: String?
@@ -88,7 +88,7 @@ public struct CourierUser: Codable {
     
 }
 
-extension CourierUser {
+extension CourierUserProfile {
     
     var toProfile: CourierProfile {
         return CourierProfile(profile: self)

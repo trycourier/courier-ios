@@ -55,16 +55,20 @@ internal class TestRepository: Repository {
         let requestId: String
     }
     
+    private struct JwtToken: Codable {
+        let token: String
+    }
+    
     internal func sendTestPush(userId: String, title: String, message: String, onSuccess: @escaping (String) -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
         
-        guard let authKey = Courier.shared.authorizationKey else {
-            print("Courier Authorization Key is missing")
+        guard let accessToken = Courier.shared.accessToken else {
+            print("Courier Access Token is missing")
             return nil
         }
 
         let url = URL(string: "\(baseUrl)/send")!
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "POST"
         request.httpBody = try? JSONEncoder().encode(MessageBody(
             message: Message(

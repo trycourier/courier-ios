@@ -8,7 +8,7 @@
 import Foundation
 
 enum CourierError: Error {
-    case userSetFailed
-    case userSignOutFailed
-    case testPushSendFailed
+    case noAccessTokenFound
+    case noUserIdFound
+    case requestError
 }

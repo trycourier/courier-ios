@@ -9,9 +9,9 @@ import Foundation
 
 public struct CourierProfile: Codable {
     
-    public let profile: CourierUser
+    public let profile: CourierUserProfile
     
-    public init(profile: CourierUser) {
+    public init(profile: CourierUserProfile) {
         self.profile = profile
     }
     

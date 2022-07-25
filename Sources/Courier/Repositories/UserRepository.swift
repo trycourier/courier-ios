@@ -7,45 +7,40 @@
 
 import Foundation
 
-@available(iOS 10.0.0, *)
 class UserRepository: Repository {
     
-    func updateUser(user: CourierUser, onSuccess: @escaping () -> Void, onFailure: @escaping () -> Void) -> CourierTask? {
+    func putUserProfile(user: CourierUserProfile) async throws {
         
-        guard let authKey = Courier.shared.authorizationKey else {
-            print("Courier Authorization Key is missing")
-            return nil
-        }
-
-        let url = URL(string: "\(baseUrl)/profiles/\(user.id)")!
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "PUT"
-        request.httpBody = try? JSONEncoder().encode(user.toProfile)
-
-        return CourierTask(with: request) { (validCodes, data, response, error) in
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
             
-            do {
+            guard let accessToken = Courier.shared.accessToken else {
+                print("Courier Access Token is missing")
+                continuation.resume(throwing: CourierError.noAccessTokenFound)
+                return
+            }
+
+            let url = URL(string: "\(baseUrl)/profiles/\(user.id)")!
+            var request = URLRequest(url: url)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            request.httpMethod = "PUT"
+            request.httpBody = try? JSONEncoder().encode(user.toProfile)
+            
+            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error) in
                 
                 let status = (response as! HTTPURLResponse).statusCode
                 if (!validCodes.contains(status)) {
-                    onFailure()
+                    continuation.resume(throwing: CourierError.requestError)
                     return
                 }
                 
-                let res = try JSONDecoder().decode(CourierResponse.self, from: data ?? Data())
-                debugPrint(res)
-                onSuccess()
-                
-            } catch {
-                
-                debugPrint(error)
-                onFailure()
+                continuation.resume()
                 
             }
             
-        }
-
+            task.start()
+            
+        })
     }
     
 }
