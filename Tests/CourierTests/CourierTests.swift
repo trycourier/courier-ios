@@ -6,6 +6,7 @@ final class CourierTests: XCTestCase {
     let apnsToken = "282D849F-2AF8-4ECB-BBFD-EC3F96DD59D4"
     let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9"
     let userId = "example_user"
+    let testAuthKey = "pk_prod_EYP5JB2DH447WDJN7ACKPY75BEGJ"
     
     func testA() async throws {
 
@@ -131,7 +132,7 @@ final class CourierTests: XCTestCase {
         // DO NOT STORE YOUR AUTH KEY IN THE PROJECT
         // THIS IS ONLY USED FOR TESTING
         let requestId = try await Courier.shared.sendPush(
-            authKey: "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP",
+            authKey: testAuthKey,
             userId: userId,
             title: "Hello!",
             message: "Chirp Chrip"
