@@ -33,9 +33,9 @@ _The following will show you how to install the SDK using a standard Swift + Sto
 ```swift
 import Courier
 
-// You will need to remove UIResponder & UIApplicationDelegate from you AppDelegate extensions
-// CourierDelegate contains them and other code
 class AppDelegate: CourierDelegate {
+// If you are implementing UIResponder & UIApplicationDelegate, please remove them from your AppDelegate
+// CourierDelegate contains both of these implementations inside of it
 
     ...
 

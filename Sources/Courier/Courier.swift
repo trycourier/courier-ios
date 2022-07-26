@@ -43,7 +43,7 @@ open class Courier: NSObject {
      */
     private lazy var userRepo = UserRepository()
     private lazy var tokenRepo = TokenRepository()
-    private lazy var testRepo = TestRepository()
+    private lazy var messagingRepo = MessagingRepository()
     
     // MARK: Getters
     
@@ -127,6 +127,8 @@ open class Courier: NSObject {
     
     /**
      * Upserts the APNS token in Courier for the current user
+     * If you implement `CourierDelegate`, this will get set automattically
+     * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
      */
     internal func setAPNSToken(_ token: String) async throws {
 
@@ -152,7 +154,7 @@ open class Courier: NSObject {
      * Upserts the FCM token in Courier for the current user
      * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
      */
-    public func setFCMToken(_ token: String) async throws {
+    internal func setFCMToken(_ token: String) async throws {
 
         fcmToken = token
 
@@ -165,6 +167,19 @@ open class Courier: NSObject {
             deviceToken: token
         )
 
+    }
+    
+    /**
+     * Manually saves a token into Courier based on the provider supported
+     * This function should be used to set a device token manually
+     */
+    public func setPushToken(provider: CourierProvider, token: String) async throws {
+        switch (provider) {
+        case .apns:
+            return try await Courier.shared.setAPNSToken(token)
+        case .fcm:
+            return try await Courier.shared.setFCMToken(token)
+        }
     }
     
     // MARK: Permissions
@@ -228,8 +243,8 @@ open class Courier: NSObject {
     // MARK: Testing
 
     @discardableResult
-    public func sendTestMessage(authKey: String, userId: String, title: String, message: String) async throws -> String {
-        return try await testRepo.sendTestPush(
+    public func sendPush(authKey: String, userId: String, title: String, message: String) async throws -> String {
+        return try await messagingRepo.send(
             authKey: authKey,
             userId: userId,
             title: title,

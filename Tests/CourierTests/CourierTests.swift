@@ -98,23 +98,29 @@ final class CourierTests: XCTestCase {
 
         print("🔬 Testing APNS Token Update")
         
-        try await Courier.shared.setAPNSToken(apnsToken)
+        try await Courier.shared.setPushToken(
+            provider: .apns,
+            token: apnsToken
+        )
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userProfile?.id, userId)
-        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
     }
 
     func testF() async throws {
 
-        print("🔬 Testing APNS Token Update")
+        print("🔬 Testing FCM Token Update")
         
-        try await Courier.shared.setAPNSToken(apnsToken)
+        try await Courier.shared.setPushToken(
+            provider: .fcm,
+            token: fcmToken
+        )
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userProfile?.id, userId)
-        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
     }
     
@@ -124,7 +130,7 @@ final class CourierTests: XCTestCase {
         
         // DO NOT STORE YOUR AUTH KEY IN THE PROJECT
         // THIS IS ONLY USED FOR TESTING
-        let requestId = try await Courier.shared.sendTestMessage(
+        let requestId = try await Courier.shared.sendPush(
             authKey: "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP",
             userId: userId,
             title: "Hello!",

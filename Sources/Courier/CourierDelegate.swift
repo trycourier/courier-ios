@@ -1,20 +1,12 @@
 //
 //  CourierDelegate.swift
-//  Messaging
+//
 //
 //  Created by Michael Miller on 7/5/22.
 //
 
-// 1. Must enable push notification setting in project
-// 2. Must eneable background remote notifications in project
-
-// 1. Init sdk with apikey
-// 2. Register sdk with app delegate for tokens
-// 3. Hit protocol function with token changes
-
 import UIKit
 
-@available(iOS 10.0, *)
 open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     // MARK: Init
@@ -56,16 +48,18 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) async {
         Task.init {
             do {
-                try await Courier.shared.setAPNSToken(deviceToken.string)
+                try await Courier.shared.setPushToken(
+                    provider: .apns,
+                    token: deviceToken.string
+                )
             } catch {
                 debugPrint(error)
             }
         }
     }
     
-    // MARK: Messaging
+    // MARK: Functions
 
-    @available(iOS 10.0, *)
     open func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs presentForegroundNotificationOptions: @escaping (UNNotificationPresentationOptions) -> Void) {}
     
     open func pushNotificationOpened(message: [AnyHashable : Any]) {}

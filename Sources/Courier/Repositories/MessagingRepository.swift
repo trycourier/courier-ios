@@ -1,5 +1,5 @@
 //
-//  TestRepository.swift
+//  MessagingRepository.swift
 //  
 //
 //  Created by Michael Miller on 7/21/22.
@@ -7,8 +7,7 @@
 
 import Foundation
 
-@available(iOS 10.0.0, *)
-internal class TestRepository: Repository {
+internal class MessagingRepository: Repository {
     
     private struct MessageBody: Codable {
         let message: Message
@@ -59,7 +58,7 @@ internal class TestRepository: Repository {
         let token: String
     }
     
-    internal func sendTestPush(authKey: String, userId: String, title: String, message: String) async throws -> String {
+    internal func send(authKey: String, userId: String, title: String, message: String) async throws -> String {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
 
