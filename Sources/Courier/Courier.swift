@@ -14,28 +14,8 @@ open class Courier: NSObject {
       \/_____/\/_____/\/_____/\/_/ /_/\/_/\/_____/\/_/ /_/
      
      
-     Before you begin:
-     
-     1. Generate APNS key (https://developer.apple.com/account/resources/authkeys/add)
-     2. Download the key
-     3. Enter details of APNS key here (https://app.courier.com/channels/apn)
-     
-     ---
-     
-     Enable Push Notifications Entitlement:
-     
-     1. Open your Xcode project file
-     2. Select your Target
-     3. Click "Signing & Capabilities"
-     4. Click the "+" (found to the left of "All")
-     5. Type "Push Notifications"
-     6. Press Enter
-     
-     ---
-     
      Follow the docs here to get everything running:
-     
-     Documentation: https://docs.courier.com/asdf
+     Documentation: https://github.com/trycourier/courier-ios/blob/master/README.md
      
      
      */
@@ -63,6 +43,7 @@ open class Courier: NSObject {
      */
     private lazy var userRepo = UserRepository()
     private lazy var tokenRepo = TokenRepository()
+    private lazy var testRepo = TestRepository()
     
     // MARK: Getters
     
@@ -203,7 +184,6 @@ open class Courier: NSObject {
     /**
      * Get notification permission status with async await
      */
-    @available(iOS 13.0.0, *)
     public static func getNotificationAuthorizationStatus() async throws -> UNAuthorizationStatus {
         let settings = await userNotificationCenter.notificationSettings()
         return settings.authorizationStatus
@@ -239,7 +219,7 @@ open class Courier: NSObject {
     /**
      * Request notification permission access with async await
      */
-    @available(iOS 13.0.0, *)
+    @discardableResult
     public static func requestNotificationPermissions() async throws -> UNAuthorizationStatus {
         try await userNotificationCenter.requestAuthorization(options: permissionAuthorizationOptions)
         return try await getNotificationAuthorizationStatus()
@@ -249,7 +229,7 @@ open class Courier: NSObject {
 
     @discardableResult
     public func sendTestMessage(authKey: String, userId: String, title: String, message: String) async throws -> String {
-        return try await TestRepository().sendTestPush(
+        return try await testRepo.sendTestPush(
             authKey: authKey,
             userId: userId,
             title: title,
