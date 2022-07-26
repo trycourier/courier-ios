@@ -26,10 +26,6 @@ class AppDelegate: CourierDelegate {
         // 4. Get the Firebase Service Key JSON from here (Click "Generate New Private Key"): https://console.firebase.google.com/project/YOUR_PROJECT_ID/settings/serviceaccounts/adminsdk
         // 5. Upload the Firebase Service Key JSON to here: https://app.courier.com/channels/firebase-fcm
         
-        // Initialize the Courier SDK by setting your authorization key
-        // 6. Get your api key from here: https://app.courier.com/settings/api-keys
-        Courier.shared.authorizationKey = your_auth_key
-        
         return true
     }
     
@@ -64,8 +60,17 @@ class AppDelegate: CourierDelegate {
 extension AppDelegate: MessagingDelegate {
   
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-      if let token = fcmToken {
-          Courier.shared.setFCMToken(token)
+      Task.init {
+          do {
+              if let token = fcmToken {
+                  try await Courier.shared.setPushToken(
+                      provider: .fcm,
+                      token: token
+                  )
+              }
+          } catch {
+              debugPrint(error)
+          }
       }
   }
 

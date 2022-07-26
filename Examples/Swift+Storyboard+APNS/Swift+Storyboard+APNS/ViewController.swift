@@ -85,7 +85,7 @@ extension ViewController {
             country: "us"
         )
         
-        let user = CourierUser(
+        let user = CourierUserProfile(
             id: userId,
             email: "example@email.com",
             email_verified: false,
@@ -117,7 +117,14 @@ extension ViewController {
             userStatusLabel.text = "Signing in..."
             userStatusButton.isHidden = true
             
-            try await Courier.shared.setUser(user)
+            // Courier needs you to generate an access token on your backend
+            // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
+            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
+            
+            try await Courier.shared.setUserProfile(
+                accessToken: accessToken,
+                userProfile: user
+            )
             
             refreshUser()
             
@@ -188,14 +195,15 @@ extension ViewController {
             updateUIForStatus(status: status)
             
             // Send the test
-            try await Courier.sendTestMessage(
+            try await Courier.shared.sendPush(
+                authKey: "your_auth_key", // TODO: Remove this from production
                 userId: userId,
                 title: "Hi! 👋",
                 message: "Chrip Chirp!"
             )
             
             // Check if Courier has a user already signed in
-            if (Courier.shared.user?.id == nil) {
+            if (Courier.shared.userProfile?.id == nil) {
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.showMessageAlert(
                     title: "You are not signed in",

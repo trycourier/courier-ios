@@ -17,10 +17,6 @@ class AppDelegate: CourierDelegate {
         // 1. Create new APNS key here: https://developer.apple.com/account/resources/authkeys/add
         // 2. Upload your APNS key here: https://app.courier.com/channels/apn
         
-        // Initialize the Courier SDK by setting your authorization key
-        // 3. Get your api key from here: https://app.courier.com/settings/api-keys
-        Courier.shared.authorizationKey = your_auth_key
-        
         return true
     }
     
@@ -51,4 +47,21 @@ class AppDelegate: CourierDelegate {
     }
 
 }
+
+//    If you do not want to use CourierDelegate to get started. Here is what you can extend.
+//    You still need to be sure that you call Courier.shared.setUserProfile(...)
+
+//    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+//        Task.init {
+//            do {
+//                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+//                try await Courier.shared.setPushToken(
+//                    provider: .apns,
+//                    token: token
+//                )
+//            } catch {
+//                debugPrint(error)
+//            }
+//        }
+//    }
 

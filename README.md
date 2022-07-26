@@ -1,4 +1,4 @@
-# **Courier — iOS**
+# **🐤 Courier — iOS**
 
 Courier helps you spend less time building notification infrastructure, and more time building great experiences for your users!
 
