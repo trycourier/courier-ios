@@ -45,7 +45,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         debugPrint("Unable to register for remote notifications: \(error.localizedDescription)")
     }
 
-    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) async {
+    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Task.init {
             do {
                 try await Courier.shared.setPushToken(

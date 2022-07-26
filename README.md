@@ -10,6 +10,10 @@ Courier helps you spend less time building notification infrastructure, and more
 
 The following steps will get the Courier iOS SDK setup and allow support for sending push notifications from Courier to your device.
 
+Full examples:
+- [Swift + Storyboard + Apple Push Notification Service (APNS)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BAPNS)
+- [Swift + Storyboard + Firebase Cloud Messaging (FCM)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BFCM)
+
 &emsp;
 
 ### **1. Add the Swift Package**
@@ -24,47 +28,38 @@ https://github.com/trycourier/courier-ios
 
 &emsp;
 
-### **2. Initialize SDK & Support Push Notifications**
+### **2. Manage User Profiles**
 
-_The following will show you how to install the SDK using a standard Swift + Storyboard project. Other examples can be found here: [Courier iOS Example Projects](https://github.com/trycourier/courier-ios/tree/master/Examples)_
-
-1. Add the following to your `AppDelegate` to initilize Courier and support receiving push notifications.
+User Profiles must be set in Courier before they can receive push notifications.
+User Profiles should be signed out when you no longer want that user to receive push notifications.
 
 ```swift
 import Courier
 
-class AppDelegate: CourierDelegate {
-// If you are implementing UIResponder & UIApplicationDelegate, please remove them from your AppDelegate
-// CourierDelegate contains both of these implementations inside of it
+func signInWithCourier() {
+    
+    Task.init {
 
-    ...
+        let userId = "example_user_id"
+        
+        // Courier needs you to generate an access token on your backend
+        // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
+        let accessToken = try await YourBackend.generateCourierAccessToken(userId: userId)
 
-    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
-        print("Push Received")
-        print(message)
-        
-        // ⚠️ Customize this to be what you would like
-        // Pass an empty array to this if you do not want to use it
-        showForegroundNotificationAs([.list, .badge, .banner, .sound])
-        
+        // Create a user profile in Courier
+        let user = CourierUserProfile(id: userId)
+        try await Courier.shared.setUserProfile(accessToken: accessToken, userProfile: user)
+
     }
     
-    override func pushNotificationOpened(message: [AnyHashable : Any]) {
-
-        print("Push Opened")
-        print(message)
-
-    }
-
 }
 ```
 
-2. Change `your_auth_key` to use an authentication key you'd like from here: [Courier Authentication Keys](https://app.courier.com/settings/api-keys)
-
 &emsp;
 
-### **3. Enable Push Notification Capability**
+### **3. Enable Push Notifications**
+
+![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
 
 1. Select your Xcode project file
 2. Click your project Target
@@ -75,9 +70,13 @@ class AppDelegate: CourierDelegate {
 
 &emsp;
 
-### **4. Handle Push Notifications**
+### **4. Manage Push Notification Tokens**
 
-1. Add the following to your `AppDelegate` to support push notifications
+&emsp;
+
+Example with `CourierDelegate`.
+
+_`CourierDelegate` automatically syncs APNS tokens and gives functions for handling push notifications very easily._
 
 ```swift
 ...
@@ -89,6 +88,7 @@ class AppDelegate: CourierDelegate {
 
     override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
         
+        // TODO: Remove this print
         print("Push Received")
         print(message)
         
@@ -100,6 +100,7 @@ class AppDelegate: CourierDelegate {
     
     override func pushNotificationOpened(message: [AnyHashable : Any]) {
 
+        // TODO: Remove this print
         print("Push Opened")
         print(message)
 
@@ -108,11 +109,74 @@ class AppDelegate: CourierDelegate {
 }
 ```
 
-_These are optional functions and should be used however would be best for the user experience you are trying to build._
+&emsp;
+
+Traditional APNS Example
+
+```swift
+...
+import Courier
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    ...
+
+    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+
+        Task.init {
+            do {
+                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+                try await Courier.shared.setPushToken(
+                    provider: .apns,
+                    token: token
+                )
+            } catch {
+                debugPrint(error)
+            }
+        }
+
+    }
+
+    ...
+
+}
+```
+
+Traditional FCM Example
+
+```swift
+...
+import Courier
+
+extension AppDelegate: MessagingDelegate {
+  
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+
+        if let token = fcmToken {
+
+            Task.init {
+                do {
+                    try await Courier.shared.setPushToken(
+                        provider: .fcm,
+                        token: token
+                    )
+                } catch {
+                    debugPrint(error)
+                }
+            }
+
+        }
+
+    }
+
+}
+```
+
+_Other examples can be found here: [More Examples](https://github.com/trycourier/courier-ios/tree/master/Examples)_
 
 &emsp;
 
-### **4. Configure a Provider**
+### **5. Configure a Provider**
 
 To get pushes to appear, add support for the provider you would like to use. Checkout the following tutorials to get a push provider setup.
 
@@ -121,61 +185,47 @@ To get pushes to appear, add support for the provider you would like to use. Che
 
 &emsp;
 
-### **5. Send a Test Push Notification**
-
-The following code:
-- Registers a user in Courier
-- Requests Push Notification Permissions
-- Sends a Test Message
-
-Please add this to your project in a place the makes the most sense for the user experience you are building. 
-
-_This example uses async await found in newer versions of Swift. More complete examples can be found here: [Courier iOS Example Projects](https://github.com/trycourier/courier-ios/tree/master/Examples)_
-
-```swift
-...
-import Courier
-
-class ViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        Task.init {
-
-            let userId = "example_user_id"
-
-            // Create a user in courier
-            // This should be called everytime your user's authentication state changes
-            let user = CourierUser(id: userId)
-            try await Courier.shared.setUser(user)
-
-            // Request push notification permissions
-            // status must be .authorized for notifications to appear
-            let status = try await Courier.requestNotificationPermissions()
-
-            // Send test push notification
-            try await Courier.sendTestMessage(
-                userId: userId,
-                title: "Test message!",
-                message: "Chrip Chirp!"
-            )
-
-        }
-        
-    }
-
-}
-```
-
 ### **6. Signing Users Out**
 
 Best user experience practice is to synchronize the current user's push notification tokens and the user's state. 
 
-To handle this with Courier, simply:
+This should be called where you normally manage your user's state.
 
-1. Call `Courier.shared.setUser(...)` when your user signs into your app
-2. Call `Courier.shared.signOut()` when your user signs out if your app
+```swift
+import Courier
 
-If you do not call `Courier.shared.signOut()` it is possible that user's that sign out will still receive push notifications as if they are signed in.
+func signOut() {
+    
+    Task.init {
 
+        try await Courier.shared.signOut()
+
+    }
+    
+}
+```
+
+### **Bonus! Sending a Test Push Notification**
+
+_This is only for testing purposes and should not be in your production app._
+
+```swift
+import Courier
+
+func sendTestMessage() {
+    
+    Task.init {
+
+        let userId = "example_user_id"
+        
+        try await Courier.shared.sendTestMessage(
+            authKey: "your_api_key",
+            userId: userId,
+            title: "Test message!",
+            message: "Chrip Chirp!"
+        )
+
+    }
+    
+}
+```
