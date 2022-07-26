@@ -24,31 +24,38 @@ https://github.com/trycourier/courier-ios
 
 &emsp;
 
-### **2. Initialize the SDK**
+### **2. Initialize SDK & Support Push Notifications**
 
 _The following will show you how to install the SDK using a standard Swift + Storyboard project. Other examples can be found here: [Courier iOS Example Projects](https://github.com/trycourier/courier-ios/tree/master/Examples)_
 
-1. Add the following to your `AppDelegate` to initialize the SDK.
+1. Add the following to your `AppDelegate` to initilize Courier and support receiving push notifications.
 
 ```swift
-...
 import Courier
 
+// You will need to remove UIResponder & UIApplicationDelegate from you AppDelegate extensions
+// CourierDelegate contains them and other code
 class AppDelegate: CourierDelegate {
 
     ...
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        print("Push Received")
+        print(message)
+        
+        // ⚠️ Customize this to be what you would like
+        // Pass an empty array to this if you do not want to use it
+        showForegroundNotificationAs([.list, .badge, .banner, .sound])
+        
+    }
+    
+    override func pushNotificationOpened(message: [AnyHashable : Any]) {
 
-        ...
-
-        Courier.shared.authorizationKey = your_auth_key
-
-        ...
+        print("Push Opened")
+        print(message)
 
     }
-
-    ...
 
 }
 ```
@@ -97,8 +104,6 @@ class AppDelegate: CourierDelegate {
         print(message)
 
     }
-
-    ...
 
 }
 ```

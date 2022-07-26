@@ -117,8 +117,27 @@ final class CourierTests: XCTestCase {
         XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
 
     }
-
+    
     func testG() async throws {
+
+        print("🔬 Testing Sending Test Message")
+        
+        // DO NOT STORE YOUR AUTH KEY IN THE PROJECT
+        // THIS IS ONLY USED FOR TESTING
+        let requestId = try await Courier.shared.sendTestMessage(
+            authKey: "pk_prod_3EH7GNYRC9409PMQGRQE37GC6ABP",
+            userId: userId,
+            title: "Hello!",
+            message: "Chirp Chrip"
+        )
+        
+        print("Request ID: \(requestId)")
+
+        XCTAssertEqual(requestId.isEmpty, false)
+
+    }
+
+    func testH() async throws {
 
         print("🔬 Testing Sign Out")
         

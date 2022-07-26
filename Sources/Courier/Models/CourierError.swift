@@ -11,4 +11,5 @@ enum CourierError: Error {
     case noAccessTokenFound
     case noUserIdFound
     case requestError
+    case sendTestMessageFail
 }
