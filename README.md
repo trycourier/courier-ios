@@ -31,7 +31,7 @@ https://github.com/trycourier/courier-ios
 ### **2. Manage User Profiles**
 
 User Profiles must be set in Courier before they can receive push notifications.
-User Profiles should be signed out when you no longer want that user to receive push notifications.
+User Profiles should be [signed out](https://github.com/trycourier/courier-ios#6-signing-users-out) when you no longer want that user to receive push notifications.
 
 ```swift
 import Courier
@@ -76,7 +76,7 @@ func signInWithCourier() {
 
 Example with `CourierDelegate`.
 
-_`CourierDelegate` automatically syncs APNS tokens and gives functions for handling push notifications very easily._
+`CourierDelegate` automatically synchronize APNS tokens and simplifies receiving and opening push notifications.
 
 ```swift
 ...
