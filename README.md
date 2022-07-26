@@ -217,7 +217,7 @@ func sendTestMessage() {
 
         let userId = "example_user_id"
         
-        try await Courier.shared.sendTestMessage(
+        try await Courier.shared.sendPush(
             authKey: "your_api_key_that_should_not_stay_in_your_production_app",
             userId: userId,
             title: "Test message!",
