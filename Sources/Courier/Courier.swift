@@ -71,9 +71,9 @@ open class Courier: NSObject {
         self.accessToken = accessToken
         self.userProfile = userProfile
         
-        async let putUser: () = userRepo.putUserProfile(
-            user: userProfile
-        )
+//        async let putUser: () = userRepo.putUserProfile(
+//            user: userProfile
+//        )
 
         async let putAPNS: () = tokenRepo.putUserToken(
             userId: userProfile.id,
@@ -87,7 +87,8 @@ open class Courier: NSObject {
             deviceToken: fcmToken
         )
         
-        let _ = try await [putUser, putAPNS, putFCM]
+//        let _ = try await [putUser, putAPNS, putFCM]
+        let _ = try await [putAPNS, putFCM]
         
     }
     

@@ -5,7 +5,7 @@ final class CourierTests: XCTestCase {
     
     let apnsToken = "282D849F-2AF8-4ECB-BBFD-EC3F96DD59D4"
     let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9"
-    let userId = "example_id"
+    let userId = "example_user"
     
     func testA() async throws {
 
@@ -36,13 +36,13 @@ final class CourierTests: XCTestCase {
     }
     
     func testC() async throws {
-        
+
         print("🔬 Starting Courier SDK")
-        
+
         // Get the token from our custom endpoint
         // This should be your custom endpoint
         let accessToken = try await ExampleServer.generateJwt(userId: userId)
-        
+
         // Create an example user
         let address = CourierAddress(
             formatted: "some_format",
@@ -79,13 +79,13 @@ final class CourierTests: XCTestCase {
             updated_at: "Updated at now",
             address: address
         )
-        
+
         // Set the access token and start the SDK
         try await Courier.shared.setUserProfile(
             accessToken: accessToken,
             userProfile: user
         )
-        
+
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userProfile?.id, userId)
         XCTAssertEqual(Courier.shared.userProfile?.address?.street_address, "1234 Fake Street")
@@ -146,7 +146,7 @@ final class CourierTests: XCTestCase {
     func testH() async throws {
 
         print("🔬 Testing Sign Out")
-        
+
         try await Courier.shared.signOut()
 
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
