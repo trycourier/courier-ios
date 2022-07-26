@@ -1,4 +1,4 @@
-# **Courier 🐤**
+# **Courier — iOS**
 
 Courier helps you spend less time building notification infrastructure, and more time building great experiences for your users!
 
@@ -30,7 +30,8 @@ https://github.com/trycourier/courier-ios
 
 ### **2. Manage User Profiles**
 
-User Profiles must be set in Courier before they can receive push notifications.
+User Profiles must be set in Courier before they can receive push notifications. This should be handled where you normally manage your user's state.
+
 User Profiles should be [signed out](#6-signing-users-out) when you no longer want that user to receive push notifications.
 
 ```swift
@@ -74,7 +75,7 @@ func signInWithCourier() {
 
 &emsp;
 
-Example with `CourierDelegate`.
+### Example with `CourierDelegate`
 
 `CourierDelegate` automatically synchronize APNS tokens and simplifies receiving and opening push notifications.
 
@@ -111,10 +112,9 @@ class AppDelegate: CourierDelegate {
 
 &emsp;
 
-Traditional APNS Example
+### Traditional APNS Example
 
 ```swift
-...
 import Courier
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -137,15 +137,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-    ...
-
 }
 ```
 
-Traditional FCM Example
+&emsp;
+
+### Traditional FCM Example
 
 ```swift
-...
 import Courier
 
 extension AppDelegate: MessagingDelegate {
@@ -207,7 +206,7 @@ func signOut() {
 
 ### **Bonus! Sending a Test Push Notification**
 
-_This is only for testing purposes and should not be in your production app._
+This is only for testing purposes and should not be in your production app.
 
 ```swift
 import Courier
@@ -219,7 +218,7 @@ func sendTestMessage() {
         let userId = "example_user_id"
         
         try await Courier.shared.sendTestMessage(
-            authKey: "your_api_key",
+            authKey: "your_api_key_that_should_not_stay_in_your_production_app",
             userId: userId,
             title: "Test message!",
             message: "Chrip Chirp!"
