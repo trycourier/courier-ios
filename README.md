@@ -216,6 +216,8 @@ func signOut() {
 }
 ```
 
+&emsp;
+
 ### **Bonus! Sending a Test Push Notification**
 
 ⚠️ This is only for testing purposes and should not be in your production app.
@@ -240,3 +242,11 @@ func sendTestMessage() {
     
 }
 ```
+
+&emsp;
+
+### **Share feedback with Courier**
+
+We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Join our Discord!
+
+[Courier Discord](https://discord.com/invite/courier)
