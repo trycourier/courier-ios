@@ -42,11 +42,32 @@ final class CourierTests: XCTestCase {
     
     func testC() async throws {
 
-        print("\n🔬 Starting Courier SDK")
+        print("\n🔬 Starting Courier SDK with JWT")
 
         // Get the token from our custom endpoint
         // This should be your custom endpoint
         let accessToken = try await ExampleServer.generateJwt(userId: userId)
+
+        // Set the access token and start the SDK
+        try await Courier.shared.setCredentials(
+            accessToken: accessToken,
+            userId: userId
+        )
+
+        XCTAssertEqual(Courier.shared.accessToken, accessToken)
+        XCTAssertEqual(Courier.shared.userId, userId)
+        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
+
+    }
+    
+    func testD() async throws {
+
+        print("\n🔬 Starting Courier SDK with Auth Key")
+        
+        // TODO: Remove this. For test purposed only
+        // Do not use auth key in production app
+        let accessToken = testAuthKey
 
         // Set the access token and start the SDK
         try await Courier.shared.setCredentials(
@@ -95,13 +116,13 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Sending Test Message")
         
-        // DO NOT STORE YOUR AUTH KEY IN THE PROJECT
-        // THIS IS ONLY USED FOR TESTING
+        // TODO: Remove this. For test purposed only
+        // Do not use auth key in production app
         let requestId = try await Courier.shared.sendPush(
             authKey: testAuthKey,
             userId: userId,
-            title: "Chirp Chirp!",
-            message: "This is a test message sent from Xcode tests"
+            title: "🐤 Chirp Chirp!",
+            message: "Message sent from Xcode tests"
         )
         
         print("Request ID: \(requestId)")
