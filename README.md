@@ -74,6 +74,8 @@ func signInWithCourier() {
 
 ### **4. Manage Push Notification Tokens**
 
+There are few different ways to manage user tokens. Here are 3 examples.
+
 &emsp;
 
 ### Example with `CourierDelegate`
@@ -115,6 +117,8 @@ class AppDelegate: CourierDelegate {
 
 ### Traditional APNS Example
 
+Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
+
 ```swift
 import Courier
 
@@ -144,6 +148,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 &emsp;
 
 ### Traditional FCM Example
+
+Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
 
 ```swift
 import Courier
