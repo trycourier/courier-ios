@@ -17,6 +17,9 @@ Full examples:
 &emsp;
 
 ### **1. Add the Swift Package**
+
+![Swift Package Setup](https://github.com/trycourier/courier-ios/blob/master/add-swift-package.gif)
+
 1. In your Xcode project, go to File > Add Packages
 2. Paste the following url in "Search or Enter Package URL"
 
