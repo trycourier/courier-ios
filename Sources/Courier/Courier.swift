@@ -41,7 +41,6 @@ open class Courier: NSObject {
     /**
      * Courier APIs
      */
-    private lazy var userRepo = UserRepository()
     private lazy var tokenRepo = TokenRepository()
     private lazy var messagingRepo = MessagingRepository()
     

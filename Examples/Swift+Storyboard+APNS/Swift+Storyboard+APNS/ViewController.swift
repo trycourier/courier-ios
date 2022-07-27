@@ -10,7 +10,7 @@ import Courier
 
 class ViewController: UIViewController {
     
-    let userId = "example_user_apns"
+    let userId = "example_user"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
@@ -44,17 +44,17 @@ class ViewController: UIViewController {
 extension ViewController {
     
     private func refreshUser() {
-        if (Courier.shared.user != nil) {
-            userStatusLabel.text = "User is signed in with userId:\n\n\(Courier.shared.user!.id)"
+        if (Courier.shared.userId != nil) {
+            userStatusLabel.text = "Courier User Id is set to:\n\n\(Courier.shared.userId!)"
             userStatusButton.setTitle("Sign Out", for: .normal)
         } else {
-            userStatusLabel.text = "User is signed out.\n\nClick 'Sign In' to sync APNS token to Courier"
+            userStatusLabel.text = "No Courier User Id Found.\n\nClick 'Sign In' to sync APNS token to Courier"
             userStatusButton.setTitle("Sign In", for: .normal)
         }
     }
     
     private func performUserButtonAction() {
-        if (Courier.shared.user != nil) {
+        if (Courier.shared.userId != nil) {
             signOutUser()
         } else {
             signInUser()
@@ -76,42 +76,6 @@ extension ViewController {
     
     private func signInUser() {
         
-        let address = CourierAddress(
-            formatted: "some_format",
-            street_address: "1234 Fake Street",
-            locality: "en-us",
-            region: "east",
-            postal_code: "55555",
-            country: "us"
-        )
-        
-        let user = CourierUserProfile(
-            id: userId,
-            email: "example@email.com",
-            email_verified: false,
-            phone_number: "5555555555",
-            phone_number_verified: false,
-            picture: "something.com",
-            birthdate: "1/23/4567",
-            gender: "gender",
-            profile: "profile_name",
-            sub: "sub",
-            name: "Name",
-            nickname: "Nickname",
-            preferred_name: "Preferred Name",
-            preferred_username: "Preferred Username",
-            given_name: "Given Name",
-            middle_name: "Middle Name",
-            family_name: "Family Name",
-            first_name: "First Name",
-            last_name: "Last Name",
-            website: "Website",
-            locale: "Locale",
-            zoneinfo: "Zoneinfo",
-            updated_at: "Updated at now",
-            address: address
-        )
-        
         Task.init {
             
             userStatusLabel.text = "Signing in..."
@@ -121,9 +85,9 @@ extension ViewController {
             // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
             let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
             
-            try await Courier.shared.setUserProfile(
+            try await Courier.shared.setCredentials(
                 accessToken: accessToken,
-                userProfile: user
+                userId: userId
             )
             
             refreshUser()
