@@ -14,6 +14,8 @@ Full examples:
 - [Swift + Storyboard + Apple Push Notification Service (APNS)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BAPNS)
 - [Swift + Storyboard + Firebase Cloud Messaging (FCM)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BFCM)
 
+_⚠️ You need a physical iPhone or iPad to receive push notifications. You cannot test this effectively using the simulator._
+
 &emsp;
 
 ### **1. Add the Swift Package**
