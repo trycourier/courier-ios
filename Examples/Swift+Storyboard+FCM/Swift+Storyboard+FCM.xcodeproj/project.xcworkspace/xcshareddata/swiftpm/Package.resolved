@@ -24,7 +24,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "master",
-        "revision" : "a65dd49ff89022394e71c387adffd99f01f4e65e"
+        "revision" : "f13a70c1a0a77b64709f7efd32777a13b1d9c4b6"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
         "branch" : "master",
-        "revision" : "aaeb5f43fcfeaa49340fa1be7a74ed7bfa5152bf"
+        "revision" : "cbaa7ce7063d5ab22414962ec63366ccbba26034"
       }
     },
     {
