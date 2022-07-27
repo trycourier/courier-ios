@@ -14,7 +14,7 @@ Full examples:
 - [Swift + Storyboard + Apple Push Notification Service (APNS)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BAPNS)
 - [Swift + Storyboard + Firebase Cloud Messaging (FCM)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BFCM)
 
-_⚠️ You need a physical iPhone or iPad to receive push notifications. You cannot test this effectively using the simulator._
+⚠️ You need a physical iPhone or iPad to receive push notifications. You cannot test this effectively using the simulator.
 
 &emsp;
 
@@ -37,9 +37,9 @@ https://github.com/trycourier/courier-ios
 
 User Credentials must be set in Courier before they can receive push notifications. This should be handled where you normally manage your user's state.
 
-User Credentials should be [signed out](#6-signing-users-out) when you no longer want that user to receive push notifications.
+⚠️ User Credentials should be [signed out](#6-signing-users-out) when you no longer want that user to receive push notifications.
 
-Courier does not maintain user state between app sessions, or in other words, if you force close the app, you will need to set user credentials again. We will be looking into maintaining user credential state between app sessions in future versions of this SDK.
+⚠️ Courier does not maintain user state between app sessions, or in other words, if you force close the app, you will need to set user credentials again. We will be looking into maintaining user credential state between app sessions in future versions of this SDK.
 
 ```swift
 import Courier
@@ -122,7 +122,7 @@ class AppDelegate: CourierDelegate {
 
 ### 2. Traditional APNS Example (Manually manage APNS tokens)
 
-Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken(...)`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
+⚠️ Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken(...)`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
 
 ```swift
 import Courier
@@ -154,7 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 ### 3. Traditional FCM Example (Manually manage FCM tokens)
 
-Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken(...)`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
+⚠️ Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken(...)`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
 
 ```swift
 import Courier
@@ -218,7 +218,7 @@ func signOut() {
 
 ### **Bonus! Sending a Test Push Notification**
 
-This is only for testing purposes and should not be in your production app.
+⚠️ This is only for testing purposes and should not be in your production app.
 
 ```swift
 import Courier
