@@ -100,8 +100,8 @@ final class CourierTests: XCTestCase {
         let requestId = try await Courier.shared.sendPush(
             authKey: testAuthKey,
             userId: userId,
-            title: "Hello!",
-            message: "Chirp Chrip"
+            title: "Chirp Chirp!",
+            message: "This is a test message sent from Xcode tests"
         )
         
         print("Request ID: \(requestId)")

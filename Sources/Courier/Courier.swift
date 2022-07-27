@@ -73,7 +73,6 @@ open class Courier: NSObject {
 
         // Attempt to put the users tokens
         // If we have them
-        
         async let putAPNS: () = tokenRepo.putUserToken(
             userId: userId,
             provider: CourierProvider.apns,

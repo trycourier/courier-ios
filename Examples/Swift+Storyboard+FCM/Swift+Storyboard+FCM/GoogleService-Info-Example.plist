@@ -3,32 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>694725526129-c50rggqnuue0m6ropgli5tmh6ir2kruh.apps.googleusercontent.com</string>
+	<string>your_value</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.694725526129-c50rggqnuue0m6ropgli5tmh6ir2kruh</string>
+	<string>your_value</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBNrs37yi9iJb5d8d27CBF8ViRo4_TNhs4</string>
+	<string>your_value</string>
 	<key>GCM_SENDER_ID</key>
-	<string>694725526129</string>
+	<string>your_value</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.courier.Swift-Storyboard-FCM</string>
 	<key>PROJECT_ID</key>
-	<string>test-fcm-e7ddc</string>
+	<string>your_value</string>
 	<key>STORAGE_BUCKET</key>
-	<string>test-fcm-e7ddc.appspot.com</string>
+	<string>your_value</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:694725526129:ios:ff426d1a0f8b36eb8811d0</string>
+	<string>your_value</string>
 </dict>
 </plist>

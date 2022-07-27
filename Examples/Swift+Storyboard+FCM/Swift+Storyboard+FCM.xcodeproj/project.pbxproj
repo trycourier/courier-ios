@@ -7,19 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		270147642891858E00C01A75 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 270147632891858E00C01A75 /* Courier */; };
+		270147662891860B00C01A75 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270147652891860A00C01A75 /* GoogleService-Info.plist */; };
 		27EF5BAE2889C129000CCC32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5BAD2889C129000CCC32 /* AppDelegate.swift */; };
 		27EF5BB02889C129000CCC32 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5BAF2889C129000CCC32 /* SceneDelegate.swift */; };
 		27EF5BB22889C129000CCC32 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5BB12889C129000CCC32 /* ViewController.swift */; };
 		27EF5BB52889C129000CCC32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EF5BB32889C129000CCC32 /* Main.storyboard */; };
 		27EF5BB72889C12A000CCC32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27EF5BB62889C12A000CCC32 /* Assets.xcassets */; };
 		27EF5BBA2889C12A000CCC32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EF5BB82889C12A000CCC32 /* LaunchScreen.storyboard */; };
-		27EF5BC32889C19A000CCC32 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27EF5BC22889C19A000CCC32 /* Courier */; };
 		27EF5BC62889C1D4000CCC32 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 27EF5BC52889C1D4000CCC32 /* FirebaseMessaging */; };
 		27EF5BC92889C216000CCC32 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5BC82889C216000CCC32 /* Extras.swift */; };
-		27EF5BCD2889C480000CCC32 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27EF5BCC2889C480000CCC32 /* GoogleService-Info.plist */; };
+		27EF5BCD2889C480000CCC32 /* GoogleService-Info-Example.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27EF5BCC2889C480000CCC32 /* GoogleService-Info-Example.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		270147652891860A00C01A75 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		27EF5BAA2889C129000CCC32 /* Swift+Storyboard+FCM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift+Storyboard+FCM.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EF5BAD2889C129000CCC32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27EF5BAF2889C129000CCC32 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -30,7 +32,7 @@
 		27EF5BBB2889C12A000CCC32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27EF5BC72889C1DF000CCC32 /* Swift+Storyboard+FCM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift+Storyboard+FCM.entitlements"; sourceTree = "<group>"; };
 		27EF5BC82889C216000CCC32 /* Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extras.swift; path = "../../Swift+Storyboard+APNS/Swift+Storyboard+APNS/Extras.swift"; sourceTree = "<group>"; };
-		27EF5BCC2889C480000CCC32 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		27EF5BCC2889C480000CCC32 /* GoogleService-Info-Example.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-Example.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,8 +40,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				270147642891858E00C01A75 /* Courier in Frameworks */,
 				27EF5BC62889C1D4000CCC32 /* FirebaseMessaging in Frameworks */,
-				27EF5BC32889C19A000CCC32 /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,7 +67,8 @@
 		27EF5BAC2889C129000CCC32 /* Swift+Storyboard+FCM */ = {
 			isa = PBXGroup;
 			children = (
-				27EF5BCC2889C480000CCC32 /* GoogleService-Info.plist */,
+				270147652891860A00C01A75 /* GoogleService-Info.plist */,
+				27EF5BCC2889C480000CCC32 /* GoogleService-Info-Example.plist */,
 				27EF5BC72889C1DF000CCC32 /* Swift+Storyboard+FCM.entitlements */,
 				27EF5BAD2889C129000CCC32 /* AppDelegate.swift */,
 				27EF5BAF2889C129000CCC32 /* SceneDelegate.swift */,
@@ -96,8 +99,8 @@
 			);
 			name = "Swift+Storyboard+FCM";
 			packageProductDependencies = (
-				27EF5BC22889C19A000CCC32 /* Courier */,
 				27EF5BC52889C1D4000CCC32 /* FirebaseMessaging */,
+				270147632891858E00C01A75 /* Courier */,
 			);
 			productName = "Swift+Storyboard+FCM";
 			productReference = 27EF5BAA2889C129000CCC32 /* Swift+Storyboard+FCM.app */;
@@ -128,8 +131,8 @@
 			);
 			mainGroup = 27EF5BA12889C129000CCC32;
 			packageReferences = (
-				27EF5BC12889C19A000CCC32 /* XCRemoteSwiftPackageReference "courier-ios" */,
 				27EF5BC42889C1D4000CCC32 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				270147622891858E00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27EF5BAB2889C129000CCC32 /* Products */;
 			projectDirPath = "";
@@ -145,10 +148,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27EF5BCD2889C480000CCC32 /* GoogleService-Info.plist in Resources */,
+				27EF5BCD2889C480000CCC32 /* GoogleService-Info-Example.plist in Resources */,
 				27EF5BBA2889C12A000CCC32 /* LaunchScreen.storyboard in Resources */,
 				27EF5BB72889C12A000CCC32 /* Assets.xcassets in Resources */,
 				27EF5BB52889C129000CCC32 /* Main.storyboard in Resources */,
+				270147662891860B00C01A75 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,11 +388,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		27EF5BC12889C19A000CCC32 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+		270147622891858E00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = master;
+				branch = "feature/remove-user";
 				kind = branch;
 			};
 		};
@@ -403,9 +407,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		27EF5BC22889C19A000CCC32 /* Courier */ = {
+		270147632891858E00C01A75 /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 27EF5BC12889C19A000CCC32 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 270147622891858E00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
 		27EF5BC52889C1D4000CCC32 /* FirebaseMessaging */ = {

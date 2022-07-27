@@ -162,16 +162,16 @@ extension ViewController {
             try await Courier.shared.sendPush(
                 authKey: "your_auth_key", // TODO: Remove this from production
                 userId: userId,
-                title: "Hi! 👋",
-                message: "Chrip Chirp!"
+                title: "Chirp Chirp!",
+                message: "This is a test message sent from the Courier iOS APNS example app"
             )
             
             // Check if Courier has a user already signed in
-            if (Courier.shared.userProfile?.id == nil) {
+            if (Courier.shared.userId == nil) {
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.showMessageAlert(
                     title: "You are not signed in",
-                    message: "Courier will try and send push notifications to this user id, but you will not receive it on this device."
+                    message: "Courier will try and send push notifications to this user id, but you will not receive them on this device."
                 )
             }
             
