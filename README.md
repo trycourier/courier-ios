@@ -249,4 +249,4 @@ func sendTestMessage() {
 
 We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Join our Discord!
 
-[Courier Discord](https://discord.com/invite/courier)
+<a href="https://discord.com/invite/courier" target="_blank">Courier Discord</a>
