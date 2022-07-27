@@ -247,6 +247,7 @@ func sendTestMessage() {
 
 ### **Share feedback with Courier**
 
-We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Join our Discord!
+We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Here are some links to contact us:
 
-[Courier Discord](https://discord.com/invite/courier)
+- [Courier Feedback](https://feedback.courier.com/)
+- [Courier iOS Issues](https://github.com/trycourier/courier-ios/issues)
