@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		270147642891858E00C01A75 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 270147632891858E00C01A75 /* Courier */; };
 		270147662891860B00C01A75 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 270147652891860A00C01A75 /* GoogleService-Info.plist */; };
+		2701476928918CAF00C01A75 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2701476828918CAF00C01A75 /* Courier */; };
 		27EF5BAE2889C129000CCC32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5BAD2889C129000CCC32 /* AppDelegate.swift */; };
 		27EF5BB02889C129000CCC32 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5BAF2889C129000CCC32 /* SceneDelegate.swift */; };
 		27EF5BB22889C129000CCC32 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5BB12889C129000CCC32 /* ViewController.swift */; };
@@ -40,7 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				270147642891858E00C01A75 /* Courier in Frameworks */,
+				2701476928918CAF00C01A75 /* Courier in Frameworks */,
 				27EF5BC62889C1D4000CCC32 /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,7 +100,7 @@
 			name = "Swift+Storyboard+FCM";
 			packageProductDependencies = (
 				27EF5BC52889C1D4000CCC32 /* FirebaseMessaging */,
-				270147632891858E00C01A75 /* Courier */,
+				2701476828918CAF00C01A75 /* Courier */,
 			);
 			productName = "Swift+Storyboard+FCM";
 			productReference = 27EF5BAA2889C129000CCC32 /* Swift+Storyboard+FCM.app */;
@@ -132,7 +132,7 @@
 			mainGroup = 27EF5BA12889C129000CCC32;
 			packageReferences = (
 				27EF5BC42889C1D4000CCC32 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				270147622891858E00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				2701476728918CAE00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27EF5BAB2889C129000CCC32 /* Products */;
 			projectDirPath = "";
@@ -388,7 +388,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		270147622891858E00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+		2701476728918CAE00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
@@ -407,9 +407,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		270147632891858E00C01A75 /* Courier */ = {
+		2701476828918CAF00C01A75 /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 270147622891858E00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 2701476728918CAE00C01A75 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
 		27EF5BC52889C1D4000CCC32 /* FirebaseMessaging */ = {
