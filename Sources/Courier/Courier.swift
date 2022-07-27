@@ -54,67 +54,66 @@ open class Courier: NSObject {
     // MARK: User Management
     
     /**
-     * A read only value for the current Courier user
+     * A read only value set to the current user id
      */
-    public private(set) var userProfile: CourierUserProfile? = nil
+    public private(set) var userId: String? = nil
     
     /**
-     * Function used to set the current Courier user
+     * Function to set the current credentials for the user and their access token
      * You should consider using this in areas where you update your local user's state
      */
-    public func setUserProfile(accessToken: String, userProfile: CourierUserProfile) async throws {
+    public func setCredentials(accessToken: String, userId: String) async throws {
         
         debugPrint("Updating Courier User Profile")
-        debugPrint(accessToken)
-        debugPrint(userProfile)
+        debugPrint("Access Token: \(accessToken)")
+        debugPrint("User Id: \(userId)")
         
+        // Set the user's current credentials
         self.accessToken = accessToken
-        self.userProfile = userProfile
-        
-//        async let putUser: () = userRepo.putUserProfile(
-//            user: userProfile
-//        )
+        self.userId = userId
 
+        // Attempt to put the users tokens
+        // If we have them
+        
         async let putAPNS: () = tokenRepo.putUserToken(
-            userId: userProfile.id,
+            userId: userId,
             provider: CourierProvider.apns,
             deviceToken: apnsToken
         )
 
         async let putFCM: () = tokenRepo.putUserToken(
-            userId: userProfile.id,
+            userId: userId,
             provider: CourierProvider.fcm,
             deviceToken: fcmToken
         )
         
-//        let _ = try await [putUser, putAPNS, putFCM]
         let _ = try await [putAPNS, putFCM]
         
     }
     
     /**
-     * Function to sign the current Courier user out
+     * Function that clears the current user id and access token
      * You should call this when your user signs out
      * It will remove the current tokens used for this user in Courier so they do not receive pushes they should not get
      */
     public func signOut() async throws {
         
-        debugPrint("Signing Courier User Profile Out")
+        debugPrint("Clearing Courier User Credentials")
         
         async let deleteAPNS: () = tokenRepo.deleteToken(
-            userId: userProfile?.id,
+            userId: userId,
             deviceToken: apnsToken
         )
 
         async let deleteFCM: () = tokenRepo.deleteToken(
-            userId: userProfile?.id,
+            userId: userId,
             deviceToken: fcmToken
         )
         
         let _ = try await [deleteAPNS, deleteFCM]
         
-        userProfile = nil
         accessToken = nil
+        userId = nil
         
     }
     
@@ -139,7 +138,7 @@ open class Courier: NSObject {
         debugPrint(token)
 
         return try await tokenRepo.putUserToken(
-            userId: userProfile?.id,
+            userId: userId,
             provider: CourierProvider.apns,
             deviceToken: token
         )
@@ -163,7 +162,7 @@ open class Courier: NSObject {
         debugPrint(token)
 
         return try await tokenRepo.putUserToken(
-            userId: userProfile?.id,
+            userId: userId,
             provider: CourierProvider.fcm,
             deviceToken: token
         )
