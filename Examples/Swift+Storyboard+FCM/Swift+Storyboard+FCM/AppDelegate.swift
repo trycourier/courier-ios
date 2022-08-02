@@ -69,7 +69,7 @@ extension AppDelegate: MessagingDelegate {
                   )
               }
           } catch {
-              debugPrint(error)
+              Courier.log(error)
           }
       }
   }

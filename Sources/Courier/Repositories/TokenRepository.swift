@@ -11,24 +11,24 @@ class TokenRepository: Repository {
     
     func putUserToken(userId: String?, provider: CourierProvider, deviceToken: String?) async throws {
         
-        debugPrint("Putting Messaging Token")
+        Courier.log("Putting Messaging Token")
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
             
             guard let accessToken = Courier.shared.accessToken else {
-                print("Courier Access Token is missing")
+                Courier.log("Courier Access Token is missing")
                 continuation.resume(throwing: CourierError.noAccessTokenFound)
                 return
             }
             
             guard let userId = userId else {
-                print("No user id found")
+                Courier.log("No user id found")
                 continuation.resume(throwing: CourierError.noUserIdFound)
                 return
             }
             
             guard let messagingToken = deviceToken else {
-                print("\(provider.rawValue) token is nil")
+                Courier.log("\(provider.rawValue) token is nil")
                 continuation.resume()
                 return
             }
@@ -61,7 +61,7 @@ class TokenRepository: Repository {
     
     func deleteToken(userId: String?, deviceToken: String?) async throws {
         
-        debugPrint("Deleting Messaging Token")
+        Courier.log("Deleting Messaging Token")
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
             

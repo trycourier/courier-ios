@@ -104,11 +104,11 @@ internal class MessagingRepository: Repository {
                 
                 do {
                     let res = try JSONDecoder().decode(MessageResponse.self, from: data ?? Data())
-                    debugPrint("New Courier message sent. View logs here:")
-                    debugPrint("https://app.courier.com/logs/messages?message=\(res.requestId)")
+                    Courier.log("New Courier message sent. View logs here:")
+                    Courier.log("https://app.courier.com/logs/messages?message=\(res.requestId)")
                     continuation.resume(returning: res.requestId)
                 } catch {
-                    debugPrint(error)
+                    Courier.log(String(describing: error))
                     continuation.resume(throwing: CourierError.requestError)
                 }
                 

@@ -29,11 +29,11 @@ class ExampleServer {
                 "user_id": userId
             ])
 
-            debugPrint("URL: \(request.url?.absoluteString ?? "")")
-            debugPrint("Method: \(request.httpMethod ?? "")")
+            print("URL: \(request.url?.absoluteString ?? "")")
+            print("Method: \(request.httpMethod ?? "")")
             
             if let json = String(data: request.httpBody ?? Data(), encoding: .utf8) {
-                debugPrint("Body: \(json)")
+                print("Body: \(json)")
             }
             
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in

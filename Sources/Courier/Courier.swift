@@ -23,6 +23,13 @@ open class Courier: NSObject {
     // MARK: Init
     
     private override init() {
+        
+        #if DEBUG
+        isDebugging = true
+        #else
+        isDebugMode = false
+        #endif
+        
         super.init()
     }
     
@@ -37,6 +44,12 @@ open class Courier: NSObject {
      * https://www.courier.com/docs/reference/auth/issue-token/
      */
     internal var accessToken: String? = nil
+    
+    /**
+     * Determines if the SDK should show logs or other debugging data
+     * Set to find debug mode by default
+     */
+    public var isDebugging = false
     
     /**
      * Courier APIs
@@ -63,9 +76,9 @@ open class Courier: NSObject {
      */
     public func setCredentials(accessToken: String, userId: String) async throws {
         
-        debugPrint("Updating Courier User Profile")
-        debugPrint("Access Token: \(accessToken)")
-        debugPrint("User Id: \(userId)")
+        Courier.log("Updating Courier User Profile")
+        Courier.log("Access Token: \(accessToken)")
+        Courier.log("User Id: \(userId)")
         
         // Set the user's current credentials
         self.accessToken = accessToken
@@ -96,7 +109,7 @@ open class Courier: NSObject {
      */
     public func signOut() async throws {
         
-        debugPrint("Clearing Courier User Credentials")
+        Courier.log("Clearing Courier User Credentials")
         
         async let deleteAPNS: () = tokenRepo.deleteToken(
             userId: userId,
@@ -132,8 +145,8 @@ open class Courier: NSObject {
 
         apnsToken = token
 
-        debugPrint("Apple Push Notification Service Token")
-        debugPrint(token)
+        Courier.log("Apple Push Notification Service Token")
+        Courier.log(token)
 
         return try await tokenRepo.putUserToken(
             userId: userId,
@@ -156,8 +169,8 @@ open class Courier: NSObject {
 
         fcmToken = token
 
-        debugPrint("Firebase Cloud Messaging Token")
-        debugPrint(token)
+        Courier.log("Firebase Cloud Messaging Token")
+        Courier.log(token)
 
         return try await tokenRepo.putUserToken(
             userId: userId,
@@ -248,6 +261,17 @@ open class Courier: NSObject {
             title: title,
             message: message
         )
+    }
+    
+    // MARK: Logging
+    
+    public static func log(_ data: String) {
+        
+        // Print the log if we are debugging
+        if (Courier.shared.isDebugging) {
+            print(data)
+        }
+        
     }
     
 }

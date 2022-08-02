@@ -11,6 +11,7 @@ import Courier
 class ViewController: UIViewController {
     
     let userId = "example_user"
+    let authKey = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
@@ -83,7 +84,8 @@ extension ViewController {
             
             // Courier needs you to generate an access token on your backend
             // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
-            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
+//            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
+            let accessToken = authKey
             
             try await Courier.shared.setCredentials(
                 accessToken: accessToken,
@@ -160,7 +162,7 @@ extension ViewController {
             
             // Send the test
             try await Courier.shared.sendPush(
-                authKey: "your_auth_key", // TODO: Remove this from production
+                authKey: authKey, // TODO: Remove this from production
                 userId: userId,
                 title: "Chirp Chirp!",
                 message: "This is a test message sent from the Courier iOS APNS example app"

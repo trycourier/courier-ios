@@ -141,7 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     token: token
                 )
             } catch {
-                debugPrint(error)
+                print(error)
             }
         }
 
@@ -172,7 +172,7 @@ extension AppDelegate: MessagingDelegate {
                         token: token
                     )
                 } catch {
-                    debugPrint(error)
+                    print(error)
                 }
             }
 

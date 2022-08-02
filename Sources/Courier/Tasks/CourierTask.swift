@@ -17,22 +17,30 @@ class CourierTask {
         
         task = session.dataTask(with: request) { (data, response, error) in
             
-            debugPrint("📡 New Courier API Request")
-            debugPrint("URL: \(request.url?.absoluteString ?? "")")
-            debugPrint("Method: \(request.httpMethod ?? "")")
-            
-            if let body = request.httpBody, let json = String(data: body, encoding: .utf8) {
-                debugPrint("Body: \(json)")
-            }
-            
-            let status = (response as! HTTPURLResponse).statusCode
-            debugPrint("Status: \(status)")
-            
             do {
-                let json = try JSONSerialization.jsonObject(with: data ?? Data(), options: []) as? [String : Any]
-                debugPrint("JSON: \(String(describing: json))")
+             
+                Courier.log("📡 New Courier API Request")
+                Courier.log("URL: \(request.url?.absoluteString ?? "")")
+                Courier.log("Method: \(request.httpMethod ?? "")")
+                
+                if let body = request.httpBody, let json = String(data: body, encoding: .utf8) {
+                    Courier.log("Body: \(json)")
+                }
+                
+                if let response = response as? HTTPURLResponse {
+                    let code = response.statusCode
+                    Courier.log("Status: \(code)")
+                }
+                
+                if let data = data {
+                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
+                    Courier.log("Response: \(String(describing: json))")
+                }
+                
             } catch {
-                // Empty
+                
+                Courier.log(String(describing: error))
+                
             }
             
             completionHandler(validCodes, data, response, error)

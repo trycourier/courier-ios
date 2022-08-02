@@ -9,6 +9,12 @@ import UIKit
 
 open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
+    // MARK: Getters
+    
+    private var app: UIApplication {
+        get { return UIApplication.shared }
+    }
+    
     // MARK: Init
     
     override init() {
@@ -20,17 +26,12 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
     }
     
-    // MARK: Getters
-    
-    private var app: UIApplication {
-        get { return UIApplication.shared }
-    }
-    
     // MARK: Messaging
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let message = notification.request.content.userInfo
-        pushNotificationReceivedInForeground(message: message, presentAs: completionHandler)
+        let presentationOptions = pushNotificationReceivedInForeground(message: message)
+        completionHandler(presentationOptions)
     }
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -42,7 +43,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     // MARK: Token Management
 
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        debugPrint("Unable to register for remote notifications: \(error.localizedDescription)")
+        Courier.log("Unable to register for remote notifications: \(error.localizedDescription)")
     }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -53,15 +54,23 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
                     token: deviceToken.string
                 )
             } catch {
-                debugPrint(error)
+                Courier.log(String(describing: error))
             }
         }
     }
     
     // MARK: Functions
 
-    open func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs presentForegroundNotificationOptions: @escaping (UNNotificationPresentationOptions) -> Void) {}
+    // TODO: Returns
+    
+    open func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions { return [] }
+    
+//    open func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs presentForegroundNotificationOptions: @escaping (UNNotificationPresentationOptions) -> Void) {}
     
     open func pushNotificationOpened(message: [AnyHashable : Any]) {}
+    
+//    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
+//        <#code#>
+//    }
     
 }
