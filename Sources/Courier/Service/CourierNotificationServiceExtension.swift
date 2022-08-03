@@ -20,7 +20,7 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
         
         if let notification = bestAttemptContent {
             testAPI { statusCode in
-                notification.title = "\(notification.title) [Courier SDK 🐣]"
+                notification.title = "\(notification.title) [Chrip! 🐣]"
                 notification.subtitle = "\(notification.subtitle) [\(statusCode)]"
                 notification.body = notification.body + " or whatever"
                 contentHandler(notification)
