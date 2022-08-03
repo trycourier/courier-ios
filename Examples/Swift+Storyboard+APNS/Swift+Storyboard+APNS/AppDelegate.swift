@@ -9,7 +9,7 @@ import UIKit
 import Courier
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: CourierDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -17,85 +17,70 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 1. Create new APNS key here: https://developer.apple.com/account/resources/authkeys/add
         // 2. Upload your APNS key here: https://app.courier.com/channels/apn
         
-        Task.init {
+        if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
+            print(deviceId)
+        }
+        
+        if let bundleId = Bundle.main.bundleIdentifier {
             
-            let status = try await Courier.getNotificationAuthorizationStatus()
-            if (status == .authorized) {
-                try await Courier.requestNotificationPermissions()
-//                application.registerForRemoteNotifications()
+            if let userDefaults = UserDefaults(suiteName: "group." + bundleId) {
+                let value = ["Chirp! 🐣", "Squawk 🐤", "Frrrr 🐥"].randomElement()!
+                userDefaults.set(value, forKey: "bird_says")
             }
             
         }
         
         return true
-    }
-    
-    // MARK: Courier Notification Functions
-    
-//    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
-//
-//        print("Push Received")
-//        print(message)
-//
-//        // ⚠️ Customize this to be what you would like
-//        // Pass an empty array to this if you do not want to use it
-//        showForegroundNotificationAs([.list, .badge, .banner, .sound])
-//
-//        // ⚠️ For demo purposes only
-//        showMessageAlert(title: "Push Received", message: "\(message)")
-//
-//    }
-//
-//    override func pushNotificationOpened(message: [AnyHashable : Any]) {
-//
-//        print("Push Opened")
-//        print(message)
-//
-//        // ⚠️ For demo purposes only
-//        showMessageAlert(title: "Push Opened", message: "\(message)")
-//
-//    }
-    
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        
-        Task.init {
-            do {
-                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-                try await Courier.shared.setPushToken(
-                    provider: .apns,
-                    token: token
-                )
-            } catch {
-                debugPrint(error)
-            }
-        }
         
     }
     
+    // MARK: Courier Notification Support
+
+    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+
+        print("Push Received")
+        print(message)
+
+        // ⚠️ For demo purposes only
+        showMessageAlert(title: "Push Received", message: "\(message)")
+
+        return [.list, .badge, .banner, .sound]
+
+    }
+
+    override func pushNotificationOpened(message: [AnyHashable : Any]) {
+
+        print("Push Opened")
+        print(message)
+
+        // ⚠️ For demo purposes only
+        showMessageAlert(title: "Push Opened", message: "\(message)")
+
+    }
+    
+//    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+//
+//        Task.init {
+//            do {
+//                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+//                try await Courier.shared.setPushToken(
+//                    provider: .apns,
+//                    token: token
+//                )
+//            } catch {
+//                debugPrint(error)
+//            }
+//        }
+//
+//    }
+//
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-      print(userInfo)
+        showMessageAlert(title: "Push Received", message: "\(userInfo)")
     }
-    
+
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        
-        Task.init {
-            
-            print(userInfo)
-            
-            let userId = "example_user"
-            let authKey = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
-         
-            try await Courier.shared.sendPush(
-                authKey: authKey,
-                userId: userId,
-                title: "Background",
-                message: "Background Message"
-            )
-            
-            completionHandler(.newData)
-            
-        }
-        
+        showMessageAlert(title: "Push Received", message: "\(userInfo)")
+        completionHandler(.newData)
     }
 
 }
