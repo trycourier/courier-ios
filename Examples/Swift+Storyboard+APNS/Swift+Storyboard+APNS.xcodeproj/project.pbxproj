@@ -14,20 +14,8 @@
 		2720BB2D2889B4DD0089219C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2720BB2C2889B4DD0089219C /* Assets.xcassets */; };
 		2720BB302889B4DD0089219C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2720BB2E2889B4DD0089219C /* LaunchScreen.storyboard */; };
 		2720BB3C2889B9F90089219C /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2720BB3B2889B9F90089219C /* Extras.swift */; };
-		277E1DCA289B007F00132446 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E1DC9289B007F00132446 /* NotificationService.swift */; };
-		277E1DCE289B007F00132446 /* CourierNotification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 277E1DC7289B007F00132446 /* CourierNotification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2780E639289AC64E00B263F2 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2780E638289AC64E00B263F2 /* Courier */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		277E1DCC289B007F00132446 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2720BB182889B4DD0089219C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 277E1DC6289B007F00132446;
-			remoteInfo = CourierNotification;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2780E5F22899B71B00B263F2 /* Embed App Extensions */ = {
@@ -36,7 +24,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				277E1DCE289B007F00132446 /* CourierNotification.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,10 +40,7 @@
 		2720BB312889B4DD0089219C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2720BB372889B4ED0089219C /* Swift+Storyboard+APNS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift+Storyboard+APNS.entitlements"; sourceTree = "<group>"; };
 		2720BB3B2889B9F90089219C /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
-		277E1DC7289B007F00132446 /* CourierNotification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierNotification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		277E1DC9289B007F00132446 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		277E1DCB289B007F00132446 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		277E1DCF289B007F00132446 /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift+Storyboard+APNS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		277E1DD6289B1CFC00132446 /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Swift+Storyboard+APNS.app"; path = "/Users/mike/Desktop/mobile-sdk/Courier/Examples/Swift+Storyboard+APNS/build/Debug-iphoneos/Swift+Storyboard+APNS.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,13 +52,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		277E1DC4289B007F00132446 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -82,9 +59,6 @@
 			isa = PBXGroup;
 			children = (
 				2720BB222889B4DD0089219C /* Swift+Storyboard+APNS */,
-				277E1DC7289B007F00132446 /* CourierNotification.appex */,
-				277E1DC8289B007F00132446 /* CourierNotification */,
-				277E1DCF289B007F00132446 /* Swift+Storyboard+APNS.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,15 +78,6 @@
 			path = "Swift+Storyboard+APNS";
 			sourceTree = "<group>";
 		};
-		277E1DC8289B007F00132446 /* CourierNotification */ = {
-			isa = PBXGroup;
-			children = (
-				277E1DC9289B007F00132446 /* NotificationService.swift */,
-				277E1DCB289B007F00132446 /* Info.plist */,
-			);
-			path = CourierNotification;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -128,32 +93,14 @@
 			buildRules = (
 			);
 			dependencies = (
-				277E1DCD289B007F00132446 /* PBXTargetDependency */,
 			);
 			name = "Swift+Storyboard+APNS";
 			packageProductDependencies = (
 				2780E638289AC64E00B263F2 /* Courier */,
 			);
 			productName = "Swift+Storyboard+APNS";
-			productReference = 277E1DCF289B007F00132446 /* Swift+Storyboard+APNS.app */;
+			productReference = 277E1DD6289B1CFC00132446 /* Swift+Storyboard+APNS.app */;
 			productType = "com.apple.product-type.application";
-		};
-		277E1DC6289B007F00132446 /* CourierNotification */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 277E1DD0289B007F00132446 /* Build configuration list for PBXNativeTarget "CourierNotification" */;
-			buildPhases = (
-				277E1DC3289B007F00132446 /* Sources */,
-				277E1DC4289B007F00132446 /* Frameworks */,
-				277E1DC5289B007F00132446 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CourierNotification;
-			productName = CourierNotification;
-			productReference = 277E1DC7289B007F00132446 /* CourierNotification.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -166,9 +113,6 @@
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
 					2720BB1F2889B4DD0089219C = {
-						CreatedOnToolsVersion = 13.4.1;
-					};
-					277E1DC6289B007F00132446 = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
 				};
@@ -190,7 +134,6 @@
 			projectRoot = "";
 			targets = (
 				2720BB1F2889B4DD0089219C /* Swift+Storyboard+APNS */,
-				277E1DC6289B007F00132446 /* CourierNotification */,
 			);
 		};
 /* End PBXProject section */
@@ -203,13 +146,6 @@
 				2720BB302889B4DD0089219C /* LaunchScreen.storyboard in Resources */,
 				2720BB2D2889B4DD0089219C /* Assets.xcassets in Resources */,
 				2720BB2B2889B4DD0089219C /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		277E1DC5289B007F00132446 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,23 +163,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		277E1DC3289B007F00132446 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				277E1DCA289B007F00132446 /* NotificationService.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		277E1DCD289B007F00132446 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 277E1DC6289B007F00132446 /* CourierNotification */;
-			targetProxy = 277E1DCC289B007F00132446 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2720BB292889B4DD0089219C /* Main.storyboard */ = {
@@ -382,7 +302,6 @@
 		2720BB352889B4DD0089219C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+APNS/Swift+Storyboard+APNS.entitlements";
@@ -412,7 +331,6 @@
 		2720BB362889B4DD0089219C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+APNS/Swift+Storyboard+APNS.entitlements";
@@ -439,56 +357,6 @@
 			};
 			name = Release;
 		};
-		277E1DD1289B007F00132446 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CourierNotification/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = CourierNotification;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS.CourierNotification";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		277E1DD2289B007F00132446 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CourierNotification/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = CourierNotification;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS.CourierNotification";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -506,15 +374,6 @@
 			buildConfigurations = (
 				2720BB352889B4DD0089219C /* Debug */,
 				2720BB362889B4DD0089219C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		277E1DD0289B007F00132446 /* Build configuration list for PBXNativeTarget "CourierNotification" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				277E1DD1289B007F00132446 /* Debug */,
-				277E1DD2289B007F00132446 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
