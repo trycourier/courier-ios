@@ -65,12 +65,6 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     
     open func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions { return [] }
     
-//    open func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs presentForegroundNotificationOptions: @escaping (UNNotificationPresentationOptions) -> Void) {}
-    
     open func pushNotificationOpened(message: [AnyHashable : Any]) {}
-    
-//    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
-//        <#code#>
-//    }
     
 }
