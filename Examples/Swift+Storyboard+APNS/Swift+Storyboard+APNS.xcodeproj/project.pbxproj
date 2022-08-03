@@ -40,7 +40,7 @@
 		2720BB312889B4DD0089219C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2720BB372889B4ED0089219C /* Swift+Storyboard+APNS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift+Storyboard+APNS.entitlements"; sourceTree = "<group>"; };
 		2720BB3B2889B9F90089219C /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
-		277E1DD6289B1CFC00132446 /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Swift+Storyboard+APNS.app"; path = "/Users/mike/Desktop/mobile-sdk/Courier/Examples/Swift+Storyboard+APNS/build/Debug-iphoneos/Swift+Storyboard+APNS.app"; sourceTree = "<absolute>"; };
+		277E1DEA289B1FDB00132446 /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Swift+Storyboard+APNS.app"; path = "/Users/mike/Desktop/mobile-sdk/Courier/Examples/Swift+Storyboard+APNS/build/Debug-iphoneos/Swift+Storyboard+APNS.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +99,7 @@
 				2780E638289AC64E00B263F2 /* Courier */,
 			);
 			productName = "Swift+Storyboard+APNS";
-			productReference = 277E1DD6289B1CFC00132446 /* Swift+Storyboard+APNS.app */;
+			productReference = 277E1DEA289B1FDB00132446 /* Swift+Storyboard+APNS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
