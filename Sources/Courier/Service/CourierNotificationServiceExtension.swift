@@ -19,8 +19,9 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
         
         if let bestAttemptContent = bestAttemptContent {
             
-            let userId = Courier.shared.userId ?? "Missing"
-            bestAttemptContent.title = "\(bestAttemptContent.title) [\(userId)]"
+            bestAttemptContent.title = "Courier SDK here! 😁"
+            bestAttemptContent.subtitle = ""
+            bestAttemptContent.body = "Chirp Chirp 🐣"
             
             contentHandler(bestAttemptContent)
             
