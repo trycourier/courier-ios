@@ -1,14 +1,13 @@
 //
-//  CourierNotificationServiceExtension.swift
-//  
+//  NotificationService.swift
+//  NotificationServiceExtension
 //
 //  Created by Michael Miller on 8/3/22.
 //
 
 import UserNotifications
-import UIKit
 
-open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
+class NotificationService: UNNotificationServiceExtension {
 
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
@@ -19,12 +18,7 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
         
         if let bestAttemptContent = bestAttemptContent {
             // Modify the notification content here...
-            
-            if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
-                bestAttemptContent.title = "\(bestAttemptContent.title) [\(deviceId)]"
-            } else {
-                bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
-            }
+            bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
             
             contentHandler(bestAttemptContent)
         }
@@ -37,5 +31,5 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
             contentHandler(bestAttemptContent)
         }
     }
-    
+
 }
