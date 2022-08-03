@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-  <dict>
+<dict>
     <key>Kind</key>
     <string>Xcode.Xcode3.ProjectTemplateUnitKind</string>
-  
     <key>Identifier</key>
-    <string>de.zeezide.dt.unit.spm.modules.UXKit</string>
-
+    <string>com.apple.dt.unit.notificationserviceextensionios</string>
+    <key>Ancestors</key>
+    <array>
+        <string>com.apple.dt.unit.iosAppExtensionBase</string>
+    </array>
     <key>Concrete</key>
-    <false/>
+    <true/>
+    <key>Description</key>
+    <string>This template builds a Notification Service application extension.</string>
+    <key>Targets</key>
+    <array>
+        <dict>
+            <key>TargetIdentifier</key>
+            <string>com.apple.dt.notificationServiceExtension</string>
+        </dict>
+    </array>
 
     <key>Options</key>
     <array>
@@ -48,34 +59,8 @@
         </dict>
       </dict>
     </array>
-  </dict>
-</plist>
 
-
-<!-- <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Kind</key>
-    <string>Xcode.Xcode3.ProjectTemplateUnitKind</string>
-    <key>Identifier</key>
-    <string>com.apple.dt.unit.notificationserviceextensionios</string>
-    <key>Ancestors</key>
-    <array>
-        <string>com.apple.dt.unit.iosAppExtensionBase</string>
-    </array>
-    <key>Concrete</key>
-    <true/>
-    <key>Description</key>
-    <string>This template builds a Notification Service application extension.</string>
-    <key>Targets</key>
-    <array>
-        <dict>
-            <key>TargetIdentifier</key>
-            <string>com.apple.dt.notificationServiceExtension</string>
-        </dict>
-    </array>
-    <key>Options</key>
+    <!-- <key>Options</key>
     <array>
         <dict>
             <key>Identifier</key>
@@ -120,7 +105,8 @@
                 </dict>
             </dict>
         </dict>
-    </array>
+    </array> -->
+
     <key>Nodes</key>
     <array>
         <string>Info.plist:NSExtension</string>
@@ -143,4 +129,4 @@
 		<string>bell.badge</string>
     </dict>
 </dict>
-</plist> -->
+</plist>
