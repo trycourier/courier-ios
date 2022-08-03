@@ -1,4 +1,4 @@
-echo 'Making Courier Service Template 🥚'
+#!/bin/sh
 
 # Create Templates folder (if needed)
 mkdir -p ~/Library/Developer/Xcode/Templates >/dev/null 2>&1
@@ -7,6 +7,20 @@ mkdir -p ~/Library/Developer/Xcode/Templates >/dev/null 2>&1
 rm -rf ~/Library/Developer/Xcode/Templates/Courier\ Service.xctemplate
 
 # Create the new Template
-cp -rf Courier\ Notification\ Service\ Extension.xctemplate ~/Library/Developer/Xcode/Templates/Courier\ Service.xctemplate
+cp -rf Courier\ Service.xctemplate ~/Library/Developer/Xcode/Templates/Courier\ Service.xctemplate
 
-echo 'Courier Service Template Created 🐣'
+echo "
+    
+    ^-
+  '( 🍥 >
+   _) (
+  /    )
+ /_,'  /
+   \  /
+===m""m===
+
+"
+
+echo 'Courier Service Template is ready!'
+echo 'You can close this terminal window.'
+echo '\n'
