@@ -26,8 +26,6 @@ open class Courier: NSObject {
         
         #if DEBUG
         isDebugging = true
-        #else
-        isDebugMode = false
         #endif
         
         super.init()
