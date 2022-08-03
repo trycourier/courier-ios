@@ -29,7 +29,7 @@
             <key>Units</key>
             <dict>
 
-                <key>Custom</key>
+                <!-- <key>Custom</key>
                 <dict>
                     <key>Nodes</key>
                     <array>
@@ -60,7 +60,8 @@
                             <string>NotificationService.m</string>
                         </dict>
                     </dict>
-                </dict>
+                </dict> -->
+
                 <key>Swift</key>
                 <dict>
                     <key>Nodes</key>
