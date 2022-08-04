@@ -24,7 +24,9 @@ class CourierTask {
                 Courier.log("Method: \(request.httpMethod ?? "")")
                 
                 if let body = request.httpBody, let json = String(data: body, encoding: .utf8) {
-                    Courier.log("Body: \(json)")
+                    if (!json.isEmpty) {
+                        Courier.log("Body: \(json)")
+                    }
                 }
                 
                 if let response = response as? HTTPURLResponse {
@@ -32,9 +34,12 @@ class CourierTask {
                     Courier.log("Status: \(code)")
                 }
                 
-                if let data = data {
-                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any]
-                    Courier.log("Response: \(String(describing: json))")
+                if let data = data, let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
+                    if (!json.isEmpty) {
+                        Courier.log("Response: \(String(describing: json))")
+                    } else {
+                        Courier.log("Response: Empty")
+                    }
                 }
                 
             } catch {
