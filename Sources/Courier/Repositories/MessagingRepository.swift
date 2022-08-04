@@ -76,6 +76,11 @@ internal class MessagingRepository: Repository {
     internal func postTrackingUrl(url: String, event: CourierPushEvent) async throws {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+            
+            // TODO: Remove me
+            if (event != .delivered) {
+                return
+            }
 
             let url = URL(string: url)!
             var request = URLRequest(url: url)

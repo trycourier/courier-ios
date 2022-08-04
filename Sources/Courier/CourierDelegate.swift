@@ -33,7 +33,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         let message = notification.request.content.userInfo
         
         // Try and track
-        Courier.trackNotification(message: message, event: .delivered)
+//        Courier.trackNotification(message: message, event: .delivered)
         
         // Complete
         let presentationOptions = pushNotificationReceivedInForeground(message: message)
@@ -46,7 +46,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         let message = response.notification.request.content.userInfo
         
         // Try and track
-        Courier.trackNotification(message: message, event: .opened)
+//        Courier.trackNotification(message: message, event: .clicked)
         
         // Complete
         pushNotificationOpened(message: message)

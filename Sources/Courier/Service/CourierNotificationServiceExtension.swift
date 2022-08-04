@@ -26,7 +26,7 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
         // Async, does not wait for completion
         Courier.trackNotification(
             message: notification.userInfo,
-            event: .read
+            event: .delivered
         )
         
         // TODO: Remove me
