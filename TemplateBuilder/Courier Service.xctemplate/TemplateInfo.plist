@@ -14,6 +14,7 @@
 	<true/>
 	<key>Description</key>
 	<string>This template builds a Notification Service application extension.</string>
+
 	<key>Targets</key>
 	<array>
 		<dict>
@@ -23,6 +24,31 @@
 	</array>
 	<key>Options</key>
 	<array>
+
+        <!-- 
+
+			This is a custom variable
+			it can be accessed by using "___VARIABLE_COURIER_CLIENT_KEY___" in the template files
+			More about this here: https://gist.github.com/gregfu/1524894
+
+		<dict> Uncomment this if we need a custom variable
+            <key>Description</key>
+                <string>Your apps client key</string>
+            <key>EmptyReplacement</key>
+                <string>client_key</string>
+            <key>Identifier</key>
+                <string>COURIER_CLIENT_KEY</string>
+            <key>Name</key>
+                <string>Client Key</string>
+            <key>NotPersisted</key>
+                <true/>
+            <key>Required</key>
+                <true/>
+            <key>Type</key>
+                <string>text</string>
+        </dict> 
+		-->
+
 		<dict>
 			<key>Identifier</key>
 			<string>languageChoice</string>

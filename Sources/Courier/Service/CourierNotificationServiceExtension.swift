@@ -33,7 +33,7 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
     
     open override func serviceExtensionTimeWillExpire() {
         
-        // If all fails, return present the original notification
+        // If all fails, present the original notification
         if let handler = originalHandler, let content = originalContent {
             handler(content)
         }

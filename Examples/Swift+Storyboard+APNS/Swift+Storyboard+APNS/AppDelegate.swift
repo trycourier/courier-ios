@@ -17,11 +17,6 @@ class AppDelegate: CourierDelegate {
         // 1. Create new APNS key here: https://developer.apple.com/account/resources/authkeys/add
         // 2. Upload your APNS key here: https://app.courier.com/channels/apn
         
-        // TODO::::::
-        if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
-            print(deviceId)
-        }
-        
         return true
         
     }
@@ -49,48 +44,5 @@ class AppDelegate: CourierDelegate {
         showMessageAlert(title: "Push Opened", message: "\(message)")
 
     }
-    
-//    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//
-//        Task.init {
-//            do {
-//                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-//                try await Courier.shared.setPushToken(
-//                    provider: .apns,
-//                    token: token
-//                )
-//            } catch {
-//                debugPrint(error)
-//            }
-//        }
-//
-//    }
-//
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        showMessageAlert(title: "Push Received", message: "\(userInfo)")
-    }
-
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        showMessageAlert(title: "Push Received", message: "\(userInfo)")
-        completionHandler(.newData)
-    }
 
 }
-
-//    If you do not want to use CourierDelegate to get started. Here is what you can extend.
-//    You still need to be sure that you call Courier.shared.setUserProfile(...)
-
-//    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        Task.init {
-//            do {
-//                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-//                try await Courier.shared.setPushToken(
-//                    provider: .apns,
-//                    token: token
-//                )
-//            } catch {
-//                debugPrint(error)
-//            }
-//        }
-//    }
-

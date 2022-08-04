@@ -2,7 +2,7 @@
 //  NotificationService.swift
 //  CourierService
 //
-//  Created by Michael Miller on 8/3/22.
+//  Created by Michael Miller on 8/4/22.
 //
 
 import UserNotifications
@@ -10,6 +10,11 @@ import Courier
 
 class NotificationService: CourierNotificationServiceExtension {
 
-    // You can override this but it is not recommended
+    //
+    //         ^      ---------------------------------
+    //       >' )     | "You can override this class, |
+    //       ( ( \   <   but it is not recommended"   |
+    //      mm''|\    ---------------------------------
+    //
 
 }

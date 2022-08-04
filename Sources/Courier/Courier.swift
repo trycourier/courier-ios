@@ -14,11 +14,15 @@ open class Courier: NSObject {
       \/_____/\/_____/\/_____/\/_/ /_/\/_/\/_____/\/_/ /_/
      
      
-     Follow the docs here to get everything running:
-     Documentation: https://github.com/trycourier/courier-ios/blob/master/README.md
+     Full Documentation: https://github.com/trycourier/courier-ios
      
      
      */
+    
+//    // TODO::::::
+//    if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
+//        print(deviceId)
+//    }
     
     // MARK: Init
     
