@@ -24,13 +24,7 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
         
         // Try and track the notification
         // Async, does not wait for completion
-        Courier.trackNotification(
-            message: notification.userInfo,
-            event: .delivered
-        )
-        
-        // TODO: Remove me
-        notification.title = "\(notification.title) [Posted]"
+        Courier.trackNotification(message: notification.userInfo, event: .delivered)
         
         // Show the notification
         contentHandler(notification)
