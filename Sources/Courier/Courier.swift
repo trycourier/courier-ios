@@ -262,6 +262,8 @@ open class Courier: NSObject {
             return
         }
         
+        Courier.log("Tracking notification event")
+        
         Task.init {
             do {
                 try await MessagingRepository().postTrackingUrl(url: trackingUrl, event: event)

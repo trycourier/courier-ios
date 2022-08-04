@@ -79,7 +79,7 @@ internal class MessagingRepository: Repository {
 
             let url = URL(string: url)!
             var request = URLRequest(url: url)
-            request.setValue("X-Courier-Client-Key", forHTTPHeaderField: "YWY2MzAzYmUtMGUxZS00MGI1LWJiODAtZTFkOTI5OWNjY2Zm") // TODO: Change me
+            request.setValue("YWY2MzAzYmUtMGUxZS00MGI1LWJiODAtZTFkOTI5OWNjY2Zm", forHTTPHeaderField: "X-Courier-Client-Key") // TODO: WHAT IS THE VERDICT?!
             request.httpMethod = "POST"
             request.httpBody = try? JSONEncoder().encode([
                 "event": event.rawValue
