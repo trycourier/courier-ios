@@ -57,7 +57,7 @@
 		2764CB6B289C786000C2955D /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		2764CB6D289C786000C2955D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		2764CB6F289C786000C2955D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2764CB73289C786000C2955D /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift+Storyboard+APNS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2764CB73289C786000C2955D /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Swift+Storyboard+APNS.app"; path = "/Users/mike/Desktop/mobile-sdk/Courier/Examples/Swift+Storyboard+APNS/build/Debug-iphoneos/Swift+Storyboard+APNS.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,8 +86,6 @@
 				2720BB222889B4DD0089219C /* Swift+Storyboard+APNS */,
 				2764CB6B289C786000C2955D /* CourierService.appex */,
 				2764CB6C289C786000C2955D /* CourierService */,
-				2764CB73289C786000C2955D /* Swift+Storyboard+APNS.app */,
-				2764CB77289C786D00C2955D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,13 +112,6 @@
 				2764CB6F289C786000C2955D /* Info.plist */,
 			);
 			path = CourierService;
-			sourceTree = "<group>";
-		};
-		2764CB77289C786D00C2955D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
