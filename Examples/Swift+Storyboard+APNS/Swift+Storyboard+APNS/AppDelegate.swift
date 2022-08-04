@@ -17,17 +17,9 @@ class AppDelegate: CourierDelegate {
         // 1. Create new APNS key here: https://developer.apple.com/account/resources/authkeys/add
         // 2. Upload your APNS key here: https://app.courier.com/channels/apn
         
+        // TODO::::::
         if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
             print(deviceId)
-        }
-        
-        if let bundleId = Bundle.main.bundleIdentifier {
-            
-            if let userDefaults = UserDefaults(suiteName: "group." + bundleId) {
-                let value = ["Chirp! 🐣", "Squawk 🐤", "Frrrr 🐥"].randomElement()!
-                userDefaults.set(value, forKey: "bird_says")
-            }
-            
         }
         
         return true

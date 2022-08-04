@@ -249,6 +249,29 @@ open class Courier: NSObject {
         return try await getNotificationAuthorizationStatus()
     }
     
+    // MARK: Analytics
+    
+    /**
+     * Use this function if you are manually handling notifications and not using `CourierDelegate`
+     * `CourierDelegate` will automatically track the urls
+     */
+    public static func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) {
+        
+        guard let trackingUrl = message["trackingUrl"] as? String else {
+            Courier.log("Unable to find tracking url")
+            return
+        }
+        
+        Task.init {
+            do {
+                try await MessagingRepository().postTrackingUrl(url: trackingUrl, event: event)
+            } catch {
+                Courier.log(String(describing: error))
+            }
+        }
+        
+    }
+    
     // MARK: Testing
 
     @discardableResult

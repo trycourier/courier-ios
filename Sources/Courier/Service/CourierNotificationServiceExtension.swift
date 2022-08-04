@@ -10,45 +10,39 @@ import UIKit
 
 open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
 
-    private var contentHandler: ((UNNotificationContent) -> Void)?
-    private var bestAttemptContent: UNMutableNotificationContent?
+    private var originalHandler: ((UNNotificationContent) -> Void)?
+    private var originalContent: UNMutableNotificationContent?
 
     open override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         
-        self.contentHandler = contentHandler
-        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+        originalHandler = contentHandler
+        originalContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
-        if let notification = bestAttemptContent {
-            testAPI { statusCode in
-                notification.title = "\(notification.title) [Chrip! 🐣]"
-                notification.subtitle = "\(notification.subtitle) [\(statusCode)]"
-                notification.body = notification.body + " or whatever"
-                contentHandler(notification)
-            }
+        guard let notification = originalContent else {
+            return
         }
+        
+        // Try and track the notification
+        // Async, does not wait for completion
+        Courier.trackNotification(
+            message: notification.userInfo,
+            event: .delivered
+        )
+        
+        // TODO: Remove me
+        notification.title = "\(notification.title) [Posted]"
+        
+        // Show the notification
+        contentHandler(notification)
         
     }
     
     open override func serviceExtensionTimeWillExpire() {
         
-        // Called just before the extension will be terminated by the system.
-        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-        if let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent {
-            contentHandler(bestAttemptContent)
+        // If all fails, return present the original notification
+        if let handler = originalHandler, let content = originalContent {
+            handler(content)
         }
-        
-    }
-    
-    private func testAPI(completionHandler: @escaping (String) -> Void) {
-        
-        let url = URL(string: "https://jsonplaceholder.typicode.com/todos/1")!
-
-        let task = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
-            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 420
-            completionHandler("\(statusCode)")
-        })
-        
-        task.resume()
         
     }
     

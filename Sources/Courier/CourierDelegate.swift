@@ -29,15 +29,29 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     // MARK: Messaging
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
         let message = notification.request.content.userInfo
+        
+        // Try and track
+        Courier.trackNotification(message: message, event: .delivered)
+        
+        // Complete
         let presentationOptions = pushNotificationReceivedInForeground(message: message)
         completionHandler(presentationOptions)
+        
     }
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
         let message = response.notification.request.content.userInfo
+        
+        // Try and track
+        Courier.trackNotification(message: message, event: .opened)
+        
+        // Complete
         pushNotificationOpened(message: message)
         completionHandler()
+        
     }
     
     // MARK: Token Management
@@ -60,8 +74,6 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     }
     
     // MARK: Functions
-
-    // TODO: Returns
     
     open func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions { return [] }
     
