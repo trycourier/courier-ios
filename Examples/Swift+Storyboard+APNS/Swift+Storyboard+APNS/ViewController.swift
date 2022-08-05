@@ -161,7 +161,7 @@ extension ViewController {
             updateUIForStatus(status: status)
             
             // Send the test
-            try await Courier.shared.sendPush(
+            try await Courier.sendPush(
                 authKey: authKey, // TODO: Remove this from production
                 userId: userId,
                 title: "Chirp Chirp!",

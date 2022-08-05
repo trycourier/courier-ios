@@ -11,10 +11,10 @@ import Courier
 class NotificationService: CourierNotificationServiceExtension {
 
     //
-    //         ^      ---------------------------------
-    //       >' )     | "You can override this class, |
-    //       ( ( \   <   but it is not recommended"   |
-    //      mm''|\    ---------------------------------
+    //         ^      ╔══════════════════════════════╗
+    //       >' )     ║ You can override this class, ║
+    //       ( ( \   <  but it is not recommended    ║
+    //      mm''|\    ╚══════════════════════════════╝
     //
 
 }
