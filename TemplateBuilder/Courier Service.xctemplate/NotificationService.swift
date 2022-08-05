@@ -1,6 +1,5 @@
 //___FILEHEADER___
 
-import UserNotifications
 import Courier
 
 class ___FILEBASENAME___: CourierNotificationServiceExtension {
