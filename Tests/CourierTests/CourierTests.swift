@@ -118,7 +118,7 @@ final class CourierTests: XCTestCase {
         
         // TODO: Remove this. For test purposed only
         // Do not use auth key in production app
-        let requestId = try await Courier.shared.sendPush(
+        let requestId = try await Courier.sendPush(
             authKey: testAuthKey,
             userId: userId,
             title: "🐤 Chirp Chirp!",
@@ -130,8 +130,33 @@ final class CourierTests: XCTestCase {
         XCTAssertEqual(requestId.isEmpty, false)
 
     }
-
+    
     func testH() async throws {
+
+        print("\n🔬 Testing Tracking URL")
+        
+        // This is just a random url from a sample project
+        let message = [
+            "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/e/fe9w674dfqmbrvnm6seqbxdd4kbg"
+        ]
+        
+        // Track delivery
+        try await Courier.trackNotification(
+            message: message,
+            event: .delivered
+        )
+        
+        // Track click
+        try await Courier.trackNotification(
+            message: message,
+            event: .clicked
+        )
+        
+        print("URL Tracked")
+
+    }
+
+    func testI() async throws {
 
         print("\n🔬 Testing Sign Out")
 

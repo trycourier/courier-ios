@@ -19,16 +19,21 @@ echo "
    \  /
  ===m""m===
 
-Courier Service Template is ready! 🐣
-
-Next, in Xcode, go to:
-1. File > New > Target
-2. Type \"Courier\" in the filter search box
-3. Click Next
-4. Type a Product Name
-5. Click Finish
-6. Enjoy!
-
-You are safe to close this terminal window.
+Courier Service Template is ready!
 
 "
+
+read -p "→ Press \"enter ↩\" to setup the Courier Service"
+open https://github.com/trycourier/courier-ios#1-add-the-swift-package
+
+echo "
+
+Launching Courier Service setup tutorial...
+
+If your broswer did not open the link, you can see next steps here:
+https://github.com/trycourier/courier-ios#1-add-the-swift-package
+
+"
+
+read -p "→ Press \"enter ↩\" to close this terminal session"
+osascript -e 'tell application "Terminal" to close first window'

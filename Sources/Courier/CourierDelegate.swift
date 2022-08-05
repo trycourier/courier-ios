@@ -33,7 +33,15 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         let message = notification.request.content.userInfo
         
         // Try and track
-        Courier.trackNotification(message: message, event: .delivered)
+        Task.init {
+            
+            do {
+                try await Courier.trackNotification(message: message, event: .delivered)
+            } catch {
+                Courier.log(String(describing: error))
+            }
+            
+        }
         
         // Complete
         let presentationOptions = pushNotificationReceivedInForeground(message: message)

@@ -14,18 +14,18 @@
 		2720BB2D2889B4DD0089219C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2720BB2C2889B4DD0089219C /* Assets.xcassets */; };
 		2720BB302889B4DD0089219C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2720BB2E2889B4DD0089219C /* LaunchScreen.storyboard */; };
 		2720BB3C2889B9F90089219C /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2720BB3B2889B9F90089219C /* Extras.swift */; };
-		2764CB6E289C786000C2955D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764CB6D289C786000C2955D /* NotificationService.swift */; };
-		2764CB72289C786000C2955D /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2764CB6B289C786000C2955D /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2764CB79289C786D00C2955D /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2764CB78289C786D00C2955D /* Courier */; };
+		2764CBCB289D5B1A00C2955D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764CBCA289D5B1A00C2955D /* NotificationService.swift */; };
+		2764CBCF289D5B1A00C2955D /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2764CBC8289D5B1A00C2955D /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2764CBD6289D5B2600C2955D /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2764CBD5289D5B2600C2955D /* Courier */; };
 		2780E639289AC64E00B263F2 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2780E638289AC64E00B263F2 /* Courier */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2764CB70289C786000C2955D /* PBXContainerItemProxy */ = {
+		2764CBCD289D5B1A00C2955D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2720BB182889B4DD0089219C /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 2764CB6A289C786000C2955D;
+			remoteGlobalIDString = 2764CBC7289D5B1A00C2955D;
 			remoteInfo = CourierService;
 		};
 /* End PBXContainerItemProxy section */
@@ -37,7 +37,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2764CB72289C786000C2955D /* CourierService.appex in Embed App Extensions */,
+				2764CBCF289D5B1A00C2955D /* CourierService.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,10 +54,10 @@
 		2720BB312889B4DD0089219C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2720BB372889B4ED0089219C /* Swift+Storyboard+APNS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift+Storyboard+APNS.entitlements"; sourceTree = "<group>"; };
 		2720BB3B2889B9F90089219C /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
-		2764CB6B289C786000C2955D /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2764CB6D289C786000C2955D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		2764CB6F289C786000C2955D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2764CB73289C786000C2955D /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Swift+Storyboard+APNS.app"; path = "/Users/mike/Desktop/mobile-sdk/Courier/Examples/Swift+Storyboard+APNS/build/Debug-iphoneos/Swift+Storyboard+APNS.app"; sourceTree = "<absolute>"; };
+		2764CBC8289D5B1A00C2955D /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2764CBCA289D5B1A00C2955D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		2764CBCC289D5B1A00C2955D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2764CBD0289D5B1A00C2955D /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift+Storyboard+APNS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,11 +69,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2764CB68289C786000C2955D /* Frameworks */ = {
+		2764CBC5289D5B1A00C2955D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2764CB79289C786D00C2955D /* Courier in Frameworks */,
+				2764CBD6289D5B2600C2955D /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,8 +84,10 @@
 			isa = PBXGroup;
 			children = (
 				2720BB222889B4DD0089219C /* Swift+Storyboard+APNS */,
-				2764CB6B289C786000C2955D /* CourierService.appex */,
-				2764CB6C289C786000C2955D /* CourierService */,
+				2764CBC8289D5B1A00C2955D /* CourierService.appex */,
+				2764CBC9289D5B1A00C2955D /* CourierService */,
+				2764CBD0289D5B1A00C2955D /* Swift+Storyboard+APNS.app */,
+				2764CBD4289D5B2600C2955D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,13 +107,20 @@
 			path = "Swift+Storyboard+APNS";
 			sourceTree = "<group>";
 		};
-		2764CB6C289C786000C2955D /* CourierService */ = {
+		2764CBC9289D5B1A00C2955D /* CourierService */ = {
 			isa = PBXGroup;
 			children = (
-				2764CB6D289C786000C2955D /* NotificationService.swift */,
-				2764CB6F289C786000C2955D /* Info.plist */,
+				2764CBCA289D5B1A00C2955D /* NotificationService.swift */,
+				2764CBCC289D5B1A00C2955D /* Info.plist */,
 			);
 			path = CourierService;
+			sourceTree = "<group>";
+		};
+		2764CBD4289D5B2600C2955D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -129,23 +138,23 @@
 			buildRules = (
 			);
 			dependencies = (
-				2764CB71289C786000C2955D /* PBXTargetDependency */,
+				2764CBCE289D5B1A00C2955D /* PBXTargetDependency */,
 			);
 			name = "Swift+Storyboard+APNS";
 			packageProductDependencies = (
 				2780E638289AC64E00B263F2 /* Courier */,
 			);
 			productName = "Swift+Storyboard+APNS";
-			productReference = 2764CB73289C786000C2955D /* Swift+Storyboard+APNS.app */;
+			productReference = 2764CBD0289D5B1A00C2955D /* Swift+Storyboard+APNS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2764CB6A289C786000C2955D /* CourierService */ = {
+		2764CBC7289D5B1A00C2955D /* CourierService */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2764CB74289C786000C2955D /* Build configuration list for PBXNativeTarget "CourierService" */;
+			buildConfigurationList = 2764CBD1289D5B1A00C2955D /* Build configuration list for PBXNativeTarget "CourierService" */;
 			buildPhases = (
-				2764CB67289C786000C2955D /* Sources */,
-				2764CB68289C786000C2955D /* Frameworks */,
-				2764CB69289C786000C2955D /* Resources */,
+				2764CBC4289D5B1A00C2955D /* Sources */,
+				2764CBC5289D5B1A00C2955D /* Frameworks */,
+				2764CBC6289D5B1A00C2955D /* Resources */,
 			);
 			buildRules = (
 			);
@@ -153,10 +162,10 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				2764CB78289C786D00C2955D /* Courier */,
+				2764CBD5289D5B2600C2955D /* Courier */,
 			);
 			productName = CourierService;
-			productReference = 2764CB6B289C786000C2955D /* CourierService.appex */;
+			productReference = 2764CBC8289D5B1A00C2955D /* CourierService.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -172,7 +181,7 @@
 					2720BB1F2889B4DD0089219C = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
-					2764CB6A289C786000C2955D = {
+					2764CBC7289D5B1A00C2955D = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
 				};
@@ -194,7 +203,7 @@
 			projectRoot = "";
 			targets = (
 				2720BB1F2889B4DD0089219C /* Swift+Storyboard+APNS */,
-				2764CB6A289C786000C2955D /* CourierService */,
+				2764CBC7289D5B1A00C2955D /* CourierService */,
 			);
 		};
 /* End PBXProject section */
@@ -210,7 +219,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2764CB69289C786000C2955D /* Resources */ = {
+		2764CBC6289D5B1A00C2955D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -231,21 +240,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2764CB67289C786000C2955D /* Sources */ = {
+		2764CBC4289D5B1A00C2955D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2764CB6E289C786000C2955D /* NotificationService.swift in Sources */,
+				2764CBCB289D5B1A00C2955D /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2764CB71289C786000C2955D /* PBXTargetDependency */ = {
+		2764CBCE289D5B1A00C2955D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2764CB6A289C786000C2955D /* CourierService */;
-			targetProxy = 2764CB70289C786000C2955D /* PBXContainerItemProxy */;
+			target = 2764CBC7289D5B1A00C2955D /* CourierService */;
+			targetProxy = 2764CBCD289D5B1A00C2955D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -443,7 +452,7 @@
 			};
 			name = Release;
 		};
-		2764CB75289C786000C2955D /* Debug */ = {
+		2764CBD2289D5B1A00C2955D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -468,7 +477,7 @@
 			};
 			name = Debug;
 		};
-		2764CB76289C786000C2955D /* Release */ = {
+		2764CBD3289D5B1A00C2955D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -514,11 +523,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2764CB74289C786000C2955D /* Build configuration list for PBXNativeTarget "CourierService" */ = {
+		2764CBD1289D5B1A00C2955D /* Build configuration list for PBXNativeTarget "CourierService" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2764CB75289C786000C2955D /* Debug */,
-				2764CB76289C786000C2955D /* Release */,
+				2764CBD2289D5B1A00C2955D /* Debug */,
+				2764CBD3289D5B1A00C2955D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -537,7 +546,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2764CB78289C786D00C2955D /* Courier */ = {
+		2764CBD5289D5B2600C2955D /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2780E637289AC64E00B263F2 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
