@@ -79,9 +79,9 @@ func signInWithCourier() {
 
 ### **(Recommended) Setup the Courier Notification Service**
 
-Without adding the Courier Notification Service your Courier workspace will not know when Courier delivers the push notification.
+Without adding the Courier Notification Service your Courier workspace will not know when Courier delivers a push notification to the device.
 
-Follow this tutorial setup the service! (No code required 😄)
+Follow this tutorial to setup the service! (No Code Required 😄)
 
 ![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/service-extension-tutorial.gif)
 
