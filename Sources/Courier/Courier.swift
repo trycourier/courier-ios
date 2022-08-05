@@ -19,11 +19,6 @@ open class Courier: NSObject {
      
      */
     
-//    // TODO::::::
-//    if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
-//        print(deviceId)
-//    }
-    
     // MARK: Init
     
     private override init() {

@@ -31,17 +31,15 @@ class AppDelegate: CourierDelegate {
     
     // MARK: Courier Notification Functions
     
-    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
+    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
         
         print("Push Received")
         print(message)
         
-        // ⚠️ Customize this to be what you would like
-        // Pass an empty array to this if you do not want to use it
-        showForegroundNotificationAs([.list, .badge, .banner, .sound])
-        
         // ⚠️ For demo purposes only
         showMessageAlert(title: "Push Received", message: "\(message)")
+        
+        return [.list, .badge, .banner, .sound]
         
     }
     
@@ -69,7 +67,7 @@ extension AppDelegate: MessagingDelegate {
                   )
               }
           } catch {
-              Courier.log(error)
+              print(error)
           }
       }
   }

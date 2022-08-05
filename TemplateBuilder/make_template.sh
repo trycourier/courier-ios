@@ -24,14 +24,14 @@ Courier Service Template is ready!
 "
 
 read -p "→ Press \"enter ↩\" to setup the Courier Service"
-open https://github.com/trycourier/courier-ios#1-add-the-swift-package
+open https://github.com/trycourier/courier-ios#recommended-setup-the-courier-notification-service
 
 echo "
 
 Launching Courier Service setup tutorial...
 
 If your broswer did not open the link, you can see next steps here:
-https://github.com/trycourier/courier-ios#1-add-the-swift-package
+https://github.com/trycourier/courier-ios#recommended-setup-the-courier-notification-service
 
 "
 

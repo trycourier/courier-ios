@@ -16,8 +16,8 @@
 		2720BB3C2889B9F90089219C /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2720BB3B2889B9F90089219C /* Extras.swift */; };
 		2764CC07289D82DB00C2955D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764CC06289D82DB00C2955D /* NotificationService.swift */; };
 		2764CC0B289D82DB00C2955D /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2764CC04289D82DB00C2955D /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2764CC12289D82E700C2955D /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2764CC11289D82E700C2955D /* Courier */; };
-		2780E639289AC64E00B263F2 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2780E638289AC64E00B263F2 /* Courier */; };
+		2764CC28289DA85100C2955D /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2764CC27289DA85100C2955D /* Courier */; };
+		2764CC2A289DA86E00C2955D /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2764CC29289DA86E00C2955D /* Courier */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2780E639289AC64E00B263F2 /* Courier in Frameworks */,
+				2764CC28289DA85100C2955D /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2764CC12289D82E700C2955D /* Courier in Frameworks */,
+				2764CC2A289DA86E00C2955D /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,7 +142,7 @@
 			);
 			name = "Swift+Storyboard+APNS";
 			packageProductDependencies = (
-				2780E638289AC64E00B263F2 /* Courier */,
+				2764CC27289DA85100C2955D /* Courier */,
 			);
 			productName = "Swift+Storyboard+APNS";
 			productReference = 2764CC0C289D82DB00C2955D /* Swift+Storyboard+APNS.app */;
@@ -162,7 +162,7 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				2764CC11289D82E700C2955D /* Courier */,
+				2764CC29289DA86E00C2955D /* Courier */,
 			);
 			productName = CourierService;
 			productReference = 2764CC04289D82DB00C2955D /* CourierService.appex */;
@@ -196,7 +196,7 @@
 			);
 			mainGroup = 2720BB172889B4DD0089219C;
 			packageReferences = (
-				2780E637289AC64E00B263F2 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				2764CC26289DA85100C2955D /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 2720BB172889B4DD0089219C;
 			projectDirPath = "";
@@ -535,25 +535,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2780E637289AC64E00B263F2 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+		2764CC26289DA85100C2955D /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = feature/analytics;
+				branch = master;
 				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2764CC11289D82E700C2955D /* Courier */ = {
+		2764CC27289DA85100C2955D /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2780E637289AC64E00B263F2 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 2764CC26289DA85100C2955D /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
-		2780E638289AC64E00B263F2 /* Courier */ = {
+		2764CC29289DA86E00C2955D /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2780E637289AC64E00B263F2 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 2764CC26289DA85100C2955D /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
 /* End XCSwiftPackageProductDependency section */

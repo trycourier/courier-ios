@@ -11,7 +11,7 @@ import Courier
 class ViewController: UIViewController {
     
     let userId = "example_user"
-    let authKey = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
+    let authKey = "example_auth_key"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
@@ -85,6 +85,8 @@ extension ViewController {
             // Courier needs you to generate an access token on your backend
             // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
 //            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
+            
+            // You can test with your auth key
             let accessToken = authKey
             
             try await Courier.shared.setCredentials(
