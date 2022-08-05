@@ -18,50 +18,31 @@ class AppDelegate: CourierDelegate {
         // 2. Upload your APNS key here: https://app.courier.com/channels/apn
         
         return true
+        
     }
     
-    // MARK: Courier Notification Functions
-    
-    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
+    // MARK: Courier Notification Support
+
+    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+
         print("Push Received")
         print(message)
-        
-        // ⚠️ Customize this to be what you would like
-        // Pass an empty array to this if you do not want to use it
-        showForegroundNotificationAs([.list, .badge, .banner, .sound])
-        
+
         // ⚠️ For demo purposes only
         showMessageAlert(title: "Push Received", message: "\(message)")
-        
+
+        return [.list, .badge, .banner, .sound]
+
     }
-    
+
     override func pushNotificationOpened(message: [AnyHashable : Any]) {
-        
+
         print("Push Opened")
         print(message)
-        
+
         // ⚠️ For demo purposes only
         showMessageAlert(title: "Push Opened", message: "\(message)")
-        
+
     }
 
 }
-
-//    If you do not want to use CourierDelegate to get started. Here is what you can extend.
-//    You still need to be sure that you call Courier.shared.setUserProfile(...)
-
-//    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        Task.init {
-//            do {
-//                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-//                try await Courier.shared.setPushToken(
-//                    provider: .apns,
-//                    token: token
-//                )
-//            } catch {
-//                debugPrint(error)
-//            }
-//        }
-//    }
-

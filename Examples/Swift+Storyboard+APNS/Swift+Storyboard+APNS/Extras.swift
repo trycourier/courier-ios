@@ -22,14 +22,20 @@ extension UIApplication {
     }
 }
 
+var alert: UIAlertController? = nil
+
 extension AppDelegate {
     
     func showMessageAlert(title: String, message: String) {
+        
+        alert?.dismiss(animated: true)
+        
         if let window = UIApplication.shared.currentWindow {
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default))
-            window.rootViewController?.present(alert, animated: true, completion: nil)
+            alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert!.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default))
+            window.rootViewController?.present(alert!, animated: true, completion: nil)
         }
+        
     }
     
 }

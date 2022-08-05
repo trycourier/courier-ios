@@ -77,6 +77,27 @@ func signInWithCourier() {
 
 &emsp;
 
+### **(Recommended) Setup the Courier Notification Service**
+
+To be sure your Courier workspace knows that a sent push notification was delivered to the device, it's recommended that you setup the Courier Notification Service. If this service is not setup, your workspace will not know if the push actually makes it to the device.
+
+Follow this tutorial setup the service. (No code required 😄)
+
+![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/service-extension-tutorial.gif)
+
+1. Run the script located at Xcode > Package Dependencies > Courier > TemplateBuilder > make_template.sh (`sh make_template.sh`)
+2. Go back to Xcode and click File > New > Target
+3. Under iOS, filter for "Courier"
+4. Click Next
+5. Give the service extension a name (i.e. "CourierService")
+6. Click Finish
+7. Click on your project file
+8. Under Targets, click on your new Target
+9. Under the General tab > Frameworks and Libraries, click the "+" icon
+10. Select the Courier package from the list under Courier Package > Courier
+
+&emsp;
+
 ### **4. Manage Push Notification Tokens**
 
 There are few different ways to manage user tokens. Here are 3 examples:
@@ -141,7 +162,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     token: token
                 )
             } catch {
-                debugPrint(error)
+                print(error)
             }
         }
 
@@ -172,7 +193,7 @@ extension AppDelegate: MessagingDelegate {
                         token: token
                     )
                 } catch {
-                    debugPrint(error)
+                    print(error)
                 }
             }
 

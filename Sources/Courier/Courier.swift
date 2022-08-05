@@ -14,15 +14,24 @@ open class Courier: NSObject {
       \/_____/\/_____/\/_____/\/_/ /_/\/_/\/_____/\/_/ /_/
      
      
-     Follow the docs here to get everything running:
-     Documentation: https://github.com/trycourier/courier-ios/blob/master/README.md
+     Full Documentation: https://github.com/trycourier/courier-ios
      
      
      */
     
+//    // TODO::::::
+//    if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
+//        print(deviceId)
+//    }
+    
     // MARK: Init
     
     private override init() {
+        
+        #if DEBUG
+        isDebugging = true
+        #endif
+        
         super.init()
     }
     
@@ -39,16 +48,16 @@ open class Courier: NSObject {
     internal var accessToken: String? = nil
     
     /**
+     * Determines if the SDK should show logs or other debugging data
+     * Set to find debug mode by default
+     */
+    public var isDebugging = false
+    
+    /**
      * Courier APIs
      */
     private lazy var tokenRepo = TokenRepository()
     private lazy var messagingRepo = MessagingRepository()
-    
-    // MARK: Getters
-    
-    private static var userNotificationCenter: UNUserNotificationCenter {
-        get { UNUserNotificationCenter.current() }
-    }
     
     // MARK: User Management
     
@@ -63,9 +72,9 @@ open class Courier: NSObject {
      */
     public func setCredentials(accessToken: String, userId: String) async throws {
         
-        debugPrint("Updating Courier User Profile")
-        debugPrint("Access Token: \(accessToken)")
-        debugPrint("User Id: \(userId)")
+        Courier.log("Updating Courier User Profile")
+        Courier.log("Access Token: \(accessToken)")
+        Courier.log("User Id: \(userId)")
         
         // Set the user's current credentials
         self.accessToken = accessToken
@@ -96,7 +105,7 @@ open class Courier: NSObject {
      */
     public func signOut() async throws {
         
-        debugPrint("Clearing Courier User Credentials")
+        Courier.log("Clearing Courier User Credentials")
         
         async let deleteAPNS: () = tokenRepo.deleteToken(
             userId: userId,
@@ -132,8 +141,8 @@ open class Courier: NSObject {
 
         apnsToken = token
 
-        debugPrint("Apple Push Notification Service Token")
-        debugPrint(token)
+        Courier.log("Apple Push Notification Service Token")
+        Courier.log(token)
 
         return try await tokenRepo.putUserToken(
             userId: userId,
@@ -156,8 +165,8 @@ open class Courier: NSObject {
 
         fcmToken = token
 
-        debugPrint("Firebase Cloud Messaging Token")
-        debugPrint(token)
+        Courier.log("Firebase Cloud Messaging Token")
+        Courier.log(token)
 
         return try await tokenRepo.putUserToken(
             userId: userId,
@@ -178,76 +187,6 @@ open class Courier: NSObject {
         case .fcm:
             return try await Courier.shared.setFCMToken(token)
         }
-    }
-    
-    // MARK: Permissions
-    
-    /**
-     * Get the authorization status of the notification permissions
-     * Completion returns on main thread
-     */
-    public static func getNotificationAuthorizationStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
-        userNotificationCenter.getNotificationSettings(completionHandler: { settings in
-            DispatchQueue.main.async {
-                completion(settings.authorizationStatus)
-            }
-        })
-    }
-    
-    /**
-     * Get notification permission status with async await
-     */
-    public static func getNotificationAuthorizationStatus() async throws -> UNAuthorizationStatus {
-        let settings = await userNotificationCenter.notificationSettings()
-        return settings.authorizationStatus
-    }
-    
-    /**
-     * Permission authorization options needed to handle pushes nicely
-     */
-    private static var permissionAuthorizationOptions: UNAuthorizationOptions {
-        get {
-            return [.alert, .badge, .sound]
-        }
-    }
-    
-    /**
-     * Request notification permission access with completion handler
-     * Completion returns on main thread
-     */
-    public static func requestNotificationPermissions(completion: @escaping (UNAuthorizationStatus) -> Void) {
-        userNotificationCenter.requestAuthorization(
-            options: permissionAuthorizationOptions,
-            completionHandler: { _, _ in
-                
-                // Get the full status of the permission
-                getNotificationAuthorizationStatus { permission in
-                    completion(permission)
-                }
-                
-            }
-        )
-    }
-    
-    /**
-     * Request notification permission access with async await
-     */
-    @discardableResult
-    public static func requestNotificationPermissions() async throws -> UNAuthorizationStatus {
-        try await userNotificationCenter.requestAuthorization(options: permissionAuthorizationOptions)
-        return try await getNotificationAuthorizationStatus()
-    }
-    
-    // MARK: Testing
-
-    @discardableResult
-    public func sendPush(authKey: String, userId: String, title: String, message: String) async throws -> String {
-        return try await messagingRepo.send(
-            authKey: authKey,
-            userId: userId,
-            title: title,
-            message: message
-        )
     }
     
 }
