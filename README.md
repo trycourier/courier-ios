@@ -143,7 +143,7 @@ class AppDelegate: CourierDelegate {
 
 ### 2. Traditional APNS Example (Manually manage APNS tokens)
 
-⚠️ Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken(...)`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
+⚠️ Be sure to call both `Courier.shared.setCredentials(...)` and `Courier.shared.setPushToken(...)` in your implementation. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
 
 ```swift
 import Courier
@@ -175,7 +175,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 ### 3. Traditional FCM Example (Manually manage FCM tokens)
 
-⚠️ Be sure to call `Courier.shared.setCredentials(...)` before you call `Courier.shared.setPushToken(...)`. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
+⚠️ Be sure to call both `Courier.shared.setCredentials(...)` and `Courier.shared.setPushToken(...)` in your implementation. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
 
 ```swift
 import Courier
