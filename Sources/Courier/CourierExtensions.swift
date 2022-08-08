@@ -73,6 +73,14 @@ extension Courier {
         return try await getNotificationAuthorizationStatus()
     }
     
+    // MARK: Settings
+    
+    public static func openSettingsForApp() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
+            UIApplication.shared.open(appSettings)
+        }
+    }
+    
     // MARK: Analytics
     
     /**

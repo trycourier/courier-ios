@@ -11,7 +11,7 @@ import Courier
 class ViewController: UIViewController {
     
     let userId = "example_user"
-    let authKey = "your_auth_key"
+    let authKey = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
@@ -27,7 +27,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var testMessageButton: UIButton!
     @IBAction func testMessageAction(_ sender: Any) {
-        sendTestMessage()
+        openAppSpecificSettings()
+//        sendTestMessage()
     }
     
     override func viewDidLoad() {
@@ -67,7 +68,7 @@ extension ViewController {
         userStatusLabel.text = "Signing out..."
         userStatusButton.isHidden = true
         
-        Task.init {
+        Task {
             try await Courier.shared.signOut()
             refreshUser()
             userStatusButton.isHidden = false
@@ -126,7 +127,7 @@ extension ViewController {
         notificationStatusLabel.text = "Getting notification status..."
         notificationButton.isHidden = true
         
-        Task.init {
+        Task {
             
             let status = try await Courier.getNotificationAuthorizationStatus()
             updateUIForStatus(status: status)
@@ -137,7 +138,7 @@ extension ViewController {
     
     private func requestNotificationPermissions() {
         
-        Task.init {
+        Task {
             
             let status = try await Courier.requestNotificationPermissions()
             updateUIForStatus(status: status)
@@ -154,7 +155,7 @@ extension ViewController {
     
     private func sendTestMessage() {
         
-        Task.init {
+        Task {
             
             testMessageButton.isEnabled = false
             
