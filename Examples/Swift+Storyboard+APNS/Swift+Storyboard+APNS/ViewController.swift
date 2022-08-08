@@ -10,28 +10,9 @@ import Courier
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var sendTestButton: ActionButton!
     @IBOutlet weak var notificationActionButton: ActionButton!
     @IBOutlet weak var userDetailsActionButton: ActionButton!
-    
-    @IBOutlet weak var userStatusLabel: UILabel!
-    @IBOutlet weak var userStatusButton: UIButton!
-    @IBAction func userButtonAction(_ sender: Any) {
-//        performUserButtonAction()
-    }
-    
-    @IBOutlet weak var notificationStatusLabel: UILabel!
-    @IBOutlet weak var notificationButton: UIButton!
-    @IBAction func notificationRequestAction(_ sender: Any) {
-//        requestNotificationPermissions()
-        let vc = NotificationPermissionViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @IBOutlet weak var testMessageButton: UIButton!
-    @IBAction func testMessageAction(_ sender: Any) {
-//        Courier.openSettingsForApp()
-//        sendTestMessage()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +29,13 @@ class ViewController: UIViewController {
             self?.navigationController?.pushViewController(vc, animated: true)
         }
         
+        sendTestButton.action = { [weak self] in
+            self?.sendTestMessage()
+        }
+        
         refreshUser()
         refreshNotificationPermission()
+        setMessagingButton(isLoading: false)
         
     }
 
@@ -63,25 +49,7 @@ extension ViewController {
         
         userDetailsActionButton.rows = [
             ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
-            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
-            ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
-            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
-            ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
-            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
-            ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
-            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
-            ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
-            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
-            ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
-            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
-            ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "User ID", value: Courier.shared.userId ?? "Not set"),
             ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set")
         ]
         
@@ -204,34 +172,51 @@ extension ViewController {
 
 extension ViewController {
     
+    private func setMessagingButton(isLoading: Bool) {
+        sendTestButton.title = isLoading ? "Loading..." : "Send Test Push Notification"
+        sendTestButton.isUserInteractionEnabled = !isLoading
+    }
+    
     private func sendTestMessage() {
         
         Task {
             
-            testMessageButton.isEnabled = false
+            setMessagingButton(isLoading: true)
             
-            // Request push notifications if they are not requested
-            let status = try await Courier.requestNotificationPermissions()
-            updateUIForStatus(status: status)
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
             
-            // Send the test
-            try await Courier.sendPush(
-                authKey: currentAccessToken ?? "", // TODO: Remove this from production
-                userId: currentUserId ?? "",
-                title: "Chirp Chirp!",
-                message: "This is a test message sent from the Courier iOS APNS example app"
-            )
-            
-            // Check if Courier has a user already signed in
-            if (Courier.shared.userId == nil) {
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                appDelegate.showMessageAlert(
-                    title: "You are not signed in",
-                    message: "Courier will try and send push notifications to this user id, but you will not receive them on this device."
+            do {
+                
+                // Request push notifications if they are not requested
+                let status = try await Courier.requestNotificationPermissions()
+                updateUIForStatus(status: status)
+                
+                // Send the test
+                try await Courier.sendPush(
+                    authKey: currentAccessToken ?? "", // TODO: Remove this from production
+                    userId: currentUserId ?? "",
+                    title: "Chirp Chirp!",
+                    message: "This is a test message sent from the Courier iOS APNS example app"
                 )
+                
+                // Check if Courier has a user already signed in
+                if (Courier.shared.userId == nil) {
+                    appDelegate.showMessageAlert(
+                        title: "You are not signed in",
+                        message: "Courier will try and send push notifications to this user id, but you will not receive them on this device."
+                    )
+                }
+                
+            } catch {
+                
+                appDelegate.showMessageAlert(
+                    title: "Error sending test push",
+                    message: "\(error)"
+                )
+                
             }
             
-            testMessageButton.isEnabled = true
+            setMessagingButton(isLoading: false)
             
         }
         

@@ -31,6 +31,14 @@ class ActionButton: UIView {
     
     var action: (() -> Void)? = nil
     
+    var title: String? = nil {
+        didSet {
+            if let t = title {
+                setTitle(title: t)
+            }
+        }
+    }
+    
     private let vStack = UIStackView()
     private let containerStack = UIStackView()
 
@@ -81,6 +89,27 @@ class ActionButton: UIView {
         
     }
     
+    private func setTitle(title: String) {
+        
+        subviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 16.0)
+        titleLabel.textColor = .white
+        titleLabel.textAlignment = .center
+        
+        addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+    }
+    
     private func makeRow(row: Row) -> UIStackView {
         
         let title = UILabel()
@@ -100,7 +129,6 @@ class ActionButton: UIView {
         if (row.value.isEmpty) {
             title.font = UIFont.boldSystemFont(ofSize: 20.0)
             title.textColor = .tintColor
-            title.textAlignment = .center
         }
         
         title.adjustsFontSizeToFitWidth = true
