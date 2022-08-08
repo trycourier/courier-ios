@@ -11,7 +11,7 @@ import Courier
 class ViewController: UIViewController {
     
     let userId = "example_user"
-    let authKey = "example_auth_key"
+    let authKey = "your_auth_key"
 
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!

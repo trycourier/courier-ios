@@ -79,13 +79,13 @@ open class Courier: NSObject {
         // If we have them
         async let putAPNS: () = tokenRepo.putUserToken(
             userId: userId,
-            provider: CourierProvider.apns,
+            provider: .apns,
             deviceToken: apnsToken
         )
 
         async let putFCM: () = tokenRepo.putUserToken(
             userId: userId,
-            provider: CourierProvider.fcm,
+            provider: .fcm,
             deviceToken: fcmToken
         )
         
@@ -141,7 +141,7 @@ open class Courier: NSObject {
 
         return try await tokenRepo.putUserToken(
             userId: userId,
-            provider: CourierProvider.apns,
+            provider: .apns,
             deviceToken: token
         )
 
@@ -165,7 +165,7 @@ open class Courier: NSObject {
 
         return try await tokenRepo.putUserToken(
             userId: userId,
-            provider: CourierProvider.fcm,
+            provider: .fcm,
             deviceToken: token
         )
 

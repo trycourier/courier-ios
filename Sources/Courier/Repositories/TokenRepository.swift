@@ -37,9 +37,10 @@ class TokenRepository: Repository {
             var request = URLRequest(url: url)
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             request.httpMethod = "PUT"
-            request.httpBody = try? JSONEncoder().encode([
-                "provider_key": provider.rawValue
-            ])
+            request.httpBody = try? JSONEncoder().encode(CourierToken(
+                provider_key: provider.rawValue,
+                device: CourierDevice()
+            ))
             
             let task = CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
                 

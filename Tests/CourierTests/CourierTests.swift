@@ -13,7 +13,7 @@ final class CourierTests: XCTestCase {
     }
     
     func testA() async throws {
-
+        
         print("\n🔬 Setting APNS Token before User")
         
         do {
