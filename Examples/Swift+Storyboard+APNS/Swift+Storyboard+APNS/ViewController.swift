@@ -9,30 +9,44 @@ import UIKit
 import Courier
 
 class ViewController: UIViewController {
-    
-    let userId = "example_user"
-    let authKey = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
 
+    @IBOutlet weak var notificationActionButton: ActionButton!
+    @IBOutlet weak var userDetailsActionButton: ActionButton!
+    
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var userStatusButton: UIButton!
     @IBAction func userButtonAction(_ sender: Any) {
-        performUserButtonAction()
+//        performUserButtonAction()
     }
     
     @IBOutlet weak var notificationStatusLabel: UILabel!
     @IBOutlet weak var notificationButton: UIButton!
     @IBAction func notificationRequestAction(_ sender: Any) {
-        requestNotificationPermissions()
+//        requestNotificationPermissions()
+        let vc = NotificationPermissionViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @IBOutlet weak var testMessageButton: UIButton!
     @IBAction func testMessageAction(_ sender: Any) {
-        openAppSpecificSettings()
+//        Courier.openSettingsForApp()
 //        sendTestMessage()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Courier Example"
+        
+        notificationActionButton.action = { [weak self] in
+            let vc = NotificationPermissionViewController()
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        userDetailsActionButton.action = { [weak self] in
+            let vc = UserDetailsViewController()
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
         
         refreshUser()
         refreshNotificationPermission()
@@ -46,62 +60,93 @@ class ViewController: UIViewController {
 extension ViewController {
     
     private func refreshUser() {
-        if (Courier.shared.userId != nil) {
-            userStatusLabel.text = "Courier User Id is set to:\n\n\(Courier.shared.userId!)"
-            userStatusButton.setTitle("Sign Out", for: .normal)
-        } else {
-            userStatusLabel.text = "No Courier User Id Found.\n\nClick 'Sign In' to sync APNS token to Courier"
-            userStatusButton.setTitle("Sign In", for: .normal)
-        }
+        
+        userDetailsActionButton.rows = [
+            ActionButton.Row(title: "Courier Credentials", value: ""),
+            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
+            ActionButton.Row(title: "Courier Credentials", value: ""),
+            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
+            ActionButton.Row(title: "Courier Credentials", value: ""),
+            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
+            ActionButton.Row(title: "Courier Credentials", value: ""),
+            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
+            ActionButton.Row(title: "Courier Credentials", value: ""),
+            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
+            ActionButton.Row(title: "Courier Credentials", value: ""),
+            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set"),
+            ActionButton.Row(title: "Courier Credentials", value: ""),
+            ActionButton.Row(title: "User ID", value: currentUserId ?? "Not set"),
+            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set")
+        ]
+        
+//        if (Courier.shared.userId != nil) {
+//
+//            notificationActionButton.rows = [
+//                ActionButton.Row(title: "Notification Permission", value: ""),
+//                ActionButton.Row(title: "Status", value: status.prettyText)
+//            ]
+//
+//            userStatusLabel.text = "Courier User Id is set to:\n\n\(Courier.shared.userId!)"
+//            userStatusButton.setTitle("Sign Out", for: .normal)
+//        } else {
+//            userStatusLabel.text = "No Courier User Id Found.\n\nClick 'Sign In' to sync APNS token to Courier"
+//            userStatusButton.setTitle("Sign In", for: .normal)
+//        }
     }
     
-    private func performUserButtonAction() {
-        if (Courier.shared.userId != nil) {
-            signOutUser()
-        } else {
-            signInUser()
-        }
-    }
-    
-    private func signOutUser() {
-        
-        userStatusLabel.text = "Signing out..."
-        userStatusButton.isHidden = true
-        
-        Task {
-            try await Courier.shared.signOut()
-            refreshUser()
-            userStatusButton.isHidden = false
-        }
-        
-    }
-    
-    private func signInUser() {
-        
-        Task.init {
-            
-            userStatusLabel.text = "Signing in..."
-            userStatusButton.isHidden = true
-            
-            // Courier needs you to generate an access token on your backend
-            // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
-//            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
-            
-            // You can test with your auth key
-            let accessToken = authKey
-            
-            try await Courier.shared.setCredentials(
-                accessToken: accessToken,
-                userId: userId
-            )
-            
-            refreshUser()
-            
-            userStatusButton.isHidden = false
-            
-        }
-        
-    }
+//    private func performUserButtonAction() {
+//        if (Courier.shared.userId != nil) {
+//            signOutUser()
+//        } else {
+//            signInUser()
+//        }
+//    }
+//
+//    private func signOutUser() {
+//
+//        userStatusLabel.text = "Signing out..."
+//        userStatusButton.isHidden = true
+//
+//        Task {
+//            try await Courier.shared.signOut()
+//            refreshUser()
+//            userStatusButton.isHidden = false
+//        }
+//
+//    }
+//
+//    private func signInUser() {
+//
+//        Task.init {
+//
+//            userStatusLabel.text = "Signing in..."
+//            userStatusButton.isHidden = true
+//
+//            // Courier needs you to generate an access token on your backend
+//            // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
+////            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
+//
+//            // You can test with your auth key
+////            let accessToken = authKey
+//
+//            try await Courier.shared.setCredentials(
+//                accessToken: currentAccessToken ?? "",
+//                userId: currentUserId ?? ""
+//            )
+//
+//            refreshUser()
+//
+//            userStatusButton.isHidden = false
+//
+//        }
+//
+//    }
     
 }
 
@@ -111,29 +156,35 @@ extension ViewController {
     
     private func updateUIForStatus(status: UNAuthorizationStatus) {
         
-        notificationStatusLabel.text = "Notification Permission:\n\n\(status.prettyText)"
+        notificationActionButton.rows = [
+            ActionButton.Row(title: "Notification Permission", value: ""),
+            ActionButton.Row(title: "Status", value: status.prettyText)
+        ]
         
-        if (status == .notDetermined) {
-            notificationButton.setTitle("Request Notification Permission", for: .normal)
-            notificationButton.isHidden = false
-        } else {
-            notificationButton.isHidden = true
-        }
+//        if (status == .notDetermined) {
+//            notificationButton.setTitle("Request Notification Permission", for: .normal)
+//            notificationButton.isHidden = false
+//        } else {
+//            notificationButton.isHidden = true
+//        }
         
     }
     
     private func refreshNotificationPermission() {
         
-        notificationStatusLabel.text = "Getting notification status..."
-        notificationButton.isHidden = true
-        
+        let row = ActionButton.Row(title: "Getting notification status...", value: "")
+        notificationActionButton.rows = [row]
+
+//        notificationStatusLabel.text = "Getting notification status..."
+//        notificationButton.isHidden = true
+
         Task {
-            
+
             let status = try await Courier.getNotificationAuthorizationStatus()
             updateUIForStatus(status: status)
-            
+
         }
-        
+
     }
     
     private func requestNotificationPermissions() {
@@ -165,8 +216,8 @@ extension ViewController {
             
             // Send the test
             try await Courier.sendPush(
-                authKey: authKey, // TODO: Remove this from production
-                userId: userId,
+                authKey: currentAccessToken ?? "", // TODO: Remove this from production
+                userId: currentUserId ?? "",
                 title: "Chirp Chirp!",
                 message: "This is a test message sent from the Courier iOS APNS example app"
             )

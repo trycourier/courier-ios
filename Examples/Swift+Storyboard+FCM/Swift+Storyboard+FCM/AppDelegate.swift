@@ -20,6 +20,8 @@ class AppDelegate: CourierDelegate {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         
+//        FirebaseApp.configure(options: FirebaseOptions(googleAppID: <#T##String#>, gcmSenderID: <#T##String#>))
+        
         // Be sure you have created a new APNS key and have uploaded it here before you get started
         // 2. Create new APNS key here: https://developer.apple.com/account/resources/authkeys/add
         // 3. Upload your APNS key to your Firebase Account: https://console.firebase.google.com/project/YOUR_PROJECT_ID/settings/cloudmessaging
