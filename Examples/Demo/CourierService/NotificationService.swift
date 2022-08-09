@@ -2,10 +2,9 @@
 //  NotificationService.swift
 //  CourierService
 //
-//  Created by Michael Miller on 8/5/22.
+//  Created by Michael Miller on 8/9/22.
 //
 
-import UserNotifications
 import Courier
 
 class NotificationService: CourierNotificationServiceExtension {

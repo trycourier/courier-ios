@@ -28,13 +28,15 @@ var alert: UIAlertController? = nil
 
 extension AppDelegate {
     
-    func showMessageAlert(title: String, message: String) {
+    func showMessageAlert(title: String, message: String, onOkClick: (() -> Void)? = nil) {
         
         alert?.dismiss(animated: true)
         
         if let window = UIApplication.shared.currentWindow {
             alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert!.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default))
+            alert!.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
+                onOkClick?()
+            }))
             window.rootViewController?.present(alert!, animated: true, completion: nil)
         }
         

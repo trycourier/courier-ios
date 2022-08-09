@@ -1,29 +1,31 @@
 //
-//  ViewController.swift
-//  Swift+Storyboard+APNS
+//  RootViewController.swift
+//  Demo
 //
-//  Created by Michael Miller on 7/21/22.
+//  Created by Michael Miller on 8/9/22.
 //
 
 import UIKit
 import Courier
+import FirebaseCore
+import FirebaseMessaging
 
-class ViewController: UIViewController {
+class RootViewController: UIViewController {
 
     @IBOutlet weak var sendTestButton: ActionButton!
     @IBOutlet weak var notificationActionButton: ActionButton!
     @IBOutlet weak var userDetailsActionButton: ActionButton!
     @IBOutlet weak var firebaseActionButton: ActionButton!
-    @IBOutlet weak var providerSegment: UISegmentedControl!
     
+    @IBOutlet weak var providerSegment: UISegmentedControl!
     @IBAction func providerChange(_ sender: Any) {
-        updateFirebaseUI()
+        updateMessagingUI()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Courier Example"
+        title = "Courier Demo"
         
         notificationActionButton.action = { [weak self] in
             let vc = NotificationPermissionViewController()
@@ -51,14 +53,14 @@ class ViewController: UIViewController {
         refreshUser()
         refreshNotificationPermission()
         setMessagingButton(isLoading: false)
-        updateFirebaseUI()
+        updateMessagingUI()
     }
 
 }
 
 // MARK: Notifications Setup
 
-extension ViewController {
+extension RootViewController {
     
     private func updateUIForStatus(status: UNAuthorizationStatus) {
         
@@ -98,7 +100,7 @@ extension ViewController {
 
 // MARK: Example Authentication Setup
 
-extension ViewController {
+extension RootViewController {
     
     private func refreshUser() {
         
@@ -123,16 +125,30 @@ extension ViewController {
 
 // MARK: Firebase Setup
 
-extension ViewController {
+extension RootViewController {
     
-    private func updateFirebaseUI() {
-        
-        let isFirebase = providerSegment.selectedSegmentIndex == 1
-        
-        let row = ActionButton.Row(title: "Firebase Settings", value: nil)
-        firebaseActionButton.rows = [row]
+    var isFirebase: Bool {
+        get {
+            return providerSegment.selectedSegmentIndex == 1
+        }
+    }
+    
+    private func updateMessagingUI() {
         
         firebaseActionButton.isHidden = !isFirebase
+        
+        sendTestButton.title = isFirebase ? "Send FCM Test Push" : "Send APNS Test Push"
+        
+        var rows = [ActionButton.Row(title: "Firebase Configuration", value: nil)]
+        
+        guard let options = FirebaseApp.app()?.options else {
+            firebaseActionButton.rows = rows
+            return
+        }
+        
+        rows.append(ActionButton.Row(title: "Google App Id", value: options.googleAppID))
+        rows.append(ActionButton.Row(title: "GCM Sender Id", value: options.gcmSenderID))
+        firebaseActionButton.rows = rows
         
     }
     
@@ -140,18 +156,23 @@ extension ViewController {
 
 // MARK: Test Push Setup
 
-extension ViewController {
+extension RootViewController {
     
     private func setMessagingButton(isLoading: Bool) {
-        sendTestButton.title = isLoading ? "Loading..." : "Send Test Push Notification"
+        
+        if (isLoading) {
+            sendTestButton.title = "Loading..."
+        } else {
+            updateMessagingUI()
+        }
+        
         sendTestButton.isUserInteractionEnabled = !isLoading
+
     }
     
     private func sendTestMessage() {
         
         Task {
-            
-            setMessagingButton(isLoading: true)
             
             do {
                 
@@ -159,21 +180,41 @@ extension ViewController {
                 let status = try await Courier.requestNotificationPermissions()
                 updateUIForStatus(status: status)
                 
+                // Check for user
+                if (Courier.shared.userId == nil) {
+                    appDelegate.showMessageAlert(
+                        title: "Courier user not set",
+                        message: "Set your Courier credentials before sending a push",
+                        onOkClick: {
+                            let vc = CourierUserViewController()
+                            self.navigationController?.pushViewController(vc, animated: true)
+                        }
+                    )
+                    return
+                }
+                
+                setMessagingButton(isLoading: true)
+                
+                // Sync fcm token if possible
+                if let fcmToken = Messaging.messaging().fcmToken {
+                    try await Courier.shared.setPushToken(
+                        provider: .fcm,
+                        token: fcmToken
+                    )
+                    refreshUser()
+                }
+                
+                let provider = isFirebase ? CourierProvider.fcm : CourierProvider.apns
+                let userId = Courier.shared.userId ?? ""
+                
                 // Send the test
                 try await Courier.sendPush(
                     authKey: currentAccessToken, // TODO: Remove this from production
-                    userId: currentUserId,
+                    userId: userId,
                     title: "Chirp Chirp!",
-                    message: "This is a test message sent from the Courier iOS APNS example app"
+                    message: "This is a message from \(provider == .apns ? "APNS 🍎" : "FCM 🔥") to user id: \(userId)",
+                    providers: [provider]
                 )
-                
-                // Check if Courier has a user already signed in
-                if (Courier.shared.userId == nil) {
-                    appDelegate.showMessageAlert(
-                        title: "You are not signed in",
-                        message: "Courier will try and send push notifications to this user id, but you will not receive them on this device."
-                    )
-                }
                 
             } catch {
                 

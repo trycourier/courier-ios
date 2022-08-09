@@ -10,6 +10,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NotificationPermissionViewController" customModule="Demo" customModuleProvider="target">
             <connections>
+                <outlet property="messageLabel" destination="Ph0-IJ-aWo" id="wo5-4W-xLC"/>
+                <outlet property="settingButton" destination="GpI-9G-KYE" id="GmT-Zg-nbS"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

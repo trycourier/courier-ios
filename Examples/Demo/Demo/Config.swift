@@ -7,5 +7,5 @@
 
 import Foundation
 
-var currentAccessToken: String = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
+var currentAccessToken: String = "your_access_token"
 var currentUserId: String = "example_user"

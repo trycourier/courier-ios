@@ -24,7 +24,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "feature/key-removal",
-        "revision" : "95de57b9b761ad76c3fa06a9994453bcf308c5f1"
+        "revision" : "5c0f53578187c184f4cf6cf598326239f7d3bcbd"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
         "branch" : "master",
-        "revision" : "ef9dcd4da96c079a36a81b4bf917e787bfb7ae31"
+        "revision" : "879d0b47334282c611c917f8cee7c8c2468da772"
       }
     },
     {

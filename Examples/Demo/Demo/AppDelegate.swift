@@ -1,17 +1,23 @@
 //
 //  AppDelegate.swift
-//  Swift+Storyboard+APNS
+//  Demo
 //
-//  Created by Michael Miller on 7/21/22.
+//  Created by Michael Miller on 8/9/22.
 //
 
 import UIKit
 import Courier
+import FirebaseCore
+import FirebaseMessaging
 
 @main
 class AppDelegate: CourierDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        FirebaseApp.configure()
+        
+        Messaging.messaging().delegate = self
         
         // Be sure you have created a new APNS key and have uploaded it here before you get started
         // 1. Create new APNS key here: https://developer.apple.com/account/resources/authkeys/add
@@ -43,6 +49,25 @@ class AppDelegate: CourierDelegate {
         // ⚠️ For demo purposes only
         showMessageAlert(title: "Push Opened", message: "\(message)")
 
+    }
+
+}
+
+extension AppDelegate: MessagingDelegate {
+  
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        Task {
+            do {
+                if let token = fcmToken {
+                    try await Courier.shared.setPushToken(
+                        provider: .fcm,
+                        token: token
+                    )
+                }
+            } catch {
+                print(error)
+            }
+        }
     }
 
 }

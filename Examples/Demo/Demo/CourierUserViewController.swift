@@ -7,6 +7,7 @@
 
 import UIKit
 import Courier
+import FirebaseMessaging
 
 class CourierUserViewController: UIViewController {
 
@@ -61,7 +62,7 @@ extension CourierUserViewController {
     private func refreshUI() {
         
         let isUserSignedIn = Courier.shared.userId != nil
-        authButton.title = isUserSignedIn ? "Sign Out" : "Sign In"
+        authButton.title = isUserSignedIn ? "Sign Out" : "Set Credentials"
         
         userIdField.isEnabled = !isUserSignedIn
         accessTokenField.isEnabled = !isUserSignedIn
@@ -102,20 +103,39 @@ extension CourierUserViewController {
         Task {
             
             authButton.title = "Loading..."
-
-            // Courier needs you to generate an access token on your backend
-            // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
-//            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
-
-            try await Courier.shared.setCredentials(
-                accessToken: currentAccessToken,
-                userId: currentUserId
-            )
-
-            refreshUI()
             
+            do {
+                
+                // Courier needs you to generate an access token on your backend
+                // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
+                // let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
+
+                try await Courier.shared.setCredentials(
+                    accessToken: currentAccessToken,
+                    userId: currentUserId
+                )
+                
+                // Sync fcm token if possible
+                if let fcmToken = Messaging.messaging().fcmToken {
+                    try await Courier.shared.setPushToken(
+                        provider: .fcm,
+                        token: fcmToken
+                    )
+                }
+                
+            } catch {
+                
+                try await Courier.shared.signOut()
+                
+                appDelegate.showMessageAlert(
+                    title: "Error setting credentials",
+                    message: "Make sure your access token is valid"
+                )
+                
+            }
+
             if (Courier.shared.userId != nil) {
-                self.navigationController?.popViewController(animated: true)
+                navigationController?.popViewController(animated: true)
             }
 
         }
