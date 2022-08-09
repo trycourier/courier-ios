@@ -99,6 +99,9 @@ extension CourierUserViewController {
     }
 
     private func signIn() {
+        
+        currentUserId = userIdField.text ?? ""
+        currentAccessToken = accessTokenField.text ?? ""
 
         Task {
             
@@ -133,6 +136,8 @@ extension CourierUserViewController {
                 )
                 
             }
+            
+            refreshUI()
 
             if (Courier.shared.userId != nil) {
                 navigationController?.popViewController(animated: true)

@@ -211,8 +211,8 @@ extension RootViewController {
                 try await Courier.sendPush(
                     authKey: currentAccessToken, // TODO: Remove this from production
                     userId: userId,
-                    title: "Chirp Chirp!",
-                    message: "This is a message from \(provider == .apns ? "APNS 🍎" : "FCM 🔥") to user id: \(userId)",
+                    title: "Hi \(userId) 👋",
+                    message: "This is a message from \(provider == .apns ? "APNS 🍎" : "FCM 🔥")",
                     providers: [provider]
                 )
                 
