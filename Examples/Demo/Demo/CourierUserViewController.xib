@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CourierUserViewController" customModule="Demo" customModuleProvider="target">
+            <connections>
+                <outlet property="accessTokenField" destination="lON-rS-9Z9" id="3Wu-ql-jaJ"/>
+                <outlet property="authButton" destination="qBH-lH-lb0" id="D8b-sK-hPo"/>
+                <outlet property="buttonBottom" destination="4gq-Ih-dRb" id="tJn-P5-dgx"/>
+                <outlet property="userIdField" destination="cTs-oj-G9n" id="DKt-VO-qeb"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mad-F6-l60">
+                    <rect key="frame" x="0.0" y="44" width="414" height="722"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fua-E0-BCa" userLabel="ContentView">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="281"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="rxK-ex-nxV">
+                                    <rect key="frame" x="20" y="20" width="374" height="241"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="L1T-yF-3Hq">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="117.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Courier Access Token" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C5Y-2x-S62">
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ySZ-BN-76E">
+                                                    <rect key="frame" x="0.0" y="30.5" width="374" height="43"/>
+                                                    <string key="text">This should be an access token jwt generated from the Courier issue token endpoint. You can use your auth key in the mean time, but you should not use the auth key in production.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Courier Access Token" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lON-rS-9Z9">
+                                                    <rect key="frame" x="0.0" y="83.5" width="374" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <action selector="accessTokenFieldChanged:" destination="-1" eventType="editingChanged" id="irR-fI-DWh"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                        </stackView>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ugU-AL-GBh">
+                                            <rect key="frame" x="0.0" y="137.5" width="374" height="103.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Courier User ID" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yLP-gt-TOo">
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This User ID should be one that matched the user IDs in your existing system" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GZ9-1x-gY8">
+                                                    <rect key="frame" x="0.0" y="30.5" width="374" height="29"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Courier User ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cTs-oj-G9n">
+                                                    <rect key="frame" x="0.0" y="69.5" width="374" height="34"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <action selector="userIdFieldChanged:" destination="-1" eventType="editingChanged" id="Kzb-LX-YoN"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="rxK-ex-nxV" secondAttribute="trailing" constant="20" id="AxP-iu-ejR"/>
+                                <constraint firstAttribute="bottom" secondItem="rxK-ex-nxV" secondAttribute="bottom" constant="20" id="PY3-CF-LbA"/>
+                                <constraint firstItem="rxK-ex-nxV" firstAttribute="leading" secondItem="Fua-E0-BCa" secondAttribute="leading" constant="20" id="f1X-xH-Bll"/>
+                                <constraint firstItem="rxK-ex-nxV" firstAttribute="top" secondItem="Fua-E0-BCa" secondAttribute="top" constant="20" id="mZv-Fq-Lg7"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="Fua-E0-BCa" firstAttribute="leading" secondItem="YIN-7A-cER" secondAttribute="leading" id="GP5-rk-Jf2"/>
+                        <constraint firstItem="Fua-E0-BCa" firstAttribute="trailing" secondItem="YIN-7A-cER" secondAttribute="trailing" id="Ne3-h1-9py"/>
+                        <constraint firstItem="Fua-E0-BCa" firstAttribute="top" secondItem="YIN-7A-cER" secondAttribute="top" id="fbg-6d-0BT"/>
+                        <constraint firstItem="Fua-E0-BCa" firstAttribute="bottom" secondItem="YIN-7A-cER" secondAttribute="bottom" id="jfM-s9-Vj6"/>
+                        <constraint firstItem="Fua-E0-BCa" firstAttribute="width" secondItem="77k-qV-Y6b" secondAttribute="width" id="tMm-Cp-rdt"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="YIN-7A-cER"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="77k-qV-Y6b"/>
+                </scrollView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qBH-lH-lb0" customClass="ActionButton" customModule="Demo" customModuleProvider="target">
+                    <rect key="frame" x="20" y="786" width="374" height="56"/>
+                    <color key="backgroundColor" red="0.52156862745098043" green="0.16862745098039217" blue="0.73333333333333328" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="56" id="C9b-dR-1go"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="qBH-lH-lb0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="4bu-Et-jVS"/>
+                <constraint firstItem="qBH-lH-lb0" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" constant="-20" id="4gq-Ih-dRb"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="qBH-lH-lb0" secondAttribute="trailing" constant="20" id="8Jf-ug-8gI"/>
+                <constraint firstItem="qBH-lH-lb0" firstAttribute="top" secondItem="mad-F6-l60" secondAttribute="bottom" constant="20" id="VdJ-Me-dDH"/>
+                <constraint firstItem="mad-F6-l60" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="dBT-Bd-17w"/>
+                <constraint firstItem="qBH-lH-lb0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="fHA-gK-MSY"/>
+                <constraint firstItem="mad-F6-l60" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="hYW-aS-M5A"/>
+                <constraint firstItem="mad-F6-l60" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="qeO-7j-e5Z"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="qBH-lH-lb0" secondAttribute="trailing" constant="20" id="zVN-we-o4U"/>
+            </constraints>
+            <point key="canvasLocation" x="131.8840579710145" y="130.58035714285714"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

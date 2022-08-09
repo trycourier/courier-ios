@@ -9,7 +9,7 @@ import Foundation
 
 internal class MessagingRepository: Repository {
     
-    internal func send(authKey: String, userId: String, title: String, message: String) async throws -> String {
+    internal func send(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider]) async throws -> String {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             
@@ -24,10 +24,7 @@ internal class MessagingRepository: Repository {
                     ),
                     routing: Routing(
                         method: "all",
-                        channels: [
-                            CourierProvider.fcm.rawValue,
-                            CourierProvider.apns.rawValue
-                        ]
+                        channels: providers.map { $0.rawValue }
                     ),
                     providers: Providers(
                         apn: APNProvider(
@@ -47,9 +44,8 @@ internal class MessagingRepository: Repository {
             request.httpMethod = "POST"
             request.httpBody = try? JSONEncoder().encode(message)
             
-            let task = CourierTask(with: request, validCodes: [200, 202]) { (validCodes, data, response, error) in
+            let task = CourierTask(with: request, validCodes: [200, 202]) { (validCodes, data, response, error, status) in
                 
-                let status = (response as! HTTPURLResponse).statusCode
                 if (!validCodes.contains(status)) {
                     continuation.resume(throwing: CourierError.requestError)
                     return
@@ -84,9 +80,8 @@ internal class MessagingRepository: Repository {
                 "event": event.rawValue
             ])
             
-            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error) in
+            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error, status) in
                 
-                let status = (response as! HTTPURLResponse).statusCode
                 if (!validCodes.contains(status)) {
                     continuation.resume(throwing: CourierError.requestError)
                     return

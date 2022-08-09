@@ -102,17 +102,26 @@ open class Courier: NSObject {
         
         Courier.log("Clearing Courier User Credentials")
         
-        async let deleteAPNS: () = tokenRepo.deleteToken(
-            userId: userId,
-            deviceToken: apnsToken
-        )
+        do {
+            
+            async let deleteAPNS: () = tokenRepo.deleteToken(
+                userId: userId,
+                deviceToken: apnsToken
+            )
 
-        async let deleteFCM: () = tokenRepo.deleteToken(
-            userId: userId,
-            deviceToken: fcmToken
-        )
-        
-        let _ = try await [deleteAPNS, deleteFCM]
+            async let deleteFCM: () = tokenRepo.deleteToken(
+                userId: userId,
+                deviceToken: fcmToken
+            )
+            
+            let _ = try await [deleteAPNS, deleteFCM]
+            
+        } catch {
+            
+            Courier.log("Error deleting token")
+            Courier.log("\(error)")
+            
+        }
         
         accessToken = nil
         userId = nil

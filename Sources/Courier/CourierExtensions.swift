@@ -73,6 +73,14 @@ extension Courier {
         return try await getNotificationAuthorizationStatus()
     }
     
+    // MARK: Settings
+    
+    public static func openSettingsForApp() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
+            UIApplication.shared.open(appSettings)
+        }
+    }
+    
     // MARK: Analytics
     
     /**
@@ -124,12 +132,13 @@ extension Courier {
     // MARK: Testing
 
     @discardableResult
-    public static func sendPush(authKey: String, userId: String, title: String, message: String) async throws -> String {
+    public static func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases) async throws -> String {
         return try await MessagingRepository().send(
             authKey: authKey,
             userId: userId,
             title: title,
-            message: message
+            message: message,
+            providers: providers
         )
     }
     

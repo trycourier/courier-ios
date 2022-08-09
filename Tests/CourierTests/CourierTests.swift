@@ -1,12 +1,19 @@
 import XCTest
 @testable import Courier
 
+let apnsToken = "282D849F-2AF8-4ECB-BBFD-EC3F96DD59D4" // This is fake
+let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
+let userId = "example_user"
+var authKey: String = "your_access_key"
+
 final class CourierTests: XCTestCase {
     
-    private let apnsToken = "282D849F-2AF8-4ECB-BBFD-EC3F96DD59D4" // This is fake
-    private let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
-    private let userId = "example_user"
-    private let testAuthKey = "pk_prod_EYP5JB2DH447WDJN7ACKPY75BEGJ"
+    override class func setUp() {
+        print("\n")
+        print("🔑 Set your Courier Auth Key: ", terminator: "")
+        authKey = readLine()!
+        print("\n")
+    }
     
     override func tearDown() async throws {
         print("\n")
@@ -54,7 +61,7 @@ final class CourierTests: XCTestCase {
             userId: userId
         )
 
-        XCTAssertEqual(Courier.shared.accessToken, accessToken)
+        XCTAssertEqual(Courier.shared.accessToken, authKey)
         XCTAssertEqual(Courier.shared.userId, userId)
         XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
@@ -66,16 +73,13 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Starting Courier SDK with Auth Key")
         
         // TODO: Remove this. For test purposed only
-        // Do not use auth key in production app
-        let accessToken = testAuthKey
-
         // Set the access token and start the SDK
         try await Courier.shared.setCredentials(
-            accessToken: accessToken,
+            accessToken: authKey,
             userId: userId
         )
 
-        XCTAssertEqual(Courier.shared.accessToken, accessToken)
+        XCTAssertEqual(Courier.shared.accessToken, authKey)
         XCTAssertEqual(Courier.shared.userId, userId)
         XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
@@ -119,7 +123,7 @@ final class CourierTests: XCTestCase {
         // TODO: Remove this. For test purposed only
         // Do not use auth key in production app
         let requestId = try await Courier.sendPush(
-            authKey: testAuthKey,
+            authKey: authKey,
             userId: userId,
             title: "🐤 Chirp Chirp!",
             message: "Message sent from Xcode tests"
@@ -137,7 +141,7 @@ final class CourierTests: XCTestCase {
         
         // This is just a random url from a sample project
         let message = [
-            "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/e/fe9w674dfqmbrvnm6seqbxdd4kbg"
+            "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/e/tzgspbr4jcmcy1qkhw96m0034bvy"
         ]
         
         // Track delivery
