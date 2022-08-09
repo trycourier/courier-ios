@@ -11,7 +11,7 @@ class ActionButton: UIView {
     
     struct Row {
         let title: String
-        let value: String
+        let value: String?
     }
     
     var rows: [Row] = [] {
@@ -65,6 +65,7 @@ class ActionButton: UIView {
         containerStack.backgroundColor = .clear
         containerStack.axis = .horizontal
         containerStack.spacing = 20
+        containerStack.distribution = .fillProportionally
         
         // Clean
         vStack.removeFromSuperview()
@@ -116,23 +117,25 @@ class ActionButton: UIView {
         let value = UILabel()
         let hStack = UIStackView()
         
+        hStack.alignment = .top
         hStack.axis = .horizontal
-        hStack.distribution = .equalSpacing
+        hStack.distribution = .fillEqually
         hStack.spacing = 20
         
         hStack.addArrangedSubview(title)
-        hStack.addArrangedSubview(value)
         title.text = row.title
-        value.text = row.value
-        value.textAlignment = .right
         
-        if (row.value.isEmpty) {
+        if (row.value != nil) {
+            hStack.addArrangedSubview(value)
+            value.text = row.value
+            value.textAlignment = .right
+        } else {
             title.font = UIFont.boldSystemFont(ofSize: 20.0)
             title.textColor = .tintColor
         }
         
-        title.adjustsFontSizeToFitWidth = true
-        value.adjustsFontSizeToFitWidth = true
+        title.numberOfLines = 0
+        value.numberOfLines = 0
         
         return hStack
         

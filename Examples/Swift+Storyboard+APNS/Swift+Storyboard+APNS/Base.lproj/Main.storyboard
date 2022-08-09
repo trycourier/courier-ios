@@ -30,14 +30,49 @@
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="ura-Ix-RCg">
-                                                <rect key="frame" x="20" y="171" width="374" height="658"/>
+                                                <rect key="frame" x="20" y="171" width="374" height="1145"/>
                                                 <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cDF-71-NfU">
+                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="128"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Provider Setting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e5S-pT-gRC">
+                                                                <rect key="frame" x="20" y="20" width="334" height="24"/>
+                                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                                                <color key="textColor" systemColor="systemBlueColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Hz3-0g-yjR">
+                                                                <rect key="frame" x="20" y="64" width="334" height="45"/>
+                                                                <segments>
+                                                                    <segment title="APNS"/>
+                                                                    <segment title="FCM"/>
+                                                                </segments>
+                                                                <connections>
+                                                                    <action selector="providerChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="n1S-lx-1Zj"/>
+                                                                </connections>
+                                                            </segmentedControl>
+                                                        </subviews>
+                                                        <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                                        <constraints>
+                                                            <constraint firstItem="Hz3-0g-yjR" firstAttribute="top" secondItem="e5S-pT-gRC" secondAttribute="bottom" constant="20" id="8Do-hx-kLn"/>
+                                                            <constraint firstAttribute="bottom" secondItem="Hz3-0g-yjR" secondAttribute="bottom" constant="20" id="9RR-AX-qUd"/>
+                                                            <constraint firstItem="e5S-pT-gRC" firstAttribute="top" secondItem="cDF-71-NfU" secondAttribute="top" constant="20" id="Hrn-e9-OjT"/>
+                                                            <constraint firstItem="Hz3-0g-yjR" firstAttribute="leading" secondItem="cDF-71-NfU" secondAttribute="leading" constant="20" id="haN-3h-Skf"/>
+                                                            <constraint firstItem="e5S-pT-gRC" firstAttribute="leading" secondItem="cDF-71-NfU" secondAttribute="leading" constant="20" id="jyn-WW-qLJ"/>
+                                                            <constraint firstAttribute="trailing" secondItem="Hz3-0g-yjR" secondAttribute="trailing" constant="20" id="pLY-J4-KoX"/>
+                                                            <constraint firstAttribute="trailing" secondItem="e5S-pT-gRC" secondAttribute="trailing" constant="20" id="s57-Fy-VQa"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="br9-o5-NaY" customClass="ActionButton" customModule="Swift_Storyboard_APNS" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="148" width="374" height="319"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    </view>
                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JTJ-Tj-4Mm" customClass="ActionButton" customModule="Swift_Storyboard_APNS" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="319"/>
+                                                        <rect key="frame" x="0.0" y="487" width="374" height="319"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     </view>
                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WYP-0i-jeQ" customClass="ActionButton" customModule="Swift_Storyboard_APNS" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="339" width="374" height="319"/>
+                                                        <rect key="frame" x="0.0" y="826" width="374" height="319"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     </view>
                                                 </subviews>
@@ -76,7 +111,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="uF9-FG-Rxo"/>
                     <connections>
+                        <outlet property="firebaseActionButton" destination="br9-o5-NaY" id="Fom-GS-cru"/>
                         <outlet property="notificationActionButton" destination="JTJ-Tj-4Mm" id="VHZ-3k-BR8"/>
+                        <outlet property="providerSegment" destination="Hz3-0g-yjR" id="9Ju-g1-LuG"/>
                         <outlet property="sendTestButton" destination="6yo-Qi-AX9" id="hG4-Dg-Mis"/>
                         <outlet property="userDetailsActionButton" destination="WYP-0i-jeQ" id="ShC-Wu-cGp"/>
                     </connections>
@@ -103,8 +140,14 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

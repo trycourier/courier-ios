@@ -86,7 +86,11 @@ internal class MessagingRepository: Repository {
             
             let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error) in
                 
-                let status = (response as! HTTPURLResponse).statusCode
+                guard let status = (response as? HTTPURLResponse)?.statusCode else {
+                    continuation.resume(throwing: CourierError.requestError)
+                    return
+                }
+                
                 if (!validCodes.contains(status)) {
                     continuation.resume(throwing: CourierError.requestError)
                     return

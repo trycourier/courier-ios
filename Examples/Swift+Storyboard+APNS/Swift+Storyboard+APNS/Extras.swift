@@ -12,6 +12,8 @@
 
 import UIKit
 
+let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
 extension UIApplication {
     var currentWindow: UIWindow? {
         connectedScenes

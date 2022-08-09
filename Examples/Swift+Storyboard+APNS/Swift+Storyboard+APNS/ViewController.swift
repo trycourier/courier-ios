@@ -13,6 +13,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var sendTestButton: ActionButton!
     @IBOutlet weak var notificationActionButton: ActionButton!
     @IBOutlet weak var userDetailsActionButton: ActionButton!
+    @IBOutlet weak var firebaseActionButton: ActionButton!
+    @IBOutlet weak var providerSegment: UISegmentedControl!
+    
+    @IBAction func providerChange(_ sender: Any) {
+        updateFirebaseUI()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,126 +31,47 @@ class ViewController: UIViewController {
         }
         
         userDetailsActionButton.action = { [weak self] in
-            let vc = UserDetailsViewController()
+            let vc = CourierUserViewController()
             self?.navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        firebaseActionButton.action = { [weak self] in
+            print("SUNRISE")
         }
         
         sendTestButton.action = { [weak self] in
             self?.sendTestMessage()
         }
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         refreshUser()
         refreshNotificationPermission()
         setMessagingButton(isLoading: false)
-        
+        updateFirebaseUI()
     }
 
 }
 
-// MARK: Example Authentication Setup
-
-extension ViewController {
-    
-    private func refreshUser() {
-        
-        userDetailsActionButton.rows = [
-            ActionButton.Row(title: "Courier Credentials", value: ""),
-            ActionButton.Row(title: "User ID", value: Courier.shared.userId ?? "Not set"),
-            ActionButton.Row(title: "Access Token", value: currentAccessToken ?? "Not set")
-        ]
-        
-//        if (Courier.shared.userId != nil) {
-//
-//            notificationActionButton.rows = [
-//                ActionButton.Row(title: "Notification Permission", value: ""),
-//                ActionButton.Row(title: "Status", value: status.prettyText)
-//            ]
-//
-//            userStatusLabel.text = "Courier User Id is set to:\n\n\(Courier.shared.userId!)"
-//            userStatusButton.setTitle("Sign Out", for: .normal)
-//        } else {
-//            userStatusLabel.text = "No Courier User Id Found.\n\nClick 'Sign In' to sync APNS token to Courier"
-//            userStatusButton.setTitle("Sign In", for: .normal)
-//        }
-    }
-    
-//    private func performUserButtonAction() {
-//        if (Courier.shared.userId != nil) {
-//            signOutUser()
-//        } else {
-//            signInUser()
-//        }
-//    }
-//
-//    private func signOutUser() {
-//
-//        userStatusLabel.text = "Signing out..."
-//        userStatusButton.isHidden = true
-//
-//        Task {
-//            try await Courier.shared.signOut()
-//            refreshUser()
-//            userStatusButton.isHidden = false
-//        }
-//
-//    }
-//
-//    private func signInUser() {
-//
-//        Task.init {
-//
-//            userStatusLabel.text = "Signing in..."
-//            userStatusButton.isHidden = true
-//
-//            // Courier needs you to generate an access token on your backend
-//            // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
-////            let accessToken = try await YourBackend.generateCourierAccessToken(userId: user.id)
-//
-//            // You can test with your auth key
-////            let accessToken = authKey
-//
-//            try await Courier.shared.setCredentials(
-//                accessToken: currentAccessToken ?? "",
-//                userId: currentUserId ?? ""
-//            )
-//
-//            refreshUser()
-//
-//            userStatusButton.isHidden = false
-//
-//        }
-//
-//    }
-    
-}
-
-// MARK: Example Notifications Setup
+// MARK: Notifications Setup
 
 extension ViewController {
     
     private func updateUIForStatus(status: UNAuthorizationStatus) {
         
         notificationActionButton.rows = [
-            ActionButton.Row(title: "Notification Permission", value: ""),
+            ActionButton.Row(title: "Notification Permission", value: nil),
             ActionButton.Row(title: "Status", value: status.prettyText)
         ]
-        
-//        if (status == .notDetermined) {
-//            notificationButton.setTitle("Request Notification Permission", for: .normal)
-//            notificationButton.isHidden = false
-//        } else {
-//            notificationButton.isHidden = true
-//        }
         
     }
     
     private func refreshNotificationPermission() {
         
-        let row = ActionButton.Row(title: "Getting notification status...", value: "")
+        let row = ActionButton.Row(title: "Getting notification status...", value: nil)
         notificationActionButton.rows = [row]
-
-//        notificationStatusLabel.text = "Getting notification status..."
-//        notificationButton.isHidden = true
 
         Task {
 
@@ -168,7 +95,49 @@ extension ViewController {
     
 }
 
-// MARK: Example Test Push Setup
+// MARK: Example Authentication Setup
+
+extension ViewController {
+    
+    private func refreshUser() {
+        
+        var rows = [
+            ActionButton.Row(title: "Courier Credentials", value: nil)
+        ]
+        
+        if (Courier.shared.userId != nil) {
+            rows.append(ActionButton.Row(title: "User ID", value: Courier.shared.userId ?? "Not set"))
+            rows.append(ActionButton.Row(title: "Access Token", value: currentAccessToken))
+            rows.append(ActionButton.Row(title: "APNS Token", value: Courier.shared.apnsToken ?? "Not set"))
+            rows.append(ActionButton.Row(title: "FCM Token", value: Courier.shared.fcmToken ?? "Not set"))
+        } else {
+            rows.append(ActionButton.Row(title: "User Status", value: "Not Signed In"))
+        }
+        
+        userDetailsActionButton.rows = rows
+        
+    }
+    
+}
+
+// MARK: Firebase Setup
+
+extension ViewController {
+    
+    private func updateFirebaseUI() {
+        
+        let isFirebase = providerSegment.selectedSegmentIndex == 1
+        
+        let row = ActionButton.Row(title: "Firebase Settings", value: nil)
+        firebaseActionButton.rows = [row]
+        
+        firebaseActionButton.isHidden = !isFirebase
+        
+    }
+    
+}
+
+// MARK: Test Push Setup
 
 extension ViewController {
     
@@ -183,8 +152,6 @@ extension ViewController {
             
             setMessagingButton(isLoading: true)
             
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            
             do {
                 
                 // Request push notifications if they are not requested
@@ -193,8 +160,8 @@ extension ViewController {
                 
                 // Send the test
                 try await Courier.sendPush(
-                    authKey: currentAccessToken ?? "", // TODO: Remove this from production
-                    userId: currentUserId ?? "",
+                    authKey: currentAccessToken, // TODO: Remove this from production
+                    userId: currentUserId,
                     title: "Chirp Chirp!",
                     message: "This is a test message sent from the Courier iOS APNS example app"
                 )

@@ -7,8 +7,5 @@
 
 import Foundation
 
-var currentAccessToken: String? = nil
-var currentUserId: String? = nil
-
-//let userId = "example_user"
-//let authKey = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
+var currentAccessToken: String = "pk_prod_7DEP6PSEY3MZXCQ4EPGHMPQHAYV2"
+var currentUserId: String = "example_user"
