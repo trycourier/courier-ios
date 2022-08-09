@@ -8,10 +8,8 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NotificationPermissionViewController" customModule="Swift_Storyboard_APNS" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NotificationPermissionViewController" customModule="Demo" customModuleProvider="target">
             <connections>
-                <outlet property="messageLabel" destination="Ph0-IJ-aWo" id="gMW-Y9-zir"/>
-                <outlet property="settingButton" destination="GpI-9G-KYE" id="0R5-tA-iw2"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -20,7 +18,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GpI-9G-KYE" customClass="ActionButton" customModule="Swift_Storyboard_APNS" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GpI-9G-KYE" customClass="ActionButton" customModule="Demo" customModuleProvider="target">
                     <rect key="frame" x="20" y="786" width="374" height="56"/>
                     <color key="backgroundColor" red="0.52156862745098043" green="0.16862745098039217" blue="0.73333333333333328" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>

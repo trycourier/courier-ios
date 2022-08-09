@@ -16,8 +16,9 @@
 		2720BB3C2889B9F90089219C /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2720BB3B2889B9F90089219C /* Extras.swift */; };
 		2731E45828A1AA9600A1531B /* CourierUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E45628A1AA9600A1531B /* CourierUserViewController.swift */; };
 		2731E45928A1AA9600A1531B /* CourierUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E45728A1AA9600A1531B /* CourierUserViewController.xib */; };
-		2764CC07289D82DB00C2955D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764CC06289D82DB00C2955D /* NotificationService.swift */; };
-		2764CC0B289D82DB00C2955D /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2764CC04289D82DB00C2955D /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2731E47C28A29FEA00A1531B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2731E47B28A29FEA00A1531B /* FirebaseMessaging */; };
+		2731E47F28A2A01400A1531B /* FirebaseConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E47D28A2A01400A1531B /* FirebaseConfigViewController.swift */; };
+		2731E48028A2A01400A1531B /* FirebaseConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E47E28A2A01400A1531B /* FirebaseConfigViewController.xib */; };
 		2764CC3028A1828E00C2955D /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2764CC2F28A1828E00C2955D /* Courier */; };
 		2764CC3228A182A900C2955D /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2764CC3128A182A900C2955D /* Courier */; };
 		2764CC3628A1853600C2955D /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764CC3528A1853600C2955D /* Config.swift */; };
@@ -43,7 +44,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2764CC0B289D82DB00C2955D /* CourierService.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,14 +58,13 @@
 		2720BB2C2889B4DD0089219C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2720BB2F2889B4DD0089219C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2720BB312889B4DD0089219C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2720BB372889B4ED0089219C /* Swift+Storyboard+APNS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift+Storyboard+APNS.entitlements"; sourceTree = "<group>"; };
 		2720BB3B2889B9F90089219C /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		2731E45628A1AA9600A1531B /* CourierUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourierUserViewController.swift; sourceTree = "<group>"; };
 		2731E45728A1AA9600A1531B /* CourierUserViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CourierUserViewController.xib; sourceTree = "<group>"; };
-		2764CC04289D82DB00C2955D /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2764CC06289D82DB00C2955D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		2764CC08289D82DB00C2955D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2764CC0C289D82DB00C2955D /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift+Storyboard+APNS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2731E47D28A2A01400A1531B /* FirebaseConfigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConfigViewController.swift; sourceTree = "<group>"; };
+		2731E47E28A2A01400A1531B /* FirebaseConfigViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FirebaseConfigViewController.xib; sourceTree = "<group>"; };
+		2731E48128A2A2DD00A1531B /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Demo.app; path = "/Users/mike/Desktop/mobile-sdk/Courier/Examples/Demo/build/Debug-iphoneos/Demo.app"; sourceTree = "<absolute>"; };
+		2764CC04289D82DB00C2955D /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; name = CourierService.appex; path = "/Users/mike/Desktop/mobile-sdk/Courier/Examples/Demo/build/Debug-iphoneos/CourierService.appex"; sourceTree = "<absolute>"; };
 		2764CC3528A1853600C2955D /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2764CC3728A187A400C2955D /* NotificationPermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPermissionViewController.swift; sourceTree = "<group>"; };
 		2764CC3828A187A400C2955D /* NotificationPermissionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotificationPermissionViewController.xib; sourceTree = "<group>"; };
@@ -77,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2731E47C28A29FEA00A1531B /* FirebaseMessaging in Frameworks */,
 				2764CC3028A1828E00C2955D /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,31 +95,26 @@
 		2720BB172889B4DD0089219C = {
 			isa = PBXGroup;
 			children = (
-				2720BB222889B4DD0089219C /* Swift+Storyboard+APNS */,
-				2764CC04289D82DB00C2955D /* CourierService.appex */,
-				2764CC05289D82DB00C2955D /* CourierService */,
-				2764CC0C289D82DB00C2955D /* Swift+Storyboard+APNS.app */,
-				2764CC10289D82E700C2955D /* Frameworks */,
+				2720BB222889B4DD0089219C /* Demo */,
 			);
 			sourceTree = "<group>";
 		};
-		2720BB222889B4DD0089219C /* Swift+Storyboard+APNS */ = {
+		2720BB222889B4DD0089219C /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				2720BB372889B4ED0089219C /* Swift+Storyboard+APNS.entitlements */,
 				2764CC3528A1853600C2955D /* Config.swift */,
 				2720BB232889B4DD0089219C /* AppDelegate.swift */,
 				2720BB252889B4DD0089219C /* SceneDelegate.swift */,
 				2720BB272889B4DD0089219C /* ViewController.swift */,
 				2720BB292889B4DD0089219C /* Main.storyboard */,
-				2731E45528A1AA6100A1531B /* Detail View Controllers */,
 				2720BB2C2889B4DD0089219C /* Assets.xcassets */,
 				2720BB2E2889B4DD0089219C /* LaunchScreen.storyboard */,
 				2720BB312889B4DD0089219C /* Info.plist */,
 				2720BB3B2889B9F90089219C /* Extras.swift */,
 				2764CC3C28A191A400C2955D /* ActionButton.swift */,
+				2731E45528A1AA6100A1531B /* Detail View Controllers */,
 			);
-			path = "Swift+Storyboard+APNS";
+			path = Demo;
 			sourceTree = "<group>";
 		};
 		2731E45528A1AA6100A1531B /* Detail View Controllers */ = {
@@ -129,32 +124,18 @@
 				2764CC3828A187A400C2955D /* NotificationPermissionViewController.xib */,
 				2731E45628A1AA9600A1531B /* CourierUserViewController.swift */,
 				2731E45728A1AA9600A1531B /* CourierUserViewController.xib */,
+				2731E47D28A2A01400A1531B /* FirebaseConfigViewController.swift */,
+				2731E47E28A2A01400A1531B /* FirebaseConfigViewController.xib */,
 			);
 			path = "Detail View Controllers";
-			sourceTree = "<group>";
-		};
-		2764CC05289D82DB00C2955D /* CourierService */ = {
-			isa = PBXGroup;
-			children = (
-				2764CC06289D82DB00C2955D /* NotificationService.swift */,
-				2764CC08289D82DB00C2955D /* Info.plist */,
-			);
-			path = CourierService;
-			sourceTree = "<group>";
-		};
-		2764CC10289D82E700C2955D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2720BB1F2889B4DD0089219C /* Swift+Storyboard+APNS */ = {
+		2720BB1F2889B4DD0089219C /* Demo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2720BB342889B4DD0089219C /* Build configuration list for PBXNativeTarget "Swift+Storyboard+APNS" */;
+			buildConfigurationList = 2720BB342889B4DD0089219C /* Build configuration list for PBXNativeTarget "Demo" */;
 			buildPhases = (
 				2720BB1C2889B4DD0089219C /* Sources */,
 				2720BB1D2889B4DD0089219C /* Frameworks */,
@@ -166,12 +147,13 @@
 			dependencies = (
 				2764CC0A289D82DB00C2955D /* PBXTargetDependency */,
 			);
-			name = "Swift+Storyboard+APNS";
+			name = Demo;
 			packageProductDependencies = (
 				2764CC2F28A1828E00C2955D /* Courier */,
+				2731E47B28A29FEA00A1531B /* FirebaseMessaging */,
 			);
 			productName = "Swift+Storyboard+APNS";
-			productReference = 2764CC0C289D82DB00C2955D /* Swift+Storyboard+APNS.app */;
+			productReference = 2731E48128A2A2DD00A1531B /* Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2764CC03289D82DB00C2955D /* CourierService */ = {
@@ -212,7 +194,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2720BB1B2889B4DD0089219C /* Build configuration list for PBXProject "Swift+Storyboard+APNS" */;
+			buildConfigurationList = 2720BB1B2889B4DD0089219C /* Build configuration list for PBXProject "Demo" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -223,12 +205,13 @@
 			mainGroup = 2720BB172889B4DD0089219C;
 			packageReferences = (
 				2764CC2E28A1828E00C2955D /* XCRemoteSwiftPackageReference "courier-ios" */,
+				2731E47A28A29FEA00A1531B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 2720BB172889B4DD0089219C;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2720BB1F2889B4DD0089219C /* Swift+Storyboard+APNS */,
+				2720BB1F2889B4DD0089219C /* Demo */,
 				2764CC03289D82DB00C2955D /* CourierService */,
 			);
 		};
@@ -243,6 +226,7 @@
 				2764CC3A28A187A400C2955D /* NotificationPermissionViewController.xib in Resources */,
 				2720BB302889B4DD0089219C /* LaunchScreen.storyboard in Resources */,
 				2720BB2D2889B4DD0089219C /* Assets.xcassets in Resources */,
+				2731E48028A2A01400A1531B /* FirebaseConfigViewController.xib in Resources */,
 				2720BB2B2889B4DD0089219C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,6 +252,7 @@
 				2720BB262889B4DD0089219C /* SceneDelegate.swift in Sources */,
 				2764CC3628A1853600C2955D /* Config.swift in Sources */,
 				2764CC3928A187A400C2955D /* NotificationPermissionViewController.swift in Sources */,
+				2731E47F28A2A01400A1531B /* FirebaseConfigViewController.swift in Sources */,
 				2764CC3D28A191A400C2955D /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,7 +261,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2764CC07289D82DB00C2955D /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,10 +411,10 @@
 		2720BB352889B4DD0089219C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+APNS/Swift+Storyboard+APNS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VJQ245Q28G;
@@ -446,8 +430,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.courier.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -457,10 +442,10 @@
 		2720BB362889B4DD0089219C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+APNS/Swift+Storyboard+APNS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VJQ245Q28G;
@@ -476,8 +461,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS";
+				PRODUCT_BUNDLE_IDENTIFIER = com.courier.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -537,7 +523,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2720BB1B2889B4DD0089219C /* Build configuration list for PBXProject "Swift+Storyboard+APNS" */ = {
+		2720BB1B2889B4DD0089219C /* Build configuration list for PBXProject "Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2720BB322889B4DD0089219C /* Debug */,
@@ -546,7 +532,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2720BB342889B4DD0089219C /* Build configuration list for PBXNativeTarget "Swift+Storyboard+APNS" */ = {
+		2720BB342889B4DD0089219C /* Build configuration list for PBXNativeTarget "Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2720BB352889B4DD0089219C /* Debug */,
@@ -567,6 +553,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2731E47A28A29FEA00A1531B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		2764CC2E28A1828E00C2955D /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
@@ -578,6 +572,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2731E47B28A29FEA00A1531B /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2731E47A28A29FEA00A1531B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		2764CC2F28A1828E00C2955D /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2764CC2E28A1828E00C2955D /* XCRemoteSwiftPackageReference "courier-ios" */;

@@ -90,6 +90,7 @@ extension CourierUserViewController {
     private func signOut() {
 
         Task {
+            authButton.title = "Loading..."
             try await Courier.shared.signOut()
             refreshUI()
         }

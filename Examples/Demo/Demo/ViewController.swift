@@ -36,7 +36,8 @@ class ViewController: UIViewController {
         }
         
         firebaseActionButton.action = { [weak self] in
-            print("SUNRISE")
+            let vc = FirebaseConfigViewController()
+            self?.navigationController?.pushViewController(vc, animated: true)
         }
         
         sendTestButton.action = { [weak self] in

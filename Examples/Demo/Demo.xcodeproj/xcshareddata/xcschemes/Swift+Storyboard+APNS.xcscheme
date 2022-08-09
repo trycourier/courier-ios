@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2720BB1F2889B4DD0089219C"
-               BuildableName = "Swift+Storyboard+APNS.app"
-               BlueprintName = "Swift+Storyboard+APNS"
-               ReferencedContainer = "container:Swift+Storyboard+APNS.xcodeproj">
+               BuildableName = "Demo.app"
+               BlueprintName = "Demo"
+               ReferencedContainer = "container:Demo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2720BB1F2889B4DD0089219C"
-            BuildableName = "Swift+Storyboard+APNS.app"
-            BlueprintName = "Swift+Storyboard+APNS"
-            ReferencedContainer = "container:Swift+Storyboard+APNS.xcodeproj">
+            BuildableName = "Demo.app"
+            BlueprintName = "Demo"
+            ReferencedContainer = "container:Demo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2720BB1F2889B4DD0089219C"
-            BuildableName = "Swift+Storyboard+APNS.app"
-            BlueprintName = "Swift+Storyboard+APNS"
-            ReferencedContainer = "container:Swift+Storyboard+APNS.xcodeproj">
+            BuildableName = "Demo.app"
+            BlueprintName = "Demo"
+            ReferencedContainer = "container:Demo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
