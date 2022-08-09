@@ -7,5 +7,5 @@
 
 import Foundation
 
-var currentAccessToken: String = "your_access_token"
+var currentAccessToken: String = ""
 var currentUserId: String = "example_user"

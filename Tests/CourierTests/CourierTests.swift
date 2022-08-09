@@ -141,7 +141,7 @@ final class CourierTests: XCTestCase {
         
         // This is just a random url from a sample project
         let message = [
-            "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/e/fe9w674dfqmbrvnm6seqbxdd4kbg"
+            "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/e/tzgspbr4jcmcy1qkhw96m0034bvy"
         ]
         
         // Track delivery

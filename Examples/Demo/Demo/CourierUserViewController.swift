@@ -75,7 +75,7 @@ extension CourierUserViewController {
             userIdField.resignFirstResponder()
             accessTokenField.resignFirstResponder()
         } else {
-            userIdField.becomeFirstResponder()
+            accessTokenField.becomeFirstResponder()
         }
         
     }

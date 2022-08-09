@@ -15,13 +15,9 @@ class AppDelegate: CourierDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        // Init Firebase
         FirebaseApp.configure()
-        
         Messaging.messaging().delegate = self
-        
-        // Be sure you have created a new APNS key and have uploaded it here before you get started
-        // 1. Create new APNS key here: https://developer.apple.com/account/resources/authkeys/add
-        // 2. Upload your APNS key here: https://app.courier.com/channels/apn
         
         return true
         
