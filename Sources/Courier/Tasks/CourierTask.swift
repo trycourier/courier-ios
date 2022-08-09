@@ -13,7 +13,7 @@ class CourierTask {
     
     var task: URLSessionDataTask? = nil
     
-    init(with request: URLRequest, validCodes: [Int] = [200], completionHandler: @escaping ([Int], Data?, URLResponse?, Error?) -> Void) {
+    init(with request: URLRequest, validCodes: [Int] = [200], completionHandler: @escaping ([Int], Data?, URLResponse?, Error?, Int) -> Void) {
         
         task = session.dataTask(with: request) { (data, response, error) in
             
@@ -48,7 +48,9 @@ class CourierTask {
                 
             }
             
-            completionHandler(validCodes, data, response, error)
+            let status = (response as? HTTPURLResponse)?.statusCode ?? 420
+            
+            completionHandler(validCodes, data, response, error, status)
             
         }
         

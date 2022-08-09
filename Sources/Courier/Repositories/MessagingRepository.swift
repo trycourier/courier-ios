@@ -44,9 +44,8 @@ internal class MessagingRepository: Repository {
             request.httpMethod = "POST"
             request.httpBody = try? JSONEncoder().encode(message)
             
-            let task = CourierTask(with: request, validCodes: [200, 202]) { (validCodes, data, response, error) in
+            let task = CourierTask(with: request, validCodes: [200, 202]) { (validCodes, data, response, error, status) in
                 
-                let status = (response as! HTTPURLResponse).statusCode
                 if (!validCodes.contains(status)) {
                     continuation.resume(throwing: CourierError.requestError)
                     return
@@ -81,12 +80,7 @@ internal class MessagingRepository: Repository {
                 "event": event.rawValue
             ])
             
-            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error) in
-                
-                guard let status = (response as? HTTPURLResponse)?.statusCode else {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
+            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error, status) in
                 
                 if (!validCodes.contains(status)) {
                     continuation.resume(throwing: CourierError.requestError)

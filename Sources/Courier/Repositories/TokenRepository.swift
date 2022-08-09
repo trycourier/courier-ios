@@ -42,9 +42,8 @@ class TokenRepository: Repository {
                 device: CourierDevice()
             ))
             
-            let task = CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
+            let task = CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error, status) in
                 
-                let status = (response as! HTTPURLResponse).statusCode
                 if (!validCodes.contains(status)) {
                     continuation.resume(throwing: CourierError.requestError)
                     return
@@ -89,9 +88,8 @@ class TokenRepository: Repository {
             request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
             request.httpMethod = "DELETE"
             
-            let task = CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error) in
+            let task = CourierTask(with: request, validCodes: [200, 204]) { (validCodes, data, response, error, status) in
                 
-                let status = (response as! HTTPURLResponse).statusCode
                 if (!validCodes.contains(status)) {
                     continuation.resume(throwing: CourierError.requestError)
                     return
