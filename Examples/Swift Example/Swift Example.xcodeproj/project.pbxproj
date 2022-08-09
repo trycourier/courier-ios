@@ -27,7 +27,7 @@
 		2731E4D928A2AAF700A1531B /* FirebaseConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4D528A2AAF700A1531B /* FirebaseConfigViewController.xib */; };
 		2731E4DA28A2AAF700A1531B /* CourierUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4D628A2AAF700A1531B /* CourierUserViewController.xib */; };
 		2731E4DE28A2AD6200A1531B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2731E4DD28A2AD6200A1531B /* FirebaseMessaging */; };
-		2731E4E428A2DFC100A1531B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4E328A2DFC100A1531B /* GoogleService-Info.plist */; };
+		2731E4E828A309DE00A1531B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4E728A309DE00A1531B /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2731E48B28A2A60300A1531B /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2731E48B28A2A60300A1531B /* Swift Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2731E48E28A2A60300A1531B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2731E49028A2A60300A1531B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2731E49228A2A60300A1531B /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
@@ -76,8 +76,8 @@
 		2731E4D428A2AAF700A1531B /* FirebaseConfigViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseConfigViewController.swift; sourceTree = "<group>"; };
 		2731E4D528A2AAF700A1531B /* FirebaseConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirebaseConfigViewController.xib; sourceTree = "<group>"; };
 		2731E4D628A2AAF700A1531B /* CourierUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourierUserViewController.xib; sourceTree = "<group>"; };
-		2731E4DB28A2AC8400A1531B /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
-		2731E4E328A2DFC100A1531B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2731E4DB28A2AC8400A1531B /* Swift Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift Example.entitlements"; sourceTree = "<group>"; };
+		2731E4E728A309DE00A1531B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +104,7 @@
 		2731E48228A2A60300A1531B = {
 			isa = PBXGroup;
 			children = (
-				2731E48D28A2A60300A1531B /* Demo */,
+				2731E48D28A2A60300A1531B /* Swift Example */,
 				2731E4AA28A2A77700A1531B /* CourierService */,
 				2731E48C28A2A60300A1531B /* Products */,
 				2731E4B528A2A77C00A1531B /* Frameworks */,
@@ -114,17 +114,17 @@
 		2731E48C28A2A60300A1531B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2731E48B28A2A60300A1531B /* Demo.app */,
+				2731E48B28A2A60300A1531B /* Swift Example.app */,
 				2731E4A928A2A77700A1531B /* CourierService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		2731E48D28A2A60300A1531B /* Demo */ = {
+		2731E48D28A2A60300A1531B /* Swift Example */ = {
 			isa = PBXGroup;
 			children = (
-				2731E4E328A2DFC100A1531B /* GoogleService-Info.plist */,
-				2731E4DB28A2AC8400A1531B /* Demo.entitlements */,
+				2731E4E728A309DE00A1531B /* GoogleService-Info.plist */,
+				2731E4DB28A2AC8400A1531B /* Swift Example.entitlements */,
 				2731E4C428A2A84700A1531B /* Config.swift */,
 				2731E48E28A2A60300A1531B /* AppDelegate.swift */,
 				2731E49028A2A60300A1531B /* SceneDelegate.swift */,
@@ -142,7 +142,7 @@
 				2731E4D428A2AAF700A1531B /* FirebaseConfigViewController.swift */,
 				2731E4D528A2AAF700A1531B /* FirebaseConfigViewController.xib */,
 			);
-			path = Demo;
+			path = "Swift Example";
 			sourceTree = "<group>";
 		};
 		2731E4AA28A2A77700A1531B /* CourierService */ = {
@@ -165,9 +165,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2731E48A28A2A60300A1531B /* Demo */ = {
+		2731E48A28A2A60300A1531B /* Swift Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2731E49F28A2A60400A1531B /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildConfigurationList = 2731E49F28A2A60400A1531B /* Build configuration list for PBXNativeTarget "Swift Example" */;
 			buildPhases = (
 				2731E48728A2A60300A1531B /* Sources */,
 				2731E48828A2A60300A1531B /* Frameworks */,
@@ -179,13 +179,13 @@
 			dependencies = (
 				2731E4AF28A2A77700A1531B /* PBXTargetDependency */,
 			);
-			name = Demo;
+			name = "Swift Example";
 			packageProductDependencies = (
 				2731E4A328A2A76300A1531B /* Courier */,
 				2731E4DD28A2AD6200A1531B /* FirebaseMessaging */,
 			);
 			productName = Demo;
-			productReference = 2731E48B28A2A60300A1531B /* Demo.app */;
+			productReference = 2731E48B28A2A60300A1531B /* Swift Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2731E4A828A2A77700A1531B /* CourierService */ = {
@@ -226,7 +226,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2731E48628A2A60300A1531B /* Build configuration list for PBXProject "Demo" */;
+			buildConfigurationList = 2731E48628A2A60300A1531B /* Build configuration list for PBXProject "Swift Example" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -243,7 +243,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2731E48A28A2A60300A1531B /* Demo */,
+				2731E48A28A2A60300A1531B /* Swift Example */,
 				2731E4A828A2A77700A1531B /* CourierService */,
 			);
 		};
@@ -258,9 +258,9 @@
 				2731E49B28A2A60400A1531B /* LaunchScreen.storyboard in Resources */,
 				2731E4D928A2AAF700A1531B /* FirebaseConfigViewController.xib in Resources */,
 				2731E4DA28A2AAF700A1531B /* CourierUserViewController.xib in Resources */,
+				2731E4E828A309DE00A1531B /* GoogleService-Info.plist in Resources */,
 				2731E49828A2A60400A1531B /* Assets.xcassets in Resources */,
 				2731E49628A2A60300A1531B /* Main.storyboard in Resources */,
-				2731E4E428A2DFC100A1531B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,13 +448,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Swift Example/Swift Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Courier Demo";
+				INFOPLIST_FILE = "Swift Example/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swift Example";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -465,7 +465,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.example-swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -479,13 +479,13 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Swift Example/Swift Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Courier Demo";
+				INFOPLIST_FILE = "Swift Example/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swift Example";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -496,7 +496,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.example-swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -521,7 +521,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.example-swift.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -547,7 +547,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.example-swift.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -559,7 +559,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2731E48628A2A60300A1531B /* Build configuration list for PBXProject "Demo" */ = {
+		2731E48628A2A60300A1531B /* Build configuration list for PBXProject "Swift Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2731E49D28A2A60400A1531B /* Debug */,
@@ -568,7 +568,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2731E49F28A2A60400A1531B /* Build configuration list for PBXNativeTarget "Demo" */ = {
+		2731E49F28A2A60400A1531B /* Build configuration list for PBXNativeTarget "Swift Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2731E4A028A2A60400A1531B /* Debug */,
@@ -593,7 +593,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "feature/key-removal";
+				branch = master;
 				kind = branch;
 			};
 		};
