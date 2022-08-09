@@ -451,9 +451,10 @@
 				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Demo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Courier Demo";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -464,7 +465,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.courier.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -481,9 +482,10 @@
 				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Demo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Courier Demo";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -494,7 +496,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.courier.demo;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -508,7 +510,7 @@
 				CODE_SIGN_ENTITLEMENTS = CourierService/CourierService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -519,12 +521,12 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.courier.demo.CourierService;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -534,7 +536,7 @@
 				CODE_SIGN_ENTITLEMENTS = CourierService/CourierService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -545,12 +547,12 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.courier.demo.CourierService;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.internal-sample.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
