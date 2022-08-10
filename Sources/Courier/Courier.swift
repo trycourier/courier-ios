@@ -136,6 +136,8 @@ open class Courier: NSObject {
      */
     public private(set) var apnsToken: String? = nil
     
+    public var rawApnsToken: Data? = nil // TODO:
+    
     /**
      * Upserts the APNS token in Courier for the current user
      * If you implement `CourierDelegate`, this will get set automattically

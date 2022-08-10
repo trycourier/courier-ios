@@ -27,7 +27,6 @@
 		2731E4D928A2AAF700A1531B /* FirebaseConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4D528A2AAF700A1531B /* FirebaseConfigViewController.xib */; };
 		2731E4DA28A2AAF700A1531B /* CourierUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4D628A2AAF700A1531B /* CourierUserViewController.xib */; };
 		2731E4DE28A2AD6200A1531B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2731E4DD28A2AD6200A1531B /* FirebaseMessaging */; };
-		2731E4E828A309DE00A1531B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4E728A309DE00A1531B /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,7 +76,6 @@
 		2731E4D528A2AAF700A1531B /* FirebaseConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirebaseConfigViewController.xib; sourceTree = "<group>"; };
 		2731E4D628A2AAF700A1531B /* CourierUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourierUserViewController.xib; sourceTree = "<group>"; };
 		2731E4DB28A2AC8400A1531B /* Swift Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift Example.entitlements"; sourceTree = "<group>"; };
-		2731E4E728A309DE00A1531B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +121,6 @@
 		2731E48D28A2A60300A1531B /* Swift Example */ = {
 			isa = PBXGroup;
 			children = (
-				2731E4E728A309DE00A1531B /* GoogleService-Info.plist */,
 				2731E4DB28A2AC8400A1531B /* Swift Example.entitlements */,
 				2731E4C428A2A84700A1531B /* Config.swift */,
 				2731E48E28A2A60300A1531B /* AppDelegate.swift */,
@@ -258,7 +255,6 @@
 				2731E49B28A2A60400A1531B /* LaunchScreen.storyboard in Resources */,
 				2731E4D928A2AAF700A1531B /* FirebaseConfigViewController.xib in Resources */,
 				2731E4DA28A2AAF700A1531B /* CourierUserViewController.xib in Resources */,
-				2731E4E828A309DE00A1531B /* GoogleService-Info.plist in Resources */,
 				2731E49828A2A60400A1531B /* Assets.xcassets in Resources */,
 				2731E49628A2A60300A1531B /* Main.storyboard in Resources */,
 			);

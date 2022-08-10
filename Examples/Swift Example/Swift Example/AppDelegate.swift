@@ -16,7 +16,8 @@ class AppDelegate: CourierDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Init Firebase
-        FirebaseApp.configure()
+//        FirebaseApp.configure()
+        
         Messaging.messaging().delegate = self
         
         return true

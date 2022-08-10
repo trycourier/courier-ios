@@ -69,6 +69,9 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        
+        Courier.shared.rawApnsToken = deviceToken
+        
         Task.init {
             do {
                 try await Courier.shared.setPushToken(
@@ -79,6 +82,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
                 Courier.log(String(describing: error))
             }
         }
+        
     }
     
     // MARK: Functions
