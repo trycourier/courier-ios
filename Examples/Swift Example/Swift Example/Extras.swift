@@ -66,3 +66,33 @@ extension UNAuthorizationStatus {
     }
     
 }
+
+class LocalStorage {
+
+    static var userId: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "user.id")
+        }
+        set {
+            if newValue != nil {
+                UserDefaults.standard.set(newValue, forKey: "user.id")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "user.id")
+            }
+        }
+    }
+    
+    static var accessToken: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "access.token")
+        }
+        set {
+            if newValue != nil {
+                UserDefaults.standard.set(newValue, forKey: "access.token")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "access.token")
+            }
+        }
+    }
+    
+}

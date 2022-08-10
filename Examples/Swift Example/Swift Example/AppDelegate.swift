@@ -12,9 +12,6 @@ import FirebaseMessaging
 
 @main
 class AppDelegate: CourierDelegate {
-    
-    // 1. Production send
-    // 2. User defaults
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         

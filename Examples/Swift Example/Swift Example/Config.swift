@@ -7,5 +7,20 @@
 
 import Foundation
 
-var currentAccessToken: String = ""
-var currentUserId: String = "example_user"
+var currentAccessToken: String {
+    get {
+        return LocalStorage.accessToken ?? ""
+    }
+    set {
+        LocalStorage.accessToken = newValue
+    }
+}
+
+var currentUserId: String  {
+    get {
+        return LocalStorage.userId ?? "example_user"
+    }
+    set {
+        LocalStorage.userId = newValue
+    }
+}
