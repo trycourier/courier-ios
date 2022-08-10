@@ -139,7 +139,7 @@ extension Courier {
             title: title,
             message: message,
             providers: providers,
-            isProduction: UIDevice.current.pushEnvironment == .production
+            isProduction: !Courier.shared.isDebugging
         )
     }
     
