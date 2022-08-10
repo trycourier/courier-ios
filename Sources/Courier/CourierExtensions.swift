@@ -138,7 +138,8 @@ extension Courier {
             userId: userId,
             title: title,
             message: message,
-            providers: providers
+            providers: providers,
+            isProduction: UIDevice.current.pushEnvironment == .production
         )
     }
     
