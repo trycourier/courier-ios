@@ -54,10 +54,7 @@ extension AppDelegate: MessagingDelegate {
         Task {
             do {
                 if let token = fcmToken {
-                    try await Courier.shared.setPushToken(
-                        provider: .fcm,
-                        token: token
-                    )
+                    try await Courier.shared.setFCMToken(token)
                 }
             } catch {
                 print(error)
