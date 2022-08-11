@@ -240,10 +240,7 @@ extension RootViewController {
                 
                 // Sync fcm token if possible
                 if let fcmToken = Messaging.messaging().fcmToken {
-                    try await Courier.shared.setPushToken(
-                        provider: .fcm,
-                        token: fcmToken
-                    )
+                    try await Courier.shared.setFCMToken(fcmToken)
                     refreshUser()
                 }
                 

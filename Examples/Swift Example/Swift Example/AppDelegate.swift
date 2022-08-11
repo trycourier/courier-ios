@@ -23,9 +23,9 @@ class AppDelegate: CourierDelegate {
     }
     
     // MARK: Courier Notification Support
-
-    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
-
+    
+    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+        
         print("Push Received")
         print(message)
 
@@ -33,17 +33,17 @@ class AppDelegate: CourierDelegate {
         showMessageAlert(title: "Push Received", message: "\(message)")
 
         return [.list, .badge, .banner, .sound]
-
+        
     }
 
-    override func pushNotificationOpened(message: [AnyHashable : Any]) {
-
+    override func pushNotificationClicked(message: [AnyHashable : Any]) {
+        
         print("Push Opened")
         print(message)
 
         // ⚠️ For demo purposes only
         showMessageAlert(title: "Push Opened", message: "\(message)")
-
+        
     }
 
 }

@@ -147,21 +147,20 @@ open class Courier: NSObject {
      * Upserts the APNS token in Courier for the current user
      * If you implement `CourierDelegate`, this will get set automattically
      * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
+     * This function requires a `Data` value as the token.
      */
-    internal func setAPNSToken(_ token: Data) async throws {
+    public func setAPNSToken(_ rawToken: Data) async throws {
 
         // We save the raw apns token here
-        // The raw token is stored as a Data object
-        // but can easily be converted to string with `.string`
-        rawApnsToken = token
+        rawApnsToken = rawToken
 
         Courier.log("Apple Push Notification Service Token")
-        Courier.log(token.string)
+        Courier.log(rawToken.string)
 
         return try await tokenRepo.putUserToken(
             userId: userId,
             provider: .apns,
-            deviceToken: token.string
+            deviceToken: rawToken.string
         )
 
     }
@@ -175,7 +174,7 @@ open class Courier: NSObject {
      * Upserts the FCM token in Courier for the current user
      * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
      */
-    internal func setFCMToken(_ token: String) async throws {
+    public func setFCMToken(_ token: String) async throws {
 
         fcmToken = token
 

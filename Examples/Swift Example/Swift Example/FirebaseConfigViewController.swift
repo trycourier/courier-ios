@@ -122,7 +122,6 @@ extension FirebaseConfigViewController {
         FirebaseApp.configure(options: options)
         
         if let token = Courier.shared.rawApnsToken {
-            print([UInt8](token))
             Messaging.messaging().setAPNSToken(token, type: .sandbox)
         }
         
