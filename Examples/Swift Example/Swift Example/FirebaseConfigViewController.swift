@@ -88,9 +88,9 @@ class FirebaseConfigViewController: UIViewController {
             return
         }
         
-//        if let token = Courier.shared.apnsToken?.data(using: .utf8) {
-//            Messaging.messaging().setAPNSToken(token, type: .sandbox)
-//        }
+        if let token = Courier.shared.rawApnsToken {
+            Messaging.messaging().setAPNSToken(token, type: .sandbox)
+        }
         
         appIdField.text = options.googleAppID
         gcmSenderIdField.text = options.gcmSenderID

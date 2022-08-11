@@ -589,7 +589,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = master;
+				branch = "feature/no-plist-testing";
 				kind = branch;
 			};
 		};

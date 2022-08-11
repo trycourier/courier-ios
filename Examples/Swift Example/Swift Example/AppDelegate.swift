@@ -15,9 +15,7 @@ class AppDelegate: CourierDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // Init Firebase
-//        FirebaseApp.configure()
-        
+        // Register callback to receive fcm token changes
         Messaging.messaging().delegate = self
         
         return true
