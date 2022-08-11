@@ -31,6 +31,9 @@ internal class MessagingRepository: Repository {
                             override: Override(
                                 config: Config(
                                     isProduction: isProduction
+                                ),
+                                body: Body(
+                                    mutableContent: 1
                                 )
                             )
                         )
@@ -79,6 +82,11 @@ internal class MessagingRepository: Repository {
             request.httpBody = try? JSONEncoder().encode([
                 "event": event.rawValue
             ])
+            
+            
+            // TODO: Remove me
+            request.setValue("ZDI1NDlkNjItODgwZC00ZDAxLTgzMDEtNTdhYmY4M2U0YTJh", forHTTPHeaderField: "X-Courier-Client-Key")
+            
             
             let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error, status) in
                 

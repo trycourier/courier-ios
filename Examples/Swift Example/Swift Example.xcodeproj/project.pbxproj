@@ -14,9 +14,6 @@
 		2731E49828A2A60400A1531B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2731E49728A2A60400A1531B /* Assets.xcassets */; };
 		2731E49B28A2A60400A1531B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2731E49928A2A60400A1531B /* LaunchScreen.storyboard */; };
 		2731E4A428A2A76300A1531B /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2731E4A328A2A76300A1531B /* Courier */; };
-		2731E4AC28A2A77700A1531B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E4AB28A2A77700A1531B /* NotificationService.swift */; };
-		2731E4B028A2A77700A1531B /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2731E4A928A2A77700A1531B /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2731E4B728A2A77C00A1531B /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2731E4B628A2A77C00A1531B /* Courier */; };
 		2731E4BA28A2A80B00A1531B /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E4B828A2A80B00A1531B /* Extras.swift */; };
 		2731E4BB28A2A80B00A1531B /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E4B928A2A80B00A1531B /* ActionButton.swift */; };
 		2731E4C528A2A84700A1531B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E4C428A2A84700A1531B /* Config.swift */; };
@@ -27,14 +24,17 @@
 		2731E4D928A2AAF700A1531B /* FirebaseConfigViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4D528A2AAF700A1531B /* FirebaseConfigViewController.xib */; };
 		2731E4DA28A2AAF700A1531B /* CourierUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2731E4D628A2AAF700A1531B /* CourierUserViewController.xib */; };
 		2731E4DE28A2AD6200A1531B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2731E4DD28A2AD6200A1531B /* FirebaseMessaging */; };
+		2731E58528A5851C00A1531B /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E58428A5851C00A1531B /* NotificationService.swift */; };
+		2731E58928A5851C00A1531B /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 2731E58228A5851C00A1531B /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2731E59028A5852300A1531B /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2731E58F28A5852300A1531B /* Courier */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2731E4AE28A2A77700A1531B /* PBXContainerItemProxy */ = {
+		2731E58728A5851C00A1531B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2731E48328A2A60300A1531B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 2731E4A828A2A77700A1531B;
+			remoteGlobalIDString = 2731E58128A5851C00A1531B;
 			remoteInfo = CourierService;
 		};
 /* End PBXContainerItemProxy section */
@@ -46,7 +46,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2731E4B028A2A77700A1531B /* CourierService.appex in Embed App Extensions */,
+				2731E58928A5851C00A1531B /* CourierService.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,7 +54,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2731E48B28A2A60300A1531B /* Swift Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2731E48E28A2A60300A1531B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2731E49028A2A60300A1531B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2731E49228A2A60300A1531B /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
@@ -62,13 +61,9 @@
 		2731E49728A2A60400A1531B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2731E49A28A2A60400A1531B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2731E49C28A2A60400A1531B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2731E4A928A2A77700A1531B /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2731E4AB28A2A77700A1531B /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		2731E4AD28A2A77700A1531B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2731E4B828A2A80B00A1531B /* Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		2731E4B928A2A80B00A1531B /* ActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		2731E4C428A2A84700A1531B /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		2731E4C628A2A85A00A1531B /* CourierService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CourierService.entitlements; sourceTree = "<group>"; };
 		2731E4CC28A2AA6300A1531B /* NotificationPermissionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationPermissionViewController.xib; sourceTree = "<group>"; };
 		2731E4D128A2AAA600A1531B /* NotificationPermissionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationPermissionViewController.swift; sourceTree = "<group>"; };
 		2731E4D328A2AAF700A1531B /* CourierUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourierUserViewController.swift; sourceTree = "<group>"; };
@@ -76,6 +71,10 @@
 		2731E4D528A2AAF700A1531B /* FirebaseConfigViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirebaseConfigViewController.xib; sourceTree = "<group>"; };
 		2731E4D628A2AAF700A1531B /* CourierUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CourierUserViewController.xib; sourceTree = "<group>"; };
 		2731E4DB28A2AC8400A1531B /* Swift Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Swift Example.entitlements"; sourceTree = "<group>"; };
+		2731E58228A5851C00A1531B /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2731E58428A5851C00A1531B /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		2731E58628A5851C00A1531B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2731E58A28A5851D00A1531B /* Swift Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,11 +87,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2731E4A628A2A77700A1531B /* Frameworks */ = {
+		2731E57F28A5851C00A1531B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2731E4B728A2A77C00A1531B /* Courier in Frameworks */,
+				2731E59028A5852300A1531B /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,19 +102,11 @@
 			isa = PBXGroup;
 			children = (
 				2731E48D28A2A60300A1531B /* Swift Example */,
-				2731E4AA28A2A77700A1531B /* CourierService */,
-				2731E48C28A2A60300A1531B /* Products */,
-				2731E4B528A2A77C00A1531B /* Frameworks */,
+				2731E58228A5851C00A1531B /* CourierService.appex */,
+				2731E58328A5851C00A1531B /* CourierService */,
+				2731E58A28A5851D00A1531B /* Swift Example.app */,
+				2731E58E28A5852300A1531B /* Frameworks */,
 			);
-			sourceTree = "<group>";
-		};
-		2731E48C28A2A60300A1531B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2731E48B28A2A60300A1531B /* Swift Example.app */,
-				2731E4A928A2A77700A1531B /* CourierService.appex */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		2731E48D28A2A60300A1531B /* Swift Example */ = {
@@ -142,17 +133,16 @@
 			path = "Swift Example";
 			sourceTree = "<group>";
 		};
-		2731E4AA28A2A77700A1531B /* CourierService */ = {
+		2731E58328A5851C00A1531B /* CourierService */ = {
 			isa = PBXGroup;
 			children = (
-				2731E4C628A2A85A00A1531B /* CourierService.entitlements */,
-				2731E4AB28A2A77700A1531B /* NotificationService.swift */,
-				2731E4AD28A2A77700A1531B /* Info.plist */,
+				2731E58428A5851C00A1531B /* NotificationService.swift */,
+				2731E58628A5851C00A1531B /* Info.plist */,
 			);
 			path = CourierService;
 			sourceTree = "<group>";
 		};
-		2731E4B528A2A77C00A1531B /* Frameworks */ = {
+		2731E58E28A5852300A1531B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -174,7 +164,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				2731E4AF28A2A77700A1531B /* PBXTargetDependency */,
+				2731E58828A5851C00A1531B /* PBXTargetDependency */,
 			);
 			name = "Swift Example";
 			packageProductDependencies = (
@@ -182,16 +172,16 @@
 				2731E4DD28A2AD6200A1531B /* FirebaseMessaging */,
 			);
 			productName = Demo;
-			productReference = 2731E48B28A2A60300A1531B /* Swift Example.app */;
+			productReference = 2731E58A28A5851D00A1531B /* Swift Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2731E4A828A2A77700A1531B /* CourierService */ = {
+		2731E58128A5851C00A1531B /* CourierService */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2731E4B128A2A77700A1531B /* Build configuration list for PBXNativeTarget "CourierService" */;
+			buildConfigurationList = 2731E58B28A5851D00A1531B /* Build configuration list for PBXNativeTarget "CourierService" */;
 			buildPhases = (
-				2731E4A528A2A77700A1531B /* Sources */,
-				2731E4A628A2A77700A1531B /* Frameworks */,
-				2731E4A728A2A77700A1531B /* Resources */,
+				2731E57E28A5851C00A1531B /* Sources */,
+				2731E57F28A5851C00A1531B /* Frameworks */,
+				2731E58028A5851C00A1531B /* Resources */,
 			);
 			buildRules = (
 			);
@@ -199,10 +189,10 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				2731E4B628A2A77C00A1531B /* Courier */,
+				2731E58F28A5852300A1531B /* Courier */,
 			);
 			productName = CourierService;
-			productReference = 2731E4A928A2A77700A1531B /* CourierService.appex */;
+			productReference = 2731E58228A5851C00A1531B /* CourierService.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -218,7 +208,7 @@
 					2731E48A28A2A60300A1531B = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
-					2731E4A828A2A77700A1531B = {
+					2731E58128A5851C00A1531B = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
 				};
@@ -236,12 +226,12 @@
 				2731E4A228A2A76300A1531B /* XCRemoteSwiftPackageReference "courier-ios" */,
 				2731E4DC28A2AD6200A1531B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
-			productRefGroup = 2731E48C28A2A60300A1531B /* Products */;
+			productRefGroup = 2731E48228A2A60300A1531B;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				2731E48A28A2A60300A1531B /* Swift Example */,
-				2731E4A828A2A77700A1531B /* CourierService */,
+				2731E58128A5851C00A1531B /* CourierService */,
 			);
 		};
 /* End PBXProject section */
@@ -260,7 +250,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2731E4A728A2A77700A1531B /* Resources */ = {
+		2731E58028A5851C00A1531B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -286,21 +276,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2731E4A528A2A77700A1531B /* Sources */ = {
+		2731E57E28A5851C00A1531B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2731E4AC28A2A77700A1531B /* NotificationService.swift in Sources */,
+				2731E58528A5851C00A1531B /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2731E4AF28A2A77700A1531B /* PBXTargetDependency */ = {
+		2731E58828A5851C00A1531B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2731E4A828A2A77700A1531B /* CourierService */;
-			targetProxy = 2731E4AE28A2A77700A1531B /* PBXContainerItemProxy */;
+			target = 2731E58128A5851C00A1531B /* CourierService */;
+			targetProxy = 2731E58728A5851C00A1531B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -500,12 +490,11 @@
 			};
 			name = Release;
 		};
-		2731E4B228A2A77700A1531B /* Debug */ = {
+		2731E58C28A5851D00A1531B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = CourierService/CourierService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
@@ -522,16 +511,15 @@
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		2731E4B328A2A77700A1531B /* Release */ = {
+		2731E58D28A5851D00A1531B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = CourierService/CourierService.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
@@ -548,7 +536,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -573,11 +561,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2731E4B128A2A77700A1531B /* Build configuration list for PBXNativeTarget "CourierService" */ = {
+		2731E58B28A5851D00A1531B /* Build configuration list for PBXNativeTarget "CourierService" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2731E4B228A2A77700A1531B /* Debug */,
-				2731E4B328A2A77700A1531B /* Release */,
+				2731E58C28A5851D00A1531B /* Debug */,
+				2731E58D28A5851D00A1531B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -609,15 +597,15 @@
 			package = 2731E4A228A2A76300A1531B /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
-		2731E4B628A2A77C00A1531B /* Courier */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2731E4A228A2A76300A1531B /* XCRemoteSwiftPackageReference "courier-ios" */;
-			productName = Courier;
-		};
 		2731E4DD28A2AD6200A1531B /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2731E4DC28A2AD6200A1531B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		2731E58F28A5852300A1531B /* Courier */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2731E4A228A2A76300A1531B /* XCRemoteSwiftPackageReference "courier-ios" */;
+			productName = Courier;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

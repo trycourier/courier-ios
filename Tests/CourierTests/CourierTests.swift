@@ -1,7 +1,7 @@
 import XCTest
 @testable import Courier
 
-let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 81, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20]) // This is fake
+let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20]) // This is fake
 let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
 let userId = "example_user"
 var authKey: String = "your_access_key"

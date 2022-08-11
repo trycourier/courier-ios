@@ -42,10 +42,18 @@ internal struct APNProvider: Codable {
 
 internal struct Override: Codable {
     let config: Config
+    let body: Body
 }
 
 internal struct Config: Codable {
     let isProduction: Bool
+}
+
+internal struct Body: Codable {
+    let mutableContent: Int
+    private enum CodingKeys: String, CodingKey {
+        case mutableContent = "mutable-content"
+    }
 }
 
 internal struct MessageResponse: Codable {
