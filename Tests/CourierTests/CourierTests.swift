@@ -1,7 +1,7 @@
 import XCTest
 @testable import Courier
 
-let apnsToken = "282D849F-2AF8-4ECB-BBFD-EC3F96DD59D4" // This is fake
+let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 81, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20]) // This is fake
 let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
 let userId = "example_user"
 var authKey: String = "your_access_key"
@@ -24,11 +24,11 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Setting APNS Token before User")
         
         do {
-            try await Courier.shared.setAPNSToken(apnsToken)
+            try await Courier.shared.setAPNSToken(rawApnsToken)
         } catch {
             XCTAssertEqual(Courier.shared.accessToken, nil)
             XCTAssertEqual(Courier.shared.userId, nil)
-            XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+            XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         }
 
     }
@@ -63,7 +63,7 @@ final class CourierTests: XCTestCase {
 
         XCTAssertEqual(Courier.shared.accessToken, authKey)
         XCTAssertEqual(Courier.shared.userId, userId)
-        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
     }
@@ -81,7 +81,7 @@ final class CourierTests: XCTestCase {
 
         XCTAssertEqual(Courier.shared.accessToken, authKey)
         XCTAssertEqual(Courier.shared.userId, userId)
-        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
     }
@@ -90,10 +90,7 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing APNS Token Update")
         
-        try await Courier.shared.setPushToken(
-            provider: .apns,
-            token: apnsToken
-        )
+        try await Courier.shared.setAPNSToken(rawApnsToken)
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, userId)
@@ -105,10 +102,7 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing FCM Token Update")
         
-        try await Courier.shared.setPushToken(
-            provider: .fcm,
-            token: fcmToken
-        )
+        try await Courier.shared.setFCMToken(fcmToken)
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, userId)
@@ -167,7 +161,7 @@ final class CourierTests: XCTestCase {
         try await Courier.shared.signOut()
 
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
-        XCTAssertEqual(Courier.shared.apnsToken, apnsToken)
+        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
 

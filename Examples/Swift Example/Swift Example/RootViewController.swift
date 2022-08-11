@@ -16,6 +16,8 @@ class RootViewController: UIViewController {
     @IBOutlet weak var notificationActionButton: ActionButton!
     @IBOutlet weak var userDetailsActionButton: ActionButton!
     @IBOutlet weak var firebaseActionButton: ActionButton!
+    @IBOutlet weak var apnsTokenButton: ActionButton!
+    @IBOutlet weak var fcmTokenButton: ActionButton!
     
     @IBOutlet weak var providerSegment: UISegmentedControl!
     @IBAction func providerChange(_ sender: Any) {
@@ -40,6 +42,20 @@ class RootViewController: UIViewController {
         firebaseActionButton.action = { [weak self] in
             let vc = FirebaseConfigViewController()
             self?.navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        apnsTokenButton.icon = "square.and.arrow.up"
+        apnsTokenButton.action = { [weak self] in
+            if let token = Courier.shared.apnsToken {
+                self?.share(value: token)
+            }
+        }
+        
+        fcmTokenButton.icon = "square.and.arrow.up"
+        fcmTokenButton.action = { [weak self] in
+            if let token = Messaging.messaging().fcmToken {
+                self?.share(value: token)
+            }
         }
         
         sendTestButton.action = { [weak self] in
@@ -111,13 +127,21 @@ extension RootViewController {
         if (Courier.shared.userId != nil) {
             rows.append(ActionButton.Row(title: "User ID", value: Courier.shared.userId ?? "Not set"))
             rows.append(ActionButton.Row(title: "Access Token", value: currentAccessToken))
-            rows.append(ActionButton.Row(title: "APNS Token", value: Courier.shared.apnsToken ?? "Not set"))
-            rows.append(ActionButton.Row(title: "FCM Token", value: Courier.shared.fcmToken ?? "Not set"))
         } else {
             rows.append(ActionButton.Row(title: "User Status", value: "Not Signed In"))
         }
         
         userDetailsActionButton.rows = rows
+        
+        apnsTokenButton.rows = [
+            ActionButton.Row(title: "APNS Token", value: nil),
+            ActionButton.Row(title: "Value", value: Courier.shared.apnsToken ?? "Not set")
+        ]
+        
+        fcmTokenButton.rows = [
+            ActionButton.Row(title: "FCM Token", value: nil),
+            ActionButton.Row(title: "Value", value: Messaging.messaging().fcmToken ?? "Not set")
+        ]
         
     }
     
@@ -135,6 +159,9 @@ extension RootViewController {
     
     private func updateMessagingUI() {
         
+        apnsTokenButton.isHidden = isFirebase
+        fcmTokenButton.isHidden = !isFirebase
+        
         firebaseActionButton.isHidden = !isFirebase
         
         sendTestButton.title = isFirebase ? "Send FCM Test Push" : "Send APNS Test Push"
@@ -142,6 +169,7 @@ extension RootViewController {
         var rows = [ActionButton.Row(title: "Firebase Configuration", value: nil)]
         
         guard let options = FirebaseApp.app()?.options else {
+            rows.append(ActionButton.Row(title: "Options", value: "Not set"))
             firebaseActionButton.rows = rows
             return
         }
@@ -179,6 +207,21 @@ extension RootViewController {
                 // Request push notifications if they are not requested
                 let status = try await Courier.requestNotificationPermissions()
                 updateUIForStatus(status: status)
+                
+                // Check for firebase
+                if (isFirebase) {
+                    guard let _ = FirebaseApp.app()?.options else {
+                        appDelegate.showMessageAlert(
+                            title: "Firebase configuration not set",
+                            message: "Setup firebase to continue",
+                            onOkClick: {
+                                let vc = FirebaseConfigViewController()
+                                self.navigationController?.pushViewController(vc, animated: true)
+                            }
+                        )
+                        return
+                    }
+                }
                 
                 // Check for user
                 if (Courier.shared.userId == nil) {

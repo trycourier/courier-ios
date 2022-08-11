@@ -22,7 +22,6 @@ class CourierUserViewController: UIViewController {
     }
     
     @IBOutlet weak var authButton: ActionButton!
-    
     @IBOutlet weak var buttonBottom: NSLayoutConstraint!
     
     override func viewDidLoad() {
@@ -33,7 +32,7 @@ class CourierUserViewController: UIViewController {
         userIdField.text = currentUserId
         accessTokenField.text = currentAccessToken
         
-        refreshUI()
+        refresh()
         authButton.action = { [weak self] in
             self?.authAction()
         }
@@ -59,7 +58,7 @@ class CourierUserViewController: UIViewController {
 
 extension CourierUserViewController {
     
-    private func refreshUI() {
+    private func refresh() {
         
         let isUserSignedIn = Courier.shared.userId != nil
         authButton.title = isUserSignedIn ? "Sign Out" : "Set Credentials"
@@ -93,7 +92,7 @@ extension CourierUserViewController {
         Task {
             authButton.title = "Loading..."
             try await Courier.shared.signOut()
-            refreshUI()
+            refresh()
         }
 
     }
@@ -137,7 +136,7 @@ extension CourierUserViewController {
                 
             }
             
-            refreshUI()
+            refresh()
 
             if (Courier.shared.userId != nil) {
                 navigationController?.popViewController(animated: true)

@@ -27,12 +27,12 @@
         <!--Root View Controller-->
         <scene sceneID="tYi-eM-gVi">
             <objects>
-                <viewController id="vEY-8v-4VI" customClass="RootViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vEY-8v-4VI" customClass="RootViewController" customModule="Swift_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cz3-39-J60">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cYc-ax-pad" customClass="ActionButton" customModule="Demo" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cYc-ax-pad" customClass="ActionButton" customModule="Swift_Example" customModuleProvider="target">
                                 <rect key="frame" x="20" y="786" width="374" height="56"/>
                                 <color key="backgroundColor" red="0.52156862749999999" green="0.16862745100000001" blue="0.73333333329999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -46,7 +46,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="sOb-SQ-52w">
-                                                <rect key="frame" x="20" y="171" width="374" height="1145"/>
+                                                <rect key="frame" x="20" y="171" width="374" height="1823"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tJq-im-1eY">
                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="128"/>
@@ -79,16 +79,24 @@
                                                             <constraint firstAttribute="trailing" secondItem="mSa-Ka-ULH" secondAttribute="trailing" constant="20" id="uA4-5l-Ind"/>
                                                         </constraints>
                                                     </view>
-                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCT-Gr-l1C" customClass="ActionButton" customModule="Demo" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCT-Gr-l1C" customClass="ActionButton" customModule="Swift_Example" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="148" width="374" height="319"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     </view>
-                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KdZ-d5-A64" customClass="ActionButton" customModule="Demo" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KdZ-d5-A64" customClass="ActionButton" customModule="Swift_Example" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="487" width="374" height="319"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     </view>
-                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CIL-Mi-eZo" customClass="ActionButton" customModule="Demo" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CIL-Mi-eZo" customClass="ActionButton" customModule="Swift_Example" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="826" width="374" height="319"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oIv-Eq-hVv" customClass="ActionButton" customModule="Swift_Example" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="1165" width="374" height="319"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YZC-8r-1qN" customClass="ActionButton" customModule="Swift_Example" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="1504" width="374" height="319"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     </view>
                                                 </subviews>
@@ -127,6 +135,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="bXJ-4X-fPx"/>
                     <connections>
+                        <outlet property="apnsTokenButton" destination="oIv-Eq-hVv" id="cQS-yv-Khb"/>
+                        <outlet property="fcmTokenButton" destination="YZC-8r-1qN" id="p8s-Pe-tC0"/>
                         <outlet property="firebaseActionButton" destination="FCT-Gr-l1C" id="bCy-YR-uLQ"/>
                         <outlet property="notificationActionButton" destination="KdZ-d5-A64" id="p17-gO-XeU"/>
                         <outlet property="providerSegment" destination="oP2-T7-QBg" id="KBM-jn-dQZ"/>

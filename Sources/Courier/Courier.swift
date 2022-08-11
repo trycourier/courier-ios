@@ -134,26 +134,34 @@ open class Courier: NSObject {
      * The token issued by Apple to receive tokens on this device
      * Can only be set by the Courier SDK, but can be read by external packages
      */
-    public private(set) var apnsToken: String? = nil
+    public private(set) var rawApnsToken: Data? = nil
     
-    public var rawApnsToken: Data? = nil // TODO:
+    // Returns the apns token as a string
+    public var apnsToken: String? {
+        get {
+            return rawApnsToken?.string
+        }
+    }
     
     /**
      * Upserts the APNS token in Courier for the current user
      * If you implement `CourierDelegate`, this will get set automattically
      * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
      */
-    internal func setAPNSToken(_ token: String) async throws {
+    internal func setAPNSToken(_ token: Data) async throws {
 
-        apnsToken = token
+        // We save the raw apns token here
+        // The raw token is stored as a Data object
+        // but can easily be converted to string with `.string`
+        rawApnsToken = token
 
         Courier.log("Apple Push Notification Service Token")
-        Courier.log(token)
+        Courier.log(token.string)
 
         return try await tokenRepo.putUserToken(
             userId: userId,
             provider: .apns,
-            deviceToken: token
+            deviceToken: token.string
         )
 
     }
@@ -180,19 +188,6 @@ open class Courier: NSObject {
             deviceToken: token
         )
 
-    }
-    
-    /**
-     * Manually saves a token into Courier based on the provider supported
-     * This function should be used to set a device token manually
-     */
-    public func setPushToken(provider: CourierProvider, token: String) async throws {
-        switch (provider) {
-        case .apns:
-            return try await Courier.shared.setAPNSToken(token)
-        case .fcm:
-            return try await Courier.shared.setFCMToken(token)
-        }
     }
     
 }

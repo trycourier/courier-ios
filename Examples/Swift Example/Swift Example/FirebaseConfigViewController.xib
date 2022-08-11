@@ -8,12 +8,13 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FirebaseConfigViewController" customModule="Demo" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FirebaseConfigViewController" customModule="Swift_Example" customModuleProvider="target">
             <connections>
+                <outlet property="actionButton" destination="s7z-eW-dds" id="fmy-bn-gj7"/>
+                <outlet property="actionButtonBottom" destination="mKi-3x-oDk" id="gGq-J6-IlR"/>
                 <outlet property="apiKeyField" destination="oib-l9-Je7" id="dqT-q0-C1d"/>
                 <outlet property="appIdField" destination="EHy-ad-6or" id="5TN-f3-pkr"/>
-                <outlet property="clientIdField" destination="jzd-od-blz" id="bjA-Hf-pyM"/>
-                <outlet property="gcmSenderIdField" destination="w0t-2I-euI" id="D3Q-ji-zhC"/>
+                <outlet property="gcmSenderIdField" destination="w0t-2I-euI" id="VKO-xL-jqG"/>
                 <outlet property="projectIdField" destination="hbT-Iv-fYa" id="IS6-Df-Huu"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -24,13 +25,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gRd-rw-D8V">
-                    <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="722"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ehj-kQ-BZY" userLabel="ContentView">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="442.5"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="358"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="xDd-t0-YkW">
-                                    <rect key="frame" x="20" y="20" width="374" height="402.5"/>
+                                    <rect key="frame" x="20" y="20" width="374" height="318"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="0LL-ja-IDX">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="64.5"/>
@@ -46,7 +47,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <action selector="appIdFieldChange:" destination="-1" eventType="editingChanged" id="rDM-Lh-yYf"/>
+                                                        <action selector="appIdFieldChange:" destination="-1" eventType="editingChanged" id="AvT-lD-8SZ"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -65,7 +66,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <action selector="gcmSenderIdFieldChange:" destination="-1" eventType="editingDidEnd" id="CpI-ba-E7k"/>
+                                                        <action selector="gcmSenderIdFieldChange:" destination="-1" eventType="editingChanged" id="Zi7-bT-eRG"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -84,7 +85,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <action selector="apiKeyFieldChange:" destination="-1" eventType="editingDidEnd" id="NON-iZ-aaz"/>
+                                                        <action selector="apiKeyFieldChange:" destination="-1" eventType="editingChanged" id="PZ7-iX-WfM"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -103,27 +104,7 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <action selector="projectIdChange:" destination="-1" eventType="editingDidEnd" id="pJE-I4-q5s"/>
-                                                    </connections>
-                                                </textField>
-                                            </subviews>
-                                        </stackView>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="wCl-8W-Jkb">
-                                            <rect key="frame" x="0.0" y="338" width="374" height="64.5"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Client ID" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="APC-Mf-kuv">
-                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Client ID" borderStyle="roundedRect" placeholder="Courier Access Token" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jzd-od-blz">
-                                                    <rect key="frame" x="0.0" y="30.5" width="374" height="34"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
-                                                    <connections>
-                                                        <action selector="clientIdChange:" destination="-1" eventType="editingDidEnd" id="6PF-c1-fG6"/>
-                                                        <action selector="projectIdChange:" destination="-1" eventType="editingDidEnd" id="NpO-zm-kff"/>
+                                                        <action selector="projectIdFieldChange:" destination="-1" eventType="editingChanged" id="o1w-mv-YBr"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
@@ -149,14 +130,24 @@
                     <viewLayoutGuide key="contentLayoutGuide" id="wMO-cd-a51"/>
                     <viewLayoutGuide key="frameLayoutGuide" id="mrk-84-Wc9"/>
                 </scrollView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s7z-eW-dds" customClass="ActionButton" customModule="Swift_Example" customModuleProvider="target">
+                    <rect key="frame" x="20" y="786" width="374" height="56"/>
+                    <color key="backgroundColor" red="0.52156862745098043" green="0.16862745098039217" blue="0.73333333333333328" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="56" id="K2f-e3-1xU"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="gRd-rw-D8V" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="9rK-Db-9Tg"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="s7z-eW-dds" secondAttribute="trailing" constant="20" id="Aua-Sb-v3l"/>
+                <constraint firstItem="s7z-eW-dds" firstAttribute="top" secondItem="gRd-rw-D8V" secondAttribute="bottom" constant="20" id="Cd6-fL-QFF"/>
                 <constraint firstItem="gRd-rw-D8V" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Lvx-fT-zIY"/>
-                <constraint firstAttribute="bottom" secondItem="gRd-rw-D8V" secondAttribute="bottom" id="N5e-k0-NmF"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="s7z-eW-dds" secondAttribute="bottom" constant="20" id="mKi-3x-oDk"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="gRd-rw-D8V" secondAttribute="trailing" id="mOL-Pm-Elj"/>
+                <constraint firstItem="s7z-eW-dds" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="o05-xS-OEb"/>
             </constraints>
             <point key="canvasLocation" x="131.8840579710145" y="106.47321428571428"/>
         </view>

@@ -44,7 +44,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         }
         
         // Complete
-        let presentationOptions = pushNotificationReceivedInForeground(message: message)
+        let presentationOptions = pushNotificationDeliveredInForeground(message: message)
         completionHandler(presentationOptions)
         
     }
@@ -57,7 +57,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         Courier.trackNotification(message: message, event: .clicked)
         
         // Complete
-        pushNotificationOpened(message: message)
+        pushNotificationClicked(message: message)
         completionHandler()
         
     }
@@ -69,26 +69,19 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        
-        Courier.shared.rawApnsToken = deviceToken
-        
-        Task.init {
+        Task {
             do {
-                try await Courier.shared.setPushToken(
-                    provider: .apns,
-                    token: deviceToken.string
-                )
+                try await Courier.shared.setAPNSToken(deviceToken)
             } catch {
                 Courier.log(String(describing: error))
             }
         }
-        
     }
     
     // MARK: Functions
     
-    open func pushNotificationReceivedInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions { return [] }
+    open func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions { return [] }
     
-    open func pushNotificationOpened(message: [AnyHashable : Any]) {}
+    open func pushNotificationClicked(message: [AnyHashable : Any]) {}
     
 }

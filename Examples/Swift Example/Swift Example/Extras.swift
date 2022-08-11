@@ -44,6 +44,17 @@ extension AppDelegate {
     
 }
 
+extension UIViewController {
+    
+    func share(value: String) {
+        let textToShare = [value]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+}
+
 extension UNAuthorizationStatus {
     
     var prettyText: String {
@@ -91,6 +102,58 @@ class LocalStorage {
                 UserDefaults.standard.set(newValue, forKey: "access.token")
             } else {
                 UserDefaults.standard.removeObject(forKey: "access.token")
+            }
+        }
+    }
+    
+    static var googleAppId: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "fireabse.googleAppId")
+        }
+        set {
+            if newValue != nil {
+                UserDefaults.standard.set(newValue, forKey: "fireabse.googleAppId")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "fireabse.googleAppId")
+            }
+        }
+    }
+    
+    static var gcmSenderId: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "fireabse.gcmSenderId")
+        }
+        set {
+            if newValue != nil {
+                UserDefaults.standard.set(newValue, forKey: "fireabse.gcmSenderId")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "fireabse.gcmSenderId")
+            }
+        }
+    }
+    
+    static var apiKey: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "fireabse.apiKey")
+        }
+        set {
+            if newValue != nil {
+                UserDefaults.standard.set(newValue, forKey: "fireabse.apiKey")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "fireabse.apiKey")
+            }
+        }
+    }
+    
+    static var projectId: String? {
+        get {
+            return UserDefaults.standard.string(forKey: "fireabse.projectId")
+        }
+        set {
+            if newValue != nil {
+                UserDefaults.standard.set(newValue, forKey: "fireabse.projectId")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "fireabse.projectId")
             }
         }
     }

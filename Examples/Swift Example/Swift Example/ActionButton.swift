@@ -31,6 +31,12 @@ class ActionButton: UIView {
     
     var action: (() -> Void)? = nil
     
+    var icon: String = "chevron.forward" {
+        didSet {
+            imageView.image = UIImage(systemName: icon)
+        }
+    }
+    
     var title: String? = nil {
         didSet {
             if let t = title {
@@ -41,6 +47,7 @@ class ActionButton: UIView {
     
     private let vStack = UIStackView()
     private let containerStack = UIStackView()
+    private let imageView = UIImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -79,10 +86,11 @@ class ActionButton: UIView {
         vStack.distribution = .equalSpacing
         vStack.spacing = 20
         
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "chevron.forward")
+        imageView.image = UIImage(systemName: icon)
         imageView.contentMode = .center
         containerStack.addArrangedSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.widthAnchor.constraint(equalToConstant: 18).isActive = true
         
         // Add click
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ActionButton.tapAction))
