@@ -83,11 +83,6 @@ internal class MessagingRepository: Repository {
                 "event": event.rawValue
             ])
             
-            
-            // TODO: Remove me
-            request.setValue("ZDI1NDlkNjItODgwZC00ZDAxLTgzMDEtNTdhYmY4M2U0YTJh", forHTTPHeaderField: "X-Courier-Client-Key")
-            
-            
             let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error, status) in
                 
                 if (!validCodes.contains(status)) {
