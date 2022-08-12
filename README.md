@@ -116,10 +116,10 @@ class AppDelegate: CourierDelegate {
 
     ...
 
-    override func pushNotificationReceivedInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
+    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         // TODO: Remove this print
-        print("Push Received")
+        print("Push Delivered")
         print(message)
         
         // ⚠️ Customize this to be what you would like
@@ -128,10 +128,10 @@ class AppDelegate: CourierDelegate {
         
     }
     
-    override func pushNotificationOpened(message: [AnyHashable : Any]) {
+    override func pushNotificationClicked(message: [AnyHashable : Any]) {
 
         // TODO: Remove this print
-        print("Push Opened")
+        print("Push Clicked")
         print(message)
 
     }
@@ -156,11 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Task.init {
             do {
-                let token = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-                try await Courier.shared.setPushToken(
-                    provider: .apns,
-                    token: token
-                )
+                try await Courier.shared.setAPNSToken(deviceToken)
             } catch {
                 print(error)
             }
@@ -188,10 +184,7 @@ extension AppDelegate: MessagingDelegate {
 
             Task.init {
                 do {
-                    try await Courier.shared.setPushToken(
-                        provider: .fcm,
-                        token: token
-                    )
+                    try await Courier.shared.setFCMToken(token)
                 } catch {
                     print(error)
                 }
@@ -256,7 +249,8 @@ func sendTestMessage() {
             authKey: "your_api_key_that_should_not_stay_in_your_production_app",
             userId: userId,
             title: "Test message!",
-            message: "Chrip Chirp!"
+            message: "Chrip Chirp!",
+            providers: [.apns, .fcm]
         )
 
     }
