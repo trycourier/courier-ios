@@ -12,7 +12,15 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     // MARK: Getters
     
     private var app: UIApplication {
-        get { return UIApplication.shared }
+        get {
+            return UIApplication.shared
+        }
+    }
+    
+    private var notificationCenter: UNUserNotificationCenter {
+        get {
+            return UNUserNotificationCenter.current()
+        }
     }
     
     // MARK: Init
@@ -22,7 +30,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
         // Register to ensure device token can be fetched
         app.registerForRemoteNotifications()
-        UNUserNotificationCenter.current().delegate = self
+        notificationCenter.delegate = self
         
     }
     
@@ -71,6 +79,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Task {
             do {
+                deviceTokenDidChange(rawApnsToken: deviceToken)
                 try await Courier.shared.setAPNSToken(deviceToken)
             } catch {
                 Courier.log(String(describing: error))
@@ -79,6 +88,8 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     }
     
     // MARK: Functions
+    
+    open func deviceTokenDidChange(rawApnsToken: Data) {}
     
     open func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions { return [] }
     

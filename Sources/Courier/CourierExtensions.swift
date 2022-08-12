@@ -133,14 +133,22 @@ extension Courier {
 
     @discardableResult
     public static func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases) async throws -> String {
+        
+        var isProduction = true
+        
+        #if DEBUG
+        isProduction = false
+        #endif
+        
         return try await MessagingRepository().send(
             authKey: authKey,
             userId: userId,
             title: title,
             message: message,
             providers: providers,
-            isProduction: !Courier.shared.isDebugging
+            isProduction: isProduction
         )
+        
     }
     
     // MARK: Logging
