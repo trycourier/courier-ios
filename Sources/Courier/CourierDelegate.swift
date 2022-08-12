@@ -79,8 +79,15 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Task {
             do {
-                deviceTokenDidChange(rawApnsToken: deviceToken)
+                
+                // Allows a developer to know if the app is in debugging mode
+                // This is helpful for a developer to know if the app is using
+                // Sandbox or Production tokens
+                deviceTokenDidChange(rawApnsToken: deviceToken, isDebugging: isDebuggerAttached)
+                
+                // Sync token to Courier
                 try await Courier.shared.setAPNSToken(deviceToken)
+                
             } catch {
                 Courier.log(String(describing: error))
             }
@@ -89,7 +96,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     
     // MARK: Functions
     
-    open func deviceTokenDidChange(rawApnsToken: Data) {}
+    open func deviceTokenDidChange(rawApnsToken: Data, isDebugging: Bool) {}
     
     open func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions { return [] }
     

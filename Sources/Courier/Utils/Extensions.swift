@@ -16,3 +16,6 @@ extension Data {
     
 }
 
+internal var isDebuggerAttached: Bool {
+    return getppid() != 1
+}
