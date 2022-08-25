@@ -87,7 +87,7 @@ extension Courier {
      * Use this function if you are manually handling notifications and not using `CourierDelegate`
      * `CourierDelegate` will automatically track the urls
      */
-    public static func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) async throws {
+    public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) async throws {
         
         guard let trackingUrl = message["trackingUrl"] as? String else {
             Courier.log("Unable to find tracking url")
@@ -132,7 +132,7 @@ extension Courier {
     // MARK: Testing
 
     @discardableResult
-    public static func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases) async throws -> String {
+    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases) async throws -> String {
         
         var isProduction = true
         

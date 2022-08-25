@@ -4,7 +4,7 @@ import XCTest
 let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20]) // This is fake
 let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
 let userId = "example_user"
-var authKey: String = "your_access_key"
+var authKey = "your_access_key"
 
 final class CourierTests: XCTestCase {
     
@@ -116,7 +116,7 @@ final class CourierTests: XCTestCase {
         
         // TODO: Remove this. For test purposed only
         // Do not use auth key in production app
-        let requestId = try await Courier.sendPush(
+        let requestId = try await Courier.shared.sendPush(
             authKey: authKey,
             userId: userId,
             title: "🐤 Chirp Chirp!",
@@ -139,13 +139,13 @@ final class CourierTests: XCTestCase {
         ]
         
         // Track delivery
-        try await Courier.trackNotification(
+        try await Courier.shared.trackNotification(
             message: message,
             event: .delivered
         )
         
         // Track click
-        try await Courier.trackNotification(
+        try await Courier.shared.trackNotification(
             message: message,
             event: .clicked
         )

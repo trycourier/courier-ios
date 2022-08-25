@@ -44,7 +44,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         Task.init {
             
             do {
-                try await Courier.trackNotification(message: message, event: .delivered)
+                try await Courier.shared.trackNotification(message: message, event: .delivered)
             } catch {
                 Courier.log(String(describing: error))
             }
