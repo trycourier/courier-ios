@@ -150,6 +150,16 @@ open class Courier: NSObject {
      * This function requires a `Data` value as the token.
      */
     public func setAPNSToken(_ rawToken: Data) async throws {
+        
+        // Delete the current apns token
+        do {
+            try await tokenRepo.deleteToken(
+                userId: userId,
+                deviceToken: apnsToken
+            )
+        } catch {
+            Courier.log(String(describing: error))
+        }
 
         // We save the raw apns token here
         rawApnsToken = rawToken
@@ -175,6 +185,16 @@ open class Courier: NSObject {
      * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
      */
     public func setFCMToken(_ token: String) async throws {
+        
+        // Delete the current fcm token
+        do {
+            try await tokenRepo.deleteToken(
+                userId: userId,
+                deviceToken: fcmToken
+            )
+        } catch {
+            Courier.log(String(describing: error))
+        }
 
         fcmToken = token
 
