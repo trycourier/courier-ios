@@ -15,9 +15,9 @@ struct ContentView: View {
         Task {
             do {
                 
-                try await Courier.sendPush(
-                    authKey: accessToken,
-                    userId: userId,
+                try await Courier.shared.sendPush(
+                    authKey: getDefault(key: .authKey),
+                    userId: getDefault(key: .userId),
                     title: "Test Push Notification",
                     message: "Hello from Courier! 🐣",
                     providers: [.apns]

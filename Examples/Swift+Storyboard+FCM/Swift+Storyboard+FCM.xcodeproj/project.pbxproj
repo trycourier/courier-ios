@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		271E815628B7F54B003AD23B /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271E815528B7F54B003AD23B /* Extras.swift */; };
 		2731E68228A6ACD000A1531B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E68128A6ACD000A1531B /* AppDelegate.swift */; };
 		2731E68428A6ACD000A1531B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E68328A6ACD000A1531B /* SceneDelegate.swift */; };
 		2731E68628A6ACD000A1531B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E68528A6ACD000A1531B /* ViewController.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		271E815528B7F54B003AD23B /* Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		2731E67E28A6ACD000A1531B /* Swift+Storyboard+FCM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift+Storyboard+FCM.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2731E68128A6ACD000A1531B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2731E68328A6ACD000A1531B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				2731E68128A6ACD000A1531B /* AppDelegate.swift */,
 				2731E68328A6ACD000A1531B /* SceneDelegate.swift */,
 				2731E68528A6ACD000A1531B /* ViewController.swift */,
+				271E815528B7F54B003AD23B /* Extras.swift */,
 				2731E68728A6ACD000A1531B /* Main.storyboard */,
 				2731E68A28A6ACD100A1531B /* Assets.xcassets */,
 				2731E68C28A6ACD100A1531B /* LaunchScreen.storyboard */,
@@ -244,6 +247,7 @@
 			files = (
 				2731E68628A6ACD000A1531B /* ViewController.swift in Sources */,
 				2731E68228A6ACD000A1531B /* AppDelegate.swift in Sources */,
+				271E815628B7F54B003AD23B /* Extras.swift in Sources */,
 				2731E68428A6ACD000A1531B /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -409,9 +413,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+FCM/Swift+Storyboard+FCM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Swift+Storyboard+FCM/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swift + FCM";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -422,7 +427,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-FCM";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-fcm";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -439,9 +444,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+FCM/Swift+Storyboard+FCM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Swift+Storyboard+FCM/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swift + FCM";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -452,7 +458,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-FCM";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-fcm";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -465,7 +471,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -476,7 +482,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-FCM.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-fcm.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -490,7 +496,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -501,7 +507,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-FCM.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-fcm.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

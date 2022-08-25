@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		271E815828B7F56B003AD23B /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271E815728B7F56B003AD23B /* Extras.swift */; };
 		2731E63528A6A80700A1531B /* SwiftUI_APNSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E63428A6A80700A1531B /* SwiftUI_APNSApp.swift */; };
 		2731E63728A6A80700A1531B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E63628A6A80700A1531B /* ContentView.swift */; };
 		2731E63928A6A80900A1531B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2731E63828A6A80900A1531B /* Assets.xcassets */; };
@@ -43,7 +44,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2731E63128A6A80700A1531B /* SwiftUI+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftUI+APNS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		271E815728B7F56B003AD23B /* Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
+		2731E63128A6A80700A1531B /* SwiftUI + APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftUI + APNS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2731E63428A6A80700A1531B /* SwiftUI_APNSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUI_APNSApp.swift; sourceTree = "<group>"; };
 		2731E63628A6A80700A1531B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2731E63828A6A80900A1531B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,7 +90,7 @@
 		2731E63228A6A80700A1531B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2731E63128A6A80700A1531B /* SwiftUI+APNS.app */,
+				2731E63128A6A80700A1531B /* SwiftUI + APNS.app */,
 				2731E64C28A6AC3300A1531B /* CourierService.appex */,
 			);
 			name = Products;
@@ -101,6 +103,7 @@
 				2731E64628A6A8D500A1531B /* AppDelegate.swift */,
 				2731E63428A6A80700A1531B /* SwiftUI_APNSApp.swift */,
 				2731E63628A6A80700A1531B /* ContentView.swift */,
+				271E815728B7F56B003AD23B /* Extras.swift */,
 				2731E63828A6A80900A1531B /* Assets.xcassets */,
 				2731E63A28A6A80900A1531B /* Preview Content */,
 			);
@@ -153,7 +156,7 @@
 				2731E64428A6A8BD00A1531B /* Courier */,
 			);
 			productName = "SwiftUI+APNS";
-			productReference = 2731E63128A6A80700A1531B /* SwiftUI+APNS.app */;
+			productReference = 2731E63128A6A80700A1531B /* SwiftUI + APNS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2731E64B28A6AC3300A1531B /* CourierService */ = {
@@ -242,6 +245,7 @@
 			files = (
 				2731E64728A6A8D500A1531B /* AppDelegate.swift in Sources */,
 				2731E63728A6A80700A1531B /* ContentView.swift in Sources */,
+				271E815828B7F56B003AD23B /* Extras.swift in Sources */,
 				2731E63528A6A80700A1531B /* SwiftUI_APNSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,7 +393,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SwiftUI+APNS/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -402,8 +406,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-SwiftUI-APNS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swiftui-apns";
+				PRODUCT_NAME = "SwiftUI + APNS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -420,7 +424,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SwiftUI+APNS/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -433,8 +437,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-SwiftUI-APNS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swiftui-apns";
+				PRODUCT_NAME = "SwiftUI + APNS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -446,7 +450,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -457,7 +461,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-SwiftUI-APNS.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swiftui-apns.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -471,7 +475,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -482,7 +486,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-SwiftUI-APNS.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swiftui-apns.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

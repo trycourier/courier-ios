@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		271E815428B7F534003AD23B /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271E815328B7F534003AD23B /* Extras.swift */; };
 		2731E5B528A69DA600A1531B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E5B428A69DA600A1531B /* AppDelegate.swift */; };
 		2731E5B728A69DA600A1531B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E5B628A69DA600A1531B /* SceneDelegate.swift */; };
 		2731E5B928A69DA600A1531B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2731E5B828A69DA600A1531B /* ViewController.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		271E815328B7F534003AD23B /* Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		2731E5B128A69DA600A1531B /* Swift+Storyboard+APNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Swift+Storyboard+APNS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2731E5B428A69DA600A1531B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2731E5B628A69DA600A1531B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				2731E5BD28A69DA900A1531B /* Assets.xcassets */,
 				2731E5BF28A69DA900A1531B /* LaunchScreen.storyboard */,
 				2731E5C228A69DA900A1531B /* Info.plist */,
+				271E815328B7F534003AD23B /* Extras.swift */,
 			);
 			path = "Swift+Storyboard+APNS";
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 			files = (
 				2731E5B928A69DA600A1531B /* ViewController.swift in Sources */,
 				2731E5B528A69DA600A1531B /* AppDelegate.swift in Sources */,
+				271E815428B7F534003AD23B /* Extras.swift in Sources */,
 				2731E5B728A69DA600A1531B /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -405,9 +409,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+APNS/Swift+Storyboard+APNS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Swift+Storyboard+APNS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swift + APNS";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -418,7 +423,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-apns";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -435,9 +440,10 @@
 				CODE_SIGN_ENTITLEMENTS = "Swift+Storyboard+APNS/Swift+Storyboard+APNS.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Swift+Storyboard+APNS/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Swift + APNS";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -448,7 +454,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-apns";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -461,7 +467,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -472,7 +478,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-apns.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -486,7 +492,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VJQ245Q28G;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -497,7 +503,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.Swift-Storyboard-APNS.CourierService";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.test-swift-apns.CourierService";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

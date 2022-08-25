@@ -62,7 +62,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         let message = response.notification.request.content.userInfo
         
         // Try and track
-        Courier.trackNotification(message: message, event: .clicked)
+        Courier.shared.trackNotification(message: message, event: .clicked)
         
         // Complete
         pushNotificationClicked(message: message)

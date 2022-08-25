@@ -13,31 +13,6 @@ import Courier
 @main
 class AppDelegate: CourierDelegate {
     
-    private func configureFirebase() {
-        
-        // Configure firebase programatically
-        // You can also do this with the GoogleService-Info.plist file
-        let options = FirebaseOptions(
-            googleAppID: "<FIREBASE_GOOGLE_APP_ID>",
-            gcmSenderID: "<FIREBASE_GCM_SENDER_ID>"
-        )
-        options.projectID = "<FIREBASE_PROJECT_ID>"
-        options.apiKey = "<FIREBASE_API_KEY>"
-        
-        FirebaseApp.configure(options: options)
-        
-        // Register the messaging delegate
-        Messaging.messaging().delegate = self
-        
-    }
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        configureFirebase()
-        return true
-        
-    }
-    
     // If you extend the CourierDelegate, the Courier SDK will
     // automatically manage the APNS token and track notification status analytics
     
@@ -46,6 +21,8 @@ class AppDelegate: CourierDelegate {
         print("\n=== 💌 Push Notification Delivered In Foreground ===\n")
         print(message)
         print("\n=================================================\n")
+        
+        showMessageAlert(title: "Push Delivered", message: "\(message)")
         
         // This is how you want to show your notification in the foreground
         // You can pass "[]" to not show the notification to the user or
@@ -59,6 +36,8 @@ class AppDelegate: CourierDelegate {
         print("\n=== 👉 Push Notification Clicked ===\n")
         print(message)
         print("\n=================================\n")
+        
+        showMessageAlert(title: "Push Clicked", message: "\(message)")
         
     }
     

@@ -103,7 +103,7 @@ extension Courier {
         
     }
     
-    public static func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) {
+    public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) {
         
         guard let trackingUrl = message["trackingUrl"] as? String else {
             Courier.log("Unable to find tracking url")

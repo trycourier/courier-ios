@@ -20,6 +20,8 @@ class AppDelegate: CourierDelegate {
         print(message)
         print("\n=================================================\n")
         
+        showMessageAlert(title: "Push Delivered", message: "\(message)")
+        
         // This is how you want to show your notification in the foreground
         // You can pass "[]" to not show the notification to the user or
         // handle this with your own custom styles
@@ -32,6 +34,8 @@ class AppDelegate: CourierDelegate {
         print("\n=== 👉 Push Notification Clicked ===\n")
         print(message)
         print("\n=================================\n")
+        
+        showMessageAlert(title: "Push Clicked", message: "\(message)")
         
     }
     
