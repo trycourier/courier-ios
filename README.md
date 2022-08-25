@@ -10,9 +10,7 @@ Courier helps you spend less time building notification infrastructure, and more
 
 The following steps will get the Courier iOS SDK setup and allow support for sending push notifications from Courier to your device.
 
-Full examples:
-- [Swift + Storyboard + Apple Push Notification Service (APNS)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BAPNS)
-- [Swift + Storyboard + Firebase Cloud Messaging (FCM)](https://github.com/trycourier/courier-ios/tree/master/Examples/Swift%2BStoryboard%2BFCM)
+[Full examples](https://github.com/trycourier/courier-ios/tree/master/Examples)
 
 ⚠️ You need a physical iPhone or iPad to receive push notifications. You cannot test this effectively using the simulator.
 
