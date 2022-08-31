@@ -19,6 +19,9 @@ open class Courier: NSObject {
      
      */
     
+    internal static let agent = CourierAgent.native_ios
+    internal static let version = "1.0.3"
+    
     // MARK: Init
     
     private override init() {

@@ -15,7 +15,14 @@ class CourierTask {
     
     init(with request: URLRequest, validCodes: [Int] = [200], completionHandler: @escaping ([Int], Data?, URLResponse?, Error?, Int) -> Void) {
         
-        task = session.dataTask(with: request) { (data, response, error) in
+        // Append the user agent
+        var req = request
+        let userAgent = "\(Courier.agent.rawValue)/\(Courier.version)"
+        req.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        
+        print(userAgent)
+        
+        task = session.dataTask(with: req) { (data, response, error) in
             
             do {
              
