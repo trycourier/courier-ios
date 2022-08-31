@@ -20,8 +20,6 @@ class CourierTask {
         let userAgent = "\(Courier.agent.rawValue)/\(Courier.version)"
         req.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         
-        print(userAgent)
-        
         task = session.dataTask(with: req) { (data, response, error) in
             
             do {
