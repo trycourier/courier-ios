@@ -40,10 +40,9 @@ open class Courier: NSObject {
     public static let shared = Courier()
     
     /**
-     * The key required to initialized the SDK
-     * https://www.courier.com/docs/reference/auth/issue-token/
+     * Manages basic user state
      */
-    internal var accessToken: String? = nil
+    private let userManager = UserManager()
     
     /**
      * Determines if the SDK should show logs or other debugging data
@@ -62,7 +61,21 @@ open class Courier: NSObject {
     /**
      * A read only value set to the current user id
      */
-    public private(set) var userId: String? = nil
+    public var userId: String? {
+        get {
+            return userManager.getUserId()
+        }
+    }
+    
+    /**
+     * The key required to initialized the SDK
+     * https://www.courier.com/docs/reference/auth/issue-token/
+     */
+    internal var accessToken: String? {
+        get {
+            return userManager.getAccessToken()
+        }
+    }
     
     /**
      * Function to set the current credentials for the user and their access token
@@ -75,8 +88,13 @@ open class Courier: NSObject {
         Courier.log("User Id: \(userId)")
         
         // Set the user's current credentials
-        self.accessToken = accessToken
-        self.userId = userId
+//        self.accessToken = accessToken
+//        self.userId = userId
+        
+        userManager.setCredentials(
+            userId: userId,
+            accessToken: accessToken
+        )
 
         // Attempt to put the users tokens
         // If we have them
@@ -126,8 +144,9 @@ open class Courier: NSObject {
             
         }
         
-        accessToken = nil
-        userId = nil
+//        accessToken = nil
+//        userId = nil
+        userManager.removeCredentials()
         
     }
     
