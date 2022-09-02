@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PyC-RM-6ki">
-                                <rect key="frame" x="160.5" y="664" width="93" height="31"/>
+                                <rect key="frame" x="160.5" y="551" width="93" height="31"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Send Push"/>
                                 <connections>
@@ -25,7 +25,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MBx-VR-Yd9">
-                                <rect key="frame" x="173" y="211" width="68" height="31"/>
+                                <rect key="frame" x="173" y="324.5" width="68" height="31"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
                                 <connections>
@@ -33,7 +33,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Courier User: nil" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q3T-Nm-l7M">
-                                <rect key="frame" x="145.5" y="170" width="123" height="21"/>
+                                <rect key="frame" x="145.5" y="283.5" width="123" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -44,10 +44,10 @@
                         <constraints>
                             <constraint firstItem="q3T-Nm-l7M" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="OBE-Cr-vL2"/>
                             <constraint firstItem="MBx-VR-Yd9" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="VQ2-pr-WlP"/>
-                            <constraint firstItem="PyC-RM-6ki" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.5" id="Ztl-RE-TXV"/>
+                            <constraint firstItem="PyC-RM-6ki" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.25" id="Ztl-RE-TXV"/>
                             <constraint firstItem="MBx-VR-Yd9" firstAttribute="top" secondItem="q3T-Nm-l7M" secondAttribute="bottom" constant="20" id="ba2-OU-NLI"/>
                             <constraint firstItem="PyC-RM-6ki" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="wFL-Xz-QHD"/>
-                            <constraint firstItem="MBx-VR-Yd9" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.5" id="y2y-Df-pTs"/>
+                            <constraint firstItem="MBx-VR-Yd9" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.75" id="y2y-Df-pTs"/>
                         </constraints>
                     </view>
                     <connections>

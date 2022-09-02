@@ -23,8 +23,8 @@ class ViewController: UIViewController {
             try await Courier.shared.sendPush(
                 authKey: getDefault(key: .authKey),
                 userId: getDefault(key: .userId),
-                title: "Test Push Notification",
-                message: "Hello from Courier! 🐣",
+                title: "APNS Test Push",
+                message: "Hello from Courier \(getDefault(key: .userId))! 👋",
                 providers: [.apns]
             )
             
@@ -41,7 +41,7 @@ class ViewController: UIViewController {
             if let _ = Courier.shared.userId {
                 
                 try await Courier.shared.signOut()
-                refreshUser()
+                refresh()
                 
             } else {
                 
@@ -65,7 +65,7 @@ class ViewController: UIViewController {
                     userId: getDefault(key: .userId)
                 )
                 
-                refreshUser()
+                refresh()
 
                 // You should requests this permission in a place that
                 // makes most sense for your user's experience
@@ -80,47 +80,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        refreshUser()
-        
-//        Task {
-//
-//            refreshUser()
-//
-//            try await UIApplication.shared.currentWindow?.rootViewController?.showInputAlert(
-//                fields: UserDefaultKey.allCases
-//            )
-//
-//            // To hide debugging logs
-//            // Courier.shared.isDebugging = false
-//
-//            // Set the access token to your user id
-//            // You can use a Courier auth key for this
-//            // but it is recommended that use use a jwt linked to your user
-//            // More info: https://www.courier.com/docs/reference/auth/issue-token/
-//
-//            // This should be synced with your user's state management to ensure
-//            // your users tokens don't receive notifications when they are not
-//            // authenticated to use your app
-//            try await Courier.shared.setCredentials(
-//                accessToken: getDefault(key: .accessToken),
-//                userId: getDefault(key: .userId)
-//            )
-//
-//            refreshUser()
-//
-//            // You should requests this permission in a place that
-//            // makes most sense for your user's experience
-//            try await Courier.requestNotificationPermissions()
-//
-//            // To remove the tokens for the current user, call this function.
-//            // You should call this when your user signs out of your app
-//            // try await Courier.shared.signOut()
-//
-//        }
+        refresh()
         
     }
     
-    private func refreshUser() {
+    private func refresh() {
         
         if let userId = Courier.shared.userId {
             authLabel.text = "Courier User Id: \(userId)"

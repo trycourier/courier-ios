@@ -49,7 +49,7 @@ class CourierTask {
                 
             } catch {
                 
-                Courier.log(String(describing: error))
+                // Ignore
                 
             }
             
