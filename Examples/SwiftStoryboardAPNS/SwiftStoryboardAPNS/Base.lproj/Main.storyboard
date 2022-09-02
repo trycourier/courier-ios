@@ -17,21 +17,43 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PyC-RM-6ki">
-                                <rect key="frame" x="160.5" y="437.5" width="93" height="31"/>
+                                <rect key="frame" x="160.5" y="664" width="93" height="31"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Send Push"/>
                                 <connections>
                                     <action selector="sendPush:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n5D-jL-h7R"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MBx-VR-Yd9">
+                                <rect key="frame" x="173" y="211" width="68" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
+                                <connections>
+                                    <action selector="authButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4J1-Eh-lGd"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Courier User: nil" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q3T-Nm-l7M">
+                                <rect key="frame" x="145.5" y="170" width="123" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="PyC-RM-6ki" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Ztl-RE-TXV"/>
+                            <constraint firstItem="q3T-Nm-l7M" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="OBE-Cr-vL2"/>
+                            <constraint firstItem="MBx-VR-Yd9" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="VQ2-pr-WlP"/>
+                            <constraint firstItem="PyC-RM-6ki" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.5" id="Ztl-RE-TXV"/>
+                            <constraint firstItem="MBx-VR-Yd9" firstAttribute="top" secondItem="q3T-Nm-l7M" secondAttribute="bottom" constant="20" id="ba2-OU-NLI"/>
                             <constraint firstItem="PyC-RM-6ki" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="wFL-Xz-QHD"/>
+                            <constraint firstItem="MBx-VR-Yd9" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.5" id="y2y-Df-pTs"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="authButton" destination="MBx-VR-Yd9" id="f9s-Rh-nXD"/>
+                        <outlet property="authLabel" destination="q3T-Nm-l7M" id="jG1-YL-7Yl"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

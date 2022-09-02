@@ -42,7 +42,7 @@ internal class UserManager {
     }
     
     func removeCredentials() {
-        defaults.dictionary(forKey: credentialsKey)
+        defaults.removeObject(forKey: credentialsKey)
     }
     
 }

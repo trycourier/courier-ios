@@ -144,8 +144,6 @@ open class Courier: NSObject {
             
         }
         
-//        accessToken = nil
-//        userId = nil
         userManager.removeCredentials()
         
     }
