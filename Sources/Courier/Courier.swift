@@ -81,15 +81,11 @@ open class Courier: NSObject {
      * Function to set the current credentials for the user and their access token
      * You should consider using this in areas where you update your local user's state
      */
-    public func setCredentials(accessToken: String, userId: String) async throws {
+    public func signIn(accessToken: String, userId: String) async throws {
         
         Courier.log("Updating Courier User Profile")
         Courier.log("Access Token: \(accessToken)")
         Courier.log("User Id: \(userId)")
-        
-        // Set the user's current credentials
-//        self.accessToken = accessToken
-//        self.userId = userId
         
         userManager.setCredentials(
             userId: userId,

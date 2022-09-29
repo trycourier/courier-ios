@@ -56,7 +56,7 @@ final class CourierTests: XCTestCase {
         let accessToken = try await ExampleServer.generateJwt(userId: userId)
 
         // Set the access token and start the SDK
-        try await Courier.shared.setCredentials(
+        try await Courier.shared.signIn(
             accessToken: accessToken,
             userId: userId
         )
@@ -74,7 +74,7 @@ final class CourierTests: XCTestCase {
         
         // TODO: Remove this. For test purposed only
         // Set the access token and start the SDK
-        try await Courier.shared.setCredentials(
+        try await Courier.shared.signIn(
             accessToken: authKey,
             userId: userId
         )

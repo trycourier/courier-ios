@@ -16,22 +16,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="piO-9P-BBr">
+                                <rect key="frame" x="173" y="324.5" width="68" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
+                                <connections>
+                                    <action selector="authButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="W8K-9X-s9E"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Courier User: nil" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dlo-ir-RIL">
+                                <rect key="frame" x="145.5" y="283.5" width="123" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vhM-4N-67X">
-                                <rect key="frame" x="160.5" y="437.5" width="93" height="31"/>
+                                <rect key="frame" x="160.5" y="551" width="93" height="31"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Send Push"/>
                                 <connections>
-                                    <action selector="sendPush:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BMd-Ht-oc9"/>
+                                    <action selector="sendPush:" destination="BYZ-38-t0r" eventType="touchUpInside" id="afp-Cu-br6"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="vhM-4N-67X" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Sdg-fK-9Ju"/>
-                            <constraint firstItem="vhM-4N-67X" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="qsh-kK-gIh"/>
+                            <constraint firstItem="piO-9P-BBr" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="EFA-JF-Z5N"/>
+                            <constraint firstItem="piO-9P-BBr" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.75" id="Qqo-fq-fj2"/>
+                            <constraint firstItem="vhM-4N-67X" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="aeb-Hn-D2k"/>
+                            <constraint firstItem="vhM-4N-67X" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.25" id="laZ-1f-Wfc"/>
+                            <constraint firstItem="Dlo-ir-RIL" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="w58-Mt-Vl0"/>
+                            <constraint firstItem="piO-9P-BBr" firstAttribute="top" secondItem="Dlo-ir-RIL" secondAttribute="bottom" constant="20" id="yp1-Hh-9dl"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="authButton" destination="piO-9P-BBr" id="YiW-cy-lXb"/>
+                        <outlet property="authLabel" destination="Dlo-ir-RIL" id="Pxh-KB-4Zd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

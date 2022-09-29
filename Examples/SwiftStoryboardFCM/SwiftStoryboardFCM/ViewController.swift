@@ -38,6 +38,27 @@ class ViewController: UIViewController {
         
     }
     
+    @IBOutlet weak var authLabel: UILabel!
+    @IBOutlet weak var authButton: UIButton!
+    @IBAction func authButtonAction(_ sender: Any) {
+        
+        Task {
+            
+            if let _ = Courier.shared.userId {
+                try await Courier.shared.signOut()
+            } else {
+                try await Courier.shared.setCredentials(
+                    accessToken: getDefault(key: .accessToken),
+                    userId: getDefault(key: .userId)
+                )
+            }
+            
+            refresh()
+            
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,8 +68,6 @@ class ViewController: UIViewController {
                 fields: UserDefaultKey.allCases
             )
             
-            // Configure firebase before other parts of the app start
-            // There may be issues if you do not configure firebase at this point
             firebaseConfig()
             
             // To hide debugging logs
@@ -71,38 +90,45 @@ class ViewController: UIViewController {
             // makes most sense for your user's experience
             try await Courier.requestNotificationPermissions()
             
-            // Manually link the APNS token to Firebase again
-            // Just to be sure the FCM token is ready
-            if let token = Courier.shared.rawApnsToken {
-                appDelegate.deviceTokenDidChange(
-                    rawApnsToken: token,
-                    isDebugging: Courier.shared.isDebugging
-                )
-            }
+            refresh()
             
-            // To remove the tokens for the current user, call this function.
-            // You should call this when your user signs out of your app
-            // try await Courier.shared.signOut()
-            
+        }
+        
+    }
+    
+    private func refresh() {
+        
+        if let userId = Courier.shared.userId {
+            authLabel.text = "Courier User Id: \(userId)"
+            authButton.setTitle("Sign Out", for: .normal)
+        } else {
+            authLabel.text = "No Courier User Id found"
+            authButton.setTitle("Sign In", for: .normal)
         }
         
     }
     
     private func firebaseConfig() {
         
-        // Configure firebase programatically
-        // You can also do this with the GoogleService-Info.plist file
-        let options = FirebaseOptions(
-            googleAppID: getDefault(key: .googleAppId),
-            gcmSenderID: getDefault(key: .gcmSendId)
-        )
-        options.projectID = getDefault(key: .projectID)
-        options.apiKey = getDefault(key: .apiKey)
-        
-        FirebaseApp.configure(options: options)
-        
-        // Register the messaging delegate
-        Messaging.messaging().delegate = appDelegate
+        Task {
+            
+            await FirebaseApp.app()?.delete()
+            
+            // Configure firebase programatically
+            // You can also do this with the GoogleService-Info.plist file
+            let options = FirebaseOptions(
+                googleAppID: getDefault(key: .googleAppId),
+                gcmSenderID: getDefault(key: .gcmSendId)
+            )
+            options.projectID = getDefault(key: .projectID)
+            options.apiKey = getDefault(key: .apiKey)
+            
+            FirebaseApp.configure(options: options)
+            
+            // Register the messaging delegate
+            Messaging.messaging().delegate = appDelegate
+            
+        }
         
     }
 
