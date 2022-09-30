@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name             = 'Courier-iOS'
-    s.version          = '1.0.4'
+    s.version          = '1.0.3'
     s.summary          = 'Courier helps you build messaging infrastucture much faster!'
 
     s.homepage         = 'https://github.com/trycourier/courier-ios'
@@ -19,7 +19,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.author           = { 'Mike Miller' => 'mike@courier.com' }
     s.source           = { :git => 'https://github.com/trycourier/courier-ios.git', :tag => s.version.to_s }
         
-    s.ios.deployment_target = '11.0'
+    s.ios.deployment_target = '13.0'
     s.swift_version = '5.6'
         
     s.source_files = 'Sources/Courier/**/*'
