@@ -19,8 +19,8 @@ open class Courier: NSObject {
      
      */
     
-    internal static let agent = CourierAgent.native_ios
-    internal static let version = "1.0.3"
+    public static let agent = CourierAgent.native_ios
+    internal static let version = "1.0.4"
     
     // MARK: Init
     
@@ -110,6 +110,17 @@ open class Courier: NSObject {
         
     }
     
+    public func signIn(accessToken: String, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await signIn(accessToken: accessToken, userId: userId)
+                onSuccess()
+            } catch {
+                onFailure(error)
+            }
+        }
+    }
+    
     /**
      * Function that clears the current user id and access token
      * You should call this when your user signs out
@@ -142,6 +153,17 @@ open class Courier: NSObject {
         
         userManager.removeCredentials()
         
+    }
+    
+    public func signOut(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await signOut()
+                onSuccess()
+            } catch {
+                onFailure(error)
+            }
+        }
     }
     
      // MARK: Token Management
@@ -191,6 +213,17 @@ open class Courier: NSObject {
 
     }
     
+    public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await setAPNSToken(rawToken)
+                onSuccess()
+            } catch {
+                onFailure(error)
+            }
+        }
+    }
+    
     /**
      * The current firebase token associated with this user
      */
@@ -223,6 +256,17 @@ open class Courier: NSObject {
             deviceToken: token
         )
 
+    }
+    
+    public func setFCMToken(_ token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await setFCMToken(token)
+                onSuccess()
+            } catch {
+                onFailure(error)
+            }
+        }
     }
     
 }
