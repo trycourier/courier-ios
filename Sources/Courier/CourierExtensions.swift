@@ -132,14 +132,7 @@ extension Courier {
     // MARK: Testing
 
     @discardableResult
-    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases) async throws -> String {
-        
-        var isProduction = true
-        
-        #if DEBUG
-        isProduction = false
-        #endif
-        
+    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases, isProduction: Bool) async throws -> String {
         return try await MessagingRepository().send(
             authKey: authKey,
             userId: userId,
@@ -151,7 +144,7 @@ extension Courier {
         
     }
     
-    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+    public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 let requestId = try await sendPush(
@@ -159,7 +152,8 @@ extension Courier {
                     userId: userId,
                     title: title,
                     message: message,
-                    providers: providers
+                    providers: providers,
+                    isProduction: isProduction
                 )
                 onSuccess(requestId)
             } catch {

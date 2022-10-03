@@ -120,7 +120,8 @@ final class CourierTests: XCTestCase {
             authKey: authKey,
             userId: userId,
             title: "🐤 Chirp Chirp!",
-            message: "Message sent from Xcode tests"
+            message: "Message sent from Xcode tests",
+            isProduction: false
         )
         
         print("Request ID: \(requestId)")
