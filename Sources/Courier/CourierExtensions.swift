@@ -21,7 +21,7 @@ extension Courier {
      * Get the authorization status of the notification permissions
      * Completion returns on main thread
      */
-    public static func getNotificationAuthorizationStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
+    public static func getNotificationPermissionStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
         userNotificationCenter.getNotificationSettings(completionHandler: { settings in
             DispatchQueue.main.async {
                 completion(settings.authorizationStatus)
@@ -32,7 +32,7 @@ extension Courier {
     /**
      * Get notification permission status with async await
      */
-    public static func getNotificationAuthorizationStatus() async throws -> UNAuthorizationStatus {
+    public static func getNotificationPermissionStatus() async throws -> UNAuthorizationStatus {
         let settings = await userNotificationCenter.notificationSettings()
         return settings.authorizationStatus
     }
@@ -50,13 +50,13 @@ extension Courier {
      * Request notification permission access with completion handler
      * Completion returns on main thread
      */
-    public static func requestNotificationPermissions(completion: @escaping (UNAuthorizationStatus) -> Void) {
+    public static func requestNotificationPermission(completion: @escaping (UNAuthorizationStatus) -> Void) {
         userNotificationCenter.requestAuthorization(
             options: permissionAuthorizationOptions,
             completionHandler: { _, _ in
                 
                 // Get the full status of the permission
-                getNotificationAuthorizationStatus { permission in
+                getNotificationPermissionStatus { permission in
                     completion(permission)
                 }
                 
@@ -68,9 +68,9 @@ extension Courier {
      * Request notification permission access with async await
      */
     @discardableResult
-    public static func requestNotificationPermissions() async throws -> UNAuthorizationStatus {
+    public static func requestNotificationPermission() async throws -> UNAuthorizationStatus {
         try await userNotificationCenter.requestAuthorization(options: permissionAuthorizationOptions)
-        return try await getNotificationAuthorizationStatus()
+        return try await getNotificationPermissionStatus()
     }
     
     // MARK: Settings
@@ -149,6 +149,23 @@ extension Courier {
             isProduction: isProduction
         )
         
+    }
+    
+    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                let requestId = try await sendPush(
+                    authKey: authKey,
+                    userId: userId,
+                    title: title,
+                    message: message,
+                    providers: providers
+                )
+                onSuccess(requestId)
+            } catch {
+                onFailure(error)
+            }
+        }
     }
     
     // MARK: Logging
