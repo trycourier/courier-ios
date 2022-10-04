@@ -20,7 +20,7 @@ open class Courier: NSObject {
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.0.9"
+    internal static let version = "1.0.10"
     
     // MARK: Init
     
