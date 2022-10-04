@@ -75,6 +75,7 @@ extension Courier {
     
     // MARK: Settings
     
+    @available(iOSApplicationExtension, unavailable)
     public static func openSettingsForApp() {
         if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
             UIApplication.shared.open(appSettings)

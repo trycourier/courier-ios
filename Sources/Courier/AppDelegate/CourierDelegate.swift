@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     // MARK: Getters
