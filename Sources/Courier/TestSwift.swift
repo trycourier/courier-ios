@@ -7,9 +7,9 @@
 
 import Foundation
 
-@objc(TestSwift) open class TestSwift: NSObject {
+@objc(TestSwift) public class TestSwift: NSObject {
     
-    @objc func hello() {
+    @objc public func hello() {
         print("Hello!")
     }
     
