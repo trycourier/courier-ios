@@ -1,7 +1,7 @@
 import UIKit
 
 @available(iOS 13.0.0, *)
-open class Courier: NSObject {
+@objc open class Courier: NSObject {
     
     // MARK: Courier
     
@@ -20,7 +20,7 @@ open class Courier: NSObject {
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.0.11"
+    internal static let version = "1.0.13"
     
     // MARK: Init
     
@@ -37,7 +37,7 @@ open class Courier: NSObject {
      * Singleton reference to the SDK
      * Please ensure you use this to maintain state
      */
-    public static let shared = Courier()
+    @objc public static let shared = Courier()
     
     /**
      * Manages basic user state
@@ -48,7 +48,7 @@ open class Courier: NSObject {
      * Determines if the SDK should show logs or other debugging data
      * Set to find debug mode by default
      */
-    public var isDebugging = false
+    @objc public var isDebugging = false
     
     /**
      * Courier APIs
@@ -61,7 +61,7 @@ open class Courier: NSObject {
     /**
      * A read only value set to the current user id
      */
-    public var userId: String? {
+    @objc public var userId: String? {
         get {
             return userManager.getUserId()
         }
@@ -81,7 +81,7 @@ open class Courier: NSObject {
      * Function to set the current credentials for the user and their access token
      * You should consider using this in areas where you update your local user's state
      */
-    public func signIn(accessToken: String, userId: String) async throws {
+    @objc public func signIn(accessToken: String, userId: String) async throws {
         
         Courier.log("Updating Courier User Profile")
         Courier.log("Access Token: \(accessToken)")
@@ -110,7 +110,7 @@ open class Courier: NSObject {
         
     }
     
-    public func signIn(accessToken: String, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func signIn(accessToken: String, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await signIn(accessToken: accessToken, userId: userId)
@@ -126,7 +126,7 @@ open class Courier: NSObject {
      * You should call this when your user signs out
      * It will remove the current tokens used for this user in Courier so they do not receive pushes they should not get
      */
-    public func signOut() async throws {
+    @objc public func signOut() async throws {
         
         Courier.log("Clearing Courier User Credentials")
         
@@ -155,7 +155,7 @@ open class Courier: NSObject {
         
     }
     
-    public func signOut(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func signOut(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await signOut()
@@ -175,7 +175,7 @@ open class Courier: NSObject {
     public private(set) var rawApnsToken: Data? = nil
     
     // Returns the apns token as a string
-    public var apnsToken: String? {
+    @objc public var apnsToken: String? {
         get {
             return rawApnsToken?.string
         }
@@ -187,7 +187,7 @@ open class Courier: NSObject {
      * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
      * This function requires a `Data` value as the token.
      */
-    public func setAPNSToken(_ rawToken: Data) async throws {
+    @objc public func setAPNSToken(_ rawToken: Data) async throws {
         
         // Delete the current apns token
         do {
@@ -213,7 +213,7 @@ open class Courier: NSObject {
 
     }
     
-    public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await setAPNSToken(rawToken)
@@ -227,13 +227,13 @@ open class Courier: NSObject {
     /**
      * The current firebase token associated with this user
      */
-    public private(set) var fcmToken: String? = nil
+    @objc public private(set) var fcmToken: String? = nil
     
     /**
      * Upserts the FCM token in Courier for the current user
      * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
      */
-    public func setFCMToken(_ token: String) async throws {
+    @objc public func setFCMToken(_ token: String) async throws {
         
         // Delete the current fcm token
         do {
@@ -258,7 +258,7 @@ open class Courier: NSObject {
 
     }
     
-    public func setFCMToken(_ token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func setFCMToken(_ token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await setFCMToken(token)
