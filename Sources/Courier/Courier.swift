@@ -20,7 +20,7 @@ import UIKit
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.0.14"
+    internal static let version = "1.0.15"
     
     // MARK: Init
     
@@ -55,6 +55,12 @@ import UIKit
      */
     private lazy var tokenRepo = TokenRepository()
     private lazy var messagingRepo = MessagingRepository()
+    
+    // MARK: Getters
+    
+    private static var userNotificationCenter: UNUserNotificationCenter {
+        get { UNUserNotificationCenter.current() }
+    }
     
     // MARK: User Management
     
@@ -267,6 +273,165 @@ import UIKit
                 onFailure(error)
             }
         }
+    }
+    
+    // MARK: Permissions
+    
+    /**
+     * Get the authorization status of the notification permissions
+     * Completion returns on main thread
+     */
+    @objc public static func getNotificationPermissionStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
+        userNotificationCenter.getNotificationSettings(completionHandler: { settings in
+            DispatchQueue.main.async {
+                completion(settings.authorizationStatus)
+            }
+        })
+    }
+    
+    /**
+     * Get notification permission status with async await
+     */
+    @objc public static func getNotificationPermissionStatus() async throws -> UNAuthorizationStatus {
+        let settings = await userNotificationCenter.notificationSettings()
+        return settings.authorizationStatus
+    }
+    
+    /**
+     * Permission authorization options needed to handle pushes nicely
+     */
+    private static var permissionAuthorizationOptions: UNAuthorizationOptions {
+        get {
+            return [.alert, .badge, .sound]
+        }
+    }
+    
+    /**
+     * Request notification permission access with completion handler
+     * Completion returns on main thread
+     */
+    @objc public static func requestNotificationPermission(_ completion: @escaping (UNAuthorizationStatus) -> Void) {
+        userNotificationCenter.requestAuthorization(
+            options: permissionAuthorizationOptions,
+            completionHandler: { _, _ in
+                
+                // Get the full status of the permission
+                getNotificationPermissionStatus { permission in
+                    completion(permission)
+                }
+                
+            }
+        )
+    }
+    
+    /**
+     * Request notification permission access with async await
+     */
+    @discardableResult
+    @objc public static func requestNotificationPermission() async throws -> UNAuthorizationStatus {
+        try await userNotificationCenter.requestAuthorization(options: permissionAuthorizationOptions)
+        return try await getNotificationPermissionStatus()
+    }
+    
+    // MARK: Settings
+    
+    @available(iOSApplicationExtension, unavailable)
+    @objc public static func openSettingsForApp() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
+            UIApplication.shared.open(appSettings)
+        }
+    }
+    
+    // MARK: Analytics
+    
+    /**
+     * Use this function if you are manually handling notifications and not using `CourierDelegate`
+     * `CourierDelegate` will automatically track the urls
+     */
+    @objc public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) async throws {
+        
+        guard let trackingUrl = message["trackingUrl"] as? String else {
+            Courier.log("Unable to find tracking url")
+            return
+        }
+        
+        Courier.log("Tracking notification event")
+        
+        return try await MessagingRepository().postTrackingUrl(
+            url: trackingUrl,
+            event: event
+        )
+        
+    }
+    
+    @objc public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        
+        guard let trackingUrl = message["trackingUrl"] as? String else {
+            Courier.log("Unable to find tracking url")
+            return
+        }
+        
+        Courier.log("Tracking notification event")
+        
+        Task.init {
+            
+            do {
+                try await MessagingRepository().postTrackingUrl(
+                    url: trackingUrl,
+                    event: event
+                )
+                onSuccess?()
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure?(error)
+            }
+            
+        }
+        
+    }
+    
+    // MARK: Testing
+
+    @discardableResult
+    @objc public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [String] = CourierProvider.allCases, isProduction: Bool) async throws -> String {
+        return try await MessagingRepository().send(
+            authKey: authKey,
+            userId: userId,
+            title: title,
+            message: message,
+            providers: providers.map { CourierProvider(rawValue: $0) ?? .unknown },
+            isProduction: isProduction
+        )
+        
+    }
+    
+    @objc public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [String] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                let requestId = try await sendPush(
+                    authKey: authKey,
+                    userId: userId,
+                    title: title,
+                    message: message,
+                    providers: providers,
+                    isProduction: isProduction
+                )
+                onSuccess(requestId)
+            } catch {
+                onFailure(error)
+            }
+        }
+    }
+    
+    // MARK: Logging
+    
+    @objc public static func log(_ data: String) {
+        
+        // Print the log if we are debugging
+        if (Courier.shared.isDebugging) {
+            print(data)
+        }
+        
     }
     
 }

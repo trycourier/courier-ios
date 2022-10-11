@@ -7,10 +7,46 @@
 
 import Foundation
 
-public enum CourierPushEvent: String {
-    case clicked = "CLICKED"
-    case delivered = "DELIVERED"
-    case opened = "OPENED"
-    case read = "READ"
-    case unread = "UNREAD"
+@objc public enum CourierPushEvent: Int, RawRepresentable {
+    
+    case clicked
+    case delivered
+    case opened
+    case read
+    case unread
+    
+    public typealias RawValue = String
+
+    public var rawValue: RawValue {
+        switch self {
+        case .clicked:
+            return "CLICKED"
+        case .delivered:
+            return "DELIVERED"
+        case .opened:
+            return "OPENED"
+        case .read:
+            return "READ"
+        case .unread:
+            return "UNREAD"
+        }
+    }
+
+    public init?(rawValue: RawValue) {
+        switch rawValue {
+        case "CLICKED":
+            self = .clicked
+        case "DELIVERED":
+            self = .delivered
+        case "OPENED":
+            self = .opened
+        case "READ":
+            self = .read
+        case "UNREAD":
+            self = .unread
+        default:
+            return nil
+        }
+    }
+    
 }

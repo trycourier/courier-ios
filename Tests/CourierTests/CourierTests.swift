@@ -121,6 +121,7 @@ final class CourierTests: XCTestCase {
             userId: userId,
             title: "🐤 Chirp Chirp!",
             message: "Message sent from Xcode tests",
+            providers: [CourierProvider.apns.rawValue, CourierProvider.fcm.rawValue],
             isProduction: false
         )
         
