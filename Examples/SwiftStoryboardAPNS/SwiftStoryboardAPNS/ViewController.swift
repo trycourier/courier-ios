@@ -25,7 +25,8 @@ class ViewController: UIViewController {
                 userId: getDefault(key: .userId),
                 title: "APNS Test Push",
                 message: "Hello from Courier \(getDefault(key: .userId))! 👋",
-                providers: [.apns]
+                providers: [CourierProvider.apns.rawValue],
+                isProduction: false // TODO: *You are responsible for handling this value* false is sandbox, true is production
             )
             
         }
@@ -60,7 +61,7 @@ class ViewController: UIViewController {
                 // This should be synced with your user's state management to ensure
                 // your users tokens don't receive notifications when they are not
                 // authenticated to use your app
-                try await Courier.shared.setCredentials(
+                try await Courier.shared.signIn(
                     accessToken: getDefault(key: .accessToken),
                     userId: getDefault(key: .userId)
                 )
@@ -69,7 +70,7 @@ class ViewController: UIViewController {
 
                 // You should requests this permission in a place that
                 // makes most sense for your user's experience
-                try await Courier.requestNotificationPermissions()
+                try await Courier.requestNotificationPermission()
                 
             }
             
