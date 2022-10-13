@@ -310,7 +310,7 @@ import UIKit
      * Request notification permission access with completion handler
      * Completion returns on main thread
      */
-    @objc public static func requestNotificationPermission(_ completion: @escaping (UNAuthorizationStatus) -> Void) {
+    @objc public static func requestNotificationPermission(completion: @escaping (UNAuthorizationStatus) -> Void) {
         userNotificationCenter.requestAuthorization(
             options: permissionAuthorizationOptions,
             completionHandler: { _, _ in
@@ -393,16 +393,33 @@ import UIKit
     // MARK: Testing
 
     @discardableResult
-    @objc public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [String] = CourierProvider.allCases, isProduction: Bool) async throws -> String {
+    public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider] = CourierProvider.all) async throws -> String {
         return try await MessagingRepository().send(
             authKey: authKey,
             userId: userId,
             title: title,
             message: message,
-            providers: providers.map { CourierProvider(rawValue: $0) ?? .unknown },
-            isProduction: isProduction
+            isProduction: isProduction,
+            providers: providers
         )
-        
+    }
+    
+    public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider] = CourierProvider.all, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                let requestId = try await sendPush(
+                    authKey: authKey,
+                    userId: userId,
+                    title: title,
+                    message: message,
+                    isProduction: isProduction,
+                    providers: providers
+                )
+                onSuccess(requestId)
+            } catch {
+                onFailure(error)
+            }
+        }
     }
     
     @objc public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [String] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
@@ -413,8 +430,8 @@ import UIKit
                     userId: userId,
                     title: title,
                     message: message,
-                    providers: providers,
-                    isProduction: isProduction
+                    isProduction: isProduction,
+                    providers: providers.map { CourierProvider(rawValue: $0) ?? .unknown }
                 )
                 onSuccess(requestId)
             } catch {

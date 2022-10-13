@@ -37,6 +37,10 @@
         }
     }
     
+    public static var all: [CourierProvider] {
+        return [.apns, .fcm]
+    }
+    
     public static var allCases: [RawValue] {
         get {
             return ["apn", "firebase-fcm"]

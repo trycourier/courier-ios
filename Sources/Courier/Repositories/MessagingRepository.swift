@@ -9,7 +9,7 @@ import Foundation
 
 internal class MessagingRepository: Repository {
     
-    internal func send(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider], isProduction: Bool) async throws -> String {
+    internal func send(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider]) async throws -> String {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             
