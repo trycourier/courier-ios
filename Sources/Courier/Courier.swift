@@ -20,7 +20,7 @@ import UIKit
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.0.16"
+    internal static let version = "1.0.17"
     
     // MARK: Init
     
@@ -357,7 +357,7 @@ import UIKit
         
         Courier.log("Tracking notification event")
         
-        return try await MessagingRepository().postTrackingUrl(
+        return try await messagingRepo.postTrackingUrl(
             url: trackingUrl,
             event: event
         )
@@ -376,7 +376,7 @@ import UIKit
         Task.init {
             
             do {
-                try await MessagingRepository().postTrackingUrl(
+                try await messagingRepo.postTrackingUrl(
                     url: trackingUrl,
                     event: event
                 )
@@ -394,7 +394,7 @@ import UIKit
 
     @discardableResult
     public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider] = CourierProvider.all) async throws -> String {
-        return try await MessagingRepository().send(
+        return try await messagingRepo.send(
             authKey: authKey,
             userId: userId,
             title: title,

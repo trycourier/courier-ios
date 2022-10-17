@@ -41,18 +41,9 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
         let message = notification.request.content.userInfo
         
-        // Try and track
-        Task.init {
-            
-            do {
-                try await Courier.shared.trackNotification(message: message, event: .delivered)
-            } catch {
-                Courier.log(String(describing: error))
-            }
-            
-        }
+        // Track the message in Courier
+        Courier.shared.trackNotification(message: message, event: .delivered)
         
-        // Complete
         let presentationOptions = pushNotificationDeliveredInForeground(message: message)
         completionHandler(presentationOptions)
         
@@ -62,10 +53,9 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
         let message = response.notification.request.content.userInfo
         
-        // Try and track
+        // Track the message in Courier
         Courier.shared.trackNotification(message: message, event: .clicked)
         
-        // Complete
         pushNotificationClicked(message: message)
         completionHandler()
         
