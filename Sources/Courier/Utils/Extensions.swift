@@ -23,7 +23,7 @@ extension Data {
 
 extension UNNotificationContent {
     
-    var pushNotification: [AnyHashable : Any?] {
+    public var pushNotification: [AnyHashable : Any?] {
         get {
             
             // Initial payload
