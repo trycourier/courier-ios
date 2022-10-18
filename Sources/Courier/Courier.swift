@@ -20,7 +20,7 @@ import UIKit
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.0.18"
+    internal static let version = "1.0.19"
     
     // MARK: Init
     
@@ -333,15 +333,6 @@ import UIKit
         return try await getNotificationPermissionStatus()
     }
     
-    // MARK: Settings
-    
-    @available(iOSApplicationExtension, unavailable)
-    @objc public static func openSettingsForApp() {
-        if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
-            UIApplication.shared.open(appSettings)
-        }
-    }
-    
     // MARK: Analytics
     
     /**
@@ -442,13 +433,63 @@ import UIKit
     
     // MARK: Logging
     
+    // Called when logs are performed
+    // Used for React Native and Flutter SDKs
+    @objc var logListener: ((String) -> Void)? = nil
+    
     @objc public static func log(_ data: String) {
         
         // Print the log if we are debugging
         if (Courier.shared.isDebugging) {
             print(data)
+            Courier.shared.logListener?(data)
         }
         
+    }
+    
+    // MARK: Helpers
+    
+    @objc public static func formatPushNotification(content: UNNotificationContent) -> Dictionary<AnyHashable, Any> {
+        
+        // Initial payload
+        var payload: Dictionary<AnyHashable, Any> = [
+            "title": content.title,
+            "body": content.body
+        ]
+        
+        if let badge = content.badge {
+            payload["badge"] = badge
+        }
+        
+        // Do not add subtitle if it's empty
+        if (!content.subtitle.isEmpty) {
+            payload["subtitle"] = content.subtitle
+        }
+        
+        // Add sound as a string
+        if let aps = content.userInfo["aps"] as? [AnyHashable : Any?], let sound = aps["sound"] {
+            payload["sound"] = sound
+        }
+        
+        // Merge the payload data
+        // This appends all custom attributes
+        var data = content.userInfo
+        data.removeValue(forKey: "aps")
+        data.forEach { payload[$0] = $1 }
+        
+        // Add the raw data
+        payload["raw"] = content.userInfo
+        
+        return payload
+        
+    }
+    
+    // Shortcut to open the settings app for the current app
+    @available(iOSApplicationExtension, unavailable)
+    @objc public static func openSettingsForApp() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
+            UIApplication.shared.open(appSettings)
+        }
     }
     
 }
