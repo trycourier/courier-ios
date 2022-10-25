@@ -20,7 +20,7 @@ import UIKit
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.0.19"
+    internal static let version = "1.0.20"
     
     // MARK: Init
     
@@ -435,7 +435,7 @@ import UIKit
     
     // Called when logs are performed
     // Used for React Native and Flutter SDKs
-    @objc var logListener: ((String) -> Void)? = nil
+    @objc public var logListener: ((String) -> Void)? = nil
     
     @objc public static func log(_ data: String) {
         
