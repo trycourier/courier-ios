@@ -6,6 +6,18 @@ Courier helps you spend less time building notification infrastructure, and more
 
 &emsp;
 
+# Requirements & Support
+
+| Min SDK | Compile SDK | Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox | Courier Toast |
+|     :--: |         :--: |     :--: |       :--: |    :--: |        :--: |  :--: |       :--: |           :--: |           :--: |
+|    `13` |           — |      ✅ |        ✅ |       ✅ |                               ✅ |   ❌ |         ❌ |            ❌ |            ❌ |
+
+> Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
+
+> Testing push notifications requires a physical device. Simulators will not work.
+
+&emsp;
+
 ## **Installation (6 Steps)**
 
 The following steps will get the Courier iOS SDK setup and allow support for sending push notifications from Courier to your device.
