@@ -8,9 +8,9 @@ Courier helps you spend less time building notification infrastructure, and more
 
 # Requirements & Support
 
-| Min SDK | Compile SDK | Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox | Courier Toast |
-|     :--: |         :--: |     :--: |       :--: |    :--: |        :--: |  :--: |       :--: |           :--: |           :--: |
-|    `13` |           — |      ✅ |        ✅ |       ✅ |                               ✅ |   ❌ |         ❌ |            ❌ |            ❌ |
+| Min SDK |  Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox | Courier Toast |
+|     :--: |      :--: |       :--: |    :--: |           :--: |            :--: |    :--: |           :--: |           :--: |
+|    `13` |         ✅ |         ✅ |       ✅ |              ✅ |             ❌ |         ❌ |            ❌ |            ❌ |
 
 > Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
 
