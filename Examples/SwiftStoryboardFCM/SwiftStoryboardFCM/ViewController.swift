@@ -31,6 +31,7 @@ class ViewController: UIViewController {
                 userId: Env.COURIER_USER_ID,
                 title: "Test Push Notification",
                 message: "Hello from Courier! 🐣",
+                isProduction: false,
                 providers: [.fcm]
             )
             
@@ -47,7 +48,7 @@ class ViewController: UIViewController {
             if let _ = Courier.shared.userId {
                 try await Courier.shared.signOut()
             } else {
-                try await Courier.shared.setCredentials(
+                try await Courier.shared.signIn(
                     accessToken: Env.COURIER_ACCESS_TOKEN,
                     userId: Env.COURIER_USER_ID
                 )
@@ -81,14 +82,14 @@ class ViewController: UIViewController {
             // This should be synced with your user's state management to ensure
             // your users tokens don't receive notifications when they are not
             // authenticated to use your app
-            try await Courier.shared.setCredentials(
+            try await Courier.shared.signIn(
                 accessToken: Env.COURIER_ACCESS_TOKEN,
                 userId: Env.COURIER_USER_ID
             )
             
             // You should requests this permission in a place that
             // makes most sense for your user's experience
-            try await Courier.requestNotificationPermissions()
+            try await Courier.requestNotificationPermission()
             
             refresh()
             
