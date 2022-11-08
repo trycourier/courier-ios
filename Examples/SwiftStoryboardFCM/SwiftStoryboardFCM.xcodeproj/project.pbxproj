@@ -19,6 +19,8 @@
 		279DE9E628B9105E000F2E35 /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 279DE9DF28B9105E000F2E35 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		279DE9ED28B91064000F2E35 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 279DE9EC28B91064000F2E35 /* Courier */; };
 		279DE9F028B91086000F2E35 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279DE9EF28B91086000F2E35 /* Extras.swift */; };
+		67B7843C291AF1B60024946A /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B7843B291AF1B60024946A /* Env.swift */; };
+		67B7843E291AF6490024946A /* EnvSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B7843D291AF6490024946A /* EnvSample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +61,8 @@
 		279DE9E328B9105E000F2E35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		279DE9EE28B9106F000F2E35 /* SwiftStoryboardFCM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftStoryboardFCM.entitlements; sourceTree = "<group>"; };
 		279DE9EF28B91086000F2E35 /* Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
+		67B7843B291AF1B60024946A /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
+		67B7843D291AF6490024946A /* EnvSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvSample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +117,8 @@
 				279DE9CA28B90FE0000F2E35 /* Assets.xcassets */,
 				279DE9CC28B90FE0000F2E35 /* LaunchScreen.storyboard */,
 				279DE9CF28B90FE0000F2E35 /* Info.plist */,
+				67B7843B291AF1B60024946A /* Env.swift */,
+				67B7843D291AF6490024946A /* EnvSample.swift */,
 			);
 			path = SwiftStoryboardFCM;
 			sourceTree = "<group>";
@@ -245,10 +251,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67B7843C291AF1B60024946A /* Env.swift in Sources */,
 				279DE9C628B90FDF000F2E35 /* ViewController.swift in Sources */,
 				279DE9C228B90FDF000F2E35 /* AppDelegate.swift in Sources */,
 				279DE9F028B91086000F2E35 /* Extras.swift in Sources */,
 				279DE9C428B90FDF000F2E35 /* SceneDelegate.swift in Sources */,
+				67B7843E291AF6490024946A /* EnvSample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
