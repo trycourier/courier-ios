@@ -26,6 +26,8 @@ import UIKit
     
     private override init() {
         
+        print("Hello! 👋")
+        
         #if DEBUG
         isDebugging = true
         #endif
