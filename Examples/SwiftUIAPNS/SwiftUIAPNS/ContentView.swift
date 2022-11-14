@@ -18,8 +18,8 @@ struct ContentView: View {
             do {
                 
                 try await Courier.shared.sendPush(
-                    authKey: getDefault(key: .authKey),
-                    userId: getDefault(key: .userId),
+                    authKey: Env.COURIER_AUTH_KEY,
+                    userId: Env.COURIER_USER_ID,
                     title: "Test Push Notification",
                     message: "Hello from Courier! 🐣",
                     providers: [.apns]

@@ -17,6 +17,8 @@
 		279DEA3F28B9164C000F2E35 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279DEA3E28B9164C000F2E35 /* NotificationService.swift */; };
 		279DEA4328B9164C000F2E35 /* CourierService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 279DEA3C28B9164C000F2E35 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		279DEA4A28B91652000F2E35 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 279DEA4928B91652000F2E35 /* Courier */; };
+		67B78438291AED640024946A /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B78437291AED640024946A /* Env.swift */; };
+		67B7843A291AEF4A0024946A /* EnvSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B78439291AEF4A0024946A /* EnvSample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		279DEA3E28B9164C000F2E35 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		279DEA4028B9164C000F2E35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		279DEA4B28B917A6000F2E35 /* SwiftUIAPNS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftUIAPNS.entitlements; sourceTree = "<group>"; };
+		67B78437291AED640024946A /* Env.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
+		67B78439291AEF4A0024946A /* EnvSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvSample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,7 @@
 		279DEA2228B915C7000F2E35 /* SwiftUIAPNS */ = {
 			isa = PBXGroup;
 			children = (
+				67B78437291AED640024946A /* Env.swift */,
 				279DEA4B28B917A6000F2E35 /* SwiftUIAPNS.entitlements */,
 				279DEA2328B915C7000F2E35 /* SwiftUIAPNSApp.swift */,
 				279DEA2528B915C7000F2E35 /* ContentView.swift */,
@@ -106,6 +111,7 @@
 				279DEA3328B91600000F2E35 /* Extras.swift */,
 				279DEA2728B915C9000F2E35 /* Assets.xcassets */,
 				279DEA2928B915C9000F2E35 /* Preview Content */,
+				67B78439291AEF4A0024946A /* EnvSample.swift */,
 			);
 			path = SwiftUIAPNS;
 			sourceTree = "<group>";
@@ -243,10 +249,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67B78438291AED640024946A /* Env.swift in Sources */,
 				279DEA3228B915EE000F2E35 /* AppDelegate.swift in Sources */,
 				279DEA2628B915C7000F2E35 /* ContentView.swift in Sources */,
 				279DEA3428B91600000F2E35 /* Extras.swift in Sources */,
 				279DEA2428B915C7000F2E35 /* SwiftUIAPNSApp.swift in Sources */,
+				67B7843A291AEF4A0024946A /* EnvSample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

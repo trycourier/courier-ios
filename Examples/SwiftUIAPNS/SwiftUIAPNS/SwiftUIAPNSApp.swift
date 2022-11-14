@@ -23,9 +23,6 @@ struct SwiftUI_APNSApp: App {
         
         Task {
             
-            try await UIApplication.shared.currentWindow?.rootViewController?.showInputAlert(
-                fields: UserDefaultKey.allCases
-            )
                 
             // To hide debugging logs
 //                Courier.shared.isDebugging = false
@@ -39,8 +36,8 @@ struct SwiftUI_APNSApp: App {
             // your users tokens don't receive notifications when they are not
             // authenticated to use your app
             try await Courier.shared.setCredentials(
-                accessToken: getDefault(key: .accessToken),
-                userId: getDefault(key: .userId)
+                accessToken: Env.COURIER_ACCESS_TOKEN,
+                userId: Env.COURIER_USER_ID
             )
             
             // You should requests this permission in a place that

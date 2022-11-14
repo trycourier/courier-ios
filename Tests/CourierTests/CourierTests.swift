@@ -3,21 +3,8 @@ import XCTest
 
 let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20]) // This is fake
 let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
-let userId = "example_user"
-var authKey = "your_access_key"
 
 final class CourierTests: XCTestCase {
-    
-    override class func setUp() {
-        print("\n")
-        print("🔑 Set your Courier Auth Key: ", terminator: "")
-        authKey = readLine()!
-        print("\n")
-    }
-    
-    override func tearDown() async throws {
-        print("\n")
-    }
     
     func testA() async throws {
         
@@ -51,18 +38,14 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Starting Courier SDK with JWT")
 
-        // Get the token from our custom endpoint
-        // This should be your custom endpoint
-        let accessToken = try await ExampleServer.generateJwt(userId: userId)
-
         // Set the access token and start the SDK
         try await Courier.shared.signIn(
-            accessToken: accessToken,
-            userId: userId
+            accessToken: Env.COURIER_ACCESS_TOKEN,
+            userId: Env.COURIER_USER_ID
         )
 
-        XCTAssertEqual(Courier.shared.accessToken, authKey)
-        XCTAssertEqual(Courier.shared.userId, userId)
+        XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
+        XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
@@ -75,12 +58,12 @@ final class CourierTests: XCTestCase {
         // TODO: Remove this. For test purposed only
         // Set the access token and start the SDK
         try await Courier.shared.signIn(
-            accessToken: authKey,
-            userId: userId
+            accessToken: Env.COURIER_ACCESS_TOKEN,
+            userId: Env.COURIER_USER_ID
         )
 
-        XCTAssertEqual(Courier.shared.accessToken, authKey)
-        XCTAssertEqual(Courier.shared.userId, userId)
+        XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
+        XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
@@ -93,7 +76,7 @@ final class CourierTests: XCTestCase {
         try await Courier.shared.setAPNSToken(rawApnsToken)
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
-        XCTAssertEqual(Courier.shared.userId, userId)
+        XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
     }
@@ -105,7 +88,7 @@ final class CourierTests: XCTestCase {
         try await Courier.shared.setFCMToken(fcmToken)
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
-        XCTAssertEqual(Courier.shared.userId, userId)
+        XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
 
     }
@@ -117,8 +100,8 @@ final class CourierTests: XCTestCase {
         // TODO: Remove this. For test purposed only
         // Do not use auth key in production app
         let requestId = try await Courier.shared.sendPush(
-            authKey: authKey,
-            userId: userId,
+            authKey: Env.COURIER_ACCESS_TOKEN,
+            userId: Env.COURIER_USER_ID,
             title: "🐤 Chirp Chirp!",
             message: "Message sent from Xcode tests",
             isProduction: false,
@@ -137,7 +120,7 @@ final class CourierTests: XCTestCase {
         
         // This is just a random url from a sample project
         let message = [
-            "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/e/tzgspbr4jcmcy1qkhw96m0034bvy"
+            "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/t/tzgspbr4jcmcy1qkhw96m0034bvy"
         ]
         
         // Track delivery
