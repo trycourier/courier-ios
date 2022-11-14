@@ -27,8 +27,8 @@ class ViewController: UIViewController {
         Task {
             
             try await Courier.shared.sendPush(
-                authKey: getDefault(key: .authKey),
-                userId: getDefault(key: .userId),
+                authKey: Env.COURIER_AUTH_KEY,
+                userId: Env.COURIER_USER_ID,
                 title: "Test Push Notification",
                 message: "Hello from Courier! 🐣",
                 isProduction: false,
@@ -49,8 +49,8 @@ class ViewController: UIViewController {
                 try await Courier.shared.signOut()
             } else {
                 try await Courier.shared.signIn(
-                    accessToken: getDefault(key: .accessToken),
-                    userId: getDefault(key: .userId)
+                    accessToken: Env.COURIER_ACCESS_TOKEN,
+                    userId: Env.COURIER_USER_ID
                 )
             }
             
@@ -65,9 +65,9 @@ class ViewController: UIViewController {
         
         Task {
             
-            try await UIApplication.shared.currentWindow?.rootViewController?.showInputAlert(
-                fields: UserDefaultKey.allCases
-            )
+            //try await UIApplication.shared.currentWindow?.rootViewController?.showInputAlert(
+            //    fields: UserDefaultKey.allCases
+            //  )
             
             firebaseConfig()
             
@@ -83,8 +83,8 @@ class ViewController: UIViewController {
             // your users tokens don't receive notifications when they are not
             // authenticated to use your app
             try await Courier.shared.signIn(
-                accessToken: getDefault(key: .accessToken),
-                userId: getDefault(key: .userId)
+                accessToken: Env.COURIER_ACCESS_TOKEN,
+                userId: Env.COURIER_USER_ID
             )
             
             // You should requests this permission in a place that
@@ -118,11 +118,11 @@ class ViewController: UIViewController {
             // Configure firebase programatically
             // You can also do this with the GoogleService-Info.plist file
             let options = FirebaseOptions(
-                googleAppID: getDefault(key: .googleAppId),
-                gcmSenderID: getDefault(key: .gcmSendId)
+                googleAppID: Env.GOOGLE_APP_ID,
+                gcmSenderID: Env.GCM_SENDER_ID
             )
-            options.projectID = getDefault(key: .projectID)
-            options.apiKey = getDefault(key: .apiKey)
+            options.projectID = Env.FIREBASE_PROJECT_ID
+            options.apiKey = Env.FIREBASE_API_KEY
             
             FirebaseApp.configure(options: options)
             

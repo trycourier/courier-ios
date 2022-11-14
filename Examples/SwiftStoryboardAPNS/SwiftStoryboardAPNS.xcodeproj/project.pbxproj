@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27895156291D8FAA0070F501 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895155291D8FAA0070F501 /* Env.swift */; };
 		279DE98928B90CDD000F2E35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279DE98828B90CDD000F2E35 /* AppDelegate.swift */; };
 		279DE98B28B90CDD000F2E35 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279DE98A28B90CDD000F2E35 /* SceneDelegate.swift */; };
 		279DE98D28B90CDD000F2E35 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279DE98C28B90CDD000F2E35 /* ViewController.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		27895155291D8FAA0070F501 /* Env.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
 		279DE98528B90CDD000F2E35 /* SwiftStoryboardAPNS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftStoryboardAPNS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		279DE98828B90CDD000F2E35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		279DE98A28B90CDD000F2E35 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 		279DE98728B90CDD000F2E35 /* SwiftStoryboardAPNS */ = {
 			isa = PBXGroup;
 			children = (
+				27895155291D8FAA0070F501 /* Env.swift */,
 				279DE9A128B90E0C000F2E35 /* SwiftStoryboardAPNS.entitlements */,
 				279DE98828B90CDD000F2E35 /* AppDelegate.swift */,
 				279DE98A28B90CDD000F2E35 /* SceneDelegate.swift */,
@@ -241,6 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27895156291D8FAA0070F501 /* Env.swift in Sources */,
 				279DE98D28B90CDD000F2E35 /* ViewController.swift in Sources */,
 				279DE98928B90CDD000F2E35 /* AppDelegate.swift in Sources */,
 				279DE9A028B90DBC000F2E35 /* Extras.swift in Sources */,

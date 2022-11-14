@@ -21,10 +21,10 @@ class ViewController: UIViewController {
         Task {
             
             try await Courier.shared.sendPush(
-                authKey: getDefault(key: .authKey),
-                userId: getDefault(key: .userId),
+                authKey: Env.COURIER_AUTH_KEY,
+                userId: Env.COURIER_USER_ID,
                 title: "APNS Test Push",
-                message: "Hello from Courier \(getDefault(key: .userId))! 👋",
+                message: "Hello from Courier \(Env.COURIER_USER_ID)! 👋",
                 providers: [CourierProvider.apns.rawValue],
                 isProduction: false // TODO: *You are responsible for handling this value* false is sandbox, true is production
             )
@@ -46,9 +46,9 @@ class ViewController: UIViewController {
                 
             } else {
                 
-                try await UIApplication.shared.currentWindow?.rootViewController?.showInputAlert(
-                    fields: UserDefaultKey.allCases
-                )
+//                try await UIApplication.shared.currentWindow?.rootViewController?.showInputAlert(
+//                    fields: UserDefaultKey.allCases
+//                )
                 
                 // To hide debugging logs
                 // Courier.shared.isDebugging = false
@@ -62,8 +62,8 @@ class ViewController: UIViewController {
                 // your users tokens don't receive notifications when they are not
                 // authenticated to use your app
                 try await Courier.shared.signIn(
-                    accessToken: getDefault(key: .accessToken),
-                    userId: getDefault(key: .userId)
+                    accessToken: Env.COURIER_ACCESS_TOKEN,
+                    userId: Env.COURIER_USER_ID
                 )
                 
                 refresh()

@@ -9,3 +9,4 @@ DerivedData/
 .netrc
 save_changes.sh
 GoogleService-Info.plist*
+Env.swift
