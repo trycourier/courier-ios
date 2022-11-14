@@ -9,6 +9,6 @@ import Foundation
 
 class Repository {
     
-    let baseUrl = "https://api.courier.com"
+    let baseUrl = "https://ms8xx1dwbh.execute-api.us-east-1.amazonaws.com/dev"
     
 }
