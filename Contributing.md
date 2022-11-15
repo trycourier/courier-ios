@@ -1,32 +1,39 @@
-# Welcome to Courier android contributing guide
+# Welcome to Courier iOS Contribution Guide
 
 ## Getting Started
 
-1. Clone the repo and navigate to any of the three example repos inside courier-ios.
-2. Click on ``.xcodeproj`` file
-3. The project should open in xcode.
-2. create a new Swift file named `Env`
-3. Copy contents from `EnvSample.kt` and paste it in `Env.kt`
-4. Provide your fcm and courier credentials
+1. Clone the repo
+2. Run `sh env-setup.sh` from the root directory
 
 From here, you are all set to start working on the package! 🙌
 
 ## Developing
-To develop the project you have to make changes in ``courier-ios/Sources/Courier`` directory.
-after development is done push your changes to remote directory.
-Click on project, go to package Dependencies change the branch to working branch.
-Navigate to File->Packages->Update to latest package version.
+
+To make changes to the SDK:
+1. Edit code inside of `Sources`
+
+To test the changes in an example:
+1. Commit and push your changes to a branch
+  - This is the flow needed to test the Swift Package Manager package
+2. Open an example project found inside `Examples`
+3. In the example project, make sure your Package Dependency is using the branch you are developing on
+
+<img width="868" alt="Screen Shot 2022-11-14 at 12 58 24 PM" src="https://user-images.githubusercontent.com/6370613/201732644-d334f38b-1fa4-4bd7-a26c-5932ee6689cb.png">
+
+4. To pull the latest changes from your branch, go to File > Packages > Update to Latest Package Versions
+
+When you need to make a change, you will need to make the change in the `Sources` file, commit and push the change, the Update to Latest Package Verisons.
+
+This is the recommended apple development flow 🤷‍♂️
 
 ## Testing 
 
-While developing, you can run the project from xcode to test your changes. To see
-Any changes you make in your library code will be reflected in the example app everytime you rebuild the app.
+To test pushes, you will need a physical iOS device
 
+To run automated tests, checkout `Tests/CourierTests/CourierTests.swift`
 
-To start the packager:
-you'll need a real iphone, notification's won't work on simulators.
+## Releasing
 
-connect your ios device 
-build and run the project
-
-you can write and run test cases in ``Examples/(projectName)/Tests/CourierTests`` directory
+To push a release to Swift Package Manager and Cocoapods
+1. Change the `version` to the version you need in `Sources/Courier.swift`
+2. From the root directory, run `sh release.sh`
