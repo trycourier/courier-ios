@@ -43,7 +43,7 @@ class ViewController: UIViewController {
             try await Courier.shared.sendPush(
                 authKey: Env.COURIER_AUTH_KEY,
                 userId: Env.COURIER_USER_ID,
-                title: "APNS Test Push",
+                title: "\(isApns ? "APNS" : "FCM") Test Push",
                 message: "Hello from Courier \(Env.COURIER_USER_ID)! 👋",
                 isProduction: false,
                 providers: [isApns ? .apns : .fcm]

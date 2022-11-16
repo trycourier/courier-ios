@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseMessaging
 import Courier
 
 func signInWithCourier() {
@@ -30,6 +32,7 @@ class AppDelegate: CourierDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        fcmConfiguration()
         return true
     }
 
@@ -71,8 +74,26 @@ class AppDelegate: CourierDelegate {
         showMessageAlert(title: "Push Clicked", message: "\(message)")
         
     }
- 
-
+    
+    private func fcmConfiguration(){
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = appDelegate
+    }
 
 }
 
+extension AppDelegate: MessagingDelegate {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        Task {
+            do {
+                if let token = fcmToken {
+                    print("fcmToken", token)
+                    try await Courier.shared.setFCMToken(token)
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
+
+}

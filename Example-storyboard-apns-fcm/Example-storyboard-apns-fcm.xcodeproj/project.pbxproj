@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67081CBB29257B2B0055B562 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 67081CBA29257B2B0055B562 /* FirebaseMessaging */; };
 		67268E04291EEC0B00FD4427 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 67268E03291EEC0B00FD4427 /* Courier */; };
 		67268E0C291EEC4A00FD4427 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67268E0B291EEC4A00FD4427 /* NotificationService.swift */; };
 		67268E10291EEC4A00FD4427 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 67268E09291EEC4A00FD4427 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -70,7 +71,7 @@
 		67268E15291EEC7400FD4427 /* Example-storyboard-apns-fcm.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Example-storyboard-apns-fcm.entitlements"; sourceTree = "<group>"; };
 		67268E1A291EEFF600FD4427 /* Extras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		672E27DD29256B700045D753 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		6763506C291E6B8D00CE422C /* Example-storyboard-apns-fcm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-storyboard-apns-fcm.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6763506C291E6B8D00CE422C /* Courier IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Courier IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6763506F291E6B8D00CE422C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67635071291E6B8D00CE422C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		67635073291E6B8D00CE422C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67081CBB29257B2B0055B562 /* FirebaseMessaging in Frameworks */,
 				67268E04291EEC0B00FD4427 /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,7 +153,7 @@
 		6763506D291E6B8D00CE422C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6763506C291E6B8D00CE422C /* Example-storyboard-apns-fcm.app */,
+				6763506C291E6B8D00CE422C /* Courier IOS.app */,
 				67635082291E6B8F00CE422C /* Example-storyboard-apns-fcmTests.xctest */,
 				6763508C291E6B8F00CE422C /* Example-storyboard-apns-fcmUITests.xctest */,
 				67268E09291EEC4A00FD4427 /* CourierService.appex */,
@@ -234,9 +236,10 @@
 			name = "Example-storyboard-apns-fcm";
 			packageProductDependencies = (
 				67268E03291EEC0B00FD4427 /* Courier */,
+				67081CBA29257B2B0055B562 /* FirebaseMessaging */,
 			);
 			productName = "Example-storyboard-apns-fcm";
-			productReference = 6763506C291E6B8D00CE422C /* Example-storyboard-apns-fcm.app */;
+			productReference = 6763506C291E6B8D00CE422C /* Courier IOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		67635081291E6B8F00CE422C /* Example-storyboard-apns-fcmTests */ = {
@@ -312,6 +315,7 @@
 			mainGroup = 67635063291E6B8D00CE422C;
 			packageReferences = (
 				67268E02291EEC0B00FD4427 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				67081CB929257B2B0055B562 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 6763506D291E6B8D00CE422C /* Products */;
 			projectDirPath = "";
@@ -625,7 +629,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.trycourier.Example-storyboard-apns-fcm";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Courier IOS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -655,7 +659,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.trycourier.Example-storyboard-apns-fcm";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Courier IOS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -789,6 +793,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		67081CB929257B2B0055B562 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		67268E02291EEC0B00FD4427 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
@@ -800,6 +812,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		67081CBA29257B2B0055B562 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67081CB929257B2B0055B562 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		67268E03291EEC0B00FD4427 /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 67268E02291EEC0B00FD4427 /* XCRemoteSwiftPackageReference "courier-ios" */;
