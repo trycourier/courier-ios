@@ -8,9 +8,9 @@ Courier helps you spend less time building notification infrastructure, and more
 
 # Requirements & Support
 
-| Min SDK |  Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox | Courier Toast |
-|     :--: |      :--: |       :--: |    :--: |           :--: |            :--: |    :--: |           :--: |           :--: |
-|    `13` |         ✅ |         ✅ |       ✅ |              ✅ |             ❌ |         ❌ |            ❌ |            ❌ |
+| Min SDK | Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox | Courier Toast |
+| :-----: | :---: | :---: | :----------------------: | :-----------------------------: | :--: | :-------: | :-----------: | :-----------: |
+|  `13`   |  ✅   |  ✅   |            ✅            |               ✅                |  ❌  |    ❌     |      ❌       |      ❌       |
 
 > Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
 
@@ -55,11 +55,11 @@ User Credentials must be set in Courier before they can receive push notificatio
 import Courier
 
 func signInWithCourier() {
-    
+
     Task.init {
 
         let userId = "example_user"
-        
+
         // Courier needs you to generate an access token on your backend
         // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
         let accessToken = try await YourBackend.generateCourierAccessToken(userId: userId)
@@ -68,7 +68,7 @@ func signInWithCourier() {
         try await Courier.shared.setCredentials(accessToken: accessToken, userId: userId)
 
     }
-    
+
 }
 ```
 
@@ -100,11 +100,12 @@ Follow this tutorial to setup the service! (No Code Required 😄)
 3. Under iOS, filter for "Courier"
 4. Click Next
 5. Give the service extension a name (i.e. "CourierService")
-6. Click Finish
-7. Click on your project file
-8. Under Targets, click on your new Target
-9. Under the General tab > Frameworks and Libraries, click the "+" icon
-10. Select the Courier package from the list under Courier Package > Courier
+6. Select "Courier" from package dropdown.
+7. Click Finish
+8. Click on your project file
+9. Under Targets, click on your new Target
+10. Under the General tab > Frameworks and Libraries, click the "+" icon
+11. Select the Courier package from the list under Courier Package > Courier
 
 &emsp;
 
@@ -127,17 +128,17 @@ class AppDelegate: CourierDelegate {
     ...
 
     override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
+
         // TODO: Remove this print
         print("Push Delivered")
         print(message)
-        
+
         // ⚠️ Customize this to be what you would like
         // Pass an empty array to this if you do not want to use it
         showForegroundNotificationAs([.list, .badge, .banner, .sound])
-        
+
     }
-    
+
     override func pushNotificationClicked(message: [AnyHashable : Any]) {
 
         // TODO: Remove this print
@@ -187,7 +188,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 import Courier
 
 extension AppDelegate: MessagingDelegate {
-  
+
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
 
         if let token = fcmToken {
@@ -222,7 +223,7 @@ To get pushes to appear, add support for the provider you would like to use. Che
 
 ### **6. Signing Users Out**
 
-Best user experience practice is to synchronize the current user's push notification tokens and the user's state. 
+Best user experience practice is to synchronize the current user's push notification tokens and the user's state.
 
 This should be called where you normally manage your user's state.
 
@@ -230,13 +231,13 @@ This should be called where you normally manage your user's state.
 import Courier
 
 func signOut() {
-    
+
     Task.init {
 
         try await Courier.shared.signOut()
 
     }
-    
+
 }
 ```
 
@@ -250,11 +251,11 @@ func signOut() {
 import Courier
 
 func sendTestMessage() {
-    
+
     Task.init {
 
         let userId = "example_user_id"
-        
+
         try await Courier.shared.sendPush(
             authKey: "your_api_key_that_should_not_stay_in_your_production_app",
             userId: userId,
@@ -264,7 +265,7 @@ func sendTestMessage() {
         )
 
     }
-    
+
 }
 ```
 

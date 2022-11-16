@@ -87,7 +87,6 @@ extension AppDelegate: MessagingDelegate {
         Task {
             do {
                 if let token = fcmToken {
-                    print("fcmToken", token)
                     try await Courier.shared.setFCMToken(token)
                 }
             } catch {
