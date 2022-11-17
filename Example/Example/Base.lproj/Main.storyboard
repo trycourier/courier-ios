@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G0r-iJ-p6K">
+                                <rect key="frame" x="157" y="304" width="76" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
+                                <connections>
+                                    <action selector="authButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3Mf-f3-OPe"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Courier User Id Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWA-NA-1NT">
+                                <rect key="frame" x="98" y="263" width="194" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hvh-xJ-qxN">
+                                <rect key="frame" x="140.66666666666666" y="467" width="109" height="32"/>
+                                <segments>
+                                    <segment title="APNS"/>
+                                    <segment title="FCM"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZvI-8h-FKS">
+                                <rect key="frame" x="142" y="518" width="106" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Send Push"/>
+                                <connections>
+                                    <action selector="sendPushAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lbm-xG-YAO"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="G0r-iJ-p6K" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="8n5-hA-Fdk"/>
+                            <constraint firstItem="hvh-xJ-qxN" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Cg3-f2-Vu0"/>
+                            <constraint firstItem="G0r-iJ-p6K" firstAttribute="top" secondItem="kWA-NA-1NT" secondAttribute="bottom" constant="20" id="M0Z-Qu-q53"/>
+                            <constraint firstItem="G0r-iJ-p6K" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.75" id="PcK-xc-mpd"/>
+                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="d9R-Cx-5fq"/>
+                            <constraint firstItem="kWA-NA-1NT" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="mCN-N1-D8L"/>
+                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.25" id="o3S-KR-EpT"/>
+                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="top" secondItem="hvh-xJ-qxN" secondAttribute="bottom" constant="20" id="xFS-aw-HWM"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="authButton" destination="G0r-iJ-p6K" id="QmC-Xp-7eg"/>
+                        <outlet property="authLabel" destination="kWA-NA-1NT" id="M5w-ts-ONc"/>
+                        <outlet property="segmentedControl" destination="hvh-xJ-qxN" id="ccQ-Xj-5Xt"/>
+                        <outlet property="sendButton" destination="ZvI-8h-FKS" id="bqf-OS-JES"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-14" y="-28"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
