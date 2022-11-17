@@ -1,9 +1,47 @@
-# **🐤 Courier — iOS**
+# Courier iOS Overview
 
-Courier helps you spend less time building notification infrastructure, and more time building great experiences for your users!
+```swift
+Courier.shared.isDebugging = true
 
-[https://courier.com](https://www.courier.com/)
+let userId = Courier.shared.userId
 
+await Courier.shared.signIn(
+    accessToken: 'asdf...',
+    userId: 'example_user_id',
+);
+
+await Courier.shared.signOut()
+
+let currentPermissionStatus = await Courier.shared.getNotificationPermissionStatus()
+let requestPermissionStatus = await Courier.shared.requestNotificationPermission()
+
+await Courier.shared.setFcmToken(token)
+
+let fcmToken = Courier.shared.fcmToken
+let apnsToken = Courier.shared.apnsToken
+
+override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+    print(message)
+    // This is how you want to show your notification in the foreground
+    // You can pass "[]" to not show the notification to the user or
+    // handle this with your own custom styles
+    return [.sound, .list, .banner, .badge]
+}
+
+override func pushNotificationClicked(message: [AnyHashable : Any]) {
+    print(message)
+}
+
+let messageId = await Courier.shared.sendPush(
+    authKey: 'asdf...',
+    userId: 'example_user_id',
+    title: 'Hey! 👋',
+    body: 'Courier is awesome!!',
+    isProduction: false,
+    providers: [.apns, .fcm],
+);
+
+```
 &emsp;
 
 # Requirements & Support
@@ -18,262 +56,220 @@ Courier helps you spend less time building notification infrastructure, and more
 
 &emsp;
 
-## **Installation (6 Steps)**
+# **Installation**
 
-The following steps will get the Courier iOS SDK setup and allow support for sending push notifications from Courier to your device.
+>
+> Link to [`Example App`](https://github.com/trycourier/courier-ios/tree/master/Example)
+>
 
-[Full examples](https://github.com/trycourier/courier-ios/tree/master/Examples)
-
-⚠️ You need a physical iPhone or iPad to receive push notifications. You cannot test this effectively using the simulator.
+1. [`Install the package`](#1-install-the-package)
+2. [`Setup`](#2-setup)
+3. [`Configure Push Provider`](#3-configure-push-provider)
+6. [`Managing User State`](#4-managing-user-state)
+7. [`Testing Push Notifications`](#5-testing-push-notifications)
 
 &emsp;
 
-### **1. Add the Swift Package**
-
+## **1. Install the package**
+### using swift package manager
 ![Swift Package Setup](https://github.com/trycourier/courier-ios/blob/master/add-swift-package.gif)
-
-1. In your Xcode project, go to File > Add Packages
-2. Paste the following url in "Search or Enter Package URL"
+1. Open your iOS project and increase the min SDK target to iOS 13.0+
+2. In your Xcode project, go to File > Add Packages
+3. Paste the following url in "Search or Enter Package URL"
 
 ```
 https://github.com/trycourier/courier-ios
 ```
 
-3. Click "Add Package"
+### using cocoapods
+1. update Podfile for ios 13.0+
+    ```ruby
+    platform :ios, '13.0'
+    ```
+2. add the snippet in your `Podfile`
+    ```ruby
+    # Allows CourierService to access the Courier Pod
+    target 'CourierService' do
+      pod 'Courier-iOS'
+    end
+    ```
+3. open terminal in root directory and run
+    ```sh
+    pod install
+    ```
+target `CourierService` is discussed in Add the Notification Service Extension Section.
+&emsp;
+
+
+## **2. Setup**
+1. Change your `AppDelegate` to extend the `CourierDelegate` and add `import Courier` to the top of your `AppDelegate` file
+    - This automatically syncs APNS tokens to Courier
+2. Enable the "Push Notifications" capability
+    - ![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
+    1. Select your Xcode project file
+    2. Click your project Target
+    3. Click "Signing & Capabilities"
+    4. Click the small "+" to add a capability
+    5. Type "Push Notifications"
+    6. Press Enter
+
+&emsp;
+### **Add the Notification Service Extension (Recommended)**
+
+To make sure Courier can track when a notification is delivered to the device, you need to add a Notification Service Extension. Here is how to add one.
+
+https://user-images.githubusercontent.com/6370613/198336479-45aeec9e-0c94-4c29-b132-ea8c777b9da1.mov
+
+1. Download and Unzip the Courier Notification Service Extension: [`CourierNotificationServiceTemplate.zip`](https://github.com/trycourier/courier-notification-service-extension-template/archive/refs/heads/main.zip)
+2. Open the folder in terminal and run `sh make_template.sh`
+    - This will create the Notification Service Extension on your mac to save you time
+3. Open your iOS app in Xcode and go to File > New > Target
+4. Select "Courier Service" and click "Next"
+5. Give the Notification Service Extension a name (i.e. "CourierService"), 
+    * if you are using cocoapods select `Courier_iOS` as the Package
+    * if you are using swift package manager 
+        1. Select "Courier" from package dropdown.
+        2. Click Finish
+        3. Click on your project file
+        4. Under Targets, click on your new Target
+        5. Under the General tab > Frameworks and Libraries, click the "+" icon
+        6. Select the Courier package from the list under Courier Package > Courier
 
 &emsp;
 
-### **2. Manage User Credentials**
+## **3. Configure Push Provider**
 
-User Credentials must be set in Courier before they can receive push notifications. This should be handled where you normally manage your user's state.
+> If you don't need push notification support, you can skip this step.
 
-⚠️ User Credentials should be [signed out](#6-signing-users-out) when you no longer want that user to receive push notifications.
+To get push notification to appear in your app, add support for the provider you would like to use:
+- [`APNS (Apple Push Notification Service)`](https://www.courier.com/docs/guides/providers/push/apple-push-notification)
+- [`FCM (Firebase Cloud Messaging)`](https://www.courier.com/docs/guides/providers/push/firebase-fcm/)
 
-⚠️ Courier does not maintain user state between app sessions, or in other words, if you force close the app, you will need to set user credentials again. We will be looking into maintaining user credential state between app sessions in future versions of this SDK.
+&emsp;
 
+## **4. Managing User State**
+
+Best user experience practice is to synchronize the current user's push notification tokens and the user's state. Courier does most of this for you automatically!
+
+> You can use a Courier Auth Key [`found here`](https://app.courier.com/settings/api-keys) when developing.
+
+> When you are ready for production release, you should be using a JWT as the `accessToken`.
+> Here is more info about [`Going to Production`](#going-to-production)
+
+Place these functions where you normally manage your user's state:
 ```swift
-import Courier
+// Saves accessToken and userId to native level local storage
+// This will persist between app sessions
+await Courier.shared.signIn(
+    accessToken: accessToken,
+    userId: userId,
+);
 
-func signInWithCourier() {
-
-    Task.init {
-
-        let userId = "example_user"
-
-        // Courier needs you to generate an access token on your backend
-        // Docs for setting this up: https://www.courier.com/docs/reference/auth/issue-token/
-        let accessToken = try await YourBackend.generateCourierAccessToken(userId: userId)
-
-        // Set Courier user credentials
-        try await Courier.shared.setCredentials(accessToken: accessToken, userId: userId)
-
-    }
-
-}
+await Courier.shared.signOut();
 ```
 
-&emsp;
+If you followed the steps above:
+- APNS tokens on iOS will automatically be synced to Courier
 
-### **3. Enable Push Notifications**
+If you want FCM tokens to sync to Courier on iOS:
 
-![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
+1. Add the following Flutter packages to your project
+    * if you are using cocoapods
+        - [`firebase_core`](https://pub.dev/packages/firebase_core)
+        - [`firebase_messaging`](https://pub.dev/packages/firebase_messaging)
+    * if you are using swift package manager
+        - add [`firebase-ios-sdk`](https://github.com/firebase/firebase-ios-sdk)
+        - select `firebase-messaging`
 
-1. Select your Xcode project file
-2. Click your project Target
-3. Click "Signing & Capabilities"
-4. Click the small "+" to add a capability
-5. Type "Push Notifications"
-6. Press Enter
-
-&emsp;
-
-### **(Recommended) Setup the Courier Notification Service**
-
-Without adding the Courier Notification Service your Courier workspace will not know when Courier delivers a push notification to the device.
-
-Follow this tutorial to setup the service! (No Code Required 😄)
-
-![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/service-extension-tutorial.gif)
-
-1. Run the script located at Xcode > Package Dependencies > Courier > TemplateBuilder > make_template.sh (`sh make_template.sh`)
-2. Go back to Xcode and click File > New > Target
-3. Under iOS, filter for "Courier"
-4. Click Next
-5. Give the service extension a name (i.e. "CourierService")
-6. Select "Courier" from package dropdown.
-7. Click Finish
-8. Click on your project file
-9. Under Targets, click on your new Target
-10. Under the General tab > Frameworks and Libraries, click the "+" icon
-11. Select the Courier package from the list under Courier Package > Courier
-
-&emsp;
-
-### **4. Manage Push Notification Tokens**
-
-There are few different ways to manage user tokens. Here are 3 examples:
-
-&emsp;
-
-### 1. `CourierDelegate` Example (Automatically manage APNS tokens)
-
-`CourierDelegate` automatically synchronizes APNS tokens and simplifies receiving and opening push notifications.
-
+2. Add code to manually sync FCM tokens
+    1. Change your `AppDelegate` to extend the `CourierDelegate`, `MessagingDelegate`.
+    2. Add `import Courier`, `import FirebaseCore`, `import FirebaseMessaging` to the top of your `AppDelegate` file.
+    3. Modify your `AppDelegate` according to the snippet below
 ```swift
-...
-import Courier
-
-class AppDelegate: CourierDelegate {
-
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     ...
-
-    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any], presentAs showForegroundNotificationAs: @escaping (UNNotificationPresentationOptions) -> Void) {
-
-        // TODO: Remove this print
-        print("Push Delivered")
-        print(message)
-
-        // ⚠️ Customize this to be what you would like
-        // Pass an empty array to this if you do not want to use it
-        showForegroundNotificationAs([.list, .badge, .banner, .sound])
-
-    }
-
-    override func pushNotificationClicked(message: [AnyHashable : Any]) {
-
-        // TODO: Remove this print
-        print("Push Clicked")
-        print(message)
-
-    }
-
-}
-```
-
-&emsp;
-
-### 2. Traditional APNS Example (Manually manage APNS tokens)
-
-⚠️ Be sure to call both `Courier.shared.setCredentials(...)` and `Courier.shared.setPushToken(...)` in your implementation. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
-
-```swift
-import Courier
-
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    FirebaseApp.configure()
+    Messaging.messaging().delegate = self
     ...
+    return true
+}
 
-    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-
-        Task.init {
-            do {
-                try await Courier.shared.setAPNSToken(deviceToken)
-            } catch {
-                print(error)
-            }
-        }
-
+// Handle FCM token refreshes
+func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+    guard let token = fcmToken else { return }
+    Task {
+        try await Courier.shared.setFCMToken(token)
     }
-
 }
 ```
 
 &emsp;
 
-### 3. Traditional FCM Example (Manually manage FCM tokens)
+## **5. Testing Push Notifications**
 
-⚠️ Be sure to call both `Courier.shared.setCredentials(...)` and `Courier.shared.setPushToken(...)` in your implementation. Details can be found here: [Manage User Credentials](#2-manage-user-credentials)
+> If you don't need push notification support, you can skip this step.
+
+Courier allows you to send a push notification directly from the SDK to a user id. No tokens juggling or backend needed!
 
 ```swift
-import Courier
+let notificationPermission = await Courier.shared.getNotificationPermissionStatus();
+print(notificationPermission);
 
-extension AppDelegate: MessagingDelegate {
+// Notification permissions must be `authorized/UNAuthorizationStatus(rawValue: 2)` to receive pushes
+let requestedNotificationPermission = await Courier.shared.requestNotificationPermission();
+print(requestedNotificationPermission);
 
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-
-        if let token = fcmToken {
-
-            Task.init {
-                do {
-                    try await Courier.shared.setFCMToken(token)
-                } catch {
-                    print(error)
-                }
-            }
-
-        }
-
-    }
-
+override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+    print(message)
+    // This is how you want to show your notification in the foreground
+    // You can pass "[]" to not show the notification to the user or
+    // handle this with your own custom styles
+    return [.sound, .list, .banner, .badge]
 }
-```
 
-_Other examples can be found here: [More Examples](https://github.com/trycourier/courier-ios/tree/master/Examples)_
-
-&emsp;
-
-### **5. Configure a Provider**
-
-To get pushes to appear, add support for the provider you would like to use. Checkout the following tutorials to get a push provider setup.
-
-- [Apple Push Notification Service](https://www.courier.com/docs/guides/providers/push/apple-push-notification)
-- [Firebase Cloud Messaging](https://www.courier.com/docs/guides/providers/push/firebase-fcm/)
-
-&emsp;
-
-### **6. Signing Users Out**
-
-Best user experience practice is to synchronize the current user's push notification tokens and the user's state.
-
-This should be called where you normally manage your user's state.
-
-```swift
-import Courier
-
-func signOut() {
-
-    Task.init {
-
-        try await Courier.shared.signOut()
-
-    }
-
-}
+// Sends a test push
+let messageId = await Courier.shared.sendPush(
+    authKey: 'a_courier_auth_key_that_should_only_be_used_for_testing',
+    userId: 'example_user',
+    title: 'Chirp Chrip!',
+    body: 'Hello from Courier 🐣',
+    isProduction: false, // false == sandbox / true == production
+    providers: [.apns, .fcm],
+);
 ```
 
 &emsp;
 
-### **Bonus! Sending a Test Push Notification**
+## **Going to Production**
 
-⚠️ This is only for testing purposes and should not be in your production app.
+For security reasons, you should not keep your `authKey` (which looks like: `pk_prod_ABCD...`) in your production app. The `authKey` is safe to test with, but you will want to use an `accessToken` in production.
 
-```swift
-import Courier
+To create an `accessToken`, call this: 
 
-func sendTestMessage() {
-
-    Task.init {
-
-        let userId = "example_user_id"
-
-        try await Courier.shared.sendPush(
-            authKey: "your_api_key_that_should_not_stay_in_your_production_app",
-            userId: userId,
-            title: "Test message!",
-            message: "Chrip Chirp!",
-            providers: [.apns, .fcm]
-        )
-
-    }
-
-}
+```curl
+curl --request POST \
+     --url https://api.courier.com/auth/issue-token \
+     --header 'Accept: application/json' \
+     --header 'Authorization: Bearer $YOUR_AUTH_KEY' \
+     --header 'Content-Type: application/json' \
+     --data
+ '{
+    "scope": "user_id:$YOUR_USER_ID write:user-tokens",
+    "expires_in": "$YOUR_NUMBER days"
+  }'
 ```
+
+Or generate one here:
+[`Issue Courier Access Token`](https://www.courier.com/docs/reference/auth/issue-token/)
+
+> This request to issue a token should likely exist in a separate endpoint served on your backend.
 
 &emsp;
 
-### **Share feedback with Courier**
+## **Share feedback with Courier**
 
 We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Here are some links to contact us:
 
 - [Courier Feedback](https://feedback.courier.com/)
-- [Courier iOS Issues](https://github.com/trycourier/courier-ios/issues)
+- [Courier Flutter Issues](https://github.com/trycourier/courier-ios/issues)
+
