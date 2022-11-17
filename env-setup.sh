@@ -1,5 +1,5 @@
 # ENV variables
-APP_FILE=Example-storyboard-apns-fcm/Example-storyboard-apns-fcm/Env.swift
+APP_FILE=Example/Example/Env.swift
 TEST_FILE=Tests/CourierTests/Env.swift
 
 # Create the app file env
