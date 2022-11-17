@@ -129,6 +129,12 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 4. Select "Courier Service" and click "Next"
 5. Give the Notification Service Extension a name (i.e. "CourierService"), 
     * if you are using cocoapods select `Courier_iOS` as the Package
+        add the snippet in your Podfile
+        ```ruby 
+            target 'CourierService' do
+                pod 'Courier-iOS'
+            end
+        ```
     * if you are using swift package manager 
         1. Select "Courier" from package dropdown.
         2. Click Finish
