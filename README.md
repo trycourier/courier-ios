@@ -72,7 +72,8 @@ let messageId = await Courier.shared.sendPush(
 
 ## **1. Install the package**
 ### using swift package manager
-![Swift Packagte Setup](https://user-images.githubusercontent.com/29832989/202577441-76e89b99-659b-4fad-83ac-54ddd6992dc3.mov)
+
+https://user-images.githubusercontent.com/29832989/202578202-32c0ebf7-c11f-46c0-905a-daa8fc3ba8bd.mov
 
 1. Open your iOS project and increase the min SDK target to iOS 13.0+
 2. In your Xcode project, go to File > Add Packages
