@@ -1,4 +1,4 @@
-# Welcome to Courier android contributing guide
+# Courier iOS Contribution Guide
 
 ## Getting Started
 
