@@ -120,7 +120,7 @@ target `CourierService` is discussed in Add the Notification Service Extension S
 
 To make sure Courier can track when a notification is delivered to the device, you need to add a Notification Service Extension. Here is how to add one.
 
-https://user-images.githubusercontent.com/6370613/198336479-45aeec9e-0c94-4c29-b132-ea8c777b9da1.mov
+https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-8485-c0c43f077e12.mov
 
 1. Download and Unzip the Courier Notification Service Extension: [`CourierNotificationServiceTemplate.zip`](https://github.com/trycourier/courier-notification-service-extension-template/archive/refs/heads/main.zip)
 2. Open the folder in terminal and run `sh make_template.sh`
