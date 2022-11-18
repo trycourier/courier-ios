@@ -105,13 +105,7 @@ https://github.com/trycourier/courier-ios
     ```ruby
     platform :ios, '13.0'
     ```
-2. Add the snippet in your `Podfile`
-    ```ruby
-    # Allows CourierService to access the Courier Pod
-    target 'CourierService' do
-      pod 'Courier-iOS'
-    end
-    ```
+2. Add `pod 'Courier-iOS'` in your base target
 3. Open terminal in root directory and run
     ```sh
     pod install
@@ -334,5 +328,5 @@ Or generate one here:
 We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Here are some links to contact us:
 
 - [Courier Feedback](https://feedback.courier.com/)
-- [Courier Flutter Issues](https://github.com/trycourier/courier-ios/issues)
+- [Courier iOS Issues](https://github.com/trycourier/courier-ios/issues)
 
