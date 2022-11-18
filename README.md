@@ -1,6 +1,34 @@
 # Courier iOS Overview
 
 ```swift
+import UIKit
+import Courier
+@main
+class AppDelegate: CourierDelegate {
+
+    .....
+
+    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+
+        print(message)
+
+        // This is how you want to show your notification in the foreground
+        // You can pass "[]" to not show the notification to the user or
+        // handle this with your own custom styles
+        return [.sound, .list, .banner, .badge]
+        
+    }
+    
+    override func pushNotificationClicked(message: [AnyHashable : Any]) {
+        
+        print(message)
+        
+    }
+    .....
+
+}
+
+
 Courier.shared.isDebugging = true
 
 let userId = Courier.shared.userId
@@ -20,18 +48,6 @@ await Courier.shared.setFcmToken(token)
 let fcmToken = Courier.shared.fcmToken
 let apnsToken = Courier.shared.apnsToken
 
-override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
-    print(message)
-    // This is how you want to show your notification in the foreground
-    // You can pass "[]" to not show the notification to the user or
-    // handle this with your own custom styles
-    return [.sound, .list, .banner, .badge]
-}
-
-override func pushNotificationClicked(message: [AnyHashable : Any]) {
-    print(message)
-}
-
 let messageId = await Courier.shared.sendPush(
     authKey: 'asdf...',
     userId: 'example_user_id',
@@ -39,7 +55,8 @@ let messageId = await Courier.shared.sendPush(
     body: 'Courier is awesome!!',
     isProduction: false,
     providers: [.apns, .fcm],
-);
+)
+
 
 ```
 &emsp;
@@ -83,19 +100,19 @@ https://user-images.githubusercontent.com/29832989/202578202-32c0ebf7-c11f-46c0-
 https://github.com/trycourier/courier-ios
 ```
 
-### using cocoapods
-1. update Podfile for ios 13.0+
+### Using cocoapods
+1. Update Podfile for ios 13.0+
     ```ruby
     platform :ios, '13.0'
     ```
-2. add the snippet in your `Podfile`
+2. Add the snippet in your `Podfile`
     ```ruby
     # Allows CourierService to access the Courier Pod
     target 'CourierService' do
       pod 'Courier-iOS'
     end
     ```
-3. open terminal in root directory and run
+3. Open terminal in root directory and run
     ```sh
     pod install
     ```
@@ -107,13 +124,16 @@ target `CourierService` is discussed in Add the Notification Service Extension S
 1. Change your `AppDelegate` to extend the `CourierDelegate` and add `import Courier` to the top of your `AppDelegate` file
     - This automatically syncs APNS tokens to Courier
 2. Enable the "Push Notifications" capability
-    - ![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
-    1. Select your Xcode project file
-    2. Click your project Target
-    3. Click "Signing & Capabilities"
-    4. Click the small "+" to add a capability
-    5. Type "Push Notifications"
-    6. Press Enter
+![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
+    <ol start="1" type="1">
+        <li>Select your Xcode project file</li>
+        <li>Click your project Target</li>
+        <li>Click "Signing & Capabilities"</li>
+        <li>Click the small "+" to add a capability</li>
+        <li>Type "Push Notifications"</li>
+        <li>Press Enter</li>
+    </ol>
+
 
 &emsp;
 ### **Add the Notification Service Extension (Recommended)**
@@ -127,22 +147,23 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
     - This will create the Notification Service Extension on your mac to save you time
 3. Open your iOS app in Xcode and go to File > New > Target
 4. Select "Courier Service" and click "Next"
-5. Give the Notification Service Extension a name (i.e. "CourierService"), 
-    * if you are using cocoapods select `Courier_iOS` as the Package
+5. Give the Notification Service Extension a name (i.e. "CourierService").
+    * If you are using cocoapods select `Courier_iOS` as the Package
         add the snippet in your Podfile
         ```ruby 
-            target 'CourierService' do
-                pod 'Courier-iOS'
-            end
+        target 'CourierService' do
+            pod 'Courier-iOS'
+        end
         ```
-    * if you are using swift package manager 
-        1. Select "Courier" from package dropdown.
-        2. Click Finish
-        3. Click on your project file
-        4. Under Targets, click on your new Target
-        5. Under the General tab > Frameworks and Libraries, click the "+" icon
-        6. Select the Courier package from the list under Courier Package > Courier
-
+    * If you are using swift package manager 
+        <ol start="1" type="1">
+            <li>Select "Courier" from package dropdown.</li>
+            <li>Click Finish</li>
+            <li>Click on your project file</li>
+            <li>Under Targets, click on your new Target</li>
+            <li>Under the General tab > Frameworks and Libraries, click the "+" icon</li>
+            <li>Select the Courier package from the list under Courier Package > Courier</li>
+        </ol>
 &emsp;
 
 ## **3. Configure Push Provider**
@@ -182,33 +203,67 @@ If you followed the steps above:
 If you want FCM tokens to sync to Courier on iOS:
 
 1. Add the following Flutter packages to your project
-    * if you are using cocoapods
-        - [`firebase_core`](https://pub.dev/packages/firebase_core)
-        - [`firebase_messaging`](https://pub.dev/packages/firebase_messaging)
-    * if you are using swift package manager
+    * If you are using cocoapods
+        - [`FirebaseCore`](https://cocoapods.org/pods/FirebaseCore)
+        - [`FirebaseMessaging`](https://cocoapods.org/pods/FirebaseMessaging)
+    * If you are using swift package manager
         - add [`firebase-ios-sdk`](https://github.com/firebase/firebase-ios-sdk)
         - select `firebase-messaging`
 
 2. Add code to manually sync FCM tokens
-    1. Change your `AppDelegate` to extend the `CourierDelegate`, `MessagingDelegate`.
-    2. Add `import Courier`, `import FirebaseCore`, `import FirebaseMessaging` to the top of your `AppDelegate` file.
-    3. Modify your `AppDelegate` according to the snippet below
+    <ol start="1" type="1">
+        <li>Change your `AppDelegate` to extend the `CourierDelegate`, `MessagingDelegate`.</li>
+        <li>Add `import Courier`, `import FirebaseCore`, `import FirebaseMessaging` to the top of your `AppDelegate` file.</li>
+        <li>Modify your `AppDelegate` according to the snippet below.</li>
+    </ol>
 ```swift
-func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    ...
-    FirebaseApp.configure()
-    Messaging.messaging().delegate = self
-    ...
-    return true
+import UIKit
+import Courier
+import FirebaseCore
+import FirebaseMessaging
+
+@main
+class AppDelegate: CourierDelegate, MessagingDelegate {
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        
+        return true
+        
+    }
+
+
+    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+        
+        print(message)
+
+        // This is how you want to show your notification in the foreground
+        // You can pass "[]" to not show the notification to the user or
+        // handle this with your own custom styles
+        return [.sound, .list, .banner, .badge]
+        
+    }
+    
+    override func pushNotificationClicked(message: [AnyHashable : Any]) {
+        print(message)
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        
+        guard let token = fcmToken else { return }
+        
+        Task {
+            try await Courier.shared.setFCMToken(token)    
+        }
+        
+    }
+
+
 }
 
-// Handle FCM token refreshes
-func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-    guard let token = fcmToken else { return }
-    Task {
-        try await Courier.shared.setFCMToken(token)
-    }
-}
+
 ```
 
 &emsp;
@@ -220,12 +275,12 @@ func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: Str
 Courier allows you to send a push notification directly from the SDK to a user id. No tokens juggling or backend needed!
 
 ```swift
-let notificationPermission = await Courier.shared.getNotificationPermissionStatus();
-print(notificationPermission);
+let notificationPermission = await Courier.shared.getNotificationPermissionStatus()
+print(notificationPermission)
 
 // Notification permissions must be `authorized/UNAuthorizationStatus(rawValue: 2)` to receive pushes
-let requestedNotificationPermission = await Courier.shared.requestNotificationPermission();
-print(requestedNotificationPermission);
+let requestedNotificationPermission = await Courier.shared.requestNotificationPermission()
+print(requestedNotificationPermission)
 
 override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
     print(message)
@@ -243,7 +298,7 @@ let messageId = await Courier.shared.sendPush(
     body: 'Hello from Courier 🐣',
     isProduction: false, // false == sandbox / true == production
     providers: [.apns, .fcm],
-);
+)
 ```
 
 &emsp;
