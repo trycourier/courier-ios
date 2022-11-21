@@ -124,16 +124,8 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 3. Open your iOS app in Xcode and go to File > New > Target
 4. Select "Courier Service" and click "Next"
 5. Give the Notification Service Extension a name (i.e. "CourierService").
-
-- If you are using cocoapods select `Courier_iOS` as the Package add the snippet in your Podfile
-    
-```ruby 
-target 'CourierService' do
-    pod 'Courier-iOS'
-end
-```
-    
-- If you are using swift package manager 
+6. Link the Courier SDK to your extension
+    - If you are using Swift Package Manager
     <ol start="1" type="1">
         <li>Select "Courier" from package dropdown.</li>
         <li>Click Finish</li>
@@ -142,6 +134,17 @@ end
         <li>Under the General tab > Frameworks and Libraries, click the "+" icon</li>
         <li>Select the Courier package from the list under Courier Package > Courier</li>
     </ol>
+    - If you are using Cocoapods
+    <ol start="1" type="1">
+        <li>Select `Courier_iOS` from the package dropdown</li>
+        <li>Add the following snippet to the bottom of your Podfile</li>
+        <li>Run `pod install`</li>
+    </ol>
+```ruby 
+target 'CourierService' do
+    pod 'Courier-iOS'
+end
+```
 &emsp;
 
 ## **3. Configure Push Provider**
