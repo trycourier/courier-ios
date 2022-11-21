@@ -101,12 +101,14 @@ pod install
     - This automatically syncs APNS tokens to Courier
 2. Enable the "Push Notifications" capability
 ![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
-    1. Select your Xcode project file
-    2. Click your project Target
-    3. Click "Signing & Capabilities"
-    4. Click the small "+" to add a capability
-    5. Type "Push Notifications"
-    6. Press Enter
+    <ol start="1" type="1">
+        <li>Select your Xcode project file</li>
+        <li>Click your project Target</li>
+        <li>Click "Signing & Capabilities"</li>
+        <li>Click the small "+" to add a capability</li>
+        <li>Type "Push Notifications"</li>
+        <li>Press Enter</li>
+    </ol>
 
 &emsp;
 
@@ -122,22 +124,24 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 3. Open your iOS app in Xcode and go to File > New > Target
 4. Select "Courier Service" and click "Next"
 5. Give the Notification Service Extension a name (i.e. "CourierService").
-    * If you are using cocoapods select `Courier_iOS` as the Package
-        add the snippet in your Podfile
-        ```ruby 
-        target 'CourierService' do
-            pod 'Courier-iOS'
-        end
-        ```
-    * If you are using swift package manager 
-        <ol start="1" type="1">
-            <li>Select "Courier" from package dropdown.</li>
-            <li>Click Finish</li>
-            <li>Click on your project file</li>
-            <li>Under Targets, click on your new Target</li>
-            <li>Under the General tab > Frameworks and Libraries, click the "+" icon</li>
-            <li>Select the Courier package from the list under Courier Package > Courier</li>
-        </ol>
+
+- If you are using cocoapods select `Courier_iOS` as the Package add the snippet in your Podfile
+    
+```ruby 
+target 'CourierService' do
+    pod 'Courier-iOS'
+end
+```
+    
+- If you are using swift package manager 
+    <ol start="1" type="1">
+        <li>Select "Courier" from package dropdown.</li>
+        <li>Click Finish</li>
+        <li>Click on your project file</li>
+        <li>Under Targets, click on your new Target</li>
+        <li>Under the General tab > Frameworks and Libraries, click the "+" icon</li>
+        <li>Select the Courier package from the list under Courier Package > Courier</li>
+    </ol>
 &emsp;
 
 ## **3. Configure Push Provider**
