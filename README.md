@@ -1,34 +1,6 @@
 # Courier iOS Overview
 
 ```swift
-import UIKit
-import Courier
-@main
-class AppDelegate: CourierDelegate {
-
-    .....
-
-    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
-
-        print(message)
-
-        // This is how you want to show your notification in the foreground
-        // You can pass "[]" to not show the notification to the user or
-        // handle this with your own custom styles
-        return [.sound, .list, .banner, .badge]
-        
-    }
-    
-    override func pushNotificationClicked(message: [AnyHashable : Any]) {
-        
-        print(message)
-        
-    }
-    .....
-
-}
-
-
 Courier.shared.isDebugging = true
 
 let userId = Courier.shared.userId
@@ -36,7 +8,7 @@ let userId = Courier.shared.userId
 await Courier.shared.signIn(
     accessToken: 'asdf...',
     userId: 'example_user_id',
-);
+)
 
 await Courier.shared.signOut()
 
@@ -57,7 +29,18 @@ let messageId = await Courier.shared.sendPush(
     providers: [.apns, .fcm],
 )
 
+class AppDelegate: CourierDelegate {
 
+    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+        print(message)
+        return [.sound, .list, .banner, .badge]
+    }
+    
+    override func pushNotificationClicked(message: [AnyHashable : Any]) {
+        print(message)
+    }
+
+}
 ```
 &emsp;
 
