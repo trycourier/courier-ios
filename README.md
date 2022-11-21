@@ -6,7 +6,7 @@ Courier.shared.isDebugging = true
 let userId = Courier.shared.userId
 
 await Courier.shared.signIn(
-    accessToken: 'asdf...',
+    accessToken: "asdf...",
     userId: 'example_user_id',
 )
 
@@ -21,10 +21,10 @@ let fcmToken = Courier.shared.fcmToken
 let apnsToken = Courier.shared.apnsToken
 
 let messageId = await Courier.shared.sendPush(
-    authKey: 'asdf...',
-    userId: 'example_user_id',
-    title: 'Hey! 👋',
-    body: 'Courier is awesome!!',
+    authKey: "asdf...",
+    userId: "example_user_id",
+    title: "Hey! 👋",
+    body: "Courier is awesome!!",
     isProduction: false,
     providers: [.apns, .fcm],
 )
