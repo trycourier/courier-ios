@@ -71,7 +71,7 @@ class AppDelegate: CourierDelegate {
 &emsp;
 
 ## **1. Install the package**
-### using swift package manager
+### Using Swift Package Manager
 
 https://user-images.githubusercontent.com/29832989/202578202-32c0ebf7-c11f-46c0-905a-daa8fc3ba8bd.mov
 
@@ -83,17 +83,16 @@ https://user-images.githubusercontent.com/29832989/202578202-32c0ebf7-c11f-46c0-
 https://github.com/trycourier/courier-ios
 ```
 
-### Using cocoapods
+### Using Cocoapods
 1. Update Podfile for ios 13.0+
-    ```ruby
-    platform :ios, '13.0'
-    ```
+```ruby
+platform :ios, '13.0'
+```
 2. Add `pod 'Courier-iOS'` in your base target
 3. Open terminal in root directory and run
-    ```sh
-    pod install
-    ```
-target `CourierService` is discussed in Add the Notification Service Extension Section.
+```sh
+pod install
+```
 &emsp;
 
 
@@ -102,17 +101,15 @@ target `CourierService` is discussed in Add the Notification Service Extension S
     - This automatically syncs APNS tokens to Courier
 2. Enable the "Push Notifications" capability
 ![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
-    <ol start="1" type="1">
-        <li>Select your Xcode project file</li>
-        <li>Click your project Target</li>
-        <li>Click "Signing & Capabilities"</li>
-        <li>Click the small "+" to add a capability</li>
-        <li>Type "Push Notifications"</li>
-        <li>Press Enter</li>
-    </ol>
-
+    1. Select your Xcode project file
+    2. Click your project Target
+    3. Click "Signing & Capabilities"
+    4. Click the small "+" to add a capability
+    5. Type "Push Notifications"
+    6. Press Enter
 
 &emsp;
+
 ### **Add the Notification Service Extension (Recommended)**
 
 To make sure Courier can track when a notification is delivered to the device, you need to add a Notification Service Extension. Here is how to add one.
