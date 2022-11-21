@@ -182,22 +182,23 @@ await Courier.shared.signOut();
 If you followed the steps above:
 - APNS tokens on iOS will automatically be synced to Courier
 
-If you want FCM tokens to sync to Courier on iOS:
+### **Support FCM (Firebase Cloud Messaging)**
 
-1. Add the following Flutter packages to your project
-    * If you are using cocoapods
-        - [`FirebaseCore`](https://cocoapods.org/pods/FirebaseCore)
-        - [`FirebaseMessaging`](https://cocoapods.org/pods/FirebaseMessaging)
-    * If you are using swift package manager
-        - add [`firebase-ios-sdk`](https://github.com/firebase/firebase-ios-sdk)
-        - select `firebase-messaging`
+1. Add the Firebase Package
 
-2. Add code to manually sync FCM tokens
-    <ol start="1" type="1">
-        <li>Change your `AppDelegate` to extend the `CourierDelegate`, `MessagingDelegate`.</li>
-        <li>Add `import Courier`, `import FirebaseCore`, `import FirebaseMessaging` to the top of your `AppDelegate` file.</li>
-        <li>Modify your `AppDelegate` according to the snippet below.</li>
-    </ol>
+#### If you are using Swift Package Manager
+- Add the Firebase Swift Package [`firebase-ios-sdk`](https://github.com/firebase/firebase-ios-sdk)
+- Select `firebase-messaging`
+
+#### If you are using Cocoapods
+- [`FirebaseCore`](https://cocoapods.org/pods/FirebaseCore)
+- [`FirebaseMessaging`](https://cocoapods.org/pods/FirebaseMessaging)
+
+2. Change your `AppDelegate` to also extend `MessagingDelegate`
+3. Add `import FirebaseCore`, `import FirebaseMessaging` to the top of your `AppDelegate` file
+4. Modify your `AppDelegate` according to the snippet below
+    - This will automatically sync FCM tokens to Courier when Firebase detects them
+    - If you need more custom integrations, you can call `Courier.shared.setFCMToken(token)` where ever works best for you
 ```swift
 import UIKit
 import Courier
@@ -208,29 +209,12 @@ import FirebaseMessaging
 class AppDelegate: CourierDelegate, MessagingDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-        
         return true
-        
     }
 
-
-    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
-        
-        print(message)
-
-        // This is how you want to show your notification in the foreground
-        // You can pass "[]" to not show the notification to the user or
-        // handle this with your own custom styles
-        return [.sound, .list, .banner, .badge]
-        
-    }
-    
-    override func pushNotificationClicked(message: [AnyHashable : Any]) {
-        print(message)
-    }
+    ..
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         
@@ -242,10 +226,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         
     }
 
-
 }
-
-
 ```
 
 &emsp;
@@ -254,33 +235,56 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 
 > If you don't need push notification support, you can skip this step.
 
-Courier allows you to send a push notification directly from the SDK to a user id. No tokens juggling or backend needed!
+Courier allows you to send a push notification directly from the SDK to a user id. No token juggling or backend needed!
 
 ```swift
-let notificationPermission = await Courier.shared.getNotificationPermissionStatus()
-print(notificationPermission)
+class YourViewController: UIViewController {
 
-// Notification permissions must be `authorized/UNAuthorizationStatus(rawValue: 2)` to receive pushes
-let requestedNotificationPermission = await Courier.shared.requestNotificationPermission()
-print(requestedNotificationPermission)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        Task {
+        
+            let notificationPermission = await Courier.shared.getNotificationPermissionStatus()
+            print(notificationPermission)
 
-override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
-    print(message)
-    // This is how you want to show your notification in the foreground
-    // You can pass "[]" to not show the notification to the user or
-    // handle this with your own custom styles
-    return [.sound, .list, .banner, .badge]
+            // Notification permissions must be `.authorized` to receive pushes
+            let requestedNotificationPermission = await Courier.shared.requestNotificationPermission()
+            print(requestedNotificationPermission)
+        
+        }
+        
+    }
+    
+    private func sendTestPush() {
+    
+        Task {
+
+            let messageId = await Courier.shared.sendPush(
+                authKey: 'a_courier_auth_key_that_should_only_be_used_for_testing',
+                userId: 'example_user',
+                title: 'Chirp Chrip!',
+                body: 'Hello from Courier 🐣',
+                isProduction: false, // false == sandbox / true == production
+                providers: [.apns, .fcm],
+            )
+
+        }
+    
+    }
+
 }
 
-// Sends a test push
-let messageId = await Courier.shared.sendPush(
-    authKey: 'a_courier_auth_key_that_should_only_be_used_for_testing',
-    userId: 'example_user',
-    title: 'Chirp Chrip!',
-    body: 'Hello from Courier 🐣',
-    isProduction: false, // false == sandbox / true == production
-    providers: [.apns, .fcm],
-)
+class AppDelegate: CourierDelegate {
+
+    ..
+
+    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+        print(message)
+        return [.sound, .list, .banner, .badge] // Pass [] to hide any foreground presentation
+    }
+
+}
 ```
 
 &emsp;
