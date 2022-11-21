@@ -251,6 +251,8 @@ class YourViewController: UIViewController {
             // Notification permissions must be `.authorized` to receive pushes
             let requestedNotificationPermission = await Courier.shared.requestNotificationPermission()
             print(requestedNotificationPermission)
+            
+            sendTestPush()
         
         }
         
