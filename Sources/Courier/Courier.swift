@@ -55,6 +55,7 @@ import UIKit
      */
     private lazy var tokenRepo = TokenRepository()
     private lazy var messagingRepo = MessagingRepository()
+    private lazy var userRepo = ProfileRepository()
     
     // MARK: Getters
     
@@ -97,22 +98,46 @@ import UIKit
             userId: userId,
             accessToken: accessToken
         )
-
-        // Attempt to put the users tokens
-        // If we have them
-        async let putAPNS: () = tokenRepo.putUserToken(
-            userId: userId,
-            provider: .apns,
-            deviceToken: apnsToken
-        )
-
-        async let putFCM: () = tokenRepo.putUserToken(
-            userId: userId,
-            provider: .fcm,
-            deviceToken: fcmToken
-        )
         
-        let _ = try await [putAPNS, putFCM]
+        do {
+            
+            // Creates a userId if it doesn't exist
+            async let patchUser: () = userRepo.patchUser(
+                userId: userId
+            )
+            
+            // Attempt to put the users tokens
+            // If we have them
+            async let putAPNS: () = tokenRepo.putUserToken(
+                userId: userId,
+                provider: .apns,
+                deviceToken: apnsToken
+            )
+
+            async let putFCM: () = tokenRepo.putUserToken(
+                userId: userId,
+                provider: .fcm,
+                deviceToken: fcmToken
+            )
+            
+            let _ = try await [patchUser ,putAPNS, putFCM]
+            
+        } catch {
+            
+            Courier.log(String(describing: error))
+            
+            Courier.shared.signOut(
+                onSuccess: {
+                    //
+                },
+                onFailure: { error in
+                    Courier.log(String(describing: error))
+                }
+            )
+
+            throw error
+            
+        }
         
     }
     

@@ -14,21 +14,21 @@
 		27895170292689470070F501 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2789516F292689470070F501 /* Assets.xcassets */; };
 		27895173292689470070F501 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27895171292689470070F501 /* LaunchScreen.storyboard */; };
 		2789517C292689B60070F501 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2789517B292689B60070F501 /* FirebaseMessaging */; };
-		2789517F29268A470070F501 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2789517E29268A470070F501 /* Courier */; };
 		2789518129268C400070F501 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789518029268C400070F501 /* Env.swift */; };
-		2789518929268CB90070F501 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789518829268CB90070F501 /* NotificationService.swift */; };
-		2789518D29268CB90070F501 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2789518629268CB90070F501 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		2789519429268CC80070F501 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2789519329268CC80070F501 /* Courier */; };
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
 		2789519929268E860070F501 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2789519829268E860070F501 /* GoogleService-Info.plist */; };
+		6729FF942926F2E0006A3EC2 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 6729FF932926F2E0006A3EC2 /* Courier */; };
+		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
+		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6729FFB62926F781006A3EC2 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 6729FFB52926F781006A3EC2 /* Courier */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2789518B29268CB90070F501 /* PBXContainerItemProxy */ = {
+		6729FFAF2926F779006A3EC2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2789515B292689460070F501 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 2789518529268CB90070F501;
+			remoteGlobalIDString = 6729FFA92926F779006A3EC2;
 			remoteInfo = CourierService;
 		};
 /* End PBXContainerItemProxy section */
@@ -40,7 +40,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				2789518D29268CB90070F501 /* CourierService.appex in Embed Foundation Extensions */,
+				6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,12 +57,12 @@
 		27895172292689470070F501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27895174292689470070F501 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2789518029268C400070F501 /* Env.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
-		2789518629268CB90070F501 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2789518829268CB90070F501 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		2789518A29268CB90070F501 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2789519529268DB70070F501 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		2789519829268E860070F501 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		6729FFAE2926F779006A3EC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,16 +70,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2789517F29268A470070F501 /* Courier in Frameworks */,
+				6729FF942926F2E0006A3EC2 /* Courier in Frameworks */,
 				2789517C292689B60070F501 /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2789518329268CB90070F501 /* Frameworks */ = {
+		6729FFA72926F779006A3EC2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2789519429268CC80070F501 /* Courier in Frameworks */,
+				6729FFB62926F781006A3EC2 /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				27895165292689460070F501 /* Example */,
-				2789518729268CB90070F501 /* CourierService */,
+				6729FFAB2926F779006A3EC2 /* CourierService */,
 				27895164292689460070F501 /* Products */,
 				2789519229268CC80070F501 /* Frameworks */,
 			);
@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				27895163292689460070F501 /* Example.app */,
-				2789518629268CB90070F501 /* CourierService.appex */,
+				6729FFAA2926F779006A3EC2 /* CourierService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,20 +123,20 @@
 			path = Example;
 			sourceTree = "<group>";
 		};
-		2789518729268CB90070F501 /* CourierService */ = {
-			isa = PBXGroup;
-			children = (
-				2789518829268CB90070F501 /* NotificationService.swift */,
-				2789518A29268CB90070F501 /* Info.plist */,
-			);
-			path = CourierService;
-			sourceTree = "<group>";
-		};
 		2789519229268CC80070F501 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6729FFAB2926F779006A3EC2 /* CourierService */ = {
+			isa = PBXGroup;
+			children = (
+				6729FFAC2926F779006A3EC2 /* NotificationService.swift */,
+				6729FFAE2926F779006A3EC2 /* Info.plist */,
+			);
+			path = CourierService;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,24 +154,24 @@
 			buildRules = (
 			);
 			dependencies = (
-				2789518C29268CB90070F501 /* PBXTargetDependency */,
+				6729FFB02926F779006A3EC2 /* PBXTargetDependency */,
 			);
 			name = Example;
 			packageProductDependencies = (
 				2789517B292689B60070F501 /* FirebaseMessaging */,
-				2789517E29268A470070F501 /* Courier */,
+				6729FF932926F2E0006A3EC2 /* Courier */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2789518529268CB90070F501 /* CourierService */ = {
+		6729FFA92926F779006A3EC2 /* CourierService */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2789518E29268CB90070F501 /* Build configuration list for PBXNativeTarget "CourierService" */;
+			buildConfigurationList = 6729FFB22926F779006A3EC2 /* Build configuration list for PBXNativeTarget "CourierService" */;
 			buildPhases = (
-				2789518229268CB90070F501 /* Sources */,
-				2789518329268CB90070F501 /* Frameworks */,
-				2789518429268CB90070F501 /* Resources */,
+				6729FFA62926F779006A3EC2 /* Sources */,
+				6729FFA72926F779006A3EC2 /* Frameworks */,
+				6729FFA82926F779006A3EC2 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -179,10 +179,10 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				2789519329268CC80070F501 /* Courier */,
+				6729FFB52926F781006A3EC2 /* Courier */,
 			);
 			productName = CourierService;
-			productReference = 2789518629268CB90070F501 /* CourierService.appex */;
+			productReference = 6729FFAA2926F779006A3EC2 /* CourierService.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -198,7 +198,7 @@
 					27895162292689460070F501 = {
 						CreatedOnToolsVersion = 14.0.1;
 					};
-					2789518529268CB90070F501 = {
+					6729FFA92926F779006A3EC2 = {
 						CreatedOnToolsVersion = 14.0.1;
 					};
 				};
@@ -214,14 +214,14 @@
 			mainGroup = 2789515A292689460070F501;
 			packageReferences = (
 				2789517A292689B60070F501 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				2789517D29268A470070F501 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				6729FF922926F2E0006A3EC2 /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				27895162292689460070F501 /* Example */,
-				2789518529268CB90070F501 /* CourierService */,
+				6729FFA92926F779006A3EC2 /* CourierService */,
 			);
 		};
 /* End PBXProject section */
@@ -238,7 +238,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2789518429268CB90070F501 /* Resources */ = {
+		6729FFA82926F779006A3EC2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -260,21 +260,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2789518229268CB90070F501 /* Sources */ = {
+		6729FFA62926F779006A3EC2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2789518929268CB90070F501 /* NotificationService.swift in Sources */,
+				6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		2789518C29268CB90070F501 /* PBXTargetDependency */ = {
+		6729FFB02926F779006A3EC2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2789518529268CB90070F501 /* CourierService */;
-			targetProxy = 2789518B29268CB90070F501 /* PBXContainerItemProxy */;
+			target = 6729FFA92926F779006A3EC2 /* CourierService */;
+			targetProxy = 6729FFAF2926F779006A3EC2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -472,7 +472,7 @@
 			};
 			name = Release;
 		};
-		2789518F29268CB90070F501 /* Debug */ = {
+		6729FFB32926F779006A3EC2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -482,6 +482,7 @@
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -497,7 +498,7 @@
 			};
 			name = Debug;
 		};
-		2789519029268CB90070F501 /* Release */ = {
+		6729FFB42926F779006A3EC2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -507,6 +508,7 @@
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -543,11 +545,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2789518E29268CB90070F501 /* Build configuration list for PBXNativeTarget "CourierService" */ = {
+		6729FFB22926F779006A3EC2 /* Build configuration list for PBXNativeTarget "CourierService" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2789518F29268CB90070F501 /* Debug */,
-				2789519029268CB90070F501 /* Release */,
+				6729FFB32926F779006A3EC2 /* Debug */,
+				6729FFB42926F779006A3EC2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -563,11 +565,11 @@
 				kind = branch;
 			};
 		};
-		2789517D29268A470070F501 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+		6729FF922926F2E0006A3EC2 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = master;
+				branch = "patch-user";
 				kind = branch;
 			};
 		};
@@ -579,14 +581,14 @@
 			package = 2789517A292689B60070F501 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
 		};
-		2789517E29268A470070F501 /* Courier */ = {
+		6729FF932926F2E0006A3EC2 /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2789517D29268A470070F501 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 6729FF922926F2E0006A3EC2 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
-		2789519329268CC80070F501 /* Courier */ = {
+		6729FFB52926F781006A3EC2 /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2789517D29268A470070F501 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 6729FF922926F2E0006A3EC2 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
 /* End XCSwiftPackageProductDependency section */
