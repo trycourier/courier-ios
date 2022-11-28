@@ -7,7 +7,8 @@
 
 import Foundation
 
-internal class ProfileRepository: Repository {
+
+internal class UserRepository: Repository {
     
     func patchUser(userId: String?) async throws {
         
@@ -24,6 +25,7 @@ internal class ProfileRepository: Repository {
                 continuation.resume(throwing: CourierError.noUserIdFound)
                 return
             }
+            
 
             let url = URL(string: "\(baseUrl)/profiles/\(userId)")!
             var request = URLRequest(url: url)

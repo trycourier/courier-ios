@@ -55,7 +55,7 @@ import UIKit
      */
     private lazy var tokenRepo = TokenRepository()
     private lazy var messagingRepo = MessagingRepository()
-    private lazy var userRepo = ProfileRepository()
+    private lazy var userRepo = UserRepository()
     
     // MARK: Getters
     
