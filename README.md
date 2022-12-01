@@ -100,15 +100,16 @@ pod install
 1. Change your `AppDelegate` to extend the `CourierDelegate` and add `import Courier` to the top of your `AppDelegate` file
     - This automatically syncs APNS tokens to Courier
 2. Enable the "Push Notifications" capability
-![Entitlement setup](https://github.com/trycourier/courier-ios/blob/master/push-notification-entitlement.gif)
-    <ol start="1" type="1">
-        <li>Select your Xcode project file</li>
-        <li>Click your project Target</li>
-        <li>Click "Signing & Capabilities"</li>
-        <li>Click the small "+" to add a capability</li>
-        <li>Type "Push Notifications"</li>
-        <li>Press Enter</li>
-    </ol>
+
+https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-8e8f-bf77dc0a2bf3.mov
+   <ol start="1" type="1">
+       <li>Select your Xcode project file</li>
+       <li>Click your project Target</li>
+       <li>Click "Signing & Capabilities"</li>
+       <li>Click the small "+" to add a capability</li>
+       <li>Type "Push Notifications"</li>
+       <li>Press Enter</li>
+   </ol>
 
 &emsp;
 
