@@ -97,22 +97,34 @@ import UIKit
             userId: userId,
             accessToken: accessToken
         )
-
-        // Attempt to put the users tokens
-        // If we have them
-        async let putAPNS: () = tokenRepo.putUserToken(
-            userId: userId,
-            provider: .apns,
-            deviceToken: apnsToken
-        )
-
-        async let putFCM: () = tokenRepo.putUserToken(
-            userId: userId,
-            provider: .fcm,
-            deviceToken: fcmToken
-        )
         
-        let _ = try await [putAPNS, putFCM]
+        do {
+            
+            // Attempt to put the users tokens
+            // If we have them
+            async let putAPNS: () = tokenRepo.putUserToken(
+                userId: userId,
+                provider: .apns,
+                deviceToken: apnsToken
+            )
+
+            async let putFCM: () = tokenRepo.putUserToken(
+                userId: userId,
+                provider: .fcm,
+                deviceToken: fcmToken
+            )
+            
+            let _ = try await [putAPNS, putFCM]
+            
+        } catch {
+            
+            Courier.log(String(describing: error))
+            
+            try await signOut()
+            
+            throw error
+            
+        }
         
     }
     
@@ -157,6 +169,8 @@ import UIKit
             
         }
         
+        // Sign out will still work, but will keep
+        // existing tokens in Courier if failure
         userManager.removeCredentials()
         
     }
