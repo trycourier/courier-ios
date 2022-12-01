@@ -169,6 +169,8 @@ import UIKit
             
         }
         
+        // Sign out will still work, but will keep
+        // existing tokens in Courier if failure
         userManager.removeCredentials()
         
     }
