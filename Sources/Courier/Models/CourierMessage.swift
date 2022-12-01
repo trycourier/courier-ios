@@ -33,7 +33,41 @@ internal struct Routing: Codable {
 }
 
 internal struct Providers: Codable {
+    let firebaseFcm: FCMProvider
     let apn: APNProvider
+    private enum CodingKeys: String, CodingKey {
+        case firebaseFcm = "firebase-fcm"
+    }
+}
+
+internal struct FCMProvider: Codable {
+    let override: FCMOverride
+}
+
+internal struct FCMOverride: Codable {
+    let body: FCMBody
+}
+
+internal struct FCMBody: Codable {
+    let data: Content
+    let apns: FCMAPNSPayload
+}
+
+internal struct FCMAPNSPayload: Codable {
+    let payload: Payload
+}
+
+internal struct Payload: Codable {
+    let aps: ApplePayloadBody
+}
+
+internal struct ApplePayloadBody: Codable {
+    let mutableContent: Int
+    private enum CodingKeys: String, CodingKey {
+        case mutableContent = "mutable-content"
+    }
+    let alert: Content
+    let sound: String
 }
 
 internal struct APNProvider: Codable {
