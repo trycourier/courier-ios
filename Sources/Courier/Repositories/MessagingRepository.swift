@@ -38,20 +38,23 @@ internal class MessagingRepository: Repository {
                             )
                         ),
                         firebaseFcm: FCMProvider(
-                            override: FCMBody(
-                                data: Content(
-                                    title: title,
-                                    body: message
-                                )
-                                apns: FCMAPNSPayload(
-                                    payload: Payload(
-                                        aps: ApplePayloadBody(
-                                            mutableContent: 1,
-                                            alert: Content(
-                                                title: title,
-                                                body: message
-                                            ),
-                                            sound: "bingbong.aiff"
+                            override: FCMOverride(
+                                body: FCMBody(
+                                    notification: nil,
+                                    data: Content(
+                                        title: title,
+                                        body: message
+                                    ),
+                                    apns: FCMAPNSPayload(
+                                        payload: Payload(
+                                            aps: ApplePayloadBody(
+                                                mutableContent: 1,
+                                                alert: Content(
+                                                    title: title,
+                                                    body: message
+                                                ),
+                                                sound: "bingbong.aiff"
+                                            )
                                         )
                                     )
                                 )

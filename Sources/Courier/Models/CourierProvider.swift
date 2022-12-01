@@ -48,7 +48,3 @@
     }
     
 }
-
-extension CourierProvider {
-    func generatePayload
-}

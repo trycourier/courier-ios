@@ -33,9 +33,10 @@ internal struct Routing: Codable {
 }
 
 internal struct Providers: Codable {
-    let firebaseFcm: FCMProvider
     let apn: APNProvider
+    let firebaseFcm: FCMProvider
     private enum CodingKeys: String, CodingKey {
+        case apn = "apn"
         case firebaseFcm = "firebase-fcm"
     }
 }
@@ -49,6 +50,7 @@ internal struct FCMOverride: Codable {
 }
 
 internal struct FCMBody: Codable {
+    let notification: Content?
     let data: Content
     let apns: FCMAPNSPayload
 }
@@ -63,11 +65,13 @@ internal struct Payload: Codable {
 
 internal struct ApplePayloadBody: Codable {
     let mutableContent: Int
-    private enum CodingKeys: String, CodingKey {
-        case mutableContent = "mutable-content"
-    }
     let alert: Content
     let sound: String
+    private enum CodingKeys: String, CodingKey {
+        case mutableContent = "mutable-content"
+        case alert = "alert"
+        case sound = "sound"
+    }
 }
 
 internal struct APNProvider: Codable {
