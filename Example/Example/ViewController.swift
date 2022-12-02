@@ -12,8 +12,9 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var authLabel: UILabel!
     @IBOutlet weak var authButton: UIButton!
-    @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var apnsSwitch: UISwitch!
+    @IBOutlet weak var fcmSwitch: UISwitch!
     
     @IBAction func authButtonAction(_ sender: Any) {
         
@@ -43,22 +44,45 @@ class ViewController: UIViewController {
         
     }
     
+    func getTitle() -> String {
+        if(apnsSwitch.isOn && fcmSwitch.isOn){
+            return "APNS & FCM Test Push"
+        }else if(apnsSwitch.isOn){
+            return "APNS Test Push"
+        }else if(fcmSwitch.isOn){
+            return "FCM Test Push"
+        }
+        return ""
+    }
+    
     @IBAction func sendPushAction(_ sender: Any) {
         
         // TODO: Be sure to handle errors
         
         Task {
             
-            let isApns = segmentedControl.selectedSegmentIndex == 0
+            var providers: [CourierProvider] = []
             
-            try await Courier.shared.sendPush(
-                authKey: Env.COURIER_AUTH_KEY,
-                userId: Env.COURIER_USER_ID,
-                title: isApns ? "APNS Test Push" : "FCM Test Push",
-                message: "Hello from Courier \(Env.COURIER_USER_ID)! 👋",
-                isProduction: false,
-                providers: isApns ? [.apns] : [.fcm]
-            )
+            if(apnsSwitch.isOn){
+                providers.append(.apns)
+            }
+            
+            if(fcmSwitch.isOn){
+                providers.append(.fcm)
+            }
+            
+            let title = getTitle()
+            
+            if(!providers.isEmpty){
+                try await Courier.shared.sendPush(
+                    authKey: Env.COURIER_AUTH_KEY,
+                    userId: Env.COURIER_USER_ID,
+                    title: title,
+                    message: "Hello from Courier \(Env.COURIER_USER_ID)! 👋",
+                    isProduction: false,
+                    providers: providers
+                )
+            }
             
         }
         
@@ -76,15 +100,13 @@ class ViewController: UIViewController {
             authButton.setTitle("Sign Out", for: .normal)
             authLabel.text = "Courier User Id: \(userId)"
             sendButton.isEnabled = true
-            segmentedControl.isEnabled = true
+//            segmentedControl.isEnabled = true
             
         } else {
             
             authButton.setTitle("Sign In", for: .normal)
             authLabel.text = "No Courier User Id Found"
             sendButton.isEnabled = false
-            segmentedControl.isEnabled = false
-            
         }
         
     }
