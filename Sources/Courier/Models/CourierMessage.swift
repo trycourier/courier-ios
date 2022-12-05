@@ -68,7 +68,7 @@ internal struct FCMOverride: Codable {
 }
 
 internal struct FCMBody: Codable {
-    @NullEncodable let notification: Content? = nil
+    @NullEncodable var notification: Content? = nil
     let data: Content
     let apns: FCMAPNSPayload
 }
