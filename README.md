@@ -264,11 +264,11 @@ class YourViewController: UIViewController {
         Task {
 
             let messageId = await Courier.shared.sendPush(
-                authKey: 'a_courier_auth_key_that_should_only_be_used_for_testing',
-                userId: 'example_user',
-                title: 'Chirp Chrip!',
-                body: 'Hello from Courier 🐣',
-                isProduction: false, // false == sandbox / true == production
+                authKey: "a_courier_auth_key_that_should_only_be_used_for_testing",
+                userId: "example_user",
+                title: "Chirp Chrip!",
+                body: "Hello from Courier 🐣",
+                isProduction: false, // false == sandbox apns / true == production apns
                 providers: [.apns, .fcm],
             )
 
