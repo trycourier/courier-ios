@@ -8,15 +8,18 @@
 import Foundation
 
 @propertyWrapper
-struct NullEncodable<T>: Encodable where T: Encodable {
+@propertyWrapper
+public struct NullCodable<Wrapped> {
+    public var wrappedValue: Wrapped?
     
-    var wrappedValue: T?
-
-    init(wrappedValue: T?) {
+    public init(wrappedValue: Wrapped?) {
         self.wrappedValue = wrappedValue
     }
+}
+
+extension NullCodable: Encodable where Wrapped: Encodable {
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch wrappedValue {
         case .some(let value): try container.encode(value)
@@ -25,6 +28,25 @@ struct NullEncodable<T>: Encodable where T: Encodable {
     }
 }
 
+extension NullCodable: Decodable where Wrapped: Decodable {
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if !container.decodeNil() {
+            wrappedValue = try container.decode(Wrapped.self)
+        }
+    }
+}
+
+extension NullCodable: Equatable where Wrapped: Equatable { }
+
+extension KeyedDecodingContainer {
+    
+    public func decode<Wrapped>(_ type: NullCodable<Wrapped>.Type,
+                                forKey key: KeyedDecodingContainer<K>.Key) throws -> NullCodable<Wrapped> where Wrapped: Decodable {
+        return try decodeIfPresent(NullCodable<Wrapped>.self, forKey: key) ?? NullCodable<Wrapped>(wrappedValue: nil)
+    }
+}
 internal struct CourierMessage: Codable {
     let message: Message
 }
@@ -67,8 +89,8 @@ internal struct FCMOverride: Codable {
     let body: FCMBody
 }
 
-internal struct FCMBody: Encodable {
-    @NullEncodable var notification: Content? = nil
+internal struct FCMBody: Codable {
+    @NullCodable var notification: Content? = nil
     let data: Content
     let apns: FCMAPNSPayload
 }
