@@ -175,9 +175,9 @@ Place these functions where you normally manage your user's state:
 await Courier.shared.signIn(
     accessToken: accessToken,
     userId: userId,
-);
+)
 
-await Courier.shared.signOut();
+await Courier.shared.signOut()
 ```
 
 If you followed the steps above:
