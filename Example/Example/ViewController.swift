@@ -18,8 +18,6 @@ class ViewController: UIViewController {
     
     @IBAction func authButtonAction(_ sender: Any) {
         
-        // TODO: Be sure to handle errors
-        
         Task {
             
             if let _ = Courier.shared.userId {
@@ -44,41 +42,28 @@ class ViewController: UIViewController {
         
     }
     
-    func getTitle() -> String {
-        if(apnsSwitch.isOn && fcmSwitch.isOn){
-            return "APNS & FCM Test Push"
-        }else if(apnsSwitch.isOn){
-            return "APNS Test Push"
-        }else if(fcmSwitch.isOn){
-            return "FCM Test Push"
-        }
-        return ""
-    }
-    
     @IBAction func sendPushAction(_ sender: Any) {
-        
-        // TODO: Be sure to handle errors
         
         Task {
             
             var providers: [CourierProvider] = []
             
-            if(apnsSwitch.isOn){
+            if (apnsSwitch.isOn) {
                 providers.append(.apns)
             }
             
-            if(fcmSwitch.isOn){
+            if (fcmSwitch.isOn) {
                 providers.append(.fcm)
             }
             
-            let title = getTitle()
+            let messageProviders = providers.map { $0.rawValue }.joined(separator: " and ")
             
-            if(!providers.isEmpty){
+            if (!providers.isEmpty) {
                 try await Courier.shared.sendPush(
                     authKey: Env.COURIER_AUTH_KEY,
                     userId: Env.COURIER_USER_ID,
-                    title: title,
-                    message: "Hello from Courier \(Env.COURIER_USER_ID)! 👋",
+                    title: "Hey \(Env.COURIER_USER_ID)!",
+                    message: "This is a test push sent through \(messageProviders)",
                     isProduction: false,
                     providers: providers
                 )
@@ -100,13 +85,13 @@ class ViewController: UIViewController {
             authButton.setTitle("Sign Out", for: .normal)
             authLabel.text = "Courier User Id: \(userId)"
             sendButton.isEnabled = true
-//            segmentedControl.isEnabled = true
             
         } else {
             
             authButton.setTitle("Sign In", for: .normal)
             authLabel.text = "No Courier User Id Found"
             sendButton.isEnabled = false
+            
         }
         
     }
