@@ -7,6 +7,24 @@
 
 import Foundation
 
+@propertyWrapper
+struct NullEncodable<T>: Encodable where T: Encodable {
+    
+    var wrappedValue: T?
+
+    init(wrappedValue: T?) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch wrappedValue {
+        case .some(let value): try container.encode(value)
+        case .none: try container.encodeNil()
+        }
+    }
+}
+
 internal struct CourierMessage: Codable {
     let message: Message
 }
@@ -50,7 +68,7 @@ internal struct FCMOverride: Codable {
 }
 
 internal struct FCMBody: Codable {
-    let notification: Content?
+    @NullEncodable let notification: Content? = nil
     let data: Content
     let apns: FCMAPNSPayload
 }
