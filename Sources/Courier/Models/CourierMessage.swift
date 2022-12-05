@@ -8,7 +8,6 @@
 import Foundation
 
 @propertyWrapper
-@propertyWrapper
 public struct NullCodable<Wrapped> {
     public var wrappedValue: Wrapped?
     
