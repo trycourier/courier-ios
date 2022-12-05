@@ -36,10 +36,34 @@ internal class MessagingRepository: Repository {
                                     mutableContent: 1
                                 )
                             )
+                        ),
+                        firebaseFcm: FCMProvider(
+                            override: FCMOverride(
+                                body: FCMBody(
+                                    notification: nil,
+                                    data: Content(
+                                        title: title,
+                                        body: message
+                                    ),
+                                    apns: FCMAPNSPayload(
+                                        payload: Payload(
+                                            aps: ApplePayloadBody(
+                                                mutableContent: 1,
+                                                alert: Content(
+                                                    title: title,
+                                                    body: message
+                                                ),
+                                                sound: "bingbong.aiff"
+                                            )
+                                        )
+                                    )
+                                )
+                            )
                         )
                     )
                 )
             )
+            
 
             let url = URL(string: "\(baseUrl)/send")!
             var request = URLRequest(url: url)

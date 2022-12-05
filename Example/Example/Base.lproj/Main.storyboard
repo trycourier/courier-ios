@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G0r-iJ-p6K">
-                                <rect key="frame" x="157" y="304" width="76" height="35"/>
+                                <rect key="frame" x="157.33333333333334" y="304.33333333333331" width="75.666666666666657" height="34.333333333333314"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
                                 <connections>
@@ -25,50 +25,80 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Courier User Id Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWA-NA-1NT">
-                                <rect key="frame" x="98" y="263" width="194" height="21"/>
+                                <rect key="frame" x="98.333333333333329" y="264" width="193.33333333333337" height="20.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="hvh-xJ-qxN">
-                                <rect key="frame" x="140.66666666666666" y="467" width="109" height="32"/>
-                                <segments>
-                                    <segment title="APNS"/>
-                                    <segment title="FCM"/>
-                                </segments>
-                            </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZvI-8h-FKS">
-                                <rect key="frame" x="142" y="518" width="106" height="35"/>
+                                <rect key="frame" x="142.33333333333334" y="604" width="105.66666666666666" height="34.333333333333371"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Send Push"/>
                                 <connections>
                                     <action selector="sendPushAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lbm-xG-YAO"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="feN-2z-rFA">
+                                <rect key="frame" x="135" y="502" width="120" height="82"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmR-rJ-R3B">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="APNS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XId-40-aVj">
+                                                <rect key="frame" x="0.0" y="0.0" width="71" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BfP-Fl-NGp">
+                                                <rect key="frame" x="71" y="0.0" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QVg-eV-ACx">
+                                        <rect key="frame" x="0.0" y="51" width="120" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FCM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Am-MI-FAs">
+                                                <rect key="frame" x="0.0" y="0.0" width="71" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="2bA-Ot-qg8">
+                                                <rect key="frame" x="71" y="0.0" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="Yol-qe-jwr"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="G0r-iJ-p6K" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="8n5-hA-Fdk"/>
-                            <constraint firstItem="hvh-xJ-qxN" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Cg3-f2-Vu0"/>
                             <constraint firstItem="G0r-iJ-p6K" firstAttribute="top" secondItem="kWA-NA-1NT" secondAttribute="bottom" constant="20" id="M0Z-Qu-q53"/>
                             <constraint firstItem="G0r-iJ-p6K" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.75" id="PcK-xc-mpd"/>
+                            <constraint firstItem="feN-2z-rFA" firstAttribute="centerX" secondItem="ZvI-8h-FKS" secondAttribute="centerX" id="XMB-dp-aoF"/>
                             <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="d9R-Cx-5fq"/>
                             <constraint firstItem="kWA-NA-1NT" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="mCN-N1-D8L"/>
-                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.25" id="o3S-KR-EpT"/>
-                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="top" secondItem="hvh-xJ-qxN" secondAttribute="bottom" constant="20" id="xFS-aw-HWM"/>
+                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.45" id="o3S-KR-EpT"/>
+                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="top" secondItem="feN-2z-rFA" secondAttribute="bottom" constant="20" id="wDd-qt-eEO"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="apnsSwitch" destination="BfP-Fl-NGp" id="Utn-2l-mhd"/>
                         <outlet property="authButton" destination="G0r-iJ-p6K" id="QmC-Xp-7eg"/>
                         <outlet property="authLabel" destination="kWA-NA-1NT" id="M5w-ts-ONc"/>
-                        <outlet property="segmentedControl" destination="hvh-xJ-qxN" id="ccQ-Xj-5Xt"/>
+                        <outlet property="fcmSwitch" destination="2bA-Ot-qg8" id="Hun-Pa-Wq8"/>
                         <outlet property="sendButton" destination="ZvI-8h-FKS" id="bqf-OS-JES"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-14" y="-28"/>
+            <point key="canvasLocation" x="-15.384615384615383" y="-28.436018957345969"/>
         </scene>
     </scenes>
     <resources>

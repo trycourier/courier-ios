@@ -95,17 +95,17 @@ final class CourierTests: XCTestCase {
     
     func testG() async throws {
 
-        print("\n🔬 Testing Sending Test Message")
+        print("\n🔬 Testing Sending APNS Message")
         
         // TODO: Remove this. For test purposed only
         // Do not use auth key in production app
         let requestId = try await Courier.shared.sendPush(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
-            title: "🐤 Chirp Chirp!",
+            title: "🐤 Chirp Chirp from APNS",
             message: "Message sent from Xcode tests",
             isProduction: false,
-            providers: [.apns, .fcm]
+            providers: [.apns]
         )
         
         print("Request ID: \(requestId)")
@@ -115,6 +115,27 @@ final class CourierTests: XCTestCase {
     }
     
     func testH() async throws {
+
+        print("\n🔬 Testing Sending FCM Message")
+        
+        // TODO: Remove this. For test purposed only
+        // Do not use auth key in production app
+        let requestId = try await Courier.shared.sendPush(
+            authKey: Env.COURIER_ACCESS_TOKEN,
+            userId: Env.COURIER_USER_ID,
+            title: "🐤 Chirp Chirp from FCM!",
+            message: "Message sent from Xcode tests",
+            isProduction: false,
+            providers: [.fcm]
+        )
+        
+        print("Request ID: \(requestId)")
+
+        XCTAssertEqual(requestId.isEmpty, false)
+
+    }
+    
+    func testI() async throws {
 
         print("\n🔬 Testing Tracking URL")
         
@@ -139,7 +160,7 @@ final class CourierTests: XCTestCase {
 
     }
 
-    func testI() async throws {
+    func testJ() async throws {
 
         print("\n🔬 Testing Sign Out")
 
