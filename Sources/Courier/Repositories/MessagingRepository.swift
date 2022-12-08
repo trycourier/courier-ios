@@ -25,41 +25,6 @@ internal class MessagingRepository: Repository {
                     routing: Routing(
                         method: "all",
                         channels: providers.map { $0.rawValue }
-                    ),
-                    providers: Providers(
-                        apn: APNProvider(
-                            override: Override(
-                                config: Config(
-                                    isProduction: isProduction
-                                ),
-                                body: Body(
-                                    mutableContent: 1
-                                )
-                            )
-                        ),
-                        firebaseFcm: FCMProvider(
-                            override: FCMOverride(
-                                body: FCMBody(
-                                    notification: nil,
-                                    data: Content(
-                                        title: title,
-                                        body: message
-                                    ),
-                                    apns: FCMAPNSPayload(
-                                        payload: Payload(
-                                            aps: ApplePayloadBody(
-                                                mutableContent: 1,
-                                                alert: Content(
-                                                    title: title,
-                                                    body: message
-                                                ),
-                                                sound: "bingbong.aiff"
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
                     )
                 )
             )

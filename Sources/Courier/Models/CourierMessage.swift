@@ -54,7 +54,7 @@ internal struct Message: Codable {
     let to: User
     let content: Content
     let routing: Routing
-    let providers: Providers
+//    let providers: Providers
 }
 
 internal struct User: Codable {
