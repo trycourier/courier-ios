@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "send-push-fix",
-        "revision" : "0c417f2446b537c4d3b4e9a733afa442fcd81de4"
+        "branch" : "master",
+        "revision" : "7afbe886c81a025b4b4389b77be5652843cfd5de"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
         "branch" : "master",
-        "revision" : "861839a5f1389141cf72a3ba6e9af694a36dd7fa"
+        "revision" : "67ae9555da3f5ff9f432485c1fc09e2dcd0b58da"
       }
     },
     {
