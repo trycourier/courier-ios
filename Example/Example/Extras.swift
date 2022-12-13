@@ -43,12 +43,12 @@ extension AppDelegate {
 
 extension UIViewController {
     
-    func showInputAlert(onComplete: @escaping (String) -> Void) {
+    func showInputAlert(title: String, placeHolder: String, action: String, onComplete: @escaping (String) -> Void) {
         
         alert?.dismiss(animated: true)
         
         alert = UIAlertController(
-            title: "Enter a user id",
+            title: title,
             message: nil,
             preferredStyle: .alert
         )
@@ -58,7 +58,7 @@ extension UIViewController {
             present(alert, animated: true)
             
             alert.addTextField { field in
-                field.placeholder = "Courier User Id"
+                field.placeholder = placeHolder
                 field.keyboardType = .default
                 field.autocorrectionType = .no
                 field.autocapitalizationType = .none
@@ -72,7 +72,7 @@ extension UIViewController {
             ))
             
             alert.addAction(UIAlertAction(
-                title: "Sign In",
+                title: action,
                 style: .default,
                 handler: { _ in
                     
