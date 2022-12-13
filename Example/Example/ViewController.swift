@@ -18,64 +18,30 @@ class ViewController: UIViewController {
     
     @IBAction func authButtonAction(_ sender: Any) {
         
-        Task {
+        if let _ = Courier.shared.userId {
             
-            if let _ = Courier.shared.userId {
-                
+            Task {
+            
                 try await Courier.shared.signOut()
                 refresh()
                 
-            } else {
+            }
+            
+        } else {
+            
+            showInputAlert { userId in
                 
-                let alert = UIAlertController(
-                    title: "Sign In with Courier User Id",
-                    message: "Please enter Courier User Id to continue.",
-                    preferredStyle: .alert
-                )
-                present(alert, animated: true)
-                
-                alert.addTextField{ field in
-                    field.placeholder = "Courier User Id"
-                    field.keyboardType = .default
-                    field.autocorrectionType = .no
-                    field.autocapitalizationType = .none
-                    field.returnKeyType = .continue
+                Task {
+                    
+                    try await Courier.shared.signIn(
+                        accessToken: Env.COURIER_ACCESS_TOKEN,
+                        userId: userId
+                    )
+                    
+                    self.refresh()
+                    try await Courier.requestNotificationPermission()
+                    
                 }
-                
-                alert.addAction(UIAlertAction(
-                    title: "Cancel",
-                    style: .cancel,
-                    handler: nil
-                ))
-                
-                alert.addAction(UIAlertAction(
-                    title: "Sign In",
-                    style: .default,
-                    handler: {_ in
-                        
-                        guard let fields = alert.textFields, fields.count == 1 else {
-                            return
-                        }
-                        let userIdField = fields[0]
-                        
-                        guard let userId = userIdField.text, !userId.isEmpty else{
-                           return
-                        }
-                        
-                        Task{
-                            try await Courier.shared.signIn(
-                                accessToken: Env.COURIER_ACCESS_TOKEN,
-                                userId: userId
-                            )
-                            
-                            self.refresh()
-                        
-                            try await Courier.requestNotificationPermission()
-                        }
-                       
-                    }
-                ))
-
                 
             }
             
