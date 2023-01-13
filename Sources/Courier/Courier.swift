@@ -398,18 +398,17 @@ import UIKit
     // MARK: Testing
 
     @discardableResult
-    public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider] = CourierProvider.all) async throws -> String {
+    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all) async throws -> String {
         return try await messagingRepo.send(
             authKey: authKey,
             userId: userId,
             title: title,
             message: message,
-            isProduction: isProduction,
             providers: providers
         )
     }
     
-    public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider] = CourierProvider.all, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 let requestId = try await sendPush(
@@ -417,7 +416,6 @@ import UIKit
                     userId: userId,
                     title: title,
                     message: message,
-                    isProduction: isProduction,
                     providers: providers
                 )
                 onSuccess(requestId)
@@ -427,7 +425,7 @@ import UIKit
         }
     }
     
-    @objc public func sendPush(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [String] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [String] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 let requestId = try await sendPush(
@@ -435,7 +433,6 @@ import UIKit
                     userId: userId,
                     title: title,
                     message: message,
-                    isProduction: isProduction,
                     providers: providers.map { CourierProvider(rawValue: $0) ?? .unknown }
                 )
                 onSuccess(requestId)

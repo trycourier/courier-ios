@@ -104,7 +104,6 @@ final class CourierTests: XCTestCase {
             userId: Env.COURIER_USER_ID,
             title: "🐤 Chirp Chirp from APNS",
             message: "Message sent from Xcode tests",
-            isProduction: false,
             providers: [.apns]
         )
         
@@ -125,7 +124,6 @@ final class CourierTests: XCTestCase {
             userId: Env.COURIER_USER_ID,
             title: "🐤 Chirp Chirp from FCM!",
             message: "Message sent from Xcode tests",
-            isProduction: false,
             providers: [.fcm]
         )
         

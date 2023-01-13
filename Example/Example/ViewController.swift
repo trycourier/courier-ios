@@ -73,7 +73,6 @@ class ViewController: UIViewController {
                         userId: userId,
                         title: "Hey \(userId)!",
                         message: "This is a test push sent through \(messageProviders)",
-                        isProduction: false,
                         providers: providers
                     )
                 }
