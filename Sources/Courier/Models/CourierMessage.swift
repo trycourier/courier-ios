@@ -50,11 +50,6 @@ internal struct ApplePayloadBody: Codable {
     }
 }
 
-
-internal struct Config: Codable {
-    let isProduction: Bool
-}
-
 internal struct Body: Codable {
     let mutableContent: Int
     private enum CodingKeys: String, CodingKey {
