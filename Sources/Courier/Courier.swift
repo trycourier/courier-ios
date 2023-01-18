@@ -20,7 +20,7 @@ import UIKit
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.1.1"
+    internal static let version = "1.1.2"
     
     // MARK: Init
     
