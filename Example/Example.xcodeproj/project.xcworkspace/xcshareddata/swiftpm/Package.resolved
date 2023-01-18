@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "revision" : "7afbe886c81a025b4b4389b77be5652843cfd5de",
-        "version" : "1.1.1"
+        "branch" : "remove-providers-field",
+        "revision" : "4df141a4e22dad345271518cfde8f0ae2fc24541"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
         "branch" : "master",
-        "revision" : "deda10709308822b5a41a92f7dbaf3b4ac581511"
+        "revision" : "43b6e276bf89d899bb3fadcafabd42b81f1ef759"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
       "state" : {
-        "revision" : "71eb6700dd53a851473c48d392f00a3ab26699a6",
-        "version" : "10.1.0"
+        "revision" : "9a09ece724128e8d1e14c5133b87c0e236844ac0",
+        "version" : "10.4.0"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleUtilities.git",
       "state" : {
-        "revision" : "6db6edb48bdd9943426562c7f042a5492de5ba3d",
-        "version" : "7.10.0"
+        "revision" : "0543562f85620b5b7c510c6bcbef75b562a5127b",
+        "version" : "7.11.0"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/gtm-session-fetcher.git",
       "state" : {
-        "revision" : "efda500b6d9858d38a76dbfbfa396bd644692e4a",
-        "version" : "3.0.0"
+        "revision" : "96d7cc73a71ce950723aa3c50ce4fb275ae180b8",
+        "version" : "3.1.0"
       }
     },
     {

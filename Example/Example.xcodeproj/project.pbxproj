@@ -563,8 +563,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				branch = "remove-providers-field";
+				kind = branch;
 			};
 		};
 		277665252948CEA9009787AF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
