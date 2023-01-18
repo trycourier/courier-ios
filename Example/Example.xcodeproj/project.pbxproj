@@ -563,7 +563,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "remove-providers-field";
+				branch = master;
 				kind = branch;
 			};
 		};
