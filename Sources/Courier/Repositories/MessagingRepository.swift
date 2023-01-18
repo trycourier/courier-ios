@@ -9,7 +9,7 @@ import Foundation
 
 internal class MessagingRepository: Repository {
     
-    internal func send(authKey: String, userId: String, title: String, message: String, isProduction: Bool, providers: [CourierProvider]) async throws -> String {
+    internal func send(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider]) async throws -> String {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             
@@ -25,45 +25,9 @@ internal class MessagingRepository: Repository {
                     routing: Routing(
                         method: "all",
                         channels: providers.map { $0.rawValue }
-                    ),
-                    providers: Providers(
-                        apn: APNProvider(
-                            override: Override(
-                                config: Config(
-                                    isProduction: isProduction
-                                ),
-                                body: Body(
-                                    mutableContent: 1
-                                )
-                            )
-                        ),
-                        firebaseFcm: FCMProvider(
-                            override: FCMOverride(
-                                body: FCMBody(
-                                    notification: nil,
-                                    data: Content(
-                                        title: title,
-                                        body: message
-                                    ),
-                                    apns: FCMAPNSPayload(
-                                        payload: Payload(
-                                            aps: ApplePayloadBody(
-                                                mutableContent: 1,
-                                                alert: Content(
-                                                    title: title,
-                                                    body: message
-                                                ),
-                                                sound: "bingbong.aiff"
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
                     )
                 )
             )
-            
 
             let url = URL(string: "\(baseUrl)/send")!
             var request = URLRequest(url: url)

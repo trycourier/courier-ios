@@ -25,7 +25,6 @@ let messageId = await Courier.shared.sendPush(
     userId: "example_user_id",
     title: "Hey! 👋",
     body: "Courier is awesome!!",
-    isProduction: false,
     providers: [.apns, .fcm],
 )
 
@@ -268,7 +267,6 @@ class YourViewController: UIViewController {
                 userId: "example_user",
                 title: "Chirp Chrip!",
                 body: "Hello from Courier 🐣",
-                isProduction: false, // false == sandbox apns / true == production apns
                 providers: [.apns, .fcm],
             )
 
