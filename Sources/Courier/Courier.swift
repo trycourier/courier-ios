@@ -1,5 +1,15 @@
 import UIKit
 
+@objc public class TestListener: NSObject {
+    
+    let onCounterChange: (Int) -> Void
+    
+    init(onCounterChange: @escaping (Int) -> Void) {
+        self.onCounterChange = onCounterChange
+    }
+    
+}
+
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
     
@@ -444,15 +454,20 @@ import UIKit
     
     // MARK: Inbox
     
-    @objc public func addInboxListener(listener: @escaping (Int) -> Void) {
+    @objc public func addInboxListener(listener: @escaping (Int) -> Void) -> TestListener {
+        
+        let test = TestListener(onCounterChange: listener)
         
         var counter = 0
         
-        let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             counter += 1
             print(counter)
-            listener(counter)
+//            listener(counter)
+            test.onCounterChange(counter)
         }
+        
+        return test
         
     }
     
