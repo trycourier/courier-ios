@@ -444,13 +444,14 @@ import UIKit
     
     // MARK: Inbox
     
-    @objc public func addInboxListener(listener: () -> Void) {
+    @objc public func addInboxListener(listener: @escaping (Int) -> Void) {
         
         var counter = 0
         
         let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             counter += 1
             print(counter)
+            listener(counter)
         }
         
     }

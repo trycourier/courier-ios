@@ -85,7 +85,13 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         refresh()
+        
+        Courier.shared.addInboxListener { count in
+            print("The count is: \(count)")
+        }
+        
     }
     
     private func refresh() {
