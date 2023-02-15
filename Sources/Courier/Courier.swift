@@ -458,17 +458,28 @@ import UIKit
     
     // MARK: Inbox
     
+    private var timer: Timer? = nil
+    private var counter = 0
+    
+    private func startInboxPipe(listener: TestListener) {
+     
+        if (timer == nil) {
+            
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                self.counter += 1
+                print("Root pipe counter: \(self.counter)")
+                listener.onCounterChange?(self.counter)
+            }
+            
+        }
+        
+    }
+    
     @objc public func addInboxListener(listener: @escaping (Int) -> Void) -> TestListener {
         
         let testListener = TestListener(onCounterChange: listener)
         
-        var counter = 0
-        
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            counter += 1
-            print(counter)
-            testListener.onCounterChange?(counter)
-        }
+        startInboxPipe(listener: testListener)
         
         return testListener
         
