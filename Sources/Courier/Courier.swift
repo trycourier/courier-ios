@@ -2,10 +2,14 @@ import UIKit
 
 @objc public class TestListener: NSObject {
     
-    let onCounterChange: (Int) -> Void
+    var onCounterChange: ((Int) -> Void)? = nil
     
     init(onCounterChange: @escaping (Int) -> Void) {
         self.onCounterChange = onCounterChange
+    }
+    
+    public func remove() {
+        onCounterChange = nil
     }
     
 }
@@ -456,18 +460,17 @@ import UIKit
     
     @objc public func addInboxListener(listener: @escaping (Int) -> Void) -> TestListener {
         
-        let test = TestListener(onCounterChange: listener)
+        let testListener = TestListener(onCounterChange: listener)
         
         var counter = 0
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             counter += 1
             print(counter)
-//            listener(counter)
-            test.onCounterChange(counter)
+            testListener.onCounterChange?(counter)
         }
         
-        return test
+        return testListener
         
     }
     
