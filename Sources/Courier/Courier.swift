@@ -1,6 +1,6 @@
 import UIKit
 
-@objc public class TestListener: NSObject {
+@objc open class TestListener: NSObject {
     
     var onCounterChange: ((Int) -> Void)? = nil
     
@@ -460,29 +460,40 @@ import UIKit
     
     private var timer: Timer? = nil
     private var counter = 0
+    private var listeners: [TestListener] = []
     
     private func startInboxPipe(listener: TestListener) {
+        
+        // Add the new listener
+        listeners.append(listener)
      
+        // Start the timer if needed
         if (timer == nil) {
             
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+                
                 self.counter += 1
+                
                 print("Root pipe counter: \(self.counter)")
-                listener.onCounterChange?(self.counter)
+                
+                self.listeners.forEach { listener in
+                    listener.onCounterChange?(self.counter)
+                }
+                
             }
             
         }
         
     }
     
-    @objc public func addInboxListener(listener: @escaping (Int) -> Void) -> TestListener {
-        
-        let testListener = TestListener(onCounterChange: listener)
-        
-        startInboxPipe(listener: testListener)
-        
-        return testListener
-        
+    @objc public func addInboxListener(listener: TestListener) {
+        startInboxPipe(listener: listener)
+    }
+    
+    @objc public func removeInboxListener(listener: TestListener) {
+        listeners.removeAll(where: {
+            return $0 == listener
+        })
     }
     
     // MARK: Logging

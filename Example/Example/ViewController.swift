@@ -92,6 +92,8 @@ class ViewController: UIViewController {
             print("L1 count is: \(count)")
         }
         
+        let listener = TestListener()
+        
         let listener2 = Courier.shared.addInboxListener { count in
             
             if (count > 10) {
