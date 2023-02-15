@@ -473,7 +473,7 @@ import UIKit
                 print("Root pipe counter: \(self.counter)")
                 
                 self.listeners.forEach { listener in
-                    listener.onCounterChange?(self.counter)
+                    listener.onCounterChange(self.counter)
                 }
                 
             }
