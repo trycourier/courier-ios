@@ -487,9 +487,17 @@ import UIKit
     }
     
     @objc public func removeInboxListener(listener: TestListener) {
+        
+        // Look for the listener we need to remove
         listeners.removeAll(where: {
             return $0 == listener
         })
+        
+        // Kill the timer if nothing is listening
+        if (listeners.isEmpty) {
+            timer?.invalidate()
+        }
+        
     }
     
     // MARK: Logging

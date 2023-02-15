@@ -93,22 +93,18 @@ class ViewController: UIViewController {
         }
         
         let l2 = TestListener { count in
+            
             print("L2 count is: \(count)")
-        }
-        
-        Courier.shared.addInboxListener { count in
-            print("L1 count is: \(count)")
-        }
-        
-        Courier.shared.addInboxListener { count in
             
             if (count > 10) {
-                listener1.remove()
+                Courier.shared.removeInboxListener(listener: l1)
             }
             
-            print("L2 count is: \(count)")
-            
         }
+        
+        Courier.shared.addInboxListener(listener: l1)
+        
+        Courier.shared.addInboxListener(listener: l2)
         
     }
     
