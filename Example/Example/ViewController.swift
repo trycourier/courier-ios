@@ -88,13 +88,19 @@ class ViewController: UIViewController {
         
         refresh()
         
-        let listener1 = Courier.shared.addInboxListener { count in
+        let l1 = TestListener { count in
             print("L1 count is: \(count)")
         }
         
-        let listener = TestListener()
+        let l2 = TestListener { count in
+            print("L2 count is: \(count)")
+        }
         
-        let listener2 = Courier.shared.addInboxListener { count in
+        Courier.shared.addInboxListener { count in
+            print("L1 count is: \(count)")
+        }
+        
+        Courier.shared.addInboxListener { count in
             
             if (count > 10) {
                 listener1.remove()

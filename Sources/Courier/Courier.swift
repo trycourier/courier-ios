@@ -1,15 +1,11 @@
 import UIKit
 
-@objc open class TestListener: NSObject {
+@objc public class TestListener: NSObject {
     
-    var onCounterChange: ((Int) -> Void)? = nil
+    var onCounterChange: (Int) -> Void
     
-    init(onCounterChange: @escaping (Int) -> Void) {
+    public init(onCounterChange: @escaping (Int) -> Void) {
         self.onCounterChange = onCounterChange
-    }
-    
-    public func remove() {
-        onCounterChange = nil
     }
     
 }
