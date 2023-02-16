@@ -36,6 +36,23 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
         
     }
     
+    // MARK: FCM integration
+    
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        Messaging.messaging().delegate = self
+        return true
+    }
+    
+    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        
+        guard let token = fcmToken else { return }
+        
+        Task {
+            try await Courier.shared.setFCMToken(token)
+        }
+        
+    }
+    
     // MARK: Messaging
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
