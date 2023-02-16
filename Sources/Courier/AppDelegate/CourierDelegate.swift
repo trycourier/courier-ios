@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import FirebaseMessaging
 
 @available(iOSApplicationExtension, unavailable)
-open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
     
     // MARK: Getters
     
