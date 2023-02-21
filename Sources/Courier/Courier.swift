@@ -1,15 +1,5 @@
 import UIKit
 
-@objc public class TestListener: NSObject {
-    
-    var onCounterChange: (Int) -> Void
-    
-    public init(onCounterChange: @escaping (Int) -> Void) {
-        self.onCounterChange = onCounterChange
-    }
-    
-}
-
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
     
@@ -456,12 +446,10 @@ import UIKit
     
     private var timer: Timer? = nil
     private var counter = 0
-    private var listeners: [TestListener] = []
     
-    private func startInboxPipe(listener: TestListener) {
-        
-        // Add the new listener
-        listeners.append(listener)
+    private var inboxListeners: [CourierInboxListener] = []
+    
+    private func startInboxPipe(listener: CourierInboxListener) {
      
         // Start the timer if needed
         if (timer == nil) {
@@ -472,8 +460,9 @@ import UIKit
                 
                 print("Root pipe counter: \(self.counter)")
                 
-                self.listeners.forEach { listener in
-                    listener.onCounterChange(self.counter)
+                // Call every listener that is attached
+                self.inboxListeners.forEach { listener in
+                    listener.onMessagesChanged(self.counter)
                 }
                 
             }
@@ -482,19 +471,32 @@ import UIKit
         
     }
     
-    @objc public func addInboxListener(listener: TestListener) {
+    @objc public func addInboxListener(onInitialLoad: @escaping () -> Void, onError: @escaping () -> Void, onMessagesChanged: @escaping (Int) -> Void) {
+        
+        // Create a new inbox listener
+        let listener = CourierInboxListener(
+            onInitialLoad: onInitialLoad,
+            onError: onError,
+            onMessagesChanged: onMessagesChanged
+        )
+        
+        // Add the new listener
+        inboxListeners.append(listener)
+        
+        // Start the pipe
         startInboxPipe(listener: listener)
+        
     }
     
-    @objc public func removeInboxListener(listener: TestListener) {
+    @objc public func removeInboxListener(listener: CourierInboxListener) {
         
         // Look for the listener we need to remove
-        listeners.removeAll(where: {
+        inboxListeners.removeAll(where: {
             return $0 == listener
         })
         
         // Kill the timer if nothing is listening
-        if (listeners.isEmpty) {
+        if (inboxListeners.isEmpty) {
             timer?.invalidate()
         }
         

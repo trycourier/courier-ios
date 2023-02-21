@@ -82,29 +82,27 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    let l1 = TestListener { count in
+        print("L1 count is: \(count)")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         refresh()
         
-        let l1 = TestListener { count in
-            print("L1 count is: \(count)")
-        }
+        Courier.shared.addInboxListener(listener: l1)
         
-        let l2 = TestListener { count in
+        Courier.shared.addInboxListener(listener: TestListener { count in
             
             print("L2 count is: \(count)")
             
-            if (count > 10) {
-                Courier.shared.removeInboxListener(listener: l1)
+            if (count >= 5) {
+                Courier.shared.removeInboxListener(listener: self.l1)
             }
             
-        }
-        
-        Courier.shared.addInboxListener(listener: l1)
-        
-        Courier.shared.addInboxListener(listener: l2)
+        })
         
     }
     
