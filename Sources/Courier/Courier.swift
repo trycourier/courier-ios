@@ -462,7 +462,7 @@ import UIKit
                 
                 // Call every listener that is attached
                 self.inboxListeners.forEach { listener in
-                    listener.onMessagesChanged(self.counter)
+                    listener.onMessagesChanged?(self.counter)
                 }
                 
             }
@@ -471,7 +471,7 @@ import UIKit
         
     }
     
-    @discardableResult @objc public func addInboxListener(onInitialLoad: @escaping () -> Void, onError: @escaping () -> Void, onMessagesChanged: @escaping (Int) -> Void) -> CourierInboxListener {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: ((Int) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(

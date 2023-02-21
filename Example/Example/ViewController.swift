@@ -88,7 +88,7 @@ class ViewController: UIViewController {
         
         refresh()
         
-        Courier.shared.addInboxListener(listener: l1)
+        Courier.shared.addInboxListener
         
         Courier.shared.addInboxListener(listener: TestListener { count in
             

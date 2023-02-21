@@ -9,11 +9,11 @@ import Foundation
 
 @objc public class CourierInboxListener: NSObject {
     
-    let onInitialLoad: () -> Void
-    let onError: () -> Void
-    let onMessagesChanged: (Int) -> Void
+    let onInitialLoad: (() -> Void)?
+    let onError: (() -> Void)?
+    let onMessagesChanged: ((Int) -> Void)?
     
-    public init(onInitialLoad: @escaping () -> Void, onError: @escaping () -> Void, onMessagesChanged: @escaping (Int) -> Void) {
+    public init(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: ((Int) -> Void)? = nil) {
         self.onInitialLoad = onInitialLoad
         self.onError = onError
         self.onMessagesChanged = onMessagesChanged
