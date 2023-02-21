@@ -471,7 +471,7 @@ import UIKit
         
     }
     
-    @objc public func addInboxListener(onInitialLoad: @escaping () -> Void, onError: @escaping () -> Void, onMessagesChanged: @escaping (Int) -> Void) {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: @escaping () -> Void, onError: @escaping () -> Void, onMessagesChanged: @escaping (Int) -> Void) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -485,6 +485,9 @@ import UIKit
         
         // Start the pipe
         startInboxPipe(listener: listener)
+        
+        // Return the listener
+        return listener
         
     }
     

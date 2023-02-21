@@ -82,10 +82,6 @@ class ViewController: UIViewController {
         }
         
     }
-    
-    let l1 = TestListener { count in
-        print("L1 count is: \(count)")
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
