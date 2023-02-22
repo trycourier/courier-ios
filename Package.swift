@@ -14,11 +14,15 @@ let package = Package(
             targets: ["Courier"]
         ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/apollographql/apollo-ios.git", from: "1.0.7")
+    ],
     targets: [
         .target(
             name: "Courier",
-            dependencies: []
+            dependencies: [
+                .product(name: "Apollo", package: "apollo-ios")
+            ]
         ),
         .testTarget(
             name: "CourierTests",

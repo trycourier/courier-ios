@@ -1,4 +1,5 @@
 import UIKit
+import Apollo
 
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
@@ -499,10 +500,19 @@ import UIKit
         })
         
         // Kill the timer if nothing is listening
+        closeInboxPipe()
+        
+    }
+    
+    @objc public func removeAllInboxListeners() {
+        inboxListeners.removeAll()
+        closeInboxPipe()
+    }
+    
+    private func closeInboxPipe() {
         if (inboxListeners.isEmpty) {
             timer?.invalidate()
         }
-        
     }
     
     // MARK: Logging
@@ -565,5 +575,29 @@ import UIKit
             UIApplication.shared.open(appSettings)
         }
     }
+    
+    private(set) lazy var apolloClient: ApolloClient = {
+        
+        let cache = InMemoryNormalizedCache()
+        let store1 = ApolloStore(cache: cache)
+        
+        let authPayloads = [
+            "Authorization": "Bearer pk_prod_G543WABV0PMA9BMHTW1985WZ1GXM",
+            "x-courier-client-key": "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
+        ]
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = authPayloads
+        
+        let client1 = URLSessionClient(sessionConfiguration: configuration, callbackQueue: nil)
+        let provider = NetworkInterceptorProvider(client: client1, shouldInvalidateClientOnDeinit: true, store: store1)
+        
+        let url = URL(string: "https://api.courier.com/client/q")!
+        
+        let requestChainTransport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
+        
+        return ApolloClient(networkTransport: requestChainTransport, store: store1)
+        
+    }()
     
 }
