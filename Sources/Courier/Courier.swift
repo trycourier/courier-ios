@@ -576,14 +576,14 @@ import Apollo
         }
     }
     
-    private(set) lazy var apolloClient: ApolloClient = {
+    public func getApolloClient(authKey: String, clientKey: String, userId: String) -> ApolloClient {
         
         let cache = InMemoryNormalizedCache()
         let store1 = ApolloStore(cache: cache)
         
         let authPayloads = [
-            "Authorization": "Bearer pk_prod_G543WABV0PMA9BMHTW1985WZ1GXM",
-            "x-courier-client-key": "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
+            "Authorization": "Bearer \(authKey)",
+            "x-courier-client-key": "\(clientKey)",
         ]
         
         let configuration = URLSessionConfiguration.default
@@ -598,6 +598,6 @@ import Apollo
         
         return ApolloClient(networkTransport: requestChainTransport, store: store1)
         
-    }()
+    }
     
 }

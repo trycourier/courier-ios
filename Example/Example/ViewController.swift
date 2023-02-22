@@ -102,6 +102,8 @@ class ViewController: UIViewController {
             
         })
         
+        Courier.shared.apolloClient
+        
     }
     
     private func refresh() {
