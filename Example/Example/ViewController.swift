@@ -102,7 +102,7 @@ class ViewController: UIViewController {
             
         })
         
-        Courier.shared.apolloClient
+        Courier.shared.
         
     }
     

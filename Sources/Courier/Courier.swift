@@ -576,7 +576,7 @@ import Apollo
         }
     }
     
-    public func getApolloClient(authKey: String, clientKey: String, userId: String) -> ApolloClient {
+    open func getApolloClient(authKey: String, clientKey: String, userId: String) -> ApolloClient {
         
         let cache = InMemoryNormalizedCache()
         let store1 = ApolloStore(cache: cache)
