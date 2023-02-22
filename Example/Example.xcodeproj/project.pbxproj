@@ -19,8 +19,7 @@
 		27D4C01C2964886100CE972E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27D4C01B2964886100CE972E /* GoogleService-Info.plist */; };
 		27DAF06A29A6ABAE00D45FFB /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 27DAF06929A6ABAE00D45FFB /* FirebaseMessaging */; };
 		27DAF06C29A6AC0E00D45FFB /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27DAF06B29A6AC0E00D45FFB /* Courier */; };
-		27DAF06F29A6AD9200D45FFB /* Message.graphql in Sources */ = {isa = PBXBuildFile; fileRef = 27DAF06E29A6AD9200D45FFB /* Message.graphql */; };
-		27DAF07129A6B15A00D45FFB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DAF07029A6B15A00D45FFB /* Message.swift */; };
+		27DAF06F29A6AD9200D45FFB /* GetMessages.graphql in Sources */ = {isa = PBXBuildFile; fileRef = 27DAF06E29A6AD9200D45FFB /* GetMessages.graphql */; };
 		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
 		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -62,8 +61,7 @@
 		2789519529268DB70070F501 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27D4C01B2964886100CE972E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		27DAF06E29A6AD9200D45FFB /* Message.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = Message.graphql; sourceTree = "<group>"; };
-		27DAF07029A6B15A00D45FFB /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		27DAF06E29A6AD9200D45FFB /* GetMessages.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetMessages.graphql; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		6729FFAE2926F779006A3EC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -138,8 +136,7 @@
 		27DAF06D29A6AD8300D45FFB /* GraphQL */ = {
 			isa = PBXGroup;
 			children = (
-				27DAF06E29A6AD9200D45FFB /* Message.graphql */,
-				27DAF07029A6B15A00D45FFB /* Message.swift */,
+				27DAF06E29A6AD9200D45FFB /* GetMessages.graphql */,
 			);
 			path = GraphQL;
 			sourceTree = "<group>";
@@ -267,12 +264,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				2789516B292689460070F501 /* ViewController.swift in Sources */,
-				27DAF06F29A6AD9200D45FFB /* Message.graphql in Sources */,
+				27DAF06F29A6AD9200D45FFB /* GetMessages.graphql in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
 				2789518129268C400070F501 /* Env.swift in Sources */,
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,
-				27DAF07129A6B15A00D45FFB /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

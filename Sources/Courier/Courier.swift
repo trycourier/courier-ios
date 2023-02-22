@@ -1,5 +1,5 @@
 import UIKit
-import Apollo
+import GraphQLite
 
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
@@ -576,30 +576,52 @@ import Apollo
         }
     }
     
-    open func getApolloClient(authKey: String, clientKey: String, userId: String) -> ApolloClient {
-        
-        let cache = InMemoryNormalizedCache()
-        let store1 = ApolloStore(cache: cache)
-        
-        let authPayloads = [
-//            "Authorization": "Bearer \(authKey)",
-            "x-courier-client-key": "\(clientKey)",
-            "x-courier-user-id": "\(userId)"
+    @objc public func getMessages() {
+    
+        let url = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
+        let headers = [
+            "x-courier-client-key": "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
+            "x-courier-user-id": "example_user"
         ]
         
-        let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = authPayloads
+        let server = GQLServer(HTTP: url, headers: headers)
         
-        let client1 = URLSessionClient(sessionConfiguration: configuration, callbackQueue: nil)
-        let provider = NetworkInterceptorProvider(client: client1, shouldInvalidateClientOnDeinit: true, store: store1)
-        
-        let server = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
-//        let server = "https://api.courier.com/client/q"
-        let url = URL(string: server)!
-        
-        let requestChainTransport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
-        
-        return ApolloClient(networkTransport: requestChainTransport, store: store1)
+        let query = """
+        query GetMessages(
+            $params: FilterParamsInput
+            $limit: Int = 10
+            $after: String
+        ) {
+            count(params: $params)
+            messages(params: $params, limit: $limit, after: $after) {
+                totalCount
+                pageInfo {
+                    startCursor
+                    hasNextPage
+                }
+                nodes {
+                    messageId
+                    read
+                    archived
+                    created
+                    tags
+                    title
+                    preview
+                    actions {
+                        content
+                        href
+                        style
+                        background_color
+                    }
+                }
+            }
+        }
+        """
+
+        server.query(query, [:]) { result, error in
+            print(error ?? "No error")
+            print(result)
+        }
         
     }
     

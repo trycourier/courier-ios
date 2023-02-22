@@ -14,15 +14,17 @@ let package = Package(
             targets: ["Courier"]
         ),
     ],
-    dependencies: [
-        .package(url: "https://github.com/apollographql/apollo-ios.git", from: "1.0.7")
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "Courier",
             dependencies: [
-                .product(name: "Apollo", package: "apollo-ios")
+                .byName(name: "GraphQLite")
             ]
+        ),
+        .binaryTarget(
+            name: "GraphQLite",
+            path: "Frameworks/GraphQLite.xcframework"
         ),
         .testTarget(
             name: "CourierTests",

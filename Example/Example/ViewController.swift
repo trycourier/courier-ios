@@ -112,6 +112,10 @@ class ViewController: UIViewController {
             print(result)
         }
         
+        client.watch(query: Message) { result in
+            print(result)
+        }
+        
     }
     
     private func refresh() {

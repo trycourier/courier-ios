@@ -1,0 +1,29 @@
+query GetMessages(
+    $params: FilterParamsInput
+    $limit: Int = 10
+    $after: String
+) {
+    count(params: $params)
+    messages(params: $params, limit: $limit, after: $after) {
+        totalCount
+        pageInfo {
+            startCursor
+            hasNextPage
+        }
+        nodes {
+            messageId
+            read
+            archived
+            created
+            tags
+            title
+            preview
+            actions {
+                content
+                href
+                style
+                background_color
+            }
+        }
+    }
+}
