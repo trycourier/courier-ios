@@ -102,7 +102,15 @@ class ViewController: UIViewController {
             
         })
         
-        Courier.shared.
+        let client = Courier.shared.getApolloClient(
+            authKey: "pk_prod_G543WABV0PMA9BMHTW1985WZ1GXM",
+            clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
+            userId: "example_user"
+        )
+        
+        client.fetch(query: Message) { result in
+            print(result)
+        }
         
     }
     

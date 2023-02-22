@@ -1,0 +1,6 @@
+query Message {
+  message {
+    title
+    body
+  }
+}

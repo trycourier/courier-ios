@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		277665242948CC70009787AF /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 277665232948CC70009787AF /* Courier */; };
-		277665272948CEA9009787AF /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 277665262948CEA9009787AF /* FirebaseMessaging */; };
-		277665292948CF16009787AF /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 277665282948CF16009787AF /* Courier */; };
 		27895167292689460070F501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895166292689460070F501 /* AppDelegate.swift */; };
 		27895169292689460070F501 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895168292689460070F501 /* SceneDelegate.swift */; };
 		2789516B292689460070F501 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789516A292689460070F501 /* ViewController.swift */; };
@@ -18,7 +15,12 @@
 		27895173292689470070F501 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27895171292689470070F501 /* LaunchScreen.storyboard */; };
 		2789518129268C400070F501 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789518029268C400070F501 /* Env.swift */; };
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
+		27A2BA3C29A6A53E001B7A77 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27A2BA3B29A6A53E001B7A77 /* Courier */; };
 		27D4C01C2964886100CE972E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27D4C01B2964886100CE972E /* GoogleService-Info.plist */; };
+		27DAF06A29A6ABAE00D45FFB /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 27DAF06929A6ABAE00D45FFB /* FirebaseMessaging */; };
+		27DAF06C29A6AC0E00D45FFB /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27DAF06B29A6AC0E00D45FFB /* Courier */; };
+		27DAF06F29A6AD9200D45FFB /* Message.graphql in Sources */ = {isa = PBXBuildFile; fileRef = 27DAF06E29A6AD9200D45FFB /* Message.graphql */; };
+		27DAF07129A6B15A00D45FFB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DAF07029A6B15A00D45FFB /* Message.swift */; };
 		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
 		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -60,6 +62,8 @@
 		2789519529268DB70070F501 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27D4C01B2964886100CE972E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		27DAF06E29A6AD9200D45FFB /* Message.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = Message.graphql; sourceTree = "<group>"; };
+		27DAF07029A6B15A00D45FFB /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		6729FFAE2926F779006A3EC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,8 +74,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				277665272948CEA9009787AF /* FirebaseMessaging in Frameworks */,
-				277665242948CC70009787AF /* Courier in Frameworks */,
+				27DAF06A29A6ABAE00D45FFB /* FirebaseMessaging in Frameworks */,
+				27A2BA3C29A6A53E001B7A77 /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				277665292948CF16009787AF /* Courier in Frameworks */,
+				27DAF06C29A6AC0E00D45FFB /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +112,7 @@
 		27895165292689460070F501 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				27DAF06D29A6AD8300D45FFB /* GraphQL */,
 				27D4C01B2964886100CE972E /* GoogleService-Info.plist */,
 				2789519529268DB70070F501 /* Example.entitlements */,
 				2789518029268C400070F501 /* Env.swift */,
@@ -128,6 +133,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		27DAF06D29A6AD8300D45FFB /* GraphQL */ = {
+			isa = PBXGroup;
+			children = (
+				27DAF06E29A6AD9200D45FFB /* Message.graphql */,
+				27DAF07029A6B15A00D45FFB /* Message.swift */,
+			);
+			path = GraphQL;
 			sourceTree = "<group>";
 		};
 		6729FFAB2926F779006A3EC2 /* CourierService */ = {
@@ -158,8 +172,8 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				277665232948CC70009787AF /* Courier */,
-				277665262948CEA9009787AF /* FirebaseMessaging */,
+				27A2BA3B29A6A53E001B7A77 /* Courier */,
+				27DAF06929A6ABAE00D45FFB /* FirebaseMessaging */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
@@ -179,7 +193,7 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				277665282948CF16009787AF /* Courier */,
+				27DAF06B29A6AC0E00D45FFB /* Courier */,
 			);
 			productName = CourierService;
 			productReference = 6729FFAA2926F779006A3EC2 /* CourierService.appex */;
@@ -213,8 +227,8 @@
 			);
 			mainGroup = 2789515A292689460070F501;
 			packageReferences = (
-				277665222948CC70009787AF /* XCRemoteSwiftPackageReference "courier-ios" */,
-				277665252948CEA9009787AF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				27DAF06829A6ABAE00D45FFB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -253,10 +267,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2789516B292689460070F501 /* ViewController.swift in Sources */,
+				27DAF06F29A6AD9200D45FFB /* Message.graphql in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
 				2789518129268C400070F501 /* Env.swift in Sources */,
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,
+				27DAF07129A6B15A00D45FFB /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +575,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		277665222948CC70009787AF /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+		27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
@@ -567,30 +583,30 @@
 				kind = branch;
 			};
 		};
-		277665252948CEA9009787AF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		27DAF06829A6ABAE00D45FFB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		277665232948CC70009787AF /* Courier */ = {
+		27A2BA3B29A6A53E001B7A77 /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 277665222948CC70009787AF /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
-		277665262948CEA9009787AF /* FirebaseMessaging */ = {
+		27DAF06929A6ABAE00D45FFB /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 277665252948CEA9009787AF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 27DAF06829A6ABAE00D45FFB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
 		};
-		277665282948CF16009787AF /* Courier */ = {
+		27DAF06B29A6AC0E00D45FFB /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 277665222948CC70009787AF /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
 /* End XCSwiftPackageProductDependency section */

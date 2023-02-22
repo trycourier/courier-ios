@@ -582,8 +582,9 @@ import Apollo
         let store1 = ApolloStore(cache: cache)
         
         let authPayloads = [
-            "Authorization": "Bearer \(authKey)",
+//            "Authorization": "Bearer \(authKey)",
             "x-courier-client-key": "\(clientKey)",
+            "x-courier-user-id": "\(userId)"
         ]
         
         let configuration = URLSessionConfiguration.default
@@ -592,7 +593,9 @@ import Apollo
         let client1 = URLSessionClient(sessionConfiguration: configuration, callbackQueue: nil)
         let provider = NetworkInterceptorProvider(client: client1, shouldInvalidateClientOnDeinit: true, store: store1)
         
-        let url = URL(string: "https://api.courier.com/client/q")!
+        let server = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
+//        let server = "https://api.courier.com/client/q"
+        let url = URL(string: server)!
         
         let requestChainTransport = RequestChainNetworkTransport(interceptorProvider: provider, endpointURL: url)
         
