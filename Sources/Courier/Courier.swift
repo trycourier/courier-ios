@@ -448,15 +448,6 @@ import UIKit
     private var inboxListeners: [CourierInboxListener] = []
     
     private var isFetchingInboxMessages = false
-    private var inboxMessages: [InboxMessage]? = nil {
-        didSet {
-            if let messages = inboxMessages {
-                inboxListeners.forEach {
-                    $0.onMessagesChanged?(messages)
-                }
-            }
-        }
-    }
     
     // TODO: Get Web Socket
     
@@ -468,16 +459,12 @@ import UIKit
                 
                 listener.onInitialLoad?()
                 
-                // Get the current messages and only call the new listener
-                if (!isFetchingInboxMessages) {
-                    if let messages = inboxMessages {
-                        listener.onMessagesChanged?(messages)
-                        return
-                    }
-                }
+                let messages = try await inboxRepo.getMessages(
+                    clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx", // TODO
+                    userId: "example_user" // TODO
+                )
                 
-                // Update the messages and call all the listeners
-                inboxMessages = try await refreshInboxMessages()
+                listener.onMessagesChanged?(messages)
                 
             } catch {
                 
@@ -486,39 +473,6 @@ import UIKit
             }
             
         }
-        
-    }
-    
-    private func refreshInboxMessages() async throws -> [InboxMessage] {
-        
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<[InboxMessage], Error>) in
-            
-            Task {
-                
-                do {
-                    
-                    isFetchingInboxMessages = true
-                    
-                    let messages = try await inboxRepo.getMessages(
-                        clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx", // TODO
-                        userId: "example_user" // TODO
-                    )
-                    
-                    isFetchingInboxMessages = false
-                    
-                    continuation.resume(returning: messages)
-                    
-                } catch {
-                    
-                    print(error)
-                    
-                    continuation.resume(throwing: error)
-                    
-                }
-                
-            }
-            
-        })
         
     }
     
