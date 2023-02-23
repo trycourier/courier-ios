@@ -457,7 +457,7 @@ import UIKit
             
             do {
                 
-                listener.onError?()
+                listener.onInitialLoad?()
                 
                 if let messages = inboxMessages {
                     
@@ -490,9 +490,6 @@ import UIKit
     }
     
     @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
-        
-        // Call initial load
-        onInitialLoad?()
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
