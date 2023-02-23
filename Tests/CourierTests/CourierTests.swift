@@ -8,13 +8,6 @@ final class CourierTests: XCTestCase {
     
     func testA() async throws {
         
-        let messages = try await Courier.shared.getAllMessages(
-            clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
-            userId: "example_user"
-        )
-        
-        print(messages)
-        
         print("\n🔬 Setting APNS Token before User")
         
         do {

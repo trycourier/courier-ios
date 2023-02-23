@@ -11,9 +11,9 @@ import Foundation
     
     let onInitialLoad: (() -> Void)?
     let onError: (() -> Void)?
-    let onMessagesChanged: ((Int) -> Void)?
+    let onMessagesChanged: (([InboxMessage]) -> Void)?
     
-    public init(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: ((Int) -> Void)? = nil) {
+    public init(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) {
         self.onInitialLoad = onInitialLoad
         self.onError = onError
         self.onMessagesChanged = onMessagesChanged

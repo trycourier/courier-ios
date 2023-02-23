@@ -20,8 +20,10 @@ internal struct InboxNodes: Codable {
     let nodes: [InboxMessage]
 }
 
-internal struct InboxMessage: Codable {
+@objc public class InboxMessage: NSObject, Codable {
+    
     let title: String?
+    let body: String?
     let preview: String?
     let created: String?
 //    let actions: String?
@@ -29,4 +31,16 @@ internal struct InboxMessage: Codable {
     let read: Bool?
     let messageId: String
     let tags: String?
+    
+    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: Bool?, messageId: String, tags: String?) {
+        self.title = title
+        self.body = body
+        self.preview = preview
+        self.created = created
+        self.archived = archived
+        self.read = read
+        self.messageId = messageId
+        self.tags = tags
+    }
+    
 }

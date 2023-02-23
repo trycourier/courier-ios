@@ -56,6 +56,7 @@ import GraphQLite
      */
     private lazy var tokenRepo = TokenRepository()
     private lazy var messagingRepo = MessagingRepository()
+    private lazy var inboxRepo = InboxRepository()
     
     // MARK: Getters
     
@@ -445,26 +446,40 @@ import GraphQLite
     
     // MARK: Inbox
     
-    private var timer: Timer? = nil
-    private var counter = 0
-    
     private var inboxListeners: [CourierInboxListener] = []
+    private var inboxMessages: [InboxMessage]? = nil
+    
+    // TODO: Get Web Socket
     
     private func startInboxPipe(listener: CourierInboxListener) {
-     
-        // Start the timer if needed
-        if (timer == nil) {
+        
+        Task {
             
-            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            do {
                 
-                self.counter += 1
-                
-                print("Root pipe counter: \(self.counter)")
-                
-                // Call every listener that is attached
-                self.inboxListeners.forEach { listener in
-                    listener.onMessagesChanged?(self.counter)
+                if let messages = inboxMessages {
+                    
+                    // Send the messages to the listener if we have messages
+                    listener.onMessagesChanged?(messages)
+                    
+                } else {
+                    
+                    // Grab the messages if needed
+                    inboxMessages = try await inboxRepo.getMessages(
+                        clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
+                        userId: "example_user"
+                    )
+                    
+                    // Call all the listeners at the same time
+                    inboxListeners.forEach { listener in
+                        listener.onMessagesChanged?(inboxMessages ?? [])
+                    }
+                    
                 }
+                
+            } catch {
+                
+                listener.onError?() // TODO: Get the error
                 
             }
             
@@ -472,7 +487,7 @@ import GraphQLite
         
     }
     
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: ((Int) -> Void)? = nil) -> CourierInboxListener {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -480,6 +495,11 @@ import GraphQLite
             onError: onError,
             onMessagesChanged: onMessagesChanged
         )
+        
+        // Call initial loading closure
+        if (inboxListeners.isEmpty) {
+            listener.onInitialLoad?()
+        }
         
         // Add the new listener
         inboxListeners.append(listener)
@@ -510,13 +530,15 @@ import GraphQLite
     }
     
     private func closeInboxPipe() {
+        
+        // Clear the messages
         if (inboxListeners.isEmpty) {
-            timer?.invalidate()
+            inboxMessages = nil
         }
+        
     }
     
-    // TODO: Get web socket
-    internal func getAllMessages(clientKey: String, userId: String) async throws -> [InboxMessage] {
+    private func getAllMessages(clientKey: String, userId: String) async throws -> [InboxMessage] {
         return try await InboxRepository().getMessages(clientKey: clientKey, userId: userId)
     }
     
