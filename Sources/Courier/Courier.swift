@@ -1,5 +1,4 @@
 import UIKit
-import GraphQLite
 
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
@@ -453,6 +452,10 @@ import GraphQLite
     
     private func startInboxPipe(listener: CourierInboxListener) {
         
+        // Tell the listener we are loading
+        listener.onInitialLoad?()
+        
+        // Handle data fetching
         Task {
             
             do {
@@ -466,8 +469,8 @@ import GraphQLite
                     
                     // Grab the messages if needed
                     inboxMessages = try await inboxRepo.getMessages(
-                        clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
-                        userId: "example_user"
+                        clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx", // TODO
+                        userId: "example_user" // TODO
                     )
                     
                     // Call all the listeners at the same time
@@ -495,11 +498,6 @@ import GraphQLite
             onError: onError,
             onMessagesChanged: onMessagesChanged
         )
-        
-        // Call initial loading closure
-        if (inboxListeners.isEmpty) {
-            listener.onInitialLoad?()
-        }
         
         // Add the new listener
         inboxListeners.append(listener)
@@ -536,10 +534,6 @@ import GraphQLite
             inboxMessages = nil
         }
         
-    }
-    
-    private func getAllMessages(clientKey: String, userId: String) async throws -> [InboxMessage] {
-        return try await InboxRepository().getMessages(clientKey: clientKey, userId: userId)
     }
     
     // MARK: Logging
