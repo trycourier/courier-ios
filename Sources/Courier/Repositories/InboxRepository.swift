@@ -15,14 +15,51 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     
     private(set) var webSocket: URLSessionWebSocketTask?
     
-    internal func createWebSocket(clientKey: String, userId: String) async throws {
+    internal func createWebSocket(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void) async throws {
         
         webSocket = openWebSocket(clientKey: clientKey)
         
         if let socket = webSocket {
             
             socket.receive { result in
-                print(result)
+                
+                switch result {
+                    
+                case .failure(let error):
+                    
+                    print(error) // TODO
+                    
+                case .success(let message):
+                    
+                    switch message {
+                        
+                    case .data(let data):
+                        
+                        do {
+                            let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
+                            onMessageReceived(newMessage)
+                        } catch {
+    //                        Courier.log(String(describing: error))
+    //                        continuation.resume(throwing: CourierError.requestError)
+                        }
+                        
+                    case .string(let str):
+                        
+                        do {
+                            let data = str.data(using: .utf8) ?? Data()
+                            let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
+                            onMessageReceived(newMessage)
+                        } catch {
+    //                        Courier.log(String(describing: error))
+    //                        continuation.resume(throwing: CourierError.requestError)
+                        }
+                        
+                    @unknown default:
+                        break
+                    }
+                    
+                }
+                
             }
             
             try await subscribeWebSocket(

@@ -100,17 +100,17 @@ class ViewController: UIViewController {
             }
         )
         
-        let l2 = Courier.shared.addInboxListener(
-            onInitialLoad: {
-                print("Listener 2 Loading")
-            },
-            onError: {
-                print("Listener 2 Error")
-            },
-            onMessagesChanged: { messages in
-                print("Listener 2 Messages: \(messages)")
-            }
-        )
+//        let l2 = Courier.shared.addInboxListener(
+//            onInitialLoad: {
+//                print("Listener 2 Loading")
+//            },
+//            onError: {
+//                print("Listener 2 Error")
+//            },
+//            onMessagesChanged: { messages in
+//                print("Listener 2 Messages: \(messages)")
+//            }
+//        )
         
     }
     

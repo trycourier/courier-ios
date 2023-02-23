@@ -458,14 +458,21 @@ import UIKit
                 let clientKey = "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx"
                 let userId = "example_user"
                 
-                let messages = try await inboxRepo.getMessages(
+                var messages = try await inboxRepo.getMessages(
                     clientKey: clientKey,
                     userId: userId
                 )
                 
                 try await inboxRepo.createWebSocket(
                     clientKey: clientKey,
-                    userId: userId
+                    userId: userId,
+                    onMessageReceived: { message in
+                        
+                        // Testing TODO: Fix
+                        messages.append(message)
+                        listener.onMessagesChanged?(messages)
+                        
+                    }
                 )
                 
                 listener.onMessagesChanged?(messages)

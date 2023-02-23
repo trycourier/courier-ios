@@ -6,6 +6,28 @@ let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
 
 final class CourierTests: XCTestCase {
     
+    func test1() {
+        
+        let exp = expectation(description: "Completed")
+        
+        Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("Listener 1 Loading")
+            },
+            onError: {
+                print("Listener 1 Error")
+//                exp.fulfill()
+            },
+            onMessagesChanged: { messages in
+                print("Listener 1 Messages: \(messages)")
+//                exp.fulfill()
+            }
+        )
+        
+        waitForExpectations(timeout: 30, handler: nil)
+
+    }
+    
     func testA() async throws {
         
         print("\n🔬 Setting APNS Token before User")
