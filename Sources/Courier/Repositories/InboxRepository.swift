@@ -7,7 +7,69 @@
 
 import Foundation
 
-internal class InboxRepository: Repository {
+internal struct WebSocketConnectionPayload: Codable {
+    var query: String
+}
+
+internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
+    
+    private(set) var webSocket: URLSessionWebSocketTask?
+    
+    internal func createWebSocket(clientKey: String, userId: String) async throws {
+        
+        webSocket = openWebSocket(clientKey: clientKey)
+        
+        if let socket = webSocket {
+            
+            socket.receive { result in
+                print(result)
+            }
+            
+            try await subscribeWebSocket(
+                webSocket: socket,
+                clientKey: clientKey,
+                userId: userId
+            )
+            
+        }
+        
+    }
+    
+    internal func closeWebSocket() {
+        webSocket?.cancel(with: .goingAway, reason: nil)
+        webSocket = nil
+    }
+    
+    private func openWebSocket(clientKey: String) -> URLSessionWebSocketTask {
+        
+        let url = URL(string: "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production/?clientKey=\(clientKey)")!
+        let request = URLRequest(url: url)
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        let socket = session.webSocketTask(with: request)
+        socket.resume()
+        
+        return socket
+        
+    }
+    
+    private func subscribeWebSocket(webSocket: URLSessionWebSocketTask, clientKey: String, userId: String) async throws {
+        
+        let dict: [String : Any] = [
+            "action": "subscribe",
+            "data": [
+                "channel": userId,
+                "clientKey": clientKey,
+                "event": "*",
+                "version": "3"
+            ]
+        ]
+        
+        let json = try? JSONSerialization.data(withJSONObject: dict, options: [])
+        let body = String(data: json ?? Data(), encoding: .utf8) ?? ""
+        
+        try await webSocket.send(URLSessionWebSocketTask.Message.string(body))
+        
+    }
     
     internal func getMessages(clientKey: String, userId: String) async throws -> [InboxMessage] {
         

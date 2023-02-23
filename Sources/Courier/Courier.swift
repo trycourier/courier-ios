@@ -447,10 +447,6 @@ import UIKit
     
     private var inboxListeners: [CourierInboxListener] = []
     
-    private var isFetchingInboxMessages = false
-    
-    // TODO: Get Web Socket
-    
     private func startInboxPipe(listener: CourierInboxListener) {
         
         Task {
@@ -459,9 +455,17 @@ import UIKit
                 
                 listener.onInitialLoad?()
                 
+                let clientKey = "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx"
+                let userId = "example_user"
+                
                 let messages = try await inboxRepo.getMessages(
-                    clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx", // TODO
-                    userId: "example_user" // TODO
+                    clientKey: clientKey,
+                    userId: userId
+                )
+                
+                try await inboxRepo.createWebSocket(
+                    clientKey: clientKey,
+                    userId: userId
                 )
                 
                 listener.onMessagesChanged?(messages)
