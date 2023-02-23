@@ -576,12 +576,12 @@ import GraphQLite
         }
     }
     
-    @objc public func getMessages() {
+    @objc public func getMessages(clientKey: String, userId: String) {
     
         let url = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
         let headers = [
-            "x-courier-client-key": "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
-            "x-courier-user-id": "example_user"
+            "x-courier-client-key": clientKey,
+            "x-courier-user-id": userId
         ]
         
         let server = GQLServer(HTTP: url, headers: headers)

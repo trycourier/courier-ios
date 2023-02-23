@@ -10,15 +10,6 @@
       }
     },
     {
-      "identity" : "apollo-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apollographql/apollo-ios.git",
-      "state" : {
-        "revision" : "f9a452cf786e02cafff85c4acf9f72e99011b3ad",
-        "version" : "1.0.7"
-      }
-    },
-    {
       "identity" : "boringssl-swiftpm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
@@ -33,7 +24,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "feature/inbox",
-        "revision" : "449602b18a80ef082030c3b8822e56e846bd54e0"
+        "revision" : "4ffb54a083bde452d3ab8e7c320911579b81bba3"
       }
     },
     {
@@ -91,15 +82,6 @@
       }
     },
     {
-      "identity" : "inflectorkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mattt/InflectorKit",
-      "state" : {
-        "revision" : "d8cbcc04972690aaa5fc760a2b9ddb3e9f0decd7",
-        "version" : "1.0.0"
-      }
-    },
-    {
       "identity" : "leveldb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/leveldb.git",
@@ -127,39 +109,12 @@
       }
     },
     {
-      "identity" : "sqlite.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stephencelis/SQLite.swift.git",
-      "state" : {
-        "revision" : "7a2e3cd27de56f6d396e84f63beefd0267b55ccb",
-        "version" : "0.14.1"
-      }
-    },
-    {
-      "identity" : "swift-argument-parser",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-argument-parser.git",
-      "state" : {
-        "revision" : "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
-        "version" : "1.2.2"
-      }
-    },
-    {
-      "identity" : "swift-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections",
-      "state" : {
-        "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
-        "version" : "1.0.4"
-      }
-    },
-    {
       "identity" : "swift-protobuf",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "ab3a58b7209a17d781c0d1dbb3e1ff3da306bae8",
-        "version" : "1.20.3"
+        "revision" : "0af9125c4eae12a4973fb66574c53a54962a9e1e",
+        "version" : "1.21.0"
       }
     }
   ],
