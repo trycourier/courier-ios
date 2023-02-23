@@ -14,82 +14,74 @@ internal struct WebSocketConnectionPayload: Codable {
 internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     
     private(set) var webSocket: URLSessionWebSocketTask?
+    private var onMessageReceived: ((InboxMessage) -> Void)?
+    
+    private func setupReceive() {
+        webSocket?.receive { result in
+            
+            switch result {
+            case .success(let message):
+                
+                switch message {
+                case .string(let str):
+                    
+                    do {
+                        let data = str.data(using: .utf8) ?? Data()
+                        let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
+                        self.onMessageReceived?(newMessage)
+                    } catch {
+                        Courier.log(String(describing: error))
+//                        continuation.resume(throwing: CourierError.requestError)
+                    }
+                    
+                case .data(let data):
+                    
+                    do {
+                        let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
+                        self.onMessageReceived?(newMessage)
+                    } catch {
+                        Courier.log(String(describing: error))
+//                        continuation.resume(throwing: CourierError.requestError)
+                    }
+                    
+                @unknown default:
+                    print("Unknown")
+                }
+                
+                self.setupReceive()
+                
+            case .failure(let error):
+                print(error)
+            }
+            
+        }
+    }
     
     internal func createWebSocket(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void) async throws {
         
-        webSocket = openWebSocket(clientKey: clientKey)
+        closeWebSocket()
         
-        if let socket = webSocket {
-            
-            socket.receive { result in
-                
-                switch result {
-                    
-                case .failure(let error):
-                    
-                    print(error) // TODO
-                    
-                case .success(let message):
-                    
-                    switch message {
-                        
-                    case .data(let data):
-                        
-                        do {
-                            let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
-                            onMessageReceived(newMessage)
-                        } catch {
-    //                        Courier.log(String(describing: error))
-    //                        continuation.resume(throwing: CourierError.requestError)
-                        }
-                        
-                    case .string(let str):
-                        
-                        do {
-                            let data = str.data(using: .utf8) ?? Data()
-                            let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
-                            onMessageReceived(newMessage)
-                        } catch {
-    //                        Courier.log(String(describing: error))
-    //                        continuation.resume(throwing: CourierError.requestError)
-                        }
-                        
-                    @unknown default:
-                        break
-                    }
-                    
-                }
-                
-            }
-            
-            try await subscribeWebSocket(
-                webSocket: socket,
-                clientKey: clientKey,
-                userId: userId
-            )
-            
-        }
+        webSocket = try await openWebSocket(clientKey: clientKey, userId: userId)
+
+        self.onMessageReceived = onMessageReceived
+        
+        setupReceive()
         
     }
     
     internal func closeWebSocket() {
         webSocket?.cancel(with: .goingAway, reason: nil)
         webSocket = nil
+        onMessageReceived = nil
     }
     
-    private func openWebSocket(clientKey: String) -> URLSessionWebSocketTask {
+    private func openWebSocket(clientKey: String, userId: String) async throws -> URLSessionWebSocketTask {
         
         let url = URL(string: "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production/?clientKey=\(clientKey)")!
         let request = URLRequest(url: url)
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         let socket = session.webSocketTask(with: request)
         socket.resume()
-        
-        return socket
-        
-    }
-    
-    private func subscribeWebSocket(webSocket: URLSessionWebSocketTask, clientKey: String, userId: String) async throws {
         
         let dict: [String : Any] = [
             "action": "subscribe",
@@ -104,7 +96,9 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         let json = try? JSONSerialization.data(withJSONObject: dict, options: [])
         let body = String(data: json ?? Data(), encoding: .utf8) ?? ""
         
-        try await webSocket.send(URLSessionWebSocketTask.Message.string(body))
+        try await socket.send(URLSessionWebSocketTask.Message.string(body))
+        
+        return socket
         
     }
     

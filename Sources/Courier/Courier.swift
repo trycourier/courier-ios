@@ -463,17 +463,21 @@ import UIKit
                     userId: userId
                 )
                 
-                try await inboxRepo.createWebSocket(
-                    clientKey: clientKey,
-                    userId: userId,
-                    onMessageReceived: { message in
-                        
-                        // Testing TODO: Fix
-                        messages.append(message)
-                        listener.onMessagesChanged?(messages)
-                        
-                    }
-                )
+                if (inboxRepo.webSocket == nil) {
+                    
+                    try await inboxRepo.createWebSocket(
+                        clientKey: clientKey,
+                        userId: userId,
+                        onMessageReceived: { message in
+
+                            // Testing TODO: Fix
+                            messages.append(message)
+                            listener.onMessagesChanged?(messages)
+
+                        }
+                    )
+                    
+                }
                 
                 listener.onMessagesChanged?(messages)
                 
