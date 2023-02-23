@@ -457,6 +457,8 @@ import UIKit
             
             do {
                 
+                listener.onError?()
+                
                 if let messages = inboxMessages {
                     
                     // Send the messages to the listener if we have messages
