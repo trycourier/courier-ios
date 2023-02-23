@@ -446,38 +446,24 @@ import UIKit
     // MARK: Inbox
     
     private var inboxListeners: [CourierInboxListener] = []
-    private var inboxMessages: [InboxMessage]? = nil
     
     // TODO: Get Web Socket
     
     private func startInboxPipe(listener: CourierInboxListener) {
         
-        // Handle data fetching
         Task {
             
             do {
                 
                 listener.onInitialLoad?()
                 
-                if let messages = inboxMessages {
-                    
-                    // Send the messages to the listener if we have messages
-                    listener.onMessagesChanged?(messages)
-                    
-                } else {
-                    
-                    // Grab the messages if needed
-                    inboxMessages = try await inboxRepo.getMessages(
-                        clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx", // TODO
-                        userId: "example_user" // TODO
-                    )
-                    
-                    // Call all the listeners at the same time
-                    inboxListeners.forEach { listener in
-                        listener.onMessagesChanged?(inboxMessages ?? [])
-                    }
-                    
-                }
+                let messages = try await inboxRepo.getMessages(
+                    clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx", // TODO
+                    userId: "example_user" // TODO
+                )
+                
+                // Send the messages to the listener if we have messages
+                listener.onMessagesChanged?(messages)
                 
             } catch {
                 
@@ -516,7 +502,7 @@ import UIKit
             return $0 == listener
         })
         
-        // Kill the timer if nothing is listening
+        // Kill the pipes if nothing is listening
         closeInboxPipe()
         
     }
@@ -530,7 +516,7 @@ import UIKit
         
         // Clear the messages
         if (inboxListeners.isEmpty) {
-            inboxMessages = nil
+//            inboxMessages = nil
         }
         
     }
