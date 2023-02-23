@@ -18,13 +18,7 @@ let package = Package(
     targets: [
         .target(
             name: "Courier",
-            dependencies: [
-                .byName(name: "GraphQLite")
-            ]
-        ),
-        .binaryTarget(
-            name: "GraphQLite",
-            path: "Frameworks/GraphQLite.xcframework"
+            dependencies: []
         ),
         .testTarget(
             name: "CourierTests",

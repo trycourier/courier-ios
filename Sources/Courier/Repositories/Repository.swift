@@ -10,5 +10,6 @@ import Foundation
 class Repository {
     
     let baseUrl = "https://api.courier.com"
+    let inboxUrl = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
     
 }

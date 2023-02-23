@@ -515,6 +515,11 @@ import GraphQLite
         }
     }
     
+    // TODO: Get web socket
+    internal func getAllMessages(clientKey: String, userId: String) async throws -> [InboxMessage] {
+        return try await InboxRepository().getMessages(clientKey: clientKey, userId: userId)
+    }
+    
     // MARK: Logging
     
     // Called when logs are performed
@@ -574,70 +579,6 @@ import GraphQLite
         if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
             UIApplication.shared.open(appSettings)
         }
-    }
-    
-    @objc public func getMessages(clientKey: String, userId: String) {
-    
-        let url = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
-        let headers = [
-            "x-courier-client-key": clientKey,
-            "x-courier-user-id": userId
-        ]
-        
-        let server = GQLServer(HTTP: url, headers: headers)
-        
-        let query = """
-        query GetMessages(
-            $params: FilterParamsInput
-            $limit: Int = 10
-            $after: String
-        ) {
-            count(params: $params)
-            messages(params: $params, limit: $limit, after: $after) {
-                totalCount
-                pageInfo {
-                    startCursor
-                    hasNextPage
-                }
-                nodes {
-                    messageId
-                    read
-                    archived
-                    created
-                    tags
-                    title
-                    preview
-                    actions {
-                        content
-                        href
-                        style
-                        background_color
-                    }
-                }
-            }
-        }
-        """
-
-        server.query(query, [:]) { result, error in
-            print(error ?? "No error")
-            print(result)
-        }
-        
-    }
-    
-    @objc public func getMessagesRaw(clientKey: String, userId: String) {
-        
-        Task {
-            do {
-                try await InboxRepository().getMessages(url: "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q", clientKey: clientKey, userId: userId)
-//                onSuccess(messages)
-//                print(messages)
-            } catch {
-                print(error)
-//                onFailure(error)
-            }
-        }
-        
     }
     
 }

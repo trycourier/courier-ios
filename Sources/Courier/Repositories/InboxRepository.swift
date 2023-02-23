@@ -7,16 +7,11 @@
 
 import Foundation
 
-struct GraphQLQuery: Codable {
-    var variables: String = "{}"
-    var query: String
-}
-
 internal class InboxRepository: Repository {
     
-    internal func getMessages(url: String, clientKey: String, userId: String) async throws {
+    internal func getMessages(clientKey: String, userId: String) async throws -> [InboxMessage] {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<[InboxMessage], Error>) in
             
             let query = """
             query GetMessages(
@@ -50,13 +45,15 @@ internal class InboxRepository: Repository {
             }
             """
 
-            let url = URL(string: url)!
+            let url = URL(string: inboxUrl)!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
+            
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
             request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
             
-            let payload = GraphQLQuery(query: query)
+            let payload = CourierGraphQLQuery(query: query)
             request.httpBody = try! JSONEncoder().encode(payload)
             
             let task = CourierTask(with: request) { (validCodes, data, response, error, status) in
@@ -66,7 +63,13 @@ internal class InboxRepository: Repository {
                     return
                 }
                 
-                continuation.resume()
+                do {
+                    let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
+                    continuation.resume(returning: res.data.messages.nodes)
+                } catch {
+                    Courier.log(String(describing: error))
+                    continuation.resume(throwing: CourierError.requestError)
+                }
                 
             }
             
