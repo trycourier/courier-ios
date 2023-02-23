@@ -452,9 +452,6 @@ import UIKit
     
     private func startInboxPipe(listener: CourierInboxListener) {
         
-        // Tell the listener we are loading
-        listener.onInitialLoad?()
-        
         // Handle data fetching
         Task {
             
@@ -491,6 +488,9 @@ import UIKit
     }
     
     @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
+        
+        // Call initial load
+        onInitialLoad?()
         
         // Create a new inbox listener
         let listener = CourierInboxListener(

@@ -88,19 +88,29 @@ class ViewController: UIViewController {
         
         refresh()
         
-        let l1 = Courier.shared.addInboxListener(onMessagesChanged: { messages in
-            print("Listener 1: \(messages)")
-        })
+        let l1 = Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("Listener 1 Loading")
+            },
+            onError: {
+                print("Listener 1 Error")
+            },
+            onMessagesChanged: { messages in
+                print("Listener 1 Messages: \(messages)")
+            }
+        )
         
-//        Courier.shared.addInboxListener(onMessagesChanged: { messages in
-//
-//            print("L2 count is: \(messages)")
-//
-//            if (count >= 5) {
-//                Courier.shared.removeInboxListener(listener: l1)
+//        let l2 = Courier.shared.addInboxListener(
+//            onInitialLoad: {
+//                print("Listener 2 Loading")
+//            },
+//            onError: {
+//                print("Listener 2 Error")
+//            },
+//            onMessagesChanged: { messages in
+//                print("Listener 2: \(messages)")
 //            }
-//
-//        })
+//        )
         
     }
     
