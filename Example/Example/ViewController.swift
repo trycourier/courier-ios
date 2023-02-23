@@ -102,9 +102,10 @@ class ViewController: UIViewController {
             
         })
         
-        "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx"
-        
-        Courier.shared.getMessages()
+        Courier.shared.getMessages(
+            clientKey: "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx",
+            userId: "example_user"
+        )
         
     }
     

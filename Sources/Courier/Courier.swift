@@ -625,4 +625,19 @@ import GraphQLite
         
     }
     
+    @objc public func getMessagesRaw(clientKey: String, userId: String) {
+        
+        Task {
+            do {
+                try await InboxRepository().getMessages(url: "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q", clientKey: clientKey, userId: userId)
+//                onSuccess(messages)
+//                print(messages)
+            } catch {
+                print(error)
+//                onFailure(error)
+            }
+        }
+        
+    }
+    
 }
