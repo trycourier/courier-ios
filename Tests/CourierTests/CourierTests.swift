@@ -38,9 +38,7 @@ final class CourierTests: XCTestCase {
             userId: Env.COURIER_USER_ID
         )
         
-        try await Task.sleep(nanoseconds: 2_000_000_000)
-        
-        try await Courier.shared.signOut()
+        try await Task.sleep(nanoseconds: 5_000_000_000)
         
         Courier.shared.addInboxListener(
             onInitialLoad: {

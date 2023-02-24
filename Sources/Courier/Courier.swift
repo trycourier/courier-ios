@@ -136,7 +136,15 @@ import UIKit
             
             // Check if we need to start the inbox pipe
             if (!inboxListeners.isEmpty && inboxRepo.webSocket == nil) {
+                
+                // Notify all listeners
+                self.inboxListeners.forEach {
+                    $0.onInitialLoad?()
+                }
+                
+                // Create the inbox pipe
                 startInboxPipe()
+                
             }
             
         } catch {
