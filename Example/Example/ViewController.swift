@@ -96,7 +96,7 @@ class ViewController: UIViewController {
                 print("Listener 1 Error")
             },
             onMessagesChanged: { messages in
-                print("Listener 1 Messages: \(messages)")
+                print("Listener 1 Messages: \(messages.count)")
             }
         )
         
@@ -108,7 +108,12 @@ class ViewController: UIViewController {
 //                print("Listener 2 Error")
 //            },
 //            onMessagesChanged: { messages in
-//                print("Listener 2 Messages: \(messages)")
+//                print("Listener 2 Messages: \(messages.count)")
+//
+//                if (messages.count > 10) {
+//                    Courier.shared.removeInboxListener(listener: l1)
+//                }
+//
 //            }
 //        )
         

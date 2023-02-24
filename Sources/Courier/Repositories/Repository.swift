@@ -11,5 +11,6 @@ class Repository: NSObject {
     
     let baseUrl = "https://api.courier.com"
     let inboxUrl = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
+    let inboxWebSocketUrl = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
     
 }

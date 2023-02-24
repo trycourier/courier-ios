@@ -10,10 +10,10 @@ import Foundation
 @objc public class CourierInboxListener: NSObject {
     
     let onInitialLoad: (() -> Void)?
-    let onError: (() -> Void)?
+    let onError: ((Error) -> Void)?
     let onMessagesChanged: (([InboxMessage]) -> Void)?
     
-    public init(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) {
+    public init(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) {
         self.onInitialLoad = onInitialLoad
         self.onError = onError
         self.onMessagesChanged = onMessagesChanged

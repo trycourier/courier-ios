@@ -7,9 +7,11 @@
 
 import Foundation
 
-enum CourierError: Error {
+public enum CourierError: Error {
     case noAccessTokenFound
     case noUserIdFound
     case requestError
     case sendTestMessageFail
+    case inboxWebSocketError
+    case inboxWebSocketFail
 }

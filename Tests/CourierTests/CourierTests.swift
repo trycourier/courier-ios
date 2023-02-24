@@ -6,28 +6,6 @@ let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
 
 final class CourierTests: XCTestCase {
     
-    func test1() {
-        
-        let exp = expectation(description: "Completed")
-        
-        Courier.shared.addInboxListener(
-            onInitialLoad: {
-                print("Listener 1 Loading")
-            },
-            onError: {
-                print("Listener 1 Error")
-//                exp.fulfill()
-            },
-            onMessagesChanged: { messages in
-                print("Listener 1 Messages: \(messages)")
-//                exp.fulfill()
-            }
-        )
-        
-        waitForExpectations(timeout: 30, handler: nil)
-
-    }
-    
     func testA() async throws {
         
         print("\n🔬 Setting APNS Token before User")
@@ -36,6 +14,7 @@ final class CourierTests: XCTestCase {
             try await Courier.shared.setAPNSToken(rawApnsToken)
         } catch {
             XCTAssertEqual(Courier.shared.accessToken, nil)
+            XCTAssertEqual(Courier.shared.clientKey, nil)
             XCTAssertEqual(Courier.shared.userId, nil)
             XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         }
@@ -50,6 +29,7 @@ final class CourierTests: XCTestCase {
             try await Courier.shared.setFCMToken(fcmToken)
         } catch {
             XCTAssertEqual(Courier.shared.accessToken, nil)
+            XCTAssertEqual(Courier.shared.clientKey, nil)
             XCTAssertEqual(Courier.shared.userId, nil)
             XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
         }
@@ -63,6 +43,7 @@ final class CourierTests: XCTestCase {
         // Set the access token and start the SDK
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_ACCESS_TOKEN,
+            clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
 
@@ -81,6 +62,7 @@ final class CourierTests: XCTestCase {
         // Set the access token and start the SDK
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_ACCESS_TOKEN,
+            clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
 

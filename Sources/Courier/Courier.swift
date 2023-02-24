@@ -75,6 +75,15 @@ import UIKit
     }
     
     /**
+     * A read only value set to the current user client key
+     */
+    @objc public var clientKey: String? {
+        get {
+            return userManager.getClientKey()
+        }
+    }
+    
+    /**
      * The key required to initialized the SDK
      * https://www.courier.com/docs/reference/auth/issue-token/
      */
@@ -84,19 +93,29 @@ import UIKit
         }
     }
     
+    @objc public var isUserSignedIn: Bool {
+        get {
+            return userManager.getUserId() != nil
+            && userManager.getClientKey() != nil
+            && userManager.getAccessToken() != nil
+        }
+    }
+    
     /**
      * Function to set the current credentials for the user and their access token
      * You should consider using this in areas where you update your local user's state
      */
-    @objc public func signIn(accessToken: String, userId: String) async throws {
+    @objc public func signIn(accessToken: String, clientKey: String, userId: String) async throws {
         
         Courier.log("Updating Courier User Profile")
         Courier.log("Access Token: \(accessToken)")
+        Courier.log("Client Key: \(clientKey)")
         Courier.log("User Id: \(userId)")
         
         userManager.setCredentials(
             userId: userId,
-            accessToken: accessToken
+            accessToken: accessToken,
+            clientKey: clientKey
         )
         
         do {
@@ -129,10 +148,10 @@ import UIKit
         
     }
     
-    @objc public func signIn(accessToken: String, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func signIn(accessToken: String, clientKey: String, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                try await signIn(accessToken: accessToken, userId: userId)
+                try await signIn(accessToken: accessToken, clientKey: clientKey, userId: userId)
                 onSuccess()
             } catch {
                 onFailure(error)
@@ -449,14 +468,21 @@ import UIKit
     
     private func startInboxPipe(listener: CourierInboxListener) {
         
+        if (!isUserSignedIn) {
+            Courier.log("User is not logged in. Log the user in and try again.")
+            return
+        }
+        
+        // Safe guard. Should not get called
+        guard let userId = self.userId, let clientKey = self.clientKey else {
+            return
+        }
+        
         Task {
             
             do {
                 
                 listener.onInitialLoad?()
-                
-                let clientKey = "ZDA3MDVmNGUtM2Y1ZS00ZTUyLWJlMmQtODY4ZTRlODFmZWQx"
-                let userId = "example_user"
                 
                 var messages = try await inboxRepo.getMessages(
                     clientKey: clientKey,
@@ -474,6 +500,9 @@ import UIKit
                             messages.append(message)
                             listener.onMessagesChanged?(messages)
 
+                        },
+                        onMessageReceivedError: { error in
+                            listener.onError?(error)
                         }
                     )
                     
@@ -483,7 +512,9 @@ import UIKit
                 
             } catch {
                 
-                listener.onError?() // TODO: Get the error
+                if let error = error as? CourierError {
+                    listener.onError?(error)
+                }
                 
             }
             
@@ -491,7 +522,7 @@ import UIKit
         
     }
     
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: (() -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -532,7 +563,7 @@ import UIKit
         
         // Clear the messages
         if (inboxListeners.isEmpty) {
-//            inboxMessages = nil
+            inboxRepo.closeWebSocket()
         }
         
     }
