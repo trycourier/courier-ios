@@ -95,9 +95,7 @@ import UIKit
     
     @objc public var isUserSignedIn: Bool {
         get {
-            return userManager.getUserId() != nil
-            && userManager.getClientKey() != nil
-            && userManager.getAccessToken() != nil
+            return userId != nil && clientKey != nil && accessToken != nil
         }
     }
     
@@ -119,6 +117,8 @@ import UIKit
         )
         
         do {
+            
+            
             
             // Attempt to put the users tokens
             // If we have them
@@ -466,55 +466,71 @@ import UIKit
     
     private var inboxListeners: [CourierInboxListener] = []
     
-    private func startInboxPipe(listener: CourierInboxListener) {
+    private var inboxMessages: [InboxMessage]? = nil
+    
+//    private func startInboxPipe(userId: String, clientKey: String, listener: CourierInboxListener) {
+//
+//        if (inboxListeners.isEmpty) {
+//
+//            self.inboxMessages = nil
+//
+//            self.inboxMessages = try await inboxRepo.getMessages(
+//                clientKey: clientKey,
+//                userId: userId
+//            )
+//
+//            if (inboxRepo.webSocket == nil) {
+//
+//                try await inboxRepo.createWebSocket(
+//                    clientKey: clientKey,
+//                    userId: userId,
+//                    onMessageReceived: { message in
+//
+//                        // Testing TODO: Fix
+//                        self.inboxMessages?.append(message)
+//                        listener.onMessagesChanged?(self.inboxMessages ?? [])
+//
+//                    },
+//                    onMessageReceivedError: { error in
+//                        listener.onError?(error)
+//                    }
+//                )
+//
+//            }
+//
+//        }
+//
+//    }
+    
+    private var inboxInitialization: (Task<[InboxMessage], Error>)? = nil
+    
+    private func getInboxInitTask(clientKey: String, userId: String) -> Task<[InboxMessage], Error> {
         
-        if (!isUserSignedIn) {
-            Courier.log("User is not logged in. Log the user in and try again.")
-            return
-        }
-        
-        // Safe guard. Should not get called
-        guard let userId = self.userId, let clientKey = self.clientKey else {
-            return
-        }
-        
-        Task {
+        return Task {
             
             do {
                 
-                listener.onInitialLoad?()
-                
-                var messages = try await inboxRepo.getMessages(
+                let messages = try await inboxRepo.getMessages(
                     clientKey: clientKey,
                     userId: userId
                 )
                 
-                if (inboxRepo.webSocket == nil) {
-                    
-                    try await inboxRepo.createWebSocket(
-                        clientKey: clientKey,
-                        userId: userId,
-                        onMessageReceived: { message in
-
-                            // Testing TODO: Fix
-                            messages.append(message)
-                            listener.onMessagesChanged?(messages)
-
-                        },
-                        onMessageReceivedError: { error in
-                            listener.onError?(error)
-                        }
-                    )
-                    
-                }
+                try await inboxRepo.createWebSocket(
+                    clientKey: clientKey,
+                    userId: userId,
+                    onMessageReceived: { message in
+                        print(message)
+                    },
+                    onMessageReceivedError: { error in
+                        print(error)
+                    }
+                )
                 
-                listener.onMessagesChanged?(messages)
+                return messages
                 
             } catch {
                 
-                if let error = error as? CourierError {
-                    listener.onError?(error)
-                }
+                throw error
                 
             }
             
@@ -522,7 +538,7 @@ import UIKit
         
     }
     
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener? {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -531,13 +547,16 @@ import UIKit
             onMessagesChanged: onMessagesChanged
         )
         
-        // Add the new listener
+        if (inboxInitialization == nil) {
+            inboxInitialization = getInboxInitTask(
+                clientKey: clientKey ?? "",
+                userId: userId ?? ""
+            )
+        }
+        
+        // Keep track of listener
         inboxListeners.append(listener)
         
-        // Start the pipe
-        startInboxPipe(listener: listener)
-        
-        // Return the listener
         return listener
         
     }

@@ -35,6 +35,7 @@ class ViewController: UIViewController {
                     
                     try await Courier.shared.signIn(
                         accessToken: Env.COURIER_ACCESS_TOKEN,
+                        clientKey: Env.COURIER_CLIENT_KEY,
                         userId: userId
                     )
                     
@@ -92,8 +93,8 @@ class ViewController: UIViewController {
             onInitialLoad: {
                 print("Listener 1 Loading")
             },
-            onError: {
-                print("Listener 1 Error")
+            onError: { error in
+                print("Listener 1 Error: \(error)")
             },
             onMessagesChanged: { messages in
                 print("Listener 1 Messages: \(messages.count)")
