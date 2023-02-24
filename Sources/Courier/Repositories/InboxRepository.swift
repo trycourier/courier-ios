@@ -92,7 +92,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     
     private func openWebSocket(clientKey: String, userId: String) async throws -> URLSessionWebSocketTask {
         
-        // Return the socket if it is connected
+        // Return the socket if it is created
         if let socket = webSocket {
             return socket
         }
