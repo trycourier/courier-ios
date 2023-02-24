@@ -17,24 +17,6 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     private var onMessageReceived: ((InboxMessage) -> Void)?
     private var onMessageReceivedError: ((CourierError) -> Void)?
     
-//    internal func startInbox(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws -> [InboxMessage] {
-//        
-//        let messages = try await getMessages(
-//            clientKey: clientKey,
-//            userId: userId
-//        )
-//        
-//        try await createWebSocket(
-//            clientKey: clientKey,
-//            userId: userId,
-//            onMessageReceived: onMessageReceived,
-//            onMessageReceivedError: onMessageReceivedError
-//        )
-//        
-//        return messages
-//        
-//    }
-    
     internal func createWebSocket(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
         
         // Open and connect to the server

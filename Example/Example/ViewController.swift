@@ -97,7 +97,22 @@ class ViewController: UIViewController {
                 print("Listener 1 Error: \(error)")
             },
             onMessagesChanged: { messages in
-                print("Listener 1 Messages: \(messages.count)")
+                
+                print("--- MESSAGES CHANGED START ---\n")
+                
+                messages.forEach { message in
+                    do {
+                        let jsonEncoder = JSONEncoder()
+                        let jsonData = try jsonEncoder.encode(message)
+                        let json = String(data: jsonData, encoding: String.Encoding.utf8)
+                        print(json ?? "")
+                    } catch {
+                        print(error)
+                    }
+                }
+                
+                print("\n--- MESSAGES CHANGED END ---")
+                
             }
         )
         
