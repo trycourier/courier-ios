@@ -6,6 +6,63 @@ let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
 
 final class CourierTests: XCTestCase {
     
+    func test1() async throws {
+        
+        try await Courier.shared.signOut()
+        
+        let l1 = Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("L2 Loading")
+            },
+            onError: { error in
+                print("L1 Error \(error)")
+            },
+            onMessagesChanged: { messages in
+                print("L1 messages \(messages.count)")
+            })
+        
+        let l2 = Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("L2 Loading")
+            },
+            onError: { error in
+                print("L2 Error \(error)")
+            },
+            onMessagesChanged: { messages in
+                print("L2 messages \(messages.count)")
+            })
+        
+        try await Courier.shared.signIn(
+            accessToken: Env.COURIER_ACCESS_TOKEN,
+            clientKey: Env.COURIER_CLIENT_KEY,
+            userId: Env.COURIER_USER_ID
+        )
+        
+        try await Task.sleep(nanoseconds: 2_000_000_000)
+        
+        try await Courier.shared.signOut()
+        
+        Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("L3 Loading")
+            },
+            onError: { error in
+                print("L3 Error \(error)")
+            },
+            onMessagesChanged: { messages in
+                print("L3 messages \(messages.count)")
+                
+                if (messages.count >= 12) {
+                    Courier.shared.removeInboxListener(listener: l1)
+                    Courier.shared.removeInboxListener(listener: l2)
+                }
+                
+            })
+        
+        try await Task.sleep(nanoseconds: 60_000_000_000)
+        
+    }
+    
     func testA() async throws {
         
         print("\n🔬 Setting APNS Token before User")

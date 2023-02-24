@@ -14,4 +14,5 @@ public enum CourierError: Error {
     case sendTestMessageFail
     case inboxWebSocketError
     case inboxWebSocketFail
+    case inboxUserNotFound
 }

@@ -105,16 +105,11 @@ class ViewController: UIViewController {
 //            onInitialLoad: {
 //                print("Listener 2 Loading")
 //            },
-//            onError: {
-//                print("Listener 2 Error")
+//            onError: { error in
+//                print("Listener 2 Error: \(error)")
 //            },
 //            onMessagesChanged: { messages in
 //                print("Listener 2 Messages: \(messages.count)")
-//
-//                if (messages.count > 10) {
-//                    Courier.shared.removeInboxListener(listener: l1)
-//                }
-//
 //            }
 //        )
         

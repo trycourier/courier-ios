@@ -118,10 +118,6 @@ import UIKit
         
         do {
             
-            if (!inboxListeners.isEmpty && inboxInitialization == nil) {
-                startInboxPipe()
-            }
-            
             // Attempt to put the users tokens
             // If we have them
             async let putAPNS: () = tokenRepo.putUserToken(
@@ -137,6 +133,11 @@ import UIKit
             )
             
             let _ = try await [putAPNS, putFCM]
+            
+            // Check if we need to start the inbox pipe
+            if (!inboxListeners.isEmpty && inboxRepo.webSocket == nil) {
+                startInboxPipe()
+            }
             
         } catch {
             
@@ -183,6 +184,9 @@ import UIKit
             )
             
             let _ = try await [deleteAPNS, deleteFCM]
+            
+            // Close the inbox pipe if needed
+            closeInboxPipe()
             
         } catch {
             
@@ -467,16 +471,17 @@ import UIKit
     // MARK: Inbox
     
     private var inboxListeners: [CourierInboxListener] = []
-    
     private var inboxMessages: [InboxMessage]? = nil
     
-    private var inboxInitialization: (Task<[InboxMessage], Error>)? = nil
-    
-    private func initInbox(clientKey: String, userId: String) -> Task<[InboxMessage], Error> {
+    private func startInboxPipe() {
         
-        return Task {
+        Task {
             
             do {
+                
+                guard let clientKey = self.clientKey, let userId = self.userId else {
+                    return
+                }
                 
                 var messages = try await inboxRepo.getMessages(
                     clientKey: clientKey,
@@ -507,44 +512,10 @@ import UIKit
                     }
                 )
                 
-                return messages
+                // Set the messages and call the listeners
+                inboxMessages = messages
                 
-            } catch {
-                
-                throw error
-                
-            }
-            
-        }
-        
-    }
-    
-    private func startInboxPipe() {
-        
-        Task {
-            
-            do {
-                
-                guard let clientKey = self.clientKey, let userId = self.userId else {
-                    
-                    // Kill the initialization
-                    inboxInitialization?.cancel()
-                    inboxInitialization = nil
-                    
-                    Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
-                    return
-                    
-                }
-                
-                inboxInitialization?.cancel()
-                
-                inboxInitialization = initInbox(
-                    clientKey: clientKey,
-                    userId: userId
-                )
-                
-                inboxMessages = try await inboxInitialization?.value
-                
+                // Call the listeners
                 inboxListeners.forEach {
                     $0.onMessagesChanged?(inboxMessages ?? [])
                 }
@@ -561,7 +532,7 @@ import UIKit
         
     }
     
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener? {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -573,11 +544,20 @@ import UIKit
         // Keep track of listener
         inboxListeners.append(listener)
         
-        // Tell the listener about the messages or start the pipe
-        if let messages = inboxMessages {
-            listener.onMessagesChanged?(messages)
-        } else {
+        // Call initial load
+        listener.onInitialLoad?()
+        
+        // User is not signed
+        if (!isUserSignedIn) {
+            Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
+            listener.onError?(CourierError.inboxUserNotFound)
+            return listener
+        }
+        
+        if (inboxListeners.count == 1) {
             startInboxPipe()
+        } else if let messages = inboxMessages {
+            listener.onMessagesChanged?(messages)
         }
         
         return listener
@@ -592,7 +572,9 @@ import UIKit
         })
         
         // Kill the pipes if nothing is listening
-        closeInboxPipe()
+        if (inboxListeners.isEmpty) {
+            closeInboxPipe()
+        }
         
     }
     
@@ -603,12 +585,14 @@ import UIKit
     
     private func closeInboxPipe() {
         
-        // Clear the messages
-        if (inboxListeners.isEmpty) {
-            inboxInitialization?.cancel()
-            inboxInitialization = nil
-            inboxMessages = nil
-            inboxRepo.closeWebSocket()
+        // Remove all inbox details
+        // Keep the listeners still registered
+        inboxMessages = nil
+        inboxRepo.closeWebSocket()
+        
+        // Tell all the listeners the user is signed out
+        inboxListeners.forEach {
+            $0.onError?(CourierError.inboxUserNotFound)
         }
         
     }
