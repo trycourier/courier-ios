@@ -96,22 +96,32 @@ class ViewController: UIViewController {
             onError: { error in
                 print("Listener 1 Error: \(error)")
             },
-            onMessagesChanged: { messages in
+            onMessagesChanged: { unreadMessageCount, totalMessageCount, previousMessages, newMessages, canPaginate in
                 
                 print("--- MESSAGES CHANGED START ---\n")
                 
-                messages.forEach { message in
+                let allMessages = newMessages + previousMessages
+                
+                for (index, message) in allMessages.enumerated() {
+                
                     do {
                         let jsonEncoder = JSONEncoder()
                         let jsonData = try jsonEncoder.encode(message)
                         let json = String(data: jsonData, encoding: String.Encoding.utf8)
-                        print(json ?? "")
+                        print("\(index): \(json ?? "")")
                     } catch {
                         print(error)
                     }
+                    
                 }
                 
                 print("\n--- MESSAGES CHANGED END ---")
+                
+                print(canPaginate)
+                
+                if (canPaginate) {
+                    Courier.shared.fetchNextPageOfMessages()
+                }
                 
             }
         )

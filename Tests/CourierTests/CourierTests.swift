@@ -14,7 +14,7 @@ final class CourierTests: XCTestCase {
             accessToken: Env.COURIER_ACCESS_TOKEN,
             clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
-        )
+        ) 
         
         var canPage = true
         

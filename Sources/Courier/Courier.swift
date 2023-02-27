@@ -540,6 +540,8 @@ import UIKit
                 inboxMessages = inboxData.messages.nodes
                 inboxPaginationInfo = inboxData.messages.pageInfo
                 
+                inboxPageFetch = nil
+                
                 // Call the listeners
                 inboxListeners.forEach {
                     $0.callMessageChanged(
@@ -551,15 +553,13 @@ import UIKit
                     )
                 }
                 
-                inboxPageFetch = nil
-                
             } catch {
+                
+                inboxPageFetch = nil
                 
                 inboxListeners.forEach {
                     $0.onError?(error)
                 }
-                
-                inboxPageFetch = nil
                 
             }
             
@@ -596,6 +596,8 @@ import UIKit
                 inboxMessages = previousMessages + newMessages
                 inboxPaginationInfo = inboxData.messages.pageInfo
                 
+                inboxPageFetch = nil
+                
                 // Call the listeners
                 inboxListeners.forEach {
                     $0.callMessageChanged(
@@ -607,15 +609,13 @@ import UIKit
                     )
                 }
                 
-                inboxPageFetch = nil
-                
             } catch {
+                
+                inboxPageFetch = nil
                 
                 inboxListeners.forEach {
                     $0.onError?(error)
                 }
-                
-                inboxPageFetch = nil
                 
             }
             
