@@ -14,10 +14,10 @@ final class CourierTests: XCTestCase {
             accessToken: Env.COURIER_ACCESS_TOKEN,
             clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
-        ) 
-        
+        )
+
         var canPage = true
-        
+
         Courier.shared.addInboxListener(
             onInitialLoad: {
                 print("L2 Loading")
@@ -30,7 +30,7 @@ final class CourierTests: XCTestCase {
                 print("Last Message Ids: \(previousMessages.last?.messageId) \(newMessages.last?.messageId)")
                 canPage = canPaginate
             })
-        
+
         while (canPage) {
             try await Task.sleep(nanoseconds: 2_000_000_000)
             Courier.shared.fetchNextPageOfMessages()
@@ -254,6 +254,21 @@ final class CourierTests: XCTestCase {
         XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
+
+    }
+    
+    func testK() async throws {
+        
+        print("\n🔬 Setting Inbox Pagination Limit")
+        
+        Courier.shared.inboxPaginationLimit = 10
+        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 10)
+        
+        Courier.shared.inboxPaginationLimit = -1000
+        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 1)
+        
+        Courier.shared.inboxPaginationLimit = 1000
+        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 200)
 
     }
     

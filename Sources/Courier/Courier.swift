@@ -53,8 +53,19 @@ import UIKit
     /**
      * Default pagination limit for messages
      */
-    
-    private static let inboxPaginationLimit = 24
+    private static let defaultPaginationLimit = 24
+    private static let defaultMaxPaginationLimit = 200
+    private static let defaultMinPaginationLimit = 1
+    private var _inboxPaginationLimit = defaultPaginationLimit
+    @objc public var inboxPaginationLimit: Int {
+        get {
+            return self._inboxPaginationLimit
+        }
+        set {
+            let min = min(Courier.defaultMaxPaginationLimit, newValue)
+            self._inboxPaginationLimit = max(Courier.defaultMinPaginationLimit, min)
+        }
+    }
     
     /**
      * Courier APIs
@@ -503,7 +514,7 @@ import UIKit
                 let inboxData = try await inboxRepo.getMessages(
                     clientKey: clientKey,
                     userId: userId,
-                    paginationLimit: Courier.inboxPaginationLimit
+                    paginationLimit: _inboxPaginationLimit
                 )
                 
                 try await inboxRepo.createWebSocket(
@@ -584,7 +595,7 @@ import UIKit
                 let inboxData = try await inboxRepo.getMessages(
                     clientKey: clientKey,
                     userId: userId,
-                    paginationLimit: Courier.inboxPaginationLimit,
+                    paginationLimit: _inboxPaginationLimit,
                     startCursor: inboxPaginationInfo?.startCursor
                 )
                 
