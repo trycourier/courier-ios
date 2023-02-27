@@ -105,15 +105,15 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         
     }
     
-    internal func getMessages(clientKey: String, userId: String) async throws -> [InboxMessage] {
+    internal func getMessages(clientKey: String, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<[InboxMessage], Error>) in
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<InboxData, Error>) in
             
             let query = """
             query GetMessages(
                 $params: FilterParamsInput
-                $limit: Int = 10
-                $after: String
+                $limit: Int = \(paginationLimit)
+                $after: String \(startCursor != nil ? "= \"\(startCursor!)\"" : "")
             ) {
                 count(params: $params)
                 messages(params: $params, limit: $limit, after: $after) {
@@ -161,7 +161,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 
                 do {
                     let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
-                    continuation.resume(returning: res.data.messages.nodes)
+                    continuation.resume(returning: res.data)
                 } catch {
                     Courier.log(String(describing: error))
                     continuation.resume(throwing: CourierError.requestError)

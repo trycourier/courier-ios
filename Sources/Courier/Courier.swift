@@ -6,12 +6,12 @@ import UIKit
     // MARK: Courier
     
     /*
-
+     
      ______  ______  __  __  ______  __  ______  ______
-    /\  ___\/\  __ \/\ \/\ \/\  == \/\ \/\  ___\/\  == \
-    \ \ \___\ \ \/\ \ \ \_\ \ \  __<\ \ \ \  __\\ \  __<
+     /\  ___\/\  __ \/\ \/\ \/\  == \/\ \/\  ___\/\  == \
+     \ \ \___\ \ \/\ \ \ \_\ \ \  __<\ \ \ \  __\\ \  __<
      \ \_____\ \_____\ \_____\ \_\ \_\ \_\ \_____\ \_\ \_\
-      \/_____/\/_____/\/_____/\/_/ /_/\/_/\/_____/\/_/ /_/
+     \/_____/\/_____/\/_____/\/_/ /_/\/_/\/_____/\/_/ /_/
      
      
      Full Documentation: https://github.com/trycourier/courier-ios
@@ -26,9 +26,9 @@ import UIKit
     
     private override init() {
         
-        #if DEBUG
+#if DEBUG
         isDebugging = true
-        #endif
+#endif
         
         super.init()
     }
@@ -49,6 +49,12 @@ import UIKit
      * Set to find debug mode by default
      */
     @objc public var isDebugging = false
+    
+    /**
+     * Default pagination limit for messages
+     */
+    
+    private static let inboxPaginationLimit = 24
     
     /**
      * Courier APIs
@@ -125,7 +131,7 @@ import UIKit
                 provider: .apns,
                 deviceToken: apnsToken
             )
-
+            
             async let putFCM: () = tokenRepo.putUserToken(
                 userId: userId,
                 provider: .fcm,
@@ -185,7 +191,7 @@ import UIKit
                 userId: userId,
                 deviceToken: apnsToken
             )
-
+            
             async let deleteFCM: () = tokenRepo.deleteToken(
                 userId: userId,
                 deviceToken: fcmToken
@@ -220,7 +226,7 @@ import UIKit
         }
     }
     
-     // MARK: Token Management
+    // MARK: Token Management
     
     /**
      * The token issued by Apple to receive tokens on this device
@@ -252,19 +258,19 @@ import UIKit
         } catch {
             Courier.log(String(describing: error))
         }
-
+        
         // We save the raw apns token here
         rawApnsToken = rawToken
-
+        
         Courier.log("Apple Push Notification Service Token")
         Courier.log(rawToken.string)
-
+        
         return try await tokenRepo.putUserToken(
             userId: userId,
             provider: .apns,
             deviceToken: rawToken.string
         )
-
+        
     }
     
     @objc public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
@@ -298,18 +304,18 @@ import UIKit
         } catch {
             Courier.log(String(describing: error))
         }
-
+        
         fcmToken = token
-
+        
         Courier.log("Firebase Cloud Messaging Token")
         Courier.log(token)
-
+        
         return try await tokenRepo.putUserToken(
             userId: userId,
             provider: .fcm,
             deviceToken: token
         )
-
+        
     }
     
     @objc public func setFCMToken(_ token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
@@ -430,7 +436,7 @@ import UIKit
     }
     
     // MARK: Testing
-
+    
     @discardableResult
     public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all) async throws -> String {
         return try await messagingRepo.send(
@@ -479,11 +485,14 @@ import UIKit
     // MARK: Inbox
     
     private var inboxListeners: [CourierInboxListener] = []
-    private var inboxMessages: [InboxMessage]? = nil
+    @objc private(set) public var inboxMessages: [InboxMessage]? = nil
+    
+    private var inboxPaginationInfo: InboxPageInfo? = nil
+    private var inboxPageFetch: Task<Void, Error>? = nil
     
     private func startInboxPipe() {
         
-        Task {
+        inboxPageFetch = Task {
             
             do {
                 
@@ -491,9 +500,10 @@ import UIKit
                     return
                 }
                 
-                var messages = try await inboxRepo.getMessages(
+                let inboxData = try await inboxRepo.getMessages(
                     clientKey: clientKey,
-                    userId: userId
+                    userId: userId,
+                    paginationLimit: Courier.inboxPaginationLimit
                 )
                 
                 try await inboxRepo.createWebSocket(
@@ -501,13 +511,19 @@ import UIKit
                     userId: userId,
                     onMessageReceived: { message in
                         
-                        // Add the message to the array
-                        messages.append(message)
-                        
                         // Notify all listeners
                         self.inboxListeners.forEach {
-                            $0.onMessagesChanged?(messages)
+                            $0.callMessageChanged(
+                                unreadMessageCount: 0,
+                                totalMessageCount: 0,
+                                previousMessages: self.inboxMessages ?? [],
+                                newMessages: [message],
+                                canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
+                            )
                         }
+                        
+                        // Add the message to the array
+                        self.inboxMessages?.insert(message, at: 0)
                         
                     },
                     onMessageReceivedError: { error in
@@ -520,13 +536,22 @@ import UIKit
                     }
                 )
                 
-                // Set the messages and call the listeners
-                inboxMessages = messages
+                // Save values for later
+                inboxMessages = inboxData.messages.nodes
+                inboxPaginationInfo = inboxData.messages.pageInfo
                 
                 // Call the listeners
                 inboxListeners.forEach {
-                    $0.onMessagesChanged?(inboxMessages ?? [])
+                    $0.callMessageChanged(
+                        unreadMessageCount: 0,
+                        totalMessageCount: inboxData.messages.totalCount ?? 0,
+                        previousMessages: [],
+                        newMessages: self.inboxMessages ?? [],
+                        canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
+                    )
                 }
+                
+                inboxPageFetch = nil
                 
             } catch {
                 
@@ -534,13 +559,75 @@ import UIKit
                     $0.onError?(error)
                 }
                 
+                inboxPageFetch = nil
+                
             }
             
         }
         
     }
     
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: (([InboxMessage]) -> Void)? = nil) -> CourierInboxListener {
+    @objc public func fetchNextPageOfMessages() {
+        
+        if (inboxPageFetch != nil) {
+            return
+        }
+        
+        inboxPageFetch = Task {
+            
+            do {
+                
+                guard let clientKey = self.clientKey, let userId = self.userId else {
+                    return
+                }
+                
+                let inboxData = try await inboxRepo.getMessages(
+                    clientKey: clientKey,
+                    userId: userId,
+                    paginationLimit: Courier.inboxPaginationLimit,
+                    startCursor: inboxPaginationInfo?.startCursor
+                )
+                
+                // Hold previous messages
+                let previousMessages = inboxMessages ?? []
+                let newMessages = inboxData.messages.nodes
+                
+                // Save values for later
+                inboxMessages = previousMessages + newMessages
+                inboxPaginationInfo = inboxData.messages.pageInfo
+                
+                // Call the listeners
+                inboxListeners.forEach {
+                    $0.callMessageChanged(
+                        unreadMessageCount: 0,
+                        totalMessageCount: inboxData.messages.totalCount ?? 0,
+                        previousMessages: previousMessages,
+                        newMessages: newMessages,
+                        canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
+                    )
+                }
+                
+                inboxPageFetch = nil
+                
+            } catch {
+                
+                inboxListeners.forEach {
+                    $0.onError?(error)
+                }
+                
+                inboxPageFetch = nil
+                
+            }
+            
+        }
+        
+    }
+    
+    @objc public func readAllMessages() {
+        // TODO
+    }
+    
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ unreadMessageCount: Int, _ totalMessageCount: Int, _ previousMessages: [InboxMessage], _ newMessages: [InboxMessage], _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -565,7 +652,13 @@ import UIKit
         if (inboxListeners.count == 1) {
             startInboxPipe()
         } else if let messages = inboxMessages {
-            listener.onMessagesChanged?(messages)
+            listener.callMessageChanged(
+                unreadMessageCount: 0,
+                totalMessageCount: 0,
+                previousMessages: [],
+                newMessages: messages,
+                canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
+            )
         }
         
         return listener

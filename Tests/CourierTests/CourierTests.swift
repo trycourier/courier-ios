@@ -8,29 +8,7 @@ final class CourierTests: XCTestCase {
     
     func test1() async throws {
         
-        try await Courier.shared.signOut()
-        
-        let l1 = Courier.shared.addInboxListener(
-            onInitialLoad: {
-                print("L2 Loading")
-            },
-            onError: { error in
-                print("L1 Error \(error)")
-            },
-            onMessagesChanged: { messages in
-                print("L1 messages \(messages.count)")
-            })
-        
-        let l2 = Courier.shared.addInboxListener(
-            onInitialLoad: {
-                print("L2 Loading")
-            },
-            onError: { error in
-                print("L2 Error \(error)")
-            },
-            onMessagesChanged: { messages in
-                print("L2 messages \(messages.count)")
-            })
+        Courier.shared.isDebugging = false
         
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_ACCESS_TOKEN,
@@ -38,26 +16,75 @@ final class CourierTests: XCTestCase {
             userId: Env.COURIER_USER_ID
         )
         
-        try await Task.sleep(nanoseconds: 5_000_000_000)
+        var canPage = true
         
         Courier.shared.addInboxListener(
             onInitialLoad: {
-                print("L3 Loading")
+                print("L2 Loading")
             },
             onError: { error in
-                print("L3 Error \(error)")
+                print("L1 Error \(error)")
             },
-            onMessagesChanged: { messages in
-                print("L3 messages \(messages.count)")
-                
-                if (messages.count >= 12) {
-                    Courier.shared.removeInboxListener(listener: l1)
-                    Courier.shared.removeInboxListener(listener: l2)
-                }
-                
+            onMessagesChanged: { unreadMessageCount, totalMessageCount, previousMessages, newMessages, canPaginate in
+                print("L1 messages \(unreadMessageCount) \(totalMessageCount) \(previousMessages.count) \(newMessages.count) \(canPaginate)")
+                print("Last Message Ids: \(previousMessages.last?.messageId) \(newMessages.last?.messageId)")
+                canPage = canPaginate
             })
         
-        try await Task.sleep(nanoseconds: 60_000_000_000)
+        while (canPage) {
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+            Courier.shared.fetchNextPageOfMessages()
+        }
+        
+//        print(Courier.shared.inboxMessages?.count)
+//        print(Courier.shared.inboxMessages?.first?.messageId)
+//        print(Courier.shared.inboxMessages?.last?.messageId)
+        
+//        Courier.shared.fetchNextPageOfMessages()
+//
+//        try await Task.sleep(nanoseconds: 2_000_000_000)
+//
+//        Courier.shared.fetchNextPageOfMessages()
+//
+//        try await Task.sleep(nanoseconds: 2_000_000_000)
+        
+//        let l2 = Courier.shared.addInboxListener(
+//            onInitialLoad: {
+//                print("L2 Loading")
+//            },
+//            onError: { error in
+//                print("L2 Error \(error)")
+//            },
+//            onMessagesChanged: { messages in
+//                print("L2 messages \(messages.count)")
+//            })
+//
+//        try await Courier.shared.signIn(
+//            accessToken: Env.COURIER_ACCESS_TOKEN,
+//            clientKey: Env.COURIER_CLIENT_KEY,
+//            userId: Env.COURIER_USER_ID
+//        )
+//
+//        try await Task.sleep(nanoseconds: 5_000_000_000)
+//
+//        Courier.shared.addInboxListener(
+//            onInitialLoad: {
+//                print("L3 Loading")
+//            },
+//            onError: { error in
+//                print("L3 Error \(error)")
+//            },
+//            onMessagesChanged: { messages in
+//                print("L3 messages \(messages.count)")
+//
+//                if (messages.count >= 12) {
+//                    Courier.shared.removeInboxListener(listener: l1)
+//                    Courier.shared.removeInboxListener(listener: l2)
+//                }
+//
+//            })
+//
+//        try await Task.sleep(nanoseconds: 60_000_000_000)
         
     }
     

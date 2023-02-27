@@ -17,7 +17,14 @@ internal struct InboxData: Codable {
 }
 
 internal struct InboxNodes: Codable {
+    let totalCount: Int?
+    let pageInfo: InboxPageInfo
     let nodes: [InboxMessage]
+}
+
+internal struct InboxPageInfo: Codable {
+    let startCursor: String?
+    let hasNextPage: Bool?
 }
 
 @objc public class InboxMessage: NSObject, Codable {
@@ -28,11 +35,11 @@ internal struct InboxNodes: Codable {
     let created: String?
 //    let actions: String?
     let archived: Bool?
-    let read: Bool?
+    let read: String?
     let messageId: String
-    let tags: String?
+    let tags: [String]?
     
-    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: Bool?, messageId: String, tags: String?) {
+    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, tags: [String]?) {
         self.title = title
         self.body = body
         self.preview = preview
