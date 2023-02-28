@@ -24,7 +24,10 @@ class CustomInboxCollectionViewCell: UICollectionViewCell {
             textLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             textLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
         ])
+        
+        textLabel.numberOfLines = 0
         self.textLabel = textLabel
+        
 
         self.contentView.backgroundColor = .lightGray
         self.textLabel.textAlignment = .center

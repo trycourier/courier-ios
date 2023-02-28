@@ -35,8 +35,18 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                     Courier.shared.fetchNextPageOfMessages()
                 }
                 
-                self.inboxMessages = previousMessages + newMessages
-                self.collectionView.reloadData()
+                if (newMessages.count == 1) {
+                    self.inboxMessages = newMessages + previousMessages
+                } else {
+                    self.inboxMessages = previousMessages + newMessages
+                }
+                
+                // TODO: Move to main thread
+                // TODO: Clean this up
+                
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
                 
             }
         )
@@ -55,7 +65,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
         let message = inboxMessages[indexPath.row]
-        cell.textLabel.text = "\(message.messageId)"
+        cell.textLabel.text = "\(message.messageId) :: \(message.title ?? "No title")"
         return cell
         
     }

@@ -11,9 +11,9 @@ import Foundation
     
     let onInitialLoad: (() -> Void)?
     let onError: ((Error) -> Void)?
-    let onMessagesChanged: ((_ unreadMessageCount: Int, _ totalMessageCount: Int, _ previousMessages: [InboxMessage], _ newMessages: [InboxMessage], _ canPaginate: Bool) -> Void)?
+    let onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)?
     
-    public init(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ unreadMessageCount: Int, _ totalMessageCount: Int, _ previousMessages: [InboxMessage], _ newMessages: [InboxMessage], _ canPaginate: Bool) -> Void)? = nil) {
+    public init(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) {
         self.onInitialLoad = onInitialLoad
         self.onError = onError
         self.onMessagesChanged = onMessagesChanged
@@ -23,12 +23,13 @@ import Foundation
 
 extension CourierInboxListener {
     
-    func callMessageChanged(unreadMessageCount: Int, totalMessageCount: Int, previousMessages: [InboxMessage], newMessages: [InboxMessage], canPaginate: Bool) {
+    func callMessageChanged(newMessage: InboxMessage?, previousMessages: [InboxMessage], nextPageOfMessages: [InboxMessage], unreadMessageCount: Int, totalMessageCount: Int, canPaginate: Bool) {
         self.onMessagesChanged?(
+            newMessage,
+            previousMessages,
+            nextPageOfMessages,
             unreadMessageCount,
             totalMessageCount,
-            previousMessages,
-            newMessages,
             canPaginate
         )
     }

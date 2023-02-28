@@ -12,12 +12,21 @@ internal struct InboxResponse: Codable {
 }
 
 internal struct InboxData: Codable {
-    let count: Int
-    let messages: InboxNodes
+    var count: Int
+    var messages: InboxNodes
+}
+
+extension InboxData {
+    
+    mutating func incrementCounts() {
+        count += 1
+        messages.totalCount! += 1
+    }
+    
 }
 
 internal struct InboxNodes: Codable {
-    let totalCount: Int?
+    var totalCount: Int?
     let pageInfo: InboxPageInfo
     let nodes: [InboxMessage]
 }

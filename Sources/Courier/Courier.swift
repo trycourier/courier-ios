@@ -496,9 +496,21 @@ import UIKit
     // MARK: Inbox
     
     private var inboxListeners: [CourierInboxListener] = []
-    @objc private(set) public var inboxMessages: [InboxMessage]? = nil
     
-    private var inboxPaginationInfo: InboxPageInfo? = nil
+    private var inboxData: InboxData? = nil {
+        didSet {
+            
+            // Add the new messages to the existing messages
+            let newMessages = inboxData?.messages.nodes ?? []
+            inboxMessages = (inboxMessages ?? []) + newMessages
+            
+        }
+    }
+    
+    @objc private(set) public var inboxMessages: [InboxMessage]? = nil
+//    private var totalMessageCount: Int? = nil
+    
+//    private var inboxPaginationInfo: InboxPageInfo? = nil
     private var inboxPageFetch: Task<Void, Error>? = nil
     
     private func startInboxPipe() {
@@ -511,7 +523,7 @@ import UIKit
                     return
                 }
                 
-                let inboxData = try await inboxRepo.getMessages(
+                self.inboxData = try await inboxRepo.getMessages(
                     clientKey: clientKey,
                     userId: userId,
                     paginationLimit: _inboxPaginationLimit
@@ -522,19 +534,32 @@ import UIKit
                     userId: userId,
                     onMessageReceived: { message in
                         
-                        // Notify all listeners
-                        self.inboxListeners.forEach {
-                            $0.callMessageChanged(
-                                unreadMessageCount: 0,
-                                totalMessageCount: 0,
-                                previousMessages: self.inboxMessages ?? [],
-                                newMessages: [message],
-                                canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
-                            )
+                        // Ensure we have data to work with
+                        if let data = self.inboxData {
+                            
+                            // Add the new message
+                            self.inboxData?.incrementCounts()
+                            
+                            let totalMessageCount = data.messages.totalCount ?? 0
+                            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+                            let previousMessages = self.inboxMessages ?? []
+                            
+                            // Notify all listeners
+                            self.inboxListeners.forEach {
+                                $0.callMessageChanged(
+                                    newMessage: message,
+                                    previousMessages: previousMessages,
+                                    nextPageOfMessages: [],
+                                    unreadMessageCount: -999,
+                                    totalMessageCount: totalMessageCount,
+                                    canPaginate: canPaginate
+                                )
+                            }
+                            
+                            // Add the message to the array
+                            self.inboxMessages?.insert(message, at: 0)
+                            
                         }
-                        
-                        // Add the message to the array
-                        self.inboxMessages?.insert(message, at: 0)
                         
                     },
                     onMessageReceivedError: { error in
@@ -547,21 +572,26 @@ import UIKit
                     }
                 )
                 
-                // Save values for later
-                inboxMessages = inboxData.messages.nodes
-                inboxPaginationInfo = inboxData.messages.pageInfo
-                
                 inboxPageFetch = nil
                 
-                // Call the listeners
-                inboxListeners.forEach {
-                    $0.callMessageChanged(
-                        unreadMessageCount: 0,
-                        totalMessageCount: inboxData.messages.totalCount ?? 0,
-                        previousMessages: [],
-                        newMessages: self.inboxMessages ?? [],
-                        canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
-                    )
+                if let data = inboxData {
+                    
+                    let totalMessageCount = (data.messages.totalCount ?? 0) + 1
+                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+                    let previousMessages = self.inboxMessages ?? []
+                    
+                    // Call the listeners
+                    inboxListeners.forEach {
+                        $0.callMessageChanged(
+                            newMessage: nil,
+                            previousMessages: [],
+                            nextPageOfMessages: previousMessages,
+                            unreadMessageCount: -999,
+                            totalMessageCount: totalMessageCount,
+                            canPaginate: canPaginate
+                        )
+                    }
+                    
                 }
                 
             } catch {
@@ -588,36 +618,41 @@ import UIKit
             
             do {
                 
-                guard let clientKey = self.clientKey, let userId = self.userId else {
+                guard let clientKey = self.clientKey, let userId = self.userId, let data = self.inboxData else {
                     return
                 }
                 
-                let inboxData = try await inboxRepo.getMessages(
+                let previousMessages = inboxMessages ?? []
+                let cursor = data.messages.pageInfo.startCursor
+                
+                self.inboxData = try await inboxRepo.getMessages(
                     clientKey: clientKey,
                     userId: userId,
                     paginationLimit: _inboxPaginationLimit,
-                    startCursor: inboxPaginationInfo?.startCursor
+                    startCursor: cursor
                 )
-                
-                // Hold previous messages
-                let previousMessages = inboxMessages ?? []
-                let newMessages = inboxData.messages.nodes
-                
-                // Save values for later
-                inboxMessages = previousMessages + newMessages
-                inboxPaginationInfo = inboxData.messages.pageInfo
                 
                 inboxPageFetch = nil
                 
-                // Call the listeners
-                inboxListeners.forEach {
-                    $0.callMessageChanged(
-                        unreadMessageCount: 0,
-                        totalMessageCount: inboxData.messages.totalCount ?? 0,
-                        previousMessages: previousMessages,
-                        newMessages: newMessages,
-                        canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
-                    )
+                if let data = inboxData {
+                 
+                    // Hold previous messages
+                    let nextPageOfMessages = data.messages.nodes
+                    let totalMessageCount = data.messages.totalCount ?? 0
+                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+                    
+                    // Call the listeners
+                    inboxListeners.forEach {
+                        $0.callMessageChanged(
+                            newMessage: nil,
+                            previousMessages: previousMessages,
+                            nextPageOfMessages: nextPageOfMessages,
+                            unreadMessageCount: -999,
+                            totalMessageCount: totalMessageCount,
+                            canPaginate: canPaginate
+                        )
+                    }
+                    
                 }
                 
             } catch {
@@ -638,7 +673,7 @@ import UIKit
         // TODO
     }
     
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ unreadMessageCount: Int, _ totalMessageCount: Int, _ previousMessages: [InboxMessage], _ newMessages: [InboxMessage], _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -661,15 +696,23 @@ import UIKit
         }
         
         if (inboxListeners.count == 1) {
+            
             startInboxPipe()
-        } else if let messages = inboxMessages {
+            
+        } else if let data = inboxData, let messages = inboxMessages {
+            
+            let totalMessageCount = (data.messages.totalCount ?? 0) + 1
+            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+            
             listener.callMessageChanged(
-                unreadMessageCount: 0,
-                totalMessageCount: 0,
+                newMessage: nil,
                 previousMessages: [],
-                newMessages: messages,
-                canPaginate: self.inboxPaginationInfo?.hasNextPage ?? false
+                nextPageOfMessages: messages,
+                unreadMessageCount: -999,
+                totalMessageCount: totalMessageCount,
+                canPaginate: canPaginate
             )
+            
         }
         
         return listener
