@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var apnsSwitch: UISwitch!
     @IBOutlet weak var fcmSwitch: UISwitch!
+    @IBOutlet weak var inboxSwitch: UISwitch!
     
     @IBAction func authButtonAction(_ sender: Any) {
         
@@ -62,6 +63,10 @@ class ViewController: UIViewController {
             
             if (fcmSwitch.isOn) {
                 providers.append(.fcm)
+            }
+            
+            if (inboxSwitch.isOn) {
+                providers.append(.inbox)
             }
             
             let messageProviders = providers.map { $0.rawValue }.joined(separator: " and ")

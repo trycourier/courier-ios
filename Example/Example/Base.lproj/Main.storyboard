@@ -31,15 +31,15 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZvI-8h-FKS">
-                                <rect key="frame" x="142.33333333333334" y="568.66666666666663" width="105.66666666666666" height="34.333333333333371"/>
+                                <rect key="frame" x="127.00000000000001" y="568.66666666666663" width="136.33333333333337" height="34.333333333333371"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="gray" title="Send Push"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Send Message"/>
                                 <connections>
                                     <action selector="sendPushAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lbm-xG-YAO"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="feN-2z-rFA">
-                                <rect key="frame" x="135" y="466.66666666666669" width="120" height="82.000000000000057"/>
+                                <rect key="frame" x="135" y="415.66666666666669" width="120" height="133.00000000000006"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmR-rJ-R3B">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="31"/>
@@ -56,7 +56,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QVg-eV-ACx">
-                                        <rect key="frame" x="0.0" y="50.999999999999943" width="120" height="31"/>
+                                        <rect key="frame" x="0.0" y="51" width="120" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FCM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Am-MI-FAs">
                                                 <rect key="frame" x="0.0" y="0.0" width="71" height="31"/>
@@ -65,6 +65,20 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="2bA-Ot-qg8">
+                                                <rect key="frame" x="71" y="0.0" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpO-5O-89t">
+                                        <rect key="frame" x="0.0" y="101.99999999999994" width="120" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Inbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kbd-oM-qwT">
+                                                <rect key="frame" x="0.0" y="0.0" width="71" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wKB-FX-sRD">
                                                 <rect key="frame" x="71" y="0.0" width="51" height="31"/>
                                             </switch>
                                         </subviews>
@@ -94,6 +108,7 @@
                         <outlet property="authButton" destination="G0r-iJ-p6K" id="QmC-Xp-7eg"/>
                         <outlet property="authLabel" destination="kWA-NA-1NT" id="M5w-ts-ONc"/>
                         <outlet property="fcmSwitch" destination="2bA-Ot-qg8" id="Hun-Pa-Wq8"/>
+                        <outlet property="inboxSwitch" destination="wKB-FX-sRD" id="X7j-Rq-r8v"/>
                         <outlet property="sendButton" destination="ZvI-8h-FKS" id="bqf-OS-JES"/>
                     </connections>
                 </viewController>

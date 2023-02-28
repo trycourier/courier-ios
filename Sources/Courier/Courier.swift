@@ -459,7 +459,7 @@ import UIKit
         )
     }
     
-    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+    public func sendMessage(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 let requestId = try await sendMessage(
