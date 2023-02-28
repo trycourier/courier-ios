@@ -29,15 +29,15 @@ internal struct InboxPageInfo: Codable {
 
 @objc public class InboxMessage: NSObject, Codable {
     
-    let title: String?
-    let body: String?
-    let preview: String?
-    let created: String?
+    public let title: String?
+    public let body: String?
+    public let preview: String?
+    public let created: String?
 //    let actions: String?
-    let archived: Bool?
-    let read: String?
-    let messageId: String
-    let tags: [String]?
+    public let archived: Bool?
+    public let read: String?
+    public let messageId: String
+    public let tags: [String]?
     
     public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, tags: [String]?) {
         self.title = title

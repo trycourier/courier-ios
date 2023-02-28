@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
+		27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */; };
 		27895167292689460070F501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895166292689460070F501 /* AppDelegate.swift */; };
 		27895169292689460070F501 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895168292689460070F501 /* SceneDelegate.swift */; };
 		2789516B292689460070F501 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789516A292689460070F501 /* ViewController.swift */; };
@@ -48,6 +50,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		27644EEB29AE7378002F907B /* CustomInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxViewController.swift; sourceTree = "<group>"; };
+		27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxCollectionViewCell.swift; sourceTree = "<group>"; };
 		27895163292689460070F501 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27895166292689460070F501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27895168292689460070F501 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 				27895166292689460070F501 /* AppDelegate.swift */,
 				27895168292689460070F501 /* SceneDelegate.swift */,
 				2789516A292689460070F501 /* ViewController.swift */,
+				27644EEB29AE7378002F907B /* CustomInboxViewController.swift */,
+				27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */,
 				2789516C292689460070F501 /* Main.storyboard */,
 				2789516F292689470070F501 /* Assets.xcassets */,
 				27895171292689470070F501 /* LaunchScreen.storyboard */,
@@ -254,7 +260,9 @@
 			files = (
 				2789516B292689460070F501 /* ViewController.swift in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
+				27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */,
 				2789518129268C400070F501 /* Env.swift in Sources */,
+				27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */,
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,
 			);

@@ -89,42 +89,45 @@ class ViewController: UIViewController {
         
         refresh()
         
-        let l1 = Courier.shared.addInboxListener(
-            onInitialLoad: {
-                print("Listener 1 Loading")
-            },
-            onError: { error in
-                print("Listener 1 Error: \(error)")
-            },
-            onMessagesChanged: { unreadMessageCount, totalMessageCount, previousMessages, newMessages, canPaginate in
-                
-                print("--- MESSAGES CHANGED START ---\n")
-                
-                let allMessages = newMessages + previousMessages
-                
-                for (index, message) in allMessages.enumerated() {
-                
-                    do {
-                        let jsonEncoder = JSONEncoder()
-                        let jsonData = try jsonEncoder.encode(message)
-                        let json = String(data: jsonData, encoding: String.Encoding.utf8)
-                        print("\(index): \(json ?? "")")
-                    } catch {
-                        print(error)
-                    }
-                    
-                }
-                
-                print("\n--- MESSAGES CHANGED END ---")
-                
-                print(canPaginate)
-                
-                if (canPaginate) {
-                    Courier.shared.fetchNextPageOfMessages()
-                }
-                
-            }
-        )
+//        let l1 = Courier.shared.addInboxListener(
+//            onInitialLoad: {
+//                print("Listener 1 Loading")
+//            },
+//            onError: { error in
+//                print("Listener 1 Error: \(error)")
+//            },
+//            onMessagesChanged: { unreadMessageCount, totalMessageCount, previousMessages, newMessages, canPaginate in
+//
+//                print("--- MESSAGES CHANGED START ---\n")
+//
+//                // TODO: Add next page to bottom
+//                // TODO: Add next message to top
+//
+//                let allMessages = previousMessages + newMessages
+//
+//                for (index, message) in allMessages.enumerated() {
+//
+//                    do {
+//                        let jsonEncoder = JSONEncoder()
+//                        let jsonData = try jsonEncoder.encode(message)
+//                        let json = String(data: jsonData, encoding: String.Encoding.utf8)
+//                        print("\(index): \(json ?? "")")
+//                    } catch {
+//                        print(error)
+//                    }
+//
+//                }
+//
+//                print("\n--- MESSAGES CHANGED END ---")
+//
+//                print(canPaginate)
+//
+//                if (canPaginate) {
+//                    Courier.shared.fetchNextPageOfMessages()
+//                }
+//
+//            }
+//        )
         
 //        let l2 = Courier.shared.addInboxListener(
 //            onInitialLoad: {

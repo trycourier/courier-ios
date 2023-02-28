@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Notifications-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G0r-iJ-p6K">
-                                <rect key="frame" x="157.33333333333334" y="304.33333333333331" width="75.666666666666657" height="34.333333333333314"/>
+                                <rect key="frame" x="157.33333333333334" y="286" width="75.666666666666657" height="34.333333333333314"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
                                 <connections>
@@ -25,13 +25,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Courier User Id Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWA-NA-1NT">
-                                <rect key="frame" x="98.333333333333329" y="264" width="193.33333333333337" height="20.333333333333314"/>
+                                <rect key="frame" x="98.333333333333329" y="245.66666666666666" width="193.33333333333337" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZvI-8h-FKS">
-                                <rect key="frame" x="142.33333333333334" y="604" width="105.66666666666666" height="34.333333333333371"/>
+                                <rect key="frame" x="142.33333333333334" y="568.66666666666663" width="105.66666666666666" height="34.333333333333371"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Send Push"/>
                                 <connections>
@@ -39,7 +39,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="feN-2z-rFA">
-                                <rect key="frame" x="135" y="502" width="120" height="82"/>
+                                <rect key="frame" x="135" y="466.66666666666669" width="120" height="82.000000000000057"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmR-rJ-R3B">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="31"/>
@@ -56,7 +56,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QVg-eV-ACx">
-                                        <rect key="frame" x="0.0" y="51" width="120" height="31"/>
+                                        <rect key="frame" x="0.0" y="50.999999999999943" width="120" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FCM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Am-MI-FAs">
                                                 <rect key="frame" x="0.0" y="0.0" width="71" height="31"/>
@@ -88,6 +88,7 @@
                             <constraint firstItem="ZvI-8h-FKS" firstAttribute="top" secondItem="feN-2z-rFA" secondAttribute="bottom" constant="20" id="wDd-qt-eEO"/>
                         </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Notifications" image="paperplane" catalog="system" id="PLW-Xf-H6p"/>
                     <connections>
                         <outlet property="apnsSwitch" destination="BfP-Fl-NGp" id="Utn-2l-mhd"/>
                         <outlet property="authButton" destination="G0r-iJ-p6K" id="QmC-Xp-7eg"/>
@@ -98,10 +99,85 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-15.384615384615383" y="-28.436018957345969"/>
+            <point key="canvasLocation" x="1595" y="-468"/>
+        </scene>
+        <!--Custom Inbox View Controller-->
+        <scene sceneID="ncF-hg-SPf">
+            <objects>
+                <viewController id="9PO-Mt-HrD" customClass="CustomInboxViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dws-37-khE">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Oy5-e3-xVI">
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JYO-qU-pVs">
+                                    <size key="itemSize" width="390" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="J9B-jF-jox"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Oy5-e3-xVI" firstAttribute="trailing" secondItem="J9B-jF-jox" secondAttribute="trailing" id="5on-bk-1sZ"/>
+                            <constraint firstItem="Oy5-e3-xVI" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" id="Gvc-JC-D3S"/>
+                            <constraint firstItem="Oy5-e3-xVI" firstAttribute="top" secondItem="dws-37-khE" secondAttribute="top" id="IDX-av-ojd"/>
+                            <constraint firstAttribute="bottom" secondItem="Oy5-e3-xVI" secondAttribute="bottom" id="hkq-MR-trm"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="qjV-kz-L6Q"/>
+                    <connections>
+                        <outlet property="collectionView" destination="Oy5-e3-xVI" id="W1m-DB-TEE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7Bg-2L-P5V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2444.6153846153848" y="244.54976303317534"/>
+        </scene>
+        <!--Inbox-->
+        <scene sceneID="XAS-ae-2lZ">
+            <objects>
+                <navigationController id="nH0-Ut-6va" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Inbox" image="tray.and.arrow.down" catalog="system" id="f1p-GQ-bmz"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="30b-Yw-PzX">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="9PO-Mt-HrD" kind="relationship" relationship="rootViewController" id="j82-p2-uYI"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="K6f-7m-xg7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1594" y="245"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="Uxj-pF-x4e">
+            <objects>
+                <tabBarController id="WFc-8G-AqP" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ctl-1Z-4qO">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="1GA-Hs-Xez"/>
+                        <segue destination="nH0-Ut-6va" kind="relationship" relationship="viewControllers" id="2UR-9Z-GFG"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Nnt-Hk-krp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="688" y="-76"/>
         </scene>
     </scenes>
     <resources>
+        <image name="paperplane" catalog="system" width="128" height="119"/>
+        <image name="tray.and.arrow.down" catalog="system" width="128" height="111"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
