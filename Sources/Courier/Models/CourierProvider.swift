@@ -7,6 +7,7 @@
 
 @objc public enum CourierProvider: Int, RawRepresentable {
     
+    case inbox
     case apns
     case fcm
     //    case expo
@@ -17,6 +18,8 @@
     
     public var rawValue: RawValue {
         switch self {
+        case .inbox:
+            return "inbox"
         case .apns:
             return "apn"
         case .fcm:
@@ -28,6 +31,8 @@
     
     public init?(rawValue: RawValue) {
         switch rawValue {
+        case "inbox":
+            self = .inbox
         case "apn":
             self = .apns
         case "firebase-fcm":
@@ -38,12 +43,12 @@
     }
     
     public static var all: [CourierProvider] {
-        return [.apns, .fcm]
+        return [.inbox, .apns, .fcm]
     }
     
     public static var allCases: [RawValue] {
         get {
-            return ["apn", "firebase-fcm"]
+            return ["inbox", "apn", "firebase-fcm"]
         }
     }
     

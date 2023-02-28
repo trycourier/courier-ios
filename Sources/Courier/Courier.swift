@@ -449,7 +449,7 @@ import UIKit
     // MARK: Testing
     
     @discardableResult
-    public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all) async throws -> String {
+    public func sendMessage(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all) async throws -> String {
         return try await messagingRepo.send(
             authKey: authKey,
             userId: userId,
@@ -462,7 +462,7 @@ import UIKit
     public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider] = CourierProvider.all, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                let requestId = try await sendPush(
+                let requestId = try await sendMessage(
                     authKey: authKey,
                     userId: userId,
                     title: title,
@@ -479,7 +479,7 @@ import UIKit
     @objc public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [String] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                let requestId = try await sendPush(
+                let requestId = try await sendMessage(
                     authKey: authKey,
                     userId: userId,
                     title: title,

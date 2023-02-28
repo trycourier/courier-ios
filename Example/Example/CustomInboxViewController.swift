@@ -11,7 +11,9 @@ import Courier
 class CustomInboxViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    
     private var inboxMessages: [InboxMessage] = []
+    private var canPaginate = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,21 +31,18 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             onError: { error in
                 print("Inbox Listener Error: \(error)")
             },
-            onMessagesChanged: { unreadMessageCount, totalMessageCount, previousMessages, newMessages, canPaginate in
+            onMessagesChanged: { newMessage, previousMessages, nextPageOfMessages, unreadMessageCount, totalMessageCount, canPaginate in
                 
-                if (canPaginate) {
-                    Courier.shared.fetchNextPageOfMessages()
-                }
+                self.canPaginate = canPaginate
                 
-                if (newMessages.count == 1) {
-                    self.inboxMessages = newMessages + previousMessages
+                if let message = newMessage {
+                    self.inboxMessages = [message] + previousMessages
                 } else {
-                    self.inboxMessages = previousMessages + newMessages
+                    self.inboxMessages = previousMessages + nextPageOfMessages
                 }
                 
-                // TODO: Move to main thread
-                // TODO: Clean this up
-                
+                // TODO: Main thread?
+                // TODO: How do we animate?
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
                 }
@@ -57,16 +56,38 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         return CGSize(width: collectionView.bounds.width, height: 100)
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return self.canPaginate ? 2 : 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.inboxMessages.count
+        return section == 0 ? self.inboxMessages.count : 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
-        let message = inboxMessages[indexPath.row]
-        cell.textLabel.text = "\(message.messageId) :: \(message.title ?? "No title")"
+        
+        if (indexPath.section == 0) {
+            let message = inboxMessages[indexPath.row]
+            cell.textLabel.text = "\(indexPath.row) :: \(message.title ?? "No title")"
+        } else {
+            cell.textLabel.text = "Loading..."
+        }
+        
         return cell
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if (indexPath.section == 1) {
+            Courier.shared.fetchNextPageOfMessages()
+        }
         
     }
 

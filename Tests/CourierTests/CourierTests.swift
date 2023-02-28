@@ -186,7 +186,7 @@ final class CourierTests: XCTestCase {
         
         // TODO: Remove this. For test purposed only
         // Do not use auth key in production app
-        let requestId = try await Courier.shared.sendPush(
+        let requestId = try await Courier.shared.sendMessage(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
             title: "🐤 Chirp Chirp from APNS",
@@ -206,7 +206,7 @@ final class CourierTests: XCTestCase {
         
         // TODO: Remove this. For test purposed only
         // Do not use auth key in production app
-        let requestId = try await Courier.shared.sendPush(
+        let requestId = try await Courier.shared.sendMessage(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
             title: "🐤 Chirp Chirp from FCM!",
