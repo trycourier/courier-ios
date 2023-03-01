@@ -761,8 +761,10 @@ import UIKit
         inboxRepo.closeWebSocket()
         
         // Tell all the listeners the user is signed out
-        inboxListeners.forEach {
-            $0.onError?(CourierError.inboxUserNotFound)
+        runOnMainThread { [weak self] in
+            self?.inboxListeners.forEach {
+                $0.onError?(CourierError.inboxUserNotFound)
+            }
         }
         
     }

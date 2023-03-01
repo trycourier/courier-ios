@@ -11,12 +11,22 @@ import Courier
 class CustomInboxViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var stateLabel: UILabel!
     
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
+    
+    enum State {
+        case loading
+        case error
+        case content
+        case empty
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = "Inbox"
 
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -26,12 +36,18 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         // Courier Inbox
         Courier.shared.addInboxListener(
             onInitialLoad: {
-                print("Inbox Listener Loading")
+                self.setState(.loading)
             },
             onError: { error in
-                print("Inbox Listener Error: \(error)")
+                self.setState(.error, error: String(describing: error))
             },
             onMessagesChanged: { newMessage, previousMessages, nextPageOfMessages, unreadMessageCount, totalMessageCount, canPaginate in
+                
+                if (Courier.shared.inboxMessages?.isEmpty ?? true) {
+                    self.setState(.empty)
+                } else {
+                    self.setState(.content)
+                }
                 
                 self.canPaginate = canPaginate
                 
@@ -41,15 +57,33 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                     self.inboxMessages = previousMessages + nextPageOfMessages
                 }
                 
-                // TODO: Main thread?
+                self.collectionView.reloadData()
                 // TODO: How do we animate?
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
                 
             }
         )
         
+    }
+    
+    private func setState(_ state: State, error: String? = nil) {
+        switch (state) {
+        case .loading:
+            self.collectionView.isHidden = true
+            self.stateLabel.isHidden = false
+            self.stateLabel.text = "Loading..."
+        case .error:
+            self.collectionView.isHidden = true
+            self.stateLabel.isHidden = false
+            self.stateLabel.text = error ?? "Error"
+        case .content:
+            self.collectionView.isHidden = false
+            self.stateLabel.isHidden = true
+            self.stateLabel.text = ""
+        case .empty:
+            self.collectionView.isHidden = true
+            self.stateLabel.isHidden = false
+            self.stateLabel.text = "No messages found"
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -135,19 +135,30 @@
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M6f-Se-H0F">
+                                <rect key="frame" x="20" y="91" width="350" height="670"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="J9B-jF-jox"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Oy5-e3-xVI" firstAttribute="trailing" secondItem="J9B-jF-jox" secondAttribute="trailing" id="5on-bk-1sZ"/>
+                            <constraint firstItem="M6f-Se-H0F" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" constant="20" id="Gha-ym-02a"/>
                             <constraint firstItem="Oy5-e3-xVI" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" id="Gvc-JC-D3S"/>
                             <constraint firstItem="Oy5-e3-xVI" firstAttribute="top" secondItem="dws-37-khE" secondAttribute="top" id="IDX-av-ojd"/>
                             <constraint firstAttribute="bottom" secondItem="Oy5-e3-xVI" secondAttribute="bottom" id="hkq-MR-trm"/>
+                            <constraint firstItem="M6f-Se-H0F" firstAttribute="top" secondItem="J9B-jF-jox" secondAttribute="top" id="jt9-En-ndE"/>
+                            <constraint firstItem="J9B-jF-jox" firstAttribute="trailing" secondItem="M6f-Se-H0F" secondAttribute="trailing" constant="20" id="kMb-CC-gbs"/>
+                            <constraint firstItem="J9B-jF-jox" firstAttribute="bottom" secondItem="M6f-Se-H0F" secondAttribute="bottom" id="pxP-Qz-bg6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="qjV-kz-L6Q"/>
                     <connections>
                         <outlet property="collectionView" destination="Oy5-e3-xVI" id="W1m-DB-TEE"/>
+                        <outlet property="stateLabel" destination="M6f-Se-H0F" id="vuG-32-Rzf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Bg-2L-P5V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
