@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Notifications-->
+        <!--Notifications View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="NotificationsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
@@ -16,22 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G0r-iJ-p6K">
-                                <rect key="frame" x="157.33333333333334" y="286" width="75.666666666666657" height="34.333333333333314"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
-                                <connections>
-                                    <action selector="authButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3Mf-f3-OPe"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Courier User Id Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWA-NA-1NT">
-                                <rect key="frame" x="98.333333333333329" y="245.66666666666666" width="193.33333333333337" height="20.333333333333343"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZvI-8h-FKS">
-                                <rect key="frame" x="127.00000000000001" y="568.66666666666663" width="136.33333333333337" height="34.333333333333371"/>
+                                <rect key="frame" x="127.00000000000001" y="409" width="136.33333333333337" height="34.333333333333314"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="Send Message"/>
                                 <connections>
@@ -39,7 +25,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="feN-2z-rFA">
-                                <rect key="frame" x="135" y="415.66666666666669" width="120" height="133.00000000000006"/>
+                                <rect key="frame" x="135" y="256" width="120" height="133"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmR-rJ-R3B">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="31"/>
@@ -70,7 +56,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpO-5O-89t">
-                                        <rect key="frame" x="0.0" y="101.99999999999994" width="120" height="31"/>
+                                        <rect key="frame" x="0.0" y="102" width="120" height="31"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Inbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kbd-oM-qwT">
                                                 <rect key="frame" x="0.0" y="0.0" width="71" height="31"/>
@@ -78,7 +64,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wKB-FX-sRD">
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wKB-FX-sRD">
                                                 <rect key="frame" x="71" y="0.0" width="51" height="31"/>
                                             </switch>
                                         </subviews>
@@ -92,21 +78,15 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="G0r-iJ-p6K" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="8n5-hA-Fdk"/>
-                            <constraint firstItem="G0r-iJ-p6K" firstAttribute="top" secondItem="kWA-NA-1NT" secondAttribute="bottom" constant="20" id="M0Z-Qu-q53"/>
-                            <constraint firstItem="G0r-iJ-p6K" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="0.75" id="PcK-xc-mpd"/>
                             <constraint firstItem="feN-2z-rFA" firstAttribute="centerX" secondItem="ZvI-8h-FKS" secondAttribute="centerX" id="XMB-dp-aoF"/>
                             <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="d9R-Cx-5fq"/>
-                            <constraint firstItem="kWA-NA-1NT" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="mCN-N1-D8L"/>
-                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1.45" id="o3S-KR-EpT"/>
+                            <constraint firstItem="ZvI-8h-FKS" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="o3S-KR-EpT"/>
                             <constraint firstItem="ZvI-8h-FKS" firstAttribute="top" secondItem="feN-2z-rFA" secondAttribute="bottom" constant="20" id="wDd-qt-eEO"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Notifications" image="paperplane" catalog="system" id="PLW-Xf-H6p"/>
+                    <navigationItem key="navigationItem" id="DB4-LO-Fsv"/>
                     <connections>
                         <outlet property="apnsSwitch" destination="BfP-Fl-NGp" id="Utn-2l-mhd"/>
-                        <outlet property="authButton" destination="G0r-iJ-p6K" id="QmC-Xp-7eg"/>
-                        <outlet property="authLabel" destination="kWA-NA-1NT" id="M5w-ts-ONc"/>
                         <outlet property="fcmSwitch" destination="2bA-Ot-qg8" id="Hun-Pa-Wq8"/>
                         <outlet property="inboxSwitch" destination="wKB-FX-sRD" id="X7j-Rq-r8v"/>
                         <outlet property="sendButton" destination="ZvI-8h-FKS" id="bqf-OS-JES"/>
@@ -114,7 +94,85 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1595" y="-468"/>
+            <point key="canvasLocation" x="2445" y="-491"/>
+        </scene>
+        <!--Auth-->
+        <scene sceneID="9Ks-Gv-TMe">
+            <objects>
+                <navigationController id="Tmj-8w-Ahx" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Auth" image="person.circle" catalog="system" id="b6q-ef-Sgl"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="aGh-i6-t8d">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="miz-bH-rnm" kind="relationship" relationship="rootViewController" id="rbx-cr-JIf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Awj-A7-Mqn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1594" y="1017"/>
+        </scene>
+        <!--Auth View Controller-->
+        <scene sceneID="p5d-L8-ww8">
+            <objects>
+                <viewController id="miz-bH-rnm" customClass="AuthViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="sEv-Xe-881">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLd-SX-o9O">
+                                <rect key="frame" x="157.33333333333334" y="409" width="75.666666666666657" height="34.333333333333314"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
+                                <connections>
+                                    <action selector="authButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Dv-xX-CU2"/>
+                                    <action selector="authButtonAction:" destination="miz-bH-rnm" eventType="touchUpInside" id="oev-1P-Dj5"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Courier User Id Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emG-u0-i0I">
+                                <rect key="frame" x="98.333333333333329" y="368.66666666666669" width="193.33333333333337" height="20.333333333333314"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="aGi-VM-S4U"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="BLd-SX-o9O" firstAttribute="top" secondItem="emG-u0-i0I" secondAttribute="bottom" constant="20" id="M6o-wV-ExL"/>
+                            <constraint firstItem="BLd-SX-o9O" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="QGj-8L-kiy"/>
+                            <constraint firstItem="BLd-SX-o9O" firstAttribute="top" secondItem="emG-u0-i0I" secondAttribute="bottom" constant="20" id="aFF-zO-UL6"/>
+                            <constraint firstItem="emG-u0-i0I" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="kIq-X3-YAQ"/>
+                            <constraint firstItem="BLd-SX-o9O" firstAttribute="centerY" secondItem="aGi-VM-S4U" secondAttribute="centerY" id="kr3-QL-DXd"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="UCa-K7-8wT"/>
+                    <connections>
+                        <outlet property="authButton" destination="BLd-SX-o9O" id="2gF-tH-4YX"/>
+                        <outlet property="authLabel" destination="emG-u0-i0I" id="n8b-mC-4QK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Gi7-we-bW0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2445" y="1017"/>
+        </scene>
+        <!--Notifications-->
+        <scene sceneID="EPn-Ql-4Sm">
+            <objects>
+                <navigationController id="ntI-cU-afA" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Notifications" image="paperplane" catalog="system" id="I45-hq-6mt"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CTu-9i-QZg">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="cXO-mV-OAC"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qCw-ud-L3c" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1574" y="-491"/>
         </scene>
         <!--Custom Inbox View Controller-->
         <scene sceneID="ncF-hg-SPf">
@@ -192,17 +250,19 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="1GA-Hs-Xez"/>
+                        <segue destination="ntI-cU-afA" kind="relationship" relationship="viewControllers" id="7ud-Fd-A2b"/>
                         <segue destination="nH0-Ut-6va" kind="relationship" relationship="viewControllers" id="2UR-9Z-GFG"/>
+                        <segue destination="Tmj-8w-Ahx" kind="relationship" relationship="viewControllers" id="88V-8k-cvs"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nnt-Hk-krp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="688" y="-76"/>
+            <point key="canvasLocation" x="135" y="451"/>
         </scene>
     </scenes>
     <resources>
         <image name="paperplane" catalog="system" width="128" height="119"/>
+        <image name="person.circle" catalog="system" width="128" height="123"/>
         <image name="tray.and.arrow.down" catalog="system" width="128" height="111"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

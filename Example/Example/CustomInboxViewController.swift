@@ -26,7 +26,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Inbox"
+        title = "Inbox"
+        
+        Courier.shared.isDebugging = false
 
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -43,6 +45,8 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             },
             onMessagesChanged: { newMessage, previousMessages, nextPageOfMessages, unreadMessageCount, totalMessageCount, canPaginate in
                 
+                print(newMessage ?? "No new message", previousMessages.count, nextPageOfMessages.count, unreadMessageCount, totalMessageCount, canPaginate)
+                
                 if (Courier.shared.inboxMessages?.isEmpty ?? true) {
                     self.setState(.empty)
                 } else {
@@ -58,7 +62,6 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 }
                 
                 self.collectionView.reloadData()
-                // TODO: How do we animate?
                 
             }
         )

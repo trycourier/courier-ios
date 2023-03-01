@@ -498,16 +498,8 @@ import UIKit
     // MARK: Inbox
     
     private var inboxListeners: [CourierInboxListener] = []
-    
-    private var inboxData: InboxData? = nil {
-        didSet {
-            
-            // Add the new messages to the existing messages
-            let newMessages = inboxData?.messages.nodes ?? []
-            inboxMessages = (inboxMessages ?? []) + newMessages
-            
-        }
-    }
+
+    private var inboxData: InboxData? = nil
     
     @objc private(set) public var inboxMessages: [InboxMessage]? = nil
     private var inboxPageFetch: Task<Void, Error>? = nil
@@ -527,6 +519,8 @@ import UIKit
                     userId: userId,
                     paginationLimit: _inboxPaginationLimit
                 )
+                
+                inboxMessages = self.inboxData?.messages.nodes ?? []
                 
                 try await inboxRepo.createWebSocket(
                     clientKey: clientKey,
@@ -639,6 +633,12 @@ import UIKit
                     startCursor: cursor
                 )
                 
+                // Set empty array if needed
+                if (inboxMessages == nil) {
+                    inboxMessages = []
+                }
+                
+                inboxMessages! += self.inboxData?.messages.nodes ?? []
                 inboxPageFetch = nil
                 
                 if let data = inboxData {
