@@ -74,7 +74,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
         if (indexPath.section == 0) {
             let message = inboxMessages[indexPath.row]
-            cell.textLabel.text = "\(indexPath.row) :: \(message.title ?? "No title")"
+            cell.textLabel.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
         } else {
             cell.textLabel.text = "Loading..."
         }

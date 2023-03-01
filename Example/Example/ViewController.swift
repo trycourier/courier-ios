@@ -74,7 +74,7 @@ class ViewController: UIViewController {
             if let userId = Courier.shared.userId {
                 
                 if (!providers.isEmpty) {
-                    try await Courier.shared.sendPush(
+                    try await Courier.shared.sendMessage(
                         authKey: Env.COURIER_AUTH_KEY,
                         userId: userId,
                         title: "Hey \(userId)!",

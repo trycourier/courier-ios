@@ -476,7 +476,7 @@ import UIKit
         }
     }
     
-    @objc public func sendPush(authKey: String, userId: String, title: String, message: String, providers: [String] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func sendMessage(authKey: String, userId: String, title: String, message: String, providers: [String] = CourierProvider.allCases, onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 let requestId = try await sendMessage(
@@ -508,9 +508,6 @@ import UIKit
     }
     
     @objc private(set) public var inboxMessages: [InboxMessage]? = nil
-//    private var totalMessageCount: Int? = nil
-    
-//    private var inboxPaginationInfo: InboxPageInfo? = nil
     private var inboxPageFetch: Task<Void, Error>? = nil
     
     private func startInboxPipe() {
@@ -532,10 +529,10 @@ import UIKit
                 try await inboxRepo.createWebSocket(
                     clientKey: clientKey,
                     userId: userId,
-                    onMessageReceived: { message in
+                    onMessageReceived: { [weak self] message in
                         
                         // Ensure we have data to work with
-                        if let data = self.inboxData {
+                        if let self = self, let data = self.inboxData {
                             
                             // Add the new message
                             self.inboxData?.incrementCounts()
@@ -545,15 +542,17 @@ import UIKit
                             let previousMessages = self.inboxMessages ?? []
                             
                             // Notify all listeners
-                            self.inboxListeners.forEach {
-                                $0.callMessageChanged(
-                                    newMessage: message,
-                                    previousMessages: previousMessages,
-                                    nextPageOfMessages: [],
-                                    unreadMessageCount: -999,
-                                    totalMessageCount: totalMessageCount,
-                                    canPaginate: canPaginate
-                                )
+                            self.runOnMainThread { [weak self] in
+                                self?.inboxListeners.forEach {
+                                    $0.callMessageChanged(
+                                        newMessage: message,
+                                        previousMessages: previousMessages,
+                                        nextPageOfMessages: [],
+                                        unreadMessageCount: -999,
+                                        totalMessageCount: totalMessageCount,
+                                        canPaginate: canPaginate
+                                    )
+                                }
                             }
                             
                             // Add the message to the array
@@ -562,11 +561,13 @@ import UIKit
                         }
                         
                     },
-                    onMessageReceivedError: { error in
+                    onMessageReceivedError: { [weak self] error in
                         
                         // Notify all listeners
-                        self.inboxListeners.forEach {
-                            $0.onError?(error)
+                        self?.runOnMainThread { [weak self] in
+                            self?.inboxListeners.forEach {
+                                $0.onError?(error)
+                            }
                         }
                         
                     }
@@ -581,15 +582,17 @@ import UIKit
                     let previousMessages = self.inboxMessages ?? []
                     
                     // Call the listeners
-                    inboxListeners.forEach {
-                        $0.callMessageChanged(
-                            newMessage: nil,
-                            previousMessages: [],
-                            nextPageOfMessages: previousMessages,
-                            unreadMessageCount: -999,
-                            totalMessageCount: totalMessageCount,
-                            canPaginate: canPaginate
-                        )
+                    runOnMainThread { [weak self] in
+                        self?.inboxListeners.forEach {
+                            $0.callMessageChanged(
+                                newMessage: nil,
+                                previousMessages: [],
+                                nextPageOfMessages: previousMessages,
+                                unreadMessageCount: -999,
+                                totalMessageCount: totalMessageCount,
+                                canPaginate: canPaginate
+                            )
+                        }
                     }
                     
                 }
@@ -598,8 +601,10 @@ import UIKit
                 
                 inboxPageFetch = nil
                 
-                inboxListeners.forEach {
-                    $0.onError?(error)
+                runOnMainThread { [weak self] in
+                    self?.inboxListeners.forEach {
+                        $0.onError?(error)
+                    }
                 }
                 
             }
@@ -642,15 +647,17 @@ import UIKit
                     let canPaginate = data.messages.pageInfo.hasNextPage ?? false
                     
                     // Call the listeners
-                    inboxListeners.forEach {
-                        $0.callMessageChanged(
-                            newMessage: nil,
-                            previousMessages: previousMessages,
-                            nextPageOfMessages: nextPageOfMessages,
-                            unreadMessageCount: -999,
-                            totalMessageCount: totalMessageCount,
-                            canPaginate: canPaginate
-                        )
+                    runOnMainThread { [weak self] in
+                        self?.inboxListeners.forEach {
+                            $0.callMessageChanged(
+                                newMessage: nil,
+                                previousMessages: previousMessages,
+                                nextPageOfMessages: nextPageOfMessages,
+                                unreadMessageCount: -999,
+                                totalMessageCount: totalMessageCount,
+                                canPaginate: canPaginate
+                            )
+                        }
                     }
                     
                 }
@@ -659,14 +666,22 @@ import UIKit
                 
                 inboxPageFetch = nil
                 
-                inboxListeners.forEach {
-                    $0.onError?(error)
+                runOnMainThread { [weak self] in
+                    self?.inboxListeners.forEach {
+                        $0.onError?(error)
+                    }
                 }
                 
             }
             
         }
         
+    }
+    
+    private func runOnMainThread(run: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            run()
+        }
     }
     
     @objc public func readAllMessages() {
