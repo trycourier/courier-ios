@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  NotificationsViewController.swift
 //  Example
 //
 //  Created by Michael Miller on 11/17/22.
@@ -8,7 +8,7 @@
 import UIKit
 import Courier
 
-class ViewController: UIViewController {
+class NotificationsViewController: UIViewController {
     
     @IBOutlet weak var authLabel: UILabel!
     @IBOutlet weak var authButton: UIButton!
