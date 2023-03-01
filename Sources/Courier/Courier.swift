@@ -155,8 +155,10 @@ import UIKit
             if (!inboxListeners.isEmpty && inboxRepo.webSocket == nil) {
                 
                 // Notify all listeners
-                self.inboxListeners.forEach {
-                    $0.onInitialLoad?()
+                runOnMainThread { [weak self] in
+                    self?.inboxListeners.forEach {
+                        $0.onInitialLoad?()
+                    }
                 }
                 
                 // Create the inbox pipe
@@ -701,12 +703,16 @@ import UIKit
         inboxListeners.append(listener)
         
         // Call initial load
-        listener.onInitialLoad?()
+        runOnMainThread {
+            listener.onInitialLoad?()
+        }
         
         // User is not signed
         if (!isUserSignedIn) {
             Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
-            listener.onError?(CourierError.inboxUserNotFound)
+            runOnMainThread {
+                listener.onError?(CourierError.inboxUserNotFound)
+            }
             return listener
         }
         
