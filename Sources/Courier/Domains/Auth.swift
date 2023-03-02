@@ -72,7 +72,7 @@ extension Courier {
     /**
      * A read only value set to the current user client key
      */
-    @objc public var clientKey: String? {
+    internal var clientKey: String? {
         get {
             return auth.userManager.getClientKey()
         }

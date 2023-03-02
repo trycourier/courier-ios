@@ -73,7 +73,7 @@ internal class Inbox {
                     let previousMessages = messages ?? []
                     
                     // Call the listeners
-                    Helpers.runOnMainThread { [weak self] in
+                    Utils.runOnMainThread { [weak self] in
                         self?.listeners.forEach {
                             $0.callMessageChanged(
                                 newMessage: nil,
@@ -92,7 +92,7 @@ internal class Inbox {
                 
                 pageFetch = nil
                 
-                Helpers.runOnMainThread { [weak self] in
+                Utils.runOnMainThread { [weak self] in
                     self?.listeners.forEach {
                         $0.onError?(error)
                     }
@@ -110,7 +110,7 @@ internal class Inbox {
         if (!listeners.isEmpty && inboxRepo.webSocket == nil) {
             
             // Notify all listeners
-            Helpers.runOnMainThread { [weak self] in
+            Utils.runOnMainThread { [weak self] in
                 self?.listeners.forEach {
                     $0.onInitialLoad?()
                 }
@@ -141,7 +141,7 @@ internal class Inbox {
                     let previousMessages = self.messages ?? []
                     
                     // Notify all listeners
-                    Helpers.runOnMainThread { [weak self] in
+                    Utils.runOnMainThread { [weak self] in
                         self?.listeners.forEach {
                             $0.callMessageChanged(
                                 newMessage: message,
@@ -163,7 +163,7 @@ internal class Inbox {
             onMessageReceivedError: { [weak self] error in
                 
                 // Notify all listeners
-                Helpers.runOnMainThread { [weak self] in
+                Utils.runOnMainThread { [weak self] in
                     self?.listeners.forEach {
                         $0.onError?(error)
                     }
@@ -192,14 +192,14 @@ internal class Inbox {
             
             do {
                 
-                let data = try await inboxRepo.getMessages(
-                    clientKey: clientKey,
-                    userId: userId,
-                    paginationLimit: paginationLimit
-                )
-                
-                print("TODO")
-                print(data)
+//                let data = try await inboxRepo.getMessages(
+//                    clientKey: clientKey,
+//                    userId: userId,
+//                    paginationLimit: paginationLimit
+//                )
+//
+//                print("TODO")
+//                print(data)
                 
                 try await connectWebSocket(
                     clientKey: clientKey,
@@ -208,7 +208,7 @@ internal class Inbox {
                 
             } catch {
                 
-                Helpers.runOnMainThread { [weak self] in
+                Utils.runOnMainThread { [weak self] in
                     self?.listeners.forEach {
                         $0.onError?(error)
                     }
@@ -222,6 +222,7 @@ internal class Inbox {
     
     internal func fetchNextPageOfMessages() {
         
+        // Block if already fetching
         if (pageFetch != nil) {
             return
         }
@@ -260,7 +261,7 @@ internal class Inbox {
                     let canPaginate = data.messages.pageInfo.hasNextPage ?? false
                     
                     // Call the listeners
-                    Helpers.runOnMainThread { [weak self] in
+                    Utils.runOnMainThread { [weak self] in
                         self?.listeners.forEach {
                             $0.callMessageChanged(
                                 newMessage: nil,
@@ -279,7 +280,7 @@ internal class Inbox {
                 
                 pageFetch = nil
                 
-                Helpers.runOnMainThread { [weak self] in
+                Utils.runOnMainThread { [weak self] in
                     self?.listeners.forEach {
                         $0.onError?(error)
                     }
@@ -308,14 +309,14 @@ internal class Inbox {
         listeners.append(listener)
         
         // Call initial load
-        Helpers.runOnMainThread {
+        Utils.runOnMainThread {
             listener.onInitialLoad?()
         }
         
         // User is not signed
         if (!Courier.shared.isUserSignedIn) {
             Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
-            Helpers.runOnMainThread {
+            Utils.runOnMainThread {
                 listener.onError?(CourierError.inboxUserNotFound)
             }
             return listener
@@ -372,7 +373,7 @@ internal class Inbox {
         inboxRepo.closeWebSocket()
         
         // Tell all the listeners the user is signed out
-        Helpers.runOnMainThread { [weak self] in
+        Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
                 $0.onError?(CourierError.inboxUserNotFound)
             }
@@ -400,10 +401,18 @@ extension Courier {
         }
     }
     
+    /**
+     Connects to the Courier Inbox service to handle new messages and other events that get sent to the device
+     Only one websocket connection and data fetching operation will get setup when calling this.
+     */
     @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
         return inbox.addInboxListener(onInitialLoad: onInitialLoad, onError: onError, onMessagesChanged: onMessagesChanged)
     }
     
+    /**
+     Grabs the next page of message from the inbox service
+     Will automatically prevent duplicate calls if a call is already performed
+     */
     @objc public func fetchNextPageOfMessages() {
         inbox.fetchNextPageOfMessages()
     }
