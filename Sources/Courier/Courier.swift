@@ -621,11 +621,11 @@ import UIKit
     }
     
     @objc private func appMovedToBackground() {
-        print("appMovedToBackground")
+        print("Background")
     }
 
     @objc private func appMovedToForeground() {
-        print("appMovedToForeground")
+        inboxRepo.webSocket?.resume()
     }
     
     @objc public func fetchNextPageOfMessages() {
