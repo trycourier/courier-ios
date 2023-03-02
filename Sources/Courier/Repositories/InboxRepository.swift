@@ -30,25 +30,17 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         self.onMessageReceivedError = onMessageReceivedError
         
         // Start receiving messages
-        self.handleMessageReceived(
-            clientKey: clientKey,
-            userId: userId,
-            onMessageReceived: onMessageReceived,
-            onMessageReceivedError: onMessageReceivedError
-        )
+        self.handleMessageReceived()
         
-    }
-    
-    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-        webSocket = nil
-        onMessageReceived = nil
     }
     
     internal func closeWebSocket() {
         webSocket?.cancel(with: .goingAway, reason: nil)
+        webSocket = nil
+        onMessageReceived = nil
     }
     
-    private func handleMessageReceived(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) {
+    private func handleMessageReceived() {
         webSocket?.receive { result in
             
             switch result {
@@ -70,27 +62,11 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                     break
                 }
                 
-                self.handleMessageReceived(
-                    clientKey: clientKey,
-                    userId: userId,
-                    onMessageReceived: onMessageReceived,
-                    onMessageReceivedError: onMessageReceivedError
-                )
+                self.handleMessageReceived()
                 
             case .failure(let error):
-                
                 Courier.log(String(describing: error))
-                
-                // Retry
-                Task {
-                    try await self.createWebSocket(
-                        clientKey: clientKey,
-                        userId: userId,
-                        onMessageReceived: onMessageReceived,
-                        onMessageReceivedError: onMessageReceivedError
-                    )
-                }
-                
+                self.onMessageReceivedError?(CourierError.inboxWebSocketFail)
             }
             
         }
