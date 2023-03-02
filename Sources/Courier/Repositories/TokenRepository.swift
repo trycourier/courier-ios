@@ -9,13 +9,13 @@ import Foundation
 
 class TokenRepository: Repository {
     
-    func putUserToken(userId: String?, provider: CourierProvider, deviceToken: String?) async throws {
+    func putUserToken(accessToken: String?, userId: String?, provider: CourierProvider, deviceToken: String?) async throws {
         
         Courier.log("Putting Messaging Token")
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
             
-            guard let accessToken = Courier.shared.accessToken else {
+            guard let accessToken = accessToken else {
                 Courier.log("Courier Access Token is missing")
                 continuation.resume(throwing: CourierError.noAccessTokenFound)
                 return
@@ -59,14 +59,14 @@ class TokenRepository: Repository {
         
     }
     
-    func deleteToken(userId: String?, deviceToken: String?) async throws {
+    func deleteToken(accessToken: String?, userId: String?, deviceToken: String?) async throws {
         
         Courier.log("Deleting Messaging Token")
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
             
-            guard let accessToken = Courier.shared.accessToken else {
-                print("Courier Access Token is missing")
+            guard let accessToken = accessToken else {
+                Courier.log("Courier Access Token is missing")
                 continuation.resume(throwing: CourierError.noAccessTokenFound)
                 return
             }

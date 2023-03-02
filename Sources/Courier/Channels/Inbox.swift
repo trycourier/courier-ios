@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal class CourierInbox {
+internal class Inbox {
     
     private lazy var inboxRepo = InboxRepository()
     
@@ -32,8 +32,8 @@ internal class CourierInbox {
     private var pageFetch: Task<Void, Error>? = nil
     
     private func addDisplayObservers() {
-        CourierInbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        CourierInbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     internal func start() {
@@ -295,7 +295,7 @@ internal class CourierInbox {
         // TODO
     }
     
-    @discardableResult internal func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
+    internal func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -395,8 +395,8 @@ extension Courier {
             return inbox.paginationLimit
         }
         set {
-            let min = min(CourierInbox.defaultMaxPaginationLimit, newValue)
-            inbox.paginationLimit = max(CourierInbox.defaultMinPaginationLimit, min)
+            let min = min(Inbox.defaultMaxPaginationLimit, newValue)
+            inbox.paginationLimit = max(Inbox.defaultMinPaginationLimit, min)
         }
     }
     
