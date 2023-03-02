@@ -631,9 +631,7 @@ import UIKit
     }
     
     @objc private func appDidMoveToBackground() {
-        
         inboxRepo.closeWebSocket()
-        
     }
 
     @objc private func appDidMoveToForeground() {
