@@ -33,7 +33,7 @@ internal class Inbox {
     
     private func addDisplayObservers() {
         Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
+        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     internal func start() async throws {
@@ -159,7 +159,7 @@ internal class Inbox {
         inboxRepo.closeWebSocket()
     }
 
-    @objc private func appDidMoveToForeground() {
+    @objc private func appDidBecomeActive() {
         
         if (listeners.isEmpty) {
             return

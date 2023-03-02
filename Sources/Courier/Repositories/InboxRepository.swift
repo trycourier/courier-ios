@@ -66,7 +66,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 
             case .failure(let error):
                 Courier.log(String(describing: error))
-                self.onMessageReceivedError?(CourierError.inboxWebSocketFail)
+//                self.onMessageReceivedError?(CourierError.inboxWebSocketFail)
             }
             
         }
