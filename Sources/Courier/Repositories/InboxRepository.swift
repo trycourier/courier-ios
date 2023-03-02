@@ -20,7 +20,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     internal func createWebSocket(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
         
         // Open and connect to the server
-        webSocket = try await openWebSocket(
+        self.webSocket = try await openWebSocket(
             clientKey: clientKey,
             userId: userId
         )

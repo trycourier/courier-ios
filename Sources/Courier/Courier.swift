@@ -621,7 +621,7 @@ import UIKit
     }
     
     @objc private func appMovedToBackground() {
-        print("Background")
+        inboxRepo.webSocket?.cancel(with: .goingAway, reason: nil)
     }
 
     @objc private func appMovedToForeground() {
