@@ -502,14 +502,17 @@ extension Courier {
         Task {
             do {
                 try await inbox.refresh()
+                Utils.runOnMainThread {
+                    onComplete()
+                }
             } catch {
                 Utils.runOnMainThread { [weak self] in
+                    onComplete()
                     self?.inbox.listeners.forEach {
                         $0.onError?(error)
                     }
                 }
             }
-            onComplete()
         }
     }
     

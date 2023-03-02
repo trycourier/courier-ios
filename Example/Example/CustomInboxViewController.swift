@@ -70,8 +70,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     @objc private func onPullRefresh() {
-//        table.reloadData()
-//        DispatchQueue.main.async { self.table.refreshControl?.endRefreshing() }
+        Courier.shared.refresh {
+            self.collectionView.refreshControl?.endRefreshing()
+        }
     }
     
     private func setState(_ state: State, error: String? = nil) {
