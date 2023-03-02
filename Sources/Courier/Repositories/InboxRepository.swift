@@ -41,8 +41,6 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     
     internal func closeWebSocket() {
         webSocket?.cancel(with: .goingAway, reason: nil)
-//        webSocket = nil
-//        onMessageReceived = nil
     }
     
     private func handleMessageReceived() {

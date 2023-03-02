@@ -156,16 +156,12 @@ internal class Inbox {
     }
     
     @objc private func appDidMoveToBackground() {
-//        inboxRepo.closeWebSocket()
+        inboxRepo.closeWebSocket()
     }
 
     @objc private func appDidMoveToForeground() {
         
         if (listeners.isEmpty) {
-            return
-        }
-        
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
             return
         }
         
