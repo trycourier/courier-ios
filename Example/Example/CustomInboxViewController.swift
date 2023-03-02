@@ -27,8 +27,6 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         super.viewDidLoad()
         
         title = "Inbox"
-        
-        Courier.shared.isDebugging = false
 
         collectionView.delegate = self
         collectionView.dataSource = self

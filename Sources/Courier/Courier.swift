@@ -639,18 +639,21 @@ import UIKit
 
     @objc private func appDidMoveToForeground() {
         
-        // Attempt to reconnect the socket
-        Task {
-            do {
-                try await connectInboxWebSocket()
-            } catch {
-                runOnMainThread { [weak self] in
-                    self?.inboxListeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
-            }
-        }
+        inboxRepo.webSocket?.resume()
+        inboxRepo.handleMessageReceived()
+        
+//        // Attempt to reconnect the socket
+//        Task {
+//            do {
+//                try await connectInboxWebSocket()
+//            } catch {
+//                runOnMainThread { [weak self] in
+//                    self?.inboxListeners.forEach {
+//                        $0.onError?(error)
+//                    }
+//                }
+//            }
+//        }
         
     }
     

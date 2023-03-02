@@ -40,7 +40,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         onMessageReceived = nil
     }
     
-    private func handleMessageReceived() {
+    internal func handleMessageReceived() {
         webSocket?.receive { result in
             
             switch result {
