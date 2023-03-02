@@ -30,7 +30,12 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         self.onMessageReceivedError = onMessageReceivedError
         
         // Start receiving messages
-        self.handleMessageReceived()
+        self.handleMessageReceived(
+            clientKey: clientKey,
+            userId: userId,
+            onMessageReceived: onMessageReceived,
+            onMessageReceivedError: onMessageReceivedError
+        )
         
     }
     
@@ -43,7 +48,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         webSocket?.cancel(with: .goingAway, reason: nil)
     }
     
-    private func handleMessageReceived() {
+    private func handleMessageReceived(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) {
         webSocket?.receive { result in
             
             switch result {
@@ -65,11 +70,27 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                     break
                 }
                 
-                self.handleMessageReceived()
+                self.handleMessageReceived(
+                    clientKey: clientKey,
+                    userId: userId,
+                    onMessageReceived: onMessageReceived,
+                    onMessageReceivedError: onMessageReceivedError
+                )
                 
             case .failure(let error):
+                
                 Courier.log(String(describing: error))
-//                self.onMessageReceivedError?(CourierError.inboxWebSocketFail)
+                
+                // Retry
+                Task {
+                    try await self.createWebSocket(
+                        clientKey: clientKey,
+                        userId: userId,
+                        onMessageReceived: onMessageReceived,
+                        onMessageReceivedError: onMessageReceivedError
+                    )
+                }
+                
             }
             
         }
