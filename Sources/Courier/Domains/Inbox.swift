@@ -33,7 +33,7 @@ internal class Inbox {
     
     private func addDisplayObservers() {
         Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     internal func start() async throws {
@@ -156,32 +156,32 @@ internal class Inbox {
     }
     
     @objc private func appDidMoveToBackground() {
-//        inboxRepo.closeWebSocket()
+        inboxRepo.closeWebSocket()
     }
 
     @objc private func appDidMoveToForeground() {
         
-//        if (listeners.isEmpty) {
-//            return
-//        }
-//
-//        Task {
-//
-//            do {
-//
-//                try await start()
-//
-//            } catch {
-//
-////                Utils.runOnMainThread { [weak self] in
-////                    self?.listeners.forEach {
-////                        $0.onError?(error)
-////                    }
-////                }
-//
-//            }
-//
-//        }
+        if (listeners.isEmpty) {
+            return
+        }
+
+        Task {
+
+            do {
+
+                try await start()
+
+            } catch {
+
+//                Utils.runOnMainThread { [weak self] in
+//                    self?.listeners.forEach {
+//                        $0.onError?(error)
+//                    }
+//                }
+
+            }
+
+        }
         
     }
     
