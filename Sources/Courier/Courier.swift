@@ -502,6 +502,8 @@ import UIKit
     
     private func startInboxPipe() {
         
+        inboxPageFetch?.cancel()
+        
         inboxPageFetch = Task {
             
             do {
