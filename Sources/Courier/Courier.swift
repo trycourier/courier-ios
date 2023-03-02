@@ -632,28 +632,24 @@ import UIKit
     
     @objc private func appDidMoveToBackground() {
         
-        // Stop the current websocket but keep a reference
-        inboxRepo.webSocket?.cancel(with: .goingAway, reason: nil)
+        inboxRepo.closeWebSocket()
         
     }
 
     @objc private func appDidMoveToForeground() {
         
-        inboxRepo.webSocket?.resume()
-        inboxRepo.handleMessageReceived()
-        
-//        // Attempt to reconnect the socket
-//        Task {
-//            do {
-//                try await connectInboxWebSocket()
-//            } catch {
-//                runOnMainThread { [weak self] in
-//                    self?.inboxListeners.forEach {
-//                        $0.onError?(error)
-//                    }
-//                }
-//            }
-//        }
+        // Attempt to reconnect the socket
+        Task {
+            do {
+                try await connectInboxWebSocket()
+            } catch {
+                runOnMainThread { [weak self] in
+                    self?.inboxListeners.forEach {
+                        $0.onError?(error)
+                    }
+                }
+            }
+        }
         
     }
     
