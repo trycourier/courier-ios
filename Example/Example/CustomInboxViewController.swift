@@ -123,7 +123,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         if (indexPath.section == 1) {
-            Courier.shared.fetchNextPageOfMessages()
+            Task {
+                Courier.shared.fetchNextPageOfMessages()
+            }
         }
         
     }

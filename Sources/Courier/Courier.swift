@@ -80,6 +80,10 @@ import UIKit
         get { UNUserNotificationCenter.current() }
     }
     
+    private static var systemNotificationCenter: NotificationCenter {
+        get { NotificationCenter.default }
+    }
+    
     // MARK: User Management
     
     /**
@@ -504,6 +508,11 @@ import UIKit
     @objc private(set) public var inboxMessages: [InboxMessage]? = nil
     private var inboxPageFetch: Task<Void, Error>? = nil
     
+    private func addDisplayObservers() {
+        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
     private func startInboxPipe() {
         
         inboxPageFetch = Task {
@@ -514,13 +523,15 @@ import UIKit
                     return
                 }
                 
-                self.inboxData = try await inboxRepo.getMessages(
+                addDisplayObservers()
+                
+                inboxData = try await inboxRepo.getMessages(
                     clientKey: clientKey,
                     userId: userId,
                     paginationLimit: _inboxPaginationLimit
                 )
                 
-                inboxMessages = self.inboxData?.messages.nodes ?? []
+                inboxMessages = inboxData?.messages.nodes ?? []
                 
                 try await inboxRepo.createWebSocket(
                     clientKey: clientKey,
@@ -607,6 +618,14 @@ import UIKit
             
         }
         
+    }
+    
+    @objc private func appMovedToBackground() {
+        print("appMovedToBackground")
+    }
+
+    @objc private func appMovedToForeground() {
+        print("appMovedToForeground")
     }
     
     @objc public func fetchNextPageOfMessages() {
