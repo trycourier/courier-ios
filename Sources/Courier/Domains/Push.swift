@@ -166,32 +166,6 @@ internal class Push {
         
     }
     
-    internal func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-        
-        guard let trackingUrl = message["trackingUrl"] as? String else {
-            Courier.log("Unable to find tracking url")
-            return
-        }
-        
-        Courier.log("Tracking notification event")
-        
-        Task.init {
-            
-            do {
-                try await trackingRepo.postTrackingUrl(
-                    url: trackingUrl,
-                    event: event
-                )
-                onSuccess?()
-            } catch {
-                Courier.log(String(describing: error))
-                onFailure?(error)
-            }
-            
-        }
-        
-    }
-    
 }
 
 extension Courier {
@@ -269,7 +243,15 @@ extension Courier {
     }
     
     @objc public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-        push.trackNotification(message: message, event: event, onSuccess: onSuccess, onFailure: onFailure)
+        Task {
+            do {
+                try await push.trackNotification(message: message, event: event)
+                onSuccess?()
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure?(error)
+            }
+        }
     }
     
     /**
