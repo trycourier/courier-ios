@@ -42,7 +42,7 @@ class NotificationsViewController: UIViewController {
                         authKey: Env.COURIER_AUTH_KEY,
                         userId: userId,
                         title: "Hey \(userId)!",
-                        message: "This is a test push sent through \(messageProviders)",
+                        message: randomText(),
                         providers: providers
                     )
                 }
@@ -51,6 +51,20 @@ class NotificationsViewController: UIViewController {
             
         }
         
+    }
+    
+    func randomText() -> String{
+        let paragraph = Int.random(in: 1..<20)
+        var global = ""
+        for _ in 0..<(Int.random(in: 2..<paragraph)) {
+            var x = ""
+            for _ in 0..<Int.random(in: 2..<15){
+                let string = String(format: "%c", Int.random(in: 97..<123)) as String
+                x+=string
+            }
+            global = global +  " " + x
+        }
+        return global
     }
 
     override func viewDidLoad() {

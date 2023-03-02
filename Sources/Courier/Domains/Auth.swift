@@ -26,9 +26,11 @@ internal class Auth {
         
         do {
             
-            try await push.putPushTokens()
+            async let putTokens: () = push.putPushTokens()
+            async let connectInbox: () = inbox.connectIfNeeded()
             
-            inbox.connectIfNeeded()
+            // Batch all functions together
+            let _ = try await [putTokens, connectInbox]
             
         } catch {
             

@@ -27,6 +27,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         super.viewDidLoad()
         
         title = "Inbox"
+        
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
 
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -64,6 +67,11 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             }
         )
         
+    }
+    
+    @objc private func onPullRefresh() {
+//        table.reloadData()
+//        DispatchQueue.main.async { self.table.refreshControl?.endRefreshing() }
     }
     
     private func setState(_ state: State, error: String? = nil) {
