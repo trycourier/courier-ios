@@ -531,9 +531,54 @@ import UIKit
                     paginationLimit: _inboxPaginationLimit
                 )
                 
-                inboxMessages = inboxData?.messages.nodes ?? []
+                try await inboxRepo.createWebSocket(
+                    clientKey: clientKey,
+                    userId: userId,
+                    onMessageReceived: { [weak self] message in
+                        
+                        // Ensure we have data to work with
+                        if let self = self, let data = self.inboxData {
+                            
+                            // Add the new message
+                            self.inboxData?.incrementCounts()
+                            
+                            let totalMessageCount = data.messages.totalCount ?? 0
+                            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+                            let previousMessages = self.inboxMessages ?? []
+                            
+                            // Notify all listeners
+                            self.runOnMainThread { [weak self] in
+                                self?.inboxListeners.forEach {
+                                    $0.callMessageChanged(
+                                        newMessage: message,
+                                        previousMessages: previousMessages,
+                                        nextPageOfMessages: [],
+                                        unreadMessageCount: -999,
+                                        totalMessageCount: totalMessageCount,
+                                        canPaginate: canPaginate
+                                    )
+                                }
+                            }
+                            
+                            // Add the message to the array
+                            self.inboxMessages?.insert(message, at: 0)
+                            
+                        }
+                        
+                    },
+                    onMessageReceivedError: { [weak self] error in
+                        
+                        // Notify all listeners
+                        self?.runOnMainThread { [weak self] in
+                            self?.inboxListeners.forEach {
+                                $0.onError?(error)
+                            }
+                        }
+                        
+                    }
+                )
                 
-                try await connectInboxWebSocket()
+                inboxMessages = inboxData?.messages.nodes ?? []
                 
             } catch {
                 
