@@ -154,7 +154,7 @@ internal class Inbox {
     }
     
     @objc private func appDidMoveToBackground() {
-        inboxRepo.closeWebSocket()
+//        inboxRepo.closeWebSocket()
     }
 
     @objc private func appDidMoveToForeground() {
