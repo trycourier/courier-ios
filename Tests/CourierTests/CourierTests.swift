@@ -26,7 +26,8 @@ final class CourierTests: XCTestCase {
                 print("L1 Error \(error)")
             },
             onMessagesChanged: { newMessage, previousMessages, nextPageOfMessages, unreadMessageCount, totalMessageCount, canPaginate  in
-                print("L1 messages: \(newMessage) \(previousMessages.count) \(nextPageOfMessages.count) \(unreadMessageCount) \(unreadMessageCount) \(canPaginate)")
+                print("L1 messages: \(newMessage) \(previousMessages.count) \(nextPageOfMessages.count) \(unreadMessageCount) \(totalMessageCount) \(canPaginate)")
+                canPage = canPaginate
 //                print("L1 messages \(newMessage) \(previousMessages) \(previousMessages.coun =t) \(newMessages.count) \(canPaginate)")
 //                print("Last Message Ids: \(previousMessages.last?.messageId) \(newMessages.last?.messageId)")
 //                canPage = canPaginate
