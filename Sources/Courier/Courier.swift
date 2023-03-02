@@ -509,8 +509,8 @@ import UIKit
     private var inboxPageFetch: Task<Void, Error>? = nil
     
     private func addDisplayObservers() {
-        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appMovedToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     private func startInboxPipe() {
@@ -533,76 +533,7 @@ import UIKit
                 
                 inboxMessages = inboxData?.messages.nodes ?? []
                 
-                try await inboxRepo.createWebSocket(
-                    clientKey: clientKey,
-                    userId: userId,
-                    onMessageReceived: { [weak self] message in
-                        
-                        // Ensure we have data to work with
-                        if let self = self, let data = self.inboxData {
-                            
-                            // Add the new message
-                            self.inboxData?.incrementCounts()
-                            
-                            let totalMessageCount = data.messages.totalCount ?? 0
-                            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-                            let previousMessages = self.inboxMessages ?? []
-                            
-                            // Notify all listeners
-                            self.runOnMainThread { [weak self] in
-                                self?.inboxListeners.forEach {
-                                    $0.callMessageChanged(
-                                        newMessage: message,
-                                        previousMessages: previousMessages,
-                                        nextPageOfMessages: [],
-                                        unreadMessageCount: -999,
-                                        totalMessageCount: totalMessageCount,
-                                        canPaginate: canPaginate
-                                    )
-                                }
-                            }
-                            
-                            // Add the message to the array
-                            self.inboxMessages?.insert(message, at: 0)
-                            
-                        }
-                        
-                    },
-                    onMessageReceivedError: { [weak self] error in
-                        
-                        // Notify all listeners
-                        self?.runOnMainThread { [weak self] in
-                            self?.inboxListeners.forEach {
-                                $0.onError?(error)
-                            }
-                        }
-                        
-                    }
-                )
-                
-                inboxPageFetch = nil
-                
-                if let data = inboxData {
-                    
-                    let totalMessageCount = (data.messages.totalCount ?? 0) + 1
-                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-                    let previousMessages = self.inboxMessages ?? []
-                    
-                    // Call the listeners
-                    runOnMainThread { [weak self] in
-                        self?.inboxListeners.forEach {
-                            $0.callMessageChanged(
-                                newMessage: nil,
-                                previousMessages: [],
-                                nextPageOfMessages: previousMessages,
-                                unreadMessageCount: -999,
-                                totalMessageCount: totalMessageCount,
-                                canPaginate: canPaginate
-                            )
-                        }
-                    }
-                    
-                }
+                try await connectInboxWebSocket()
                 
             } catch {
                 
@@ -620,12 +551,78 @@ import UIKit
         
     }
     
-    @objc private func appMovedToBackground() {
+    private func connectInboxWebSocket() async throws {
+        
+        guard let clientKey = self.clientKey, let userId = self.userId else {
+            Courier.log("Client key or userId missing. Couldn't start inbox websocket.")
+            return
+        }
+        
+        try await inboxRepo.createWebSocket(
+            clientKey: clientKey,
+            userId: userId,
+            onMessageReceived: { [weak self] message in 
+                
+                // Ensure we have data to work with
+                if let self = self, let data = self.inboxData {
+                    
+                    // Add the new message
+                    self.inboxData?.incrementCounts()
+                    
+                    let totalMessageCount = data.messages.totalCount ?? 0
+                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+                    let previousMessages = self.inboxMessages ?? []
+                    
+                    // Notify all listeners
+                    self.runOnMainThread { [weak self] in
+                        self?.inboxListeners.forEach {
+                            $0.callMessageChanged(
+                                newMessage: message,
+                                previousMessages: previousMessages,
+                                nextPageOfMessages: [],
+                                unreadMessageCount: -999,
+                                totalMessageCount: totalMessageCount,
+                                canPaginate: canPaginate
+                            )
+                        }
+                    }
+                    
+                    // Add the message to the array
+                    self.inboxMessages?.insert(message, at: 0)
+                    
+                }
+                
+            },
+            onMessageReceivedError: { [weak self] error in
+                
+                // Notify all listeners
+                self?.runOnMainThread { [weak self] in
+                    self?.inboxListeners.forEach {
+                        $0.onError?(error)
+                    }
+                }
+                
+            }
+        )
+        
+    }
+    
+    @objc private func appDidMoveToBackground() {
         inboxRepo.webSocket?.cancel(with: .goingAway, reason: nil)
     }
 
-    @objc private func appMovedToForeground() {
-        inboxRepo.webSocket?.resume()
+    @objc private func appDidMoveToForeground() {
+        Task {
+            do {
+                try await connectInboxWebSocket()
+            } catch {
+                runOnMainThread { [weak self] in
+                    self?.inboxListeners.forEach {
+                        $0.onError?(CourierError.inboxWebSocketFail)
+                    }
+                }
+            }
+        }
     }
     
     @objc public func fetchNextPageOfMessages() {
