@@ -37,7 +37,7 @@ class NotificationsViewController: UIViewController {
             
             if let userId = Courier.shared.userId {
                 
-                let emojis = ["😂", "🤪", "🦄", "🤦‍♂️", "😛"]
+                let emojis = ["😂", "🤪", "🦄", "🤦‍♂️", "😛", "😎", "🥸", "🤯", "🥶", "👻", "🎃"]
                 
                 if (!providers.isEmpty) {
                     try await Courier.shared.sendMessage(
