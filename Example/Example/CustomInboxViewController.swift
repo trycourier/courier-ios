@@ -70,7 +70,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     @objc private func onPullRefresh() {
-        Courier.shared.refresh {
+        Courier.shared.refreshInbox {
             self.collectionView.refreshControl?.endRefreshing()
         }
     }

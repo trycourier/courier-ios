@@ -187,11 +187,11 @@ internal class Inbox {
                 
             } catch {
                 
-                Utils.runOnMainThread { [weak self] in
-                    self?.listeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
+//                Utils.runOnMainThread { [weak self] in
+//                    self?.listeners.forEach {
+//                        $0.onError?(error)
+//                    }
+//                }
                 
             }
             
