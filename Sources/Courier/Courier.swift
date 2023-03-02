@@ -20,7 +20,7 @@ import UIKit
      */
     
     public static var agent = CourierAgent.native_ios
-    internal static let version = "1.1.1"
+    internal static let version = "2.0.0"
     
     // MARK: Init
     
@@ -51,37 +51,20 @@ import UIKit
     @objc public var isDebugging = false
     
     /**
-     * Default pagination limit for messages
-     */
-    private static let defaultPaginationLimit = 24
-    private static let defaultMaxPaginationLimit = 200
-    private static let defaultMinPaginationLimit = 1
-    private var _inboxPaginationLimit = defaultPaginationLimit
-    @objc public var inboxPaginationLimit: Int {
-        get {
-            return self._inboxPaginationLimit
-        }
-        set {
-            let min = min(Courier.defaultMaxPaginationLimit, newValue)
-            self._inboxPaginationLimit = max(Courier.defaultMinPaginationLimit, min)
-        }
-    }
-    
-    /**
      * Courier APIs
      */
     private lazy var tokenRepo = TokenRepository()
     private lazy var messagingRepo = MessagingRepository()
-    private lazy var inboxRepo = InboxRepository()
+    
+    /**
+     * Courier Channels
+     */
+    internal lazy var inbox = CourierInbox()
     
     // MARK: Getters
     
     private static var userNotificationCenter: UNUserNotificationCenter {
         get { UNUserNotificationCenter.current() }
-    }
-    
-    private static var systemNotificationCenter: NotificationCenter {
-        get { NotificationCenter.default }
     }
     
     // MARK: User Management
@@ -155,7 +138,7 @@ import UIKit
             
             let _ = try await [putAPNS, putFCM]
             
-            connectInboxIfNeeded()
+            inbox.connectIfNeeded()
             
         } catch {
             
@@ -203,8 +186,7 @@ import UIKit
             
             let _ = try await [deleteAPNS, deleteFCM]
             
-            // Close the inbox pipe if needed
-            closeInboxPipe()
+            inbox.close()
             
         } catch {
             
@@ -484,370 +466,6 @@ import UIKit
                 onFailure(error)
             }
         }
-    }
-    
-    // MARK: Inbox
-    
-    private var inboxListeners: [CourierInboxListener] = []
-
-    private var inboxData: InboxData? = nil
-    
-    @objc private(set) public var inboxMessages: [InboxMessage]? = nil
-    private var inboxPageFetch: Task<Void, Error>? = nil
-    
-    private func addDisplayObservers() {
-        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        Courier.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-    }
-    
-    private func startInboxPipe() {
-        
-        inboxPageFetch?.cancel()
-        
-        inboxPageFetch = Task {
-            
-            do {
-                
-                guard let clientKey = self.clientKey, let userId = self.userId else {
-                    return
-                }
-                
-                addDisplayObservers()
-                
-                inboxData = try await inboxRepo.getMessages(
-                    clientKey: clientKey,
-                    userId: userId,
-                    paginationLimit: _inboxPaginationLimit
-                )
-                
-                try await connectInboxWebSocket(
-                    clientKey: clientKey,
-                    userId: userId
-                )
-                
-                // Reset the data
-                inboxMessages = inboxData?.messages.nodes ?? []
-                inboxPageFetch = nil
-                
-                // Get the inbox data and notify the listeners with the details
-                if let data = inboxData {
-                    
-                    let totalMessageCount = data.messages.totalCount ?? 0
-                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-                    let previousMessages = inboxMessages ?? []
-                    
-                    // Call the listeners
-                    runOnMainThread { [weak self] in
-                        self?.inboxListeners.forEach {
-                            $0.callMessageChanged(
-                                newMessage: nil,
-                                previousMessages: [],
-                                nextPageOfMessages: previousMessages,
-                                unreadMessageCount: -999,
-                                totalMessageCount: totalMessageCount,
-                                canPaginate: canPaginate
-                            )
-                        }
-                    }
-                    
-                }
-                
-            } catch {
-                
-                inboxPageFetch = nil
-                
-                runOnMainThread { [weak self] in
-                    self?.inboxListeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    private func connectInboxIfNeeded() {
-        
-        // Check if we need to start the inbox pipe
-        if (!inboxListeners.isEmpty && inboxRepo.webSocket == nil) {
-            
-            // Notify all listeners
-            runOnMainThread { [weak self] in
-                self?.inboxListeners.forEach {
-                    $0.onInitialLoad?()
-                }
-            }
-            
-            // Create the inbox pipe
-            startInboxPipe()
-            
-        }
-        
-    }
-    
-    private func connectInboxWebSocket(clientKey: String, userId: String) async throws {
-        
-        try await inboxRepo.createWebSocket(
-            clientKey: clientKey,
-            userId: userId,
-            onMessageReceived: { [weak self] message in
-                
-                // Ensure we have data to work with
-                if let self = self, let data = self.inboxData {
-                    
-                    // Add the new message
-                    self.inboxData?.incrementCounts()
-                    
-                    let totalMessageCount = data.messages.totalCount ?? 0
-                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-                    let previousMessages = self.inboxMessages ?? []
-                    
-                    // Notify all listeners
-                    self.runOnMainThread { [weak self] in
-                        self?.inboxListeners.forEach {
-                            $0.callMessageChanged(
-                                newMessage: message,
-                                previousMessages: previousMessages,
-                                nextPageOfMessages: [],
-                                unreadMessageCount: -999,
-                                totalMessageCount: totalMessageCount,
-                                canPaginate: canPaginate
-                            )
-                        }
-                    }
-                    
-                    // Add the message to the array
-                    self.inboxMessages?.insert(message, at: 0)
-                    
-                }
-                
-            },
-            onMessageReceivedError: { [weak self] error in
-                
-                // Notify all listeners
-                self?.runOnMainThread { [weak self] in
-                    self?.inboxListeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
-                
-            }
-        )
-        
-    }
-    
-    @objc private func appDidMoveToBackground() {
-        inboxRepo.closeWebSocket()
-    }
-
-    @objc private func appDidMoveToForeground() {
-        
-        if (inboxListeners.isEmpty) {
-            return
-        }
-        
-        guard let clientKey = self.clientKey, let userId = self.userId else {
-            return
-        }
-        
-        Task {
-            
-            do {
-                
-                let data = try await inboxRepo.getMessages(
-                    clientKey: clientKey,
-                    userId: userId,
-                    paginationLimit: _inboxPaginationLimit
-                )
-                
-                print("TODO")
-                print(data)
-                
-                try await connectInboxWebSocket(
-                    clientKey: clientKey,
-                    userId: userId
-                )
-                
-            } catch {
-                
-                runOnMainThread { [weak self] in
-                    self?.inboxListeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    @objc public func fetchNextPageOfMessages() {
-        
-        if (inboxPageFetch != nil) {
-            return
-        }
-        
-        inboxPageFetch = Task {
-            
-            do {
-                
-                guard let clientKey = self.clientKey, let userId = self.userId, let data = self.inboxData else {
-                    return
-                }
-                
-                let previousMessages = inboxMessages ?? []
-                let cursor = data.messages.pageInfo.startCursor
-                
-                self.inboxData = try await inboxRepo.getMessages(
-                    clientKey: clientKey,
-                    userId: userId,
-                    paginationLimit: _inboxPaginationLimit,
-                    startCursor: cursor
-                )
-                
-                // Set empty array if needed
-                if (inboxMessages == nil) {
-                    inboxMessages = []
-                }
-                
-                inboxMessages! += self.inboxData?.messages.nodes ?? []
-                inboxPageFetch = nil
-                
-                if let data = inboxData {
-                 
-                    // Hold previous messages
-                    let nextPageOfMessages = data.messages.nodes
-                    let totalMessageCount = data.messages.totalCount ?? 0
-                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-                    
-                    // Call the listeners
-                    runOnMainThread { [weak self] in
-                        self?.inboxListeners.forEach {
-                            $0.callMessageChanged(
-                                newMessage: nil,
-                                previousMessages: previousMessages,
-                                nextPageOfMessages: nextPageOfMessages,
-                                unreadMessageCount: -999,
-                                totalMessageCount: totalMessageCount,
-                                canPaginate: canPaginate
-                            )
-                        }
-                    }
-                    
-                }
-                
-            } catch {
-                
-                inboxPageFetch = nil
-                
-                runOnMainThread { [weak self] in
-                    self?.inboxListeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    private func runOnMainThread(run: @escaping () -> Void) {
-        DispatchQueue.main.async {
-            run()
-        }
-    }
-    
-    @objc public func readAllMessages() {
-        // TODO
-    }
-    
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
-        
-        // Create a new inbox listener
-        let listener = CourierInboxListener(
-            onInitialLoad: onInitialLoad,
-            onError: onError,
-            onMessagesChanged: onMessagesChanged
-        )
-        
-        // Keep track of listener
-        inboxListeners.append(listener)
-        
-        // Call initial load
-        runOnMainThread {
-            listener.onInitialLoad?()
-        }
-        
-        // User is not signed
-        if (!isUserSignedIn) {
-            Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
-            runOnMainThread {
-                listener.onError?(CourierError.inboxUserNotFound)
-            }
-            return listener
-        }
-        
-        if (inboxListeners.count == 1) {
-            
-            startInboxPipe()
-            
-        } else if let data = inboxData, let messages = inboxMessages {
-            
-            let totalMessageCount = (data.messages.totalCount ?? 0) + 1
-            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-            
-            listener.callMessageChanged(
-                newMessage: nil,
-                previousMessages: [],
-                nextPageOfMessages: messages,
-                unreadMessageCount: -999,
-                totalMessageCount: totalMessageCount,
-                canPaginate: canPaginate
-            )
-            
-        }
-        
-        return listener
-        
-    }
-    
-    @objc public func removeInboxListener(listener: CourierInboxListener) {
-        
-        // Look for the listener we need to remove
-        inboxListeners.removeAll(where: {
-            return $0 == listener
-        })
-        
-        // Kill the pipes if nothing is listening
-        if (inboxListeners.isEmpty) {
-            closeInboxPipe()
-        }
-        
-    }
-    
-    @objc public func removeAllInboxListeners() {
-        inboxListeners.removeAll()
-        closeInboxPipe()
-    }
-    
-    private func closeInboxPipe() {
-        
-        // Remove all inbox details
-        // Keep the listeners still registered
-        inboxMessages = nil
-        inboxRepo.closeWebSocket()
-        
-        // Tell all the listeners the user is signed out
-        runOnMainThread { [weak self] in
-            self?.inboxListeners.forEach {
-                $0.onError?(CourierError.inboxUserNotFound)
-            }
-        }
-        
     }
     
     // MARK: Logging
