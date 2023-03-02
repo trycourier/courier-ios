@@ -48,19 +48,13 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 
                 print(newMessage ?? "No new message", previousMessages.count, nextPageOfMessages.count, unreadMessageCount, totalMessageCount, canPaginate)
                 
-                if (Courier.shared.inboxMessages?.isEmpty ?? true) {
-                    self.setState(.empty)
-                } else {
-                    self.setState(.content)
-                }
+                let isEmpty = Courier.shared.inboxMessages?.isEmpty ?? true
+                self.setState(isEmpty ? .empty : .content)
                 
                 self.canPaginate = canPaginate
                 
-                if let message = newMessage {
-                    self.inboxMessages = [message] + previousMessages
-                } else {
-                    self.inboxMessages = previousMessages + nextPageOfMessages
-                }
+                let newMessages = newMessage != nil ? [newMessage!] : []
+                self.inboxMessages = newMessages + previousMessages + nextPageOfMessages
                 
                 self.collectionView.reloadData()
                 

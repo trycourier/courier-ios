@@ -42,6 +42,8 @@ internal class Inbox {
             return
         }
         
+        inboxRepo.closeWebSocket()
+        
         addDisplayObservers()
         
         inboxData = try await inboxRepo.getMessages(
@@ -171,19 +173,7 @@ internal class Inbox {
             
             do {
                 
-//                let data = try await inboxRepo.getMessages(
-//                    clientKey: clientKey,
-//                    userId: userId,
-//                    paginationLimit: paginationLimit
-//                )
-//
-//                print("TODO")
-//                print(data)
-                
-                try await connectWebSocket(
-                    clientKey: clientKey,
-                    userId: userId
-                )
+                try await start()
                 
             } catch {
                 
@@ -337,8 +327,6 @@ internal class Inbox {
     }
     
     internal func refresh() async throws {
-        
-        inboxRepo.closeWebSocket()
         
         inboxData = nil
         messages = nil

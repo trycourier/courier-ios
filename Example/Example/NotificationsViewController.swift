@@ -37,12 +37,14 @@ class NotificationsViewController: UIViewController {
             
             if let userId = Courier.shared.userId {
                 
+                let emojis = ["😂", "🤪", "🦄", "🤦‍♂️", "😛"]
+                
                 if (!providers.isEmpty) {
                     try await Courier.shared.sendMessage(
                         authKey: Env.COURIER_AUTH_KEY,
                         userId: userId,
                         title: "Hey \(userId)!",
-                        message: randomText(),
+                        message: emojis.randomElement()!,
                         providers: providers
                     )
                 }
@@ -51,20 +53,6 @@ class NotificationsViewController: UIViewController {
             
         }
         
-    }
-    
-    func randomText() -> String{
-        let paragraph = Int.random(in: 1..<20)
-        var global = ""
-        for _ in 0..<(Int.random(in: 2..<paragraph)) {
-            var x = ""
-            for _ in 0..<Int.random(in: 2..<15){
-                let string = String(format: "%c", Int.random(in: 97..<123)) as String
-                x+=string
-            }
-            global = global +  " " + x
-        }
-        return global
     }
 
     override func viewDidLoad() {
