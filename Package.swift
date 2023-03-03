@@ -14,11 +14,15 @@ let package = Package(
             targets: ["Courier"]
         ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.5.0")
+    ],
     targets: [
         .target(
             name: "Courier",
-            dependencies: []
+            dependencies: [
+                .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
+            ]
         ),
         .testTarget(
             name: "CourierTests",

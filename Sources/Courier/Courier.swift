@@ -31,11 +31,11 @@ import UIKit
     /**
      * The features of the SDK
      */
-    internal lazy var auth = Auth()
-    internal lazy var push = Push()
-    internal lazy var inbox = Inbox()
-    internal lazy var messaging = Messaging()
-    internal let logging = Logging()
+    internal lazy var auth = CourierAuth()
+    internal lazy var push = CourierPush()
+    internal lazy var inbox = CourierInbox()
+    internal lazy var messaging = CourierMessaging()
+    internal let logging = CourierLogging()
     
     // MARK: Init
     

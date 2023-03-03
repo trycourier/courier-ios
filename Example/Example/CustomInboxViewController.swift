@@ -46,6 +46,8 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             },
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
                 
+                print(messages.first?.read)
+                
                 print(messages.count, unreadMessageCount, totalMessageCount, canPaginate)
                 
                 self.setState(messages.isEmpty ? .empty : .content)

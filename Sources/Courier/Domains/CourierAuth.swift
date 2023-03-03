@@ -1,5 +1,5 @@
 //
-//  Auth.swift
+//  CourierAuth.swift
 //  
 //
 //  Created by Michael Miller on 3/2/23.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-internal class Auth {
+internal class CourierAuth {
     
     internal let userManager = UserManager()
     
-    internal func signIn(accessToken: String, clientKey: String, userId: String, push: Push, inbox: Inbox) async throws {
+    internal func signIn(accessToken: String, clientKey: String, userId: String, push: CourierPush, inbox: CourierInbox) async throws {
         
         Courier.log("Updating Courier User Profile")
         Courier.log("Access Token: \(accessToken)")
@@ -44,7 +44,7 @@ internal class Auth {
         
     }
     
-    internal func signOut(push: Push, inbox: Inbox) async throws {
+    internal func signOut(push: CourierPush, inbox: CourierInbox) async throws {
         
         Courier.log("Clearing Courier User Credentials")
         

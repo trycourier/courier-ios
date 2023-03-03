@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal class Inbox {
+internal class CourierInbox {
     
     internal enum FetchType {
         case page
@@ -85,8 +85,8 @@ internal class Inbox {
         
         // Restart the observer
         events.forEach { event in
-            Inbox.systemNotificationCenter.removeObserver(self, name: event.key, object: nil)
-            Inbox.systemNotificationCenter.addObserver(self, selector: event.value, name: event.key, object: nil)
+            CourierInbox.systemNotificationCenter.removeObserver(self, name: event.key, object: nil)
+            CourierInbox.systemNotificationCenter.addObserver(self, selector: event.value, name: event.key, object: nil)
         }
         
     }
@@ -99,7 +99,7 @@ internal class Inbox {
         
         // Determine a safe limit
         let messageCount = messages?.count ?? paginationLimit
-        let maxRefreshLimit = min(messageCount, Inbox.defaultMaxPaginationLimit)
+        let maxRefreshLimit = min(messageCount, CourierInbox.defaultMaxPaginationLimit)
         let limit = refresh ? maxRefreshLimit : paginationLimit
         
         let data = try await inboxRepo.getMessages(
@@ -376,8 +376,8 @@ extension Courier {
             return inbox.paginationLimit
         }
         set {
-            let min = min(Inbox.defaultMaxPaginationLimit, newValue)
-            inbox.paginationLimit = max(Inbox.defaultMinPaginationLimit, min)
+            let min = min(CourierInbox.defaultMaxPaginationLimit, newValue)
+            inbox.paginationLimit = max(CourierInbox.defaultMinPaginationLimit, min)
         }
     }
     
