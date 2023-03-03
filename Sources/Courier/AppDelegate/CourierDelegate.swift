@@ -83,6 +83,8 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
                 // Sync token to Courier
                 try await Courier.shared.setAPNSToken(deviceToken)
                 
+                Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
+                
             } catch {
                 Courier.log(String(describing: error))
             }
