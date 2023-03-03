@@ -143,6 +143,11 @@ internal class Inbox {
             },
             onMessageReceivedError: { [weak self] error in
                 
+                // Prevent reporting the socket disconnect error
+                if (error == .inboxWebSocketDisconnect) {
+                    return
+                }
+                
                 // Notify all listeners
                 Utils.runOnMainThread { [weak self] in
                     self?.listeners.forEach {
