@@ -8,15 +8,13 @@
 import UIKit
 import Courier
 import FirebaseCore
-import FirebaseMessaging
 
 @main
-class AppDelegate: CourierDelegate, MessagingDelegate {
+class AppDelegate: CourierDelegate {
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
-        Messaging.messaging().delegate = self
         
         return true
         
@@ -44,18 +42,6 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         print("\n=================================\n")
         
         showMessageAlert(title: "Message Clicked", message: "\(message)")
-        
-    }
-    
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
-        guard let token = fcmToken else { return }
-        
-        Task {
-            
-            try await Courier.shared.setFCMToken(token)
-            
-        }
         
     }
 

@@ -24,6 +24,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         
     s.source_files = 'Sources/Courier/**/*'
     
-    s.dependency 'Apollo', '1.0.7'
+    s.dependency 'FirebaseMessaging', '10.6.0'
         
 end

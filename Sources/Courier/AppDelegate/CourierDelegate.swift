@@ -30,6 +30,9 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
     override init() {
         super.init()
         
+        // Firebase
+        Messaging.messaging().delegate = self
+        
         // Register to ensure device token can be fetched
         app.registerForRemoteNotifications()
         notificationCenter.delegate = self
@@ -87,11 +90,6 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
     }
     
     // MARK: Firebase Cloud Messaging
-    
-    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        Messaging.messaging().delegate = self
-        return true
-    }
 
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
 
