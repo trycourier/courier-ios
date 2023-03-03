@@ -30,12 +30,20 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
     override init() {
         super.init()
         
-        // Firebase
-        Messaging.messaging().delegate = self
-        
         // Register to ensure device token can be fetched
         app.registerForRemoteNotifications()
         notificationCenter.delegate = self
+        
+    }
+    
+    // MARK: Launch
+    
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        // Set FCM messaging delegate
+        Messaging.messaging().delegate = self
+        
+        return true
         
     }
     
@@ -82,8 +90,6 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
                 
                 // Sync token to Courier
                 try await Courier.shared.setAPNSToken(deviceToken)
-                
-                Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
                 
             } catch {
                 Courier.log(String(describing: error))
