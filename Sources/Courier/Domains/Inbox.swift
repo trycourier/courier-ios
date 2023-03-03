@@ -9,6 +9,11 @@ import UIKit
 
 internal class Inbox {
     
+    internal enum FetchType {
+        case page
+        case refresh
+    }
+    
     private lazy var inboxRepo = InboxRepository()
     
     // MARK: Getters
@@ -32,23 +37,19 @@ internal class Inbox {
     private var fetch: Task<Void, Error>? = nil
     
     private func notifyInitialLoading() {
-        
         Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
                 $0.onInitialLoad?()
             }
         }
-        
     }
     
     private func notifyError(_ error: Error) {
-        
         Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
                 $0.onError?(error)
             }
         }
-        
     }
     
     private func notifyMessagesChanged() {
@@ -90,9 +91,13 @@ internal class Inbox {
         
     }
     
-    private func connectToInbox(clientKey: String, userId: String, limit: Int) async throws -> InboxData {
+    internal func start(refresh: Bool = false) async throws {
         
-        attachLifecycleObservers()
+        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+            return
+        }
+        
+        let limit = refresh ? messages?.count ?? paginationLimit : paginationLimit
         
         let data = try await inboxRepo.getMessages(
             clientKey: clientKey,
@@ -105,23 +110,10 @@ internal class Inbox {
             userId: userId
         )
         
-        return data
+        self.attachLifecycleObservers()
         
-    }
-    
-    internal func start() async throws {
-        
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            return
-        }
-        
-        self.inboxData = try await connectToInbox(
-            clientKey: clientKey,
-            userId: userId,
-            limit: paginationLimit
-        )
-        
-        self.messages = inboxData?.messages.nodes ?? []
+        self.inboxData = data
+        self.messages = data.messages.nodes
         
         self.notifyMessagesChanged()
         
@@ -185,24 +177,7 @@ internal class Inbox {
 
             do {
                 
-                guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-                    return
-                }
-
-                // Grab all the messages we can again
-                // We want to do this to ensure that every message
-                // is in the proper state
-                let limit = messages?.count ?? paginationLimit
-                
-                self.inboxData = try await connectToInbox(
-                    clientKey: clientKey,
-                    userId: userId,
-                    limit: limit
-                )
-                
-                self.messages = self.inboxData?.messages.nodes
-                
-                self.notifyMessagesChanged()
+                try await self.start(refresh: true)
 
             } catch {
 
@@ -334,14 +309,7 @@ internal class Inbox {
     }
     
     internal func refresh() async throws {
-        
-        // Clear out existing data
-        self.inboxData = nil
-        self.messages = nil
-        
-        // Restart
-        try await start()
-        
+        try await start(refresh: true)
     }
     
     internal func refresh(onComplete: @escaping () -> Void) {
