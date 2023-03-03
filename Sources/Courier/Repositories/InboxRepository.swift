@@ -92,7 +92,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 "channel": userId,
                 "clientKey": clientKey,
                 "event": "*",
-                "version": "3"
+                "version": "4"
             ]
         ]
         
