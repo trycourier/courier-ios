@@ -59,9 +59,16 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     @objc private func onPullRefresh() {
-        Courier.shared.refreshInbox {
+        
+        Task {
+            try await Courier.shared.refreshInbox()
             self.collectionView.refreshControl?.endRefreshing()
         }
+        
+//        Courier.shared.refreshInbox {
+//            self.collectionView.refreshControl?.endRefreshing()
+//        }
+        
     }
     
     private func setState(_ state: State, error: String? = nil) {
@@ -127,7 +134,11 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     deinit {
-        self?.inboxListener.
+        
+        if let listener = inboxListener {
+            Courier.shared.removeInboxListener(listener: listener)
+        }
+//        self?.inboxListener.
     }
 
 }

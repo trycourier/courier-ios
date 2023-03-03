@@ -12,6 +12,8 @@ class RootTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Courier.shared.inboxPaginationLimit = 1
 
         Courier.shared.addInboxListener(
             onMessagesChanged: { _, _, totalMessageCount, _ in
