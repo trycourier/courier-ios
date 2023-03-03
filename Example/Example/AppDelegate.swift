@@ -15,8 +15,11 @@ class AppDelegate: CourierDelegate {
     
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
+        // Init Firebase and FCM
         FirebaseApp.configure()
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+        Messaging.messaging().delegate = self
+        
+        return true
         
     }
 

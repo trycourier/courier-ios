@@ -36,20 +36,6 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
         
     }
     
-    // MARK: Launching
-    
-    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
-        Messaging.messaging().delegate = self
-        
-        if let value = app.delegate?.application?(application, didFinishLaunchingWithOptions: launchOptions) {
-            return value
-        }
-        
-        return true
-        
-    }
-    
     // MARK: Messaging
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
