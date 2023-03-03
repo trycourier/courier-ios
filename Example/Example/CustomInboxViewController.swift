@@ -53,22 +53,23 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 self.inboxMessages = messages
                 self.collectionView.reloadData()
                 
+                if (messages.count > 10) {
+                    
+                }
+                
             }
         )
         
     }
     
+    private func test() {
+        self.inboxListener?.remove()
+    }
+    
     @objc private func onPullRefresh() {
-        
-        Task {
-            try await Courier.shared.refreshInbox()
+        Courier.shared.refreshInbox {
             self.collectionView.refreshControl?.endRefreshing()
         }
-        
-//        Courier.shared.refreshInbox {
-//            self.collectionView.refreshControl?.endRefreshing()
-//        }
-        
     }
     
     private func setState(_ state: State, error: String? = nil) {
@@ -131,14 +132,6 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             }
         }
         
-    }
-    
-    deinit {
-        
-        if let listener = inboxListener {
-            Courier.shared.removeInboxListener(listener: listener)
-        }
-//        self?.inboxListener.
     }
 
 }

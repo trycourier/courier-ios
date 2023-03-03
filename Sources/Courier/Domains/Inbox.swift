@@ -290,7 +290,7 @@ internal class Inbox {
         
     }
     
-    internal func removeAllInboxListeners() {
+    internal func removeAllListeners() {
         listeners.removeAll()
         close()
     }
@@ -389,8 +389,8 @@ extension Courier {
         return inbox.addInboxListener(onInitialLoad: onInitialLoad, onError: onError, onMessagesChanged: onMessagesChanged)
     }
     
-    @objc public func removeInboxListener(listener: CourierInboxListener) {
-        inbox.removeInboxListener(listener: listener)
+    @objc public func removeAllInboxListeners() {
+        inbox.removeAllListeners()
     }
     
     /**
