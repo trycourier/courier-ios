@@ -40,8 +40,11 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
     
     open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        // Init FCM
         Messaging.messaging().delegate = self
+        
+        if let value = app.delegate?.application?(application, didFinishLaunchingWithOptions: launchOptions) {
+            return value
+        }
         
         return true
         
