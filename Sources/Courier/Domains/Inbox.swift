@@ -31,9 +31,37 @@ internal class Inbox {
     private var inboxData: InboxData? = nil
     private var fetch: Task<Void, Error>? = nil
     
-    private func addDisplayObservers() {
+    private func attachLifecycleObservers() {
+        
+        // Removes existing observers
+        Inbox.systemNotificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+        Inbox.systemNotificationCenter.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+        
+        // Attaches new observers
         Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
+    }
+    
+    private func connectToInbox(clientKey: String, userId: String, limit: Int) async throws -> InboxData {
+        
+        inboxRepo.closeWebSocket()
+        
+        attachLifecycleObservers()
+        
+        let data = try await inboxRepo.getMessages(
+            clientKey: clientKey,
+            userId: userId,
+            paginationLimit: limit
+        )
+        
+        try await connectWebSocket(
+            clientKey: clientKey,
+            userId: userId
+        )
+        
+        return data
+        
     }
     
     internal func start() async throws {
@@ -42,19 +70,10 @@ internal class Inbox {
             return
         }
         
-        inboxRepo.closeWebSocket()
-        
-        addDisplayObservers()
-        
-        inboxData = try await inboxRepo.getMessages(
+        inboxData = try await connectToInbox(
             clientKey: clientKey,
             userId: userId,
-            paginationLimit: paginationLimit
-        )
-        
-        try await connectWebSocket(
-            clientKey: clientKey,
-            userId: userId
+            limit: paginationLimit
         )
         
         // Reset the data
@@ -65,15 +84,13 @@ internal class Inbox {
             
             let totalMessageCount = data.messages.totalCount ?? 0
             let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-            let previousMessages = messages ?? []
+            let messages = messages ?? []
             
             // Call the listeners
             Utils.runOnMainThread { [weak self] in
                 self?.listeners.forEach {
                     $0.callMessageChanged(
-                        newMessage: nil,
-                        previousMessages: [],
-                        nextPageOfMessages: previousMessages,
+                        messages: messages,
                         unreadMessageCount: -999,
                         totalMessageCount: totalMessageCount,
                         canPaginate: canPaginate
@@ -85,7 +102,11 @@ internal class Inbox {
         
     }
     
-    internal func connectIfNeeded() async throws {
+    private func notifyListeners() {
+        
+    }
+    
+    internal func restartInboxIfNeeded() async throws {
         
         // Check if we need to start the inbox pipe
         if (!listeners.isEmpty && inboxRepo.webSocket == nil) {
@@ -116,27 +137,23 @@ internal class Inbox {
                     
                     // Add the new message
                     self.inboxData?.incrementCounts()
+                    self.messages?.insert(message, at: 0)
                     
                     let totalMessageCount = data.messages.totalCount ?? 0
                     let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-                    let previousMessages = self.messages ?? []
+                    let messages = self.messages ?? []
                     
                     // Notify all listeners
                     Utils.runOnMainThread { [weak self] in
                         self?.listeners.forEach {
                             $0.callMessageChanged(
-                                newMessage: message,
-                                previousMessages: previousMessages,
-                                nextPageOfMessages: [],
+                                messages: messages,
                                 unreadMessageCount: -999,
                                 totalMessageCount: totalMessageCount,
                                 canPaginate: canPaginate
                             )
                         }
                     }
-                    
-                    // Add the message to the array
-                    self.messages?.insert(message, at: 0)
                     
                 }
                 
@@ -173,8 +190,19 @@ internal class Inbox {
         Task {
 
             do {
+                
+                guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+                    return
+                }
 
-                try await start()
+                let limit = messages?.count ?? paginationLimit
+                inboxData = try await connectToInbox(
+                    clientKey: clientKey,
+                    userId: userId,
+                    limit: limit
+                )
+                
+                print(inboxData)
 
             } catch {
 
@@ -219,14 +247,13 @@ internal class Inbox {
             let nextPageOfMessages = data.messages.nodes
             let totalMessageCount = data.messages.totalCount ?? 0
             let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+            let messages = messages ?? []
             
             // Call the listeners
             Utils.runOnMainThread { [weak self] in
                 self?.listeners.forEach {
                     $0.callMessageChanged(
-                        newMessage: nil,
-                        previousMessages: previousMessages,
-                        nextPageOfMessages: nextPageOfMessages,
+                        messages: messages,
                         unreadMessageCount: -999,
                         totalMessageCount: totalMessageCount,
                         canPaginate: canPaginate
@@ -242,7 +269,7 @@ internal class Inbox {
         // TODO
     }
     
-    internal func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
+    internal func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
         
         // Create a new inbox listener
         let listener = CourierInboxListener(
@@ -278,9 +305,7 @@ internal class Inbox {
             let canPaginate = data.messages.pageInfo.hasNextPage ?? false
             
             listener.callMessageChanged(
-                newMessage: nil,
-                previousMessages: [],
-                nextPageOfMessages: messages,
+                messages: messages,
                 unreadMessageCount: -999,
                 totalMessageCount: totalMessageCount,
                 canPaginate: canPaginate
@@ -434,7 +459,7 @@ extension Courier {
      Connects to the Courier Inbox service to handle new messages and other events that get sent to the device
      Only one websocket connection and data fetching operation will get setup when calling this.
      */
-    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ newMessage: InboxMessage?, _ previousMessages: [InboxMessage], _ nextPageOfMessages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
+    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
         return inbox.addInboxListener(onInitialLoad: onInitialLoad, onError: onError, onMessagesChanged: onMessagesChanged)
     }
     
