@@ -12,12 +12,11 @@ import FirebaseMessaging
 
 @main
 class AppDelegate: CourierDelegate {
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         FirebaseApp.configure()
-        
-        return true
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
         
     }
 
