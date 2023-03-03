@@ -9,19 +9,33 @@ import UIKit
 import Courier
 
 class RootTabBarController: UITabBarController {
+    
+    private var inboxListener: CourierInboxListener? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Courier.shared.addInboxListener(
+        self.inboxListener = Courier.shared.addInboxListener(
+            onInitialLoad: {
+                self.setBadge(0)
+            },
+            onError: { _ in
+                self.setBadge(0)
+            },
             onMessagesChanged: { _, _, totalMessageCount, _ in
-                
-                self.tabBar.items?[1].badgeValue = "\(totalMessageCount)"
-                
-                
+                self.setBadge(totalMessageCount)
             }
         )
         
+    }
+    
+    private func setBadge(_ count: Int) {
+        self.tabBar.items?[1].badgeValue = count <= 0 ? nil : "\(count)"
+        UIApplication.shared.applicationIconBadgeNumber = count
+    }
+    
+    deinit {
+        self.inboxListener?.remove()
     }
 
 }

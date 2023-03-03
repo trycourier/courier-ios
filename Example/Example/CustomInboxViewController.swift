@@ -53,17 +53,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 self.inboxMessages = messages
                 self.collectionView.reloadData()
                 
-                if (messages.count > 10) {
-                    
-                }
-                
             }
         )
         
-    }
-    
-    private func test() {
-        self.inboxListener?.remove()
     }
     
     @objc private func onPullRefresh() {
@@ -132,6 +124,10 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             }
         }
         
+    }
+    
+    deinit {
+        self.inboxListener?.remove()
     }
 
 }
