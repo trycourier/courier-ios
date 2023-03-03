@@ -38,7 +38,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
     
     // MARK: Launch
     
-    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         // Set FCM messaging delegate
         Messaging.messaging().delegate = self
