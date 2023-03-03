@@ -389,6 +389,10 @@ extension Courier {
         return inbox.addInboxListener(onInitialLoad: onInitialLoad, onError: onError, onMessagesChanged: onMessagesChanged)
     }
     
+    @objc public func removeInboxListener(listener: CourierInboxListener) {
+        inbox.removeInboxListener(listener: listener)
+    }
+    
     /**
      Grabs the next page of message from the inbox service
      Will automatically prevent duplicate calls if a call is already performed

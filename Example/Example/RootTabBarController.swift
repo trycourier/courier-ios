@@ -15,7 +15,10 @@ class RootTabBarController: UITabBarController {
 
         Courier.shared.addInboxListener(
             onMessagesChanged: { _, _, totalMessageCount, _ in
+                
                 self.tabBar.items?[1].badgeValue = "\(totalMessageCount)"
+                
+                
             }
         )
         

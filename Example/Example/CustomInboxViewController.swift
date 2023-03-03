@@ -13,6 +13,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var stateLabel: UILabel!
     
+    private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     
@@ -36,8 +37,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
         collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
         
-        // Courier Inbox
-        Courier.shared.addInboxListener(
+        self.inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: {
                 self.setState(.loading)
             },
@@ -49,13 +49,8 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 print(messages.count, unreadMessageCount, totalMessageCount, canPaginate)
                 
                 self.setState(messages.isEmpty ? .empty : .content)
-                
                 self.canPaginate = canPaginate
-                
                 self.inboxMessages = messages
-                
-//                self.tabBarController?.tabBar.items?[1].badgeValue = "\(totalMessageCount)"
-                
                 self.collectionView.reloadData()
                 
             }
@@ -129,6 +124,10 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             }
         }
         
+    }
+    
+    deinit {
+        self?.inboxListener.
     }
 
 }
