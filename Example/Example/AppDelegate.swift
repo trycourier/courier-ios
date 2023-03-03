@@ -12,16 +12,13 @@ import FirebaseCore
 @main
 class AppDelegate: CourierDelegate {
 
-//    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//
-//        FirebaseApp.configure()
-//
-//        return true
-//
-//    }
-    
-    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        
         return true
+        
     }
 
     // MARK: Push Notification Handlers
@@ -46,6 +43,18 @@ class AppDelegate: CourierDelegate {
         print("\n=================================\n")
         
         showMessageAlert(title: "Message Clicked", message: "\(message)")
+        
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        
+        guard let token = fcmToken else { return }
+        
+        Task {
+            
+            try await Courier.shared.setFCMToken(token)
+            
+        }
         
     }
 
