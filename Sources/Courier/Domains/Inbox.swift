@@ -97,7 +97,10 @@ internal class Inbox {
             return
         }
         
-        let limit = refresh ? messages?.count ?? paginationLimit : paginationLimit
+        // Determine a safe limit
+        let messageCount = messages?.count ?? paginationLimit
+        let maxRefreshLimit = min(messageCount, Inbox.defaultMaxPaginationLimit)
+        let limit = refresh ? maxRefreshLimit : paginationLimit
         
         let data = try await inboxRepo.getMessages(
             clientKey: clientKey,
@@ -174,17 +177,11 @@ internal class Inbox {
         }
 
         Task {
-
             do {
-                
                 try await self.start(refresh: true)
-
             } catch {
-
                 self.notifyError(error)
-
             }
-
         }
         
     }
