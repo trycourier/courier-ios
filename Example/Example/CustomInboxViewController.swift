@@ -44,17 +44,15 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             onError: { error in
                 self.setState(.error, error: String(describing: error))
             },
-            onMessagesChanged: { newMessage, previousMessages, nextPageOfMessages, unreadMessageCount, totalMessageCount, canPaginate in
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
                 
-                print(newMessage ?? "No new message", previousMessages.count, nextPageOfMessages.count, unreadMessageCount, totalMessageCount, canPaginate)
+                print(messages.count, unreadMessageCount, totalMessageCount, canPaginate)
                 
-                let isEmpty = Courier.shared.inboxMessages?.isEmpty ?? true
-                self.setState(isEmpty ? .empty : .content)
+                self.setState(messages.isEmpty ? .empty : .content)
                 
                 self.canPaginate = canPaginate
                 
-                let newMessages = newMessage != nil ? [newMessage!] : []
-                self.inboxMessages = newMessages + previousMessages + nextPageOfMessages
+                self.inboxMessages = messages
                 
                 self.collectionView.reloadData()
                 

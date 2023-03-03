@@ -31,21 +31,66 @@ internal class Inbox {
     private var inboxData: InboxData? = nil
     private var fetch: Task<Void, Error>? = nil
     
+    private func notifyInitialLoading() {
+        
+        Utils.runOnMainThread { [weak self] in
+            self?.listeners.forEach {
+                $0.onInitialLoad?()
+            }
+        }
+        
+    }
+    
+    private func notifyError(_ error: Error) {
+        
+        Utils.runOnMainThread { [weak self] in
+            self?.listeners.forEach {
+                $0.onError?(error)
+            }
+        }
+        
+    }
+    
+    private func notifyMessagesChanged() {
+        
+        if let data = inboxData {
+         
+            let messages = messages ?? []
+            let unreadCount =  -999 // TODO
+            let totalCount = data.messages.totalCount ?? 0
+            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+            
+            Utils.runOnMainThread { [weak self] in
+                self?.listeners.forEach {
+                    $0.callMessageChanged(
+                        messages: messages,
+                        unreadMessageCount: unreadCount,
+                        totalMessageCount: totalCount,
+                        canPaginate: canPaginate
+                    )
+                }
+            }
+            
+        }
+        
+    }
+    
     private func attachLifecycleObservers() {
         
-        // Removes existing observers
-        Inbox.systemNotificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
-        Inbox.systemNotificationCenter.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+        let events = [
+            UIApplication.didEnterBackgroundNotification : #selector(appDidMoveToBackground),
+            UIApplication.didBecomeActiveNotification : #selector(appDidBecomeActive)
+        ]
         
-        // Attaches new observers
-        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidMoveToBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        Inbox.systemNotificationCenter.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        // Restart the observer
+        events.forEach { event in
+            Inbox.systemNotificationCenter.removeObserver(self, name: event.key, object: nil)
+            Inbox.systemNotificationCenter.addObserver(self, selector: event.value, name: event.key, object: nil)
+        }
         
     }
     
     private func connectToInbox(clientKey: String, userId: String, limit: Int) async throws -> InboxData {
-        
-        inboxRepo.closeWebSocket()
         
         attachLifecycleObservers()
         
@@ -70,39 +115,15 @@ internal class Inbox {
             return
         }
         
-        inboxData = try await connectToInbox(
+        self.inboxData = try await connectToInbox(
             clientKey: clientKey,
             userId: userId,
             limit: paginationLimit
         )
         
-        // Reset the data
-        messages = inboxData?.messages.nodes ?? []
+        self.messages = inboxData?.messages.nodes ?? []
         
-        // Get the inbox data and notify the listeners with the details
-        if let data = inboxData {
-            
-            let totalMessageCount = data.messages.totalCount ?? 0
-            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-            let messages = messages ?? []
-            
-            // Call the listeners
-            Utils.runOnMainThread { [weak self] in
-                self?.listeners.forEach {
-                    $0.callMessageChanged(
-                        messages: messages,
-                        unreadMessageCount: -999,
-                        totalMessageCount: totalMessageCount,
-                        canPaginate: canPaginate
-                    )
-                }
-            }
-            
-        }
-        
-    }
-    
-    private func notifyListeners() {
+        self.notifyMessagesChanged()
         
     }
     
@@ -111,14 +132,7 @@ internal class Inbox {
         // Check if we need to start the inbox pipe
         if (!listeners.isEmpty && inboxRepo.webSocket == nil) {
             
-            // Notify all listeners
-            Utils.runOnMainThread { [weak self] in
-                self?.listeners.forEach {
-                    $0.onInitialLoad?()
-                }
-            }
-            
-            // Create the inbox pipe
+            self.notifyInitialLoading()
             try await start()
             
         }
@@ -127,35 +141,20 @@ internal class Inbox {
     
     private func connectWebSocket(clientKey: String, userId: String) async throws {
         
+        // Kill existing socket
+        inboxRepo.closeWebSocket()
+        
+        // Create a new socket
         try await inboxRepo.createWebSocket(
             clientKey: clientKey,
             userId: userId,
             onMessageReceived: { [weak self] message in
                 
-                // Ensure we have data to work with
-                if let self = self, let data = self.inboxData {
-                    
-                    // Add the new message
-                    self.inboxData?.incrementCounts()
-                    self.messages?.insert(message, at: 0)
-                    
-                    let totalMessageCount = data.messages.totalCount ?? 0
-                    let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-                    let messages = self.messages ?? []
-                    
-                    // Notify all listeners
-                    Utils.runOnMainThread { [weak self] in
-                        self?.listeners.forEach {
-                            $0.callMessageChanged(
-                                messages: messages,
-                                unreadMessageCount: -999,
-                                totalMessageCount: totalMessageCount,
-                                canPaginate: canPaginate
-                            )
-                        }
-                    }
-                    
-                }
+                // Add new message to array
+                self?.inboxData?.incrementCounts()
+                self?.messages?.insert(message, at: 0)
+
+                self?.notifyMessagesChanged()
                 
             },
             onMessageReceivedError: { [weak self] error in
@@ -165,12 +164,7 @@ internal class Inbox {
                     return
                 }
                 
-                // Notify all listeners
-                Utils.runOnMainThread { [weak self] in
-                    self?.listeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
+                self?.notifyError(error)
                 
             }
         )
@@ -195,22 +189,24 @@ internal class Inbox {
                     return
                 }
 
+                // Grab all the messages we can again
+                // We want to do this to ensure that every message
+                // is in the proper state
                 let limit = messages?.count ?? paginationLimit
-                inboxData = try await connectToInbox(
+                
+                self.inboxData = try await connectToInbox(
                     clientKey: clientKey,
                     userId: userId,
                     limit: limit
                 )
                 
-                print(inboxData)
+                self.messages = self.inboxData?.messages.nodes
+                
+                self.notifyMessagesChanged()
 
             } catch {
 
-//                Utils.runOnMainThread { [weak self] in
-//                    self?.listeners.forEach {
-//                        $0.onError?(error)
-//                    }
-//                }
+                self.notifyError(error)
 
             }
 
@@ -224,7 +220,6 @@ internal class Inbox {
             return
         }
         
-        let previousMessages = messages ?? []
         let cursor = data.messages.pageInfo.startCursor
         
         self.inboxData = try await inboxRepo.getMessages(
@@ -234,34 +229,24 @@ internal class Inbox {
             startCursor: cursor
         )
         
-        // Set empty array if needed
+        self.addPageToMessages(data: self.inboxData)
+        
+        self.notifyMessagesChanged()
+        
+    }
+    
+    private func addPageToMessages(data: InboxData?) {
+        
+        // Add default value
         if (messages == nil) {
             messages = []
         }
         
-        messages! += self.inboxData?.messages.nodes ?? []
+        // Get new messages
+        let nodes = data?.messages.nodes ?? []
         
-        if let data = inboxData {
-         
-            // Hold previous messages
-            let nextPageOfMessages = data.messages.nodes
-            let totalMessageCount = data.messages.totalCount ?? 0
-            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
-            let messages = messages ?? []
-            
-            // Call the listeners
-            Utils.runOnMainThread { [weak self] in
-                self?.listeners.forEach {
-                    $0.callMessageChanged(
-                        messages: messages,
-                        unreadMessageCount: -999,
-                        totalMessageCount: totalMessageCount,
-                        canPaginate: canPaginate
-                    )
-                }
-            }
-            
-        }
+        // Add messages to end of datasource
+        self.messages! += nodes
         
     }
     
@@ -338,25 +323,23 @@ internal class Inbox {
     
     internal func close() {
         
-        // Remove all inbox details
-        // Keep the listeners still registered
-        messages = nil
-        inboxRepo.closeWebSocket()
+        // Clear out data and stop socket
+        self.messages = nil
+        self.inboxData = nil
+        self.inboxRepo.closeWebSocket()
         
-        // Tell all the listeners the user is signed out
-        Utils.runOnMainThread { [weak self] in
-            self?.listeners.forEach {
-                $0.onError?(CourierError.inboxUserNotFound)
-            }
-        }
+        // Tell listeners about the change
+        self.notifyError(CourierError.inboxUserNotFound)
         
     }
     
     internal func refresh() async throws {
         
-        inboxData = nil
-        messages = nil
+        // Clear out existing data
+        self.inboxData = nil
+        self.messages = nil
         
+        // Restart
         try await start()
         
     }
@@ -369,12 +352,8 @@ internal class Inbox {
                     onComplete()
                 }
             } catch {
-                Utils.runOnMainThread { [weak self] in
-                    onComplete()
-                    self?.listeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
+                self.notifyError(error)
+                onComplete()
             }
         }
     }
@@ -386,22 +365,12 @@ internal class Inbox {
         fetch = Task {
             
             do {
-                
                 try await start()
-                
-                fetch = nil
-                
             } catch {
-
-                Utils.runOnMainThread { [weak self] in
-                    self?.listeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
-                
-                fetch = nil
-                
+                self.notifyError(error)
             }
+            
+            fetch = nil
             
         }
         
@@ -414,22 +383,12 @@ internal class Inbox {
         fetch = Task {
             
             do {
-                
                 try await fetchNextPageOfMessages()
-                
-                fetch = nil
-                
             } catch {
-
-                Utils.runOnMainThread { [weak self] in
-                    self?.listeners.forEach {
-                        $0.onError?(error)
-                    }
-                }
-                
-                fetch = nil
-                
+                self.notifyError(error)
             }
+            
+            fetch = nil
             
         }
         
