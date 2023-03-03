@@ -39,7 +39,7 @@ internal class Inbox {
     private func notifyInitialLoading() {
         Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
-                $0.onInitialLoad?()
+                $0.initialize()
             }
         }
     }
@@ -240,7 +240,7 @@ internal class Inbox {
         
         // Call initial load
         Utils.runOnMainThread {
-            listener.onInitialLoad?()
+            listener.initialize()
         }
         
         // User is not signed
@@ -261,12 +261,14 @@ internal class Inbox {
             let totalMessageCount = data.messages.totalCount ?? 0
             let canPaginate = data.messages.pageInfo.hasNextPage ?? false
             
-            listener.callMessageChanged(
-                messages: messages,
-                unreadMessageCount: -999,
-                totalMessageCount: totalMessageCount,
-                canPaginate: canPaginate
-            )
+            Utils.runOnMainThread {
+                listener.callMessageChanged(
+                    messages: messages,
+                    unreadMessageCount: -999,
+                    totalMessageCount: totalMessageCount,
+                    canPaginate: canPaginate
+                )
+            }
             
         }
         

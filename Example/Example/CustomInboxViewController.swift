@@ -54,6 +54,8 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 
                 self.inboxMessages = messages
                 
+//                self.tabBarController?.tabBar.items?[1].badgeValue = "\(totalMessageCount)"
+                
                 self.collectionView.reloadData()
                 
             }

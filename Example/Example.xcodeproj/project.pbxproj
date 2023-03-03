@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
 		27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */; };
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
@@ -51,6 +52,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		272A237F29B2886600B82CFE /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
 		27644EEB29AE7378002F907B /* CustomInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxViewController.swift; sourceTree = "<group>"; };
 		27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxCollectionViewCell.swift; sourceTree = "<group>"; };
 		27644EF329AFF741002F907B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				2789519629268E030070F501 /* Extras.swift */,
 				27895166292689460070F501 /* AppDelegate.swift */,
 				27895168292689460070F501 /* SceneDelegate.swift */,
+				272A237F29B2886600B82CFE /* RootTabBarController.swift */,
 				2789516A292689460070F501 /* NotificationsViewController.swift */,
 				27644EEB29AE7378002F907B /* CustomInboxViewController.swift */,
 				27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */,
@@ -262,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2789516B292689460070F501 /* NotificationsViewController.swift in Sources */,
+				272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
 				27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */,
 				2789518129268C400070F501 /* Env.swift in Sources */,

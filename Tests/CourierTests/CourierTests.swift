@@ -20,7 +20,7 @@ final class CourierTests: XCTestCase {
 
         Courier.shared.addInboxListener(
             onInitialLoad: {
-                print("L2 Loading")
+                print("L1 Loading")
             },
             onError: { error in
                 print("L1 Error \(error)")
@@ -31,6 +31,19 @@ final class CourierTests: XCTestCase {
 //                print("L1 messages \(newMessage) \(previousMessages) \(previousMessages.coun =t) \(newMessages.count) \(canPaginate)")
 //                print("Last Message Ids: \(previousMessages.last?.messageId) \(newMessages.last?.messageId)")
 //                canPage = canPaginate
+            })
+        
+        try await Task.sleep(nanoseconds: 4_000_000_000)
+        
+        Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("L2 Loading")
+            },
+            onError: { error in
+                print("L2 Error \(error)")
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate  in
+                print("L2 messages: \(messages.count) \(unreadMessageCount) \(totalMessageCount) \(canPaginate)")
             })
 
         while (canPage) {
