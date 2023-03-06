@@ -234,6 +234,19 @@ internal class CourierInbox {
             messageId: messageId
         )
         
+        guard let message = messages?.first(where: { $0.messageId == messageId }) else { return }
+        
+        if #available(iOS 15.0, *) {
+            message.read = Date().ISO8601Format()
+        } else {
+            let date = Date()
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions.insert(.withFractionalSeconds)
+            message.read = formatter.string(from: date)
+        }
+        
+        self.notifyMessagesChanged()
+        
     }
     
     internal func unreadMessage(messageId: String) async throws {
@@ -247,6 +260,12 @@ internal class CourierInbox {
             userId: userId,
             messageId: messageId
         )
+        
+        guard let message = messages?.first(where: { $0.messageId == messageId }) else { return }
+        
+        message.read = nil
+        
+        self.notifyMessagesChanged()
         
     }
     

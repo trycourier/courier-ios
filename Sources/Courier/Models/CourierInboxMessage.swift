@@ -43,8 +43,8 @@ internal struct InboxPageInfo: Codable {
     public let preview: String?
     public let created: String?
 //    let actions: String?
-    public let archived: Bool?
-    public let read: String?
+    internal var archived: Bool?
+    internal var read: String?
     public let messageId: String
     public let tags: [String]?
     
