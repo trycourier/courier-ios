@@ -1,5 +1,5 @@
 //
-//  CourierLogging.swift
+//  CoreLogging.swift
 //  
 //
 //  Created by Michael Miller on 3/2/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal class CourierLogging {
+internal class CoreLogging {
     
     internal var isDebugging = false
     

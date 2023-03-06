@@ -29,13 +29,13 @@ import UIKit
     @objc public static let shared = Courier()
     
     /**
-     * The features of the SDK
+     * The modules of the SDK
      */
-    internal lazy var auth = CourierAuth()
-    internal lazy var push = CourierPush()
-    internal lazy var inbox = CourierInbox()
-    internal lazy var messaging = CourierMessaging()
-    internal let logging = CourierLogging()
+    internal lazy var auth = CoreAuth()
+    internal lazy var push = CorePush()
+    internal lazy var inbox = CoreInbox()
+    internal lazy var messaging = CoreMessaging()
+    internal let logging = CoreLogging()
     
     // MARK: Init
     

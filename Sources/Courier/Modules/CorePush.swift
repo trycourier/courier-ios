@@ -1,5 +1,5 @@
 //
-//  CourierPush.swift
+//  CorePush.swift
 //  
 //
 //  Created by Michael Miller on 3/2/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal class CourierPush {
+internal class CorePush {
     
     private lazy var tokenRepo = TokenRepository()
     private lazy var trackingRepo = TrackingRepository()
@@ -193,7 +193,7 @@ extension Courier {
      * Completion returns on main thread
      */
     @objc public static func getNotificationPermissionStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
-        CourierPush.userNotificationCenter.getNotificationSettings(completionHandler: { settings in
+        CorePush.userNotificationCenter.getNotificationSettings(completionHandler: { settings in
             DispatchQueue.main.async {
                 completion(settings.authorizationStatus)
             }
@@ -204,7 +204,7 @@ extension Courier {
      * Get notification permission status with async await
      */
     @objc public static func getNotificationPermissionStatus() async throws -> UNAuthorizationStatus {
-        let settings = await CourierPush.userNotificationCenter.notificationSettings()
+        let settings = await CorePush.userNotificationCenter.notificationSettings()
         return settings.authorizationStatus
     }
     
@@ -213,8 +213,8 @@ extension Courier {
      * Completion returns on main thread
      */
     @objc public static func requestNotificationPermission(completion: @escaping (UNAuthorizationStatus) -> Void) {
-        CourierPush.userNotificationCenter.requestAuthorization(
-            options: CourierPush.permissionAuthorizationOptions,
+        CorePush.userNotificationCenter.requestAuthorization(
+            options: CorePush.permissionAuthorizationOptions,
             completionHandler: { _, _ in
                 
                 // Get the full status of the permission
@@ -230,7 +230,7 @@ extension Courier {
      * Request notification permission access with async await
      */
     @discardableResult @objc public static func requestNotificationPermission() async throws -> UNAuthorizationStatus {
-        try await CourierPush.userNotificationCenter.requestAuthorization(options: CourierPush.permissionAuthorizationOptions)
+        try await CorePush.userNotificationCenter.requestAuthorization(options: CorePush.permissionAuthorizationOptions)
         return try await Courier.getNotificationPermissionStatus()
     }
     

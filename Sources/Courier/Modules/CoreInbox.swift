@@ -1,5 +1,5 @@
 //
-//  CourierInbox.swift
+//  CoreInbox.swift
 //  
 //
 //  Created by Michael Miller on 3/2/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal class CourierInbox {
+internal class CoreInbox {
     
     internal enum FetchType {
         case page
@@ -83,8 +83,8 @@ internal class CourierInbox {
         
         // Restart the observer
         events.forEach { event in
-            CourierInbox.systemNotificationCenter.removeObserver(self, name: event.key, object: nil)
-            CourierInbox.systemNotificationCenter.addObserver(self, selector: event.value, name: event.key, object: nil)
+            CoreInbox.systemNotificationCenter.removeObserver(self, name: event.key, object: nil)
+            CoreInbox.systemNotificationCenter.addObserver(self, selector: event.value, name: event.key, object: nil)
         }
         
     }
@@ -97,7 +97,7 @@ internal class CourierInbox {
         
         // Determine a safe limit
         let messageCount = messages?.count ?? paginationLimit
-        let maxRefreshLimit = min(messageCount, CourierInbox.defaultMaxPaginationLimit)
+        let maxRefreshLimit = min(messageCount, CoreInbox.defaultMaxPaginationLimit)
         let limit = refresh ? maxRefreshLimit : paginationLimit
         
         async let dataTask: (InboxData) = inboxRepo.getAllMessages(
@@ -521,8 +521,8 @@ extension Courier {
             return inbox.paginationLimit
         }
         set {
-            let min = min(CourierInbox.defaultMaxPaginationLimit, newValue)
-            inbox.paginationLimit = max(CourierInbox.defaultMinPaginationLimit, min)
+            let min = min(CoreInbox.defaultMaxPaginationLimit, newValue)
+            inbox.paginationLimit = max(CoreInbox.defaultMinPaginationLimit, min)
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  CourierMessaging.swift
+//  CoreMessaging.swift
 //  
 //
 //  Created by Michael Miller on 3/2/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal class CourierMessaging {
+internal class CoreMessaging {
     
     private lazy var messagingRepo = MessagingRepository()
     
