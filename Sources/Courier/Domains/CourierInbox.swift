@@ -56,24 +56,20 @@ internal class CourierInbox {
     
     private func notifyMessagesChanged() {
         
-        if let data = inboxData {
-         
-            let messages = messages ?? []
-            let unreadCount = unreadCount ?? 0
-            let totalCount = data.count ?? 0
-            let canPaginate = data.messages?.pageInfo?.hasNextPage ?? false
-            
-            Utils.runOnMainThread { [weak self] in
-                self?.listeners.forEach {
-                    $0.callMessageChanged(
-                        messages: messages,
-                        unreadMessageCount: unreadCount,
-                        totalMessageCount: totalCount,
-                        canPaginate: canPaginate
-                    )
-                }
+        let messages = messages ?? []
+        let unreadCount = unreadCount ?? 0
+        let totalCount = inboxData?.count ?? 0
+        let canPaginate = inboxData?.messages?.pageInfo?.hasNextPage ?? false
+        
+        Utils.runOnMainThread { [weak self] in
+            self?.listeners.forEach {
+                $0.callMessageChanged(
+                    messages: messages,
+                    unreadMessageCount: unreadCount,
+                    totalMessageCount: totalCount,
+                    canPaginate: canPaginate
+                )
             }
-            
         }
         
     }
