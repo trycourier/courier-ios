@@ -50,6 +50,8 @@ import UIKit
         
         self.collectionView = collectionView
         
+        print(frame, bounds)
+        
     }
     
     private func makeListener() {
