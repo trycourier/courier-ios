@@ -46,30 +46,24 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 self.setState(.error, error: String(describing: error))
             },
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
-                
-                print(messages.count, unreadMessageCount, totalMessageCount, canPaginate)
-                
-                // TODO: Mark as read call back to onMessagesChanged
-//                messages.first?.markAsRead()
-                
                 self.setState(messages.isEmpty ? .empty : .content)
                 self.canPaginate = canPaginate
                 self.inboxMessages = messages
                 self.collectionView.reloadData()
-                
             }
         )
         
     }
     
     @objc private func onPullRefresh() {
-        Courier.shared.refreshInbox {
+        Task {
+            try await Courier.shared.refreshInbox()
             self.collectionView.refreshControl?.endRefreshing()
         }
     }
       
     @objc private func readAll() {
-        print("YAY")
+        Courier.shared.readAllInboxMessages()
     }
     
     private func setState(_ state: State, error: String? = nil) {
@@ -126,13 +120,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
         if (indexPath.section == 1) {
-            Task {
-                Courier.shared.fetchNextPageOfMessages()
-            }
+            Courier.shared.fetchNextPageOfMessages()
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
