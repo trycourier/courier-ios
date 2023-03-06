@@ -100,12 +100,6 @@ internal class CourierInbox {
         let maxRefreshLimit = min(messageCount, CourierInbox.defaultMaxPaginationLimit)
         let limit = refresh ? maxRefreshLimit : paginationLimit
         
-//        let data = try await inboxRepo.getAllMessages(
-//            clientKey: clientKey,
-//            userId: userId,
-//            paginationLimit: limit
-//        )
-        
         async let dataTask: (InboxData) = inboxRepo.getAllMessages(
             clientKey: clientKey,
             userId: userId,
@@ -157,9 +151,10 @@ internal class CourierInbox {
             userId: userId,
             onMessageReceived: { [weak self] message in
                 
-                // Add new message to array
+                // Update local values
                 self?.inboxData?.incrementCount()
                 self?.messages?.insert(message, at: 0)
+                self?.incrementUnreadCount()
 
                 self?.notifyMessagesChanged()
                 
@@ -234,6 +229,20 @@ internal class CourierInbox {
         
     }
     
+    private func incrementUnreadCount() {
+        if (self.unreadCount != nil) {
+            self.unreadCount! += 1
+        }
+        self.unreadCount = max(0, self.unreadCount!)
+    }
+    
+    private func decrementUnreadCount() {
+        if (self.unreadCount != nil) {
+            self.unreadCount! -= 1
+        }
+        self.unreadCount = max(0, self.unreadCount!)
+    }
+    
     internal func readMessage(messageId: String) async throws {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
@@ -258,9 +267,7 @@ internal class CourierInbox {
         }
         
         // Update unread count
-        if (self.unreadCount != nil) {
-            self.unreadCount! -= 1
-        }
+        self.decrementUnreadCount()
         
         self.notifyMessagesChanged()
         
@@ -305,9 +312,7 @@ internal class CourierInbox {
         message.read = nil
         
         // Update unread count
-        if (self.unreadCount != nil) {
-            self.unreadCount! += 1
-        }
+        self.incrementUnreadCount()
         
         self.notifyMessagesChanged()
         
