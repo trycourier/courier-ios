@@ -35,6 +35,7 @@ internal class CourierInbox {
     internal var messages: [InboxMessage]? = nil
     private var inboxData: InboxData? = nil
     private var unreadCount: Int? = nil
+    
     private var fetch: Task<Void, Error>? = nil
     
     private func notifyInitialLoading() {
@@ -246,8 +247,9 @@ internal class CourierInbox {
         // Mark the message as read instantly
         guard let message = messages?.first(where: { $0.messageId == messageId }) else { return }
         
-        // Save OG message read status
+        // Save original state
         let originalStatus = message.read
+        let prevUnreadCount = self.unreadCount
         
         // Set the new status
         if #available(iOS 15.0, *) {
@@ -259,21 +261,29 @@ internal class CourierInbox {
             message.read = formatter.string(from: date)
         }
         
+        // Update unread count
+        if (self.unreadCount != nil) {
+            self.unreadCount! -= 1
+        }
+        
         self.notifyMessagesChanged()
         
         // Perform the request async and reset if failed
         Task {
             
             do {
+                
                 try await inboxRepo.readMessage(
                     clientKey: clientKey,
                     userId: userId,
                     messageId: messageId
                 )
+                
             } catch {
                 
                 // Reset the status
                 message.read = originalStatus
+                self.unreadCount = prevUnreadCount
                 self.notifyMessagesChanged()
                 
             }
@@ -291,11 +301,17 @@ internal class CourierInbox {
         // Mark the message as read instantly
         guard let message = messages?.first(where: { $0.messageId == messageId }) else { return }
         
-        // Save OG message read status
+        // Save original state
         let originalStatus = message.read
+        let prevUnreadCount = self.unreadCount
         
         // Set the new status
         message.read = nil
+        
+        // Update unread count
+        if (self.unreadCount != nil) {
+            self.unreadCount! += 1
+        }
         
         self.notifyMessagesChanged()
         
@@ -303,15 +319,18 @@ internal class CourierInbox {
         Task {
             
             do {
+                
                 try await inboxRepo.unreadMessage(
                     clientKey: clientKey,
                     userId: userId,
                     messageId: messageId
                 )
+                
             } catch {
                 
                 // Reset the status
                 message.read = originalStatus
+                self.unreadCount = prevUnreadCount
                 self.notifyMessagesChanged()
                 
             }

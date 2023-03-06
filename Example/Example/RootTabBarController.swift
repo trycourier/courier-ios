@@ -22,8 +22,8 @@ class RootTabBarController: UITabBarController {
             onError: { _ in
                 self.setBadge(0)
             },
-            onMessagesChanged: { _, _, totalMessageCount, _ in
-                self.setBadge(totalMessageCount)
+            onMessagesChanged: { _, unreadCount, _, _ in
+                self.setBadge(unreadCount)
             }
         )
         
