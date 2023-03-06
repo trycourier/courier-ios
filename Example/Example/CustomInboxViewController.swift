@@ -109,10 +109,11 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
         if (indexPath.section == 0) {
             let message = inboxMessages[indexPath.row]
-            cell.textLabel.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
+            cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
             cell.contentView.backgroundColor = message.isRead ? .green : .red
         } else {
-            cell.textLabel.text = "Loading..."
+            cell.label.text = "Loading..."
+            cell.contentView.backgroundColor = .clear
         }
         
         return cell
@@ -126,15 +127,8 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         let message = inboxMessages[indexPath.row]
-        
-        if (message.isRead) {
-            message.markAsUnread()
-        } else {
-            message.markAsRead()
-        }
-        
+        message.isRead ? message.markAsUnread() : message.markAsRead()
     }
     
     deinit {
