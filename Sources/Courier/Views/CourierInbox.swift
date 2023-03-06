@@ -50,7 +50,7 @@ import UIKit
         
         self.collectionView = collectionView
         
-        print(frame, bounds)
+        self.makeListener()
         
     }
     
