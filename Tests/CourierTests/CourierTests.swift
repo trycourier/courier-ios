@@ -8,8 +8,6 @@ final class CourierTests: XCTestCase {
     
     func test1() async throws {
         
-        Courier.shared.isDebugging = false
-        
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_ACCESS_TOKEN,
             clientKey: Env.COURIER_CLIENT_KEY,
@@ -28,20 +26,10 @@ final class CourierTests: XCTestCase {
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate  in
                 print("L1 messages: \(messages.count) \(unreadMessageCount) \(totalMessageCount) \(canPaginate)")
                 canPage = canPaginate
-                
-                messages.first?.markAsRead(
-                    onSuccess: {
-                        print("Message marked as read")
-                    },
-                    onFailure: { error in
-                        print(error)
-                    }
-                )
-                
             })
 
         while (canPage) {
-            try await Task.sleep(nanoseconds: 2_000_000_000)
+            try await Task.sleep(nanoseconds: 1_000_000_000)
             Courier.shared.fetchNextPageOfMessages()
         }
         

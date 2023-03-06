@@ -181,7 +181,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
             
             let query = """
             query GetMessages(
-                $params: FilterParamsInput = { status: \"unread\" }
+                $params: FilterParamsInput = { status: "unread" }
                 $limit: Int = \(1)
                 $after: String
             ) {
@@ -214,7 +214,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 
                 do {
                     let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
-                    continuation.resume(returning: res.data.count)
+                    continuation.resume(returning: res.data.count ?? 0)
                 } catch {
                     Courier.log(String(describing: error))
                     continuation.resume(throwing: CourierError.requestError)

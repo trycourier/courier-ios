@@ -59,8 +59,8 @@ internal class CourierInbox {
          
             let messages = messages ?? []
             let unreadCount = unreadCount ?? 0
-            let totalCount = data.count
-            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+            let totalCount = data.count ?? 0
+            let canPaginate = data.messages?.pageInfo?.hasNextPage ?? false
             
             Utils.runOnMainThread { [weak self] in
                 self?.listeners.forEach {
@@ -131,7 +131,7 @@ internal class CourierInbox {
         
         self.inboxData = data
         self.unreadCount = unreadCount
-        self.messages = data.messages.nodes
+        self.messages = data.messages?.nodes
         
         self.notifyMessagesChanged()
         
@@ -207,7 +207,7 @@ internal class CourierInbox {
             return
         }
         
-        let cursor = data.messages.pageInfo.startCursor
+        let cursor = data.messages?.pageInfo?.startCursor
         
         self.inboxData = try await inboxRepo.getAllMessages(
             clientKey: clientKey,
@@ -230,7 +230,7 @@ internal class CourierInbox {
         }
         
         // Get new messages
-        let nodes = data?.messages.nodes ?? []
+        let nodes = data?.messages?.nodes ?? []
         
         // Add messages to end of datasource
         self.messages! += nodes
@@ -354,15 +354,15 @@ internal class CourierInbox {
             
             fetchStart()
             
-        } else if let data = inboxData, let messages = messages {
+        } else if let data = inboxData, let messages = messages, let unreadCount = unreadCount {
             
-            let totalMessageCount = data.count
-            let canPaginate = data.messages.pageInfo.hasNextPage ?? false
+            let totalMessageCount = data.count ?? 0
+            let canPaginate = data.messages?.pageInfo?.hasNextPage ?? false
             
             Utils.runOnMainThread {
                 listener.callMessageChanged(
                     messages: messages,
-                    unreadMessageCount: -999,
+                    unreadMessageCount: unreadCount,
                     totalMessageCount: totalMessageCount,
                     canPaginate: canPaginate
                 )
