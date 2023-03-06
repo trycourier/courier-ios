@@ -34,6 +34,7 @@ internal class CourierInbox {
     
     internal var messages: [InboxMessage]? = nil
     private var inboxData: InboxData? = nil
+    private var unreadCount: Int? = nil
     private var fetch: Task<Void, Error>? = nil
     
     private func notifyInitialLoading() {
@@ -57,8 +58,8 @@ internal class CourierInbox {
         if let data = inboxData {
          
             let messages = messages ?? []
-            let unreadCount =  -999 // TODO
-            let totalCount = data.messages.totalCount ?? 0
+            let unreadCount = unreadCount ?? 0
+            let totalCount = data.count
             let canPaginate = data.messages.pageInfo.hasNextPage ?? false
             
             Utils.runOnMainThread { [weak self] in
@@ -102,11 +103,24 @@ internal class CourierInbox {
         let maxRefreshLimit = min(messageCount, CourierInbox.defaultMaxPaginationLimit)
         let limit = refresh ? maxRefreshLimit : paginationLimit
         
-        let data = try await inboxRepo.getMessages(
+//        let data = try await inboxRepo.getAllMessages(
+//            clientKey: clientKey,
+//            userId: userId,
+//            paginationLimit: limit
+//        )
+        
+        async let dataTask: (InboxData) = inboxRepo.getAllMessages(
             clientKey: clientKey,
             userId: userId,
             paginationLimit: limit
         )
+        
+        async let unreadCountTask: (Int) = inboxRepo.getUnreadMessageCount(
+            clientKey: clientKey,
+            userId: userId
+        )
+        
+        let (data, unreadCount) = await (try dataTask, try unreadCountTask)
         
         try await connectWebSocket(
             clientKey: clientKey,
@@ -116,6 +130,7 @@ internal class CourierInbox {
         self.attachLifecycleObservers()
         
         self.inboxData = data
+        self.unreadCount = unreadCount
         self.messages = data.messages.nodes
         
         self.notifyMessagesChanged()
@@ -146,7 +161,7 @@ internal class CourierInbox {
             onMessageReceived: { [weak self] message in
                 
                 // Add new message to array
-                self?.inboxData?.incrementCounts()
+                self?.inboxData?.incrementCount()
                 self?.messages?.insert(message, at: 0)
 
                 self?.notifyMessagesChanged()
@@ -194,7 +209,7 @@ internal class CourierInbox {
         
         let cursor = data.messages.pageInfo.startCursor
         
-        self.inboxData = try await inboxRepo.getMessages(
+        self.inboxData = try await inboxRepo.getAllMessages(
             clientKey: clientKey,
             userId: userId,
             paginationLimit: paginationLimit,
@@ -341,7 +356,7 @@ internal class CourierInbox {
             
         } else if let data = inboxData, let messages = messages {
             
-            let totalMessageCount = data.messages.totalCount ?? 0
+            let totalMessageCount = data.count
             let canPaginate = data.messages.pageInfo.hasNextPage ?? false
             
             Utils.runOnMainThread {
