@@ -256,17 +256,8 @@ internal class CourierInbox {
         let originalStatus = message.read
         let prevUnreadCount = self.unreadCount
         
-        // Set the new status
-        if #available(iOS 15.0, *) {
-            message.read = Date().ISO8601Format()
-        } else {
-            let date = Date()
-            let formatter = ISO8601DateFormatter()
-            formatter.formatOptions.insert(.withFractionalSeconds)
-            message.read = formatter.string(from: date)
-        }
-        
-        // Update unread count
+        // Update
+        message.setRead()
         self.decrementUnreadCount()
         
         self.notifyMessagesChanged()
@@ -288,6 +279,7 @@ internal class CourierInbox {
                 message.read = originalStatus
                 self.unreadCount = prevUnreadCount
                 self.notifyMessagesChanged()
+                self.notifyError(error)
                 
             }
             
@@ -308,10 +300,8 @@ internal class CourierInbox {
         let originalStatus = message.read
         let prevUnreadCount = self.unreadCount
         
-        // Set the new status
+        // Update
         message.read = nil
-        
-        // Update unread count
         self.incrementUnreadCount()
         
         self.notifyMessagesChanged()
@@ -333,6 +323,7 @@ internal class CourierInbox {
                 message.read = originalStatus
                 self.unreadCount = prevUnreadCount
                 self.notifyMessagesChanged()
+                self.notifyError(error)
                 
             }
             
@@ -340,8 +331,44 @@ internal class CourierInbox {
         
     }
     
-    internal func readAllMessages() {
-        // TODO
+    internal func readAllMessages() async throws {
+        
+        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+            return
+        }
+        
+        // Save last values
+        let prevMessages = self.messages
+        let prevUnreadCount = self.unreadCount
+        
+        // Update
+        self.unreadCount = 0
+        self.messages?.forEach { $0.setRead() }
+        
+        self.notifyMessagesChanged()
+        
+        // Perform the request async and reset if failed
+        Task {
+            
+            do {
+                
+                try await inboxRepo.readAllMessages(
+                    clientKey: clientKey,
+                    userId: userId
+                )
+                
+            } catch {
+                
+                // Reset the status
+                self.messages = prevMessages
+                self.unreadCount = prevUnreadCount
+                self.notifyMessagesChanged()
+                self.notifyError(error)
+                
+            }
+            
+        }
+        
     }
     
     internal func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
@@ -538,11 +565,54 @@ extension Courier {
         try await inbox.readMessage(messageId: messageId)
     }
     
+    @objc public func readMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) async throws {
+        Task {
+            do {
+                try await inbox.readMessage(messageId: messageId)
+                onSuccess?()
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure?(error)
+            }
+        }
+    }
+    
     /**
      Sets the message as `unread`
      */
     @objc public func unreadMessage(messageId: String) async throws {
         try await inbox.unreadMessage(messageId: messageId)
+    }
+    
+    @objc public func unreadMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) async throws {
+        Task {
+            do {
+                try await inbox.unreadMessage(messageId: messageId)
+                onSuccess?()
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure?(error)
+            }
+        }
+    }
+    
+    /**
+     Sets `read` on all messages
+     */
+    @objc public func readAllInboxMessages() async throws {
+        try await inbox.readAllMessages()
+    }
+    
+    @objc public func readAllInboxMessages(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await inbox.readAllMessages()
+                onSuccess?()
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure?(error)
+            }
+        }
     }
     
 }

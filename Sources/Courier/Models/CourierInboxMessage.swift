@@ -75,6 +75,17 @@ internal struct InboxPageInfo: Codable {
         }
     }
     
+    internal func setRead() {
+        if #available(iOS 15.0, *) {
+            read = Date().ISO8601Format()
+        } else {
+            let date = Date()
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions.insert(.withFractionalSeconds)
+            read = formatter.string(from: date)
+        }
+    }
+    
 }
 
 extension InboxMessage {

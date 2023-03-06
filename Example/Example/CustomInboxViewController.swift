@@ -28,6 +28,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         super.viewDidLoad()
         
         title = "Inbox"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
@@ -65,6 +66,10 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         Courier.shared.refreshInbox {
             self.collectionView.refreshControl?.endRefreshing()
         }
+    }
+      
+    @objc private func readAll() {
+        print("YAY")
     }
     
     private func setState(_ state: State, error: String? = nil) {
@@ -131,14 +136,13 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         let message = inboxMessages[indexPath.row]
         
-        Task {
-            if (message.isRead) {
-                try await message.markAsUnread()
-            } else {
-                try await message.markAsRead()
-            }
+        if (message.isRead) {
+            message.markAsUnread()
+        } else {
+            message.markAsRead()
         }
         
     }
