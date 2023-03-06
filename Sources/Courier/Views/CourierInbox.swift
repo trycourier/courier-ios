@@ -12,22 +12,7 @@ import UIKit
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
-    
-    private lazy var collectionView: UICollectionView = {
-        
-        let collectionView = UICollectionView(frame: frame)
-        
-        collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
-
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.collectionViewLayout = UICollectionViewFlowLayout()
-        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
-        
-        return collectionView
-        
-    }()
+    private var collectionView: UICollectionView? = nil
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,6 +26,16 @@ import UIKit
     
     private func setup() {
         
+        let collectionViewLayout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
+        
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
+        
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(collectionView)
         
@@ -50,6 +45,8 @@ import UIKit
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
+        
+        self.collectionView = collectionView
         
     }
     
@@ -66,7 +63,7 @@ import UIKit
 //                self.setState(messages.isEmpty ? .empty : .content)
                 self.canPaginate = canPaginate
                 self.inboxMessages = messages
-                self.collectionView.reloadData()
+                self.collectionView?.reloadData()
             }
         )
         
@@ -74,7 +71,7 @@ import UIKit
     
     @objc private func onPullRefresh() {
         Courier.shared.refreshInbox {
-            self.collectionView.refreshControl?.endRefreshing()
+            self.collectionView?.refreshControl?.endRefreshing()
         }
     }
     
