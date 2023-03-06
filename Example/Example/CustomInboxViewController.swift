@@ -132,14 +132,15 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let message = inboxMessages[indexPath.row]
-        message.markAsRead(
-            onSuccess: {
-                print("Yay")
-            },
-            onFailure: { error in
-                print(error)
+        
+        Task {
+            if (message.isRead) {
+                try await message.markAsUnread()
+            } else {
+                try await message.markAsRead()
             }
-        )
+        }
+        
     }
     
     deinit {

@@ -92,7 +92,7 @@ extension InboxMessage {
     }
     
     @objc public func markAsUnread() async throws {
-        try await Courier.shared.inbox.readMessage(messageId: messageId)
+        try await Courier.shared.inbox.unreadMessage(messageId: messageId)
     }
     
     @objc public func markAsUnread(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
