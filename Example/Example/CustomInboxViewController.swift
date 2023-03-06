@@ -27,7 +27,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Inbox"
+        title = "Custom Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
         collectionView.refreshControl = UIRefreshControl()

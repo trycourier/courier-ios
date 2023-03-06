@@ -33,8 +33,6 @@ class NotificationsViewController: UIViewController {
                 providers.append(.inbox)
             }
             
-            let messageProviders = providers.map { $0.rawValue }.joined(separator: " and ")
-            
             if let userId = Courier.shared.userId {
                 
                 let emojis = ["😂", "🤪", "🦄", "🤦‍♂️", "😛", "😎", "🥸", "🤯", "🥶", "👻", "🎃"]

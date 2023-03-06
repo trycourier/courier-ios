@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
+		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
 		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
 		27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */; };
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
@@ -52,6 +53,7 @@
 
 /* Begin PBXFileReference section */
 		272A237F29B2886600B82CFE /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
+		272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltInboxViewController.swift; sourceTree = "<group>"; };
 		27644EEB29AE7378002F907B /* CustomInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxViewController.swift; sourceTree = "<group>"; };
 		27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxCollectionViewCell.swift; sourceTree = "<group>"; };
 		27644EF329AFF741002F907B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				2789516A292689460070F501 /* NotificationsViewController.swift */,
 				27644EEB29AE7378002F907B /* CustomInboxViewController.swift */,
 				27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */,
+				272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */,
 				27644EF329AFF741002F907B /* AuthViewController.swift */,
 				2789516C292689460070F501 /* Main.storyboard */,
 				2789516F292689470070F501 /* Assets.xcassets */,
@@ -265,6 +268,7 @@
 				272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
 				27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */,
+				272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */,
 				2789518129268C400070F501 /* Env.swift in Sources */,
 				27644EF429AFF741002F907B /* AuthViewController.swift in Sources */,
 				27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */,
@@ -584,7 +588,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = feature/inbox;
+				branch = "feature/inbox-ui";
 				kind = branch;
 			};
 		};

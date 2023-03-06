@@ -111,7 +111,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Awj-A7-Mqn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1594" y="1017"/>
+            <point key="canvasLocation" x="1574" y="1733"/>
         </scene>
         <!--Auth View Controller-->
         <scene sceneID="p5d-L8-ww8">
@@ -155,7 +155,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gi7-we-bW0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2445" y="1017"/>
+            <point key="canvasLocation" x="2445" y="1732"/>
         </scene>
         <!--Notifications-->
         <scene sceneID="EPn-Ql-4Sm">
@@ -221,13 +221,30 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Bg-2L-P5V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2444.6153846153848" y="244.54976303317534"/>
+            <point key="canvasLocation" x="2445" y="245"/>
         </scene>
-        <!--Inbox-->
+        <!--Prebuilt Inbox-->
+        <scene sceneID="wr9-zw-dg8">
+            <objects>
+                <navigationController id="v6Y-PJ-VDb" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Prebuilt Inbox" image="tray.and.arrow.down" catalog="system" id="Rlp-7C-BSh"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3if-g5-Sew">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="2Eg-mR-8mK" kind="relationship" relationship="rootViewController" id="oke-DT-FgU"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DzA-r0-5nX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1574" y="977"/>
+        </scene>
+        <!--Custom Inbox-->
         <scene sceneID="XAS-ae-2lZ">
             <objects>
                 <navigationController id="nH0-Ut-6va" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Inbox" image="tray.and.arrow.down" catalog="system" id="f1p-GQ-bmz"/>
+                    <tabBarItem key="tabBarItem" title="Custom Inbox" image="tray.and.arrow.down" catalog="system" id="f1p-GQ-bmz"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="30b-Yw-PzX">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -238,7 +255,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K6f-7m-xg7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1594" y="245"/>
+            <point key="canvasLocation" x="1574" y="245"/>
         </scene>
         <!--Root Tab Bar Controller-->
         <scene sceneID="Uxj-pF-x4e">
@@ -252,12 +269,41 @@
                     <connections>
                         <segue destination="ntI-cU-afA" kind="relationship" relationship="viewControllers" id="7ud-Fd-A2b"/>
                         <segue destination="nH0-Ut-6va" kind="relationship" relationship="viewControllers" id="2UR-9Z-GFG"/>
+                        <segue destination="v6Y-PJ-VDb" kind="relationship" relationship="viewControllers" id="pzf-JH-ljC"/>
                         <segue destination="Tmj-8w-Ahx" kind="relationship" relationship="viewControllers" id="88V-8k-cvs"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nnt-Hk-krp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="135" y="451"/>
+            <point key="canvasLocation" x="-612" y="1258"/>
+        </scene>
+        <!--Prebuilt Inbox View Controller-->
+        <scene sceneID="JNc-cU-aTU">
+            <objects>
+                <viewController id="2Eg-mR-8mK" customClass="PrebuiltInboxViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="1M1-5A-65r">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f1X-pS-BdD" customClass="CourierInbox" customModule="Courier">
+                                <rect key="frame" x="0.0" y="91" width="390" height="670"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="JdG-qB-nqr"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="f1X-pS-BdD" firstAttribute="bottom" secondItem="JdG-qB-nqr" secondAttribute="bottom" id="49M-KU-Kfl"/>
+                            <constraint firstItem="f1X-pS-BdD" firstAttribute="top" secondItem="JdG-qB-nqr" secondAttribute="top" id="CrH-Cc-W26"/>
+                            <constraint firstItem="f1X-pS-BdD" firstAttribute="trailing" secondItem="JdG-qB-nqr" secondAttribute="trailing" id="uQd-5V-Kiu"/>
+                            <constraint firstItem="f1X-pS-BdD" firstAttribute="leading" secondItem="JdG-qB-nqr" secondAttribute="leading" id="yCO-hD-Umi"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="wee-V5-J4q"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k1U-zU-ONl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2444.6153846153848" y="976.77725118483409"/>
         </scene>
     </scenes>
     <resources>
