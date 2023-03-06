@@ -228,14 +228,13 @@ internal class CourierInbox {
             return
         }
         
-        try await inboxRepo.readMessage(
-            clientKey: clientKey,
-            userId: userId,
-            messageId: messageId
-        )
-        
+        // Mark the message as read instantly
         guard let message = messages?.first(where: { $0.messageId == messageId }) else { return }
         
+        // Save OG message read status
+        let originalStatus = message.read
+        
+        // Set the new status
         if #available(iOS 15.0, *) {
             message.read = Date().ISO8601Format()
         } else {
@@ -247,6 +246,25 @@ internal class CourierInbox {
         
         self.notifyMessagesChanged()
         
+        // Perform the request async and reset if failed
+        Task {
+            
+            do {
+                try await inboxRepo.readMessage(
+                    clientKey: clientKey,
+                    userId: userId,
+                    messageId: messageId
+                )
+            } catch {
+                
+                // Reset the status
+                message.read = originalStatus
+                self.notifyMessagesChanged()
+                
+            }
+            
+        }
+        
     }
     
     internal func unreadMessage(messageId: String) async throws {
@@ -255,17 +273,35 @@ internal class CourierInbox {
             return
         }
         
-        try await inboxRepo.unreadMessage(
-            clientKey: clientKey,
-            userId: userId,
-            messageId: messageId
-        )
-        
+        // Mark the message as read instantly
         guard let message = messages?.first(where: { $0.messageId == messageId }) else { return }
         
+        // Save OG message read status
+        let originalStatus = message.read
+        
+        // Set the new status
         message.read = nil
         
         self.notifyMessagesChanged()
+        
+        // Perform the request async and reset if failed
+        Task {
+            
+            do {
+                try await inboxRepo.unreadMessage(
+                    clientKey: clientKey,
+                    userId: userId,
+                    messageId: messageId
+                )
+            } catch {
+                
+                // Reset the status
+                message.read = originalStatus
+                self.notifyMessagesChanged()
+                
+            }
+            
+        }
         
     }
     
