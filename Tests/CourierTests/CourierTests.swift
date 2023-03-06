@@ -28,22 +28,16 @@ final class CourierTests: XCTestCase {
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate  in
                 print("L1 messages: \(messages.count) \(unreadMessageCount) \(totalMessageCount) \(canPaginate)")
                 canPage = canPaginate
-//                print("L1 messages \(newMessage) \(previousMessages) \(previousMessages.coun =t) \(newMessages.count) \(canPaginate)")
-//                print("Last Message Ids: \(previousMessages.last?.messageId) \(newMessages.last?.messageId)")
-//                canPage = canPaginate
-            })
-        
-        try await Task.sleep(nanoseconds: 4_000_000_000)
-        
-        Courier.shared.addInboxListener(
-            onInitialLoad: {
-                print("L2 Loading")
-            },
-            onError: { error in
-                print("L2 Error \(error)")
-            },
-            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate  in
-                print("L2 messages: \(messages.count) \(unreadMessageCount) \(totalMessageCount) \(canPaginate)")
+                
+                messages.first?.markAsRead(
+                    onSuccess: {
+                        print("Message marked as read")
+                    },
+                    onFailure: { error in
+                        print(error)
+                    }
+                )
+                
             })
 
         while (canPage) {
@@ -51,55 +45,21 @@ final class CourierTests: XCTestCase {
             Courier.shared.fetchNextPageOfMessages()
         }
         
-//        print(Courier.shared.inboxMessages?.count)
-//        print(Courier.shared.inboxMessages?.first?.messageId)
-//        print(Courier.shared.inboxMessages?.last?.messageId)
+    }
+    
+    func test2() async throws {
         
-//        Courier.shared.fetchNextPageOfMessages()
-//
-//        try await Task.sleep(nanoseconds: 2_000_000_000)
-//
-//        Courier.shared.fetchNextPageOfMessages()
-//
-//        try await Task.sleep(nanoseconds: 2_000_000_000)
+        let id = "1-64053eb4-d7e678c27e93946c16a1d587"
         
-//        let l2 = Courier.shared.addInboxListener(
-//            onInitialLoad: {
-//                print("L2 Loading")
-//            },
-//            onError: { error in
-//                print("L2 Error \(error)")
-//            },
-//            onMessagesChanged: { messages in
-//                print("L2 messages \(messages.count)")
-//            })
-//
-//        try await Courier.shared.signIn(
-//            accessToken: Env.COURIER_ACCESS_TOKEN,
-//            clientKey: Env.COURIER_CLIENT_KEY,
-//            userId: Env.COURIER_USER_ID
-//        )
-//
-//        try await Task.sleep(nanoseconds: 5_000_000_000)
-//
-//        Courier.shared.addInboxListener(
-//            onInitialLoad: {
-//                print("L3 Loading")
-//            },
-//            onError: { error in
-//                print("L3 Error \(error)")
-//            },
-//            onMessagesChanged: { messages in
-//                print("L3 messages \(messages.count)")
-//
-//                if (messages.count >= 12) {
-//                    Courier.shared.removeInboxListener(listener: l1)
-//                    Courier.shared.removeInboxListener(listener: l2)
-//                }
-//
-//            })
-//
-//        try await Task.sleep(nanoseconds: 60_000_000_000)
+        try await Courier.shared.readMessage(messageId: id)
+        
+    }
+    
+    func test3() async throws {
+        
+        let id = "1-64053eb4-d7e678c27e93946c16a1d587"
+        
+        try await Courier.shared.unreadMessage(messageId: id)
         
     }
     

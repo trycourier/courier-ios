@@ -13,9 +13,9 @@ import FirebaseMessaging
 @main
 class AppDelegate: CourierDelegate {
     
-    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // Init Firebase and FCM
+        // Initialize Firebase and FCM
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         

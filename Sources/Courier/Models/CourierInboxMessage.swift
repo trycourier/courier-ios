@@ -60,3 +60,39 @@ internal struct InboxPageInfo: Codable {
     }
     
 }
+
+extension InboxMessage {
+    
+    @objc public func markAsRead() async throws {
+        try await Courier.shared.inbox.readMessage(messageId: messageId)
+    }
+    
+    @objc public func markAsRead(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await Courier.shared.inbox.readMessage(messageId: messageId)
+                onSuccess()
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure(error)
+            }
+        }
+    }
+    
+    @objc public func markAsUnread() async throws {
+        try await Courier.shared.inbox.readMessage(messageId: messageId)
+    }
+    
+    @objc public func markAsUnread(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await Courier.shared.inbox.unreadMessage(messageId: messageId)
+                onSuccess()
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure(error)
+            }
+        }
+    }
+    
+}

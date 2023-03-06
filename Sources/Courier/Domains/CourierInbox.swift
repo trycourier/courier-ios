@@ -222,6 +222,34 @@ internal class CourierInbox {
         
     }
     
+    internal func readMessage(messageId: String) async throws {
+        
+        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+            return
+        }
+        
+        try await inboxRepo.readMessage(
+            clientKey: clientKey,
+            userId: userId,
+            messageId: messageId
+        )
+        
+    }
+    
+    internal func unreadMessage(messageId: String) async throws {
+        
+        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+            return
+        }
+        
+        try await inboxRepo.unreadMessage(
+            clientKey: clientKey,
+            userId: userId,
+            messageId: messageId
+        )
+        
+    }
+    
     internal func readAllMessages() {
         // TODO
     }
@@ -411,6 +439,20 @@ extension Courier {
     
     @objc public func refreshInbox(onComplete: @escaping () -> Void) {
         inbox.refresh(onComplete: onComplete)
+    }
+    
+    /**
+     Sets the message as `read`
+     */
+    @objc public func readMessage(messageId: String) async throws {
+        try await inbox.readMessage(messageId: messageId)
+    }
+    
+    /**
+     Sets the message as `unread`
+     */
+    @objc public func unreadMessage(messageId: String) async throws {
+        try await inbox.unreadMessage(messageId: messageId)
     }
     
 }
