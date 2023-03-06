@@ -59,6 +59,18 @@ internal struct InboxPageInfo: Codable {
         self.tags = tags
     }
     
+    @objc public var isRead: Bool {
+        get {
+            return read != nil
+        }
+    }
+    
+    @objc public var isArchived: Bool {
+        get {
+            return archived != nil
+        }
+    }
+    
 }
 
 extension InboxMessage {

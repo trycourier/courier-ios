@@ -27,10 +27,10 @@ class CustomInboxCollectionViewCell: UICollectionViewCell {
         
         textLabel.numberOfLines = 0
         self.textLabel = textLabel
-        
 
         self.contentView.backgroundColor = .lightGray
         self.textLabel.textAlignment = .center
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -49,5 +49,6 @@ class CustomInboxCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.textLabel.text = nil
+        
     }
 }

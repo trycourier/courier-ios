@@ -48,6 +48,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 
                 print(messages.count, unreadMessageCount, totalMessageCount, canPaginate)
                 
+                // TODO: Mark as read call back to onMessagesChanged
+//                messages.first?.markAsRead()
+                
                 self.setState(messages.isEmpty ? .empty : .content)
                 self.canPaginate = canPaginate
                 self.inboxMessages = messages
@@ -108,6 +111,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         if (indexPath.section == 0) {
             let message = inboxMessages[indexPath.row]
             cell.textLabel.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
+            cell.contentView.backgroundColor = (message.read ?? false) ? .green : .red
         } else {
             cell.textLabel.text = "Loading..."
         }
