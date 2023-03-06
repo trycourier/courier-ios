@@ -31,6 +31,8 @@ import UIKit
         
         collectionView.refreshControl = UIRefreshControl()
         collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+        
+        collectionView.backgroundColor = .orange
 
         collectionView.delegate = self
         collectionView.dataSource = self
