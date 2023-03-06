@@ -83,14 +83,14 @@ extension InboxMessage {
         try await Courier.shared.inbox.readMessage(messageId: messageId)
     }
     
-    @objc public func markAsRead(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await Courier.shared.inbox.readMessage(messageId: messageId)
-                onSuccess()
+                onSuccess?()
             } catch {
                 Courier.log(String(describing: error))
-                onFailure(error)
+                onFailure?(error)
             }
         }
     }
@@ -99,14 +99,14 @@ extension InboxMessage {
         try await Courier.shared.inbox.unreadMessage(messageId: messageId)
     }
     
-    @objc public func markAsUnread(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await Courier.shared.inbox.unreadMessage(messageId: messageId)
-                onSuccess()
+                onSuccess?()
             } catch {
                 Courier.log(String(describing: error))
-                onFailure(error)
+                onFailure?(error)
             }
         }
     }
