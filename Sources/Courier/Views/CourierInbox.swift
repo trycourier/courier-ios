@@ -109,8 +109,21 @@ import UIKit
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
 
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        section.contentInsets = .zero
         section.interGroupSpacing = 0
+
+        let headerFooterSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(0)
+        )
+        
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerFooterSize,
+            elementKind: "SectionHeaderElementKind",
+            alignment: .top
+        )
+        
+        section.boundarySupplementaryItems = [sectionHeader]
 
         let layout = UICollectionViewCompositionalLayout(section: section)
         

@@ -10,26 +10,21 @@ import UIKit
 internal class CustomInboxCollectionViewCell: UICollectionViewCell {
 
     public static let id = "CustomInboxCollectionViewCell"
-    weak var label: UILabel!
+    let label = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let textLabel = UILabel(frame: .zero)
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(textLabel)
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(label)
         
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 12),
-            textLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
-            textLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
-            textLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
+            label.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 12),
+            label.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
+            label.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
         ])
-        
-        textLabel.numberOfLines = 0
-        textLabel.textAlignment = .center
-        
-        label = textLabel
         
     }
 
