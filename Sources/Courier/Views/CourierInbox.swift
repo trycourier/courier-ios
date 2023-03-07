@@ -175,22 +175,17 @@ import UIKit
     
     private func reloadMessages(_ newMessages: [InboxMessage]) {
         
+        // Check if we need to insert
+        if (newMessages.first?.messageId != inboxMessages.first?.messageId) {
+            inboxMessages = newMessages
+            let indexPath = IndexPath(row: 0, section: 0)
+            tableView?.insertRows(at: [indexPath], with: .left)
+            return
+        }
+        
         // Set the messages
         inboxMessages = newMessages
-        
-        // Loop all message and determine the change
-        inboxMessages.enumerated().forEach { (index, message) in
-            
-            let newMessageAtIndex = newMessages[index]
-            let indexPath = IndexPath(row: index, section: 0)
-            
-            if (newMessageAtIndex.messageId != message.messageId) {
-                tableView?.insertRows(at: [indexPath], with: .left)
-            } else {
-                tableView?.reloadData()
-            }
-            
-        }
+        tableView?.reloadData()
         
     }
     
