@@ -32,9 +32,16 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     
     func didScrollInbox(scrollView: UIScrollView) {
         
-        let distanceToBottom = scrollView.contentSize.height - scrollView.contentOffset.y
+//        let distanceToBottom = scrollView.contentSize.height - scrollView.contentOffset.y
         
-        print(distanceToBottom)
+        let safeAreaHeight = scrollView.safeAreaInsets.top + scrollView.safeAreaInsets.bottom
+        let viewHeight = scrollView.bounds.height - safeAreaHeight
+        let scrollY = scrollView.contentOffset.y + scrollView.safeAreaInsets.top
+        let distanceToBottom = scrollY + viewHeight
+        
+        let pageCalc = abs(distanceToBottom - scrollView.contentSize.height)
+        
+        print(pageCalc < 300)
 
 //        print(distanceToBottom, getPaginationTrigger())
 
