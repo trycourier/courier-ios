@@ -164,13 +164,10 @@ import UIKit
             onError: { [weak self] error in
                 self?.state = .error(error: error)
             },
-            onMessagesChanged: { [weak self] messages, unreadMessageCount, totalMessageCount, canPaginate in
-                
-                self?.state = messages.isEmpty ? .empty : .content
+            onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
+                self?.state = newMessages.isEmpty ? .empty : .content
                 self?.canPaginate = canPaginate
-                
-                self?.reloadMessages(messages)
-                
+                self?.reloadMessages(newMessages)
             }
         )
         
@@ -178,37 +175,20 @@ import UIKit
     
     private func reloadMessages(_ messages: [InboxMessage]) {
         
+        let isFirstMessageDifferent = inboxMessages.first?.messageId != messages.first?.messageId
+        
+        // Set the messages
         inboxMessages = messages
         
-        let sections: IndexSet = canPaginate ? [0, 1] : [0]
-        tableView?.reloadSections(sections, with: .fade)
-
-        
-//        var indexPaths: [IndexPath] = []
-//        for i in 0...inboxMessages.count - 1 {
-//            let indexPath = IndexPath(row: i, section: 0)
-//            indexPaths.append(indexPath)
-//        }
-//
-//        tableView?.reloadRows(at: indexPaths, with: .fade)
-        
-//        tableView?.reloadData()
-    }
-    
-    private func addMessagesToBottom(_ newMessages: [InboxMessage]) {
-        
-        let start = inboxMessages.count - 1
-        inboxMessages += newMessages
-        let end = inboxMessages.count - 1
-        
-        var indexPaths: [IndexPath] = []
-        for i in start...end {
-            let indexPath = IndexPath(row: i, section: 0)
-            indexPaths.append(indexPath)
+        // New message sent
+        if (messages.count == 1 && isFirstMessageDifferent) {
+            tableView?.insertRows(at: [IndexPath(row: 0, section: 0)], with: .left)
+            return
         }
         
-        self.tableView?.insertRows(at: indexPaths, with: .bottom)
-
+        // Otherwise, reload all data
+        tableView?.reloadData()
+        
     }
     
     private func getPaginationTrigger() -> CGFloat {
@@ -256,10 +236,7 @@ import UIKit
         
         // Only fetch if we are safe to
         if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
-            
-            // Handle updating the messages when fetch completes
             Courier.shared.fetchNextPageOfMessages()
-            
         }
         
     }
