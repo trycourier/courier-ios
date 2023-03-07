@@ -104,7 +104,8 @@ import UIKit
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
+        let cellNib = UINib(nibName: CourierInboxTableViewCell.id, bundle: nil)
+        tableView.register(cellNib, forCellReuseIdentifier: CourierInboxTableViewCell.id)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
         tableView.translatesAutoresizingMaskIntoConstraints = false
