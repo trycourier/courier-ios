@@ -71,15 +71,15 @@ import UIKit
     private func setup() {
 
         // Add the collection view
-        let collectionView = makeCollectionView()
-        addSubview(collectionView)
+        let tableView = makeTableView()
+        addSubview(tableView)
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
-        self.tableView = collectionView
+        self.tableView = tableView
         
         // Add state label
         let label = makeLabel()
@@ -98,41 +98,12 @@ import UIKit
         
     }
     
-    private func makeCollectionView() -> UITableView {
+    private func makeTableView() -> UITableView {
         
-        // Create sized layout
-//        let size = NSCollectionLayoutSize(
-//            widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
-//            heightDimension: NSCollectionLayoutDimension.estimated(44)
-//        )
-//
-//        let item = NSCollectionLayoutItem(layoutSize: size)
-//        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
-//
-//        let section = NSCollectionLayoutSection(group: group)
-//        section.contentInsets = .zero
-//        section.interGroupSpacing = 0
-//
-//        let headerFooterSize = NSCollectionLayoutSize(
-//            widthDimension: .fractionalWidth(1.0),
-//            heightDimension: .absolute(0)
-//        )
-//
-//        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
-//            layoutSize: headerFooterSize,
-//            elementKind: "SectionHeaderElementKind",
-//            alignment: .top
-//        )
-//
-//        section.boundarySupplementaryItems = [sectionHeader]
-//
-//        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        // Create the collection view
+        // Create the table view
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-//        tableView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
         tableView.register(CustomInboxCollectionViewCell.self, forCellReuseIdentifier: CustomInboxCollectionViewCell.id)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
@@ -176,7 +147,7 @@ import UIKit
     private func reloadMessages(_ newMessages: [InboxMessage]) {
         
         // Check if we need to insert
-        if (newMessages.first?.messageId != inboxMessages.first?.messageId) {
+        if (newMessages.first?.messageId != inboxMessages.first?.messageId && !inboxMessages.isEmpty) {
             inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
             tableView?.insertRows(at: [indexPath], with: .left)
@@ -187,10 +158,6 @@ import UIKit
         inboxMessages = newMessages
         tableView?.reloadData()
         
-    }
-    
-    private func getPaginationTrigger() -> CGFloat {
-        return self.frame.height / 3
     }
     
     @objc private func onPullRefresh() {
