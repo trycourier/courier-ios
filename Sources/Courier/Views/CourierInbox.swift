@@ -242,17 +242,26 @@ import UIKit
 //                })
                 
                 // Update messages
-                let start = self.inboxMessages.count - 1
-                self.inboxMessages += newMessages
-                let end = self.inboxMessages.count - 1
+//                let start = self.inboxMessages.count - 1
+//                self.inboxMessages += newMessages
+//                let end = self.inboxMessages.count - 1
                 
-                // Build paths
-                for i in start...end {
+                newMessages.forEach { message in
                     self.collectionView?.performBatchUpdates({
-                        let path = IndexPath(row: i, section: 0)
+                        self.inboxMessages.append(message)
+                        let index = self.inboxMessages.count - 1
+                        let path = IndexPath(row: index, section: 0)
                         self.collectionView?.insertItems(at: [path])
                     })
                 }
+                
+                // Build paths
+//                for i in start...end {
+//                    self.collectionView?.performBatchUpdates({
+//                        let path = IndexPath(row: i, section: 0)
+//                        self.collectionView?.insertItems(at: [path])
+//                    })
+//                }
                 
 //                // Update messages
 //                let start = self.inboxMessages.count - 1
