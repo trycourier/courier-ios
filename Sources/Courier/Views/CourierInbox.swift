@@ -221,22 +221,20 @@ import UIKit
             // Handle updating the messages when fetch completes
             Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
                 
-                let prevLastIndex = self.inboxMessages.count - 1
-                
+                // Update messages
+                let start = self.inboxMessages.count - 1
                 self.inboxMessages += newMessages
+                let end = self.inboxMessages.count - 1
                 
-                let newLastIndex = self.inboxMessages.count - 1
-                
-//                var indexPaths: [IndexPath] = []
-//                for i in prevLastIndex...newLastIndex {
-//                    let path = IndexPath(indexes: prevLastIndex...newLastIndex)
-//                    indexPaths.append(path)
-//                }
-                
-                let paths = IndexPath(indexes: prevLastIndex...newLastIndex)
+                // Build paths
+                var indexPaths: [IndexPath] = []
+                for i in start...end {
+                    let path = IndexPath(row: i, section: 0)
+                    indexPaths.append(path)
+                }
                 
                 // Add the items to the end of the set
-                self.collectionView?.insertItems(at: [paths])
+                self.collectionView?.insertItems(at: indexPaths)
                 
             })
             
