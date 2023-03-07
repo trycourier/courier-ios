@@ -169,17 +169,34 @@ import UIKit
                 self?.state = messages.isEmpty ? .empty : .content
                 self?.canPaginate = canPaginate
                 
-                self?.inboxMessages = messages
-                self?.tableView?.reloadData()
-                
-//                if (self?.inboxMessages.isEmpty == true) {
-//                    self?.inboxMessages = messages
-//                    self?.tableView?.reloadData()
-//                }
+                if (self?.inboxMessages.isEmpty == true) {
+                    self?.reloadMessages(messages)
+                }
                 
             }
         )
         
+    }
+    
+    private func reloadMessages(_ messages: [InboxMessage]) {
+        inboxMessages = messages
+        tableView?.reloadData()
+    }
+    
+    private func addMessagesToBottom(_ newMessages: [InboxMessage]) {
+        
+        let start = inboxMessages.count - 1
+        inboxMessages += newMessages
+        let end = inboxMessages.count - 1
+        
+        var indexPaths: [IndexPath] = []
+        for i in start...end {
+            let indexPath = IndexPath(row: i, section: 0)
+            indexPaths.append(indexPath)
+        }
+        
+        self.tableView?.insertRows(at: indexPaths, with: .bottom)
+
     }
     
     private func getPaginationTrigger() -> CGFloat {
@@ -196,17 +213,9 @@ import UIKit
         return self.canPaginate ? 2 : 1
     }
     
-//    public func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return self.canPaginate ? 2 : 1
-//    }
-    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? self.inboxMessages.count : 1
     }
-    
-//    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return section == 0 ? self.inboxMessages.count : 1
-//    }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -225,26 +234,9 @@ import UIKit
             
         }
         
-        fatalError("could not dequeueReusableCell")
+        return UITableViewCell()
         
     }
-    
-//    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
-//
-//        if (indexPath.section == 0) {
-//            let message = inboxMessages[indexPath.row]
-//            cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
-//            cell.contentView.backgroundColor = message.isRead ? .clear : .blue
-//        } else {
-//            cell.label.text = "Loading..."
-//            cell.contentView.backgroundColor = .clear
-//        }
-//
-//        return cell
-//
-//    }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
@@ -254,65 +246,13 @@ import UIKit
         if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
             
             // Handle updating the messages when fetch completes
-            Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
-                
-//                newMessages.forEach { message in
-//
-//                    self.tableView?.performBatchUpdates({
-//
-//                        self.inboxMessages.append(message)
-//
-//                        let index = self.inboxMessages.count - 1
-//                        let path = IndexPath(row: index, section: 0)
-//
-//                        self.tableView?.insertItems(at: [path])
-//
-//                    })
-//
-//                }
-                
+            Courier.shared.fetchNextPageOfMessages(onSuccess: { [weak self] newMessages in
+                self?.addMessagesToBottom(newMessages)
             })
             
         }
         
     }
-    
-//    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//
-//        let indexToPageAt = inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 4)
-//
-//        // Only fetch if we are safe to
-//        if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
-//
-//            // Handle updating the messages when fetch completes
-//            Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
-//
-//                newMessages.forEach { message in
-//
-//                    self.tableView?.performBatchUpdates({
-//
-//                        self.inboxMessages.append(message)
-//
-//                        let index = self.inboxMessages.count - 1
-//                        let path = IndexPath(row: index, section: 0)
-//
-//                        self.tableView?.insertItems(at: [path])
-//
-//                    })
-//
-//                }
-//
-//            })
-//
-//        }
-//
-//    }
-    
-//    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let index = indexPath.row
-//        let message = inboxMessages[index]
-//        delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
-//    }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
