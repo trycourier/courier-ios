@@ -489,11 +489,6 @@ internal class CoreInbox {
     
     internal func fetchNextPage() {
         
-        let canPaginate = inboxData?.messages?.pageInfo?.hasNextPage ?? false
-        if (!canPaginate) {
-            return
-        }
-        
         fetch?.cancel()
         
         fetch = Task {
