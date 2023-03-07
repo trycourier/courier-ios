@@ -20,10 +20,10 @@ internal class CustomInboxCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(textLabel)
         
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            textLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            textLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            textLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            textLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 12),
+            textLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
+            textLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
+            textLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
         ])
         
         textLabel.numberOfLines = 0
