@@ -20,6 +20,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private lazy var contentStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
