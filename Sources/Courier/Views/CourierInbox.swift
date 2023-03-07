@@ -207,9 +207,12 @@ import UIKit
     }
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        if (indexPath.section == 1) {
-//            Courier.shared.fetchNextPageOfMessages()
-//        }
+        
+        let indexToPageAt = inboxMessages.count - Int(Courier.shared.inboxPaginationLimit / 4)
+        if (indexPath.row == indexToPageAt) {
+            Courier.shared.fetchNextPageOfMessages()
+        }
+        
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -219,22 +222,7 @@ import UIKit
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        // Call delegate
         delegate?.didScrollInbox?(scrollView: scrollView)
-        
-        // Get positions
-        let safeAreaHeight = scrollView.safeAreaInsets.top + scrollView.safeAreaInsets.bottom
-        let viewHeight = scrollView.bounds.height - safeAreaHeight
-        let scrollY = scrollView.contentOffset.y + scrollView.safeAreaInsets.top
-        let distanceToBottom = scrollY + viewHeight
-        let pageCalc = abs(distanceToBottom - scrollView.contentSize.height)
-
-//        // Handle pagination
-//        if (pageCalc < getPaginationTrigger()) {
-//            Courier.shared.fetchNextPageOfMessages()
-//        }
-        
     }
     
     deinit {
