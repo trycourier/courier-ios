@@ -105,6 +105,7 @@ import UIKit
         collectionViewLayout.scrollDirection = .vertical
         collectionViewLayout.minimumInteritemSpacing = 0
         collectionViewLayout.minimumLineSpacing = 0
+        collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         // Create the collection view
         let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
@@ -155,9 +156,9 @@ import UIKit
         }
     }
     
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 100) // TODO
-    }
+//    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: collectionView.bounds.width, height: 100) // TODO
+//    }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.canPaginate ? 2 : 1
@@ -174,7 +175,7 @@ import UIKit
         if (indexPath.section == 0) {
             let message = inboxMessages[indexPath.row]
             cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
-            cell.contentView.backgroundColor = message.isRead ? .green : .red
+            cell.contentView.backgroundColor = message.isRead ? .clear : .blue
         } else {
             cell.label.text = "Loading..."
             cell.contentView.backgroundColor = .clear

@@ -24,6 +24,7 @@ internal class CustomInboxCollectionViewCell: UICollectionViewCell {
             textLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             textLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             textLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            textLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width) // TODO
         ])
         
         textLabel.numberOfLines = 0
