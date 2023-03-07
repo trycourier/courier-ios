@@ -48,8 +48,12 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
                 self.setState(messages.isEmpty ? .empty : .content)
                 self.canPaginate = canPaginate
-                self.inboxMessages = messages
-                self.collectionView.reloadData()
+                
+                if (self.inboxMessages.isEmpty) {
+                    self.inboxMessages = messages
+                    self.collectionView.reloadData()
+                }
+                
             }
         )
         
@@ -122,7 +126,25 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if (indexPath.section == 1) {
-            Courier.shared.fetchNextPageOfMessages()
+            Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
+                
+                let lastIndex = self.inboxMessages.count - 1
+                
+                self.inboxMessages += newMessages
+                
+                let newLastIndex = self.inboxMessages.count - 1
+                
+                var indexPaths: [IndexPath] = []
+                for i in lastIndex...newLastIndex {
+                    let path = IndexPath(row: i, section: 0)
+                    indexPaths.append(path)
+                }
+                
+                print(indexPaths)
+                
+                self.collectionView.insertItems(at: indexPaths)
+                
+            })
         }
     }
     
