@@ -169,9 +169,7 @@ import UIKit
                 self?.state = messages.isEmpty ? .empty : .content
                 self?.canPaginate = canPaginate
                 
-                if (self?.inboxMessages.isEmpty == true) {
-                    self?.reloadMessages(messages)
-                }
+                self?.reloadMessages(messages)
                 
             }
         )
@@ -179,8 +177,18 @@ import UIKit
     }
     
     private func reloadMessages(_ messages: [InboxMessage]) {
+        
         inboxMessages = messages
-        tableView?.reloadData()
+        
+        var indexPaths: [IndexPath] = []
+        for i in 0...inboxMessages.count - 1 {
+            let indexPath = IndexPath(row: i, section: 0)
+            indexPaths.append(indexPath)
+        }
+        
+        tableView?.reloadRows(at: indexPaths, with: .fade)
+        
+//        tableView?.reloadData()
     }
     
     private func addMessagesToBottom(_ newMessages: [InboxMessage]) {
@@ -246,9 +254,7 @@ import UIKit
         if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
             
             // Handle updating the messages when fetch completes
-            Courier.shared.fetchNextPageOfMessages(onSuccess: { [weak self] newMessages in
-                self?.addMessagesToBottom(newMessages)
-            })
+            Courier.shared.fetchNextPageOfMessages()
             
         }
         
