@@ -73,42 +73,41 @@ import UIKit
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         
-        label.backgroundColor = .red
-        
+        let defaultMargin: CGFloat = 20
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: topAnchor),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: defaultMargin),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -defaultMargin),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: defaultMargin),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -defaultMargin),
         ])
         
         self.stateLabel = label
         
         // Add the collection view
         
-//        let collectionViewLayout = UICollectionViewFlowLayout()
-//        let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
-//
-//        collectionView.refreshControl = UIRefreshControl()
-//        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
-//
-//        collectionView.backgroundColor = .orange
-//
-//        collectionView.delegate = self
-//        collectionView.dataSource = self
-//        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
-//
-//        collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        addSubview(collectionView)
-//
-//        NSLayoutConstraint.activate([
-//            collectionView.topAnchor.constraint(equalTo: topAnchor),
-//            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//        ])
-//
-//        self.collectionView = collectionView
+        let collectionViewLayout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
+
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+
+        collectionView.backgroundColor = .orange
+
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
+
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(collectionView)
+
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+
+        self.collectionView = collectionView
         
         self.makeListener()
         
