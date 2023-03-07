@@ -492,7 +492,7 @@ internal class CoreInbox {
     
     internal func fetchNextPage() async throws -> [InboxMessage] {
         
-        if (isPaging) {
+        if (isPaging || messages == nil) {
             return []
         }
         
