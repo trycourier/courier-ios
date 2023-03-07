@@ -29,8 +29,7 @@ final class CourierTests: XCTestCase {
             })
 
         while (canPage) {
-            try await Task.sleep(nanoseconds: 1_000_000_000)
-            Courier.shared.fetchNextPageOfMessages()
+            try await Courier.shared.fetchNextPageOfMessages()
         }
         
     }

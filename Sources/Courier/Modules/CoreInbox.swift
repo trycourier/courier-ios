@@ -193,10 +193,10 @@ internal class CoreInbox {
         
     }
     
-    internal func fetchNextPageOfMessages() async throws {
+    @discardableResult internal func fetchNextPageOfMessages() async throws -> [InboxMessage] {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let data = self.inboxData else {
-            return
+            return []
         }
         
         let cursor = data.messages?.pageInfo?.startCursor
@@ -208,24 +208,25 @@ internal class CoreInbox {
             startCursor: cursor
         )
         
-        self.addPageToMessages(data: self.inboxData)
+        let newMessages = self.inboxData?.messages?.nodes ?? []
+        
+        self.addPageToMessages(newMessages)
         
         self.notifyMessagesChanged()
         
+        return newMessages
+        
     }
     
-    private func addPageToMessages(data: InboxData?) {
+    private func addPageToMessages(_ newMessages: [InboxMessage]) {
         
         // Add default value
         if (messages == nil) {
             messages = []
         }
         
-        // Get new messages
-        let nodes = data?.messages?.nodes ?? []
-        
         // Add messages to end of datasource
-        self.messages! += nodes
+        self.messages! += newMessages
         
     }
     
@@ -487,21 +488,27 @@ internal class CoreInbox {
         
     }
     
-    internal func fetchNextPage() {
+    internal func fetchNextPage() async throws -> [InboxMessage] {
         
-        fetch?.cancel()
-        
-        fetch = Task {
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<[InboxMessage], Error>) in
             
-            do {
-                try await fetchNextPageOfMessages()
-            } catch {
-                self.notifyError(error)
+            fetch?.cancel()
+            
+            fetch = Task {
+                
+                do {
+                    let newMessages = try await fetchNextPageOfMessages()
+                    fetch = nil
+                    continuation.resume(returning: newMessages)
+                } catch {
+                    self.notifyError(error)
+                    fetch = nil
+                    continuation.resume(throwing: error)
+                }
+                
             }
             
-            fetch = nil
-            
-        }
+        })
         
     }
     
@@ -541,8 +548,20 @@ extension Courier {
      Grabs the next page of message from the inbox service
      Will automatically prevent duplicate calls if a call is already performed
      */
-    @objc public func fetchNextPageOfMessages() {
-        inbox.fetchNextPage()
+    @discardableResult @objc public func fetchNextPageOfMessages() async throws -> [InboxMessage] {
+        return try await inbox.fetchNextPage()
+    }
+    
+    @objc public func fetchNextPageOfMessages(onSuccess: (([InboxMessage]) -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                let newMessages = try await inbox.fetchNextPage()
+                onSuccess?(newMessages)
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure?(error)
+            }
+        }
     }
     
     /**
