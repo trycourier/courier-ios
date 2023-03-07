@@ -162,10 +162,15 @@ import UIKit
                 self?.state = .error(error: error)
             },
             onMessagesChanged: { [weak self] messages, unreadMessageCount, totalMessageCount, canPaginate in
+                
                 self?.state = messages.isEmpty ? .empty : .content
                 self?.canPaginate = canPaginate
-                self?.inboxMessages = messages
-                self?.collectionView?.reloadData()
+                
+                if (self?.inboxMessages.isEmpty == true) {
+                    self?.inboxMessages = messages
+                    self?.collectionView?.reloadData()
+                }
+                
             }
         )
         
@@ -210,8 +215,29 @@ import UIKit
         
         let indexToPageAt = inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 4)
         
+        // Only fetch if we are safe to
         if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
-            Courier.shared.fetchNextPageOfMessages()
+            
+            // Handle updating the messages when fetch completes
+            Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
+                
+                let lastIndex = self.inboxMessages.count - 1
+                
+                self.inboxMessages += newMessages
+                
+                let newLastIndex = self.inboxMessages.count - 1
+                
+                var indexPaths: [IndexPath] = []
+                for i in lastIndex...newLastIndex {
+                    let path = IndexPath(row: i, section: 0)
+                    indexPaths.append(path)
+                }
+                
+                // Add the items to the end of the set
+                self.collectionView?.insertItems(at: indexPaths)
+                
+            })
+            
         }
         
     }
