@@ -300,6 +300,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="wee-V5-J4q"/>
+                    <connections>
+                        <outlet property="courierInbox" destination="f1X-pS-BdD" id="3jF-kB-hNg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k1U-zU-ONl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

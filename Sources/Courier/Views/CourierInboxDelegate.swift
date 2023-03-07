@@ -8,7 +8,6 @@
 import UIKit
 
 @objc public protocol CourierInboxDelegate {
-    @objc optional func onMessageClick(message: InboxMessage, indexPath: IndexPath)
-//    @objc optional func onMessageActionClick(message: InboxMessage, indexPath: IndexPath)
+    @objc optional func didClickMessageAtIndex(message: InboxMessage, index: Int)
     @objc optional func inboxDidScroll(scrollView: UIScrollView)
 }

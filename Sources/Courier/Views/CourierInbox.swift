@@ -70,20 +70,6 @@ import UIKit
     
     private func setup() {
         
-        // Add state label
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(label)
-        
-        let defaultMargin: CGFloat = 20
-        NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: defaultMargin),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -defaultMargin),
-        ])
-        
-        self.stateLabel = label
-        
         // Add the collection view
         
         let collectionViewLayout = UICollectionViewFlowLayout()
@@ -109,6 +95,22 @@ import UIKit
         ])
 
         self.collectionView = collectionView
+        
+        // Add state label
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
+        
+        let defaultMargin: CGFloat = 20
+        NSLayoutConstraint.activate([
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: defaultMargin),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -defaultMargin),
+        ])
+        
+        self.stateLabel = label
+        
+        self.state = .loading
         
         self.makeListener()
         
@@ -179,8 +181,9 @@ import UIKit
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let message = inboxMessages[indexPath.row]
-        delegate?.onMessageClick?(message: message, indexPath: indexPath)
+        let index = indexPath.row
+        let message = inboxMessages[index]
+        delegate?.didClickMessageAtIndex?(message: message, index: index)
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
