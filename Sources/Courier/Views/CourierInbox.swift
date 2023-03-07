@@ -221,24 +221,38 @@ import UIKit
             // Handle updating the messages when fetch completes
             Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
                 
-                self.collectionView?.performBatchUpdates({
-                    
-                    // Update messages
-                    let start = self.inboxMessages.count - 1
-                    self.inboxMessages += newMessages
-                    let end = self.inboxMessages.count - 1
-                    
-                    // Build paths
-                    var indexPaths: [IndexPath] = []
-                    for i in start...end {
+//                self.collectionView?.performBatchUpdates({
+//
+//                    // Update messages
+//                    let start = self.inboxMessages.count - 1
+//                    self.inboxMessages += newMessages
+//                    let end = self.inboxMessages.count - 1
+//
+//                    // Build paths
+//                    var indexPaths: [IndexPath] = []
+//                    for i in start...end {
+//                        let path = IndexPath(row: i, section: 0)
+//                        self.collectionView?.insertItems(at: indexPaths)
+////                        indexPaths.append(path)
+//                    }
+//
+//                    // Add the items to the end of the set
+//                    self.collectionView?.insertItems(at: indexPaths)
+//
+//                })
+                
+                // Update messages
+                let start = self.inboxMessages.count - 1
+                self.inboxMessages += newMessages
+                let end = self.inboxMessages.count - 1
+                
+                // Build paths
+                for i in start...end {
+                    self.collectionView?.performBatchUpdates({
                         let path = IndexPath(row: i, section: 0)
-                        indexPaths.append(path)
-                    }
-                    
-                    // Add the items to the end of the set
-                    self.collectionView?.insertItems(at: indexPaths)
-                    
-                })
+                        self.collectionView?.insertItems(at: [path])
+                    })
+                }
                 
 //                // Update messages
 //                let start = self.inboxMessages.count - 1
