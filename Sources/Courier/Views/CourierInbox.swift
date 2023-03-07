@@ -104,7 +104,7 @@ import UIKit
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(CustomInboxCollectionViewCell.self, forCellReuseIdentifier: CustomInboxCollectionViewCell.id)
+        tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -177,14 +177,15 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if let cell = tableView.dequeueReusableCell(withIdentifier: CustomInboxCollectionViewCell.id, for: indexPath) as? CustomInboxCollectionViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
             
             if (indexPath.section == 0) {
                 let message = inboxMessages[indexPath.row]
-                cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
+                cell.message = message
+//                cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
                 cell.contentView.backgroundColor = message.isRead ? .clear : .blue
             } else {
-                cell.label.text = "Loading..."
+                cell.message = nil
                 cell.contentView.backgroundColor = .clear
             }
             

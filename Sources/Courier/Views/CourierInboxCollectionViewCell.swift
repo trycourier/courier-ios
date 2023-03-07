@@ -1,5 +1,5 @@
 //
-//  CustomInboxCollectionViewCell.swift
+//  CourierInboxTableViewCell.swift
 //  Example
 //
 //  Created by Michael Miller on 2/28/23.
@@ -7,24 +7,54 @@
 
 import UIKit
 
-internal class CustomInboxCollectionViewCell: UITableViewCell {
+internal class CourierInboxTableViewCell: UITableViewCell {
 
-    public static let id = "CustomInboxCollectionViewCell"
-    let label = UILabel()
+    internal static let id = "CourierInboxTableViewCell"
+    
+    internal var message: InboxMessage? {
+        didSet {
+            titleLabel.text = message?.messageId
+        }
+    }
+    
+    private lazy var contentStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        return stackView
+    }()
+    
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var bodyLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(label)
+        contentView.addSubview(contentStack)
+        
+        contentStack.addArrangedSubview(titleLabel)
+        contentStack.addArrangedSubview(bodyLabel)
         
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 12),
-            label.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
-            label.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
+            contentStack.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 12),
+            contentStack.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -12),
+            contentStack.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
+            contentStack.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
         ])
+        
+        contentStack.backgroundColor = .blue
+        titleLabel.backgroundColor = .red
+        bodyLabel.backgroundColor = .brown
         
     }
 
@@ -40,8 +70,7 @@ internal class CustomInboxCollectionViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        label.text = nil
-        
+        message = nil
     }
+    
 }
