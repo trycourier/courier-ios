@@ -17,8 +17,6 @@ import UIKit
     private var collectionView: UICollectionView? = nil
     private var stateLabel: UILabel? = nil
     
-    private var isPaging = false
-    
     enum State {
         
         case loading
@@ -212,15 +210,13 @@ import UIKit
         
         let indexToPageAt = inboxMessages.count - Int(Courier.shared.inboxPaginationLimit / 4)
         
-        if (indexPath.row == indexToPageAt && !isPaging) {
+        if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
             Task {
-                isPaging = true
                 do {
                     try await Courier.shared.inbox.fetchNextPage()
                 } catch {
                     Courier.log(String(describing: error))
                 }
-                isPaging = false
             }
         }
         

@@ -510,19 +510,29 @@ internal class CoreInbox {
         
     }
     
+    private var isPaging = false
+    
+    internal func canPage() -> Bool {
+        return inboxData?.messages?.pageInfo?.hasNextPage ?? false && !isPaging
+    }
+    
     @discardableResult internal func fetchNextPage() async throws -> [InboxMessage] {
         
         var msgs: [InboxMessage] = []
         
-        if (messages == nil) {
+        if (!canPage() || messages == nil) {
             return msgs
         }
+        
+        isPaging = true
         
         do {
             msgs = try await fetchNextPageOfMessages()
         } catch {
             self.notifyError(error)
         }
+        
+        isPaging = false
         
         return msgs
         
