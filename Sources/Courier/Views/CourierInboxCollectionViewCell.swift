@@ -11,6 +11,15 @@ internal class CustomInboxCollectionViewCell: UICollectionViewCell {
 
     public static let id = "CustomInboxCollectionViewCell"
     weak var label: UILabel!
+    
+    private let widthConstraint = NSLayoutConstraint()
+    
+    override var frame: CGRect {
+        didSet {
+            widthConstraint.constant = frame.width
+            widthConstraint.isActive = true
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,12 +28,13 @@ internal class CustomInboxCollectionViewCell: UICollectionViewCell {
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(textLabel)
         
+        textLabel.addConstraint(widthConstraint)
+        
         NSLayoutConstraint.activate([
             textLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             textLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            textLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            textLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            textLabel.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width) // TODO
+//            textLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+//            textLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
         ])
         
         textLabel.numberOfLines = 0
