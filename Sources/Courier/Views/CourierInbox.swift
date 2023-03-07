@@ -234,7 +234,9 @@ import UIKit
                 }
                 
                 // Add the items to the end of the set
-                self.collectionView?.insertItems(at: indexPaths)
+                Utils.runOnMainThread {
+                    self.collectionView?.insertItems(at: indexPaths)
+                }
                 
             })
             

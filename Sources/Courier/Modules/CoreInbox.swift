@@ -559,14 +559,10 @@ extension Courier {
         Task {
             do {
                 let newMessages = try await inbox.fetchNextPage()
-                Utils.runOnMainThread {
-                    onSuccess?(newMessages)
-                }
+                onSuccess?(newMessages)
             } catch {
                 Courier.log(String(describing: error))
-                Utils.runOnMainThread {
-                    onFailure?(error)
-                }
+                onFailure?(error)
             }
         }
     }
