@@ -460,11 +460,10 @@ internal class CoreInbox {
         Task {
             do {
                 try await refresh()
-                Utils.runOnMainThread {
-                    onComplete()
-                }
             } catch {
                 self.notifyError(error)
+            }
+            Utils.runOnMainThread {
                 onComplete()
             }
         }

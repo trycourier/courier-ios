@@ -20,18 +20,14 @@ import UIKit
         case loading
         case error(error: Error)
         case content
-        case empty(title: String)
+        case empty
         
         func value() -> Any? {
             switch self {
-            case .loading:
-                return nil
             case .error(let value):
                 return value
-            case .content:
+            default:
                 return nil
-            case .empty(let value):
-                return value
             }
         }
         
@@ -51,11 +47,11 @@ import UIKit
             case .content:
                 self.collectionView?.isHidden = false
                 self.stateLabel?.isHidden = true
-                self.stateLabel?.text = ""
+                self.stateLabel?.text = nil
             case .empty:
                 self.collectionView?.isHidden = true
                 self.stateLabel?.isHidden = false
-                self.stateLabel?.text = String(describing: state.value() ?? "Empty")
+                self.stateLabel?.text = "No messages found"
             }
         }
     }
@@ -77,6 +73,8 @@ import UIKit
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         
+        label.backgroundColor = .red
+        
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor),
             label.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -88,29 +86,29 @@ import UIKit
         
         // Add the collection view
         
-        let collectionViewLayout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
-        
-        collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
-        
-        collectionView.backgroundColor = .orange
-
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(collectionView)
-        
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-        
-        self.collectionView = collectionView
+//        let collectionViewLayout = UICollectionViewFlowLayout()
+//        let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
+//
+//        collectionView.refreshControl = UIRefreshControl()
+//        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+//
+//        collectionView.backgroundColor = .orange
+//
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
+//
+//        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        addSubview(collectionView)
+//
+//        NSLayoutConstraint.activate([
+//            collectionView.topAnchor.constraint(equalTo: topAnchor),
+//            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+//        ])
+//
+//        self.collectionView = collectionView
         
         self.makeListener()
         
@@ -126,7 +124,7 @@ import UIKit
                 self?.state = .error(error: error)
             },
             onMessagesChanged: { [weak self] messages, unreadMessageCount, totalMessageCount, canPaginate in
-                self?.state = messages.isEmpty ? .empty(title: "No messages found") : .content
+                self?.state = messages.isEmpty ? .empty : .content
                 self?.canPaginate = canPaginate
                 self?.inboxMessages = messages
                 self?.collectionView?.reloadData()
