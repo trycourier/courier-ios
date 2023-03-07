@@ -146,16 +146,14 @@ import UIKit
     
     private func reloadMessages(_ newMessages: [InboxMessage]) {
         
-        // TODO: Nice animation
-        
-//        // Check if we need to insert
-//        let didInsert = newMessages.count - inboxMessages.count == 1
-//        if (newMessages.first?.messageId != inboxMessages.first?.messageId && didInsert) {
-//            inboxMessages = newMessages
-//            let indexPath = IndexPath(row: 0, section: 0)
-//            tableView?.insertRows(at: [indexPath], with: .left)
-//            return
-//        }
+        // Check if we need to insert
+        let didInsert = newMessages.count - inboxMessages.count == 1
+        if (newMessages.first?.messageId != inboxMessages.first?.messageId && didInsert) {
+            inboxMessages = newMessages
+            let indexPath = IndexPath(row: 0, section: 0)
+            tableView?.insertRows(at: [indexPath], with: .left)
+            return
+        }
         
         // Set the messages
         inboxMessages = newMessages
