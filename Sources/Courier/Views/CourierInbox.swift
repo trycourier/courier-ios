@@ -7,14 +7,14 @@
 
 import UIKit
 
-@objc open class CourierInbox: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+@objc open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     public var delegate: CourierInboxDelegate? = nil
     
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
-    private var collectionView: UICollectionView? = nil
+    private var tableView: UITableView? = nil
     private var stateLabel: UILabel? = nil
     
     enum State {
@@ -39,19 +39,19 @@ import UIKit
         didSet {
             switch (state) {
             case .loading:
-                self.collectionView?.isHidden = true
+                self.tableView?.isHidden = true
                 self.stateLabel?.isHidden = false
                 self.stateLabel?.text = "Loading..."
             case .error:
-                self.collectionView?.isHidden = true
+                self.tableView?.isHidden = true
                 self.stateLabel?.isHidden = false
                 self.stateLabel?.text = String(describing: state.value() ?? "Error")
             case .content:
-                self.collectionView?.isHidden = false
+                self.tableView?.isHidden = false
                 self.stateLabel?.isHidden = true
                 self.stateLabel?.text = nil
             case .empty:
-                self.collectionView?.isHidden = true
+                self.tableView?.isHidden = true
                 self.stateLabel?.isHidden = false
                 self.stateLabel?.text = "No messages found"
             }
@@ -79,7 +79,7 @@ import UIKit
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
-        self.collectionView = collectionView
+        self.tableView = collectionView
         
         // Add state label
         let label = makeLabel()
@@ -98,48 +98,51 @@ import UIKit
         
     }
     
-    private func makeCollectionView() -> UICollectionView {
+    private func makeCollectionView() -> UITableView {
         
         // Create sized layout
-        let size = NSCollectionLayoutSize(
-            widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
-            heightDimension: NSCollectionLayoutDimension.estimated(44)
-        )
-        
-        let item = NSCollectionLayoutItem(layoutSize: size)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = .zero
-        section.interGroupSpacing = 0
-
-        let headerFooterSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(0)
-        )
-        
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: headerFooterSize,
-            elementKind: "SectionHeaderElementKind",
-            alignment: .top
-        )
-        
-        section.boundarySupplementaryItems = [sectionHeader]
-
-        let layout = UICollectionViewCompositionalLayout(section: section)
+//        let size = NSCollectionLayoutSize(
+//            widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
+//            heightDimension: NSCollectionLayoutDimension.estimated(44)
+//        )
+//
+//        let item = NSCollectionLayoutItem(layoutSize: size)
+//        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
+//
+//        let section = NSCollectionLayoutSection(group: group)
+//        section.contentInsets = .zero
+//        section.interGroupSpacing = 0
+//
+//        let headerFooterSize = NSCollectionLayoutSize(
+//            widthDimension: .fractionalWidth(1.0),
+//            heightDimension: .absolute(0)
+//        )
+//
+//        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+//            layoutSize: headerFooterSize,
+//            elementKind: "SectionHeaderElementKind",
+//            alignment: .top
+//        )
+//
+//        section.boundarySupplementaryItems = [sectionHeader]
+//
+//        let layout = UICollectionViewCompositionalLayout(section: section)
         
         // Create the collection view
-        let collectionView = UICollectionView(frame: frame, collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+//        tableView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
+        tableView.register(CustomInboxCollectionViewCell.self, forCellReuseIdentifier: CustomInboxCollectionViewCell.id)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 44
+        tableView.translatesAutoresizingMaskIntoConstraints = false
 
         // Add the refresh control
-        collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
         
-        return collectionView
+        return tableView
         
     }
     
@@ -166,10 +169,13 @@ import UIKit
                 self?.state = messages.isEmpty ? .empty : .content
                 self?.canPaginate = canPaginate
                 
-                if (self?.inboxMessages.isEmpty == true) {
-                    self?.inboxMessages = messages
-                    self?.collectionView?.reloadData()
-                }
+                self?.inboxMessages = messages
+                self?.tableView?.reloadData()
+                
+//                if (self?.inboxMessages.isEmpty == true) {
+//                    self?.inboxMessages = messages
+//                    self?.tableView?.reloadData()
+//                }
                 
             }
         )
@@ -182,36 +188,63 @@ import UIKit
     
     @objc private func onPullRefresh() {
         Courier.shared.refreshInbox {
-            self.collectionView?.refreshControl?.endRefreshing()
+            self.tableView?.refreshControl?.endRefreshing()
         }
     }
     
-    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return self.canPaginate ? 2 : 1
     }
     
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        return self.canPaginate ? 2 : 1
+//    }
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? self.inboxMessages.count : 1
     }
     
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return section == 0 ? self.inboxMessages.count : 1
+//    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
-        
-        if (indexPath.section == 0) {
-            let message = inboxMessages[indexPath.row]
-            cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
-            cell.contentView.backgroundColor = message.isRead ? .clear : .blue
-        } else {
-            cell.label.text = "Loading..."
-            cell.contentView.backgroundColor = .clear
+        if let cell = tableView.dequeueReusableCell(withIdentifier: CustomInboxCollectionViewCell.id, for: indexPath) as? CustomInboxCollectionViewCell {
+            
+            if (indexPath.section == 0) {
+                let message = inboxMessages[indexPath.row]
+                cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
+                cell.contentView.backgroundColor = message.isRead ? .clear : .blue
+            } else {
+                cell.label.text = "Loading..."
+                cell.contentView.backgroundColor = .clear
+            }
+            
         }
         
-        return cell
+        fatalError("could not dequeueReusableCell")
         
     }
     
-    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
+//
+//        if (indexPath.section == 0) {
+//            let message = inboxMessages[indexPath.row]
+//            cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
+//            cell.contentView.backgroundColor = message.isRead ? .clear : .blue
+//        } else {
+//            cell.label.text = "Loading..."
+//            cell.contentView.backgroundColor = .clear
+//        }
+//
+//        return cell
+//
+//    }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         let indexToPageAt = inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 4)
         
@@ -221,62 +254,20 @@ import UIKit
             // Handle updating the messages when fetch completes
             Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
                 
-//                self.collectionView?.performBatchUpdates({
+//                newMessages.forEach { message in
 //
-//                    // Update messages
-//                    let start = self.inboxMessages.count - 1
-//                    self.inboxMessages += newMessages
-//                    let end = self.inboxMessages.count - 1
+//                    self.tableView?.performBatchUpdates({
 //
-//                    // Build paths
-//                    var indexPaths: [IndexPath] = []
-//                    for i in start...end {
-//                        let path = IndexPath(row: i, section: 0)
-//                        self.collectionView?.insertItems(at: indexPaths)
-////                        indexPaths.append(path)
-//                    }
+//                        self.inboxMessages.append(message)
 //
-//                    // Add the items to the end of the set
-//                    self.collectionView?.insertItems(at: indexPaths)
+//                        let index = self.inboxMessages.count - 1
+//                        let path = IndexPath(row: index, section: 0)
 //
-//                })
-                
-                // Update messages
-//                let start = self.inboxMessages.count - 1
-//                self.inboxMessages += newMessages
-//                let end = self.inboxMessages.count - 1
-                
-                newMessages.forEach { message in
-                    self.collectionView?.performBatchUpdates({
-                        self.inboxMessages.append(message)
-                        let index = self.inboxMessages.count - 1
-                        let path = IndexPath(row: index, section: 0)
-                        self.collectionView?.insertItems(at: [path])
-                    })
-                }
-                
-                // Build paths
-//                for i in start...end {
-//                    self.collectionView?.performBatchUpdates({
-//                        let path = IndexPath(row: i, section: 0)
-//                        self.collectionView?.insertItems(at: [path])
+//                        self.tableView?.insertItems(at: [path])
+//
 //                    })
-//                }
-                
-//                // Update messages
-//                let start = self.inboxMessages.count - 1
-//                self.inboxMessages += newMessages
-//                let end = self.inboxMessages.count - 1
 //
-//                // Build paths
-//                var indexPaths: [IndexPath] = []
-//                for i in start...end {
-//                    let path = IndexPath(row: i, section: 0)
-//                    indexPaths.append(path)
 //                }
-//
-//                // Add the items to the end of the set
-//                self.collectionView?.insertItems(at: indexPaths)
                 
             })
             
@@ -284,7 +275,44 @@ import UIKit
         
     }
     
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//
+//        let indexToPageAt = inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 4)
+//
+//        // Only fetch if we are safe to
+//        if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
+//
+//            // Handle updating the messages when fetch completes
+//            Courier.shared.fetchNextPageOfMessages(onSuccess: { newMessages in
+//
+//                newMessages.forEach { message in
+//
+//                    self.tableView?.performBatchUpdates({
+//
+//                        self.inboxMessages.append(message)
+//
+//                        let index = self.inboxMessages.count - 1
+//                        let path = IndexPath(row: index, section: 0)
+//
+//                        self.tableView?.insertItems(at: [path])
+//
+//                    })
+//
+//                }
+//
+//            })
+//
+//        }
+//
+//    }
+    
+//    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let index = indexPath.row
+//        let message = inboxMessages[index]
+//        delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
+//    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         let message = inboxMessages[index]
         delegate?.didClickInboxMessageAtIndex?(message: message, index: index)

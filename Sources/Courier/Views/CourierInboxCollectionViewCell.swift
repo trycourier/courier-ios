@@ -7,13 +7,13 @@
 
 import UIKit
 
-internal class CustomInboxCollectionViewCell: UICollectionViewCell {
+internal class CustomInboxCollectionViewCell: UITableViewCell {
 
     public static let id = "CustomInboxCollectionViewCell"
     let label = UILabel()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
