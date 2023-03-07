@@ -17,6 +17,8 @@ import UIKit
     private var collectionView: UICollectionView? = nil
     private var stateLabel: UILabel? = nil
     
+    private var isPaging = false
+    
     enum State {
         
         case loading
@@ -209,8 +211,17 @@ import UIKit
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         let indexToPageAt = inboxMessages.count - Int(Courier.shared.inboxPaginationLimit / 4)
-        if (indexPath.row == indexToPageAt) {
-            Courier.shared.fetchNextPageOfMessages()
+        
+        if (indexPath.row == indexToPageAt && !isPaging) {
+            Task {
+                isPaging = true
+                do {
+                    try await Courier.shared.inbox.fetchNextPage()
+                } catch {
+                    Courier.log(String(describing: error))
+                }
+                isPaging = false
+            }
         }
         
     }

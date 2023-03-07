@@ -510,6 +510,24 @@ internal class CoreInbox {
         
     }
     
+    @discardableResult internal func fetchNextPage() async throws -> [InboxMessage] {
+        
+        var msgs: [InboxMessage] = []
+        
+        if (messages == nil) {
+            return msgs
+        }
+        
+        do {
+            msgs = try await fetchNextPageOfMessages()
+        } catch {
+            self.notifyError(error)
+        }
+        
+        return msgs
+        
+    }
+    
 }
 
 extension Courier {
