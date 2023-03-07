@@ -180,7 +180,8 @@ import UIKit
         
         inboxMessages = messages
         
-        tableView?.reloadSections([0, 1], with: .fade)
+        let sections: IndexSet = canPaginate ? [0, 1] : [0]
+        tableView?.reloadSections(sections, with: .fade)
 
         
 //        var indexPaths: [IndexPath] = []
