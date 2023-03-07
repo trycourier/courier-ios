@@ -230,10 +230,10 @@ import UIKit
         let distanceToBottom = scrollY + viewHeight
         let pageCalc = abs(distanceToBottom - scrollView.contentSize.height)
 
-        // Handle pagination
-        if (pageCalc < getPaginationTrigger()) {
-            Courier.shared.fetchNextPageOfMessages()
-        }
+//        // Handle pagination
+//        if (pageCalc < getPaginationTrigger()) {
+//            Courier.shared.fetchNextPageOfMessages()
+//        }
         
     }
     
