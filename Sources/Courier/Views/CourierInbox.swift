@@ -223,14 +223,14 @@ import UIKit
         // Call delegate
         delegate?.didScrollInbox?(scrollView: scrollView)
         
-        // Handle pagination
-        let distanceToBottom = scrollView.contentSize.height - scrollView.contentOffset.y
-        
-        print(distanceToBottom, getPaginationTrigger())
-        
-        if (distanceToBottom < getPaginationTrigger()) {
-            Courier.shared.fetchNextPageOfMessages()
-        }
+//        // Handle pagination
+//        let distanceToBottom = scrollView.contentSize.height - scrollView.contentOffset.y
+//
+//        print(distanceToBottom, getPaginationTrigger())
+//
+//        if (distanceToBottom < getPaginationTrigger()) {
+//            Courier.shared.fetchNextPageOfMessages()
+//        }
         
     }
     
