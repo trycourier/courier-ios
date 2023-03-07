@@ -208,16 +208,10 @@ import UIKit
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
-        let indexToPageAt = inboxMessages.count - Int(Courier.shared.inboxPaginationLimit / 4)
+        let indexToPageAt = inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 4)
         
         if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
-            Task {
-                do {
-                    try await Courier.shared.inbox.fetchNextPage()
-                } catch {
-                    Courier.log(String(describing: error))
-                }
-            }
+            Courier.shared.fetchNextPageOfMessages()
         }
         
     }

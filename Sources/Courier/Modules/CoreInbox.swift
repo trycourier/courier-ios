@@ -37,6 +37,7 @@ internal class CoreInbox {
     private var unreadCount: Int? = nil
     
     private var fetch: Task<Void, Error>? = nil
+    private var isPaging = false
     
     private func notifyInitialLoading() {
         Utils.runOnMainThread { [weak self] in
@@ -488,30 +489,6 @@ internal class CoreInbox {
         
     }
     
-    internal func fetchNextPage() {
-        
-        if (messages == nil || fetch != nil) {
-            return
-        }
-        
-        fetch?.cancel()
-        
-        fetch = Task {
-            
-            do {
-                try await fetchNextPageOfMessages()
-            } catch {
-                self.notifyError(error)
-            }
-            
-            fetch = nil
-            
-        }
-        
-    }
-    
-    private var isPaging = false
-    
     internal func canPage() -> Bool {
         return inboxData?.messages?.pageInfo?.hasNextPage ?? false && !isPaging
     }
@@ -574,8 +551,20 @@ extension Courier {
      Grabs the next page of message from the inbox service
      Will automatically prevent duplicate calls if a call is already performed
      */
-    @objc public func fetchNextPageOfMessages() {
-        inbox.fetchNextPage()
+    @discardableResult @objc public func fetchNextPageOfMessages() async throws -> [InboxMessage] {
+        return try await inbox.fetchNextPage()
+    }
+    
+    @objc public func fetchNextPageOfMessages(onSuccess: (([InboxMessage]) -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                let newMessages = try await inbox.fetchNextPage()
+                onSuccess?(newMessages)
+            } catch {
+                Courier.log(String(describing: error))
+                onFailure?(error)
+            }
+        }
     }
     
     /**
@@ -597,7 +586,7 @@ extension Courier {
         try await inbox.readMessage(messageId: messageId)
     }
     
-    @objc public func readMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) async throws {
+    @objc public func readMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await inbox.readMessage(messageId: messageId)
@@ -616,7 +605,7 @@ extension Courier {
         try await inbox.unreadMessage(messageId: messageId)
     }
     
-    @objc public func unreadMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) async throws {
+    @objc public func unreadMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await inbox.unreadMessage(messageId: messageId)
