@@ -225,6 +225,9 @@ import UIKit
         
         // Handle pagination
         let distanceToBottom = scrollView.contentSize.height - scrollView.contentOffset.y
+        
+        print(distanceToBottom, getPaginationTrigger())
+        
         if (distanceToBottom < getPaginationTrigger()) {
             Courier.shared.fetchNextPageOfMessages()
         }
