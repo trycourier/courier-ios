@@ -488,9 +488,17 @@ internal class CoreInbox {
         
     }
     
+    private var isPaging = false
+    
     internal func fetchNextPage() async throws -> [InboxMessage] {
         
+        if (isPaging) {
+            return []
+        }
+        
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<[InboxMessage], Error>) in
+            
+            isPaging = true
             
             fetch?.cancel()
             
@@ -498,13 +506,14 @@ internal class CoreInbox {
                 
                 do {
                     let newMessages = try await fetchNextPageOfMessages()
-                    fetch = nil
                     continuation.resume(returning: newMessages)
                 } catch {
                     self.notifyError(error)
-                    fetch = nil
                     continuation.resume(throwing: error)
                 }
+                
+                fetch = nil
+                isPaging = false
                 
             }
             
