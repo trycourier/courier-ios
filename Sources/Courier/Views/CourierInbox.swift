@@ -9,6 +9,8 @@ import UIKit
 
 @objc open class CourierInbox: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
+    public var delegate: CourierInboxDelegate? = nil
+    
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
@@ -178,7 +180,11 @@ import UIKit
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let message = inboxMessages[indexPath.row]
-        message.isRead ? message.markAsUnread() : message.markAsRead()
+        delegate?.onMessageClick?(message: message, indexPath: indexPath)
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        delegate?.inboxDidScroll?(scrollView: scrollView)
     }
     
     deinit {
