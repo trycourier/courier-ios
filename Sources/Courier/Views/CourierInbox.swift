@@ -100,6 +100,7 @@ import UIKit
     
     private func makeCollectionView() -> UICollectionView {
         
+        // Create sized layout
         let size = NSCollectionLayoutSize(
             widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
             heightDimension: NSCollectionLayoutDimension.estimated(44)
@@ -126,13 +127,6 @@ import UIKit
         section.boundarySupplementaryItems = [sectionHeader]
 
         let layout = UICollectionViewCompositionalLayout(section: section)
-        
-//        // Create the flow layout
-//        let collectionViewLayout = UICollectionViewFlowLayout()
-//        collectionViewLayout.scrollDirection = .vertical
-//        collectionViewLayout.minimumInteritemSpacing = 0
-//        collectionViewLayout.minimumLineSpacing = 0
-//        collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         // Create the collection view
         let collectionView = UICollectionView(frame: frame, collectionViewLayout: layout)
@@ -177,15 +171,15 @@ import UIKit
         
     }
     
+    private func getPaginationTrigger() -> CGFloat {
+        return self.frame.height / 3
+    }
+    
     @objc private func onPullRefresh() {
         Courier.shared.refreshInbox {
             self.collectionView?.refreshControl?.endRefreshing()
         }
     }
-    
-//    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: collectionView.bounds.width, height: 100) // TODO
-//    }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.canPaginate ? 2 : 1
@@ -212,11 +206,11 @@ import UIKit
         
     }
     
-    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if (indexPath.section == 1) {
-            Courier.shared.fetchNextPageOfMessages()
-        }
-    }
+//    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//        if (indexPath.section == 1) {
+//            Courier.shared.fetchNextPageOfMessages()
+//        }
+//    }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let index = indexPath.row
@@ -225,7 +219,16 @@ import UIKit
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        // Call delegate
         delegate?.didScrollInbox?(scrollView: scrollView)
+        
+        // Handle pagination
+        let distanceToBottom = scrollView.contentSize.height - scrollView.contentOffset.y
+        if (distanceToBottom < getPaginationTrigger()) {
+            Courier.shared.fetchNextPageOfMessages()
+        }
+        
     }
     
     deinit {
