@@ -13,6 +13,52 @@ import UIKit
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     private var collectionView: UICollectionView? = nil
+    private var stateLabel: UILabel? = nil
+    
+    enum State {
+        
+        case loading
+        case error(error: Error)
+        case content
+        case empty(title: String)
+        
+        func value() -> Any? {
+            switch self {
+            case .loading:
+                return nil
+            case .error(let value):
+                return value
+            case .content:
+                return nil
+            case .empty(let value):
+                return value
+            }
+        }
+        
+    }
+    
+    private var state: State = .loading {
+        didSet {
+            switch (state) {
+            case .loading:
+                self.collectionView?.isHidden = true
+                self.stateLabel?.isHidden = false
+                self.stateLabel?.text = "Loading..."
+            case .error:
+                self.collectionView?.isHidden = true
+                self.stateLabel?.isHidden = false
+                self.stateLabel?.text = String(describing: state.value() ?? "Error")
+            case .content:
+                self.collectionView?.isHidden = false
+                self.stateLabel?.isHidden = true
+                self.stateLabel?.text = ""
+            case .empty:
+                self.collectionView?.isHidden = true
+                self.stateLabel?.isHidden = false
+                self.stateLabel?.text = String(describing: state.value() ?? "Empty")
+            }
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,6 +71,22 @@ import UIKit
     }
     
     private func setup() {
+        
+        // Add state label
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: topAnchor),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
+        self.stateLabel = label
+        
+        // Add the collection view
         
         let collectionViewLayout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
@@ -57,17 +119,17 @@ import UIKit
     private func makeListener() {
         
         self.inboxListener = Courier.shared.addInboxListener(
-            onInitialLoad: {
-//                self.setState(.loading)
+            onInitialLoad: { [weak self] in
+                self?.state = .loading
             },
-            onError: { error in
-//                self.setState(.error, error: String(describing: error))
+            onError: { [weak self] error in
+                self?.state = .error(error: error)
             },
-            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
-//                self.setState(messages.isEmpty ? .empty : .content)
-                self.canPaginate = canPaginate
-                self.inboxMessages = messages
-                self.collectionView?.reloadData()
+            onMessagesChanged: { [weak self] messages, unreadMessageCount, totalMessageCount, canPaginate in
+                self?.state = messages.isEmpty ? .empty(title: "No messages found") : .content
+                self?.canPaginate = canPaginate
+                self?.inboxMessages = messages
+                self?.collectionView?.reloadData()
             }
         )
         

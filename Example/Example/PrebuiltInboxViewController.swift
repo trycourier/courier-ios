@@ -19,7 +19,7 @@ class PrebuiltInboxViewController: UIViewController {
     }
     
     @objc private func readAll() {
-        print("Something")
+        Courier.shared.readAllInboxMessages()
     }
 
 }
