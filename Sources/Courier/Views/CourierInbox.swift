@@ -186,10 +186,8 @@ import UIKit
             
             if (newMessageAtIndex.messageId != message.messageId) {
                 tableView?.insertRows(at: [indexPath], with: .left)
-            } else if (newMessageAtIndex.messageId == message.messageId) {
-                tableView?.reloadRows(at: [indexPath], with: .fade)
             } else {
-                tableView?.insertRows(at: [indexPath], with: .none)
+                tableView?.reloadData()
             }
             
         }
