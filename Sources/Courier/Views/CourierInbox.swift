@@ -180,13 +180,16 @@ import UIKit
         
         inboxMessages = messages
         
-        var indexPaths: [IndexPath] = []
-        for i in 0...inboxMessages.count - 1 {
-            let indexPath = IndexPath(row: i, section: 0)
-            indexPaths.append(indexPath)
-        }
+        tableView?.reloadSections([0, 1], with: .fade)
+
         
-        tableView?.reloadRows(at: indexPaths, with: .fade)
+//        var indexPaths: [IndexPath] = []
+//        for i in 0...inboxMessages.count - 1 {
+//            let indexPath = IndexPath(row: i, section: 0)
+//            indexPaths.append(indexPath)
+//        }
+//
+//        tableView?.reloadRows(at: indexPaths, with: .fade)
         
 //        tableView?.reloadData()
     }
