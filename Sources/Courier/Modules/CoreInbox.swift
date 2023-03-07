@@ -489,6 +489,10 @@ internal class CoreInbox {
     
     internal func fetchNextPage() {
         
+        if (fetch != nil) {
+            return
+        }
+        
         fetch?.cancel()
         
         fetch = Task {

@@ -29,5 +29,21 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
         message.isRead ? message.markAsUnread() : message.markAsRead()
     }
+    
+    func didScrollInbox(scrollView: UIScrollView) {
+        
+        let safeAreaHeight = scrollView.safeAreaInsets.top + scrollView.safeAreaInsets.bottom
+        let viewHeight = scrollView.bounds.height - safeAreaHeight
+        let scrollY = scrollView.contentOffset.y + scrollView.safeAreaInsets.top
+        let fullScrollDistance = scrollY + viewHeight
+        let pageCalc = fullScrollDistance - scrollView.contentSize.height
+        
+        print(scrollY, fullScrollDistance, pageCalc)
+        
+        if (pageCalc >= 0) {
+            Courier.shared.fetchNextPageOfMessages()
+        }
+        
+    }
 
 }
