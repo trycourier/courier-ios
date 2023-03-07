@@ -26,7 +26,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
         Courier.shared.readAllInboxMessages()
     }
     
-    func onMessageClick(message: InboxMessage, indexPath: IndexPath) {
+    func didClickMessageAtIndex(message: InboxMessage, index: Int) {
         message.isRead ? message.markAsUnread() : message.markAsRead()
     }
 

@@ -69,50 +69,64 @@ import UIKit
     }
     
     private func setup() {
-        
+
         // Add the collection view
-        
-        let collectionViewLayout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
-
-        collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
-
-        collectionView.backgroundColor = .orange
-
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
-
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        let collectionView = makeCollectionView()
         addSubview(collectionView)
-
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
-
         self.collectionView = collectionView
         
         // Add state label
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
+        let label = makeLabel()
         addSubview(label)
-        
         let defaultMargin: CGFloat = 20
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: defaultMargin),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -defaultMargin),
         ])
-        
         self.stateLabel = label
         
         self.state = .loading
         
         self.makeListener()
+        
+    }
+    
+    private func makeCollectionView() -> UICollectionView {
+        
+        // Create the flow layout
+        let collectionViewLayout = UICollectionViewFlowLayout()
+        collectionViewLayout.scrollDirection = .vertical
+        collectionViewLayout.minimumInteritemSpacing = 0
+        collectionViewLayout.minimumLineSpacing = 0
+        
+        // Create the collection view
+        let collectionView = UICollectionView(frame: frame, collectionViewLayout: collectionViewLayout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add the refresh control
+        collectionView.refreshControl = UIRefreshControl()
+        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+        
+        return collectionView
+        
+    }
+    
+    private func makeLabel() -> UILabel {
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
         
     }
     
@@ -142,11 +156,7 @@ import UIKit
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 100)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
+        return CGSize(width: collectionView.bounds.width, height: 100) // TODO
     }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -183,11 +193,11 @@ import UIKit
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let index = indexPath.row
         let message = inboxMessages[index]
-        delegate?.didClickMessageAtIndex?(message: message, index: index)
+        delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        delegate?.inboxDidScroll?(scrollView: scrollView)
+        delegate?.didScrollInbox?(scrollView: scrollView)
     }
     
     deinit {
