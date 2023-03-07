@@ -43,7 +43,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
         print(scrollY, fullScrollDistance, pageCalc)
         
         if (pageCalc >= 0) {
-//            Courier.shared.fetchNextPageOfMessages()
+            Courier.shared.fetchNextPageOfMessages()
         }
         
     }

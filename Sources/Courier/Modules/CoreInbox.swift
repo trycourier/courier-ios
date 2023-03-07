@@ -488,36 +488,25 @@ internal class CoreInbox {
         
     }
     
-    private var isPaging = false
-    
-    internal func fetchNextPage() async throws -> [InboxMessage] {
+    internal func fetchNextPage() {
         
-        if (isPaging || messages == nil) {
-            return []
+        if (messages == nil || fetch != nil) {
+            return
         }
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<[InboxMessage], Error>) in
+        fetch?.cancel()
+        
+        fetch = Task {
             
-            isPaging = true
-            
-            fetch?.cancel()
-            
-            fetch = Task {
-                
-                do {
-                    let newMessages = try await fetchNextPageOfMessages()
-                    continuation.resume(returning: newMessages)
-                } catch {
-                    self.notifyError(error)
-                    continuation.resume(throwing: error)
-                }
-                
-                fetch = nil
-                isPaging = false
-                
+            do {
+                try await fetchNextPageOfMessages()
+            } catch {
+                self.notifyError(error)
             }
             
-        })
+            fetch = nil
+            
+        }
         
     }
     
@@ -557,20 +546,8 @@ extension Courier {
      Grabs the next page of message from the inbox service
      Will automatically prevent duplicate calls if a call is already performed
      */
-    @discardableResult @objc public func fetchNextPageOfMessages() async throws -> [InboxMessage] {
-        return try await inbox.fetchNextPage()
-    }
-    
-    @objc public func fetchNextPageOfMessages(onSuccess: (([InboxMessage]) -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-        Task {
-            do {
-                let newMessages = try await inbox.fetchNextPage()
-                onSuccess?(newMessages)
-            } catch {
-                Courier.log(String(describing: error))
-                onFailure?(error)
-            }
-        }
+    @objc public func fetchNextPageOfMessages() {
+        inbox.fetchNextPage()
     }
     
     /**
