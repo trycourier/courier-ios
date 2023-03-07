@@ -13,13 +13,6 @@ class CourierInboxTableViewCell: UITableViewCell {
     
     @IBOutlet weak var bodyLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-    
-    internal var message: InboxMessage? {
-        didSet {
-            titleLabel.text = message?.title
-            bodyLabel.text = message?.body
-        }
-    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,9 +24,15 @@ class CourierInboxTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    internal func setMessage(_ message: InboxMessage) {
+        titleLabel.text = message.title
+        bodyLabel.text = message.body
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
-        message = nil
+        titleLabel.text = nil
+        bodyLabel.text = nil
     }
     
 }

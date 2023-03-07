@@ -181,11 +181,10 @@ import UIKit
             
             if (indexPath.section == 0) {
                 let message = inboxMessages[indexPath.row]
-                cell.message = message
+                cell.setMessage(message)
 //                cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
                 cell.contentView.backgroundColor = message.isRead ? .clear : .blue
             } else {
-                cell.message = nil
                 cell.contentView.backgroundColor = .clear
             }
             

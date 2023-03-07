@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="136" id="KGk-i7-Jjw" customClass="CourierInboxTableViewCell" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="136" id="KGk-i7-Jjw" customClass="CourierInboxTableViewCell" customModule="Courier">
             <rect key="frame" x="0.0" y="0.0" width="375" height="136"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -49,8 +49,8 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="bodyLabel" destination="bL5-cJ-QFQ" id="ozf-gM-HLc"/>
-                <outlet property="titleLabel" destination="jFe-vz-tMY" id="lwj-8S-nBI"/>
+                <outlet property="bodyLabel" destination="jFe-vz-tMY" id="gw0-W5-4wx"/>
+                <outlet property="titleLabel" destination="bL5-cJ-QFQ" id="I78-7a-XIY"/>
             </connections>
             <point key="canvasLocation" x="171.75572519083968" y="21.126760563380284"/>
         </tableViewCell>
