@@ -7,9 +7,9 @@
 
 import UIKit
 
-internal class CourierInboxTableViewCell: UITableViewCell {
+internal class CollectionCourierInboxTableViewCell: UITableViewCell {
 
-    internal static let id = "CourierInboxTableViewCell"
+    internal static let id = "CollectionCourierInboxTableViewCell"
     
     internal var message: InboxMessage? {
         didSet {
