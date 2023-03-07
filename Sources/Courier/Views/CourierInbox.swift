@@ -75,8 +75,7 @@ import UIKit
         
         let defaultMargin: CGFloat = 20
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: topAnchor, constant: defaultMargin),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -defaultMargin),
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: defaultMargin),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -defaultMargin),
         ])
