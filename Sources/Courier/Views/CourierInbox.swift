@@ -221,6 +221,8 @@ import UIKit
                 cell.contentView.backgroundColor = .clear
             }
             
+            return cell
+            
         }
         
         fatalError("could not dequeueReusableCell")
