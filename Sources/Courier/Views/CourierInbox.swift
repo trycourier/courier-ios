@@ -231,7 +231,7 @@ import UIKit
         
     }
     
-    @objc public var scrollView: UIScrollView? {
+    @objc public var table: UITableView? {
         get {
             return tableView
         }

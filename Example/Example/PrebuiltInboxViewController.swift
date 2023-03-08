@@ -26,7 +26,23 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     
     @objc private func readAll() {
 //        Courier.shared.readAllInboxMessages()
-        courierInbox.scrollToTop()
+//        courierInbox.scrollToTop()
+        
+        if let scrollView = courierInbox.scrollView {
+            
+            let point = CGPoint(
+                x: 0,
+                y: -scrollView.adjustedContentInset.top
+            )
+
+            scrollView.setContentOffset(point, animated: true)
+            
+        }
+        
+    }
+    
+    func didScrollInbox(scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
     }
     
     func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
