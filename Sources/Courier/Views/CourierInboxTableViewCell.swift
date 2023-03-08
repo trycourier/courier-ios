@@ -43,7 +43,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         addStack()
         addTitle()
         addBody()
-//        addButtons()
+        addButtons()
         
     }
     
@@ -139,9 +139,26 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
+        let buttonView = UIView()
+        buttonView.backgroundColor = .systemFill
+        
+        stackView.addArrangedSubview(buttonView)
+        stackView.layoutIfNeeded()
+        
         let buttonStack = UIStackView()
         buttonStack.backgroundColor = .systemBlue
         buttonStack.axis = .horizontal
+        
+        buttonView.addSubview(buttonStack)
+        
+        NSLayoutConstraint.activate([
+            buttonStack.topAnchor.constraint(equalTo: buttonView.topAnchor),
+            buttonStack.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
+            buttonStack.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
+            buttonStack.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor)
+        ])
+        
+        buttonView.layoutIfNeeded()
         
         let button1 = UIButton()
         button1.backgroundColor = .green
@@ -153,8 +170,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonStack.addArrangedSubview(button1)
         buttonStack.addArrangedSubview(button2)
-        
-        stackView.addArrangedSubview(buttonStack)
         
         stackView.layoutIfNeeded()
         
