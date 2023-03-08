@@ -11,6 +11,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
+    private static let defaultMargin: CGFloat = 8
+    
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let bodyLabel = UILabel()
@@ -47,12 +49,15 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
         
+        let horizontal = CourierInboxTableViewCell.defaultMargin * 2
+        let vertical = CourierInboxTableViewCell.defaultMargin * 1.5
+        
         // Constrain the stack to the content view
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: vertical),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -vertical),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
         ])
         
         // Add labels to stack
@@ -68,19 +73,19 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     internal func setMessage(_ message: InboxMessage) {
-        titleLabel.text = "message.title"
-        bodyLabel.text = "message.body"
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
+        titleLabel.text = message.title
+        bodyLabel.text = message.body
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         titleLabel.text = nil
         bodyLabel.text = nil
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        // Configure the view for the selected state
     }
     
 }
