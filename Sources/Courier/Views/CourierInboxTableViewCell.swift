@@ -85,6 +85,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        stackView.addArrangedSubview(titleStackView)
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(timeLabel)
         
@@ -100,7 +101,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.backgroundColor = .red
         bodyLabel.backgroundColor = .purple
         
-        stackView.addArrangedSubview(titleStackView)
         stackView.addArrangedSubview(bodyLabel)
         
         resize()
@@ -108,6 +108,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     private func resize() {
+        timeLabel.sizeToFit()
         titleLabel.sizeToFit()
         bodyLabel.sizeToFit()
         layoutIfNeeded()
