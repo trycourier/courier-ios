@@ -12,7 +12,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     internal static let id = "CourierInboxTableViewCell"
     
     private let stackView = UIStackView()
+    private let titleStackView = UIStackView()
     private let titleLabel = UILabel()
+    private let timeLabel = UILabel()
     private let bodyLabel = UILabel()
     private let indicatorView = UIView()
     
@@ -57,7 +59,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.backgroundColor = .green
         stackView.axis = .vertical
-        stackView.spacing = 4
+        stackView.spacing = CourierInboxTheme.margin / 2
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
         
@@ -72,8 +74,20 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
         ])
         
+        // Title stack
+        titleStackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.addArrangedSubview(titleStackView)
+        
+        titleStackView.backgroundColor = .purple
+        titleStackView.axis = .horizontal
+        titleStackView.spacing = horizontal
+        titleStackView.alignment = .fill
+        titleStackView.distribution = .fillProportionally
+        
+        titleStackView.addArrangedSubview(titleLabel)
+        titleStackView.addArrangedSubview(timeLabel)
+        
         // Add labels to stack
-        stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(bodyLabel)
         
         titleLabel.numberOfLines = 0
@@ -86,6 +100,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func resize() {
         bodyLabel.sizeToFit()
+        timeLabel.sizeToFit()
         titleLabel.sizeToFit()
         layoutIfNeeded()
     }
@@ -93,6 +108,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     internal func setMessage(_ message: InboxMessage) {
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
+        timeLabel.text = message.created
         bodyLabel.text = message.subtitle
         resize()
     }
@@ -101,6 +117,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         super.prepareForReuse()
         indicatorView.isHidden = true
         titleLabel.text = nil
+        timeLabel.text = nil
         bodyLabel.text = nil
         resize()
     }
