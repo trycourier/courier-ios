@@ -170,6 +170,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.addArrangedSubview(button1)
         
+        stackView.layoutIfNeeded()
+        
 //        let button2 = UIButton()
 //        button2.backgroundColor = .gray
 //        button2.setTitle("Button 2", for: .normal)
