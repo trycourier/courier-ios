@@ -53,4 +53,9 @@ internal class CourierInboxPaginationCell: UITableViewCell {
         
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        loadingIndicator.startAnimating()
+    }
+    
 }
