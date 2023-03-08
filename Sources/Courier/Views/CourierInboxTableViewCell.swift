@@ -175,6 +175,14 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         buttonStack.addArrangedSubview(button1)
         buttonStack.addArrangedSubview(button2)
         
+        NSLayoutConstraint.activate([
+            button1.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        
+        NSLayoutConstraint.activate([
+            button2.heightAnchor.constraint(equalToConstant: 32)
+        ])
+        
         buttonStack.layoutIfNeeded()
         
         stackView.layoutIfNeeded()
