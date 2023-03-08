@@ -182,7 +182,6 @@ import UIKit
             if (indexPath.section == 0) {
                 let message = inboxMessages[indexPath.row]
                 cell.setMessage(message)
-//                cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
                 cell.contentView.backgroundColor = message.isRead ? .clear : .blue
             } else {
                 cell.contentView.backgroundColor = .clear
@@ -217,19 +216,25 @@ import UIKit
         delegate?.didScrollInbox?(scrollView: scrollView)
     }
     
-    @objc public func scrollToTop() {
+    @objc public func scrollToTop(animated: Bool = false) {
         
         if let scrollView = tableView {
             
             let point = CGPoint(
-                x: -scrollView.adjustedContentInset.left,
-                y: -scrollView.adjustedContentInset.top
+                x: 0,
+                y: -scrollView.contentInset.top
             )
             
-            scrollView.setContentOffset(point, animated: true)
+            scrollView.setContentOffset(point, animated: animated)
             
         }
         
+    }
+    
+    @objc public var scrollView: UIScrollView? {
+        get {
+            return tableView
+        }
     }
     
     deinit {

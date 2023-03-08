@@ -25,7 +25,8 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     }
     
     @objc private func readAll() {
-        Courier.shared.readAllInboxMessages()
+//        Courier.shared.readAllInboxMessages()
+        courierInbox.scrollToTop()
     }
     
     func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
