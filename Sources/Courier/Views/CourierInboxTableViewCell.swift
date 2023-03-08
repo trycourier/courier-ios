@@ -12,7 +12,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     internal static let id = "CourierInboxTableViewCell"
     
     private let stackView = UIStackView()
-    private let titleStackView = UIStackView()
+    private let titleView = UIView()
     private let titleLabel = UILabel()
     private let timeLabel = UILabel()
     private let bodyLabel = UILabel()
@@ -75,19 +75,34 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         ])
         
         // Title stack
-        titleStackView.translatesAutoresizingMaskIntoConstraints = false
-        titleStackView.backgroundColor = .purple
-        titleStackView.axis = .horizontal
-        titleStackView.spacing = horizontal
-        titleStackView.alignment = .top
-        titleStackView.distribution = .fillProportionally
+        titleView.translatesAutoresizingMaskIntoConstraints = false
+        titleView.backgroundColor = .purple
+//        titleStackView.axis = .horizontal
+//        titleStackView.spacing = horizontal
+//        titleStackView.alignment = .top
+//        titleStackView.distribution = .fillProportionally
         
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.addArrangedSubview(titleStackView)
-        titleStackView.addArrangedSubview(titleLabel)
-        titleStackView.addArrangedSubview(timeLabel)
+        titleView.addSubview(titleLabel)
+        titleView.addSubview(timeLabel)
+        
+        titleLabel.backgroundColor = .yellow
+        timeLabel.backgroundColor = .systemGray
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: titleView.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
+            timeLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
+            timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
+        ])
+        
+        stackView.addArrangedSubview(titleView)
+//        titleStackView.addArrangedSubview(titleLabel)
+//        titleStackView.addArrangedSubview(timeLabel)
         
         titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         timeLabel.backgroundColor = .systemPink
@@ -98,7 +113,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.numberOfLines = 0
         bodyLabel.numberOfLines = 0
         
-        titleLabel.backgroundColor = .red
         bodyLabel.backgroundColor = .purple
         
         stackView.addArrangedSubview(bodyLabel)
