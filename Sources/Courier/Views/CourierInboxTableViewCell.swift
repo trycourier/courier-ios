@@ -35,12 +35,20 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setup() {
         
-        // Remove all subviews
         contentView.subviews.forEach {
             $0.removeFromSuperview()
         }
         
-        // Add indicator view
+        addIndicator()
+        addStack()
+        addTitle()
+        addBody()
+        addButtons()
+        
+    }
+    
+    private func addIndicator() {
+        
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(indicatorView)
         
@@ -53,7 +61,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             indicatorView.widthAnchor.constraint(equalToConstant: 3)
         ])
         
-        // Add stack view
+    }
+    
+    private func addStack() {
+        
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
         
@@ -74,7 +85,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
         ])
         
-        // Title stack
+    }
+    
+    private func addTitle() {
+        
         titleView.translatesAutoresizingMaskIntoConstraints = false
         titleView.backgroundColor = .purple
         
@@ -88,9 +102,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleView.addSubview(titleLabel)
         titleView.addSubview(timeLabel)
         
+        titleLabel.numberOfLines = 0
         titleLabel.backgroundColor = .red
         timeLabel.backgroundColor = .systemPink
         
+        let horizontal = CourierInboxTheme.margin * 2
         let timeLabelWidth: CGFloat = 80
         
         NSLayoutConstraint.activate([
@@ -105,10 +121,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         titleView.layoutIfNeeded()
         
-        // Add labels to stack
+    }
+    
+    private func addBody() {
+        
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        titleLabel.numberOfLines = 0
         bodyLabel.numberOfLines = 0
         
         bodyLabel.backgroundColor = .purple
@@ -117,7 +135,41 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.layoutIfNeeded()
         
-//        resize()
+    }
+    
+    private func addButtons() {
+        
+        let buttonContainer = UIView()
+        buttonContainer.backgroundColor = .blue
+        
+        stackView.addArrangedSubview(buttonContainer)
+        stackView.layoutIfNeeded()
+        
+        let buttonStack = UIStackView()
+        buttonStack.backgroundColor = .systemBlue
+        buttonStack.axis = .horizontal
+        
+        let button1 = UIButton()
+        button1.backgroundColor = .green
+        button1.setTitle("Button 1", for: .normal)
+        
+        let button2 = UIButton()
+        button2.backgroundColor = .gray
+        button2.setTitle("Button 2", for: .normal)
+        
+        buttonStack.addArrangedSubview(button1)
+        buttonStack.addArrangedSubview(button2)
+        
+        buttonContainer.addSubview(buttonStack)
+        
+        NSLayoutConstraint.activate([
+            buttonStack.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+            buttonStack.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
+            buttonStack.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor),
+            buttonStack.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor)
+        ])
+        
+        buttonContainer.layoutIfNeeded()
         
     }
     
