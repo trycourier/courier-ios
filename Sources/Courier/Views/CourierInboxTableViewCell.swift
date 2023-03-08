@@ -81,8 +81,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleStackView.backgroundColor = .purple
         titleStackView.axis = .horizontal
         titleStackView.spacing = horizontal
-        titleStackView.alignment = .fill
-        titleStackView.distribution = .fillEqually
+        titleStackView.alignment = .top
+        titleStackView.distribution = .fillProportionally
         
         
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
