@@ -84,10 +84,17 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
+    private func resize() {
+        bodyLabel.sizeToFit()
+        titleLabel.sizeToFit()
+        layoutIfNeeded()
+    }
+    
     internal func setMessage(_ message: InboxMessage) {
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
         bodyLabel.text = message.subtitle
+        resize()
     }
     
     override func prepareForReuse() {
@@ -95,6 +102,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         indicatorView.isHidden = true
         titleLabel.text = nil
         bodyLabel.text = nil
+        resize()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
