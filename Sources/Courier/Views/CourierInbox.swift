@@ -182,9 +182,6 @@ import UIKit
             if (indexPath.section == 0) {
                 let message = inboxMessages[indexPath.row]
                 cell.setMessage(message)
-                cell.contentView.backgroundColor = message.isRead ? .clear : .blue
-            } else {
-                cell.contentView.backgroundColor = .clear
             }
             
             return cell
@@ -216,14 +213,12 @@ import UIKit
         delegate?.didScrollInbox?(scrollView: scrollView)
     }
     
-    @objc public func scrollToTop(animated: Bool = false) {
-        if let tableView = tableView {
-            tableView.scrollToRow(
-                at: IndexPath(row: 0, section: 0),
-                at: .top,
-                animated: animated
-            )
-        }
+    @objc public func scrollToTop(animated: Bool) {
+        tableView?.scrollToRow(
+            at: IndexPath(row: 0, section: 0),
+            at: .top,
+            animated: animated
+        )
     }
     
     deinit {

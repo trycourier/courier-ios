@@ -16,6 +16,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let bodyLabel = UILabel()
+    private let indicatorView = UIView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -38,6 +39,19 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         contentView.subviews.forEach {
             $0.removeFromSuperview()
         }
+        
+        // Add indicator view
+        indicatorView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(indicatorView)
+        
+        indicatorView.backgroundColor = .orange
+        
+        NSLayoutConstraint.activate([
+            indicatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1),
+            indicatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1),
+            indicatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 1),
+            indicatorView.widthAnchor.constraint(equalToConstant: 3)
+        ])
         
         // Add stack view
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,12 +87,14 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     internal func setMessage(_ message: InboxMessage) {
+        indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
         bodyLabel.text = message.subtitle
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        indicatorView.isHidden = true
         titleLabel.text = nil
         bodyLabel.text = nil
     }
