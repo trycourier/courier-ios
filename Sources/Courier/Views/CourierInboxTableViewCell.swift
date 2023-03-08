@@ -82,7 +82,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleStackView.axis = .horizontal
         titleStackView.spacing = horizontal
         titleStackView.alignment = .fill
-        titleStackView.distribution = .fill
+        titleStackView.distribution = .fillProportionally
         
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(timeLabel)
@@ -104,7 +104,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func resize() {
         bodyLabel.sizeToFit()
-//        timeLabel.sizeToFit()
+        timeLabel.sizeToFit()
         titleLabel.sizeToFit()
         layoutIfNeeded()
     }
