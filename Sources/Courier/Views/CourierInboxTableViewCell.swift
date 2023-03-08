@@ -47,7 +47,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.spacing = 4
         stackView.alignment = .fill
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fillProportionally
         
         let horizontal = CourierInboxTableViewCell.defaultMargin * 2
         let vertical = CourierInboxTableViewCell.defaultMargin * 1.5
