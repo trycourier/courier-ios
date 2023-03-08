@@ -94,7 +94,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             titleLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: titleView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -(timeLabelWidth + horizontal)),
+//            titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -(timeLabelWidth + horizontal)),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: titleView.trailingAnchor, constant: -(timeLabelWidth + horizontal)),
             timeLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
             timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
             timeLabel.widthAnchor.constraint(equalToConstant: timeLabelWidth)
@@ -115,10 +116,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     private func resize() {
-//        timeLabel.sizeToFit()
-//        titleLabel.sizeToFit()
-//        bodyLabel.sizeToFit()
-//        layoutIfNeeded()
+        timeLabel.sizeToFit()
+        titleLabel.sizeToFit()
+        bodyLabel.sizeToFit()
+        layoutIfNeeded()
     }
     
     internal func setMessage(_ message: InboxMessage) {
