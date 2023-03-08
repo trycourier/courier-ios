@@ -38,6 +38,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         }
         
         // Add stack view
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
         
         stackView.backgroundColor = .green
