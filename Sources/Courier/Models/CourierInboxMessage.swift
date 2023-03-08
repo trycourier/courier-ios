@@ -63,6 +63,12 @@ internal struct InboxPageInfo: Codable {
         self.tags = tags
     }
     
+    @objc public var subtitle: String? {
+        get {
+            return body ?? preview
+        }
+    }
+    
     @objc public var isRead: Bool {
         get {
             return read != nil

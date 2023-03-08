@@ -74,7 +74,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal func setMessage(_ message: InboxMessage) {
         titleLabel.text = message.title
-        bodyLabel.text = message.body
+        bodyLabel.text = message.subtitle
     }
     
     override func prepareForReuse() {
