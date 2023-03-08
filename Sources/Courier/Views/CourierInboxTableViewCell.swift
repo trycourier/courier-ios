@@ -76,37 +76,34 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Title stack
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(titleStackView)
-        
         titleStackView.backgroundColor = .purple
         titleStackView.axis = .horizontal
         titleStackView.spacing = horizontal
         titleStackView.alignment = .top
         titleStackView.distribution = .fillProportionally
         
-        
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         titleStackView.addArrangedSubview(titleLabel)
-//        titleStackView.addArrangedSubview(timeLabel)
+        titleStackView.addArrangedSubview(timeLabel)
         
-//        NSLayoutConstraint.activate([
-//            timeLabel.widthAnchor.constraint(equalToConstant: 80)
-//        ])
-        
-        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         timeLabel.backgroundColor = .systemPink
         
         // Add labels to stack
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(bodyLabel)
         
         titleLabel.numberOfLines = 0
         bodyLabel.numberOfLines = 0
         
         titleLabel.backgroundColor = .red
         bodyLabel.backgroundColor = .purple
+        
+        stackView.addArrangedSubview(titleStackView)
+        stackView.addArrangedSubview(bodyLabel)
+        
+        layoutIfNeeded()
         
     }
     
