@@ -95,7 +95,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: titleView.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -(timeLabelWidth + horizontal)),
             timeLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
-            timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor, constant: timeLabelWidth),
+            timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
+            timeLabel.widthAnchor.constraint(equalToConstant: timeLabelWidth)
         ])
         
         stackView.addArrangedSubview(titleView)
