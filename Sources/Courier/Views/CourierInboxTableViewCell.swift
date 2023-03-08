@@ -95,7 +95,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 //            timeLabel.widthAnchor.constraint(equalToConstant: 80)
 //        ])
         
-//        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         timeLabel.backgroundColor = .systemPink
         
         // Add labels to stack
