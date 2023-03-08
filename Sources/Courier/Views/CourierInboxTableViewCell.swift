@@ -88,7 +88,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(timeLabel)
         
-//        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         timeLabel.backgroundColor = .systemPink
         
         // Add labels to stack
@@ -103,14 +103,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         stackView.addArrangedSubview(titleStackView)
         stackView.addArrangedSubview(bodyLabel)
         
-        layoutIfNeeded()
-        
     }
     
     private func resize() {
-        bodyLabel.sizeToFit()
-        timeLabel.sizeToFit()
-        titleLabel.sizeToFit()
+//        bodyLabel.sizeToFit()
+//        timeLabel.sizeToFit()
+//        titleLabel.sizeToFit()
         layoutIfNeeded()
     }
     
