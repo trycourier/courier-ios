@@ -49,7 +49,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         addStack()
         addTitle()
         addBody()
-        addButtons()
+//        addButtons()
         
     }
     
