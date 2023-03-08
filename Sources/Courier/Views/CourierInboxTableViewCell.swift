@@ -11,8 +11,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
-    private static let defaultMargin: CGFloat = 8
-    
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let bodyLabel = UILabel()
@@ -63,8 +61,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
         
-        let horizontal = CourierInboxTableViewCell.defaultMargin * 2
-        let vertical = CourierInboxTableViewCell.defaultMargin * 1.5
+        let horizontal = CourierInboxTheme.margin * 2
+        let vertical = CourierInboxTheme.margin * 1.5
         
         // Constrain the stack to the content view
         NSLayoutConstraint.activate([

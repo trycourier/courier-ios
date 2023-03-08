@@ -84,11 +84,10 @@ import UIKit
         // Add state label
         let label = makeLabel()
         addSubview(label)
-        let defaultMargin: CGFloat = 20
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: defaultMargin),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -defaultMargin),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: CourierInboxTheme.margin),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CourierInboxTheme.margin),
         ])
         self.stateLabel = label
         

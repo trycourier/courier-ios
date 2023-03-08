@@ -9,10 +9,8 @@ import UIKit
 
 internal class CourierInboxPaginationCell: UITableViewCell {
     
-    internal static let height: CGFloat = 88
     internal static let id = "CourierInboxPaginationCell"
     
-    private let containerView = UIView()
     private let loadingIndicator = UIActivityIndicatorView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -37,29 +35,14 @@ internal class CourierInboxPaginationCell: UITableViewCell {
             $0.removeFromSuperview()
         }
         
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(containerView)
-        
-        containerView.backgroundColor = .blue
-        
-        NSLayoutConstraint.activate([
-            contentView.heightAnchor.constraint(equalToConstant: CourierInboxPaginationCell.height)
-        ])
-        
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-        ])
-        
         // Add indicator view
         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(loadingIndicator)
+        contentView.addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([
-            loadingIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+            loadingIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CourierInboxTheme.margin * 4),
+            loadingIndicator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -CourierInboxTheme.margin * 24),
+            loadingIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
         
         loadingIndicator.startAnimating()
