@@ -87,6 +87,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(timeLabel)
         
+        timeLabel.backgroundColor = .systemPink
+        
+        NSLayoutConstraint.activate([
+            timeLabel.widthAnchor.constraint(equalToConstant: 80)
+        ])
+        
         // Add labels to stack
         stackView.addArrangedSubview(bodyLabel)
         
