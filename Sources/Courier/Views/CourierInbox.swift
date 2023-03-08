@@ -217,6 +217,21 @@ import UIKit
         delegate?.didScrollInbox?(scrollView: scrollView)
     }
     
+    @objc public func scrollToTop() {
+        
+        if let scrollView = tableView {
+            
+            let point = CGPoint(
+                x: -scrollView.adjustedContentInset.left,
+                y: -scrollView.adjustedContentInset.top
+            )
+            
+            scrollView.setContentOffset(point, animated: true)
+            
+        }
+        
+    }
+    
     deinit {
         self.inboxListener?.remove()
     }
