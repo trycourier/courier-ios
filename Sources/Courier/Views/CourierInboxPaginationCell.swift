@@ -40,14 +40,17 @@ internal class CourierInboxPaginationCell: UITableViewCell {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(containerView)
         
-        containerView.backgroundColor = .yellow
+        containerView.backgroundColor = .blue
+        
+        NSLayoutConstraint.activate([
+            contentView.heightAnchor.constraint(equalToConstant: CourierInboxPaginationCell.height)
+        ])
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: CourierInboxPaginationCell.height)
         ])
         
         // Add indicator view
