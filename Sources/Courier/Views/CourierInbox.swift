@@ -217,23 +217,12 @@ import UIKit
     }
     
     @objc public func scrollToTop(animated: Bool = false) {
-        
-        if let scrollView = tableView {
-            
-            let point = CGPoint(
-                x: 0,
-                y: -scrollView.contentInset.top
+        if let tableView = tableView {
+            tableView.scrollToRow(
+                at: IndexPath(row: 0, section: 0),
+                at: .top,
+                animated: animated
             )
-            
-            scrollView.setContentOffset(point, animated: animated)
-            
-        }
-        
-    }
-    
-    @objc public var table: UITableView? {
-        get {
-            return tableView
         }
     }
     

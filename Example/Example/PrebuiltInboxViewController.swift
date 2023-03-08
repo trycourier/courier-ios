@@ -28,14 +28,16 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
 //        Courier.shared.readAllInboxMessages()
 //        courierInbox.scrollToTop()
         
-        if let scrollView = courierInbox.scrollView {
+        if let table = courierInbox.table {
             
-            let point = CGPoint(
-                x: 0,
-                y: -scrollView.adjustedContentInset.top
-            )
-
-            scrollView.setContentOffset(point, animated: true)
+            table.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            
+//            let point = CGPoint(
+//                x: 0,
+//                y: -scrollView.adjustedContentInset.top
+//            )
+//
+//            scrollView.setContentOffset(point, animated: true)
             
         }
         
