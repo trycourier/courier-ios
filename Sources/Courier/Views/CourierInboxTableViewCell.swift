@@ -11,12 +11,18 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
+    private let indicatorView = UIView()
+    
     private let stackView = UIStackView()
+    
     private let titleView = UIView()
     private let titleLabel = UILabel()
     private let timeLabel = UILabel()
+    
     private let bodyLabel = UILabel()
-    private let indicatorView = UIView()
+    
+    private let buttonView = UIView()
+    private let buttonStack = UIStackView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -139,13 +145,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
-        let buttonView = UIView()
         buttonView.backgroundColor = .systemFill
         
         stackView.addArrangedSubview(buttonView)
         stackView.layoutIfNeeded()
         
-        let buttonStack = UIStackView()
         buttonStack.backgroundColor = .systemBlue
         buttonStack.axis = .horizontal
         
@@ -170,6 +174,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonStack.addArrangedSubview(button1)
         buttonStack.addArrangedSubview(button2)
+        
+        buttonStack.layoutIfNeeded()
         
         stackView.layoutIfNeeded()
         
