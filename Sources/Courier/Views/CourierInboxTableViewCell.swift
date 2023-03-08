@@ -103,6 +103,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         stackView.addArrangedSubview(titleStackView)
         stackView.addArrangedSubview(bodyLabel)
         
+        resize()
+        
     }
     
     private func resize() {
