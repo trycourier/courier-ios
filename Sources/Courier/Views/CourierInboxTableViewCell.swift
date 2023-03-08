@@ -81,6 +81,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        stackView.addArrangedSubview(titleView)
         titleView.addSubview(titleLabel)
         titleView.addSubview(timeLabel)
         
@@ -98,8 +99,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
             timeLabel.widthAnchor.constraint(equalToConstant: timeLabelWidth)
         ])
-        
-        stackView.addArrangedSubview(titleView)
         
         // Add labels to stack
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
