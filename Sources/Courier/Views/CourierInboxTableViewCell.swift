@@ -89,7 +89,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
         titleStackView.addArrangedSubview(titleLabel)
-        titleStackView.addArrangedSubview(timeLabel)
+//        titleStackView.addArrangedSubview(timeLabel)
         
 //        NSLayoutConstraint.activate([
 //            timeLabel.widthAnchor.constraint(equalToConstant: 80)
