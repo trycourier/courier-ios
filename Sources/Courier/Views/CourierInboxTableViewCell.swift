@@ -139,11 +139,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
-        let buttonContainer = UIView()
-        buttonContainer.backgroundColor = .blue
-        
-        stackView.addArrangedSubview(buttonContainer)
-        stackView.layoutIfNeeded()
+//        let buttonContainer = UIView()
+//        buttonContainer.backgroundColor = .blue
+//
+//        stackView.addArrangedSubview(buttonContainer)
+//        stackView.layoutIfNeeded()
         
         let buttonStack = UIStackView()
         buttonStack.backgroundColor = .systemBlue
@@ -160,16 +160,18 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         buttonStack.addArrangedSubview(button1)
         buttonStack.addArrangedSubview(button2)
         
-        buttonContainer.addSubview(buttonStack)
+        stackView.addArrangedSubview(buttonStack)
         
-        NSLayoutConstraint.activate([
-            buttonStack.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-            buttonStack.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
-            buttonStack.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor),
-            buttonStack.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor)
-        ])
+        stackView.layoutIfNeeded()
         
-        buttonContainer.layoutIfNeeded()
+//        NSLayoutConstraint.activate([
+//            buttonStack.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+//            buttonStack.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
+//            buttonStack.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor),
+//            buttonStack.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor)
+//        ])
+        
+//        stackView.layoutIfNeeded()
         
     }
     
