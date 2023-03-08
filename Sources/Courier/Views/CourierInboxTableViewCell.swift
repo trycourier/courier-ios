@@ -77,10 +77,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // Title stack
         titleView.translatesAutoresizingMaskIntoConstraints = false
         titleView.backgroundColor = .purple
-//        titleStackView.axis = .horizontal
-//        titleStackView.spacing = horizontal
-//        titleStackView.alignment = .top
-//        titleStackView.distribution = .fillProportionally
         
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -88,24 +84,21 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleView.addSubview(titleLabel)
         titleView.addSubview(timeLabel)
         
-        titleLabel.backgroundColor = .yellow
-        timeLabel.backgroundColor = .systemGray
+        titleLabel.backgroundColor = .red
+        timeLabel.backgroundColor = .systemPink
+        
+        let timeLabelWidth: CGFloat = 80
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: titleView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: timeLabelWidth + horizontal),
             timeLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
-            timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
+            timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor, constant: timeLabelWidth),
         ])
         
         stackView.addArrangedSubview(titleView)
-//        titleStackView.addArrangedSubview(titleLabel)
-//        titleStackView.addArrangedSubview(timeLabel)
-        
-        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        timeLabel.backgroundColor = .systemPink
         
         // Add labels to stack
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
