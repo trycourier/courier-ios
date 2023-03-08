@@ -74,7 +74,7 @@
                     <constraint firstItem="R3A-20-btx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="x72-kI-cDm"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="-111.45038167938931" y="-12.323943661971832"/>
+            <point key="canvasLocation" x="-40" y="-7"/>
         </tableViewCell>
     </objects>
     <resources>

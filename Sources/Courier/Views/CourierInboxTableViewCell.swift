@@ -106,9 +106,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     private func resize() {
-//        bodyLabel.sizeToFit()
-//        timeLabel.sizeToFit()
-//        titleLabel.sizeToFit()
+        titleLabel.sizeToFit()
+        bodyLabel.sizeToFit()
         layoutIfNeeded()
     }
     
