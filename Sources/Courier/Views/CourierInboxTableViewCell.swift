@@ -84,6 +84,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleStackView.alignment = .fill
         titleStackView.distribution = .fillEqually
         
+        
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         titleStackView.addArrangedSubview(titleLabel)
         titleStackView.addArrangedSubview(timeLabel)
         
@@ -95,6 +99,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.backgroundColor = .systemPink
         
         // Add labels to stack
+        bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview(bodyLabel)
         
         titleLabel.numberOfLines = 0
