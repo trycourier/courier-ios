@@ -12,8 +12,6 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
 
     @IBOutlet weak var courierInbox: CourierInbox!
     
-    var isPaging = false
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 

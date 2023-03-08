@@ -105,6 +105,7 @@ import UIKit
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
+        tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 44
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -147,17 +148,17 @@ import UIKit
     private func reloadMessages(_ newMessages: [InboxMessage]) {
         
         // Check if we need to insert
-        let didInsert = newMessages.count - inboxMessages.count == 1
-        if (newMessages.first?.messageId != inboxMessages.first?.messageId && didInsert) {
-            inboxMessages = newMessages
+        let didInsert = newMessages.count - self.inboxMessages.count == 1
+        if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
+            self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
-            tableView?.insertRows(at: [indexPath], with: .left)
+            self.tableView?.insertRows(at: [indexPath], with: .left)
             return
         }
         
         // Set the messages
-        inboxMessages = newMessages
-        tableView?.reloadData()
+        self.inboxMessages = newMessages
+        self.tableView?.reloadData()
         
     }
     
@@ -177,14 +178,21 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
+        if (indexPath.section == 0) {
             
-            if (indexPath.section == 0) {
+            // Normal cell
+            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
                 let message = inboxMessages[indexPath.row]
                 cell.setMessage(message)
+                return cell
             }
             
-            return cell
+        } else {
+            
+            // Pagination cell
+            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell {
+                return cell
+            }
             
         }
         
@@ -194,27 +202,29 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        let indexToPageAt = inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 4)
+        let indexToPageAt = self.inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 3)
         
         // Only fetch if we are safe to
         if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
-            Courier.shared.fetchNextPageOfMessages()
+//            Courier.shared.fetchNextPageOfMessages()
         }
         
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = indexPath.row
-        let message = inboxMessages[index]
-        delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
+        if (indexPath.section == 0) {
+            let index = indexPath.row
+            let message = self.inboxMessages[index]
+            self.delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
+        }
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        delegate?.didScrollInbox?(scrollView: scrollView)
+        self.delegate?.didScrollInbox?(scrollView: scrollView)
     }
     
     @objc public func scrollToTop(animated: Bool) {
-        tableView?.scrollToRow(
+        self.tableView?.scrollToRow(
             at: IndexPath(row: 0, section: 0),
             at: .top,
             animated: animated
