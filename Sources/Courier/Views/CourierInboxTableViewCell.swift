@@ -171,6 +171,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     private func layoutCell() {
+        titleLabel.sizeToFit()
+        bodyLabel.sizeToFit()
         layoutIfNeeded()
     }
     
