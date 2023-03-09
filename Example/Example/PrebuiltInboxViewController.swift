@@ -48,10 +48,10 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         title = "Prebuilt Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
-//        courierInbox.removeFromSuperview()
+        courierInbox.removeFromSuperview()
         courierInbox.delegate = self
         
-//        addTableView()
+        addTableView()
         
     }
     
@@ -71,7 +71,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         tableView.dataSource = self
         tableView.register(TestCell.self, forCellReuseIdentifier: TestCell.id)
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 44
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
     }
@@ -102,6 +102,12 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         
         return UITableViewCell()
         
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = Item(title: self.titles.randomElement()!, body: self.messages.randomElement()!)
+        items.insert(item, at: 0)
+        tableView.reloadData()
     }
 
 }

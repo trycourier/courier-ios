@@ -170,11 +170,27 @@ internal class TestCell: UITableViewCell {
         
     }
     
+    private func layout() {
+        titleLabel.sizeToFit()
+        timeLabel.sizeToFit()
+        bodyLabel.sizeToFit()
+    }
+    
     internal func setItem(item: Item) {
         indicatorView.isHidden = false
         titleLabel.text = item.title
         timeLabel.text = "999"
         bodyLabel.text = item.body
+        layout()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        indicatorView.isHidden = true
+        titleLabel.text = nil
+        timeLabel.text = nil
+        bodyLabel.text = nil
+        layout()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
