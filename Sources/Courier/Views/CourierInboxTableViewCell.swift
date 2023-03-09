@@ -175,6 +175,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.sizeToFit()
         bodyLabel.sizeToFit()
         layoutIfNeeded()
+        layoutSubviews()
     }
     
     internal func setMessage(_ message: InboxMessage) {
