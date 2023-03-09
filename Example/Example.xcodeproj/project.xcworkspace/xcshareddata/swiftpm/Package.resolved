@@ -24,7 +24,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "feature/inbox-ui",
-        "revision" : "c456333e8f2736f0711a37597831496bbc038021"
+        "revision" : "cefd97b3c6928d234d8b60812ded3eb412382573"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
         "branch" : "master",
-        "revision" : "8c9d5464f68b39cd39fde184ee87a042f23d692f"
+        "revision" : "d21ac642c8ef0ac967ecfdf065d152fc39746fda"
       }
     },
     {

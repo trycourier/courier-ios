@@ -230,9 +230,12 @@ import UIKit
         )
     }
     
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        self.tableView?.reloadData()
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        tableView?.beginUpdates()
+        tableView?.endUpdates()
+        
     }
     
     deinit {
