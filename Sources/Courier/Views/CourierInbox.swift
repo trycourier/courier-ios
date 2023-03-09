@@ -182,7 +182,7 @@ import UIKit
             // Normal cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
                 let message = inboxMessages[indexPath.row]
-                cell.setMessage(message)
+                cell.setMessage(message, tableViewWidth: tableView.bounds.width)
                 return cell
             }
             

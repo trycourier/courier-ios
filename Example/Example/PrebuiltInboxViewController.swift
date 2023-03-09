@@ -48,10 +48,10 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         title = "Prebuilt Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
-//        courierInbox.removeFromSuperview()
+        courierInbox.removeFromSuperview()
         courierInbox.delegate = self
         
-//        addTableView()
+        addTableView()
         
     }
     
@@ -96,7 +96,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: TestCell.id, for: indexPath) as? TestCell {
-            cell.setItem(item: items[indexPath.row])
+            cell.setItem(item: items[indexPath.row], width: tableView.frame.width)
             return cell
         }
         
@@ -105,8 +105,8 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = Item(title: self.titles.randomElement()!, body: self.messages.randomElement()!)
-        items.insert(item, at: 0)
+//        let item = Item(title: self.titles.randomElement()!, body: self.messages.randomElement()!)
+//        items.insert(item, at: 0)
         tableView.reloadData()
     }
 

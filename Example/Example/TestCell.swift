@@ -171,17 +171,33 @@ internal class TestCell: UITableViewCell {
     }
     
     private func layout() {
+        
+//        setNeedsLayout()
+//        layoutIfNeeded()
+//        contentView.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize).height
+        
         titleLabel.sizeToFit()
         timeLabel.sizeToFit()
+//        titleView.layoutIfNeeded()
         bodyLabel.sizeToFit()
+//        stackView.layoutIfNeeded()
+//        layoutIfNeeded()
     }
     
-    internal func setItem(item: Item) {
+    internal func setItem(item: Item, width: CGFloat) {
+        
         indicatorView.isHidden = false
         titleLabel.text = item.title
         timeLabel.text = "999"
         bodyLabel.text = item.body
-        layout()
+        
+        let contentWidth = width - 32
+        titleLabel.preferredMaxLayoutWidth = contentWidth - (80 + 16)
+        timeLabel.preferredMaxLayoutWidth = 80
+        bodyLabel.preferredMaxLayoutWidth = contentWidth
+        
+//        layout()
+        
     }
     
     override func prepareForReuse() {
