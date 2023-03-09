@@ -23,8 +23,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private let buttonView = UIView()
     private let buttonStack = UIStackView()
-    private let button1 = UIButton()
-    private let button2 = UIButton()
+    private let button1 = UIButton(type: .system)
+    private let button2 = UIButton(type: .system)
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -78,19 +78,16 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.backgroundColor = .green
         stackView.axis = .vertical
-        stackView.spacing = CourierInboxTheme.margin / 2
+        stackView.spacing = 4
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
         
-        let horizontal = CourierInboxTheme.margin * 2
-        let vertical = CourierInboxTheme.margin * 1.5
-        
         // Constrain the stack to the content view
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: vertical),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -vertical),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
         ])
         
     }
@@ -114,7 +111,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.backgroundColor = .red
         timeLabel.backgroundColor = .systemPink
         
-        let horizontal = CourierInboxTheme.margin * 2
+        let horizontal: CGFloat = 16
         let timeLabelWidth: CGFloat = 80
         
         NSLayoutConstraint.activate([
@@ -147,90 +144,37 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
-        buttonView.backgroundColor = .systemFill
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        buttonStack.backgroundColor = .systemBlue
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 16
+        buttonStack.distribution = .fill
         
-        NSLayoutConstraint.activate([
-            buttonView.heightAnchor.constraint(equalToConstant: 40),
-        ])
+        button1.backgroundColor = .gray
+        button1.setTitle("Button 1", for: .normal)
 
-//        stackView.addArrangedSubview(buttonView)
-//        stackView.layoutIfNeeded()
-//
-//        buttonStack.backgroundColor = .systemBlue
-//        buttonStack.axis = .horizontal
-//
-//        buttonView.addSubview(buttonStack)
-
-//        NSLayoutConstraint.activate([
-//            buttonStack.topAnchor.constraint(equalTo: buttonView.topAnchor),
-//            buttonStack.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-//            buttonStack.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
-//            buttonStack.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor)
-//        ])
-
-//        buttonView.layoutIfNeeded()
+        button2.backgroundColor = .gray
+        button2.setTitle("Button 2", for: .normal)
         
-//        button1.backgroundColor = .gray
-//        button1.setTitle("Button 1", for: .normal)
-//
-//        button2.backgroundColor = .gray
-//        button2.setTitle("Button 2", for: .normal)
-//
-//        buttonView.addSubview(button1)
-//        buttonView.addSubview(button2)
-//
-//        NSLayoutConstraint.activate([
-//            button1.topAnchor.constraint(equalTo: buttonView.topAnchor),
-//            button1.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-//            button1.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
-//        ])
-//
-//        NSLayoutConstraint.activate([
-//            button2.topAnchor.constraint(equalTo: buttonView.topAnchor),
-//            button2.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-//            button2.leadingAnchor.constraint(equalTo: button1.trailingAnchor),
-//        ])
-//
-//        buttonView.layoutIfNeeded()
+        buttonStack.addArrangedSubview(button1)
+        buttonStack.addArrangedSubview(button2)
         
-        stackView.addArrangedSubview(buttonView)
+        let spacer = UIView()
+        spacer.isUserInteractionEnabled = false
+        spacer.setContentHuggingPriority(.fittingSizeLevel, for: .horizontal)
+        spacer.setContentCompressionResistancePriority(.fittingSizeLevel, for: .horizontal)
         
-        stackView.layoutIfNeeded()
-
-//        buttonStack.addArrangedSubview(button1)
-//        buttonStack.addArrangedSubview(button2)
-//
-//        buttonStack.layoutIfNeeded()
-//
-//        stackView.layoutIfNeeded()
+        buttonStack.addArrangedSubview(spacer)
         
-    }
-    
-    private func resize() {
-        timeLabel.sizeToFit()
-        titleLabel.sizeToFit()
-        bodyLabel.sizeToFit()
-        buttonView.sizeToFit()
-//        button1.sizeToFit()
-//        button2.sizeToFit()
-        layoutIfNeeded()
+        stackView.addArrangedSubview(buttonStack)
+        
     }
     
     internal func setMessage(_ message: InboxMessage) {
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
         timeLabel.text = message.created
-        bodyLabel.text = message.subtitle
-        resize()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        indicatorView.isHidden = true
-        titleLabel.text = nil
-        timeLabel.text = nil
-        bodyLabel.text = nil
-        resize()
+        bodyLabel.text = message.body
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

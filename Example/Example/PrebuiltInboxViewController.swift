@@ -48,8 +48,8 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         title = "Prebuilt Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
-        courierInbox.delegate = self
-        courierInbox.isHidden = true
+        courierInbox.removeFromSuperview()
+//        courierInbox.delegate = self
         
         addTableView()
         

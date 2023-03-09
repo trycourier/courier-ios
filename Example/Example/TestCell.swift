@@ -102,7 +102,7 @@ internal class TestCell: UITableViewCell {
         
         stackView.addArrangedSubview(titleView)
         
-//        stackView.layoutIfNeeded()
+        stackView.layoutIfNeeded()
         
         titleView.addSubview(titleLabel)
         titleView.addSubview(timeLabel)
@@ -124,7 +124,7 @@ internal class TestCell: UITableViewCell {
             timeLabel.widthAnchor.constraint(equalToConstant: timeLabelWidth)
         ])
         
-//        titleView.layoutIfNeeded()
+        titleView.layoutIfNeeded()
         
     }
     
@@ -138,39 +138,13 @@ internal class TestCell: UITableViewCell {
         
         stackView.addArrangedSubview(bodyLabel)
         
-//        stackView.layoutIfNeeded()
+        stackView.layoutIfNeeded()
         
     }
     
     private func addButtons() {
         
-        
-        
-//        buttonView.backgroundColor = .systemFill
-//
-//        stackView.addArrangedSubview(buttonView)
-        
-//        NSLayoutConstraint.activate([
-//            buttonView.heightAnchor.constraint(equalToConstant: 40),
-//        ])
-
-//        stackView.addArrangedSubview(buttonView)
-//        stackView.layoutIfNeeded()
-//
-//        buttonStack.backgroundColor = .systemBlue
-//        buttonStack.axis = .horizontal
-//
-//        buttonView.addSubview(buttonStack)
-
-//        NSLayoutConstraint.activate([
-//            buttonStack.topAnchor.constraint(equalTo: buttonView.topAnchor),
-//            buttonStack.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-//            buttonStack.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
-//            buttonStack.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor)
-//        ])
-
-//        buttonView.layoutIfNeeded()
-        
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.backgroundColor = .systemBlue
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
@@ -193,49 +167,7 @@ internal class TestCell: UITableViewCell {
         buttonStack.addArrangedSubview(spacer)
         
         stackView.addArrangedSubview(buttonStack)
-
-//        buttonView.addSubview(button1)
-////        buttonView.addSubview(button2)
-//
-//        NSLayoutConstraint.activate([
-//            button1.topAnchor.constraint(equalTo: buttonView.topAnchor),
-//            button1.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-//            button1.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
-//            button1.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor),
-//        ])
-
-//        NSLayoutConstraint.activate([
-//            button2.topAnchor.constraint(equalTo: buttonView.topAnchor),
-//            button2.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-//            button2.leadingAnchor.constraint(equalTo: button1.trailingAnchor),
-//        ])
-//
-//        buttonView.layoutIfNeeded()
-//
-//        stackView.addArrangedSubview(buttonView)
-//
-//        stackView.layoutIfNeeded()
-
-//        buttonStack.addArrangedSubview(button1)
-//        buttonStack.addArrangedSubview(button2)
-//
-//        buttonStack.layoutIfNeeded()
-//
-//        stackView.layoutIfNeeded()
         
-    }
-    
-    private func resize() {
-//        timeLabel.sizeToFit()
-//        titleLabel.sizeToFit()
-//        bodyLabel.sizeToFit()
-//        buttonView.sizeToFit()
-//        button1.sizeToFit()
-//        button2.sizeToFit()
-        
-//        buttonView.sizeToFit()
-        
-        layoutIfNeeded()
     }
     
     internal func setItem(item: Item) {
@@ -243,16 +175,6 @@ internal class TestCell: UITableViewCell {
         titleLabel.text = item.title
         timeLabel.text = "999"
         bodyLabel.text = item.body
-        resize()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-//        indicatorView.isHidden = false
-//        titleLabel.text = nil
-//        timeLabel.text = nil
-//        bodyLabel.text = nil
-//        resize()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
