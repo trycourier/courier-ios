@@ -23,6 +23,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private let buttonView = UIView()
     private let buttonStack = UIStackView()
+    private let button1 = UIButton()
+    private let button2 = UIButton()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -145,57 +147,37 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
-//        buttonView.backgroundColor = .systemFill
-//
-//        stackView.addArrangedSubview(buttonView)
-//        stackView.layoutIfNeeded()
-//
-//        buttonStack.backgroundColor = .systemBlue
-//        buttonStack.axis = .horizontal
-//
-//        buttonView.addSubview(buttonStack)
-//
-//        NSLayoutConstraint.activate([
-//            buttonStack.topAnchor.constraint(equalTo: buttonView.topAnchor),
-//            buttonStack.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-//            buttonStack.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
-//            buttonStack.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor)
-//        ])
-//
-//        buttonView.layoutIfNeeded()
-        
-//        let button1 = UIButton()
-//        button1.backgroundColor = .green
-//        button1.setTitle("Button 1", for: .normal)
-        
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
-        
-        stackView.addArrangedSubview(label)
-        
-        label.sizeToFit()
-        
+        buttonView.backgroundColor = .systemFill
+
+        stackView.addArrangedSubview(buttonView)
         stackView.layoutIfNeeded()
+
+        buttonStack.backgroundColor = .systemBlue
+        buttonStack.axis = .horizontal
+
+        buttonView.addSubview(buttonStack)
+
+        NSLayoutConstraint.activate([
+            buttonStack.topAnchor.constraint(equalTo: buttonView.topAnchor),
+            buttonStack.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
+            buttonStack.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
+            buttonStack.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor)
+        ])
+
+        buttonView.layoutIfNeeded()
         
-//        let button2 = UIButton()
-//        button2.backgroundColor = .gray
-//        button2.setTitle("Button 2", for: .normal)
-//
-//        buttonStack.addArrangedSubview(button1)
-//        buttonStack.addArrangedSubview(button2)
-//
-//        NSLayoutConstraint.activate([
-//            button1.heightAnchor.constraint(equalToConstant: 32)
-//        ])
-//
-//        NSLayoutConstraint.activate([
-//            button2.heightAnchor.constraint(equalToConstant: 32)
-//        ])
-//
-//        buttonStack.layoutIfNeeded()
-//
-//        stackView.layoutIfNeeded()
+        button1.backgroundColor = .gray
+        button1.setTitle("Button 1", for: .normal)
+        
+        button2.backgroundColor = .gray
+        button2.setTitle("Button 2", for: .normal)
+
+        buttonStack.addArrangedSubview(button1)
+        buttonStack.addArrangedSubview(button2)
+
+        buttonStack.layoutIfNeeded()
+
+        stackView.layoutIfNeeded()
         
     }
     
@@ -203,6 +185,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.sizeToFit()
         titleLabel.sizeToFit()
         bodyLabel.sizeToFit()
+        button1.sizeToFit()
+        button2.sizeToFit()
         layoutIfNeeded()
     }
     
