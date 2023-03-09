@@ -184,6 +184,15 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         layoutCell()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        indicatorView.isHidden = true
+        titleLabel.text = nil
+        timeLabel.text = nil
+        bodyLabel.text = nil
+        layoutCell()
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
