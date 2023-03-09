@@ -230,6 +230,11 @@ import UIKit
         )
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        self.tableView?.reloadData()
+    }
+    
     deinit {
         self.inboxListener?.remove()
     }
