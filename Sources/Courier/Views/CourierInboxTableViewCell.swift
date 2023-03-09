@@ -148,6 +148,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func addButtons() {
         
         buttonView.backgroundColor = .systemFill
+        
+        NSLayoutConstraint.activate([
+            buttonView.heightAnchor.constraint(equalToConstant: 40),
+        ])
 
 //        stackView.addArrangedSubview(buttonView)
 //        stackView.layoutIfNeeded()
@@ -166,28 +170,28 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 
 //        buttonView.layoutIfNeeded()
         
-        button1.backgroundColor = .gray
-        button1.setTitle("Button 1", for: .normal)
-        
-        button2.backgroundColor = .gray
-        button2.setTitle("Button 2", for: .normal)
-        
-        buttonView.addSubview(button1)
-        buttonView.addSubview(button2)
-        
-        NSLayoutConstraint.activate([
-            button1.topAnchor.constraint(equalTo: buttonView.topAnchor),
-            button1.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-            button1.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
-        ])
-        
-        NSLayoutConstraint.activate([
-            button2.topAnchor.constraint(equalTo: buttonView.topAnchor),
-            button2.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-            button2.leadingAnchor.constraint(equalTo: button1.trailingAnchor),
-        ])
-        
-        buttonView.layoutIfNeeded()
+//        button1.backgroundColor = .gray
+//        button1.setTitle("Button 1", for: .normal)
+//
+//        button2.backgroundColor = .gray
+//        button2.setTitle("Button 2", for: .normal)
+//
+//        buttonView.addSubview(button1)
+//        buttonView.addSubview(button2)
+//
+//        NSLayoutConstraint.activate([
+//            button1.topAnchor.constraint(equalTo: buttonView.topAnchor),
+//            button1.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
+//            button1.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
+//        ])
+//
+//        NSLayoutConstraint.activate([
+//            button2.topAnchor.constraint(equalTo: buttonView.topAnchor),
+//            button2.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
+//            button2.leadingAnchor.constraint(equalTo: button1.trailingAnchor),
+//        ])
+//
+//        buttonView.layoutIfNeeded()
         
         stackView.addArrangedSubview(buttonView)
         
@@ -208,7 +212,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         bodyLabel.sizeToFit()
         button1.sizeToFit()
         button2.sizeToFit()
-        stackView.layoutIfNeeded()
         layoutIfNeeded()
     }
     
