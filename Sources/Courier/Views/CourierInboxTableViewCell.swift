@@ -175,7 +175,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.sizeToFit()
         bodyLabel.sizeToFit()
         layoutIfNeeded()
-        layoutSubviews()
     }
     
     internal func setMessage(_ message: InboxMessage) {
@@ -183,16 +182,16 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.text = message.title
         timeLabel.text = message.created
         bodyLabel.text = message.body
-        layoutCell()
+//        layoutCell()
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        indicatorView.isHidden = true
-        titleLabel.text = nil
-        timeLabel.text = nil
-        bodyLabel.text = nil
-        layoutCell()
+//        indicatorView.isHidden = true
+//        titleLabel.text = nil
+//        timeLabel.text = nil
+//        bodyLabel.text = nil
+//        layoutCell()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
