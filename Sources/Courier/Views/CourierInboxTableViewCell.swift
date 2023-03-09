@@ -172,7 +172,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         tableViewWidth = width
         
-        indicatorView.isHidden = false
+        indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
         timeLabel.text = message.created
         bodyLabel.text = message.subtitle
