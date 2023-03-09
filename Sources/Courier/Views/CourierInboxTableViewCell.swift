@@ -11,6 +11,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
+    private var tableViewWidth: CGFloat = 0
+    
     private let indicatorView = UIView()
     
     private let stackView = UIStackView()
@@ -21,10 +23,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private let bodyLabel = UILabel()
     
-    private let buttonView = UIView()
     private let buttonStack = UIStackView()
     private let button1 = UIButton(type: .system)
     private let button2 = UIButton(type: .system)
+    
+    private let timeLabelWidth: CGFloat = 80
+    private let horizontalMargin: CGFloat = CourierInboxTheme.margin * 2
+    private let verticalMargin: CGFloat = CourierInboxTheme.margin * 1.5
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -84,10 +89,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Constrain the stack to the content view
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: verticalMargin),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -verticalMargin),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontalMargin),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontalMargin),
         ])
         
     }
@@ -111,20 +116,15 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.backgroundColor = .red
         timeLabel.backgroundColor = .systemPink
         
-        let horizontal: CGFloat = 16
-        let timeLabelWidth: CGFloat = 80
-        
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: titleView.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -(timeLabelWidth + horizontal)),
+            titleLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -(timeLabelWidth + horizontalMargin)),
             timeLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
             timeLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
             timeLabel.widthAnchor.constraint(equalToConstant: timeLabelWidth)
         ])
-        
-        titleView.layoutIfNeeded()
         
     }
     
@@ -137,8 +137,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         bodyLabel.backgroundColor = .purple
         
         stackView.addArrangedSubview(bodyLabel)
-        
-        stackView.layoutIfNeeded()
         
     }
     
@@ -170,34 +168,50 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
-    private func layout() {
-        titleLabel.sizeToFit()
-        timeLabel.sizeToFit()
-        bodyLabel.sizeToFit()
-    }
-    
-    internal func setMessage(_ message: InboxMessage, tableViewWidth: CGFloat) {
+    internal func setMessage(_ message: InboxMessage, width: CGFloat) {
         
-        indicatorView.isHidden = message.isRead
+        tableViewWidth = width
+        
+        indicatorView.isHidden = false
         titleLabel.text = message.title
         timeLabel.text = message.created
         bodyLabel.text = message.subtitle
         
-        let contentWidth = tableViewWidth - 32
-        titleLabel.preferredMaxLayoutWidth = contentWidth - (80 + 16)
-        timeLabel.preferredMaxLayoutWidth = 80
-        bodyLabel.preferredMaxLayoutWidth = contentWidth
+        bodyLabel.isHidden = false
+        buttonStack.isHidden = false
         
-//        layout()
+        layout()
+        
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
+
         indicatorView.isHidden = true
         titleLabel.text = nil
         timeLabel.text = nil
         bodyLabel.text = nil
-//        layout()
+        
+        bodyLabel.isHidden = true
+        buttonStack.isHidden = true
+
+        layout()
+
+    }
+    
+    private func layout() {
+        titleView.layoutIfNeeded()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Ensure we can resize
+        let contentWidth = tableViewWidth - (horizontalMargin * 2)
+        titleLabel.preferredMaxLayoutWidth = contentWidth - (timeLabelWidth + horizontalMargin)
+        timeLabel.preferredMaxLayoutWidth = timeLabelWidth
+        bodyLabel.preferredMaxLayoutWidth = contentWidth
+        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

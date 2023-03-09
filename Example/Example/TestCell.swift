@@ -11,6 +11,8 @@ internal class TestCell: UITableViewCell {
     
     internal static let id = "TestCell"
     
+    private var tableViewWidth: CGFloat = 0
+    
     private let indicatorView = UIView()
     
     private let stackView = UIStackView()
@@ -21,7 +23,6 @@ internal class TestCell: UITableViewCell {
     
     private let bodyLabel = UILabel()
     
-    private let buttonView = UIView()
     private let buttonStack = UIStackView()
     private let button1 = UIButton(type: .system)
     private let button2 = UIButton(type: .system)
@@ -124,8 +125,6 @@ internal class TestCell: UITableViewCell {
             timeLabel.widthAnchor.constraint(equalToConstant: timeLabelWidth)
         ])
         
-        titleView.layoutIfNeeded()
-        
     }
     
     private func addBody() {
@@ -137,8 +136,6 @@ internal class TestCell: UITableViewCell {
         bodyLabel.backgroundColor = .purple
         
         stackView.addArrangedSubview(bodyLabel)
-        
-        stackView.layoutIfNeeded()
         
     }
     
@@ -170,43 +167,50 @@ internal class TestCell: UITableViewCell {
         
     }
     
-    private func layout() {
-        
-//        setNeedsLayout()
-//        layoutIfNeeded()
-//        contentView.systemLayoutSizeFitting(UIView.layoutFittingExpandedSize).height
-        
-        titleLabel.sizeToFit()
-        timeLabel.sizeToFit()
-//        titleView.layoutIfNeeded()
-        bodyLabel.sizeToFit()
-//        stackView.layoutIfNeeded()
-//        layoutIfNeeded()
-    }
-    
     internal func setItem(item: Item, width: CGFloat) {
+        
+        tableViewWidth = width
         
         indicatorView.isHidden = false
         titleLabel.text = item.title
         timeLabel.text = "999"
         bodyLabel.text = item.body
         
-        let contentWidth = width - 32
-        titleLabel.preferredMaxLayoutWidth = contentWidth - (80 + 16)
-        timeLabel.preferredMaxLayoutWidth = 80
-        bodyLabel.preferredMaxLayoutWidth = contentWidth
+        bodyLabel.isHidden = false
+        buttonStack.isHidden = false
         
-//        layout()
+        layout()
         
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
+
         indicatorView.isHidden = true
         titleLabel.text = nil
         timeLabel.text = nil
         bodyLabel.text = nil
+        
+        bodyLabel.isHidden = true
+        buttonStack.isHidden = true
+
         layout()
+
+    }
+    
+    private func layout() {
+        titleView.layoutIfNeeded()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Ensure we can resize
+        let contentWidth = tableViewWidth - 32
+        titleLabel.preferredMaxLayoutWidth = contentWidth - (80 + 16)
+        timeLabel.preferredMaxLayoutWidth = 80
+        bodyLabel.preferredMaxLayoutWidth = contentWidth
+        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
