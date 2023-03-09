@@ -182,7 +182,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.text = message.title
         timeLabel.text = message.created
         bodyLabel.text = message.body
-//        layoutCell()
+        layoutCell()
     }
     
     override func prepareForReuse() {
@@ -191,7 +191,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 //        titleLabel.text = nil
 //        timeLabel.text = nil
 //        bodyLabel.text = nil
-//        layoutCell()
+        layoutCell()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
