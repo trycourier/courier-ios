@@ -149,35 +149,54 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonView.backgroundColor = .systemFill
 
-        stackView.addArrangedSubview(buttonView)
-        stackView.layoutIfNeeded()
+//        stackView.addArrangedSubview(buttonView)
+//        stackView.layoutIfNeeded()
+//
+//        buttonStack.backgroundColor = .systemBlue
+//        buttonStack.axis = .horizontal
+//
+//        buttonView.addSubview(buttonStack)
 
-        buttonStack.backgroundColor = .systemBlue
-        buttonStack.axis = .horizontal
+//        NSLayoutConstraint.activate([
+//            buttonStack.topAnchor.constraint(equalTo: buttonView.topAnchor),
+//            buttonStack.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
+//            buttonStack.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
+//            buttonStack.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor)
+//        ])
 
-        buttonView.addSubview(buttonStack)
-
-        NSLayoutConstraint.activate([
-            buttonStack.topAnchor.constraint(equalTo: buttonView.topAnchor),
-            buttonStack.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
-            buttonStack.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
-            buttonStack.trailingAnchor.constraint(equalTo: buttonView.trailingAnchor)
-        ])
-
-        buttonView.layoutIfNeeded()
+//        buttonView.layoutIfNeeded()
         
         button1.backgroundColor = .gray
         button1.setTitle("Button 1", for: .normal)
         
         button2.backgroundColor = .gray
         button2.setTitle("Button 2", for: .normal)
-
-        buttonStack.addArrangedSubview(button1)
-        buttonStack.addArrangedSubview(button2)
-
-        buttonStack.layoutIfNeeded()
-
+        
+        buttonView.addSubview(button1)
+        buttonView.addSubview(button2)
+        
+        NSLayoutConstraint.activate([
+            button1.topAnchor.constraint(equalTo: buttonView.topAnchor),
+            button1.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
+            button1.leadingAnchor.constraint(equalTo: buttonView.leadingAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            button2.topAnchor.constraint(equalTo: buttonView.topAnchor),
+            button2.bottomAnchor.constraint(equalTo: buttonView.bottomAnchor),
+            button2.leadingAnchor.constraint(equalTo: button1.trailingAnchor),
+        ])
+        
+        buttonView.layoutIfNeeded()
+        
         stackView.layoutIfNeeded()
+
+//        buttonStack.addArrangedSubview(button1)
+//        buttonStack.addArrangedSubview(button2)
+//
+//        buttonStack.layoutIfNeeded()
+//
+//        stackView.layoutIfNeeded()
         
     }
     
