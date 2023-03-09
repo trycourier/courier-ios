@@ -232,10 +232,7 @@ import UIKit
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
-        tableView?.beginUpdates()
-        tableView?.endUpdates()
-        
+        tableView?.reloadData()
     }
     
     deinit {

@@ -198,6 +198,14 @@ internal class TestCell: UITableViewCell {
 
     }
     
+    func reload() {
+//        titleLabel.sizeToFit()
+//        timeLabel.sizeToFit()
+//        bodyLabel.sizeToFit()
+//        titleView.layoutIfNeeded()
+//        layoutSubviews()
+    }
+    
     private func layout() {
         titleView.layoutIfNeeded()
     }
