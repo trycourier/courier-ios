@@ -210,8 +210,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.sizeToFit()
         titleLabel.sizeToFit()
         bodyLabel.sizeToFit()
-        button1.sizeToFit()
-        button2.sizeToFit()
+        buttonView.sizeToFit()
+//        button1.sizeToFit()
+//        button2.sizeToFit()
         layoutIfNeeded()
     }
     
