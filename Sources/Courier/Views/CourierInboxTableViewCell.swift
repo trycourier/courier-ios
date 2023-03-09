@@ -174,6 +174,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.addArrangedSubview(label)
         
+        label.sizeToFit()
+        
         stackView.layoutIfNeeded()
         
 //        let button2 = UIButton()
