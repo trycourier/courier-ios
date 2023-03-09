@@ -170,11 +170,16 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
+    private func layoutCell() {
+        layoutIfNeeded()
+    }
+    
     internal func setMessage(_ message: InboxMessage) {
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
         timeLabel.text = message.created
         bodyLabel.text = message.body
+        layoutCell()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
