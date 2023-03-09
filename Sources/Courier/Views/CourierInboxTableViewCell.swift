@@ -49,7 +49,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         addStack()
         addTitle()
         addBody()
-//        addButtons()
+        addButtons()
         
     }
     
@@ -164,11 +164,15 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 //
 //        buttonView.layoutIfNeeded()
         
-        let button1 = UIButton()
-        button1.backgroundColor = .green
-        button1.setTitle("Button 1", for: .normal)
+//        let button1 = UIButton()
+//        button1.backgroundColor = .green
+//        button1.setTitle("Button 1", for: .normal)
         
-        stackView.addArrangedSubview(button1)
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat"
+        
+        stackView.addArrangedSubview(label)
         
         stackView.layoutIfNeeded()
         
