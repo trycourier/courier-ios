@@ -22,6 +22,7 @@
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
 		27A2BA3C29A6A53E001B7A77 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27A2BA3B29A6A53E001B7A77 /* Courier */; };
 		27D4C01C2964886100CE972E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27D4C01B2964886100CE972E /* GoogleService-Info.plist */; };
+		27D5807D29BA3DEC00A644AB /* TestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D5807C29BA3DEC00A644AB /* TestCell.swift */; };
 		27DAF06C29A6AC0E00D45FFB /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27DAF06B29A6AC0E00D45FFB /* Courier */; };
 		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
 		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -69,6 +70,7 @@
 		2789519529268DB70070F501 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27D4C01B2964886100CE972E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		27D5807C29BA3DEC00A644AB /* TestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCell.swift; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		6729FFAE2926F779006A3EC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				2789516F292689470070F501 /* Assets.xcassets */,
 				27895171292689470070F501 /* LaunchScreen.storyboard */,
 				27895174292689470070F501 /* Info.plist */,
+				27D5807C29BA3DEC00A644AB /* TestCell.swift */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27D5807D29BA3DEC00A644AB /* TestCell.swift in Sources */,
 				2789516B292689460070F501 /* NotificationsViewController.swift in Sources */,
 				272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
