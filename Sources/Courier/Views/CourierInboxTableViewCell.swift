@@ -58,6 +58,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         addBody()
         addButtons()
         
+        setTheme()
+        
     }
     
     private func addIndicator() {
