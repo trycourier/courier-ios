@@ -70,9 +70,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         indicatorView.backgroundColor = .orange
         
         NSLayoutConstraint.activate([
-            indicatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1),
-            indicatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1),
-            indicatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 1),
+            indicatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
+            indicatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2),
+            indicatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
             indicatorView.widthAnchor.constraint(equalToConstant: 3)
         ])
         
@@ -139,7 +139,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func addButtons() {
         
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
-        buttonStack.backgroundColor = .systemBlue
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.distribution = .fill

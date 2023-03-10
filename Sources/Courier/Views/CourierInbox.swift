@@ -150,6 +150,10 @@ import UIKit
         
         addSubview(tableView)
         
+        tableView.separatorColor = .red
+        tableView.separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
+//        tableView.separatorStyle = .none
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
