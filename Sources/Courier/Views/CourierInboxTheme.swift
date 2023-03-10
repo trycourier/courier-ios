@@ -11,18 +11,18 @@ import UIKit
     
     // MARK: Styling
     
-    private let font: String
-    private let titleTextColor: String
-    private let timeTextColor: String
-    private let bodyTextColor: String
+    private let font: String?
+    private let titleTextColor: String?
+    private let timeTextColor: String?
+    private let bodyTextColor: String?
     
     // MARK: Init
     
     public init(font: String? = nil, titleTextColor: String? = nil, timeTextColor: String? = nil, bodyTextColor: String? = nil) {
-        self.font = font ?? CourierInboxTheme.defaultLight.font
-        self.titleTextColor = titleTextColor ?? CourierInboxTheme.defaultLight.titleTextColor
-        self.timeTextColor = timeTextColor ?? CourierInboxTheme.defaultLight.timeTextColor
-        self.bodyTextColor = bodyTextColor ?? CourierInboxTheme.defaultLight.bodyTextColor
+        self.font = font
+        self.titleTextColor = titleTextColor
+        self.timeTextColor = timeTextColor
+        self.bodyTextColor = bodyTextColor
     }
     
     // MARK: Defaults
@@ -53,31 +53,36 @@ extension CourierInboxTheme {
     
     internal var titleFontValue: UIFont {
         get {
+            guard let font = self.font else { return UIFont() }
             return UIFont(name: font, size: CourierInboxTheme.titleFontSize) ?? UIFont()
         }
     }
     
     internal var subtitleFontValue: UIFont {
         get {
-            return UIFont(name: font, size: CourierInboxTheme.subtitleFontSize) ?? UIFont()
+            guard let font = self.font else { return UIFont() }
+            return UIFont(name: font, size: CourierInboxTheme.titleFontSize) ?? UIFont()
         }
     }
     
     internal var titleTextColorValue: UIColor {
         get {
-            return UIColor(hex: titleTextColor) ?? .label
+            guard let color = self.titleTextColor else { return .label }
+            return UIColor(hex: color) ?? .label
         }
     }
     
     internal var timeTextColorValue: UIColor {
         get {
-            return UIColor(hex: timeTextColor) ?? .label
+            guard let color = self.timeTextColor else { return .label }
+            return UIColor(hex: color) ?? .label
         }
     }
     
     internal var bodyTextColorValue: UIColor {
         get {
-            return UIColor(hex: bodyTextColor) ?? .label
+            guard let color = self.bodyTextColor else { return .label }
+            return UIColor(hex: color) ?? .label
         }
     }
     
