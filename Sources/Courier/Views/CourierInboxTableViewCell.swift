@@ -201,13 +201,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 
     }
     
-    private func setTheme() {
-        titleLabel.textColor = CourierInbox.theme.textColor
+    private func refresh() {
+        titleView.layoutIfNeeded()
     }
     
-    private func refresh() {
-        setTheme()
-        titleView.layoutIfNeeded()
+    private func setTheme() {
+        titleLabel.textColor = CourierInbox.theme.textColor
     }
     
     override func layoutSubviews() {
@@ -218,6 +217,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.preferredMaxLayoutWidth = contentWidth - (timeLabelWidth + horizontalMargin)
         timeLabel.preferredMaxLayoutWidth = timeLabelWidth
         bodyLabel.preferredMaxLayoutWidth = contentWidth
+        
+        // Reload the theme
+        setTheme()
         
     }
     
