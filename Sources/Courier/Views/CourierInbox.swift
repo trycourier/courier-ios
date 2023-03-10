@@ -295,8 +295,8 @@ import UIKit
 //        tableView.reloadData() // TODO fix screen rotate bug
         
         // Handles setting the theme of the Inbox
-        getMode(previousTraitCollection, onMode: { [weak self] isDarkMode in
-            self?.theme = isDarkMode ? darkTheme : lightTheme
+        getMode(previousTraitCollection, onMode: { isDarkMode in
+            CourierInbox.theme = isDarkMode ? darkTheme : lightTheme
         })
         
     }

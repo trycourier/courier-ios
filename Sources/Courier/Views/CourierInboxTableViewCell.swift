@@ -115,7 +115,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleView.addSubview(timeLabel)
         
         titleLabel.numberOfLines = 0
-        titleLabel.backgroundColor = .red
+        titleLabel.backgroundColor = .yellow
         timeLabel.backgroundColor = .systemPink
         
         NSLayoutConstraint.activate([
