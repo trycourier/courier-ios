@@ -67,8 +67,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(indicatorView)
         
-        indicatorView.backgroundColor = .orange
-        
         NSLayoutConstraint.activate([
             indicatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
             indicatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2),

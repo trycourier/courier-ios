@@ -152,7 +152,7 @@ import UIKit
         
         tableView.separatorColor = .red
         tableView.separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
-//        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLine
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: topAnchor),
