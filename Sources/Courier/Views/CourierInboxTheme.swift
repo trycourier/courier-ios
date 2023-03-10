@@ -11,26 +11,46 @@ import UIKit
     
     // MARK: Styling
     
-    @objc public let textColor: UIColor
+    @objc public let font: String
+    @objc public let textColor: String
     
     // MARK: Init
     
-    public init(textColor: UIColor? = nil) {
-        self.textColor = textColor ?? CourierInboxTheme.defaultDark.textColor
+    public init(font: String? = nil, textColor: String? = nil) {
+        self.font = font ?? CourierInboxTheme.defaultLight.font
+        self.textColor = textColor ?? CourierInboxTheme.defaultLight.textColor
     }
     
     // MARK: Defaults
     
     @objc public static let defaultDark = CourierInboxTheme(
-        textColor: .red
+        font: "Avenir Next Bold",
+        textColor: "#ffe700ff"
     )
     
     @objc public static let defaultLight = CourierInboxTheme(
-        textColor: .blue
+        font: "Charter Black",
+        textColor: "michael"
     )
     
     // MARK: Internal
     
     internal static let margin: CGFloat = 8
+    
+}
+
+extension CourierInboxTheme {
+    
+    internal var fontValue: UIFont {
+        get {
+            return UIFont(name: font, size: 16) ?? UIFont()
+        }
+    }
+    
+    internal var textColorValue: UIColor {
+        get {
+            return UIColor(hex: textColor) ?? .systemRed
+        }
+    }
     
 }
