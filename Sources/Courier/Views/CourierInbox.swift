@@ -315,6 +315,7 @@ import UIKit
         tableView.separatorStyle = CourierInbox.theme.cellStyles.separatorStyle
         tableView.separatorInset = CourierInbox.theme.cellStyles.separatorInsets
         tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
+        tableView.reloadData()
     }
     
     /**
