@@ -49,8 +49,14 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
         let theme = CourierInboxTheme(
-            titleFont: CourierInboxFont(font: UIFont.systemFont(ofSize: 20), color: .red),
-            cellStyles: CourierInboxCellStyles(separatorStyle: .none, selectionStyle: .gray)
+            titleFont: CourierInboxFont(
+                font: UIFont.systemFont(ofSize: 20),
+                color: .red
+            ),
+            cellStyles: CourierInboxCellStyles(
+                separatorStyle: .none,
+                selectionStyle: .gray
+            )
         )
         courierInbox.lightTheme = theme
         courierInbox.darkTheme = theme

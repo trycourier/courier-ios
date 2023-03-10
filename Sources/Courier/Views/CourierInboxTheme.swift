@@ -11,6 +11,7 @@ import UIKit
     
     // MARK: Styling
     
+    internal let newMessageAnimationStyle: UITableView.RowAnimation
     internal let indicatorColor: UIColor
     internal let titleFont: CourierInboxFont
     internal let timeFont: CourierInboxFont
@@ -20,6 +21,7 @@ import UIKit
     // MARK: Init
     
     public init(
+        newMessageAnimationStyle: UITableView.RowAnimation = .left,
         indicatorColor: UIColor = .systemBlue,
         titleFont: CourierInboxFont = CourierInboxFont(
             font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
@@ -35,6 +37,7 @@ import UIKit
         ),
         cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
     ) {
+        self.newMessageAnimationStyle = newMessageAnimationStyle
         self.indicatorColor = indicatorColor
         self.titleFont = titleFont
         self.timeFont = timeFont

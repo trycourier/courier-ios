@@ -21,11 +21,6 @@ import UIKit
      */
     @objc public var delegate: CourierInboxDelegate? = nil
     
-    /**
-     The style used to animate new inbox message changes
-     */
-    @objc public var newMessageAnimationStyle: UITableView.RowAnimation = .left
-    
     // MARK: Theme
     
     @objc public var lightTheme = CourierInboxTheme.defaultLight {
@@ -218,7 +213,7 @@ import UIKit
         if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
             self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: newMessageAnimationStyle)
+            self.tableView.insertRows(at: [indexPath], with: CourierInbox.theme.newMessageAnimationStyle)
             return
         }
         
