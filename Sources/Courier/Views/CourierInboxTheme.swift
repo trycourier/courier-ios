@@ -11,13 +11,29 @@ import UIKit
     
     // MARK: Styling
     
+    internal let indicatorColor: UIColor?
     internal let titleFont: CourierInboxFont?
     internal let timeFont: CourierInboxFont?
     internal let bodyFont: CourierInboxFont?
     
     // MARK: Init
     
-    public init(titleFont: CourierInboxFont? = nil, timeFont: CourierInboxFont? = nil, bodyFont: CourierInboxFont? = nil) {
+    public init(
+        indicatorColor: UIColor = .systemBlue,
+        titleFont: CourierInboxFont = CourierInboxFont(
+            font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+            color: .label
+        ),
+        timeFont: CourierInboxFont = CourierInboxFont(
+            font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+            color: .label
+        ),
+        bodyFont: CourierInboxFont = CourierInboxFont(
+            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+            color: .label
+        )
+    ) {
+        self.indicatorColor = indicatorColor
         self.titleFont = titleFont
         self.timeFont = timeFont
         self.bodyFont = bodyFont
@@ -25,27 +41,9 @@ import UIKit
     
     // MARK: Defaults
     
-    @objc public static let defaultDark = CourierInboxTheme(
-        titleFont: CourierInboxFont(
-            font: UIFont.boldSystemFont(ofSize: CourierInboxTheme.titleFontSize),
-            color: .label
-        ),
-        timeFont: CourierInboxFont(
-            font: UIFont.boldSystemFont(ofSize: CourierInboxTheme.titleFontSize),
-            color: .label
-        ),
-        bodyFont: CourierInboxFont(
-            font: UIFont.systemFont(ofSize: CourierInboxTheme.subtitleFontSize),
-            color: .label
-        )
-    )
+    @objc public static let defaultDark = CourierInboxTheme()
     
-    @objc public static let defaultLight = CourierInboxTheme(
-//        font: "Charter Black",
-//        titleTextColor: "#ffe700ff",
-//        timeTextColor: "#ffe700ff",
-//        bodyTextColor: "#ffe700ff"
-    )
+    @objc public static let defaultLight = CourierInboxTheme()
     
     // MARK: Internal
     

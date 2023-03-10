@@ -204,6 +204,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setTheme() {
         
+        indicatorView.backgroundColor = CourierInbox.theme.indicatorColor
+        
         // Font
         titleLabel.font = CourierInbox.theme.titleFont?.font
         timeLabel.font = CourierInbox.theme.timeFont?.font
