@@ -58,6 +58,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         addBody()
         addButtons()
         
+        setTheme()
+        
     }
     
     private func addIndicator() {
@@ -102,8 +104,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleView.translatesAutoresizingMaskIntoConstraints = false
         titleView.backgroundColor = .purple
         
-        timeLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
         
         stackView.addArrangedSubview(titleView)
         
@@ -165,6 +167,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         buttonStack.addArrangedSubview(spacer)
         
         stackView.addArrangedSubview(buttonStack)
+        
+    }
+    
+    private func setTheme() {
+        
+        titleLabel.textColor = CourierInbox.theme.textColor
         
     }
     

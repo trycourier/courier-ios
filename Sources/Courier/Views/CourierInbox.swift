@@ -31,6 +31,10 @@ import UIKit
     @objc public var lightTheme = CourierInboxTheme.defaultLight
     @objc public var darkTheme = CourierInboxTheme.defaultDark
     
+    // Sets the theme and propagates the change
+    // Defaults to light mode, but will change when the theme is set
+    internal static var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
+    
     // MARK: Datasource
     
     private var inboxListener: CourierInboxListener? = nil
@@ -90,9 +94,7 @@ import UIKit
     
     // MARK: Init
     
-//    init(li) {
-//        super.init(frame: .zero)
-//    }
+    // TODO: Programatic implementation
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -105,13 +107,19 @@ import UIKit
     }
     
     private func setup() {
+        
+        // Refresh light / dark mode
+        traitCollectionDidChange(nil)
 
+        // Add the views
         addTableView()
         addLoadingIndicator()
         addInfoView()
         
+        // Set state
         state = .loading
         
+        // Init the listener
         makeListener()
         
     }
@@ -286,8 +294,9 @@ import UIKit
         
 //        tableView.reloadData() // TODO fix screen rotate bug
         
+        // Handles setting the theme of the Inbox
         getMode(previousTraitCollection, onMode: { [weak self] isDarkMode in
-            print("Is dark mode: \(isDarkMode)")
+            self?.theme = isDarkMode ? darkTheme : lightTheme
         })
         
     }
