@@ -33,12 +33,7 @@ import UIKit
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
             color: .label
         ),
-        cellStyles: CourierInboxCellStyles = CourierInboxCellStyles(
-            separatorStyle: .singleLine,
-            separatorInsets: .init(top: 0, left: 16, bottom: 0, right: 0),
-            separatorColor: nil,
-            selectionStyle: .default
-        )
+        cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
     ) {
         self.indicatorColor = indicatorColor
         self.titleFont = titleFont
@@ -68,7 +63,7 @@ import UIKit
     internal let separatorColor: UIColor?
     internal let selectionStyle: UITableViewCell.SelectionStyle
     
-    public init(separatorStyle: UITableViewCell.SeparatorStyle, separatorInsets: UIEdgeInsets, separatorColor: UIColor?, selectionStyle: UITableViewCell.SelectionStyle) {
+    public init(separatorStyle: UITableViewCell.SeparatorStyle = .singleLine, separatorInsets: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0), separatorColor: UIColor? = nil, selectionStyle: UITableViewCell.SelectionStyle = .default) {
         self.separatorStyle = separatorStyle
         self.separatorInsets = separatorInsets
         self.separatorColor = separatorColor
