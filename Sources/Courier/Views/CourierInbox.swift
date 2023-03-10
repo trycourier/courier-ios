@@ -56,6 +56,12 @@ import UIKit
     private let infoView = InfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
+    public var table: UITableView {
+        get {
+            return tableView
+        }
+    }
+    
     // MARK: State
     
     enum State {
@@ -149,10 +155,6 @@ import UIKit
         tableView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
         
         addSubview(tableView)
-        
-        tableView.separatorColor = .red
-        tableView.separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
-        tableView.separatorStyle = .singleLine
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: topAnchor),
