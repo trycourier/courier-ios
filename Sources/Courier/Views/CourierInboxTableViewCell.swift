@@ -170,12 +170,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
-    private func setTheme() {
-        
-        titleLabel.textColor = CourierInbox.theme.textColor
-        
-    }
-    
     internal func setMessage(_ message: InboxMessage, width: CGFloat) {
         
         tableViewWidth = width
@@ -188,7 +182,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         bodyLabel.isHidden = false
         buttonStack.isHidden = false
         
-        layout()
+        refresh()
         
     }
     
@@ -203,11 +197,16 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         bodyLabel.isHidden = true
         buttonStack.isHidden = true
 
-        layout()
+        refresh()
 
     }
     
-    private func layout() {
+    private func setTheme() {
+        titleLabel.textColor = CourierInbox.theme.textColor
+    }
+    
+    private func refresh() {
+        setTheme()
         titleView.layoutIfNeeded()
     }
     
