@@ -58,7 +58,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         addBody()
         addButtons()
         
-        setTheme()
+        refresh()
         
     }
     
@@ -197,13 +197,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func refresh() {
         
-        // Fixes layout bug with title
-        titleView.layoutIfNeeded()
-        
-    }
-    
-    private func setTheme() {
-        
         // Font
         titleLabel.font = CourierInbox.theme.titleFontValue
         timeLabel.font = CourierInbox.theme.titleFontValue
@@ -213,6 +206,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.textColor = CourierInbox.theme.titleTextColorValue
         timeLabel.textColor = CourierInbox.theme.timeTextColorValue
         bodyLabel.textColor = CourierInbox.theme.bodyTextColorValue
+        
+        // Fixes layout bug with title
+        titleView.layoutIfNeeded()
         
     }
     
@@ -230,7 +226,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         setMaxWidth()
         
         // Reload the theme
-        setTheme()
+        refresh()
         
     }
     
