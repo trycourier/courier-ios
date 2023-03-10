@@ -53,7 +53,7 @@ extension CourierInboxTheme {
     
     internal var titleFontValue: UIFont {
         get {
-            let defaultFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+            let defaultFont = UIFont.boldSystemFont(ofSize: CourierInboxTheme.titleFontSize)
             guard let font = self.font else { return defaultFont }
             return UIFont(name: font, size: CourierInboxTheme.titleFontSize) ?? defaultFont
         }
@@ -61,7 +61,7 @@ extension CourierInboxTheme {
     
     internal var subtitleFontValue: UIFont {
         get {
-            let defaultFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+            let defaultFont = UIFont.systemFont(ofSize: CourierInboxTheme.subtitleFontSize)
             guard let font = self.font else { return defaultFont }
             return UIFont(name: font, size: CourierInboxTheme.subtitleFontSize) ?? defaultFont
         }
