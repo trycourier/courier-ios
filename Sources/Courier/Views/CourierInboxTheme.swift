@@ -11,27 +11,33 @@ import UIKit
     
     // MARK: Styling
     
-    private let font: String?
-    private let titleTextColor: String?
-    private let timeTextColor: String?
-    private let bodyTextColor: String?
+    internal let titleFont: CourierInboxFont?
+    internal let timeFont: CourierInboxFont?
+    internal let bodyFont: CourierInboxFont?
     
     // MARK: Init
     
-    public init(font: String? = nil, titleTextColor: String? = nil, timeTextColor: String? = nil, bodyTextColor: String? = nil) {
-        self.font = font
-        self.titleTextColor = titleTextColor
-        self.timeTextColor = timeTextColor
-        self.bodyTextColor = bodyTextColor
+    public init(titleFont: CourierInboxFont? = nil, timeFont: CourierInboxFont? = nil, bodyFont: CourierInboxFont? = nil) {
+        self.titleFont = titleFont
+        self.timeFont = timeFont
+        self.bodyFont = bodyFont
     }
     
     // MARK: Defaults
     
     @objc public static let defaultDark = CourierInboxTheme(
-        font: "Avenir Next Bold",
-        titleTextColor: "#FFAA77FF",
-        timeTextColor: "#FFFFACAC",
-        bodyTextColor: "#DF2E38"
+        titleFont: CourierInboxFont(
+            font: UIFont.boldSystemFont(ofSize: CourierInboxTheme.titleFontSize),
+            color: .label
+        ),
+        timeFont: CourierInboxFont(
+            font: UIFont.boldSystemFont(ofSize: CourierInboxTheme.titleFontSize),
+            color: .label
+        ),
+        bodyFont: CourierInboxFont(
+            font: UIFont.systemFont(ofSize: CourierInboxTheme.subtitleFontSize),
+            color: .label
+        )
     )
     
     @objc public static let defaultLight = CourierInboxTheme(
@@ -49,43 +55,14 @@ import UIKit
     
 }
 
-extension CourierInboxTheme {
+@objc public class CourierInboxFont: NSObject {
     
-    internal var titleFontValue: UIFont {
-        get {
-            let defaultFont = UIFont.boldSystemFont(ofSize: CourierInboxTheme.titleFontSize)
-            guard let font = self.font else { return defaultFont }
-            return UIFont(name: font, size: CourierInboxTheme.titleFontSize) ?? defaultFont
-        }
-    }
+    internal let font: UIFont?
+    internal let color: UIColor?
     
-    internal var subtitleFontValue: UIFont {
-        get {
-            let defaultFont = UIFont.systemFont(ofSize: CourierInboxTheme.subtitleFontSize)
-            guard let font = self.font else { return defaultFont }
-            return UIFont(name: font, size: CourierInboxTheme.subtitleFontSize) ?? defaultFont
-        }
-    }
-    
-    internal var titleTextColorValue: UIColor {
-        get {
-            guard let color = self.titleTextColor else { return .label }
-            return UIColor(hex: color) ?? .label
-        }
-    }
-    
-    internal var timeTextColorValue: UIColor {
-        get {
-            guard let color = self.timeTextColor else { return .label }
-            return UIColor(hex: color) ?? .label
-        }
-    }
-    
-    internal var bodyTextColorValue: UIColor {
-        get {
-            guard let color = self.bodyTextColor else { return .label }
-            return UIColor(hex: color) ?? .label
-        }
+    public init(font: UIFont? = nil, color: UIColor? = nil) {
+        self.font = font
+        self.color = color
     }
     
 }

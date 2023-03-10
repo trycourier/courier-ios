@@ -28,8 +28,17 @@ import UIKit
     
     // MARK: Theme
     
-    @objc public var lightTheme = CourierInboxTheme.defaultLight
-    @objc public var darkTheme = CourierInboxTheme.defaultDark
+    @objc public var lightTheme = CourierInboxTheme.defaultLight {
+        didSet {
+            traitCollectionDidChange(nil)
+        }
+    }
+    
+    @objc public var darkTheme = CourierInboxTheme.defaultDark {
+        didSet {
+            traitCollectionDidChange(nil)
+        }
+    }
     
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set

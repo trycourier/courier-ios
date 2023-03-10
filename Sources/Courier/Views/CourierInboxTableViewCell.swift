@@ -205,14 +205,14 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func setTheme() {
         
         // Font
-        titleLabel.font = CourierInbox.theme.titleFontValue
-        timeLabel.font = CourierInbox.theme.titleFontValue
-        bodyLabel.font = CourierInbox.theme.subtitleFontValue
+        titleLabel.font = CourierInbox.theme.titleFont?.font
+        timeLabel.font = CourierInbox.theme.timeFont?.font
+        bodyLabel.font = CourierInbox.theme.bodyFont?.font
         
         // Color
-        titleLabel.textColor = CourierInbox.theme.titleTextColorValue
-        timeLabel.textColor = CourierInbox.theme.timeTextColorValue
-        bodyLabel.textColor = CourierInbox.theme.bodyTextColorValue
+        titleLabel.textColor = CourierInbox.theme.titleFont?.color
+        timeLabel.textColor = CourierInbox.theme.timeFont?.color
+        bodyLabel.textColor = CourierInbox.theme.bodyFont?.color
         
     }
     
