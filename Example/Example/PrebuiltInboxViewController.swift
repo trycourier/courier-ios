@@ -51,6 +51,12 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
 //        courierInbox.removeFromSuperview()
         courierInbox.delegate = self
         
+        courierInbox.table.separatorStyle = .singleLine
+        courierInbox.table.separatorInset = .init(top: 0, left: 100, bottom: 0, right: 0)
+        courierInbox.table.separatorColor = .red
+    //        tableView.separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
+    //        tableView.separatorStyle = .singleLine
+        
 //        addTableView()
         
     }

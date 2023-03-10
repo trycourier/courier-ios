@@ -56,12 +56,6 @@ import UIKit
     private let infoView = InfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
-    public var table: UITableView {
-        get {
-            return tableView
-        }
-    }
-    
     // MARK: State
     
     enum State {
@@ -310,16 +304,17 @@ import UIKit
 //        tableView.reloadData() // TODO fix screen rotate bug
         
         // Handles setting the theme of the Inbox
-        getMode(previousTraitCollection, onMode: { isDarkMode in
-            CourierInbox.theme = isDarkMode ? darkTheme : lightTheme
-        })
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            setTheme(isDarkMode: traitCollection.userInterfaceStyle == .dark)
+        }
         
     }
     
-    private func getMode(_ previousTraitCollection: UITraitCollection?, onMode: (_ isDark: Bool) -> Void) {
-        if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            onMode(traitCollection.userInterfaceStyle == .dark)
-        }
+    private func setTheme(isDarkMode: Bool) {
+        CourierInbox.theme = isDarkMode ? darkTheme : lightTheme
+        tableView.separatorStyle = CourierInbox.theme.cellStyles.separatorStyle
+        tableView.separatorInset = CourierInbox.theme.cellStyles.separatorInsets
+        tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
     }
     
     /**

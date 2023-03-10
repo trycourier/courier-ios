@@ -204,14 +204,17 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         indicatorView.backgroundColor = CourierInbox.theme.indicatorColor
         
         // Font
-        titleLabel.font = CourierInbox.theme.titleFont?.font
-        timeLabel.font = CourierInbox.theme.timeFont?.font
-        bodyLabel.font = CourierInbox.theme.bodyFont?.font
+        titleLabel.font = CourierInbox.theme.titleFont.font
+        timeLabel.font = CourierInbox.theme.timeFont.font
+        bodyLabel.font = CourierInbox.theme.bodyFont.font
         
         // Color
-        titleLabel.textColor = CourierInbox.theme.titleFont?.color
-        timeLabel.textColor = CourierInbox.theme.timeFont?.color
-        bodyLabel.textColor = CourierInbox.theme.bodyFont?.color
+        titleLabel.textColor = CourierInbox.theme.titleFont.color
+        timeLabel.textColor = CourierInbox.theme.timeFont.color
+        bodyLabel.textColor = CourierInbox.theme.bodyFont.color
+        
+        // Selection style
+        selectionStyle = CourierInbox.theme.cellStyles.selectionStyle
         
     }
     
