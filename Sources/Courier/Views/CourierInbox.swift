@@ -30,13 +30,13 @@ import UIKit
     
     @objc public var lightTheme = CourierInboxTheme.defaultLight {
         didSet {
-            traitCollectionDidChange(nil)
+            layoutSubviews()
         }
     }
     
     @objc public var darkTheme = CourierInboxTheme.defaultDark {
         didSet {
-            traitCollectionDidChange(nil)
+            layoutSubviews()
         }
     }
     

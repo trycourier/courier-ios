@@ -47,15 +47,10 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
 
         title = "Prebuilt Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Change theme", style: .plain, target: self, action: #selector(theme))
         
 //        courierInbox.removeFromSuperview()
         courierInbox.delegate = self
-        
-        courierInbox.table.separatorStyle = .singleLine
-        courierInbox.table.separatorInset = .init(top: 0, left: 100, bottom: 0, right: 0)
-        courierInbox.table.separatorColor = .red
-    //        tableView.separatorInset = .init(top: 0, left: 0, bottom: 0, right: 0)
-    //        tableView.separatorStyle = .singleLine
         
 //        addTableView()
         
@@ -80,6 +75,17 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
+    }
+    
+    @objc private func theme() {
+        let size: [CGFloat] = [24, 22, 20, 16]
+        let color: [UIColor] = [.red, .systemOrange, .green]
+        let theme = CourierInboxTheme(
+            titleFont: CourierInboxFont(font: UIFont.systemFont(ofSize: size.randomElement()!), color: color.randomElement()!),
+            cellStyles: CourierInboxCellStyles(separatorStyle: .singleLine, separatorInsets: .init(top: 20, left: 20, bottom: 20, right: 20), separatorColor: .systemGreen, selectionStyle: .blue)
+        )
+        courierInbox.lightTheme = theme
+        courierInbox.darkTheme = theme
     }
     
     @objc private func readAll() {
