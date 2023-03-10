@@ -40,19 +40,24 @@ internal struct InboxPageInfo: Codable {
     let hasNextPage: Bool?
 }
 
+@objc public class InboxAction: NSObject, Codable {
+    let startCursor: String?
+    let hasNextPage: Bool?
+}
+
 @objc public class InboxMessage: NSObject, Codable {
     
     public let title: String?
     public let body: String?
     public let preview: String?
     public let created: String?
-//    let actions: String?
+    public let actions: [InboxAction]?
     internal var archived: Bool?
     internal var read: String?
     public let messageId: String
     public let tags: [String]?
     
-    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, tags: [String]?) {
+    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, tags: [String]?, actions: [InboxAction]?) {
         self.title = title
         self.body = body
         self.preview = preview
@@ -61,6 +66,7 @@ internal struct InboxPageInfo: Codable {
         self.read = read
         self.messageId = messageId
         self.tags = tags
+        self.actions = actions
     }
     
     @objc public var subtitle: String? {

@@ -14,8 +14,10 @@ import UIKit
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
-    private var tableView: UITableView? = nil
-    private var stateLabel: UILabel? = nil
+    private let tableView = UITableView()
+    private let infoView = InfoView()
+    
+    private let loadingIndicator = UIActivityIndicatorView()
     
     enum State {
         
@@ -39,21 +41,23 @@ import UIKit
         didSet {
             switch (state) {
             case .loading:
-                self.tableView?.isHidden = true
-                self.stateLabel?.isHidden = false
-                self.stateLabel?.text = "Loading..."
+                self.loadingIndicator.startAnimating()
+                self.tableView.isHidden = true
+                self.infoView.isHidden = true
             case .error:
-                self.tableView?.isHidden = true
-                self.stateLabel?.isHidden = false
-                self.stateLabel?.text = String(describing: state.value() ?? "Error")
+                self.loadingIndicator.stopAnimating()
+                self.tableView.isHidden = true
+                self.infoView.isHidden = false
+//                self.stateLabel.isHidden = false
+//                self.stateLabel.text = String(describing: state.value() ?? "Error")
             case .content:
-                self.tableView?.isHidden = false
-                self.stateLabel?.isHidden = true
-                self.stateLabel?.text = nil
+                self.loadingIndicator.stopAnimating()
+                self.tableView.isHidden = false
+                self.infoView.isHidden = true
             case .empty:
-                self.tableView?.isHidden = true
-                self.stateLabel?.isHidden = false
-                self.stateLabel?.text = "No messages found"
+                self.loadingIndicator.stopAnimating()
+                self.tableView.isHidden = true
+                self.infoView.isHidden = false
             }
         }
     }
@@ -70,37 +74,21 @@ import UIKit
     
     private func setup() {
 
-        // Add the collection view
-        let tableView = makeTableView()
-        addSubview(tableView)
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-        self.tableView = tableView
+        addTableView()
         
-        // Add state label
-        let label = makeLabel()
-        addSubview(label)
-        NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: CourierInboxTheme.margin),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CourierInboxTheme.margin),
-        ])
-        self.stateLabel = label
+        addLoadingIndicator()
         
-        self.state = .loading
+        addInfoView()
         
-        self.makeListener()
+        state = .loading
+        
+        makeListener()
         
     }
     
-    private func makeTableView() -> UITableView {
+    private func addTableView() {
         
         // Create the table view
-        let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
@@ -113,16 +101,42 @@ import UIKit
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
         
-        return tableView
+        addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
         
     }
     
-    private func makeLabel() -> UILabel {
+    private func addLoadingIndicator() {
         
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
         
-        return label
+        addSubview(loadingIndicator)
+        
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+        
+    }
+    
+    private func addInfoView() {
+        
+        infoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(infoView)
+        
+        NSLayoutConstraint.activate([
+            infoView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: CourierInboxTheme.margin),
+            infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CourierInboxTheme.margin),
+        ])
         
     }
     
@@ -151,19 +165,19 @@ import UIKit
         if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
             self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
-            self.tableView?.insertRows(at: [indexPath], with: .left)
+            self.tableView.insertRows(at: [indexPath], with: .left)
             return
         }
         
         // Set the messages
         self.inboxMessages = newMessages
-        self.tableView?.reloadData()
+        self.tableView.reloadData()
         
     }
     
     @objc private func onPullRefresh() {
         Courier.shared.refreshInbox {
-            self.tableView?.refreshControl?.endRefreshing()
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
     
@@ -223,7 +237,7 @@ import UIKit
     }
     
     @objc public func scrollToTop(animated: Bool) {
-        self.tableView?.scrollToRow(
+        self.tableView.scrollToRow(
             at: IndexPath(row: 0, section: 0),
             at: .top,
             animated: animated
@@ -232,11 +246,80 @@ import UIKit
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        tableView?.reloadData()
+        
+        tableView.reloadData() // TODO fix screen rotate bug
+        
     }
     
     deinit {
         self.inboxListener?.remove()
     }
 
+}
+
+private class InfoView: UIView {
+    
+    private let stackView = UIStackView()
+    private let titleLabel = UILabel()
+    private let actionButton = UIButton(type: .roundedRect)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+    
+    private func setup() {
+        
+        backgroundColor = .orange
+        
+        addStack()
+        addTitle()
+        addButton()
+        
+    }
+    
+    private func addStack() {
+        
+        stackView.spacing = CourierInboxTheme.margin * 2
+        stackView.axis = .vertical
+        stackView.backgroundColor = .red
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+        
+    }
+    
+    private func addTitle() {
+        
+        titleLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco"
+        
+        titleLabel.backgroundColor = .gray
+        
+        titleLabel.numberOfLines = 0
+        
+        stackView.addArrangedSubview(titleLabel)
+        
+    }
+    
+    private func addButton() {
+        
+        actionButton.setTitle("Example", for: .normal)
+        
+        stackView.addArrangedSubview(actionButton)
+        
+    }
+    
 }
