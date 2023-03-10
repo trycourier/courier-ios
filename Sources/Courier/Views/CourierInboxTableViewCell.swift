@@ -83,7 +83,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
         
-        stackView.backgroundColor = .green
         stackView.axis = .vertical
         stackView.spacing = 4
         stackView.alignment = .fill
@@ -102,7 +101,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func addTitle() {
         
         titleView.translatesAutoresizingMaskIntoConstraints = false
-        titleView.backgroundColor = .purple
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -115,8 +113,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleView.addSubview(timeLabel)
         
         titleLabel.numberOfLines = 0
-        titleLabel.backgroundColor = .yellow
-        timeLabel.backgroundColor = .systemPink
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
@@ -135,8 +131,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         
         bodyLabel.numberOfLines = 0
-        
-        bodyLabel.backgroundColor = .purple
         
         stackView.addArrangedSubview(bodyLabel)
         
@@ -202,12 +196,24 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     private func refresh() {
+        
+        // Fixes layout bug with title
         titleView.layoutIfNeeded()
+        
     }
     
     private func setTheme() {
-        titleLabel.font = CourierInbox.theme.fontValue
-        titleLabel.textColor = CourierInbox.theme.textColorValue
+        
+        // Font
+        titleLabel.font = CourierInbox.theme.titleFontValue
+        timeLabel.font = CourierInbox.theme.titleFontValue
+        bodyLabel.font = CourierInbox.theme.subtitleFontValue
+        
+        // Color
+        titleLabel.textColor = CourierInbox.theme.titleTextColorValue
+        timeLabel.textColor = CourierInbox.theme.timeTextColorValue
+        bodyLabel.textColor = CourierInbox.theme.bodyTextColorValue
+        
     }
     
     private func setMaxWidth() {

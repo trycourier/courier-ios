@@ -11,45 +11,73 @@ import UIKit
     
     // MARK: Styling
     
-    @objc public let font: String
-    @objc public let textColor: String
+    private let font: String
+    private let titleTextColor: String
+    private let timeTextColor: String
+    private let bodyTextColor: String
     
     // MARK: Init
     
-    public init(font: String? = nil, textColor: String? = nil) {
+    public init(font: String? = nil, titleTextColor: String? = nil, timeTextColor: String? = nil, bodyTextColor: String? = nil) {
         self.font = font ?? CourierInboxTheme.defaultLight.font
-        self.textColor = textColor ?? CourierInboxTheme.defaultLight.textColor
+        self.titleTextColor = titleTextColor ?? CourierInboxTheme.defaultLight.titleTextColor
+        self.timeTextColor = timeTextColor ?? CourierInboxTheme.defaultLight.timeTextColor
+        self.bodyTextColor = bodyTextColor ?? CourierInboxTheme.defaultLight.bodyTextColor
     }
     
     // MARK: Defaults
     
     @objc public static let defaultDark = CourierInboxTheme(
         font: "Avenir Next Bold",
-        textColor: "#ffe700ff"
+        titleTextColor: "#FFAA77FF",
+        timeTextColor: "#FFFFACAC",
+        bodyTextColor: "#DF2E38"
     )
     
     @objc public static let defaultLight = CourierInboxTheme(
-        font: "Charter Black",
-        textColor: "michael"
+//        font: "Charter Black",
+//        titleTextColor: "#ffe700ff",
+//        timeTextColor: "#ffe700ff",
+//        bodyTextColor: "#ffe700ff"
     )
     
     // MARK: Internal
     
     internal static let margin: CGFloat = 8
+    internal static let titleFontSize: CGFloat = 16
+    internal static let subtitleFontSize: CGFloat = 14
     
 }
 
 extension CourierInboxTheme {
     
-    internal var fontValue: UIFont {
+    internal var titleFontValue: UIFont {
         get {
-            return UIFont(name: font, size: 16) ?? UIFont()
+            return UIFont(name: font, size: CourierInboxTheme.titleFontSize) ?? UIFont()
         }
     }
     
-    internal var textColorValue: UIColor {
+    internal var subtitleFontValue: UIFont {
         get {
-            return UIColor(hex: textColor) ?? .systemRed
+            return UIFont(name: font, size: CourierInboxTheme.subtitleFontSize) ?? UIFont()
+        }
+    }
+    
+    internal var titleTextColorValue: UIColor {
+        get {
+            return UIColor(hex: titleTextColor) ?? .label
+        }
+    }
+    
+    internal var timeTextColorValue: UIColor {
+        get {
+            return UIColor(hex: timeTextColor) ?? .label
+        }
+    }
+    
+    internal var bodyTextColorValue: UIColor {
+        get {
+            return UIColor(hex: bodyTextColor) ?? .label
         }
     }
     
