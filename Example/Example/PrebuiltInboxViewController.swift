@@ -82,7 +82,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
         let color: [UIColor] = [.red, .systemOrange, .green]
         let theme = CourierInboxTheme(
             titleFont: CourierInboxFont(font: UIFont.systemFont(ofSize: size.randomElement()!), color: color.randomElement()!),
-            cellStyles: CourierInboxCellStyles(separatorStyle: .singleLine, separatorInsets: .init(top: 20, left: 20, bottom: 20, right: 20), separatorColor: .systemGreen, selectionStyle: .blue)
+            cellStyles: CourierInboxCellStyles(separatorStyle: .singleLine, separatorInsets: .init(top: 20, left: 20, bottom: 20, right: 20), separatorColor: .systemGreen, selectionStyle: .gray)
         )
         courierInbox.lightTheme = theme
         courierInbox.darkTheme = theme

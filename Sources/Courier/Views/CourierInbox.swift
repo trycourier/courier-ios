@@ -319,11 +319,13 @@ import UIKit
         tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
         
         if let paths = tableView.indexPathsForVisibleRows {
-            paths.forEach { path in
-                if let cell = tableView.cellForRow(at: path) as? CourierInboxTableViewCell {
-                    cell.layoutSubviews()
-                }
-            }
+            tableView.reloadRows(at: paths, with: .none)
+//            paths.forEach { path in
+//                tableView.reloadRows(at: <#T##[IndexPath]#>, with: <#T##UITableView.RowAnimation#>)
+//                if let cell = tableView.cellForRow(at: path) as? CourierInboxTableViewCell {
+//                    cell.layoutIfNeeded()
+//                }
+//            }
         }
         
     }
