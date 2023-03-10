@@ -7,17 +7,43 @@
 
 import UIKit
 
+/**
+ A super simple way to implement notifications into your app
+ TODO: How to use the inbox?
+ TODO: how to send messages to it?
+ TODO: Link to docs?
+ */
 @objc open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    public var delegate: CourierInboxDelegate? = nil
+    /**
+     Attached the delegate needed to handle various interactions
+     More info can be found here: ``CourierInboxDelegate``
+     */
+    @objc public var delegate: CourierInboxDelegate? = nil
+    
+    /**
+     The style used to animate new inbox message changes
+     */
+    @objc public var newMessageAnimationStyle: UITableView.RowAnimation = .left
+    
+    // MARK: Theme
+    
+    @objc public var lightTheme = CourierInboxTheme.defaultLight
+    @objc public var darkTheme = CourierInboxTheme.defaultDark
+    
+    // MARK: Datasource
     
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
+    
+    // MARK: Subviews
+    
     private let tableView = UITableView()
     private let infoView = InfoView()
+    private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
-    private let loadingIndicator = UIActivityIndicatorView()
+    // MARK: State
     
     enum State {
         
@@ -61,6 +87,12 @@ import UIKit
             }
         }
     }
+    
+    // MARK: Init
+    
+//    init(li) {
+//        super.init(frame: .zero)
+//    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -75,9 +107,7 @@ import UIKit
     private func setup() {
 
         addTableView()
-        
         addLoadingIndicator()
-        
         addInfoView()
         
         state = .loading
@@ -158,6 +188,12 @@ import UIKit
         
     }
     
+    // MARK: Reload
+    
+    /**
+     Adds the new message at top if needed
+     Otherwise will reload all the messages with the new datasource
+     */
     private func reloadMessages(_ newMessages: [InboxMessage]) {
         
         // Check if we need to insert
@@ -165,7 +201,7 @@ import UIKit
         if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
             self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: .left)
+            self.tableView.insertRows(at: [indexPath], with: newMessageAnimationStyle)
             return
         }
         
@@ -244,13 +280,27 @@ import UIKit
         )
     }
     
+    // TODO: Handle rotation and dark mode
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-        tableView.reloadData() // TODO fix screen rotate bug
+//        tableView.reloadData() // TODO fix screen rotate bug
+        
+        getMode(previousTraitCollection, onMode: { [weak self] isDarkMode in
+            print("Is dark mode: \(isDarkMode)")
+        })
         
     }
     
+    private func getMode(_ previousTraitCollection: UITraitCollection?, onMode: (_ isDark: Bool) -> Void) {
+        if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            onMode(traitCollection.userInterfaceStyle == .dark)
+        }
+    }
+    
+    /**
+     Kills the listener if the view is deallocated
+     */
     deinit {
         self.inboxListener?.remove()
     }
