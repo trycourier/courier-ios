@@ -25,8 +25,8 @@ import UIKit
             color: .label
         ),
         timeFont: CourierInboxFont = CourierInboxFont(
-            font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
-            color: .label
+            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+            color: .placeholderText
         ),
         bodyFont: CourierInboxFont = CourierInboxFont(
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
