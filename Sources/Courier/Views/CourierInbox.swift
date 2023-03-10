@@ -301,8 +301,6 @@ import UIKit
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-//        tableView.reloadData() // TODO fix screen rotate bug
-        
         // Handles setting the theme of the Inbox
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             setTheme(isDarkMode: traitCollection.userInterfaceStyle == .dark)
@@ -318,16 +316,14 @@ import UIKit
         tableView.separatorInset = CourierInbox.theme.cellStyles.separatorInsets
         tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
         
+        reloadCells()
+        
+    }
+    
+    private func reloadCells() {
         if let paths = tableView.indexPathsForVisibleRows {
             tableView.reloadRows(at: paths, with: .none)
-//            paths.forEach { path in
-//                tableView.reloadRows(at: <#T##[IndexPath]#>, with: <#T##UITableView.RowAnimation#>)
-//                if let cell = tableView.cellForRow(at: path) as? CourierInboxTableViewCell {
-//                    cell.layoutIfNeeded()
-//                }
-//            }
         }
-        
     }
     
     /**
