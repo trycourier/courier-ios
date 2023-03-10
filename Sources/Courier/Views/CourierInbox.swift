@@ -311,11 +311,25 @@ import UIKit
     }
     
     private func setTheme(isDarkMode: Bool) {
+        
         CourierInbox.theme = isDarkMode ? darkTheme : lightTheme
+        
         tableView.separatorStyle = CourierInbox.theme.cellStyles.separatorStyle
         tableView.separatorInset = CourierInbox.theme.cellStyles.separatorInsets
         tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
+        
         tableView.reloadData()
+        if let paths = tableView.indexPathsForVisibleRows {
+            paths.forEach { path in
+                if let cell = tableView.cellForRow(at: path) as? CourierInboxTableViewCell {
+                    cell.layoutSubviews()
+                }
+            }
+        }
+//        tableView.beginUpdates()
+//        tableView.reloadData()
+//        tableView.endUpdates()
+        
     }
     
     /**
