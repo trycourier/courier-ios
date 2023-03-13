@@ -153,6 +153,8 @@ import UIKit
     
     private func addCourierBar() {
         
+        courierBar.translatesAutoresizingMaskIntoConstraints = false
+        
         addSubview(courierBar)
         
         NSLayoutConstraint.activate([
