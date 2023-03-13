@@ -297,7 +297,7 @@ import UIKit
         
         // Only fetch if we are safe to
         if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
-            Courier.shared.fetchNextPageOfMessages()
+//            Courier.shared.fetchNextPageOfMessages()
         }
         
     }
