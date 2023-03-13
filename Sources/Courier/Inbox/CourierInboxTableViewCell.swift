@@ -147,11 +147,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonTopSpacer.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.addArrangedSubview(buttonTopSpacer)
-        
         NSLayoutConstraint.activate([
             buttonTopSpacer.heightAnchor.constraint(equalToConstant: CourierInboxTheme.margin)
         ])
+        
+        stackView.addArrangedSubview(buttonTopSpacer)
         
         // Create the button stack
         
@@ -174,6 +174,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         buttonStack.addArrangedSubview(spacer)
         
         stackView.addArrangedSubview(buttonStack)
+        
+        stackView.layoutIfNeeded()
         
     }
     
