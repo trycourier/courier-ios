@@ -147,11 +147,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonTopSpacer.translatesAutoresizingMaskIntoConstraints = false
         
+        stackView.addArrangedSubview(buttonTopSpacer)
+        
         NSLayoutConstraint.activate([
             buttonTopSpacer.heightAnchor.constraint(equalToConstant: CourierInboxTheme.margin)
         ])
-        
-        stackView.addArrangedSubview(buttonTopSpacer)
         
         // Create the button stack
         
@@ -237,6 +237,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.textColor = CourierInbox.theme.titleFont.color
         timeLabel.textColor = CourierInbox.theme.timeFont.color
         bodyLabel.textColor = CourierInbox.theme.bodyFont.color
+        
+        // Buttons
+        button1.setTheme()
+        button2.setTheme()
         
         // Selection style
         selectionStyle = CourierInbox.theme.cellStyles.selectionStyle
