@@ -175,8 +175,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.addArrangedSubview(buttonStack)
         
-        buttonStack.layoutIfNeeded()
-        
     }
     
     internal func setMessage(_ message: InboxMessage, width: CGFloat) {
