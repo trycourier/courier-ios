@@ -69,7 +69,6 @@ internal class CourierInboxInfoView: UIView {
         actionButton.addTarget(self, action: #selector(onActionButtonClick), for: .touchUpInside)
         
         buttonContainer.addSubview(actionButton)
-        buttonContainer.backgroundColor = .blue
         
         NSLayoutConstraint.activate([
             actionButton.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
@@ -92,7 +91,7 @@ internal class CourierInboxInfoView: UIView {
             titleLabel.isHidden = false
             buttonContainer.isHidden = false
             actionButton.setTitle("Retry", for: .normal)
-            titleLabel.text = error.friendlyMessage + "asdkja sdkj asljkd ajlksd jasdkjl alksd jlkasd kjlaskljd jalsdj alskd jalsdj lasjd lkasd "
+            titleLabel.text = error.friendlyMessage
         case .empty:
             titleLabel.isHidden = false
             buttonContainer.isHidden = true
