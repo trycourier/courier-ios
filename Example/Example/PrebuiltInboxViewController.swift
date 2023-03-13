@@ -80,11 +80,11 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
                 font: UIFont(name: "Al Nile Bold", size: 22)!,
                 color: .green
             ),
-            retryButtonFont: CourierInboxFont(
+            actionButtonFont: CourierInboxFont(
                 font: UIFont(name: "Al Nile Bold", size: 13)!,
                 color: .lightGray
             ),
-            retryButtonBackgroundColor: .systemOrange,
+            actionButtonBackgroundColor: .systemOrange,
             cellStyles: CourierInboxCellStyles(
                 separatorStyle: .singleLine,
                 separatorColor: .purple

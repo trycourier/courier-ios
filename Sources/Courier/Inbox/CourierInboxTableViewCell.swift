@@ -147,11 +147,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         buttonStack.spacing = 16
         buttonStack.distribution = .fill
         
-        button1.backgroundColor = .gray
-        button1.setTitle("Button 1", for: .normal)
-
-        button2.backgroundColor = .gray
-        button2.setTitle("Button 2", for: .normal)
+        button1.setTitle("TODO ONE", for: .normal)
+        button2.setTitle("TODO TWO", for: .normal)
         
         buttonStack.addArrangedSubview(button1)
         buttonStack.addArrangedSubview(button2)
