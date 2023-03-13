@@ -151,6 +151,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.addArrangedSubview(buttonTopSpacer)
         
+        buttonTopSpacer.layoutIfNeeded()
+        
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
