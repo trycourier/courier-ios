@@ -112,7 +112,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleView.addSubview(titleLabel)
         titleView.addSubview(timeLabel)
         
+        timeLabel.adjustsFontSizeToFitWidth = true
+        timeLabel.numberOfLines = 1
         timeLabel.textAlignment = .right
+        
         titleLabel.numberOfLines = 0
         
         NSLayoutConstraint.activate([

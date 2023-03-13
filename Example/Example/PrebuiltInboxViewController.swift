@@ -68,7 +68,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
                 color: .red
             ),
             timeFont: CourierInboxFont(
-                font: UIFont.systemFont(ofSize: 10),
+                font: UIFont.systemFont(ofSize: 100),
                 color: .green
             ),
             bodyFont: CourierInboxFont(
