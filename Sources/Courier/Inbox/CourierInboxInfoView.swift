@@ -27,8 +27,6 @@ internal class CourierInboxInfoView: UIView {
     
     private func setup() {
         
-        backgroundColor = .orange
-        
         addStack()
         addTitle()
         addButton()
@@ -39,6 +37,7 @@ internal class CourierInboxInfoView: UIView {
         
         stackView.spacing = CourierInboxTheme.margin * 2
         stackView.axis = .vertical
+        stackView.distribution = .equalCentering
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -83,7 +82,7 @@ internal class CourierInboxInfoView: UIView {
             titleLabel.isHidden = false
             actionButton.isHidden = false
             actionButton.setTitle("Retry", for: .normal)
-            titleLabel.text = error.friendlyMessage
+            titleLabel.text = error.friendlyMessage + "asdkja sdkj asljkd ajlksd jasdkjl alksd jlkasd kjlaskljd jalsdj alskd jalsdj lasjd lkasd "
         case .empty:
             titleLabel.isHidden = false
             actionButton.isHidden = true
