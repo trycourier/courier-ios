@@ -23,6 +23,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private let bodyLabel = UILabel()
     
+    private let buttonTopSpacer = UIView()
     private let buttonStack = UIStackView()
     private let button1 = CourierInboxButton(type: .system)
     private let button2 = CourierInboxButton(type: .system)
@@ -142,13 +143,25 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
+        // Add a top spacer
+        
+        buttonTopSpacer.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            buttonTopSpacer.heightAnchor.constraint(equalToConstant: CourierInboxTheme.margin)
+        ])
+        
+        stackView.addArrangedSubview(buttonTopSpacer)
+        
+        // Create the button stack
+        
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.distribution = .fill
         
-        button1.setTitle("TODO ONE", for: .normal)
-        button2.setTitle("TODO TWO", for: .normal)
+        button1.setTitle("Update me", for: .normal)
+        button2.setTitle("Me too", for: .normal)
         
         buttonStack.addArrangedSubview(button1)
         buttonStack.addArrangedSubview(button2)

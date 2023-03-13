@@ -188,7 +188,7 @@ import UIKit
         // Refresh the inbox
         infoView.onButtonClick = { [weak self] in
             self?.state = .loading
-//            self?.onRefresh()
+            self?.onRefresh()
         }
         
         addSubview(infoView)
