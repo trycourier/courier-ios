@@ -18,8 +18,8 @@ import UIKit
     internal let timeFont: CourierInboxFont
     internal let bodyFont: CourierInboxFont
     internal let detailTitleFont: CourierInboxFont
-    internal let retryButtonFont: CourierInboxFont
-    internal let retryButtonBackgroundColor: UIColor
+    internal let actionButtonFont: CourierInboxFont
+    internal let actionButtonBackgroundColor: UIColor
     internal let cellStyles: CourierInboxCellStyles
     
     // MARK: Init
@@ -44,11 +44,11 @@ import UIKit
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
             color: .label
         ),
-        retryButtonFont: CourierInboxFont = CourierInboxFont(
+        actionButtonFont: CourierInboxFont = CourierInboxFont(
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
             color: .white
         ),
-        retryButtonBackgroundColor: UIColor = .systemBlue,
+        actionButtonBackgroundColor: UIColor = .systemBlue,
         cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
     ) {
         self.messageAnimationStyle = messageAnimationStyle
@@ -58,8 +58,8 @@ import UIKit
         self.timeFont = timeFont
         self.bodyFont = bodyFont
         self.detailTitleFont = detailTitleFont
-        self.retryButtonFont = retryButtonFont
-        self.retryButtonBackgroundColor = retryButtonBackgroundColor
+        self.actionButtonFont = actionButtonFont
+        self.actionButtonBackgroundColor = actionButtonBackgroundColor
         self.cellStyles = cellStyles
     }
     
