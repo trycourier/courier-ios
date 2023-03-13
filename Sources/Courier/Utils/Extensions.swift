@@ -66,3 +66,45 @@ extension Courier {
     }
     
 }
+
+extension Date {
+    
+    internal func timeSince() -> String {
+        
+        var formattedString = String()
+        let now = Date()
+        let secondsAgo = Int(now.timeIntervalSince(self))
+        
+        let minute = 60
+        let hour = 60 * minute
+        let day = 24 * hour
+        let week = 7 * day
+        let month = 4 * week
+        let year = 12 * month
+        
+        let secondString = "s"
+        let minuteString = "m"
+        let hourString = "h"
+        let dayString = "d"
+        let weekString = "w"
+        let yearString = "y"
+        
+        if (secondsAgo < minute) {
+            formattedString = "\(secondsAgo)\(secondString)"
+        } else if (secondsAgo < hour) {
+            formattedString = "\(secondsAgo / minute)\(minuteString)"
+        } else if (secondsAgo < day) {
+            formattedString = "\(secondsAgo / hour)\(hourString)"
+        } else if (secondsAgo < week) {
+            formattedString = "\(secondsAgo / day)\(dayString)"
+        } else if (secondsAgo < year) {
+            formattedString = "\(secondsAgo / week)\(weekString)"
+        } else {
+            formattedString = "\(secondsAgo / year)\(yearString)"
+        }
+        
+        return formattedString
+        
+    }
+    
+}

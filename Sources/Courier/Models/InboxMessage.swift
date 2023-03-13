@@ -65,6 +65,21 @@ import Foundation
         }
     }
     
+    @objc public var time: String {
+        get {
+         
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+            
+            guard let createdAt = created, let date = dateFormatter.date(from: createdAt) else {
+                return "now"
+            }
+            
+            return date.timeSince()
+            
+        }
+    }
+    
 }
 
 extension InboxMessage {
