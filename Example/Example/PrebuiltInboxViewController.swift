@@ -73,9 +73,18 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
                 color: .green
             ),
             bodyFont: CourierInboxFont(
-                font: UIFont(name: "Arial", size: 14)!,
+                font: UIFont(name: "Al Nile Bold", size: 14)!,
                 color: .blue
             ),
+            detailTitleFont: CourierInboxFont(
+                font: UIFont(name: "Al Nile Bold", size: 22)!,
+                color: .green
+            ),
+            retryButtonFont: CourierInboxFont(
+                font: UIFont(name: "Al Nile Bold", size: 13)!,
+                color: .lightGray
+            ),
+            retryButtonBackgroundColor: .systemOrange,
             cellStyles: CourierInboxCellStyles(
                 separatorStyle: .singleLine,
                 separatorColor: .purple

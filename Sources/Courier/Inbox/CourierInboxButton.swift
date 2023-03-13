@@ -23,9 +23,9 @@ internal class CourierInboxButton: UIButton {
     
     private func setup() {
         
-        if #available(iOS 15.0, *) {
-            configuration = .filled()
-        }
+//        if #available(iOS 15.0, *) {
+//            configuration = .filled()
+//        }
         
     }
     
@@ -33,12 +33,31 @@ internal class CourierInboxButton: UIButton {
         
         titleLabel?.font = theme.retryButtonFont.font
         titleLabel?.textColor = theme.retryButtonFont.color
+        backgroundColor = theme.retryButtonBackgroundColor
         
-        if #available(iOS 15.0, *) {
-            configuration?.baseBackgroundColor = theme.retryButtonBackgroundColor
-        } else {
-            backgroundColor = theme.retryButtonBackgroundColor
-        }
+//        if #available(iOS 15.0, *) {
+//
+//            var style = UIButton.Configuration.filled()
+//            var background = UIButton.Configuration.filled().background
+//            style.background = theme.retryButtonBackgroundColor
+//
+//            return style
+//
+//            let attributedString = AttributedString((String(describing: title)))
+//            attributedString.font = theme.retryButtonFont.font
+//            attributedString.foregroundColor = theme.retryButtonFont.color
+//
+//            let config = configuration.updated(for: self)
+//            let config = config.background.backgroundColor
+//            print(b2)
+//
+//            configuration?.attributedTitle = attributedString
+//            configuration?.baseBackgroundColor = theme.retryButtonBackgroundColor
+//        } else {
+//            titleLabel?.font = theme.retryButtonFont.font
+//            titleLabel?.textColor = theme.retryButtonFont.color
+//            backgroundColor = theme.retryButtonBackgroundColor
+//        }
         
     }
 
