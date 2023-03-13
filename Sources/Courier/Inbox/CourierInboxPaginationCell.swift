@@ -46,6 +46,7 @@ internal class CourierInboxPaginationCell: UITableViewCell {
         ])
         
         loadingIndicator.startAnimating()
+        setTheme()
         
         // Remove cell styles
         selectionStyle = .none
@@ -56,6 +57,12 @@ internal class CourierInboxPaginationCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         loadingIndicator.startAnimating()
+    }
+    
+    private func setTheme() {
+        
+        loadingIndicator.color = CourierInbox.theme.loadingIndicatorColor
+        
     }
     
 }

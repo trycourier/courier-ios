@@ -9,7 +9,7 @@ import UIKit
 
 internal class CourierInboxButton: UIButton {
     
-    internal func setTheme(_ theme: CourierInboxTheme) {
+    internal func setTheme() {
         
         if #available(iOS 15.0, *) {
             
@@ -17,20 +17,20 @@ internal class CourierInboxButton: UIButton {
             
             config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
                 var outgoing = incoming
-                outgoing.font = theme.retryButtonFont.font
+                outgoing.font = CourierInbox.theme.retryButtonFont.font
                 return outgoing
             }
             
-            config.baseForegroundColor = theme.retryButtonFont.color
-            config.baseBackgroundColor = theme.retryButtonBackgroundColor
+            config.baseForegroundColor = CourierInbox.theme.retryButtonFont.color
+            config.baseBackgroundColor = CourierInbox.theme.retryButtonBackgroundColor
             
             configuration = config
             
         } else {
             
-            titleLabel?.font = theme.retryButtonFont.font
-            titleLabel?.textColor = theme.retryButtonFont.color
-            backgroundColor = theme.retryButtonBackgroundColor
+            titleLabel?.font = CourierInbox.theme.retryButtonFont.font
+            titleLabel?.textColor = CourierInbox.theme.retryButtonFont.color
+            backgroundColor = CourierInbox.theme.retryButtonBackgroundColor
             
         }
         

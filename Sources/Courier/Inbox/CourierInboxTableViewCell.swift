@@ -24,8 +24,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let bodyLabel = UILabel()
     
     private let buttonStack = UIStackView()
-    private let button1 = UIButton(type: .system)
-    private let button2 = UIButton(type: .system)
+    private let button1 = CourierInboxButton(type: .system)
+    private let button2 = CourierInboxButton(type: .system)
     
     private let timeLabelWidth: CGFloat = 80
     private let horizontalMargin: CGFloat = CourierInboxTheme.margin * 2

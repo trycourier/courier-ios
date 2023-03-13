@@ -332,9 +332,9 @@ import UIKit
         tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
         
         tableView.refreshControl?.tintColor = CourierInbox.theme.loadingIndicatorColor
-        loadingIndicator.tintColor = CourierInbox.theme.loadingIndicatorColor
+        loadingIndicator.color = CourierInbox.theme.loadingIndicatorColor
         
-        infoView.setTheme(CourierInbox.theme)
+        infoView.setTheme()
         
         reloadCells()
         
