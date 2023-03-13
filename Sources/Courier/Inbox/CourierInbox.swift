@@ -73,6 +73,8 @@ import UIKit
     
     private var state: State = .loading {
         didSet {
+            
+            // Update UI
             switch (state) {
             case .loading:
                 self.loadingIndicator.startAnimating()
@@ -93,6 +95,12 @@ import UIKit
                 self.infoView.isHidden = false
                 self.infoView.updateView(state)
             }
+            
+            // Scroll to top if needed
+            if ("\(oldValue)" != "\(state)") {
+                self.scrollToTop(animated: false)
+            }
+            
         }
     }
     
