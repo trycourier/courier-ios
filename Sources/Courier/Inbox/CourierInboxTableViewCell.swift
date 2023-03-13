@@ -208,6 +208,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         buttonStack.isHidden = true
 
         refresh()
+        
+        button1.setTheme()
+        button2.setTheme()
 
     }
     
