@@ -93,6 +93,7 @@ internal class CoreInbox {
     internal func start(refresh: Bool = false) async throws {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+            self.notifyError(CourierError.inboxUserNotFound)
             return
         }
         
@@ -197,7 +198,7 @@ internal class CoreInbox {
     @discardableResult internal func fetchNextPageOfMessages() async throws -> [InboxMessage] {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let data = self.inboxData else {
-            return []
+            throw CourierError.inboxUserNotFound
         }
         
         let cursor = data.messages?.pageInfo?.startCursor
@@ -248,7 +249,7 @@ internal class CoreInbox {
     internal func readMessage(messageId: String) async throws {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            return
+            throw CourierError.inboxUserNotFound
         }
         
         // Mark the message as read instantly
@@ -292,7 +293,7 @@ internal class CoreInbox {
     internal func unreadMessage(messageId: String) async throws {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            return
+            throw CourierError.inboxUserNotFound
         }
         
         // Mark the message as read instantly
@@ -336,7 +337,7 @@ internal class CoreInbox {
     internal func readAllMessages() async throws {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            return
+            throw CourierError.inboxUserNotFound
         }
         
         // Save last values

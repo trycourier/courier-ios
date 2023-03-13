@@ -61,8 +61,6 @@ internal class TestCell: UITableViewCell {
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(indicatorView)
         
-        indicatorView.backgroundColor = .orange
-        
         NSLayoutConstraint.activate([
             indicatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1),
             indicatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1),
