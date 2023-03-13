@@ -143,8 +143,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
-        // Adds 12px above the button stack
-        stackView.setCustomSpacing(CourierInboxTheme.margin * 1.5, after: bodyLabel)
+        buttonTopSpacer.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            buttonTopSpacer.heightAnchor.constraint(equalToConstant: CourierInboxTheme.margin)
+        ])
+        
+        stackView.addArrangedSubview(buttonTopSpacer)
         
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.axis = .horizontal
