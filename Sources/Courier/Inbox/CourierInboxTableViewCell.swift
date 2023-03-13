@@ -33,6 +33,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let verticalMargin: CGFloat = CourierInboxTheme.margin * 1.5
     
     private var inboxMessage: InboxMessage? = nil
+    private var onButtonClick: ((InboxMessage) -> Void)? = nil
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -165,6 +166,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         button1.setTitle("Update me", for: .normal)
         button2.setTitle("Me too", for: .normal)
         
+        button1.addTarget(self, action: #selector(button1Click), for: .touchUpInside)
+        button2.addTarget(self, action: #selector(button2Click), for: .touchUpInside)
+        
         buttonStack.addArrangedSubview(button1)
         buttonStack.addArrangedSubview(button2)
         
@@ -179,7 +183,19 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
-    internal func setMessage(_ message: InboxMessage, width: CGFloat) {
+    @objc private func button1Click() {
+        if let message = inboxMessage {
+            self.onButtonClick?(message)
+        }
+    }
+    
+    @objc private func button2Click() {
+        if let message = inboxMessage {
+            self.onButtonClick?(message)
+        }
+    }
+    
+    internal func setMessage(_ message: InboxMessage, width: CGFloat, onButtonClick: @escaping (InboxMessage) -> Void) {
         
         inboxMessage = message
         tableViewWidth = width
@@ -191,6 +207,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         bodyLabel.isHidden = false
         buttonStack.isHidden = false
+        
+        // TODO: Fix me
+        self.onButtonClick = onButtonClick
         
         refresh()
         

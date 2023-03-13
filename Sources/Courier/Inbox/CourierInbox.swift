@@ -262,8 +262,11 @@ import UIKit
             
             // Normal cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
-                let message = inboxMessages[indexPath.row]
-                cell.setMessage(message, width: tableView.bounds.width)
+                let index = indexPath.row
+                let message = inboxMessages[index]
+                cell.setMessage(message, width: tableView.bounds.width, onButtonClick: { message in
+                    self.delegate?.didClickButtonForInboxMessage?(message: message, index: index)
+                })
                 return cell
             }
             

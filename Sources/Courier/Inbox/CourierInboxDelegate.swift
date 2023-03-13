@@ -18,6 +18,11 @@ import UIKit
     @objc optional func didClickInboxMessageAtIndex(message: InboxMessage, index: Int)
     
     /**
+     Called when the user clicks on an ``InboxMessage``
+     */
+    @objc optional func didClickButtonForInboxMessage(message: InboxMessage, index: Int)
+    
+    /**
      Called when the user scrolls the CourierInbox
      Returns the entire ScrollView so you can gain access to any other needed scroll events
      */
