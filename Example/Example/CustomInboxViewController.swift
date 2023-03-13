@@ -31,7 +31,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
         collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+        collectionView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
 
         collectionView.delegate = self
         collectionView.dataSource = self

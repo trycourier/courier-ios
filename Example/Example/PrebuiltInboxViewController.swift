@@ -52,7 +52,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
 //        courierInbox.removeFromSuperview()
         courierInbox.delegate = self
         
-        setTheme()
+//        setTheme()
         
 //        addTableView()
         
@@ -68,7 +68,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
                 color: .red
             ),
             timeFont: CourierInboxFont(
-                font: UIFont.systemFont(ofSize: 100),
+                font: UIFont.systemFont(ofSize: 30),
                 color: .green
             ),
             bodyFont: CourierInboxFont(

@@ -16,4 +16,5 @@ public enum CourierError: Error {
     case inboxWebSocketFail
     case inboxWebSocketDisconnect
     case inboxUserNotFound
+    case inboxUnknownError
 }

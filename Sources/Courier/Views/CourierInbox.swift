@@ -60,7 +60,7 @@ import UIKit
         case content
         case empty
         
-        func value() -> Any? {
+        func error() -> Error? {
             switch self {
             case .error(let value):
                 return value
@@ -82,8 +82,7 @@ import UIKit
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
                 self.infoView.isHidden = false
-//                self.stateLabel.isHidden = false
-//                self.stateLabel.text = String(describing: state.value() ?? "Error")
+                self.infoView.updateView(state)
             case .content:
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = false
@@ -92,6 +91,7 @@ import UIKit
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
                 self.infoView.isHidden = false
+                self.infoView.updateView(state)
             }
         }
     }
@@ -99,8 +99,6 @@ import UIKit
     private lazy var timer = Timer()
     
     // MARK: Init
-    
-    // TODO: Programatic implementation
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -156,7 +154,7 @@ import UIKit
 
         // Add the refresh control
         tableView.refreshControl = UIRefreshControl()
-        tableView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+        tableView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
         
         addSubview(tableView)
         
@@ -186,6 +184,12 @@ import UIKit
     private func addInfoView() {
         
         infoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Refresh the inbox
+        infoView.onButtonClick = { [weak self] in
+            self?.state = .loading
+            self?.onRefresh()
+        }
         
         addSubview(infoView)
         
@@ -228,7 +232,7 @@ import UIKit
         if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
             self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: CourierInbox.theme.newMessageAnimationStyle)
+            self.tableView.insertRows(at: [indexPath], with: CourierInbox.theme.messageAnimationStyle)
             return
         }
         
@@ -238,7 +242,7 @@ import UIKit
         
     }
     
-    @objc private func onPullRefresh() {
+    @objc private func onRefresh() {
         Courier.shared.refreshInbox {
             self.tableView.refreshControl?.endRefreshing()
         }
@@ -326,6 +330,9 @@ import UIKit
         tableView.separatorInset = CourierInbox.theme.cellStyles.separatorInsets
         tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
         
+        tableView.refreshControl?.tintColor = CourierInbox.theme.loadingIndicatorColor
+        loadingIndicator.tintColor = CourierInbox.theme.loadingIndicatorColor
+        
         reloadCells()
         
     }
@@ -351,6 +358,8 @@ private class InfoView: UIView {
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let actionButton = UIButton(type: .roundedRect)
+    
+    internal var onButtonClick: (() -> Void)? = nil
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -393,10 +402,9 @@ private class InfoView: UIView {
     
     private func addTitle() {
         
-        titleLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco"
-        
-        titleLabel.backgroundColor = .gray
-        
+        titleLabel.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
+        titleLabel.textColor = .label
+        titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 0
         
         stackView.addArrangedSubview(titleLabel)
@@ -405,9 +413,32 @@ private class InfoView: UIView {
     
     private func addButton() {
         
-        actionButton.setTitle("Example", for: .normal)
+        actionButton.addTarget(self, action: #selector(onActionButtonClick), for: .touchUpInside)
         
         stackView.addArrangedSubview(actionButton)
+        
+    }
+    
+    @objc private func onActionButtonClick() {
+        onButtonClick?()
+    }
+    
+    internal func updateView(_ state: CourierInbox.State) {
+        
+        switch (state) {
+        case .error(error: let error):
+            titleLabel.isHidden = false
+            actionButton.isHidden = false
+            titleLabel.text = String(describing: error)
+            actionButton.setTitle("Retry", for: .normal)
+        case .empty:
+            titleLabel.isHidden = false
+            actionButton.isHidden = true
+            titleLabel.text = "No messages found"
+        default:
+            titleLabel.isHidden = true
+            actionButton.isHidden = true
+        }
         
     }
     
