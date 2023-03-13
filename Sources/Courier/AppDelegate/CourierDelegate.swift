@@ -81,7 +81,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
                 try await Courier.shared.setAPNSToken(deviceToken)
                 
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
             }
         }
     }
@@ -96,7 +96,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
             do {
                 try await Courier.shared.setFCMToken(token)
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
             }
         }
 

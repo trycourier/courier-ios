@@ -53,7 +53,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                         let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
                         self.onMessageReceived?(newMessage)
                     } catch {
-                        Courier.log(String(describing: error))
+                        Courier.log(error.friendlyMessage)
                         self.onMessageReceivedError?(CourierError.inboxWebSocketError)
                     }
                 case .data(_):
@@ -65,7 +65,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 self.handleMessageReceived()
                 
             case .failure(let error):
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 self.onMessageReceivedError?(CourierError.inboxWebSocketDisconnect)
             }
             
@@ -163,7 +163,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                     let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
                     continuation.resume(returning: res.data)
                 } catch {
-                    Courier.log(String(describing: error))
+                    Courier.log(error.friendlyMessage)
                     continuation.resume(throwing: CourierError.requestError)
                 }
                 
@@ -216,7 +216,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                     let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
                     continuation.resume(returning: res.data.count ?? 0)
                 } catch {
-                    Courier.log(String(describing: error))
+                    Courier.log(error.friendlyMessage)
                     continuation.resume(throwing: CourierError.requestError)
                 }
                 

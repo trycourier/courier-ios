@@ -18,3 +18,45 @@ public enum CourierError: Error {
     case inboxUserNotFound
     case inboxUnknownError
 }
+
+extension CourierError {
+    
+    internal var friendlyMessage: String {
+        get {
+            switch (self) {
+            case .noAccessTokenFound:
+                return "No user found"
+            case .noUserIdFound:
+                return "No user found"
+            case .requestError:
+                return "An error occurred. Please try again."
+            case .sendTestMessageFail:
+                return "An error occurred sending a test message."
+            case .inboxWebSocketError:
+                return "An error occurred. Please try again."
+            case .inboxWebSocketFail:
+                return "An error occurred. Please try again."
+            case .inboxWebSocketDisconnect:
+                return "An error occurred. Please try again."
+            case .inboxUserNotFound:
+                return "No user found"
+            case .inboxUnknownError:
+                return "Unknown Courier Inbox error occurred. Please try again."
+            }
+        }
+    }
+    
+}
+
+extension Error {
+    
+    internal var friendlyMessage: String {
+        get {
+            guard let courierError = self as? CourierError else {
+                return String(describing: self)
+            }
+            return courierError.friendlyMessage
+        }
+    }
+    
+}

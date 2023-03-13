@@ -34,7 +34,7 @@ internal class CoreAuth {
             
         } catch {
             
-            Courier.log(String(describing: error))
+            Courier.log(error.friendlyMessage)
             
             try await signOut(push: push, inbox: inbox)
             

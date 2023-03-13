@@ -48,7 +48,7 @@ import UIKit
     // MARK: Subviews
     
     private let tableView = UITableView()
-    private let infoView = InfoView()
+    private let infoView = CourierInboxInfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
     // MARK: State
@@ -56,7 +56,7 @@ import UIKit
     enum State {
         
         case loading
-        case error(error: Error)
+        case error(_ error: Error)
         case content
         case empty
         
@@ -208,7 +208,7 @@ import UIKit
                 self?.state = .loading
             },
             onError: { [weak self] error in
-                self?.state = .error(error: error)
+                self?.state = .error(error)
             },
             onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
                 self?.state = newMessages.isEmpty ? .empty : .content
@@ -351,95 +351,4 @@ import UIKit
         self.inboxListener?.remove()
     }
 
-}
-
-private class InfoView: UIView {
-    
-    private let stackView = UIStackView()
-    private let titleLabel = UILabel()
-    private let actionButton = UIButton(type: .roundedRect)
-    
-    internal var onButtonClick: (() -> Void)? = nil
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    public required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setup()
-    }
-    
-    private func setup() {
-        
-        backgroundColor = .orange
-        
-        addStack()
-        addTitle()
-        addButton()
-        
-    }
-    
-    private func addStack() {
-        
-        stackView.spacing = CourierInboxTheme.margin * 2
-        stackView.axis = .vertical
-        stackView.backgroundColor = .red
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
-        
-    }
-    
-    private func addTitle() {
-        
-        titleLabel.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
-        titleLabel.textColor = .label
-        titleLabel.textAlignment = .center
-        titleLabel.numberOfLines = 0
-        
-        stackView.addArrangedSubview(titleLabel)
-        
-    }
-    
-    private func addButton() {
-        
-        actionButton.addTarget(self, action: #selector(onActionButtonClick), for: .touchUpInside)
-        
-        stackView.addArrangedSubview(actionButton)
-        
-    }
-    
-    @objc private func onActionButtonClick() {
-        onButtonClick?()
-    }
-    
-    internal func updateView(_ state: CourierInbox.State) {
-        
-        switch (state) {
-        case .error(error: let error):
-            titleLabel.isHidden = false
-            actionButton.isHidden = false
-            titleLabel.text = String(describing: error)
-            actionButton.setTitle("Retry", for: .normal)
-        case .empty:
-            titleLabel.isHidden = false
-            actionButton.isHidden = true
-            titleLabel.text = "No messages found"
-        default:
-            titleLabel.isHidden = true
-            actionButton.isHidden = true
-        }
-        
-    }
-    
 }

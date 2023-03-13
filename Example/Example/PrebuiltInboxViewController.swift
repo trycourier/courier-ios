@@ -52,7 +52,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
 //        courierInbox.removeFromSuperview()
         courierInbox.delegate = self
         
-//        setTheme()
+        setTheme()
         
 //        addTableView()
         
@@ -61,8 +61,9 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate, UITab
     @objc private func setTheme() {
         
         let theme = CourierInboxTheme(
-            newMessageAnimationStyle: .none,
-            indicatorColor: .systemPink,
+            messageAnimationStyle: .right,
+            unreadIndicatorBarColor: .systemPink,
+            loadingIndicatorColor: .systemGreen,
             titleFont: CourierInboxFont(
                 font: UIFont.systemFont(ofSize: 20),
                 color: .red

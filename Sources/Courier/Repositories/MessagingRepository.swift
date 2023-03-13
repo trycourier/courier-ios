@@ -48,7 +48,7 @@ internal class MessagingRepository: Repository {
                     Courier.log("https://app.courier.com/logs/messages?message=\(res.requestId)")
                     continuation.resume(returning: res.requestId)
                 } catch {
-                    Courier.log(String(describing: error))
+                    Courier.log(error.friendlyMessage)
                     continuation.resume(throwing: CourierError.requestError)
                 }
                 

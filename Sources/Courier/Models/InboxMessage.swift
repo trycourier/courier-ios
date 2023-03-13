@@ -94,7 +94,7 @@ extension InboxMessage {
                 try await Courier.shared.inbox.readMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 onFailure?(error)
             }
         }
@@ -110,7 +110,7 @@ extension InboxMessage {
                 try await Courier.shared.inbox.unreadMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 onFailure?(error)
             }
         }

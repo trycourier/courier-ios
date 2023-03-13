@@ -563,7 +563,7 @@ extension Courier {
                     onSuccess?(newMessages)
                 }
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 Utils.runOnMainThread {
                     onFailure?(error)
                 }
@@ -596,7 +596,7 @@ extension Courier {
                 try await inbox.readMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 onFailure?(error)
             }
         }
@@ -615,7 +615,7 @@ extension Courier {
                 try await inbox.unreadMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 onFailure?(error)
             }
         }
@@ -634,7 +634,7 @@ extension Courier {
                 try await inbox.readAllMessages()
                 onSuccess?()
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 onFailure?(error)
             }
         }

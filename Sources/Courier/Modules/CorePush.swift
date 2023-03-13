@@ -88,7 +88,7 @@ internal class CorePush {
                 deviceToken: Courier.shared.apnsToken
             )
         } catch {
-            Courier.log(String(describing: error))
+            Courier.log(error.friendlyMessage)
         }
         
         // We save the raw apns token here
@@ -122,7 +122,7 @@ internal class CorePush {
                 deviceToken: fcmToken
             )
         } catch {
-            Courier.log(String(describing: error))
+            Courier.log(error.friendlyMessage)
         }
         
         fcmToken = token
@@ -248,7 +248,7 @@ extension Courier {
                 try await push.trackNotification(message: message, event: event)
                 onSuccess?()
             } catch {
-                Courier.log(String(describing: error))
+                Courier.log(error.friendlyMessage)
                 onFailure?(error)
             }
         }
