@@ -85,7 +85,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         contentView.addSubview(stackView)
         
         stackView.axis = .vertical
-        stackView.spacing = CourierInboxTheme.margin
+        stackView.spacing = CourierInboxTheme.margin / 2
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
         
@@ -159,7 +159,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.axis = .horizontal
-        buttonStack.spacing = 16
+        buttonStack.spacing = CourierInboxTheme.margin * 2
         buttonStack.distribution = .fill
         
         button1.setTitle("Update me", for: .normal)
