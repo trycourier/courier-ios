@@ -146,15 +146,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // Add a top spacer
         
         buttonTopSpacer.translatesAutoresizingMaskIntoConstraints = false
-        buttonTopSpacer.backgroundColor = .red
         
         NSLayoutConstraint.activate([
             buttonTopSpacer.heightAnchor.constraint(equalToConstant: CourierInboxTheme.margin)
         ])
         
         stackView.addArrangedSubview(buttonTopSpacer)
-        
-        stackView.layoutIfNeeded()
         
         // Create the button stack
         
