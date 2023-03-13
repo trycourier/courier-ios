@@ -315,11 +315,17 @@ import UIKit
     }
     
     @objc public func scrollToTop(animated: Bool) {
+        
+        if (self.inboxMessages.isEmpty) {
+            return
+        }
+        
         self.tableView.scrollToRow(
             at: IndexPath(row: 0, section: 0),
             at: .top,
             animated: animated
         )
+        
     }
     
     // TODO: Handle rotation and dark mode
