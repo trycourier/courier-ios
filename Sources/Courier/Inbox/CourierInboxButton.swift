@@ -45,8 +45,6 @@ internal class CourierInboxButton: UIButton {
             
         }
         
-        layoutIfNeeded()
-        
     }
 
 }

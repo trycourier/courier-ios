@@ -153,8 +153,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.addArrangedSubview(buttonTopSpacer)
         
-        stackView.layoutIfNeeded()
-        
         // Button Stack
         
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
@@ -242,10 +240,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Selection style
         selectionStyle = CourierInbox.theme.cellStyles.selectionStyle
-        
-        // Buttons
-        button1.setTheme()
-        button2.setTheme()
         
     }
     
