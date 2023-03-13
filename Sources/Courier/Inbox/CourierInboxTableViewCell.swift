@@ -52,9 +52,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setup() {
         
-        contentView.subviews.forEach {
-            $0.removeFromSuperview()
-        }
+//        contentView.subviews.forEach {
+//            $0.removeFromSuperview()
+//        }
         
         addIndicator()
         addStack()
@@ -69,6 +69,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func addIndicator() {
         
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
+        
         contentView.addSubview(indicatorView)
         
         NSLayoutConstraint.activate([
@@ -83,6 +84,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func addStack() {
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         contentView.addSubview(stackView)
         
         stackView.axis = .vertical

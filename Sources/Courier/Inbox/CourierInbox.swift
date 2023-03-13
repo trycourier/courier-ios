@@ -48,6 +48,7 @@ import UIKit
     // MARK: Subviews
     
     private let tableView = UITableView()
+    private let courierBar = CourierBar()
     private let infoView = CourierInboxInfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
@@ -124,6 +125,7 @@ import UIKit
         traitCollectionDidChange(nil)
 
         // Add the views
+        addCourierBar()
         addTableView()
         addLoadingIndicator()
         addInfoView()
@@ -149,6 +151,18 @@ import UIKit
         }
     }
     
+    private func addCourierBar() {
+        
+        addSubview(courierBar)
+        
+        NSLayoutConstraint.activate([
+            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
+            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
+            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
+    }
+    
     private func addTableView() {
         
         // Create the table view
@@ -168,7 +182,7 @@ import UIKit
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: courierBar.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])

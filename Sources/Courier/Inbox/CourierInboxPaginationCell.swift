@@ -45,23 +45,22 @@ internal class CourierInboxPaginationCell: UITableViewCell {
             loadingIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
         
-        loadingIndicator.startAnimating()
-        setTheme()
-        
         // Remove cell styles
         selectionStyle = .none
         contentView.isUserInteractionEnabled = false
+        
+        setTheme()
         
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        loadingIndicator.startAnimating()
         setTheme()
     }
     
     internal func setTheme() {
         loadingIndicator.color = CourierInbox.theme.loadingIndicatorColor
+        loadingIndicator.startAnimating()
     }
     
 }
