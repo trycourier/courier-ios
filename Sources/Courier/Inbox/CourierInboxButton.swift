@@ -25,9 +25,19 @@ internal class CourierInboxButton: UIButton {
         
         if #available(iOS 15.0, *) {
             configuration = .filled()
-            configuration?.baseBackgroundColor = .systemRed
+        }
+        
+    }
+    
+    internal func setTheme(_ theme: CourierInboxTheme) {
+        
+        titleLabel?.font = theme.retryButtonFont.font
+        titleLabel?.textColor = theme.retryButtonFont.color
+        
+        if #available(iOS 15.0, *) {
+            configuration?.baseBackgroundColor = theme.retryButtonBackgroundColor
         } else {
-            // Fallback on earlier versions
+            backgroundColor = theme.retryButtonBackgroundColor
         }
         
     }

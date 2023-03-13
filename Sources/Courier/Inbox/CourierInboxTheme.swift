@@ -17,7 +17,9 @@ import UIKit
     internal let titleFont: CourierInboxFont
     internal let timeFont: CourierInboxFont
     internal let bodyFont: CourierInboxFont
-//    internal let infoViewFont: CourierInboxFont
+    internal let detailTitleFont: CourierInboxFont
+    internal let retryButtonFont: CourierInboxFont
+    internal let retryButtonBackgroundColor: UIColor
     internal let cellStyles: CourierInboxCellStyles
     
     // MARK: Init
@@ -38,6 +40,15 @@ import UIKit
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
             color: .label
         ),
+        detailTitleFont: CourierInboxFont = CourierInboxFont(
+            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+            color: .label
+        ),
+        retryButtonFont: CourierInboxFont = CourierInboxFont(
+            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+            color: .white
+        ),
+        retryButtonBackgroundColor: UIColor = .systemBlue,
         cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
     ) {
         self.messageAnimationStyle = messageAnimationStyle
@@ -46,6 +57,9 @@ import UIKit
         self.titleFont = titleFont
         self.timeFont = timeFont
         self.bodyFont = bodyFont
+        self.detailTitleFont = detailTitleFont
+        self.retryButtonFont = retryButtonFont
+        self.retryButtonBackgroundColor = retryButtonBackgroundColor
         self.cellStyles = cellStyles
     }
     

@@ -103,4 +103,10 @@ internal class CourierInboxInfoView: UIView {
         
     }
     
+    internal func setTheme(_ theme: CourierInboxTheme) {
+        titleLabel.font = theme.detailTitleFont.font
+        titleLabel.textColor = theme.detailTitleFont.color
+        actionButton.setTheme(theme)
+    }
+    
 }

@@ -312,6 +312,7 @@ import UIKit
     }
     
     // TODO: Handle rotation and dark mode
+    
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
@@ -332,6 +333,8 @@ import UIKit
         
         tableView.refreshControl?.tintColor = CourierInbox.theme.loadingIndicatorColor
         loadingIndicator.tintColor = CourierInbox.theme.loadingIndicatorColor
+        
+        infoView.setTheme(CourierInbox.theme)
         
         reloadCells()
         
