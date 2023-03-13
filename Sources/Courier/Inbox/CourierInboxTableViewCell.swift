@@ -212,6 +212,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // Fixes layout bug with title
         titleView.layoutIfNeeded()
         
+//        // Buttons
+//        button1.setTheme()
+//        button2.setTheme()
+        
     }
     
     private func setTheme() {
@@ -227,10 +231,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.textColor = CourierInbox.theme.titleFont.color
         timeLabel.textColor = CourierInbox.theme.timeFont.color
         bodyLabel.textColor = CourierInbox.theme.bodyFont.color
-        
-        // Buttons
-        button1.setTheme()
-        button2.setTheme()
         
         // Selection style
         selectionStyle = CourierInbox.theme.cellStyles.selectionStyle
