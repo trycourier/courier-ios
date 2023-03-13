@@ -282,6 +282,7 @@ import UIKit
             
             // Pagination cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell {
+                cell.setTheme()
                 return cell
             }
             
