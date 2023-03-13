@@ -31,6 +31,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let horizontalMargin: CGFloat = CourierInboxTheme.margin * 2
     private let verticalMargin: CGFloat = CourierInboxTheme.margin * 1.5
     
+    private var inboxMessage: InboxMessage? = nil
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
@@ -110,6 +112,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleView.addSubview(titleLabel)
         titleView.addSubview(timeLabel)
         
+        timeLabel.textAlignment = .right
         titleLabel.numberOfLines = 0
         
         NSLayoutConstraint.activate([
@@ -163,6 +166,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal func setMessage(_ message: InboxMessage, width: CGFloat) {
         
+        inboxMessage = message
         tableViewWidth = width
         
         indicatorView.isHidden = message.isRead
@@ -179,6 +183,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        inboxMessage = nil
 
         indicatorView.isHidden = true
         titleLabel.text = nil
@@ -190,6 +196,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 
         refresh()
 
+    }
+    
+    internal func updateTime() {
+        if let message = inboxMessage {
+            timeLabel.text = message.time
+        }
     }
     
     private func refresh() {

@@ -96,6 +96,8 @@ import UIKit
         }
     }
     
+    private lazy var timer = Timer()
+    
     // MARK: Init
     
     // TODO: Programatic implementation
@@ -126,6 +128,19 @@ import UIKit
         // Init the listener
         makeListener()
         
+        // Start timer
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+            self?.updateVisibleCellTimes()
+        })
+        
+    }
+    
+    // Gets all the currently visible cells and refreshes their times
+    private func updateVisibleCellTimes() {
+        tableView.indexPathsForVisibleRows?.forEach { path in
+            let cell = tableView.cellForRow(at: path) as? CourierInboxTableViewCell
+            cell?.updateTime()
+        }
     }
     
     private func addTableView() {
@@ -322,9 +337,10 @@ import UIKit
     }
     
     /**
-     Kills the listener if the view is deallocated
+     Kills the listener and timer if the view is deallocated
      */
     deinit {
+        self.timer.invalidate()
         self.inboxListener?.remove()
     }
 
