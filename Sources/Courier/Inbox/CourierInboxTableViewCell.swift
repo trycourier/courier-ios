@@ -175,7 +175,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.addArrangedSubview(buttonStack)
         
-        stackView.layoutIfNeeded()
+        buttonStack.layoutIfNeeded()
         
     }
     
