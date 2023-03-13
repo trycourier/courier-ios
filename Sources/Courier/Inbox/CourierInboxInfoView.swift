@@ -12,6 +12,7 @@ internal class CourierInboxInfoView: UIView {
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let actionButton = CourierInboxButton(type: .system)
+    private let buttonContainer = UIView()
     
     internal var onButtonClick: (() -> Void)? = nil
     
@@ -37,7 +38,6 @@ internal class CourierInboxInfoView: UIView {
         
         stackView.spacing = CourierInboxTheme.margin * 2
         stackView.axis = .vertical
-        stackView.distribution = .equalCentering
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -65,9 +65,19 @@ internal class CourierInboxInfoView: UIView {
     
     private func addButton() {
         
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.addTarget(self, action: #selector(onActionButtonClick), for: .touchUpInside)
         
-        stackView.addArrangedSubview(actionButton)
+        buttonContainer.addSubview(actionButton)
+        buttonContainer.backgroundColor = .blue
+        
+        NSLayoutConstraint.activate([
+            actionButton.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
+            actionButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+            actionButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
+        ])
+        
+        stackView.addArrangedSubview(buttonContainer)
         
     }
     
@@ -80,16 +90,16 @@ internal class CourierInboxInfoView: UIView {
         switch (state) {
         case .error(let error):
             titleLabel.isHidden = false
-            actionButton.isHidden = false
+            buttonContainer.isHidden = false
             actionButton.setTitle("Retry", for: .normal)
             titleLabel.text = error.friendlyMessage + "asdkja sdkj asljkd ajlksd jasdkjl alksd jlkasd kjlaskljd jalsdj alskd jalsdj lasjd lkasd "
         case .empty:
             titleLabel.isHidden = false
-            actionButton.isHidden = true
+            buttonContainer.isHidden = true
             titleLabel.text = "No messages found"
         default:
             titleLabel.isHidden = true
-            actionButton.isHidden = true
+            buttonContainer.isHidden = true
         }
         
     }
