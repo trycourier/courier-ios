@@ -85,7 +85,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         contentView.addSubview(stackView)
         
         stackView.axis = .vertical
-        stackView.spacing = 4
+        stackView.spacing = CourierInboxTheme.margin
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
         
@@ -143,6 +143,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func addButtons() {
         
+        // Button Spacer
+        
         buttonTopSpacer.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -151,7 +153,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         stackView.addArrangedSubview(buttonTopSpacer)
         
-        buttonTopSpacer.layoutIfNeeded()
+        stackView.layoutIfNeeded()
+        
+        // Button Stack
         
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.axis = .horizontal
