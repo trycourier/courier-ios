@@ -34,11 +34,11 @@ internal class CourierBar: UIView {
 //
 //        addSubview(stackView)
 //
-//        NSLayoutConstraint.activate([
-//            heightAnchor.constraint(equalToConstant: 48),
+        NSLayoutConstraint.activate([
+            heightAnchor.constraint(equalToConstant: 48),
 //            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
 //            stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
-//        ])
+        ])
 //
 //        stackView.backgroundColor = .purple
         
