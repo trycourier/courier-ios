@@ -27,39 +27,44 @@ internal class CourierBar: UIView {
             $0.removeFromSuperview()
         }
         
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.backgroundColor = . orange
+//        let stackView = UIStackView()
+//        stackView.translatesAutoresizingMaskIntoConstraints = false
+//        stackView.axis = .horizontal
+//        stackView.backgroundColor = . orange
+//
+//        addSubview(stackView)
+//
+//        NSLayoutConstraint.activate([
+//            heightAnchor.constraint(equalToConstant: 48),
+//            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+//            stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+//        ])
+//
+//        stackView.backgroundColor = .purple
         
-        addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 48),
-            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-        
-        stackView.backgroundColor = .purple
-        
-        // Add label
-        
-        let label = UILabel()
-        label.backgroundColor = .green
-        label.text = "Powered by"
-        
-        stackView.addArrangedSubview(label)
+//        // Add label
+//
+//        let label = UILabel()
+//        label.backgroundColor = .green
+//        label.text = "Powered by"
+//
+//        stackView.addArrangedSubview(label)
         
         // Add image
         
         let imageView = UIImageView()
+        imageView.image = UIImage(named: "logo", in: Bundle.module, compatibleWith: nil)
         imageView.backgroundColor = .blue
         
-        stackView.addArrangedSubview(imageView)
+        addSubview(imageView)
+        
+//        stackView.addArrangedSubview(imageView)
         
         NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: 24),
-            imageView.widthAnchor.constraint(equalToConstant: 200),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: CourierInboxTheme.margin),
+            imageView.trailingAnchor.constraint(equalTo: leadingAnchor, constant: -CourierInboxTheme.margin),
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
         
         let border = UIView()
