@@ -306,7 +306,7 @@ import UIKit
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxListItem.id, for: indexPath) as? CourierInboxListItem {
                 let index = indexPath.row
                 let message = inboxMessages[index]
-                cell.setMessage(message, theme: theme, showButtons: [2, 6, 12, 16, 22, 23, 26].contains(index))
+                cell.setMessage(message, theme: theme, showButtons: ![2, 6, 12, 16, 22, 23, 26].contains(index))
                 return cell
             }
             
