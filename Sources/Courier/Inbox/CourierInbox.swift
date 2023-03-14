@@ -168,6 +168,7 @@ import UIKit
             courierBar.layoutIfNeeded()
             
             // Add content inset
+            tableView.verticalScrollIndicatorInsets.bottom += courierBar.frame.height
             tableView.contentInset.bottom += courierBar.frame.height
             
         }
