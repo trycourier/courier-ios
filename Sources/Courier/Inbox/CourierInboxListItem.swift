@@ -23,14 +23,14 @@ class CourierInboxListItem: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        reset()
     }
     
     internal func setMessage(_ message: InboxMessage, theme: CourierInboxTheme) {
         
-        setTheme(theme)
-        
         self.inboxMessage = message
+        
+        setTheme(theme)
         
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
@@ -66,6 +66,19 @@ class CourierInboxListItem: UITableViewCell {
         // Selection style
         selectionStyle = theme.cellStyles.selectionStyle
 
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        reset()
+    }
+    
+    private func reset() {
+        indicatorView.isHidden = true
+        titleLabel.text = nil
+        timeLabel.text = nil
+        bodyLabel.text = nil
+        buttonStack.isHidden = true
     }
 
     internal func updateTime() {
