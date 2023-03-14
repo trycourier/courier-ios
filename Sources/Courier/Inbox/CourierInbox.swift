@@ -142,9 +142,9 @@ import UIKit
         makeListener()
         
         // Start timer
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
-            self?.updateVisibleCellTimes()
-        })
+//        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+//            self?.updateVisibleCellTimes()
+//        })
         
     }
     
