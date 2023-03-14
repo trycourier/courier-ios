@@ -110,8 +110,6 @@ import UIKit
         }
     }
     
-    private var timer: Timer? = nil
-    
     // MARK: Init
 
     override init(frame: CGRect) {
@@ -143,31 +141,8 @@ import UIKit
         
     }
     
-    private func startTimerIfNeeded() {
-        
-        if (timer != nil) {
-            return
-        }
-        
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
-            self?.updateVisibleCellTimes()
-        })
-        
-    }
-    
-    // Gets all the currently visible cells and refreshes their times
-    private func updateVisibleCellTimes() {
-        tableView.indexPathsForVisibleRows?.forEach { path in
-            let cell = tableView.cellForRow(at: path) as? CourierInboxListItem
-            cell?.updateTime()
-        }
-    }
-    
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
-        // Start the countdown timer
-        startTimerIfNeeded()
         
         // Set the courier bar background color
         courierBar.backgroundColor = superview?.backgroundColor
@@ -210,11 +185,8 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
-        
         let nib = UINib(nibName: CourierInboxListItem.id, bundle: Bundle.module)
         tableView.register(nib, forCellReuseIdentifier: CourierInboxListItem.id)
-        
-        tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
         tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = UITableView.automaticDimension
@@ -431,8 +403,6 @@ import UIKit
      Kills the listener and timer if the view is deallocated
      */
     deinit {
-        self.timer?.invalidate()
-        self.timer = nil
         self.inboxListener?.remove()
     }
 
