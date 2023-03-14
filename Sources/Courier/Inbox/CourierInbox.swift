@@ -105,12 +105,13 @@ import UIKit
             // Scroll to top if needed
             if ("\(oldValue)" != "\(state)") {
                 self.scrollToTop(animated: false)
+                self.startTimerIfNeeded()
             }
             
         }
     }
     
-    private lazy var timer = Timer()
+    private var timer: Timer? = nil
     
     // MARK: Init
 
@@ -141,11 +142,13 @@ import UIKit
         // Init the listener
         makeListener()
         
-        // Start timer
+    }
+    
+    private func startTimerIfNeeded() {
+        if (timer != nil) { return }
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
             self?.updateVisibleCellTimes()
         })
-        
     }
     
     // Gets all the currently visible cells and refreshes their times
@@ -421,7 +424,8 @@ import UIKit
      Kills the listener and timer if the view is deallocated
      */
     deinit {
-        self.timer.invalidate()
+        self.timer?.invalidate()
+        self.timer = nil
         self.inboxListener?.remove()
     }
 
