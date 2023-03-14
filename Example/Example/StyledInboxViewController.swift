@@ -16,33 +16,32 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
         super.viewDidLoad()
         
         let theme = CourierInboxTheme(
-            messageAnimationStyle: .bottom,
+            messageAnimationStyle: .left,
             unreadIndicatorBarColor: .systemPink,
-            loadingIndicatorColor: .systemGreen,
+            loadingIndicatorColor: .systemOrange,
             titleFont: CourierInboxFont(
-                font: UIFont.systemFont(ofSize: 20),
-                color: .red
+                font: UIFont(name: "Helvetica", size: 24)!,
+                color: .systemGray2
             ),
             timeFont: CourierInboxFont(
-                font: UIFont.systemFont(ofSize: 30),
-                color: .green
+                font: UIFont(name: "Helvetica", size: 18)!,
+                color: .systemGray4
             ),
             bodyFont: CourierInboxFont(
-                font: UIFont(name: "Al Nile Bold", size: 14)!,
-                color: .blue
+                font: UIFont(name: "Helvetica", size: 22)!,
+                color: .systemGray3
             ),
             detailTitleFont: CourierInboxFont(
-                font: UIFont(name: "Al Nile Bold", size: 22)!,
-                color: .green
+                font: UIFont(name: "Helvetica", size: 24)!,
+                color: .systemGray2
             ),
             actionButtonFont: CourierInboxFont(
-                font: UIFont(name: "Academy Engraved LET Plain:1.0", size: 13)!,
-                color: .purple
+                font: UIFont(name: "Helvetica", size: 18)!,
+                color: .white
             ),
-            actionButtonBackgroundColor: .systemOrange,
+            actionButtonBackgroundColor: .systemMint,
             cellStyles: CourierInboxCellStyles(
-                separatorStyle: .singleLine,
-                separatorColor: .purple
+                separatorStyle: .none
             )
         )
         

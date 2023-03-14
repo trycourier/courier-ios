@@ -17,12 +17,12 @@ internal class CourierInboxButton: UIButton {
             
             config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
                 var outgoing = incoming
-                outgoing.font = theme.actionButtonFont.font
+                outgoing.font = theme.buttonStyles.font?.font
                 return outgoing
             }
             
-            config.baseForegroundColor = theme.actionButtonFont.color
-            config.baseBackgroundColor = theme.actionButtonBackgroundColor
+            config.baseForegroundColor = theme.buttonStyles.font?.color
+            config.baseBackgroundColor = theme.buttonStyles.backgroundColor
             
             configuration = config
             
@@ -30,9 +30,9 @@ internal class CourierInboxButton: UIButton {
             
             contentEdgeInsets = UIEdgeInsets(top: 0, left: CourierInboxTheme.margin, bottom: 0, right: CourierInboxTheme.margin)
             layer.cornerRadius = CourierInboxTheme.margin / 2
-            titleLabel?.font = theme.actionButtonFont.font
-            titleLabel?.textColor = theme.actionButtonFont.color
-            backgroundColor = theme.actionButtonBackgroundColor
+            titleLabel?.font = theme.buttonStyles.font?.font
+            titleLabel?.textColor = theme.buttonStyles.font?.color
+            backgroundColor = theme.buttonStyles.backgroundColor
             
         }
         

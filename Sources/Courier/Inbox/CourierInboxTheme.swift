@@ -18,8 +18,7 @@ import UIKit
     internal let timeFont: CourierInboxFont
     internal let bodyFont: CourierInboxFont
     internal let detailTitleFont: CourierInboxFont
-    internal let actionButtonFont: CourierInboxFont
-    internal let actionButtonBackgroundColor: UIColor
+    internal let buttonStyles: CourierInboxButtonStyles
     internal let cellStyles: CourierInboxCellStyles
     
     // MARK: Init
@@ -44,11 +43,7 @@ import UIKit
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
             color: .label
         ),
-        actionButtonFont: CourierInboxFont = CourierInboxFont(
-            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
-            color: .white
-        ),
-        actionButtonBackgroundColor: UIColor = .systemBlue,
+        buttonStyles: CourierInboxButtonStyles = CourierInboxButtonStyles(),
         cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
     ) {
         self.messageAnimationStyle = messageAnimationStyle
@@ -58,8 +53,7 @@ import UIKit
         self.timeFont = timeFont
         self.bodyFont = bodyFont
         self.detailTitleFont = detailTitleFont
-        self.actionButtonFont = actionButtonFont
-        self.actionButtonBackgroundColor = actionButtonBackgroundColor
+        self.buttonStyles = buttonStyles
         self.cellStyles = cellStyles
     }
     
@@ -74,6 +68,18 @@ import UIKit
     internal static let margin: CGFloat = 8
     internal static let titleFontSize: CGFloat = 16
     internal static let subtitleFontSize: CGFloat = 14
+    
+}
+
+@objc public class CourierInboxButtonStyles: NSObject {
+    
+    internal let font: CourierInboxFont?
+    internal let backgroundColor: UIColor?
+    
+    public init(font: CourierInboxFont? = nil, backgroundColor: UIColor? = nil) {
+        self.font = font
+        self.backgroundColor = backgroundColor
+    }
     
 }
 
