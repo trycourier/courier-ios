@@ -40,7 +40,6 @@ internal class CourierBar: UIView {
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
         
-        backgroundColor = .red
         stackView.backgroundColor = .purple
         
         // Add label
@@ -61,6 +60,17 @@ internal class CourierBar: UIView {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 24),
             imageView.widthAnchor.constraint(equalToConstant: 200),
+        ])
+        
+        let border = UIView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.backgroundColor = CourierInbox.theme.cellStyles.separatorColor
+        
+        NSLayoutConstraint.activate([
+            border.heightAnchor.constraint(equalToConstant: 1),
+            border.topAnchor.constraint(equalTo: topAnchor),
+            border.leadingAnchor.constraint(equalTo: leadingAnchor),
+            border.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
     }

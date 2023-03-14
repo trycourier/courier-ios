@@ -39,8 +39,6 @@ import UIKit
     // Defaults to light mode, but will change when the theme is set
     internal static var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
     
-    private var courierBarBottom: NSLayoutConstraint? = nil
-    
     // MARK: Datasource
     
     private var inboxListener: CourierInboxListener? = nil
@@ -53,6 +51,11 @@ import UIKit
     private let courierBar = CourierBar()
     private let infoView = CourierInboxInfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
+    
+    // MARK: Constraints
+    
+    private var didSetCourierBarBottom = false
+    private var courierBarBottom: NSLayoutConstraint? = nil
     
     // MARK: State
     
@@ -153,10 +156,11 @@ import UIKit
         }
     }
     
-    private var didSetCourierBarBottom = false
-    
     open override func layoutSubviews() {
         super.layoutSubviews()
+        
+        // Set the courier bar background color
+        courierBar.backgroundColor = superview?.backgroundColor
         
         // Refresh position of courier bar
         if (!didSetCourierBarBottom) {
