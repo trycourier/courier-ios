@@ -305,7 +305,7 @@ import UIKit
 //            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
                 let index = indexPath.row
                 let message = inboxMessages[index]
-                cell.setMessage(message)
+                cell.setMessage(message, theme: theme)
 //                cell.setMessage(message, width: tableView.bounds.width, theme: theme, onButtonClick: { message in
 //                    self.delegate?.didClickButtonForInboxMessage?(message: message, index: index)
 //                })
