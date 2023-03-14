@@ -11,6 +11,7 @@ class CourierInboxListItem: UITableViewCell {
     
     internal static let id = "CourierInboxListItem"
 
+    @IBOutlet weak var containerStack: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var bodyLabel: UILabel!
@@ -25,6 +26,10 @@ class CourierInboxListItem: UITableViewCell {
         titleLabel.text = message.title
         timeLabel.text = message.time
         bodyLabel.text = message.subtitle
+        
+        containerStack.layoutSubviews()
+        
+        print(containerStack.frame)
         
     }
 

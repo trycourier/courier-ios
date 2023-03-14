@@ -106,10 +106,11 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="bodyLabel" destination="Tcb-Y1-iXr" id="oIi-fC-6ct"/>
+                <outlet property="containerStack" destination="mcK-6S-til" id="jUs-om-2Ch"/>
                 <outlet property="timeLabel" destination="u9p-f0-4yT" id="plS-5u-Kls"/>
                 <outlet property="titleLabel" destination="OaO-yM-V8C" id="zeu-oU-laE"/>
             </connections>
-            <point key="canvasLocation" x="129.00763358778624" y="26.056338028169016"/>
+            <point key="canvasLocation" x="126" y="22"/>
         </tableViewCell>
     </objects>
     <resources>
