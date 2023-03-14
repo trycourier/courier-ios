@@ -59,6 +59,9 @@ class CourierInboxListItem: UITableViewCell {
         [leftButton, rightButton].forEach { button in
             button.setTheme(theme)
         }
+        
+        leftButton.setTitle("Example One", for: .normal)
+        rightButton.setTitle("Example Two", for: .normal)
 
         // Selection style
         selectionStyle = theme.cellStyles.selectionStyle
