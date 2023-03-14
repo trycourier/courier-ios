@@ -162,7 +162,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.axis = .horizontal
-        buttonStack.spacing = CourierInboxTheme.margin * 2
+        buttonStack.spacing = CourierInboxTheme.margin * 1.5
         buttonStack.distribution = .fill
         
         button1.setTitle("Update me", for: .normal)
