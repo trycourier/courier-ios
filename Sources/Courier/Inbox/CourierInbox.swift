@@ -125,10 +125,10 @@ import UIKit
         traitCollectionDidChange(nil)
 
         // Add the views
-        addCourierBar()
         addTableView()
         addLoadingIndicator()
         addInfoView()
+        addCourierBar()
         
         // Set state
         state = .loading
@@ -157,8 +157,10 @@ import UIKit
         
         addSubview(courierBar)
         
+        let bottom = tableView.contentInset.bottom
+        
         NSLayoutConstraint.activate([
-            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
+            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -bottom),
             courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
@@ -184,7 +186,7 @@ import UIKit
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: courierBar.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
