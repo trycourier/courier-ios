@@ -39,6 +39,12 @@ import UIKit
     // Defaults to light mode, but will change when the theme is set
     internal static var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
     
+    public var table: UITableView {
+        get {
+            return self.tableView
+        }
+    }
+    
     // MARK: Datasource
     
     private var inboxListener: CourierInboxListener? = nil
