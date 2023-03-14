@@ -157,6 +157,39 @@
             </objects>
             <point key="canvasLocation" x="2445" y="1732"/>
         </scene>
+        <!--Styled Inbox-->
+        <scene sceneID="kS4-fe-WXD">
+            <objects>
+                <navigationController id="8Er-gv-SMv" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Styled Inbox" image="tray.and.arrow.down" catalog="system" id="Tf6-aV-IYe"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="uQJ-xc-Rpb">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="yGi-Qb-gcc" kind="relationship" relationship="rootViewController" id="8pg-eM-MoU"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mEW-JY-7i3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1572" y="2479"/>
+        </scene>
+        <!--Styled Inbox View Controller-->
+        <scene sceneID="5qz-93-CO4">
+            <objects>
+                <viewController id="yGi-Qb-gcc" customClass="StyledInboxViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="RbE-Qe-Xhv">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="7tw-qd-FnO"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Uax-PW-Wyf"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4TK-Np-kci" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2445" y="2479"/>
+        </scene>
         <!--Notifications-->
         <scene sceneID="EPn-Ql-4Sm">
             <objects>
@@ -267,10 +300,11 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="ntI-cU-afA" kind="relationship" relationship="viewControllers" id="7ud-Fd-A2b"/>
-                        <segue destination="nH0-Ut-6va" kind="relationship" relationship="viewControllers" id="2UR-9Z-GFG"/>
-                        <segue destination="v6Y-PJ-VDb" kind="relationship" relationship="viewControllers" id="pzf-JH-ljC"/>
                         <segue destination="Tmj-8w-Ahx" kind="relationship" relationship="viewControllers" id="88V-8k-cvs"/>
+                        <segue destination="v6Y-PJ-VDb" kind="relationship" relationship="viewControllers" id="pzf-JH-ljC"/>
+                        <segue destination="8Er-gv-SMv" kind="relationship" relationship="viewControllers" id="wqk-TC-KsE"/>
+                        <segue destination="nH0-Ut-6va" kind="relationship" relationship="viewControllers" id="2UR-9Z-GFG"/>
+                        <segue destination="ntI-cU-afA" kind="relationship" relationship="viewControllers" id="7ud-Fd-A2b"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nnt-Hk-krp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

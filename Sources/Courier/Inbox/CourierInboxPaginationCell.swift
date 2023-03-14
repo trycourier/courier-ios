@@ -49,17 +49,10 @@ internal class CourierInboxPaginationCell: UITableViewCell {
         selectionStyle = .none
         contentView.isUserInteractionEnabled = false
         
-        setTheme()
-        
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        setTheme()
-    }
-    
-    internal func setTheme() {
-        loadingIndicator.color = CourierInbox.theme.loadingIndicatorColor
+    internal func setTheme(_ theme: CourierInboxTheme) {
+        loadingIndicator.color = theme.loadingIndicatorColor
         loadingIndicator.startAnimating()
     }
     

@@ -8,6 +8,8 @@
 import UIKit
 
 internal class CourierBar: UIView {
+    
+    private let border = UIView()
 
     // MARK: Init
 
@@ -48,9 +50,7 @@ internal class CourierBar: UIView {
         
         // Border
         
-        let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false
-        border.backgroundColor = CourierInbox.theme.cellStyles.separatorColor ?? .separator
         
         addSubview(border)
         
@@ -61,6 +61,10 @@ internal class CourierBar: UIView {
             border.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
+    }
+    
+    internal func setTheme(_ theme: CourierInboxTheme) {
+        border.backgroundColor = theme.cellStyles.separatorColor ?? .separator
     }
 
 }

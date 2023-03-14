@@ -62,7 +62,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         addBody()
         addButtons()
         
-        setTheme()
+//        setTheme()
         
     }
     
@@ -197,7 +197,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         }
     }
     
-    internal func setMessage(_ message: InboxMessage, width: CGFloat, onButtonClick: @escaping (InboxMessage) -> Void) {
+    internal func setMessage(_ message: InboxMessage, width: CGFloat, theme: CourierInboxTheme, onButtonClick: @escaping (InboxMessage) -> Void) {
         
         inboxMessage = message
         tableViewWidth = width
@@ -214,6 +214,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         self.onButtonClick = onButtonClick
         
         refresh()
+        
+        setTheme(theme)
         
     }
     
@@ -247,22 +249,22 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
-    private func setTheme() {
+    private func setTheme(_ theme: CourierInboxTheme) {
         
-        indicatorView.backgroundColor = CourierInbox.theme.unreadIndicatorBarColor
+        indicatorView.backgroundColor = theme.unreadIndicatorBarColor
         
         // Font
-        titleLabel.font = CourierInbox.theme.titleFont.font
-        timeLabel.font = CourierInbox.theme.timeFont.font
-        bodyLabel.font = CourierInbox.theme.bodyFont.font
+        titleLabel.font = theme.titleFont.font
+        timeLabel.font = theme.timeFont.font
+        bodyLabel.font = theme.bodyFont.font
         
         // Color
-        titleLabel.textColor = CourierInbox.theme.titleFont.color
-        timeLabel.textColor = CourierInbox.theme.timeFont.color
-        bodyLabel.textColor = CourierInbox.theme.bodyFont.color
+        titleLabel.textColor = theme.titleFont.color
+        timeLabel.textColor = theme.timeFont.color
+        bodyLabel.textColor = theme.bodyFont.color
         
         // Selection style
-        selectionStyle = CourierInbox.theme.cellStyles.selectionStyle
+        selectionStyle = theme.cellStyles.selectionStyle
         
     }
     
@@ -278,9 +280,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Ensure we can resize
         setMaxWidth()
-        
-        // Reload the theme
-        setTheme()
         
     }
     

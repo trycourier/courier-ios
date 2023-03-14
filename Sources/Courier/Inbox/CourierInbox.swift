@@ -37,7 +37,7 @@ import UIKit
     
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
-    internal static var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
+    private var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
     
     // MARK: Datasource
     
@@ -286,7 +286,7 @@ import UIKit
         if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
             self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: CourierInbox.theme.messageAnimationStyle)
+            self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle)
             return
         }
         
@@ -318,7 +318,7 @@ import UIKit
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
                 let index = indexPath.row
                 let message = inboxMessages[index]
-                cell.setMessage(message, width: tableView.bounds.width, onButtonClick: { message in
+                cell.setMessage(message, width: tableView.bounds.width, theme: theme, onButtonClick: { message in
                     self.delegate?.didClickButtonForInboxMessage?(message: message, index: index)
                 })
                 return cell
@@ -328,7 +328,7 @@ import UIKit
             
             // Pagination cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell {
-                cell.setTheme()
+                cell.setTheme(theme)
                 return cell
             }
             
@@ -389,16 +389,17 @@ import UIKit
     
     private func setTheme(isDarkMode: Bool) {
         
-        CourierInbox.theme = isDarkMode ? darkTheme : lightTheme
+        theme = isDarkMode ? darkTheme : lightTheme
         
-        tableView.separatorStyle = CourierInbox.theme.cellStyles.separatorStyle
-        tableView.separatorInset = CourierInbox.theme.cellStyles.separatorInsets
-        tableView.separatorColor = CourierInbox.theme.cellStyles.separatorColor
+        tableView.separatorStyle = theme.cellStyles.separatorStyle
+        tableView.separatorInset = theme.cellStyles.separatorInsets
+        tableView.separatorColor = theme.cellStyles.separatorColor
         
-        tableView.refreshControl?.tintColor = CourierInbox.theme.loadingIndicatorColor
-        loadingIndicator.color = CourierInbox.theme.loadingIndicatorColor
+        tableView.refreshControl?.tintColor = theme.loadingIndicatorColor
+        loadingIndicator.color = theme.loadingIndicatorColor
         
-        infoView.setTheme()
+        infoView.setTheme(theme)
+        courierBar.setTheme(theme)
         
         reloadCells()
         

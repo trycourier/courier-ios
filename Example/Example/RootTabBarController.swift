@@ -33,6 +33,7 @@ class RootTabBarController: UITabBarController {
         let tabTitle = count <= 0 ? nil : "\(count)"
         self.tabBar.items?[1].badgeValue = tabTitle
         self.tabBar.items?[2].badgeValue = tabTitle
+        self.tabBar.items?[3].badgeValue = tabTitle
         UIApplication.shared.applicationIconBadgeNumber = count
     }
     
