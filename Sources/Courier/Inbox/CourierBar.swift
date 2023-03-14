@@ -69,7 +69,7 @@ internal class CourierBar: UIView {
         addSubview(border)
         
         NSLayoutConstraint.activate([
-            border.heightAnchor.constraint(equalToConstant: 1),
+            border.heightAnchor.constraint(equalToConstant: 0.5),
             border.topAnchor.constraint(equalTo: topAnchor),
             border.leadingAnchor.constraint(equalTo: leadingAnchor),
             border.trailingAnchor.constraint(equalTo: trailingAnchor),
