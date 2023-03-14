@@ -26,7 +26,7 @@ class CourierInboxListItem: UITableViewCell {
         reset()
     }
     
-    internal func setMessage(_ message: InboxMessage, theme: CourierInboxTheme) {
+    internal func setMessage(_ message: InboxMessage, theme: CourierInboxTheme, showButtons: Bool) { // TODO
         
         self.inboxMessage = message
         
@@ -37,7 +37,7 @@ class CourierInboxListItem: UITableViewCell {
         timeLabel.text = message.time
         bodyLabel.text = message.subtitle
         
-        buttonStack.isHidden = !message.isRead
+        buttonStack.isHidden = showButtons
         
     }
     
