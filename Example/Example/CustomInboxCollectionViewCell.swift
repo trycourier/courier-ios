@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import Courier
 
 class CustomInboxCollectionViewCell: UICollectionViewCell {
 
     public static let id = "CustomInboxCollectionViewCell"
-    weak var label: UILabel!
+    private var label: UILabel!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,7 +28,7 @@ class CustomInboxCollectionViewCell: UICollectionViewCell {
         ])
         
         textLabel.numberOfLines = 0
-        textLabel.textAlignment = .center
+        textLabel.textAlignment = .left
         
         label = textLabel
         
@@ -49,4 +50,15 @@ class CustomInboxCollectionViewCell: UICollectionViewCell {
         label.text = nil
         
     }
+    
+    func setMessage(_ message: InboxMessage) {
+        label.text = message.toJson()
+        contentView.backgroundColor = message.isRead ? .clear : .systemGreen
+    }
+    
+    func showLoading() {
+        label.text = "Loading..."
+        contentView.backgroundColor = .clear
+    }
+    
 }

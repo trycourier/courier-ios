@@ -133,6 +133,8 @@ import UIKit
         addInfoView()
         addCourierBar()
         
+        courierBar.isHidden = true // TODO
+        
         // Set state
         state = .loading
         

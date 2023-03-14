@@ -15,38 +15,73 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let theme = CourierInboxTheme(
-            messageAnimationStyle: .left,
-            unreadIndicatorBarColor: .systemPink,
-            loadingIndicatorColor: .systemOrange,
+        let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
+        let primaryColor = UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
+        let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
+        
+        courierInbox.lightTheme = CourierInboxTheme(
+            messageAnimationStyle: .top,
+            unreadIndicatorBarColor: secondaryColor,
+            loadingIndicatorColor:  primaryColor,
             titleFont: CourierInboxFont(
-                font: UIFont(name: "Helvetica", size: 24)!,
-                color: .systemGray2
+                font: UIFont(name: "Courier New Bold", size: 20)!,
+                color: textColor
             ),
             timeFont: CourierInboxFont(
-                font: UIFont(name: "Helvetica", size: 18)!,
-                color: .systemGray4
+                font: UIFont(name: "Courier New", size: 16)!,
+                color: textColor
             ),
             bodyFont: CourierInboxFont(
-                font: UIFont(name: "Helvetica", size: 22)!,
-                color: .systemGray3
+                font: UIFont(name: "Courier New", size: 18)!,
+                color: textColor
             ),
             detailTitleFont: CourierInboxFont(
-                font: UIFont(name: "Helvetica", size: 24)!,
-                color: .systemGray2
+                font: UIFont(name: "Courier New", size: 20)!,
+                color: textColor
             ),
-            actionButtonFont: CourierInboxFont(
-                font: UIFont(name: "Helvetica", size: 18)!,
-                color: .white
+            buttonStyles: CourierInboxButtonStyles(
+                font: CourierInboxFont(
+                    font: UIFont(name: "Courier New Bold", size: 16)!,
+                    color: .white
+                ),
+                backgroundColor: primaryColor
             ),
-            actionButtonBackgroundColor: .systemMint,
             cellStyles: CourierInboxCellStyles(
                 separatorStyle: .none
             )
         )
         
-        courierInbox.lightTheme = theme
-        courierInbox.darkTheme = theme
+        courierInbox.darkTheme = CourierInboxTheme(
+            messageAnimationStyle: .top,
+            unreadIndicatorBarColor: secondaryColor,
+            loadingIndicatorColor:  .white,
+            titleFont: CourierInboxFont(
+                font: UIFont(name: "Courier New Bold", size: 20)!,
+                color: .white
+            ),
+            timeFont: CourierInboxFont(
+                font: UIFont(name: "Courier New", size: 16)!,
+                color: .white
+            ),
+            bodyFont: CourierInboxFont(
+                font: UIFont(name: "Courier New", size: 18)!,
+                color: .white
+            ),
+            detailTitleFont: CourierInboxFont(
+                font: UIFont(name: "Courier New", size: 20)!,
+                color: .white
+            ),
+            buttonStyles: CourierInboxButtonStyles(
+                font: CourierInboxFont(
+                    font: UIFont(name: "Courier New Bold", size: 16)!,
+                    color: primaryColor
+                ),
+                backgroundColor: .white
+            ),
+            cellStyles: CourierInboxCellStyles(
+                separatorStyle: .none
+            )
+        )
 
         courierInbox.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(courierInbox)

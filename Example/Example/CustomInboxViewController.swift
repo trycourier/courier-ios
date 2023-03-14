@@ -88,7 +88,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 100)
+        return CGSize(width: collectionView.bounds.width, height: 120)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -109,11 +109,9 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
         if (indexPath.section == 0) {
             let message = inboxMessages[indexPath.row]
-            cell.label.text = "\(indexPath.row) :: \(message.title ?? "No title") :: \(message.preview ?? "No body")"
-            cell.contentView.backgroundColor = message.isRead ? .green : .red
+            cell.setMessage(message)
         } else {
-            cell.label.text = "Loading..."
-            cell.contentView.backgroundColor = .clear
+            cell.showLoading()
         }
         
         return cell
@@ -127,8 +125,8 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let message = inboxMessages[indexPath.row]
-        message.isRead ? message.markAsUnread() : message.markAsRead()
+        let message = inboxMessages[indexPath.row].toJson()
+        appDelegate.showMessageAlert(title: "Message Clicked", message: message)
     }
     
     deinit {
