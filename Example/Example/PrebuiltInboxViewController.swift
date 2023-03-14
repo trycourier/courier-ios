@@ -23,7 +23,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
         
         courierInbox.delegate = self
         
-        test()
+//        test()
         
     }
     
@@ -69,11 +69,11 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     }
     
     func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
-//        message.isRead ? message.markAsUnread() : message.markAsRead()
-//        print(index, message)
-        print(courierInbox.table.adjustedContentInset)
-        testConstraint?.constant = -courierInbox.table.adjustedContentInset.bottom
-        bar.layoutIfNeeded()
+        message.isRead ? message.markAsUnread() : message.markAsRead()
+        print(index, message)
+//        print(courierInbox.table.adjustedContentInset)
+//        testConstraint?.constant = -courierInbox.table.adjustedContentInset.bottom
+//        bar.layoutIfNeeded()
         
     }
     

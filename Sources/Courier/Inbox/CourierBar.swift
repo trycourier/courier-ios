@@ -28,7 +28,9 @@ internal class CourierBar: UIView {
         }
         
         let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
+        stackView.backgroundColor = . orange
         
         addSubview(stackView)
         
@@ -52,7 +54,7 @@ internal class CourierBar: UIView {
         // Add image
         
         let imageView = UIImageView()
-        imageView.backgroundColor = .orange
+        imageView.backgroundColor = .blue
         
         stackView.addArrangedSubview(imageView)
         

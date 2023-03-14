@@ -153,11 +153,24 @@ import UIKit
         }
     }
     
+    private var didSetCourierBarBottom = false
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         
-        courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
-        courierBar.layoutIfNeeded()
+        // Refresh position of courier bar
+        if (!didSetCourierBarBottom) {
+            
+            didSetCourierBarBottom = true
+            
+            // Update position
+            courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
+            courierBar.layoutIfNeeded()
+            
+            // Add content inset
+            tableView.contentInset.bottom += courierBar.frame.height
+            
+        }
         
     }
     
