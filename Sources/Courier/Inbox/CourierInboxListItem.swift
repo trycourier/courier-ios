@@ -16,6 +16,8 @@ class CourierInboxListItem: UITableViewCell {
     @IBOutlet weak var bodyLabel: UILabel!
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var buttonStack: UIStackView!
+    @IBOutlet weak var leftButton: CourierInboxButton!
+    @IBOutlet weak var rightButton: CourierInboxButton!
     
     private var inboxMessage: InboxMessage?
     
@@ -24,7 +26,9 @@ class CourierInboxListItem: UITableViewCell {
         // Initialization code
     }
     
-    internal func setMessage(_ message: InboxMessage) {
+    internal func setMessage(_ message: InboxMessage, theme: CourierInboxTheme) {
+        
+        setTheme(theme)
         
         self.inboxMessage = message
         
@@ -35,6 +39,30 @@ class CourierInboxListItem: UITableViewCell {
         
         buttonStack.isHidden = !message.isRead
         
+    }
+    
+    private func setTheme(_ theme: CourierInboxTheme) {
+
+        indicatorView.backgroundColor = theme.unreadIndicatorBarColor
+
+        // Font
+        titleLabel.font = theme.titleFont.font
+        timeLabel.font = theme.timeFont.font
+        bodyLabel.font = theme.bodyFont.font
+
+        // Color
+        titleLabel.textColor = theme.titleFont.color
+        timeLabel.textColor = theme.timeFont.color
+        bodyLabel.textColor = theme.bodyFont.color
+
+        // Buttons
+        [leftButton, rightButton].forEach { button in
+            button.setTheme(theme)
+        }
+
+        // Selection style
+        selectionStyle = theme.cellStyles.selectionStyle
+
     }
 
     internal func updateTime() {

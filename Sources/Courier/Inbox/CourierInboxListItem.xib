@@ -69,12 +69,12 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Jtv-0J-TdE">
                                         <rect key="frame" x="0.0" y="8" width="343" height="34.333333333333336"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zxw-wS-4bh">
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zxw-wS-4bh" customClass="CourierInboxButton" customModule="Courier">
                                                 <rect key="frame" x="0.0" y="0.0" width="107" height="34.333333333333336"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Longer button title"/>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFl-Ur-tji">
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFl-Ur-tji" customClass="CourierInboxButton" customModule="Courier">
                                                 <rect key="frame" x="122.99999999999999" y="0.0" width="35.333333333333329" height="34.333333333333336"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="A"/>
@@ -109,6 +109,8 @@
                 <outlet property="bodyLabel" destination="Tcb-Y1-iXr" id="oIi-fC-6ct"/>
                 <outlet property="buttonStack" destination="5is-cr-EUW" id="6WA-RQ-jZi"/>
                 <outlet property="indicatorView" destination="cVo-mN-Urj" id="Pn5-ie-7VY"/>
+                <outlet property="leftButton" destination="Zxw-wS-4bh" id="EM7-bI-kxc"/>
+                <outlet property="rightButton" destination="cFl-Ur-tji" id="Neg-kF-xlg"/>
                 <outlet property="timeLabel" destination="u9p-f0-4yT" id="plS-5u-Kls"/>
                 <outlet property="titleLabel" destination="OaO-yM-V8C" id="zeu-oU-laE"/>
             </connections>
