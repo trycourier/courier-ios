@@ -142,16 +142,16 @@ import UIKit
         makeListener()
         
         // Start timer
-//        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
-//            self?.updateVisibleCellTimes()
-//        })
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+            self?.updateVisibleCellTimes()
+        })
         
     }
     
     // Gets all the currently visible cells and refreshes their times
     private func updateVisibleCellTimes() {
         tableView.indexPathsForVisibleRows?.forEach { path in
-            let cell = tableView.cellForRow(at: path) as? CourierInboxTableViewCell
+            let cell = tableView.cellForRow(at: path) as? CourierInboxListItem
             cell?.updateTime()
         }
     }

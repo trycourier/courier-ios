@@ -17,12 +17,16 @@ class CourierInboxListItem: UITableViewCell {
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var buttonStack: UIStackView!
     
+    private var inboxMessage: InboxMessage?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
     
     internal func setMessage(_ message: InboxMessage) {
+        
+        self.inboxMessage = message
         
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
@@ -33,10 +37,10 @@ class CourierInboxListItem: UITableViewCell {
         
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    internal func updateTime() {
+        if let message = self.inboxMessage {
+            timeLabel.text = message.time
+        }
     }
     
 }
