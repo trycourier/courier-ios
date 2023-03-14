@@ -213,9 +213,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // TODO: Fix me
         self.onButtonClick = onButtonClick
         
-        refresh()
-        
         setTheme(theme)
+        
+        refresh()
         
     }
     
@@ -262,6 +262,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.textColor = theme.titleFont.color
         timeLabel.textColor = theme.timeFont.color
         bodyLabel.textColor = theme.bodyFont.color
+        
+        // Buttons
+        [button1, button2].forEach { button in
+            button.setTheme(theme)
+        }
         
         // Selection style
         selectionStyle = theme.cellStyles.selectionStyle
