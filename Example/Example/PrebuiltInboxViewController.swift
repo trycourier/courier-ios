@@ -12,6 +12,8 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     
     @IBOutlet weak var courierInbox: CourierInbox!
     
+    var testConstraint: NSLayoutConstraint? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,6 +22,8 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Set Theme", style: .plain, target: self, action: #selector(setTheme))
         
         courierInbox.delegate = self
+        
+        test()
         
     }
     
@@ -65,8 +69,12 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     }
     
     func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
-        message.isRead ? message.markAsUnread() : message.markAsRead()
-        print(index, message)
+//        message.isRead ? message.markAsUnread() : message.markAsRead()
+//        print(index, message)
+        print(courierInbox.table.adjustedContentInset)
+        testConstraint?.constant = -courierInbox.table.adjustedContentInset.bottom
+        bar.layoutIfNeeded()
+        
     }
     
     func didClickButtonForInboxMessage(message: InboxMessage, index: Int) {
@@ -75,6 +83,27 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
     
     func didScrollInbox(scrollView: UIScrollView) {
         // print(scrollView.contentOffset.y)
+    }
+    
+    let bar = UIView()
+    
+    private func test() {
+        
+        bar.backgroundColor = .green
+        
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        
+        courierInbox.addSubview(bar)
+        
+//        let contentInset = courierInbox.table.adjustedContentInset
+//        print(contentInset)
+        
+        testConstraint = bar.bottomAnchor.constraint(equalTo: courierInbox.bottomAnchor)
+        testConstraint?.isActive = true
+        bar.leadingAnchor.constraint(equalTo: courierInbox.leadingAnchor).isActive = true
+        bar.trailingAnchor.constraint(equalTo: courierInbox.trailingAnchor).isActive = true
+        bar.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
     }
 
 }

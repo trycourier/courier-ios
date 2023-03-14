@@ -39,11 +39,7 @@ import UIKit
     // Defaults to light mode, but will change when the theme is set
     internal static var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
     
-    public var table: UITableView {
-        get {
-            return self.tableView
-        }
-    }
+    private var courierBarBottom: NSLayoutConstraint? = nil
     
     // MARK: Datasource
     
@@ -157,16 +153,24 @@ import UIKit
         }
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
+        courierBar.layoutIfNeeded()
+        
+    }
+    
     private func addCourierBar() {
         
         courierBar.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(courierBar)
         
-        let bottom = tableView.contentInset.bottom
+        courierBarBottom = courierBar.bottomAnchor.constraint(equalTo: bottomAnchor)
+        courierBarBottom?.isActive = true
         
         NSLayoutConstraint.activate([
-            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -bottom),
             courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
