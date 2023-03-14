@@ -25,8 +25,8 @@
                             <constraint firstAttribute="width" constant="3" id="scX-pn-2nx"/>
                         </constraints>
                     </view>
-                    <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="mcK-6S-til">
-                        <rect key="frame" x="16" y="12" width="343" height="192.66666666666666"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="mcK-6S-til">
+                        <rect key="frame" x="16" y="12" width="343" height="298"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="IAD-op-9q2">
                                 <rect key="frame" x="0.0" y="0.0" width="343" height="40.666666666666664"/>
@@ -49,7 +49,7 @@
                                 <color key="backgroundColor" systemColor="linkColor"/>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tcb-Y1-iXr">
-                                <rect key="frame" x="0.0" y="44.666666666666664" width="343" height="101.66666666666669"/>
+                                <rect key="frame" x="0.0" y="44.666666666666657" width="343" height="207"/>
                                 <color key="backgroundColor" systemColor="systemPinkColor"/>
                                 <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -57,7 +57,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="5is-cr-EUW">
-                                <rect key="frame" x="0.0" y="150.33333333333337" width="343" height="42.333333333333314"/>
+                                <rect key="frame" x="0.0" y="255.66666666666671" width="343" height="42.333333333333343"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9oG-hO-uX9">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="8"/>
@@ -98,6 +98,7 @@
                 <constraints>
                     <constraint firstItem="cVo-mN-Urj" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="2" id="0lO-j0-tkQ"/>
                     <constraint firstAttribute="bottom" secondItem="cVo-mN-Urj" secondAttribute="bottom" constant="2" id="1ag-ds-wQD"/>
+                    <constraint firstAttribute="bottom" secondItem="mcK-6S-til" secondAttribute="bottom" constant="12" id="6Km-7d-nYa"/>
                     <constraint firstItem="mcK-6S-til" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="91m-DF-dUr"/>
                     <constraint firstAttribute="trailing" secondItem="mcK-6S-til" secondAttribute="trailing" constant="16" id="X4w-b3-qyK"/>
                     <constraint firstItem="mcK-6S-til" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="mVM-GW-Q7R"/>
@@ -106,7 +107,8 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="bodyLabel" destination="Tcb-Y1-iXr" id="oIi-fC-6ct"/>
-                <outlet property="containerStack" destination="mcK-6S-til" id="jUs-om-2Ch"/>
+                <outlet property="buttonStack" destination="5is-cr-EUW" id="6WA-RQ-jZi"/>
+                <outlet property="indicatorView" destination="cVo-mN-Urj" id="Pn5-ie-7VY"/>
                 <outlet property="timeLabel" destination="u9p-f0-4yT" id="plS-5u-Kls"/>
                 <outlet property="titleLabel" destination="OaO-yM-V8C" id="zeu-oU-laE"/>
             </connections>
