@@ -26,46 +26,27 @@ internal class CourierBar: UIView {
         subviews.forEach {
             $0.removeFromSuperview()
         }
-        
-//        let stackView = UIStackView()
-//        stackView.translatesAutoresizingMaskIntoConstraints = false
-//        stackView.axis = .horizontal
-//        stackView.backgroundColor = . orange
-//
-//        addSubview(stackView)
-//
+
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: 48),
-//            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-//
-//        stackView.backgroundColor = .purple
         
-//        // Add label
-//
-//        let label = UILabel()
-//        label.backgroundColor = .green
-//        label.text = "Powered by"
-//
-//        stackView.addArrangedSubview(label)
+        // Logo
         
-        // Add image
+        let logo = UIImageView()
+        logo.translatesAutoresizingMaskIntoConstraints = false
+        logo.backgroundColor = .green
         
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "logo", in: Bundle.module, compatibleWith: nil)
-        imageView.backgroundColor = .blue
-        
-        addSubview(imageView)
-        
-//        stackView.addArrangedSubview(imageView)
+        addSubview(logo)
         
         NSLayoutConstraint.activate([
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: CourierInboxTheme.margin),
-            imageView.trailingAnchor.constraint(equalTo: leadingAnchor, constant: -CourierInboxTheme.margin),
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            logo.centerXAnchor.constraint(equalTo: centerXAnchor),
+            logo.centerYAnchor.constraint(equalTo: centerYAnchor),
+            logo.heightAnchor.constraint(equalToConstant: 16),
+            logo.widthAnchor.constraint(equalToConstant: 134),
         ])
+        
+        // Border
         
         let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false
