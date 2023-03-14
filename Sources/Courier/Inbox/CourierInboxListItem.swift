@@ -37,7 +37,7 @@ class CourierInboxListItem: UITableViewCell {
         timeLabel.text = message.time
         bodyLabel.text = message.subtitle
         
-        buttonStack.isHidden = showButtons
+        buttonStack.isHidden = !showButtons
         
     }
     
