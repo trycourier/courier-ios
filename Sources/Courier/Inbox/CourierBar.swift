@@ -64,7 +64,7 @@ internal class CourierBar: UIView {
         
         let border = UIView()
         border.translatesAutoresizingMaskIntoConstraints = false
-        border.backgroundColor = CourierInbox.theme.cellStyles.separatorColor
+        border.backgroundColor = CourierInbox.theme.cellStyles.separatorColor ?? .separator
         
         addSubview(border)
         
