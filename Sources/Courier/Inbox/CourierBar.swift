@@ -66,6 +66,8 @@ internal class CourierBar: UIView {
         border.translatesAutoresizingMaskIntoConstraints = false
         border.backgroundColor = CourierInbox.theme.cellStyles.separatorColor
         
+        addSubview(border)
+        
         NSLayoutConstraint.activate([
             border.heightAnchor.constraint(equalToConstant: 1),
             border.topAnchor.constraint(equalTo: topAnchor),
