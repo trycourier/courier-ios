@@ -200,6 +200,10 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
+        
+        let nib = UINib(nibName: CourierInboxListItem.id, bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: CourierInboxListItem.id)
+        
         tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
         tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
         tableView.rowHeight = UITableView.automaticDimension
@@ -315,12 +319,14 @@ import UIKit
         if (indexPath.section == 0) {
             
             // Normal cell
-            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxListItem.id, for: indexPath) as? CourierInboxListItem {
+//            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
                 let index = indexPath.row
                 let message = inboxMessages[index]
-                cell.setMessage(message, width: tableView.bounds.width, theme: theme, onButtonClick: { message in
-                    self.delegate?.didClickButtonForInboxMessage?(message: message, index: index)
-                })
+                cell.setMessage(message)
+//                cell.setMessage(message, width: tableView.bounds.width, theme: theme, onButtonClick: { message in
+//                    self.delegate?.didClickButtonForInboxMessage?(message: message, index: index)
+//                })
                 return cell
             }
             
