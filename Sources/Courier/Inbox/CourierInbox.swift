@@ -105,7 +105,6 @@ import UIKit
             // Scroll to top if needed
             if ("\(oldValue)" != "\(state)") {
                 self.scrollToTop(animated: false)
-                self.startTimerIfNeeded()
             }
             
         }
@@ -145,10 +144,15 @@ import UIKit
     }
     
     private func startTimerIfNeeded() {
-        if (timer != nil) { return }
+        
+        if (timer != nil) {
+            return
+        }
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
             self?.updateVisibleCellTimes()
         })
+        
     }
     
     // Gets all the currently visible cells and refreshes their times
@@ -161,6 +165,9 @@ import UIKit
     
     open override func layoutSubviews() {
         super.layoutSubviews()
+        
+        // Start the countdown timer
+        startTimerIfNeeded()
         
         // Set the courier bar background color
         courierBar.backgroundColor = superview?.backgroundColor
