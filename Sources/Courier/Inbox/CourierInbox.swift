@@ -201,7 +201,7 @@ import UIKit
         tableView.delegate = self
         tableView.dataSource = self
         
-        let nib = UINib(nibName: CourierInboxListItem.id, bundle: nil)
+        let nib = UINib(nibName: CourierInboxListItem.id, bundle: Bundle.module)
         tableView.register(nib, forCellReuseIdentifier: CourierInboxListItem.id)
         
         tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
