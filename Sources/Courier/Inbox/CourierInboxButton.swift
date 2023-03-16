@@ -13,6 +13,12 @@ internal class CourierInboxButton: UIButton {
     private let actionClick: ((InboxAction) -> Void)?
     private let onClick: (() -> Void)?
     
+    internal var title: String? {
+        didSet {
+            setTitle(title, for: .normal)
+        }
+    }
+    
     init(inboxAction: InboxAction, theme: CourierInboxTheme, actionClick: @escaping (InboxAction) -> Void) {
         
         self.inboxAction = inboxAction

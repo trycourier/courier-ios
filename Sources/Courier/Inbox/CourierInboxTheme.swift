@@ -82,13 +82,15 @@ import UIKit
     internal let backgroundColor: UIColor
     internal let cornerRadius: CGFloat
     
+    static let maxHeight: CGFloat = 34.33
+    
     public init(font: CourierInboxFont = CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white), backgroundColor: UIColor = .systemBlue, cornerRadius: CGFloat = 8) {
         self.font = font
         self.backgroundColor = backgroundColor
         
         // This is the value of the container height / 2
         // This will create a perfect rounded corner
-        let fullRoundedCorner = 34.33 / 2
+        let fullRoundedCorner = CourierInboxButtonStyles.maxHeight / 2
         
         self.cornerRadius = max(0, min(fullRoundedCorner, cornerRadius))
         

@@ -74,6 +74,7 @@ internal class CourierInboxInfoView: UIView {
         buttonContainer.addSubview(actionButton!)
         
         NSLayoutConstraint.activate([
+            actionButton!.heightAnchor.constraint(equalToConstant: CourierInboxButtonStyles.maxHeight),
             actionButton!.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
             actionButton!.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
             actionButton!.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
@@ -93,7 +94,7 @@ internal class CourierInboxInfoView: UIView {
         case .error(let error):
             titleLabel.isHidden = false
             buttonContainer.isHidden = false
-            actionButton?.setTitle("Retry", for: .normal)
+            actionButton?.title = "Retry"
             titleLabel.text = error.friendlyMessage
         case .empty:
             titleLabel.isHidden = false
