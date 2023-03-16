@@ -64,7 +64,6 @@ internal class CourierInboxListItem: UITableViewCell {
         // Pushes items to left
         if (!actions.isEmpty) {
             let spacer = UIView()
-            spacer.backgroundColor = .red
             actionsStack.addArrangedSubview(spacer)
         }
         
