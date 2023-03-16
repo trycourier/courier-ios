@@ -28,14 +28,14 @@ internal class CorePush {
     
     // Attempt to put the users tokens if we have them
     internal func putPushTokens() async throws {
-        await [
+        let _ = await [
             putTokenIfNeeded(provider: .apns, token: Courier.shared.apnsToken),
             putTokenIfNeeded(provider: .fcm, token: Courier.shared.fcmToken),
         ]
     }
     
     internal func deletePushTokens() async {
-        await [
+        let _ = await [
             deleteTokenIfNeeded(token: Courier.shared.apnsToken),
             deleteTokenIfNeeded(token: Courier.shared.fcmToken),
         ]

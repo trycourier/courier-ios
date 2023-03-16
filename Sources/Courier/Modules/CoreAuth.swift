@@ -48,18 +48,9 @@ internal class CoreAuth {
         
         Courier.log("Clearing Courier User Credentials")
         
-        do {
-            
-            try await push.deletePushTokens()
-            
-            inbox.close()
-            
-        } catch {
-            
-            Courier.log("Error deleting token")
-            Courier.log("\(error)")
-            
-        }
+        await push.deletePushTokens()
+        
+        inbox.close()
         
         // Sign out will still work, but will keep
         // existing tokens in Courier if failure
