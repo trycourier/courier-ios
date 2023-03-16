@@ -75,10 +75,12 @@ import UIKit
     
     internal let font: CourierInboxFont?
     internal let backgroundColor: UIColor?
+    internal let cornerRadius: CGFloat
     
-    public init(font: CourierInboxFont? = nil, backgroundColor: UIColor? = nil) {
+    public init(font: CourierInboxFont? = nil, backgroundColor: UIColor? = nil, cornerRadius: CGFloat = 10) {
         self.font = font
         self.backgroundColor = backgroundColor
+        self.cornerRadius = cornerRadius
     }
     
 }
