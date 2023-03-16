@@ -78,7 +78,7 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
                     color: primaryColor
                 ),
                 backgroundColor: .white,
-                cornerRadius: 32
+                cornerRadius: 100
             ),
             cellStyles: CourierInboxCellStyles(
                 separatorStyle: .none
