@@ -190,11 +190,11 @@
             </objects>
             <point key="canvasLocation" x="2445" y="2479"/>
         </scene>
-        <!--Notifications-->
+        <!--Send-->
         <scene sceneID="EPn-Ql-4Sm">
             <objects>
                 <navigationController id="ntI-cU-afA" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Notifications" image="paperplane" catalog="system" id="I45-hq-6mt"/>
+                    <tabBarItem key="tabBarItem" title="Send" image="paperplane" catalog="system" id="I45-hq-6mt"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="CTu-9i-QZg">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

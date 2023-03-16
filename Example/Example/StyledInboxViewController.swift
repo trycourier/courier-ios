@@ -20,65 +20,66 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
         let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
         
         courierInbox.lightTheme = CourierInboxTheme(
-            messageAnimationStyle: .top,
+            messageAnimationStyle: .fade,
             unreadIndicatorBarColor: secondaryColor,
-            loadingIndicatorColor:  primaryColor,
+            loadingIndicatorColor: primaryColor,
             titleFont: CourierInboxFont(
-                font: UIFont(name: "Courier New Bold", size: 20)!,
+                font: UIFont(name: "Avenir Black", size: 20)!,
                 color: textColor
             ),
             timeFont: CourierInboxFont(
-                font: UIFont(name: "Courier New", size: 16)!,
+                font: UIFont(name: "Avenir Medium", size: 16)!,
                 color: textColor
             ),
             bodyFont: CourierInboxFont(
-                font: UIFont(name: "Courier New", size: 18)!,
+                font: UIFont(name: "Avenir Medium", size: 18)!,
                 color: textColor
             ),
             detailTitleFont: CourierInboxFont(
-                font: UIFont(name: "Courier New", size: 20)!,
+                font: UIFont(name: "Avenir Medium", size: 20)!,
                 color: textColor
             ),
             buttonStyles: CourierInboxButtonStyles(
                 font: CourierInboxFont(
-                    font: UIFont(name: "Courier New Bold", size: 16)!,
+                    font: UIFont(name: "Avenir Black", size: 16)!,
                     color: .white
                 ),
                 backgroundColor: primaryColor,
-                cornerRadius: 0
+                cornerRadius: 100
             ),
             cellStyles: CourierInboxCellStyles(
-                separatorStyle: .none
+                separatorStyle: .singleLine,
+                separatorInsets: .zero
             )
         )
         
         courierInbox.darkTheme = CourierInboxTheme(
-            messageAnimationStyle: .top,
-            unreadIndicatorBarColor: secondaryColor,
-            loadingIndicatorColor:  .white,
+            messageAnimationStyle: .right,
+            unreadIndicatorBarColor: primaryColor,
+            loadingIndicatorColor: .white,
             titleFont: CourierInboxFont(
-                font: UIFont(name: "Courier New Bold", size: 20)!,
+                font: UIFont(name: "Avenir Black", size: 20)!,
                 color: .white
             ),
             timeFont: CourierInboxFont(
-                font: UIFont(name: "Courier New", size: 16)!,
+                font: UIFont(name: "Avenir Medium", size: 16)!,
                 color: .white
             ),
             bodyFont: CourierInboxFont(
-                font: UIFont(name: "Courier New", size: 18)!,
+                font: UIFont(name: "Avenir Medium", size: 18)!,
                 color: .white
             ),
             detailTitleFont: CourierInboxFont(
-                font: UIFont(name: "Courier New", size: 20)!,
+                font: UIFont(name: "Avenir Medium", size: 20)!,
                 color: .white
             ),
             buttonStyles: CourierInboxButtonStyles(
                 font: CourierInboxFont(
-                    font: UIFont(name: "Courier New Bold", size: 16)!,
+                    font: UIFont(name: "Avenir Black", size: 16)!,
                     color: primaryColor
                 ),
                 backgroundColor: .white,
-                cornerRadius: 100
+                cornerRadius: 0
             ),
             cellStyles: CourierInboxCellStyles(
                 separatorStyle: .none
