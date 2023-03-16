@@ -8,10 +8,7 @@
 import Foundation
 import UIKit
 
-public enum CourierPlatform: String {
-    case ios = "ios"
-    case android = "android"
-}
+// MARK: Internal Classes
 
 internal struct CourierDevice: Codable {
     
@@ -31,4 +28,11 @@ internal struct CourierDevice: Codable {
         self.model = UIDevice.current.localizedModel
     }
     
+}
+
+// MARK: Public Classes
+
+public enum CourierPlatform: String {
+    case ios = "ios"
+    case android = "android"
 }

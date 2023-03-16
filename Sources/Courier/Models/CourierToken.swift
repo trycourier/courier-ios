@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: Internal Classes
+
 internal struct CourierToken: Codable {
     let provider_key: String
     let device: CourierDevice

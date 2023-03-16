@@ -12,16 +12,17 @@ import Foundation
  */
 @objc public class InboxMessage: NSObject, Codable {
     
-    // TODO: Provide more details about the fields
+    // MARK: Properties
     
-    public let title: String?
-    public let body: String?
-    public let preview: String?
-    public let created: String?
-    public let actions: [InboxAction]?
+    @objc public let messageId: String
+    @objc public let title: String?
+    @objc public let body: String?
+    @objc public let preview: String?
+    @objc public let created: String?
+    @objc public let actions: [InboxAction]?
+    
     internal var archived: Bool?
     internal var read: String?
-    public let messageId: String
     
     public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, actions: [InboxAction]?) {
         self.title = title

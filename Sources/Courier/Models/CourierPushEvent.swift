@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: Public Classes
+
 @objc public enum CourierPushEvent: Int, RawRepresentable {
     
     case clicked

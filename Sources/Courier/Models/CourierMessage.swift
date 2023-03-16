@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: Internal Classes
+
 internal struct CourierMessage: Codable {
     let message: Message
 }

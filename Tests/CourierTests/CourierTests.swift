@@ -6,6 +6,15 @@ let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
 
 final class CourierTests: XCTestCase {
     
+    func test0() async throws {
+        
+        let brand = try await BrandsRepository().getBrand(clientKey: Env.COURIER_CLIENT_KEY, userId: "mike", brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2")
+        print(brand.settings?.colors?.primary)
+        print(brand.settings?.inapp?.showCourierFooter)
+        print(brand.settings?.inapp?.cornerRadius)
+        
+    }
+    
     func test1() async throws {
         
         try await Courier.shared.signIn(

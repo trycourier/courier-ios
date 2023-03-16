@@ -7,10 +7,6 @@
 
 import Foundation
 
-internal struct WebSocketConnectionPayload: Codable {
-    var query: String
-}
-
 internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     
     private(set) var webSocket: URLSessionWebSocketTask?

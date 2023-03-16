@@ -7,12 +7,8 @@
 
 import Foundation
 
-struct CourierResponse: Codable {
-    
-    public let status: String
-    
-    public init(status: String) {
-        self.status = status
-    }
-    
+// MARK: Internal Classes
+
+internal struct CourierResponse: Codable {
+    internal let status: String
 }

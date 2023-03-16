@@ -9,10 +9,12 @@ import Foundation
 
 @objc public class InboxAction: NSObject, Codable {
     
-    public let content: String?
-    public let href: String?
-    public let style: String?
-    public let background_color: String?
+    // MARK: Properties
+    
+    @objc public let content: String?
+    @objc public let href: String?
+    @objc public let style: String?
+    @objc public let background_color: String?
     
     public init(content: String?, href: String?, style: String?, background_color: String?) {
         self.content = content

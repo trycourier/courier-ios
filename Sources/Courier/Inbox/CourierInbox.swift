@@ -124,6 +124,10 @@ import UIKit
     
     private func setup() {
         
+//        Task {
+//            try await BrandsRepository().getBrand(clientKey:userId:brandId:)
+//        }
+        
         // Refresh light / dark mode
         traitCollectionDidChange(nil)
 
@@ -132,8 +136,6 @@ import UIKit
         addLoadingIndicator()
         addInfoView()
         addCourierBar()
-        
-        courierBar.isHidden = true // TODO
         
         // Set state
         state = .loading

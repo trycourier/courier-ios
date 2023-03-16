@@ -5,13 +5,13 @@
 //  Created by Michael Miller on 7/7/22.
 //
 
+// MARK: Public Classes
+
 @objc public enum CourierProvider: Int, RawRepresentable {
     
     case inbox
     case apns
     case fcm
-    //    case expo
-    //    case oneSignal
     case unknown
     
     public typealias RawValue = String

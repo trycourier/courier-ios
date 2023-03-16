@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: Public Classes
+
 public enum CourierError: Error {
     case noAccessTokenFound
     case noUserIdFound
@@ -18,6 +20,8 @@ public enum CourierError: Error {
     case inboxUserNotFound
     case inboxUnknownError
 }
+
+// MARK: Extensions
 
 extension CourierError {
     

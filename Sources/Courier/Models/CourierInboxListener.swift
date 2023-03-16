@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: Public Classes
+
 @objc public class CourierInboxListener: NSObject {
     
     let onInitialLoad: (() -> Void)?
@@ -23,9 +25,11 @@ import Foundation
     
 }
 
+// MARK: Extensions
+
 extension CourierInboxListener {
     
-    func callMessageChanged(messages: [InboxMessage], unreadMessageCount: Int, totalMessageCount: Int, canPaginate: Bool) {
+    internal func callMessageChanged(messages: [InboxMessage], unreadMessageCount: Int, totalMessageCount: Int, canPaginate: Bool) {
         
         if (!isInitialized) {
             return
@@ -40,7 +44,7 @@ extension CourierInboxListener {
         
     }
     
-    func initialize() {
+    internal func initialize() {
         onInitialLoad?()
         isInitialized = true
     }

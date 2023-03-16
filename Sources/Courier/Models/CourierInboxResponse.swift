@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: Internal Classes
+
 internal struct InboxResponse: Codable {
     let data: InboxData
 }
@@ -14,20 +16,6 @@ internal struct InboxResponse: Codable {
 internal struct InboxData: Codable {
     var count: Int? = 0
     var messages: InboxNodes?
-}
-
-extension InboxData {
-    
-    mutating func incrementCount() {
-        
-        if (count == nil) {
-            count = 0
-        }
-        
-        count! += 1
-        
-    }
-    
 }
 
 internal struct InboxNodes: Codable {
@@ -38,4 +26,23 @@ internal struct InboxNodes: Codable {
 internal struct InboxPageInfo: Codable {
     let startCursor: String?
     let hasNextPage: Bool?
+}
+
+// MARK: Extensions
+
+extension InboxData {
+    
+    // Increments the count
+    // This exists to allow instant loading after
+    // new messages arrive on the device
+    internal mutating func incrementCount() {
+        
+        if (count == nil) {
+            count = 0
+        }
+        
+        count! += 1
+        
+    }
+    
 }
