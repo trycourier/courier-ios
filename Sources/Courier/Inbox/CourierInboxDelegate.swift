@@ -15,12 +15,12 @@ import UIKit
     /**
      Called when the user clicks on an ``InboxMessage``
      */
-    @objc optional func didClickInboxMessageAtIndex(message: InboxMessage, index: Int)
+    @objc optional func didClickInboxMessageAtIndex(message: InboxMessage, listItemIndex: Int)
     
     /**
      Called when the user clicks on an ``InboxMessage``
      */
-    @objc optional func didClickButtonForInboxMessage(message: InboxMessage, index: Int)
+    @objc optional func didClickButtonForInboxMessage(message: InboxMessage, listItemIndex: Int, buttonIndex: Int)
     
     /**
      Called when the user scrolls the CourierInbox

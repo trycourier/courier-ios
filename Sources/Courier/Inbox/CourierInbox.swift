@@ -304,10 +304,26 @@ import UIKit
             
             // Normal cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxListItem.id, for: indexPath) as? CourierInboxListItem {
+                
                 let index = indexPath.row
                 let message = inboxMessages[index]
-                cell.setMessage(message, theme: theme, showButtons: index == 2 || index == 4 || index == 7)
+                
+                let actions = [
+                    CourierInboxListItemButton(title: "Test 0", action: {
+                        self.delegate?.didClickButtonForInboxMessage?(message: message, listItemIndex: index, buttonIndex: 0)
+                    }),
+                    CourierInboxListItemButton(title: "Test 1", action: {
+                        self.delegate?.didClickButtonForInboxMessage?(message: message, listItemIndex: index, buttonIndex: 1)
+                    }),
+                    CourierInboxListItemButton(title: "Test 2", action: {
+                        self.delegate?.didClickButtonForInboxMessage?(message: message, listItemIndex: index, buttonIndex: 2)
+                    })
+                ]
+                
+                cell.setMessage(message, buttons: actions, theme: theme)
+                
                 return cell
+                
             }
             
         } else {
@@ -339,7 +355,7 @@ import UIKit
         if (indexPath.section == 0) {
             let index = indexPath.row
             let message = self.inboxMessages[index]
-            self.delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
+            self.delegate?.didClickInboxMessageAtIndex?(message: message, listItemIndex: index)
         }
     }
     
