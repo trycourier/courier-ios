@@ -110,8 +110,8 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
         print(index, message)
     }
     
-    func didClickButtonForInboxMessage(message: InboxMessage, index: Int) {
-        print(index, message)
+    func didClickInboxActionForMessageAtIndex(action: InboxAction, message: InboxMessage, index: Int) {
+        print(action, message, index)
     }
     
     func didScrollInbox(scrollView: UIScrollView) {

@@ -31,11 +31,7 @@ import Foundation
         self.archived = archived
         self.read = read
         self.messageId = messageId
-//        self.actions = actions
-        self.actions = [
-            InboxAction(content: "Something", href: "", style: "", background_color: ""),
-            InboxAction(content: "Something Else", href: "", style: "", background_color: ""),
-        ]
+        self.actions = actions
     }
     
     @objc public var subtitle: String? {

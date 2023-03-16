@@ -7,11 +7,6 @@
 
 import UIKit
 
-internal struct CourierInboxListItemButton {
-    let action: InboxAction
-    let event: () -> Void
-}
-
 internal class CourierInboxListItem: UITableViewCell {
     
     internal static let id = "CourierInboxListItem"
@@ -46,7 +41,11 @@ internal class CourierInboxListItem: UITableViewCell {
     
     private func setupButtons(_ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {
         
-        let actions = self.inboxMessage?.actions ?? []
+//        let actions = self.inboxMessage?.actions ?? []
+        let actions = [
+            InboxAction(content: "Something", href: "", style: "", background_color: ""),
+            InboxAction(content: "Something Else", href: "", style: "", background_color: ""),
+        ]
         
         // Create and add a button for each action
         actions.forEach { action in
