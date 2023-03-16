@@ -77,10 +77,10 @@ import UIKit
     internal let backgroundColor: UIColor
     internal let cornerRadius: CGFloat
     
-    public init(font: CourierInboxFont = CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white), backgroundColor: UIColor = .systemBlue, cornerRadius: CGFloat = 10) {
+    public init(font: CourierInboxFont = CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white), backgroundColor: UIColor = .systemBlue, cornerRadius: CGFloat = 8) {
         self.font = font
         self.backgroundColor = backgroundColor
-        self.cornerRadius = cornerRadius
+        self.cornerRadius = min(0, max(cornerRadius, 34.33))
     }
     
 }
