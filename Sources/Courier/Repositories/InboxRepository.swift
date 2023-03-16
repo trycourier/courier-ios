@@ -76,7 +76,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         }
         
         // Create a new socket if needed
-        let url = URL(string: "\(inboxWebSocketUrl)/?clientKey=\(clientKey)")!
+        let url = URL(string: "\(CourierUrl.inboxWebSocket)/?clientKey=\(clientKey)")!
         let request = URLRequest(url: url)
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         let socket = session.webSocketTask(with: request)
@@ -103,241 +103,130 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
     
     internal func getAllMessages(clientKey: String, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<InboxData, Error>) in
-            
-            let query = """
-            query GetMessages(
-                $params: FilterParamsInput
-                $limit: Int = \(paginationLimit)
-                $after: String \(startCursor != nil ? "= \"\(startCursor!)\"" : "")
-            ) {
-                count(params: $params)
-                messages(params: $params, limit: $limit, after: $after) {
-                    totalCount
-                    pageInfo {
-                        startCursor
-                        hasNextPage
-                    }
-                    nodes {
-                        messageId
-                        read
-                        archived
-                        created
-                        title
-                        preview
-                        actions {
-                            content
-                            href
-                            style
-                            background_color
-                        }
+        let query = """
+        query GetMessages(
+            $params: FilterParamsInput
+            $limit: Int = \(paginationLimit)
+            $after: String \(startCursor != nil ? "= \"\(startCursor!)\"" : "")
+        ) {
+            count(params: $params)
+            messages(params: $params, limit: $limit, after: $after) {
+                totalCount
+                pageInfo {
+                    startCursor
+                    hasNextPage
+                }
+                nodes {
+                    messageId
+                    read
+                    archived
+                    created
+                    title
+                    preview
+                    actions {
+                        content
+                        href
+                        style
+                        background_color
                     }
                 }
             }
-            """
-
-            let url = URL(string: inboxUrl)!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
-            request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
-            
-            let payload = CourierGraphQLQuery(query: query)
-            request.httpBody = try! JSONEncoder().encode(payload)
-            
-            let task = CourierTask(with: request) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-                
-                do {
-                    let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
-                    continuation.resume(returning: res.data)
-                } catch {
-                    Courier.log(error.friendlyMessage)
-                    continuation.resume(throwing: CourierError.requestError)
-                }
-                
-            }
-            
-            task.start()
-            
-        })
+        }
+        """
+        
+        let response = try await graphQLQuery(
+            InboxResponse.self,
+            clientKey: clientKey,
+            userId: userId,
+            url: CourierUrl.inboxGraphQL,
+            query: query
+        )
+        
+        return response.data
 
     }
     
     internal func getUnreadMessageCount(clientKey: String, userId: String, startCursor: String? = nil) async throws -> Int {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Int, Error>) in
-            
-            let query = """
-            query GetMessages(
-                $params: FilterParamsInput = { status: "unread" }
-                $limit: Int = \(1)
-                $after: String
-            ) {
-                count(params: $params)
-                messages(params: $params, limit: $limit, after: $after) {
-                    nodes {
-                        messageId
-                    }
+        let query = """
+        query GetMessages(
+            $params: FilterParamsInput = { status: "unread" }
+            $limit: Int = \(1)
+            $after: String
+        ) {
+            count(params: $params)
+            messages(params: $params, limit: $limit, after: $after) {
+                nodes {
+                    messageId
                 }
             }
-            """
-
-            let url = URL(string: inboxUrl)!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
-            request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
-            
-            let payload = CourierGraphQLQuery(query: query)
-            request.httpBody = try! JSONEncoder().encode(payload)
-            
-            let task = CourierTask(with: request) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-                
-                do {
-                    let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
-                    continuation.resume(returning: res.data.count ?? 0)
-                } catch {
-                    Courier.log(error.friendlyMessage)
-                    continuation.resume(throwing: CourierError.requestError)
-                }
-                
-            }
-            
-            task.start()
-            
-        })
+        }
+        """
+        
+        let response = try await graphQLQuery(
+            InboxResponse.self,
+            clientKey: clientKey,
+            userId: userId,
+            url: CourierUrl.inboxGraphQL,
+            query: query
+        )
+        
+        return response.data.count ?? 0
 
     }
     
     internal func readMessage(clientKey: String, userId: String, messageId: String) async throws {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
-            
-            let mutation = """
-            mutation TrackEvent(
-              $messageId: String = \"\(messageId)\"
-            ) {
-              read(messageId: $messageId)
-            }
-            """
-
-            let url = URL(string: inboxUrl)!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
-            request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
-            
-            let payload = CourierGraphQLQuery(query: mutation)
-            request.httpBody = try! JSONEncoder().encode(payload)
-            
-            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-
-                continuation.resume()
-                
-            }
-            
-            task.start()
-            
-        })
+        let mutation = """
+        mutation TrackEvent(
+          $messageId: String = \"\(messageId)\"
+        ) {
+          read(messageId: $messageId)
+        }
+        """
+        
+        try await graphQLQuery(
+            clientKey: clientKey,
+            userId: userId,
+            url: CourierUrl.inboxGraphQL,
+            query: mutation
+        )
         
     }
     
     internal func unreadMessage(clientKey: String, userId: String, messageId: String) async throws {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
-            
-            let mutation = """
-            mutation TrackEvent(
-              $messageId: String = \"\(messageId)\"
-            ) {
-              unread(messageId: $messageId)
-            }
-            """
-
-            let url = URL(string: inboxUrl)!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
-            request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
-            
-            let payload = CourierGraphQLQuery(query: mutation)
-            request.httpBody = try! JSONEncoder().encode(payload)
-            
-            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-
-                continuation.resume()
-                
-            }
-            
-            task.start()
-            
-        })
+        let mutation = """
+        mutation TrackEvent(
+          $messageId: String = \"\(messageId)\"
+        ) {
+          unread(messageId: $messageId)
+        }
+        """
+        
+        try await graphQLQuery(
+            clientKey: clientKey,
+            userId: userId,
+            url: CourierUrl.inboxGraphQL,
+            query: mutation
+        )
         
     }
     
     internal func readAllMessages(clientKey: String, userId: String) async throws {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
-            
-            let mutation = """
-            mutation TrackEvent {
-                markAllRead
-            }
-            """
-
-            let url = URL(string: inboxUrl)!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
-            request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
-            
-            let payload = CourierGraphQLQuery(query: mutation)
-            request.httpBody = try! JSONEncoder().encode(payload)
-            
-            let task = CourierTask(with: request, validCodes: [200]) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-
-                continuation.resume()
-                
-            }
-            
-            task.start()
-            
-        })
+        let mutation = """
+        mutation TrackEvent {
+            markAllRead
+        }
+        """
+        
+        try await graphQLQuery(
+            clientKey: clientKey,
+            userId: userId,
+            url: CourierUrl.inboxGraphQL,
+            query: mutation
+        )
         
     }
     

@@ -9,54 +9,41 @@ import Foundation
 
 internal class MessagingRepository: Repository {
     
+    // TODO: Support actions etc
+    
     internal func send(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider]) async throws -> String {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
-            
-            let message = CourierMessage(
-                message: Message(
-                    to: User(
-                        user_id: userId
-                    ),
-                    content: Content(
-                        title: title,
-                        body: message
-                    ),
-                    routing: Routing(
-                        method: "all",
-                        channels: providers.map { $0.rawValue }
-                    )
+        let message = CourierMessage(
+            message: Message(
+                to: User(
+                    user_id: userId
+                ),
+                content: Content(
+                    title: title,
+                    body: message
+                ),
+                routing: Routing(
+                    method: "all",
+                    channels: providers.map { $0.rawValue }
                 )
             )
-
-            let url = URL(string: "\(baseUrl)/send")!
-            var request = URLRequest(url: url)
-            request.setValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
-            request.httpMethod = "POST"
-            request.httpBody = try? JSONEncoder().encode(message)
-            
-            let task = CourierTask(with: request, validCodes: [200, 202]) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-                
-                do {
-                    let res = try JSONDecoder().decode(MessageResponse.self, from: data ?? Data())
-                    Courier.log("New Courier message sent. View logs here:")
-                    Courier.log("https://app.courier.com/logs/messages?message=\(res.requestId)")
-                    continuation.resume(returning: res.requestId)
-                } catch {
-                    Courier.log(error.friendlyMessage)
-                    continuation.resume(throwing: CourierError.requestError)
-                }
-                
-            }
-            
-            task.start()
-            
-        })
+        )
+        
+        let response = try await post(
+            MessageResponse.self,
+            accessToken: authKey,
+            userId: userId,
+            url: "\(CourierUrl.baseRest)/send",
+            body: message,
+            validCodes: [200, 202]
+        )
+        
+        let messageId = response.requestId
+        
+        Courier.log("New Courier message sent. View logs here:")
+        Courier.log("https://app.courier.com/logs/messages?message=\(messageId)")
+        
+        return messageId
 
     }
     

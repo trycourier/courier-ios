@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BrandsRepository.swift
 //  
 //
 //  Created by Michael Miller on 3/16/23.
@@ -29,11 +29,11 @@ internal class BrandsRepository: Repository {
         }
         """
         
-        let response = try await graphQL(
+        let response = try await graphQLQuery(
             CourierBrandResponse.self,
             clientKey: clientKey,
             userId: userId,
-            url: baseGraphQLUrl,
+            url: CourierUrl.baseGraphQL,
             query: query
         )
         

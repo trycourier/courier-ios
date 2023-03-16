@@ -26,51 +26,44 @@ internal class CorePush {
      */
     public private(set) var rawApnsToken: Data? = nil
     
+    // Attempt to put the users tokens if we have them
     internal func putPushTokens() async throws {
-        
-        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
-            return
-        }
-        
-        // Attempt to put the users tokens
-        // If we have them
-        async let putAPNS: () = tokenRepo.putUserToken(
-            accessToken: accessToken,
-            userId: userId,
-            provider: .apns,
-            deviceToken: Courier.shared.apnsToken
-        )
-        
-        async let putFCM: () = tokenRepo.putUserToken(
-            accessToken: accessToken,
-            userId: userId,
-            provider: .fcm,
-            deviceToken: fcmToken
-        )
-        
-        let _ = try await [putAPNS, putFCM]
-        
+        await [
+            putTokenIfNeeded(provider: .apns, token: Courier.shared.apnsToken),
+            putTokenIfNeeded(provider: .fcm, token: Courier.shared.fcmToken),
+        ]
     }
     
-    internal func deletePushTokens() async throws {
+    internal func deletePushTokens() async {
+        await [
+            deleteTokenIfNeeded(token: Courier.shared.apnsToken),
+            deleteTokenIfNeeded(token: Courier.shared.fcmToken),
+        ]
+    }
+    
+    // Tries to the remove the token from Courier
+    // Will silently fail if error occurs
+    private func deleteTokenIfNeeded(token: String?) async {
         
-        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
+        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId, let prevToken = token else {
             return
         }
         
-        async let deleteAPNS: () = tokenRepo.deleteToken(
-            accessToken: accessToken,
-            userId: userId,
-            deviceToken: Courier.shared.apnsToken
-        )
+        Courier.log("Deleting Messaging Token: \(prevToken)")
         
-        async let deleteFCM: () = tokenRepo.deleteToken(
-            accessToken: accessToken,
-            userId: userId,
-            deviceToken: Courier.shared.fcmToken
-        )
-        
-        let _ = try await [deleteAPNS, deleteFCM]
+        do {
+            
+            try await tokenRepo.deleteToken(
+                accessToken: accessToken,
+                userId: userId,
+                token: prevToken
+            )
+            
+        } catch {
+            
+            Courier.log(error.friendlyMessage)
+            
+        }
         
     }
     
@@ -81,15 +74,7 @@ internal class CorePush {
         }
         
         // Delete the current apns token
-        do {
-            try await tokenRepo.deleteToken(
-                accessToken: accessToken,
-                userId: userId,
-                deviceToken: Courier.shared.apnsToken
-            )
-        } catch {
-            Courier.log(error.friendlyMessage)
-        }
+        await deleteTokenIfNeeded(token: Courier.shared.apnsToken)
         
         // We save the raw apns token here
         rawApnsToken = rawToken
@@ -101,7 +86,7 @@ internal class CorePush {
             accessToken: accessToken,
             userId: userId,
             provider: .apns,
-            deviceToken: rawToken.string
+            token: rawToken.string
         )
         
     }
@@ -115,15 +100,7 @@ internal class CorePush {
         }
         
         // Delete the current fcm token
-        do {
-            try await tokenRepo.deleteToken(
-                accessToken: accessToken,
-                userId: userId,
-                deviceToken: fcmToken
-            )
-        } catch {
-            Courier.log(error.friendlyMessage)
-        }
+        await deleteTokenIfNeeded(token: fcmToken)
         
         fcmToken = token
         
@@ -134,8 +111,35 @@ internal class CorePush {
             accessToken: accessToken,
             userId: userId,
             provider: .fcm,
-            deviceToken: token
+            token: token
         )
+        
+    }
+    
+    // Tries to the remove the token from Courier
+    // Will silently fail if error occurs
+    private func putTokenIfNeeded(provider: CourierProvider, token: String?) async {
+        
+        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId, let newToken = token else {
+            return
+        }
+        
+        Courier.log("Puting \(provider.rawValue) Messaging Token: \(newToken)")
+        
+        do {
+            
+            return try await tokenRepo.putUserToken(
+                accessToken: accessToken,
+                userId: userId,
+                provider: provider,
+                token: newToken
+            )
+            
+        } catch {
+            
+            Courier.log(error.friendlyMessage)
+            
+        }
         
     }
     
