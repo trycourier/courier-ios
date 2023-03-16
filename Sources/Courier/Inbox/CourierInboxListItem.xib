@@ -60,7 +60,7 @@
                                             <constraint firstAttribute="height" constant="8" id="1zW-Sn-LLE"/>
                                         </constraints>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Jtv-0J-TdE">
+                                    <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Jtv-0J-TdE">
                                         <rect key="frame" x="0.0" y="8" width="343" height="34.333333333333336"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="34.329999999999998" id="U6S-ZB-iP7"/>
