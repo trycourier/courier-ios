@@ -11,7 +11,7 @@ internal class CourierInboxInfoView: UIView {
     
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
-    private let actionButton = CourierInboxButton(type: .system)
+    private let actionButton = CourierInboxButton(type: .custom)
     private let buttonContainer = UIView()
     
     internal var onButtonClick: (() -> Void)? = nil
