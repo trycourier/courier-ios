@@ -11,11 +11,13 @@ internal class CourierInboxButton: UIButton {
     
     private let inboxAction: InboxAction?
     private let actionClick: ((InboxAction) -> Void)?
+    private let onClick: (() -> Void)?
     
     init(inboxAction: InboxAction, theme: CourierInboxTheme, actionClick: @escaping (InboxAction) -> Void) {
         
         self.inboxAction = inboxAction
         self.actionClick = actionClick
+        self.onClick = nil
         
         super.init(frame: .zero)
         
@@ -25,10 +27,23 @@ internal class CourierInboxButton: UIButton {
         
     }
     
+    init(onClick: @escaping () -> Void) {
+        
+        self.inboxAction = nil
+        self.actionClick = nil
+        self.onClick = onClick
+        
+        super.init(frame: .zero)
+        
+        addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
+        
+    }
+    
     override init(frame: CGRect) {
         
         self.inboxAction = nil
         self.actionClick = nil
+        self.onClick = nil
         
         super.init(frame: frame)
         
@@ -42,6 +57,7 @@ internal class CourierInboxButton: UIButton {
         if let action = inboxAction {
             actionClick?(action)
         }
+        onClick?()
     }
     
     internal func setTheme(_ theme: CourierInboxTheme) {

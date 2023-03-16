@@ -116,7 +116,7 @@ internal class CorePush {
         
     }
     
-    // Tries to the remove the token from Courier
+    // Tries add the token from Courier
     // Will silently fail if error occurs
     private func putTokenIfNeeded(provider: CourierProvider, token: String?) async {
         

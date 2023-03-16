@@ -11,7 +11,7 @@ internal class CourierInboxInfoView: UIView {
     
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
-    private let actionButton = CourierInboxButton(type: .custom)
+    private var actionButton: CourierInboxButton? = nil
     private let buttonContainer = UIView()
     
     internal var onButtonClick: (() -> Void)? = nil
@@ -65,15 +65,18 @@ internal class CourierInboxInfoView: UIView {
     
     private func addButton() {
         
-        actionButton.translatesAutoresizingMaskIntoConstraints = false
-        actionButton.addTarget(self, action: #selector(onActionButtonClick), for: .touchUpInside)
+        actionButton = CourierInboxButton { [weak self] in
+            self?.onButtonClick?()
+        }
         
-        buttonContainer.addSubview(actionButton)
+        actionButton!.translatesAutoresizingMaskIntoConstraints = false
+        
+        buttonContainer.addSubview(actionButton!)
         
         NSLayoutConstraint.activate([
-            actionButton.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
-            actionButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-            actionButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
+            actionButton!.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
+            actionButton!.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+            actionButton!.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
         ])
         
         stackView.addArrangedSubview(buttonContainer)
@@ -90,7 +93,7 @@ internal class CourierInboxInfoView: UIView {
         case .error(let error):
             titleLabel.isHidden = false
             buttonContainer.isHidden = false
-            actionButton.setTitle("Retry", for: .normal)
+            actionButton?.setTitle("Retry", for: .normal)
             titleLabel.text = error.friendlyMessage
         case .empty:
             titleLabel.isHidden = false
@@ -106,7 +109,7 @@ internal class CourierInboxInfoView: UIView {
     internal func setTheme(_ theme: CourierInboxTheme) {
         titleLabel.font = theme.detailTitleFont.font
         titleLabel.textColor = theme.detailTitleFont.color
-        actionButton.setTheme(theme)
+        actionButton?.setTheme(theme)
     }
     
 }
