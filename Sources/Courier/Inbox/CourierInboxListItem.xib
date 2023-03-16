@@ -62,11 +62,6 @@
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Jtv-0J-TdE">
                                         <rect key="frame" x="0.0" y="8" width="343" height="34.333333333333336"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="NJr-B0-VJr">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="34.333333333333336"/>
-                                            </view>
-                                        </subviews>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="34.329999999999998" id="U6S-ZB-iP7"/>
                                         </constraints>
@@ -87,6 +82,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="actionsStack" destination="Jtv-0J-TdE" id="KL6-ru-Lrs"/>
                 <outlet property="bodyLabel" destination="Tcb-Y1-iXr" id="oIi-fC-6ct"/>
                 <outlet property="buttonStack" destination="5is-cr-EUW" id="6WA-RQ-jZi"/>
                 <outlet property="indicatorView" destination="cVo-mN-Urj" id="Pn5-ie-7VY"/>

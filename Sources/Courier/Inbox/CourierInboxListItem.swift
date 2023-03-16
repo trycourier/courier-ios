@@ -21,6 +21,7 @@ internal class CourierInboxListItem: UITableViewCell {
     @IBOutlet weak var bodyLabel: UILabel!
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var buttonStack: UIStackView!
+    @IBOutlet weak var actionsStack: UIStackView!
     
     private var inboxMessage: InboxMessage?
     private var buttons: [CourierInboxListItemButton] = []
@@ -50,13 +51,21 @@ internal class CourierInboxListItem: UITableViewCell {
         // Reverse the order and add them
         // This is because we have a spacer in the view
         // and need the buttons to be added at the beginning
-        for (i, action) in buttons.reversed().enumerated() {
+        for (i, action) in buttons.enumerated() {
             let button = CourierInboxButton(type: .custom)
             button.setTitle(action.title, for: .normal)
             button.setTheme(theme)
-            button.tag = (buttons.count - 1) - i
+            button.tag = i
             button.addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
-            buttonStack.addArrangedSubview(button)
+            actionsStack.addArrangedSubview(button)
+        }
+        
+        // Add spacer to end
+        // Pushes items to left
+        if (!buttons.isEmpty) {
+            let spacer = UIView()
+            spacer.backgroundColor = .red
+            actionsStack.addArrangedSubview(spacer)
         }
         
         buttonStack.isHidden = buttons.isEmpty
@@ -96,6 +105,9 @@ internal class CourierInboxListItem: UITableViewCell {
         titleLabel.text = nil
         timeLabel.text = nil
         bodyLabel.text = nil
+        actionsStack.arrangedSubviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
         buttonStack.isHidden = true
     }
 
