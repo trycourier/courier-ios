@@ -21,8 +21,6 @@ internal class CourierInboxListItem: UITableViewCell {
     @IBOutlet weak var bodyLabel: UILabel!
     @IBOutlet weak var indicatorView: UIView!
     @IBOutlet weak var buttonStack: UIStackView!
-    @IBOutlet weak var leftButton: CourierInboxButton!
-    @IBOutlet weak var rightButton: CourierInboxButton!
     
     private var inboxMessage: InboxMessage?
     private var buttons: [CourierInboxListItemButton] = []
@@ -82,14 +80,6 @@ internal class CourierInboxListItem: UITableViewCell {
         titleLabel.textColor = theme.titleFont.color
         timeLabel.textColor = theme.timeFont.color
         bodyLabel.textColor = theme.bodyFont.color
-
-        // Buttons
-        [leftButton, rightButton].forEach { button in
-            button.setTheme(theme)
-        }
-        
-        leftButton.setTitle("Example One", for: .normal)
-        rightButton.setTitle("Example Two", for: .normal)
 
         // Selection style
         selectionStyle = theme.cellStyles.selectionStyle
