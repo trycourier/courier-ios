@@ -44,7 +44,8 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
                     font: UIFont(name: "Courier New Bold", size: 16)!,
                     color: .white
                 ),
-                backgroundColor: primaryColor
+                backgroundColor: primaryColor,
+                cornerRadius: 0
             ),
             cellStyles: CourierInboxCellStyles(
                 separatorStyle: .none
