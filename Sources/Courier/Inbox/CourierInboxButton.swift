@@ -9,6 +9,41 @@ import UIKit
 
 internal class CourierInboxButton: UIButton {
     
+    private let inboxAction: InboxAction?
+    private let actionClick: ((InboxAction) -> Void)?
+    
+    init(inboxAction: InboxAction, theme: CourierInboxTheme, actionClick: @escaping (InboxAction) -> Void) {
+        
+        self.inboxAction = inboxAction
+        self.actionClick = actionClick
+        
+        super.init(frame: .zero)
+        
+        setTitle(inboxAction.content ?? "Action", for: .normal)
+        addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
+        setTheme(theme)
+        
+    }
+    
+    override init(frame: CGRect) {
+        
+        self.inboxAction = nil
+        self.actionClick = nil
+        
+        super.init(frame: frame)
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc private func onButtonClick() {
+        if let action = inboxAction {
+            actionClick?(action)
+        }
+    }
+    
     internal func setTheme(_ theme: CourierInboxTheme) {
         
         let padding = CourierInboxTheme.margin * 1.5

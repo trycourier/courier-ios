@@ -39,8 +39,3 @@ internal struct InboxPageInfo: Codable {
     let startCursor: String?
     let hasNextPage: Bool?
 }
-
-@objc public class InboxAction: NSObject, Codable {
-    let startCursor: String?
-    let hasNextPage: Bool?
-}

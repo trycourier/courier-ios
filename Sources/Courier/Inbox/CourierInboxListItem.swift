@@ -8,8 +8,8 @@
 import UIKit
 
 internal struct CourierInboxListItemButton {
-    let title: String
-    let action: () -> Void
+    let action: InboxAction
+    let event: () -> Void
 }
 
 internal class CourierInboxListItem: UITableViewCell {
@@ -24,19 +24,17 @@ internal class CourierInboxListItem: UITableViewCell {
     @IBOutlet weak var actionsStack: UIStackView!
     
     private var inboxMessage: InboxMessage?
-    private var buttons: [CourierInboxListItemButton] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
         reset()
     }
     
-    internal func setMessage(_ message: InboxMessage, buttons: [CourierInboxListItemButton], theme: CourierInboxTheme) {
+    internal func setMessage(_ message: InboxMessage, _ theme: CourierInboxTheme, onActionClick: @escaping (InboxAction) -> Void) {
         
         self.inboxMessage = message
-        self.buttons = buttons
         
-        setupButtons(theme)
+        setupButtons(theme, onActionClick)
         setTheme(theme)
         
         indicatorView.isHidden = message.isRead
@@ -46,34 +44,33 @@ internal class CourierInboxListItem: UITableViewCell {
         
     }
     
-    private func setupButtons(_ theme: CourierInboxTheme) {
+    private func setupButtons(_ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {
         
-        // Reverse the order and add them
-        // This is because we have a spacer in the view
-        // and need the buttons to be added at the beginning
-        for (i, action) in buttons.enumerated() {
-            let button = CourierInboxButton(type: .custom)
-            button.setTitle(action.title, for: .normal)
-            button.setTheme(theme)
-            button.tag = i
-            button.addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
-            actionsStack.addArrangedSubview(button)
+        let actions = self.inboxMessage?.actions ?? []
+        
+        // Create and add a button for each action
+        actions.forEach { action in
+            
+            let actionButton = CourierInboxButton(
+                inboxAction: action,
+                theme: theme,
+                actionClick: onActionClick
+            )
+            
+            actionsStack.addArrangedSubview(actionButton)
+            
         }
         
         // Add spacer to end
         // Pushes items to left
-        if (!buttons.isEmpty) {
+        if (!actions.isEmpty) {
             let spacer = UIView()
             spacer.backgroundColor = .red
             actionsStack.addArrangedSubview(spacer)
         }
         
-        buttonStack.isHidden = buttons.isEmpty
+        buttonStack.isHidden = actions.isEmpty
         
-    }
-    
-    @objc private func onButtonClick(_ sender: UIButton) {
-        buttons[sender.tag].action()
     }
     
     private func setTheme(_ theme: CourierInboxTheme) {

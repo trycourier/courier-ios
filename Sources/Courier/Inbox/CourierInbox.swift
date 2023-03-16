@@ -308,19 +308,13 @@ import UIKit
                 let index = indexPath.row
                 let message = inboxMessages[index]
                 
-                let actions = [
-                    CourierInboxListItemButton(title: "Test 0", action: {
-                        self.delegate?.didClickButtonForInboxMessage?(message: message, listItemIndex: index, buttonIndex: 0)
-                    }),
-                    CourierInboxListItemButton(title: "Test 1", action: {
-                        self.delegate?.didClickButtonForInboxMessage?(message: message, listItemIndex: index, buttonIndex: 1)
-                    }),
-                    CourierInboxListItemButton(title: "Test 2", action: {
-                        self.delegate?.didClickButtonForInboxMessage?(message: message, listItemIndex: index, buttonIndex: 2)
-                    })
-                ]
-                
-                cell.setMessage(message, buttons: actions, theme: theme)
+                cell.setMessage(message, theme) { [weak self] inboxAction in
+                    self?.delegate?.didClickInboxActionForMessageAtIndex?(
+                        action: inboxAction,
+                        message: message,
+                        index: index
+                    )
+                }
                 
                 return cell
                 
@@ -355,7 +349,7 @@ import UIKit
         if (indexPath.section == 0) {
             let index = indexPath.row
             let message = self.inboxMessages[index]
-            self.delegate?.didClickInboxMessageAtIndex?(message: message, listItemIndex: index)
+            self.delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
         }
     }
     

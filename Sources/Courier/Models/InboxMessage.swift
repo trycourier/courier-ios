@@ -22,9 +22,8 @@ import Foundation
     internal var archived: Bool?
     internal var read: String?
     public let messageId: String
-    public let tags: [String]?
     
-    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, tags: [String]?, actions: [InboxAction]?) {
+    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, actions: [InboxAction]?) {
         self.title = title
         self.body = body
         self.preview = preview
@@ -32,8 +31,11 @@ import Foundation
         self.archived = archived
         self.read = read
         self.messageId = messageId
-        self.tags = tags
-        self.actions = actions
+//        self.actions = actions
+        self.actions = [
+            InboxAction(content: "Something", href: "", style: "", background_color: ""),
+            InboxAction(content: "Something Else", href: "", style: "", background_color: ""),
+        ]
     }
     
     @objc public var subtitle: String? {

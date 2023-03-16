@@ -31,7 +31,7 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
         print(listItemIndex, message)
     }
     
-    func didClickButtonForInboxMessage(message: InboxMessage, index: Int) {
+    func didClickButtonForInboxMessage(message: InboxMessage, listItemIndex: Int, buttonIndex: Int) {
         print(index, message)
     }
 
