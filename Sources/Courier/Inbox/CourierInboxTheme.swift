@@ -73,11 +73,11 @@ import UIKit
 
 @objc public class CourierInboxButtonStyles: NSObject {
     
-    internal let font: CourierInboxFont?
+    internal let font: CourierInboxFont
     internal let backgroundColor: UIColor
     internal let cornerRadius: CGFloat
     
-    public init(font: CourierInboxFont? = nil, backgroundColor: UIColor = .systemBlue, cornerRadius: CGFloat = 10) {
+    public init(font: CourierInboxFont = CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white), backgroundColor: UIColor = .systemBlue, cornerRadius: CGFloat = 10) {
         self.font = font
         self.backgroundColor = backgroundColor
         self.cornerRadius = cornerRadius
