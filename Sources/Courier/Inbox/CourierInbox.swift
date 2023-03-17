@@ -400,8 +400,9 @@ import UIKit
         
         Task {
             
-//            theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
-            theme = isDarkMode ? darkTheme : lightTheme
+            state = .loading
+            
+            theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
             
             tableView.separatorStyle = theme.cellStyles.separatorStyle
             tableView.separatorInset = theme.cellStyles.separatorInsets
@@ -414,6 +415,8 @@ import UIKit
             courierBar.setTheme(theme)
             
             reloadCells()
+            
+            state = inboxMessages.isEmpty ? .empty : .content
             
         }
         
