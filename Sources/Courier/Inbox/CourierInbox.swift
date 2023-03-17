@@ -54,6 +54,8 @@ import UIKit
                 
                 let prevState = state
                 
+                UIView.setAnimationsEnabled(false)
+                
                 state = .loading
                 
                 let _ = await darkTheme.attachBrand()
@@ -61,6 +63,8 @@ import UIKit
                 traitCollectionDidChange(nil)
                 
                 state = prevState
+                
+                UIView.setAnimationsEnabled(true)
                 
             }
             
@@ -162,6 +166,9 @@ import UIKit
     
     private func setup() {
         
+        // Set state
+        state = .loading
+        
         // Refresh light / dark mode
         traitCollectionDidChange(nil)
 
@@ -170,9 +177,6 @@ import UIKit
         addLoadingIndicator()
         addInfoView()
         addCourierBar()
-        
-        // Set state
-        state = .loading
         
         // Init the listener
         makeListener()
