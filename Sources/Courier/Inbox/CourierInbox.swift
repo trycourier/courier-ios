@@ -400,6 +400,9 @@ import UIKit
         
         Task {
             
+            UIView.setAnimationsEnabled(false)
+            
+            let prevState = state
             state = .loading
             
             theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
@@ -416,7 +419,9 @@ import UIKit
             
             reloadCells()
             
-            state = inboxMessages.isEmpty ? .empty : .content
+            state = prevState
+            
+            UIView.setAnimationsEnabled(true)
             
         }
         
