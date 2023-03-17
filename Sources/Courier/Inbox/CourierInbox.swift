@@ -21,57 +21,60 @@ import UIKit
      */
     @objc public var delegate: CourierInboxDelegate? = nil
     
-    // MARK: Theme
-    
-    @objc public var lightTheme = CourierInboxTheme.defaultLight {
-        didSet {
-            
-            Task {
-                
-                let prevState = state
-                
-                UIView.setAnimationsEnabled(false)
-                
-                state = .loading
-                
-                let _ = await lightTheme.attachBrand()
-                
-                traitCollectionDidChange(nil)
-                
-                state = prevState
-                
-                UIView.setAnimationsEnabled(true)
-                
-            }
-            
-        }
-    }
-    
-    @objc public var darkTheme = CourierInboxTheme.defaultDark {
-        didSet {
-            
-            Task {
-                
-                let prevState = state
-                
-                UIView.setAnimationsEnabled(false)
-                
-                state = .loading
-                
-                let _ = await darkTheme.attachBrand()
-                
-                traitCollectionDidChange(nil)
-                
-                state = prevState
-                
-                UIView.setAnimationsEnabled(true)
-                
-            }
-            
-        }
-    }
+//    @objc public var lightTheme = CourierInboxTheme.defaultLight {
+//        didSet {
+//
+//            Task {
+//
+//                let prevState = state
+//
+//                UIView.setAnimationsEnabled(false)
+//
+//                state = .loading
+//
+//                let _ = await lightTheme.attachBrand()
+//
+//                traitCollectionDidChange(nil)
+//
+//                state = prevState
+//
+//                UIView.setAnimationsEnabled(true)
+//
+//            }
+//
+//        }
+//    }
+//
+//    @objc public var darkTheme = CourierInboxTheme.defaultDark {
+//        didSet {
+//
+//            Task {
+//
+//                let prevState = state
+//
+//                UIView.setAnimationsEnabled(false)
+//
+//                state = .loading
+//
+//                let _ = await darkTheme.attachBrand()
+//
+//                traitCollectionDidChange(nil)
+//
+//                state = prevState
+//
+//                UIView.setAnimationsEnabled(true)
+//
+//            }
+//
+//        }
+//    }
     
     private var brand: CourierBrand? = nil
+    
+    // MARK: Theme
+    
+    private let lightTheme: CourierInboxTheme
+    private let darkTheme: CourierInboxTheme
     
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
@@ -153,13 +156,24 @@ import UIKit
     }
     
     // MARK: Init
+    
+    @objc public init(lightTheme: CourierInboxTheme = .defaultLight, darkTheme: CourierInboxTheme = .defaultDark) {
+        self.lightTheme = lightTheme
+        self.darkTheme = darkTheme
+        super.init(frame: .zero)
+        setup()
+    }
 
     override init(frame: CGRect) {
+        self.lightTheme = .defaultLight
+        self.darkTheme = .defaultDark
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
+        self.lightTheme = .defaultLight
+        self.darkTheme = .defaultDark
         super.init(coder: coder)
         setup()
     }
