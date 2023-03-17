@@ -101,11 +101,16 @@ extension CourierInboxTheme {
             return self
         }
         
+        // Do not continue if we have a brand already
+        if let _ = self.brand {
+            return self
+        }
+        
         do {
             
             // Grabs the brand from the server if needed
             // Sets it or fails silently
-            brand = try await BrandsRepository().getBrand(clientKey: clientKey, userId: userId, brandId: brandId)
+            self.brand = try await BrandsRepository().getBrand(clientKey: clientKey, userId: userId, brandId: brandId)
             
         } catch {
             
