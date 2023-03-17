@@ -147,16 +147,21 @@ import UIKit
     
     private func refreshCourierBarIfNeeded() {
         
-        // Set the courier bar background color
-        courierBar.backgroundColor = superview?.backgroundColor
-        
-        // Update position
-        courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
-        courierBar.layoutIfNeeded()
-        
-        // Add content inset
-        tableView.verticalScrollIndicatorInsets.bottom += courierBar.frame.height
-        tableView.contentInset.bottom += courierBar.frame.height
+        if (!courierBar.isHidden) {
+         
+            // Set the courier bar background color
+            courierBar.backgroundColor = superview?.backgroundColor
+            
+            // Update position
+            courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
+            courierBar.layoutIfNeeded()
+            
+            // Add content inset
+            let inset = (courierBarBottom?.constant ?? 0) + courierBar.frame.height
+            tableView.verticalScrollIndicatorInsets.bottom = inset
+            tableView.contentInset.bottom = inset
+            
+        }
         
     }
     
