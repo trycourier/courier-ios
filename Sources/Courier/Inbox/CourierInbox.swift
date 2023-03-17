@@ -54,6 +54,7 @@ import UIKit
     
     // MARK: Constraints
     
+    private var didSetCourierBarBottom = false
     private var courierBarBottom: NSLayoutConstraint? = nil
     
     // MARK: State
@@ -149,16 +150,13 @@ import UIKit
         // Set the courier bar background color
         courierBar.backgroundColor = superview?.backgroundColor
         
-        print(tableView.adjustedContentInset.bottom)
-        
         // Update position
         courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
         courierBar.layoutIfNeeded()
         
         // Add content inset
-        let inset = courierBar.frame.height + tableView.adjustedContentInset.bottom
-        tableView.verticalScrollIndicatorInsets.bottom = inset
-        tableView.contentInset.bottom = inset
+        tableView.verticalScrollIndicatorInsets.bottom += courierBar.frame.height
+        tableView.contentInset.bottom += courierBar.frame.height
         
     }
     
