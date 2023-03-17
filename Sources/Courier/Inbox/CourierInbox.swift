@@ -161,7 +161,7 @@ import UIKit
             courierBar.layoutIfNeeded()
             
             // Update infoView position
-            infoViewY?.constant = -courierBar.frame.height
+            infoViewY?.constant = -(courierBar.frame.height / 2)
             infoView.layoutIfNeeded()
             
         }
