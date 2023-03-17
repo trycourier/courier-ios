@@ -54,7 +54,7 @@ import UIKit
     
     // MARK: Constraints
     
-    private var didSetCourierBarBottom = false
+    private var infoViewY: NSLayoutConstraint? = nil
     private var courierBarBottom: NSLayoutConstraint? = nil
     
     // MARK: State
@@ -160,7 +160,9 @@ import UIKit
             courierBarBottom?.constant = -(tableView.adjustedContentInset.bottom - courierBar.frame.height)
             courierBar.layoutIfNeeded()
             
-            print(courierBarBottom?.constant, courierBar.frame)
+            // Update infoView position
+            infoViewY?.constant = -courierBar.frame.height
+            infoView.layoutIfNeeded()
             
         }
         
@@ -180,9 +182,9 @@ import UIKit
         addSubview(courierBar)
         
         courierBarBottom = courierBar.bottomAnchor.constraint(equalTo: bottomAnchor)
-        courierBarBottom?.isActive = true
         
         NSLayoutConstraint.activate([
+            courierBarBottom!,
             courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
@@ -242,8 +244,10 @@ import UIKit
         
         addSubview(infoView)
         
+        infoViewY = infoView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        
         NSLayoutConstraint.activate([
-            infoView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            infoViewY!,
             infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: CourierInboxTheme.margin),
             infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CourierInboxTheme.margin),
         ])
