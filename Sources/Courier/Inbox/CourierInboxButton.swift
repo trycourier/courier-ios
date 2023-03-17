@@ -73,7 +73,7 @@ internal class CourierInboxButton: UIButton {
         titleLabel?.font = theme.buttonStyles.font.font
         titleLabel?.textColor = theme.buttonStyles.font.color
         setTitleColor(theme.buttonStyles.font.color, for: .normal)
-        backgroundColor = theme.buttonStyles.backgroundColor ?? .systemBlue
+        backgroundColor = theme.buttonColor
         layer.cornerRadius = theme.buttonStyles.cornerRadius
         
     }

@@ -14,7 +14,7 @@ import UIKit
     internal let brandId: String?
     internal let messageAnimationStyle: UITableView.RowAnimation
     private let unreadIndicatorBarColor: UIColor?
-    internal let loadingIndicatorColor: UIColor?
+    private let loadingIndicatorColor: UIColor?
     internal let titleFont: CourierInboxFont
     internal let timeFont: CourierInboxFont
     internal let bodyFont: CourierInboxFont
@@ -76,8 +76,32 @@ import UIKit
         get {
             if let customColor = unreadIndicatorBarColor {
                 return customColor
-            } else if let brandColor = brand?.settings?.colors?.primary {
-                return UIColor(brandColor) ?? .systemBlue
+            } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+                return brandColor
+            } else {
+                return .systemBlue
+            }
+        }
+    }
+    
+    internal var loadingColor: UIColor {
+        get {
+            if let customColor = loadingIndicatorColor {
+                return customColor
+            } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+                return brandColor
+            } else {
+                return .systemBlue
+            }
+        }
+    }
+    
+    internal var buttonColor: UIColor {
+        get {
+            if let customColor = buttonStyles.backgroundColor {
+                return customColor
+            } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+                return brandColor
             } else {
                 return .systemBlue
             }
