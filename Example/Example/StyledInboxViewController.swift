@@ -20,8 +20,8 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
         let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
         
         courierInbox.lightTheme = CourierInboxTheme(
+            brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
             messageAnimationStyle: .fade,
-            unreadIndicatorBarColor: secondaryColor,
             loadingIndicatorColor: primaryColor,
             titleFont: CourierInboxFont(
                 font: UIFont(name: "Avenir Black", size: 20)!,
@@ -54,6 +54,7 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
         )
         
         courierInbox.darkTheme = CourierInboxTheme(
+            brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
             messageAnimationStyle: .right,
             unreadIndicatorBarColor: primaryColor,
             loadingIndicatorColor: .white,

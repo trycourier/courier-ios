@@ -73,7 +73,7 @@ internal class CourierInboxListItem: UITableViewCell {
     
     private func setTheme(_ theme: CourierInboxTheme) {
 
-        indicatorView.backgroundColor = theme.unreadIndicatorBarColor
+        indicatorView.backgroundColor = theme.unreadColor
 
         // Font
         titleLabel.font = theme.titleFont.font

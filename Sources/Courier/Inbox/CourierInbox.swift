@@ -35,6 +35,8 @@ import UIKit
         }
     }
     
+    private var brand: CourierBrand? = nil
+    
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
     private var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
@@ -44,6 +46,10 @@ import UIKit
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
+    
+    // MARK: Repository
+    
+    private lazy var brandsRepo = BrandsRepository()
     
     // MARK: Subviews
     
@@ -123,10 +129,6 @@ import UIKit
     }
     
     private func setup() {
-        
-//        Task {
-//            try await BrandsRepository().getBrand(clientKey:userId:brandId:)
-//        }
         
         // Refresh light / dark mode
         traitCollectionDidChange(nil)
@@ -394,21 +396,59 @@ import UIKit
         
     }
     
+//    private func refreshBrandIfNeeded() async {
+//
+//        // Be sure we can fetch the brand
+//        // Fail silently
+//        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let brandId = theme.brandId else {
+//            self.lightTheme.brand = nil
+//            self.darkTheme.brand = nil
+//            return
+//        }
+//
+//        // Reset the brand if needed
+//        if let brand = self.brand {
+//            self.lightTheme.brand = brand
+//            self.darkTheme.brand = brand
+//            return
+//        }
+//
+//        // Grab the brand if needed, fail silently
+//        do {
+//            self.brand = try await brandsRepo.getBrand(clientKey: clientKey, userId: userId, brandId: brandId)
+//            self.lightTheme.brand = brand
+//            self.darkTheme.brand = brand
+//        } catch {
+//            Courier.log(error.friendlyMessage)
+//        }
+//
+//    }
+    
     private func setTheme(isDarkMode: Bool) {
         
-        theme = isDarkMode ? darkTheme : lightTheme
-        
-        tableView.separatorStyle = theme.cellStyles.separatorStyle
-        tableView.separatorInset = theme.cellStyles.separatorInsets
-        tableView.separatorColor = theme.cellStyles.separatorColor
-        
-        tableView.refreshControl?.tintColor = theme.loadingIndicatorColor
-        loadingIndicator.color = theme.loadingIndicatorColor
-        
-        infoView.setTheme(theme)
-        courierBar.setTheme(theme)
-        
-        reloadCells()
+        Task {
+            
+            // Grabs the brand if needed
+            // Sets the brand to the local dark/light theme
+//            await refreshBrandIfNeeded()
+            
+            // Need to get the brand per theme
+            
+            theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
+            
+            tableView.separatorStyle = theme.cellStyles.separatorStyle
+            tableView.separatorInset = theme.cellStyles.separatorInsets
+            tableView.separatorColor = theme.cellStyles.separatorColor
+            
+            tableView.refreshControl?.tintColor = theme.loadingIndicatorColor
+            loadingIndicator.color = theme.loadingIndicatorColor
+            
+            infoView.setTheme(theme)
+            courierBar.setTheme(theme)
+            
+            reloadCells()
+            
+        }
         
     }
     
