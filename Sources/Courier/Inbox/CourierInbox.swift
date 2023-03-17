@@ -25,13 +25,45 @@ import UIKit
     
     @objc public var lightTheme = CourierInboxTheme.defaultLight {
         didSet {
-            traitCollectionDidChange(nil)
+            
+            Task {
+                
+                let prevState = state
+                
+                UIView.setAnimationsEnabled(false)
+                
+                state = .loading
+                
+                let _ = await lightTheme.attachBrand()
+                
+                traitCollectionDidChange(nil)
+                
+                state = prevState
+                
+                UIView.setAnimationsEnabled(true)
+                
+            }
+            
         }
     }
     
     @objc public var darkTheme = CourierInboxTheme.defaultDark {
         didSet {
-            traitCollectionDidChange(nil)
+            
+            Task {
+                
+                let prevState = state
+                
+                state = .loading
+                
+                let _ = await darkTheme.attachBrand()
+                
+                traitCollectionDidChange(nil)
+                
+                state = prevState
+                
+            }
+            
         }
     }
     
@@ -397,33 +429,20 @@ import UIKit
     }
     
     private func setTheme(isDarkMode: Bool) {
+            
+        theme = isDarkMode ? darkTheme : lightTheme
         
-        Task {
-            
-            UIView.setAnimationsEnabled(false)
-            
-            let prevState = state
-            state = .loading
-            
-            theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
-            
-            tableView.separatorStyle = theme.cellStyles.separatorStyle
-            tableView.separatorInset = theme.cellStyles.separatorInsets
-            tableView.separatorColor = theme.cellStyles.separatorColor
-            
-            tableView.refreshControl?.tintColor = theme.loadingIndicatorColor
-            loadingIndicator.color = theme.loadingIndicatorColor
-            
-            infoView.setTheme(theme)
-            courierBar.setTheme(theme)
-            
-            reloadCells()
-            
-            state = prevState
-            
-            UIView.setAnimationsEnabled(true)
-            
-        }
+        tableView.separatorStyle = theme.cellStyles.separatorStyle
+        tableView.separatorInset = theme.cellStyles.separatorInsets
+        tableView.separatorColor = theme.cellStyles.separatorColor
+        
+        tableView.refreshControl?.tintColor = theme.loadingIndicatorColor
+        loadingIndicator.color = theme.loadingIndicatorColor
+        
+        infoView.setTheme(theme)
+        courierBar.setTheme(theme)
+        
+        reloadCells()
         
     }
     
