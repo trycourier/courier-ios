@@ -400,10 +400,6 @@ import UIKit
         
         Task {
             
-            let prevState = state
-            
-            state = .loading
-            
             theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
             
             tableView.separatorStyle = theme.cellStyles.separatorStyle
@@ -417,8 +413,6 @@ import UIKit
             courierBar.setTheme(theme)
             
             reloadCells()
-            
-            state = prevState
             
         }
         
