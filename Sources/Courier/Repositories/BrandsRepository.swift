@@ -2,7 +2,7 @@
 //  BrandsRepository.swift
 //  
 //
-//  Created by Michael Miller on 3/16/23.
+//  Created by https://github.com/mikemilla on 3/16/23.
 //
 
 import Foundation

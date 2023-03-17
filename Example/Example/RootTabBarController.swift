@@ -2,7 +2,7 @@
 //  RootTabBarController.swift
 //  Example
 //
-//  Created by Michael Miller on 3/3/23.
+//  Created by https://github.com/mikemilla on 3/3/23.
 //
 
 import UIKit

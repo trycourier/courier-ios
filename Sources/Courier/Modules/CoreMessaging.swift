@@ -2,7 +2,7 @@
 //  CoreMessaging.swift
 //  
 //
-//  Created by Michael Miller on 3/2/23.
+//  Created by https://github.com/mikemilla on 3/2/23.
 //
 
 import Foundation

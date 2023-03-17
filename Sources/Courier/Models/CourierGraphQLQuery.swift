@@ -2,7 +2,7 @@
 //  CourierGraphQLQuery.swift
 //  
 //
-//  Created by Michael Miller on 2/23/23.
+//  Created by https://github.com/mikemilla on 2/23/23.
 //
 
 import Foundation

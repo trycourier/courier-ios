@@ -2,7 +2,7 @@
 //  TokenRepository.swift
 //
 //
-//  Created by Michael Miller on 7/7/22.
+//  Created by https://github.com/mikemilla on 7/7/22.
 //
 
 import Foundation

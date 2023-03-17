@@ -2,7 +2,7 @@
 //  UserManager.swift
 //  
 //
-//  Created by Michael Miller on 9/2/22.
+//  Created by https://github.com/mikemilla on 9/2/22.
 //
 
 import Foundation

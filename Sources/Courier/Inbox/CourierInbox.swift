@@ -2,7 +2,7 @@
 //  CourierInbox.swift
 //  
 //
-//  Created by Michael Miller on 3/6/23.
+//  Created by https://github.com/mikemilla on 3/6/23.
 //
 
 import UIKit
@@ -54,7 +54,6 @@ import UIKit
     
     // MARK: Constraints
     
-    private var didSetCourierBarBottom = false
     private var courierBarBottom: NSLayoutConstraint? = nil
     
     // MARK: State
@@ -145,26 +144,26 @@ import UIKit
         
     }
     
-    open override func layoutSubviews() {
-        super.layoutSubviews()
+    private func refreshCourierBarIfNeeded() {
         
         // Set the courier bar background color
         courierBar.backgroundColor = superview?.backgroundColor
         
-        // Refresh position of courier bar
-        if (!didSetCourierBarBottom) {
-            
-            didSetCourierBarBottom = true
-            
-            // Update position
-            courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
-            courierBar.layoutIfNeeded()
-            
-            // Add content inset
-            tableView.verticalScrollIndicatorInsets.bottom += courierBar.frame.height
-            tableView.contentInset.bottom += courierBar.frame.height
-            
-        }
+        // Update position
+        courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
+        courierBar.layoutIfNeeded()
+        
+        // Add content inset
+        let inset = courierBar.frame.height + tableView.adjustedContentInset.bottom
+        tableView.verticalScrollIndicatorInsets.bottom = inset
+        tableView.contentInset.bottom = inset
+        
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        refreshCourierBarIfNeeded()
         
     }
     

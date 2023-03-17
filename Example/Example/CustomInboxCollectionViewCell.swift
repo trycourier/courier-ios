@@ -2,7 +2,7 @@
 //  CustomInboxCollectionViewCell.swift
 //  Example
 //
-//  Created by Michael Miller on 2/28/23.
+//  Created by https://github.com/mikemilla on 2/28/23.
 //
 
 import UIKit
