@@ -159,9 +159,8 @@ import UIKit
             print(courierBarBottom?.constant, courierBar.frame)
             
             // Add content inset
-//            let inset = courierBar.frame.maxY + courierBar.frame.height
-//            tableView.verticalScrollIndicatorInsets.bottom = inset
-//            tableView.contentInset.bottom = inset
+            tableView.verticalScrollIndicatorInsets.bottom = courierBar.frame.height
+            tableView.contentInset.bottom = courierBar.frame.height
             
         }
         
