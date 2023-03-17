@@ -180,20 +180,28 @@ import UIKit
     
     private func setup() {
         
-        // Set state
-        state = .loading
-        
-        // Refresh light / dark mode
-        traitCollectionDidChange(nil)
+        Task {
+            
+            // Set state
+            state = .loading
+            
+            // Get the brands if possible
+            // Will silently fail
+            await fetchBrands()
+            
+            // Refresh light / dark mode
+            traitCollectionDidChange(nil)
 
-        // Add the views
-        addTableView()
-        addLoadingIndicator()
-        addInfoView()
-        addCourierBar()
-        
-        // Init the listener
-        makeListener()
+            // Add the views
+            addTableView()
+            addLoadingIndicator()
+            addInfoView()
+            addCourierBar()
+            
+            // Init the listener
+            makeListener()
+            
+        }
         
     }
     
@@ -304,6 +312,13 @@ import UIKit
             infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CourierInboxTheme.margin),
         ])
         
+    }
+    
+    private func fetchBrands() async {
+        let _ = await [
+            lightTheme.attachBrand(),
+            darkTheme.attachBrand()
+        ]
     }
     
     private func makeListener() {

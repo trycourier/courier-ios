@@ -77,7 +77,7 @@ import UIKit
             if let customColor = unreadIndicatorBarColor {
                 return customColor
             } else if let brandColor = brand?.settings?.colors?.primary {
-                return .red
+                return UIColor(hex: brandColor) ?? .systemBlue
             } else {
                 return .systemBlue
             }
