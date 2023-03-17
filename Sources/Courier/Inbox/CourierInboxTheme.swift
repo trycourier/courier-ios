@@ -97,7 +97,7 @@ extension CourierInboxTheme {
     internal func attachBrand() async -> CourierInboxTheme {
         
         // Return if we have no keys, or no brandId, or an existing brand exists
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let brandId = brandId, let _ = brand else {
+        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let brandId = brandId else {
             return self
         }
         
