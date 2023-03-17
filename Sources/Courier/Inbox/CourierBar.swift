@@ -65,7 +65,7 @@ internal class CourierBar: UIView {
     
     internal func setTheme(_ theme: CourierInboxTheme) {
         border.backgroundColor = theme.cellStyles.separatorColor ?? .separator
-        isHidden = theme.brand?.settings?.inapp?.showCourierFooter ?? true
+        isHidden = theme.brand?.settings?.inapp?.showCourierFooter ?? false
     }
 
 }
