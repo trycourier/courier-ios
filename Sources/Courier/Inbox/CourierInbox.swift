@@ -396,43 +396,13 @@ import UIKit
         
     }
     
-//    private func refreshBrandIfNeeded() async {
-//
-//        // Be sure we can fetch the brand
-//        // Fail silently
-//        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let brandId = theme.brandId else {
-//            self.lightTheme.brand = nil
-//            self.darkTheme.brand = nil
-//            return
-//        }
-//
-//        // Reset the brand if needed
-//        if let brand = self.brand {
-//            self.lightTheme.brand = brand
-//            self.darkTheme.brand = brand
-//            return
-//        }
-//
-//        // Grab the brand if needed, fail silently
-//        do {
-//            self.brand = try await brandsRepo.getBrand(clientKey: clientKey, userId: userId, brandId: brandId)
-//            self.lightTheme.brand = brand
-//            self.darkTheme.brand = brand
-//        } catch {
-//            Courier.log(error.friendlyMessage)
-//        }
-//
-//    }
-    
     private func setTheme(isDarkMode: Bool) {
         
         Task {
             
-            // Grabs the brand if needed
-            // Sets the brand to the local dark/light theme
-//            await refreshBrandIfNeeded()
+            let prevState = state
             
-            // Need to get the brand per theme
+            state = .loading
             
             theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
             
@@ -447,6 +417,8 @@ import UIKit
             courierBar.setTheme(theme)
             
             reloadCells()
+            
+            state = prevState
             
         }
         
