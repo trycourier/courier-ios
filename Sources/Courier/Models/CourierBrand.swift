@@ -49,17 +49,11 @@ internal struct CourierBrandData: Codable {
 @objc public class CourierBrandColors: NSObject, Codable {
     
     public let primary: String?
-    public let secondary: String?
-    public let tertiary: String?
     
     public init(
-        primary: String?,
-        secondary: String?,
-        tertiary: String?
+        primary: String?
     ) {
         self.primary = primary
-        self.secondary = secondary
-        self.tertiary = tertiary
     }
     
 }

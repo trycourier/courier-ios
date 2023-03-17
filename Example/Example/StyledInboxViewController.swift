@@ -17,8 +17,8 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
     private lazy var courierInbox = {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
-                brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
                 messageAnimationStyle: .fade,
+                unreadIndicatorBarColor: secondaryColor,
                 loadingIndicatorColor: primaryColor,
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
@@ -51,9 +51,6 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
             ),
             darkTheme: CourierInboxTheme(
                 brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
-                messageAnimationStyle: .right,
-                unreadIndicatorBarColor: primaryColor,
-                loadingIndicatorColor: .white,
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: .white
@@ -73,9 +70,8 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
                 buttonStyles: CourierInboxButtonStyles(
                     font: CourierInboxFont(
                         font: UIFont(name: "Avenir Black", size: 16)!,
-                        color: primaryColor
+                        color: .white
                     ),
-                    backgroundColor: .white,
                     cornerRadius: 0
                 ),
                 cellStyles: CourierInboxCellStyles(
