@@ -149,6 +149,10 @@ import UIKit
         // Set the courier bar background color
         courierBar.backgroundColor = superview?.backgroundColor
         
+        tableView.layoutIfNeeded()
+        
+        print(tableView.adjustedContentInset.bottom)
+        
         // Update position
         courierBarBottom?.constant = -tableView.adjustedContentInset.bottom
         courierBar.layoutIfNeeded()
