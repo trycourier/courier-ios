@@ -400,7 +400,8 @@ import UIKit
         
         Task {
             
-            theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
+//            theme = await isDarkMode ? darkTheme.attachBrand() : lightTheme.attachBrand()
+            theme = isDarkMode ? darkTheme : lightTheme
             
             tableView.separatorStyle = theme.cellStyles.separatorStyle
             tableView.separatorInset = theme.cellStyles.separatorInsets
