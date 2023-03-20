@@ -10,7 +10,7 @@ import UIKit
 internal class CourierBar: UIView {
     
     private let border = UIView()
-    private let logoButton = UIButton(type: .system)
+    private let logoButton = UIButton(type: .custom)
 
     // MARK: Init
 
@@ -38,6 +38,7 @@ internal class CourierBar: UIView {
         
         logoButton.contentMode = .scaleAspectFit
         logoButton.translatesAutoresizingMaskIntoConstraints = false
+        logoButton.addTarget(self, action: #selector(showLaunchSheet), for: .touchUpInside)
         
         addSubview(logoButton)
         
@@ -59,6 +60,30 @@ internal class CourierBar: UIView {
             border.leadingAnchor.constraint(equalTo: leadingAnchor),
             border.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
+        
+    }
+    
+    @objc private func showLaunchSheet() {
+        
+        print("Test")
+        
+//        let alert = UIAlertController(title: "Your title", message: nil, preferredStyle: .actionSheet)
+//
+//        alert.addAction(UIAlertAction(title: "Your action 1", style: .default) { _ in
+//            // onAction1()
+//        })
+//
+//        alert.addAction(UIAlertAction(title: "Your action 2", style: .default) { _ in
+//            // onAction2()
+//        })
+//
+//        alert.addAction(UIAlertAction(title: "Your cancel action", style: .cancel) { _ in
+//            // onCancel
+//        })
+//
+//        if let viewController = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
+//            viewController.present(alert, animated: true)
+//        }
         
     }
     
