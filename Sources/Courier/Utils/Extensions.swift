@@ -151,6 +151,10 @@ extension UIColor {
 
 extension UIImage {
     
+    // This contains text in it which is not ideal,
+    // however, this is intential to prevent adding more dependencies
+    // In the future, when localization is supported, we need to add the font
+    // or use a system font
     internal static var footer: UIImage? {
         get {
             return UIImage(named: "footer", in: .module, compatibleWith: nil)
