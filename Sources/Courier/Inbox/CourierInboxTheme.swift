@@ -114,6 +114,11 @@ import UIKit
     internal static let titleFontSize: CGFloat = 16
     internal static let subtitleFontSize: CGFloat = 14
     
+    // MARK: Courier Brand
+    
+    internal static let lightBrandColor: UIColor = UIColor("73819B") ?? .black
+    internal static let darkBrandColor: UIColor = .white
+    
 }
 
 extension CourierInboxTheme {
