@@ -24,7 +24,7 @@ let package = Package(
                 .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
             ],
             resources: [
-                .process("Resources")
+                Resource.process("Media.xcassets")
             ]
 //            exclude:["instructions.md"] // TODO
         ),
