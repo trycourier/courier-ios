@@ -10,6 +10,7 @@ import UIKit
 internal class CourierBar: UIView {
     
     private let border = UIView()
+    private let logo = UIImageView()
 
     // MARK: Init
 
@@ -35,7 +36,6 @@ internal class CourierBar: UIView {
         
         // Logo
         
-        let logo = UIImageView()
         logo.image = UIImage.wordmark
         logo.contentMode = .scaleAspectFit
         logo.translatesAutoresizingMaskIntoConstraints = false
@@ -65,8 +65,24 @@ internal class CourierBar: UIView {
     }
     
     internal func setTheme(_ theme: CourierInboxTheme) {
+        
         border.backgroundColor = theme.cellStyles.separatorColor ?? .separator
         isHidden = theme.brand?.settings?.inapp?.showCourierFooter ?? false
+        
+    }
+    
+    internal func setColors(with color: UIColor) {
+        
+        // Set background color
+        backgroundColor = color
+        
+        let lumen = color.luminance()
+        print(lumen)
+        
+        // Set foreground color
+        let foregroundColor: UIColor = lumen > 0.5 ? .red : .blue
+        logo.image = UIImage.wordmark?.withTintColor(foregroundColor, renderingMode: .alwaysTemplate)
+        
     }
 
 }

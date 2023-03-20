@@ -135,6 +135,18 @@ extension UIColor {
       
     }
 
+    internal func luminance() -> CGFloat {
+
+        let ciColor = CIColor(color: self)
+
+        func adjust(colorComponent: CGFloat) -> CGFloat {
+            return (colorComponent < 0.04045) ? (colorComponent / 12.92) : pow((colorComponent + 0.055) / 1.055, 2.4)
+        }
+
+        return 0.2126 * adjust(colorComponent: ciColor.red) + 0.7152 * adjust(colorComponent: ciColor.green) + 0.0722 * adjust(colorComponent: ciColor.blue)
+        
+    }
+
 }
 
 extension UIImage {
