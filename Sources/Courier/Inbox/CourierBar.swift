@@ -67,17 +67,15 @@ internal class CourierBar: UIView {
         
         if let viewController = topViewController() {
             
-            let alert = UIAlertController(title: "Your title", message: nil, preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     
-            alert.addAction(UIAlertAction(title: "Your action 1", style: .default) { _ in
-                // onAction1()
+            alert.addAction(UIAlertAction(title: "Go to Courier", style: .default) { _ in
+                if let url = URL(string: "https://www.hackingwithswift.com") {
+                    UIApplication.shared.open(url)
+                }
             })
     
-            alert.addAction(UIAlertAction(title: "Your action 2", style: .default) { _ in
-                // onAction2()
-            })
-    
-            alert.addAction(UIAlertAction(title: "Your cancel action", style: .cancel) { _ in
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
                 // onCancel
             })
     
