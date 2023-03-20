@@ -36,7 +36,7 @@ internal class CourierBar: UIView {
         
         // Logo
         
-        logo.image = UIImage.wordmark!.withRenderingMode(.alwaysTemplate)
+        logo.image = UIImage.footer!.withRenderingMode(.alwaysTemplate)
         logo.contentMode = .scaleAspectFit
         logo.translatesAutoresizingMaskIntoConstraints = false
         
@@ -75,11 +75,8 @@ internal class CourierBar: UIView {
         // Set background color
         backgroundColor = color
         
-        let lumen = color.luminance()
-        print(lumen)
-        
         // Set foreground color
-        logo.tintColor = lumen < 0.5 ? CourierInboxTheme.darkBrandColor : CourierInboxTheme.lightBrandColor
+        logo.tintColor = color.luminance() < 0.5 ? CourierInboxTheme.darkBrandColor : CourierInboxTheme.lightBrandColor
         
     }
 

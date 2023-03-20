@@ -151,9 +151,9 @@ extension UIColor {
 
 extension UIImage {
     
-    internal static var wordmark: UIImage? {
+    internal static var footer: UIImage? {
         get {
-            return UIImage(named: "wordmark", in: .module, compatibleWith: nil)
+            return UIImage(named: "footer", in: .module, compatibleWith: nil)
         }
     }
     
