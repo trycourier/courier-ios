@@ -37,6 +37,7 @@ internal class CourierBar: UIView {
         
         let logo = UIImageView()
         logo.image = UIImage.wordmark
+        logo.contentMode = .scaleAspectFit
         logo.translatesAutoresizingMaskIntoConstraints = false
         logo.backgroundColor = .green
         
@@ -46,7 +47,6 @@ internal class CourierBar: UIView {
             logo.centerXAnchor.constraint(equalTo: centerXAnchor),
             logo.centerYAnchor.constraint(equalTo: centerYAnchor),
             logo.heightAnchor.constraint(equalToConstant: 16),
-            logo.widthAnchor.constraint(equalToConstant: 134),
         ])
         
         // Border
