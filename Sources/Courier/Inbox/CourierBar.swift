@@ -65,25 +65,45 @@ internal class CourierBar: UIView {
     
     @objc private func showLaunchSheet() {
         
-        print("Test")
+        if let viewController = topViewController() {
+            
+            let alert = UIAlertController(title: "Your title", message: nil, preferredStyle: .actionSheet)
+    
+            alert.addAction(UIAlertAction(title: "Your action 1", style: .default) { _ in
+                // onAction1()
+            })
+    
+            alert.addAction(UIAlertAction(title: "Your action 2", style: .default) { _ in
+                // onAction2()
+            })
+    
+            alert.addAction(UIAlertAction(title: "Your cancel action", style: .cancel) { _ in
+                // onCancel
+            })
+    
+            viewController.present(alert, animated: true)
+            
+        }
         
-//        let alert = UIAlertController(title: "Your title", message: nil, preferredStyle: .actionSheet)
-//
-//        alert.addAction(UIAlertAction(title: "Your action 1", style: .default) { _ in
-//            // onAction1()
-//        })
-//
-//        alert.addAction(UIAlertAction(title: "Your action 2", style: .default) { _ in
-//            // onAction2()
-//        })
-//
-//        alert.addAction(UIAlertAction(title: "Your cancel action", style: .cancel) { _ in
-//            // onCancel
-//        })
-//
-//        if let viewController = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController {
-//            viewController.present(alert, animated: true)
-//        }
+    }
+    
+    private func topViewController() -> UIViewController? {
+        
+        let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+
+        if var topController = keyWindow?.rootViewController {
+            
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            
+            return topController
+            
+        } else {
+            
+            return nil
+            
+        }
         
     }
     
