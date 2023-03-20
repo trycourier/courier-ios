@@ -65,14 +65,12 @@ internal class CourierBar: UIView {
     
     @objc private func showLaunchSheet() {
         
-        if let viewController = topViewController() {
+        if let viewController = topViewController(), let url = URL(string: "https://www.courier.com/") {
             
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     
             alert.addAction(UIAlertAction(title: "Go to Courier", style: .default) { _ in
-                if let url = URL(string: "https://www.hackingwithswift.com") {
-                    UIApplication.shared.open(url)
-                }
+                UIApplication.shared.open(url)
             })
     
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
