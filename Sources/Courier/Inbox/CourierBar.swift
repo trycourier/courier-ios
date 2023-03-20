@@ -45,7 +45,8 @@ internal class CourierBar: UIView {
         NSLayoutConstraint.activate([
             logoButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             logoButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            logoButton.heightAnchor.constraint(equalToConstant: 16),
+            logoButton.heightAnchor.constraint(equalToConstant: 40),
+            logoButton.widthAnchor.constraint(equalToConstant: 134),
         ])
         
         // Border
