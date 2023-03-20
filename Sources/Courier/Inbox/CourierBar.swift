@@ -10,7 +10,7 @@ import UIKit
 internal class CourierBar: UIView {
     
     private let border = UIView()
-    private let logo = UIImageView()
+    private let logoButton = UIButton(type: .system)
 
     // MARK: Init
 
@@ -36,16 +36,15 @@ internal class CourierBar: UIView {
         
         // Logo
         
-        logo.image = UIImage.footer!.withRenderingMode(.alwaysTemplate)
-        logo.contentMode = .scaleAspectFit
-        logo.translatesAutoresizingMaskIntoConstraints = false
+        logoButton.contentMode = .scaleAspectFit
+        logoButton.translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(logo)
+        addSubview(logoButton)
         
         NSLayoutConstraint.activate([
-            logo.centerXAnchor.constraint(equalTo: centerXAnchor),
-            logo.centerYAnchor.constraint(equalTo: centerYAnchor),
-            logo.heightAnchor.constraint(equalToConstant: 16),
+            logoButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            logoButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            logoButton.heightAnchor.constraint(equalToConstant: 16),
         ])
         
         // Border
@@ -76,7 +75,9 @@ internal class CourierBar: UIView {
         backgroundColor = color
         
         // Set foreground color
-        logo.tintColor = color.luminance() < 0.5 ? CourierInboxTheme.darkBrandColor : CourierInboxTheme.lightBrandColor
+        let foregroundColor = color.luminance() < 0.5 ? CourierInboxTheme.darkBrandColor : CourierInboxTheme.lightBrandColor
+        let logo = UIImage.footer!.withRenderingMode(.alwaysTemplate).withTintColor(foregroundColor)
+        logoButton.setImage(logo, for: .normal)
         
     }
 
