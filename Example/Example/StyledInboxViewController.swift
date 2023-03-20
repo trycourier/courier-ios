@@ -50,7 +50,33 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
                 )
             ),
             darkTheme: CourierInboxTheme(
-                brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2"
+                brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
+                titleFont: CourierInboxFont(
+                    font: UIFont(name: "Avenir Black", size: 20)!,
+                    color: .white
+                ),
+                timeFont: CourierInboxFont(
+                    font: UIFont(name: "Avenir Medium", size: 16)!,
+                    color: .white
+                ),
+                bodyFont: CourierInboxFont(
+                    font: UIFont(name: "Avenir Medium", size: 18)!,
+                    color: .white
+                ),
+                detailTitleFont: CourierInboxFont(
+                    font: UIFont(name: "Avenir Medium", size: 20)!,
+                    color: .white
+                ),
+                buttonStyles: CourierInboxButtonStyles(
+                    font: CourierInboxFont(
+                        font: UIFont(name: "Avenir Black", size: 16)!,
+                        color: .white
+                    ),
+                    cornerRadius: 0
+                ),
+                cellStyles: CourierInboxCellStyles(
+                    separatorStyle: .none
+                )
             )
         )
     }()

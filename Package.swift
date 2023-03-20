@@ -22,6 +22,9 @@ let package = Package(
             name: "Courier",
             dependencies: [
                 .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
+            ],
+            resources: [
+                .process("Resources")
             ]
 //            exclude:["instructions.md"] // TODO
         ),

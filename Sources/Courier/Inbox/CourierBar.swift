@@ -36,6 +36,7 @@ internal class CourierBar: UIView {
         // Logo
         
         let logo = UIImageView()
+        logo.image = UIImage.wordmark
         logo.translatesAutoresizingMaskIntoConstraints = false
         logo.backgroundColor = .green
         

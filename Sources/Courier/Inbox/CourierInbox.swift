@@ -138,15 +138,15 @@ import UIKit
             // Get the brands if possible
             // Will silently fail
             await fetchBrands()
-            
-            // Refresh light / dark mode
-            traitCollectionDidChange(nil)
 
             // Add the views
             addTableView()
             addLoadingIndicator()
             addInfoView()
             addCourierBar()
+            
+            // Refreshes theme
+            traitCollectionDidChange(nil)
             
             // Init the listener
             makeListener()

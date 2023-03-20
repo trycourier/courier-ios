@@ -136,3 +136,19 @@ extension UIColor {
     }
 
 }
+
+extension UIImage {
+    
+    internal static var wordmark: UIImage? {
+        get {
+            
+            if let path = Bundle.module.path(forResource: "Resources/wordmark", ofType: "pdf") {
+                return UIImage(contentsOfFile: path)
+            }
+            
+            return nil
+            
+        }
+    }
+    
+}

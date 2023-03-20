@@ -84,14 +84,14 @@ import UIKit
         }
     }
     
-    internal var loadingColor: UIColor {
+    internal var loadingColor: UIColor? {
         get {
             if let customColor = loadingIndicatorColor {
                 return customColor
             } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
                 return brandColor
             } else {
-                return .systemBlue
+                return nil
             }
         }
     }
