@@ -42,7 +42,7 @@ import UIKit
     
     // MARK: Subviews
     
-    private let tableView = UITableView()
+    @objc public let tableView = UITableView()
     private let courierBar = CourierBar()
     private let infoView = CourierInboxInfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
@@ -400,8 +400,6 @@ import UIKit
         )
         
     }
-    
-    // TODO: Handle rotation and dark mode
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
