@@ -47,6 +47,8 @@ import Foundation
         }
     }
     
+    internal var isOpened: Bool = false
+    
     @objc public var isArchived: Bool {
         get {
             return archived != nil

@@ -230,4 +230,23 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         
     }
     
+    internal func openMessage(clientKey: String, userId: String, messageId: String) async throws {
+        
+        let mutation = """
+        mutation TrackEvent(
+          $messageId: String = \"\(messageId)\"
+        ) {
+          opened(messageId: $messageId)
+        }
+        """
+        
+        try await graphQLQuery(
+            clientKey: clientKey,
+            userId: userId,
+            url: CourierUrl.inboxGraphQL,
+            query: mutation
+        )
+        
+    }
+    
 }

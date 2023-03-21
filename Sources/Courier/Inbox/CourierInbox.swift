@@ -28,7 +28,7 @@ import UIKit
     
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
-    private var theme: CourierInboxTheme = CourierInboxTheme.defaultLight
+    private var theme: CourierInboxTheme = .defaultLight
     
     // MARK: Datasource
     
@@ -39,6 +39,7 @@ import UIKit
     // MARK: Repository
     
     private lazy var brandsRepo = BrandsRepository()
+    private lazy var inboxRepo = InboxRepository()
     
     // MARK: Subviews
     
@@ -385,6 +386,50 @@ import UIKit
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.delegate?.didScrollInbox?(scrollView: scrollView)
+        self.openVisibleMessages()
+    }
+    
+    private func openVisibleMessages() {
+        
+        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+            return
+        }
+            
+        self.tableView.indexPathsForVisibleRows?.forEach { indexPath in
+            
+            Task {
+             
+                // Get the current message
+                let index = indexPath.row
+                let message = inboxMessages[index]
+                
+                // If the message is not opened, open it
+                if (!message.isOpened) {
+                    
+                    // Mark the message as open
+                    // This will prevent duplicates
+                    message.isOpened = true
+                    
+                    do {
+                        
+                        try await self.inboxRepo.openMessage(
+                            clientKey: clientKey,
+                            userId: userId,
+                            messageId: message.messageId
+                        )
+                        
+                    } catch {
+                        
+                        Courier.log(error.friendlyMessage)
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
     }
     
     @objc public func scrollToTop(animated: Bool) {
