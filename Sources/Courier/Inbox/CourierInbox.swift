@@ -404,7 +404,7 @@ import UIKit
                 let message = inboxMessages[index]
 
                 // If the message is not opened, open it
-                if (message.isOpened == false) {
+                if (message.isOpened == nil || message.isOpened == false) {
 
                     // Mark the message as open
                     // This will prevent duplicates
