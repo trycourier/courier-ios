@@ -23,6 +23,7 @@ import Foundation
     
     internal var archived: Bool?
     internal var read: String?
+    internal var opened: String?
     
     public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, actions: [InboxAction]?) {
         self.title = title
@@ -47,7 +48,11 @@ import Foundation
         }
     }
     
-    internal var isOpened: Bool? = false
+    @objc public var isOpened: Bool {
+        get {
+            return opened != nil
+        }
+    }
     
     @objc public var isArchived: Bool {
         get {
@@ -56,14 +61,11 @@ import Foundation
     }
     
     internal func setRead() {
-        if #available(iOS 15.0, *) {
-            read = Date().ISO8601Format()
-        } else {
-            let date = Date()
-            let formatter = ISO8601DateFormatter()
-            formatter.formatOptions.insert(.withFractionalSeconds)
-            read = formatter.string(from: date)
-        }
+        read = Date().timestamp
+    }
+    
+    internal func setOpened() {
+        opened = Date().timestamp
     }
     
     @objc public var time: String {

@@ -313,6 +313,9 @@ import UIKit
         self.inboxMessages = newMessages
         self.tableView.reloadData()
         
+        // Open shown messages
+        self.openVisibleMessages()
+        
     }
     
     @objc private func onRefresh() {
@@ -404,11 +407,11 @@ import UIKit
                 let message = inboxMessages[index]
 
                 // If the message is not opened, open it
-                if (message.isOpened == nil || message.isOpened == false) {
+                if (!message.isOpened) {
 
                     // Mark the message as open
                     // This will prevent duplicates
-                    message.isOpened = true
+                    message.setOpened()
 
                     do {
 

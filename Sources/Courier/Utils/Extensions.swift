@@ -162,3 +162,19 @@ extension UIImage {
     }
     
 }
+
+extension Date {
+    
+    internal var timestamp: String {
+        get {
+            if #available(iOS 15.0, *) {
+                return ISO8601Format()
+            } else {
+                let formatter = ISO8601DateFormatter()
+                formatter.formatOptions.insert(.withFractionalSeconds)
+                return formatter.string(from: self)
+            }
+        }
+    }
+    
+}
