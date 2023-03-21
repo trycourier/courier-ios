@@ -121,6 +121,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                     read
                     archived
                     created
+                    opened
                     title
                     preview
                     actions {
