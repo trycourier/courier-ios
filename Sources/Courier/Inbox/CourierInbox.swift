@@ -391,42 +391,44 @@ import UIKit
     
     private func openVisibleMessages() {
         
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            return
-        }
+//        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+//            return
+//        }
             
         self.tableView.indexPathsForVisibleRows?.forEach { indexPath in
             
-            Task {
-             
-                // Get the current message
-                let index = indexPath.row
-                let message = inboxMessages[index]
-                
-                // If the message is not opened, open it
-                if (!message.isOpened) {
-                    
-                    // Mark the message as open
-                    // This will prevent duplicates
-                    message.isOpened = true
-                    
-                    do {
-                        
-                        try await self.inboxRepo.openMessage(
-                            clientKey: clientKey,
-                            userId: userId,
-                            messageId: message.messageId
-                        )
-                        
-                    } catch {
-                        
-                        Courier.log(error.friendlyMessage)
-                        
-                    }
-                    
-                }
-                
-            }
+            print(indexPath)
+            
+//            Task {
+//
+//                // Get the current message
+//                let index = indexPath.row
+//                let message = inboxMessages[index]
+//
+//                // If the message is not opened, open it
+//                if (!message.isOpened) {
+//
+//                    // Mark the message as open
+//                    // This will prevent duplicates
+//                    message.isOpened = true
+//
+//                    do {
+//
+//                        try await self.inboxRepo.openMessage(
+//                            clientKey: clientKey,
+//                            userId: userId,
+//                            messageId: message.messageId
+//                        )
+//
+//                    } catch {
+//
+//                        Courier.log(error.friendlyMessage)
+//
+//                    }
+//
+//                }
+//
+//            }
             
         }
         
