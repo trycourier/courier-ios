@@ -47,7 +47,7 @@ import Foundation
         }
     }
     
-    internal var isOpened: Bool = false
+    internal var isOpened: Bool? = false
     
     @objc public var isArchived: Bool {
         get {

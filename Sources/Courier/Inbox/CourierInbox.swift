@@ -386,7 +386,7 @@ import UIKit
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.delegate?.didScrollInbox?(scrollView: scrollView)
-//        self.openVisibleMessages()
+        self.openVisibleMessages()
     }
     
     private func openVisibleMessages() {
@@ -404,7 +404,7 @@ import UIKit
                 let message = inboxMessages[index]
 
                 // If the message is not opened, open it
-                if (!message.isOpened) {
+                if (message.isOpened == false) {
 
                     // Mark the message as open
                     // This will prevent duplicates
