@@ -115,10 +115,6 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
     }
     
     func didScrollInbox(scrollView: UIScrollView) {
-        
-        let cells = courierInbox.tableView.visibleCells
-        print(cells)
-        
 //         print(scrollView.contentOffset.y)
     }
 
