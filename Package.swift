@@ -23,10 +23,19 @@ let package = Package(
             dependencies: [
                 .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
             ],
+            exclude: [
+                "Example",
+                "add-swift-package.gif",
+                "Contributing.md",
+                "env-setup.sh",
+                "EnvSample.swift",
+                "push-notification-entitlement.gif",
+                "release.gif",
+                "service-extension-tutorial.gif"
+            ],
             resources: [
                 Resource.process("Media.xcassets")
             ]
-//            exclude:["instructions.md"] // TODO
         ),
         .testTarget(
             name: "CourierTests",
