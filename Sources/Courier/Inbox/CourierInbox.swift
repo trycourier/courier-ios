@@ -8,10 +8,7 @@
 import UIKit
 
 /**
- A super simple way to implement notifications into your app
- TODO: How to use the inbox?
- TODO: how to send messages to it?
- TODO: Link to docs?
+ A super simple way to implement a basic notification center into your app
  */
 @objc open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     

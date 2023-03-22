@@ -12,7 +12,7 @@ let package = Package(
         .library(
             name: "Courier",
             targets: ["Courier"]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.5.0")
@@ -22,16 +22,6 @@ let package = Package(
             name: "Courier",
             dependencies: [
                 .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
-            ],
-            exclude: [
-                "Example",
-                "add-swift-package.gif",
-                "Contributing.md",
-                "env-setup.sh",
-                "EnvSample.swift",
-                "push-notification-entitlement.gif",
-                "release.gif",
-                "service-extension-tutorial.gif"
             ],
             resources: [
                 Resource.process("Media.xcassets")

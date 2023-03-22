@@ -60,30 +60,12 @@ internal struct CourierBrandData: Codable {
 
 @objc public class CourierBrandInApp: NSObject, Codable {
     
-    private let borderRadius: String?
     private let disableCourierFooter: Bool?
     
     public init(
-        borderRadius: String?,
         disableCourierFooter: Bool?
     ) {
-        self.borderRadius = borderRadius
         self.disableCourierFooter = disableCourierFooter
-    }
-    
-    @objc public var cornerRadius: CGFloat {
-        get {
-            
-            // TODO: This needs cleanup
-            let cleanPixels = borderRadius?.replacingOccurrences(of: "px", with: "") ?? "8"
-            
-            if let formattedNumber = NumberFormatter().number(from: cleanPixels) {
-                return CGFloat(truncating: formattedNumber)
-            }
-            
-            return 8
-            
-        }
     }
     
     @objc public var showCourierFooter: Bool {

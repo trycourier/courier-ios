@@ -9,8 +9,6 @@ import Foundation
 
 internal class MessagingRepository: Repository {
     
-    // TODO: Support actions etc
-    
     internal func send(authKey: String, userId: String, title: String, message: String, providers: [CourierProvider]) async throws -> String {
         
         let message = CourierMessage(
