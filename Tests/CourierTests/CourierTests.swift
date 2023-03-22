@@ -1,65 +1,13 @@
 import XCTest
 @testable import Courier
 
-let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20]) // This is fake
-let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9" // This is fake
-
 final class CourierTests: XCTestCase {
     
-    func test0() async throws {
-        
-        let brand = try await BrandsRepository().getBrand(clientKey: Env.COURIER_CLIENT_KEY, userId: "mike", brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2")
-        print(brand.settings?.colors?.primary)
-        print(brand.settings?.inapp?.showCourierFooter)
-        print(brand.settings?.inapp?.cornerRadius)
-        
-    }
+    // Fake Token Values
+    let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20])
+    let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9"
     
-    func test1() async throws {
-        
-        try await Courier.shared.signIn(
-            accessToken: Env.COURIER_ACCESS_TOKEN,
-            clientKey: Env.COURIER_CLIENT_KEY,
-            userId: Env.COURIER_USER_ID
-        )
-
-        var canPage = true
-
-        Courier.shared.addInboxListener(
-            onInitialLoad: {
-                print("L1 Loading")
-            },
-            onError: { error in
-                print("L1 Error \(error)")
-            },
-            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate  in
-                print("L1 messages: \(messages.count) \(unreadMessageCount) \(totalMessageCount) \(canPaginate)")
-                canPage = canPaginate
-            })
-
-        while (canPage) {
-            try await Courier.shared.fetchNextPageOfMessages()
-        }
-        
-    }
-    
-    func test2() async throws {
-        
-        let id = "1-64053eb4-d7e678c27e93946c16a1d587"
-        
-        try await Courier.shared.readMessage(messageId: id)
-        
-    }
-    
-    func test3() async throws {
-        
-        let id = "1-64053eb4-d7e678c27e93946c16a1d587"
-        
-        try await Courier.shared.unreadMessage(messageId: id)
-        
-    }
-    
-    func testA() async throws {
+    func testA_setAPNSTokenBeforeAuth() async throws {
         
         print("\n🔬 Setting APNS Token before User")
         
@@ -74,8 +22,8 @@ final class CourierTests: XCTestCase {
 
     }
     
-    func testB() async throws {
-
+    func testB_setFCMTokenBeforeAuth() async throws {
+        
         print("🔬 Setting FCM Token before User")
         
         do {
@@ -86,14 +34,13 @@ final class CourierTests: XCTestCase {
             XCTAssertEqual(Courier.shared.userId, nil)
             XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
         }
-
+        
     }
     
-    func testC() async throws {
-
+    func testC_signInWithAuthKey() async throws {
+        
         print("\n🔬 Starting Courier SDK with JWT")
 
-        // Set the access token and start the SDK
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_ACCESS_TOKEN,
             clientKey: Env.COURIER_CLIENT_KEY,
@@ -102,31 +49,32 @@ final class CourierTests: XCTestCase {
 
         XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
-        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
-
-    }
-    
-    func testD() async throws {
-
-        print("\n🔬 Starting Courier SDK with Auth Key")
+        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
         
-        // TODO: Remove this. For test purposed only
-        // Set the access token and start the SDK
+    }
+    
+    func testD_signInWithJWT() async throws {
+        
+        print("\n🔬 Starting Courier SDK with JWT")
+        
+        let jwt = try await ExampleServer().generateJwt(
+            authKey: Env.COURIER_AUTH_KEY,
+            userId: Env.COURIER_USER_ID
+        )
+
         try await Courier.shared.signIn(
-            accessToken: Env.COURIER_ACCESS_TOKEN,
+            accessToken: jwt,
             clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
 
-        XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
+        XCTAssertEqual(Courier.shared.accessToken, jwt)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
-        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
-
+        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
+        
     }
     
-    func testE() async throws {
+    func testE_setAPNSToken() async throws {
 
         print("\n🔬 Testing APNS Token Update")
         
@@ -134,11 +82,11 @@ final class CourierTests: XCTestCase {
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
+        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
 
     }
 
-    func testF() async throws {
+    func testF_setFCMToken() async throws {
 
         print("\n🔬 Testing FCM Token Update")
         
@@ -150,12 +98,10 @@ final class CourierTests: XCTestCase {
 
     }
     
-    func testG() async throws {
+    func testG_sendAPNSMessage() async throws {
 
         print("\n🔬 Testing Sending APNS Message")
         
-        // TODO: Remove this. For test purposed only
-        // Do not use auth key in production app
         let requestId = try await Courier.shared.sendMessage(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
@@ -170,12 +116,10 @@ final class CourierTests: XCTestCase {
 
     }
     
-    func testH() async throws {
+    func testH_sendFCMMessage() async throws {
 
         print("\n🔬 Testing Sending FCM Message")
         
-        // TODO: Remove this. For test purposed only
-        // Do not use auth key in production app
         let requestId = try await Courier.shared.sendMessage(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
@@ -190,7 +134,7 @@ final class CourierTests: XCTestCase {
 
     }
     
-    func testI() async throws {
+    func testI_trackPushNotification() async throws {
 
         print("\n🔬 Testing Tracking URL")
         
@@ -210,12 +154,136 @@ final class CourierTests: XCTestCase {
             message: message,
             event: .clicked
         )
+
+    }
+    
+    private var exampleMessageId: String? = nil
+    
+    func testJ_inboxListener() async throws {
+
+        print("\n🔬 Testing Inbox Get Messages")
         
-        print("URL Tracked")
+        var canPage = true
+        
+        let listener = Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("Loading")
+            },
+            onError: { error in
+                print(error)
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+                canPage = canPaginate
+            }
+        )
+        
+        while (canPage) {
+            try await Courier.shared.fetchNextPageOfMessages()
+        }
+        
+        // Set an example message id
+        exampleMessageId = Courier.shared.inboxMessages?.first?.messageId
+        
+        listener.remove()
+
+    }
+    
+    func testK_readMessage() async throws {
+
+        print("\n🔬 Testing Read Message")
+        
+        guard let messageId = exampleMessageId else {
+            return
+        }
+        
+        try await InboxRepository().readMessage(
+            clientKey: Env.COURIER_CLIENT_KEY,
+            userId: Env.COURIER_USER_ID,
+            messageId: messageId
+        )
+
+    }
+    
+    func testL_unreadMessage() async throws {
+
+        print("\n🔬 Testing Read Message")
+        
+        guard let messageId = exampleMessageId else {
+            return
+        }
+        
+        try await InboxRepository().unreadMessage(
+            clientKey: Env.COURIER_CLIENT_KEY,
+            userId: Env.COURIER_USER_ID,
+            messageId: messageId
+        )
+
+    }
+    
+    func testM_openMessage() async throws {
+
+        print("\n🔬 Testing Read Message")
+        
+        guard let messageId = exampleMessageId else {
+            return
+        }
+        
+        try await InboxRepository().openMessage(
+            clientKey: Env.COURIER_CLIENT_KEY,
+            userId: Env.COURIER_USER_ID,
+            messageId: messageId
+        )
+
+    }
+    
+    func testN_sendInboxMessage() async throws {
+
+        print("\n🔬 Testing Sending Inbox Message")
+        
+        let requestId = try await Courier.shared.sendMessage(
+            authKey: Env.COURIER_ACCESS_TOKEN,
+            userId: Env.COURIER_USER_ID,
+            title: "🐤 Inbox Message",
+            message: "Message sent from Xcode tests",
+            providers: [.inbox]
+        )
+        
+        print("Request ID: \(requestId)")
+
+        XCTAssertEqual(requestId.isEmpty, false)
+
+    }
+    
+    func testO_paginationChecks() async throws {
+
+        print("\n🔬 Setting Inbox Pagination Limit")
+
+        Courier.shared.inboxPaginationLimit = 10
+        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 10)
+
+        Courier.shared.inboxPaginationLimit = -1000
+        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 1)
+
+        Courier.shared.inboxPaginationLimit = 1000
+        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 200)
+
+    }
+    
+    func testP_getBrand() async throws {
+
+        print("\n🔬 Testing Get Brand")
+
+        let brand = try await BrandsRepository().getBrand(
+            clientKey: Env.COURIER_CLIENT_KEY,
+            userId: Env.COURIER_USER_ID,
+            brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2"
+        )
+        
+        print(brand)
 
     }
 
-    func testJ() async throws {
+    func testQ_signOut() async throws {
 
         print("\n🔬 Testing Sign Out")
 
@@ -225,21 +293,6 @@ final class CourierTests: XCTestCase {
         XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
-
-    }
-    
-    func testK() async throws {
-        
-        print("\n🔬 Setting Inbox Pagination Limit")
-        
-        Courier.shared.inboxPaginationLimit = 10
-        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 10)
-        
-        Courier.shared.inboxPaginationLimit = -1000
-        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 1)
-        
-        Courier.shared.inboxPaginationLimit = 1000
-        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 200)
 
     }
     

@@ -8,34 +8,27 @@
 import Foundation
 
 class ExampleServer {
-    
-    private struct Body: Codable {
-        let user_id: String
-    }
 
     private struct Response: Codable {
         let token: String
     }
 
-    class func generateJwt(userId: String) async throws -> String {
-        
+    internal func generateJwt(authKey: String, userId: String) async throws -> String {
+
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
-            
-            let url = URL(string: "http://localhost:5001/courier-demo-bf7e7/us-central1/generateJwt")!
+
+            let url = URL(string: "https://api.courier.com/auth/issue-token")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
+            
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
+            
             request.httpBody = try? JSONEncoder().encode([
-                "user_id": userId
+                "scope": "user_id:\(userId) write:user-tokens",
+                "expires_in": "2 days"
             ])
 
-            print("URL: \(request.url?.absoluteString ?? "")")
-            print("Method: \(request.httpMethod ?? "")")
-            
-            if let json = String(data: request.httpBody ?? Data(), encoding: .utf8) {
-                print("Body: \(json)")
-            }
-            
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 do {
                     let res = try JSONDecoder().decode(Response.self, from: data ?? Data())
@@ -44,11 +37,11 @@ class ExampleServer {
                     continuation.resume(throwing: error)
                 }
             }
-            
+
             task.resume()
-            
+
         })
-        
+
     }
     
 }
