@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
 
     s.name             = 'Courier-iOS'
-    s.version          = '1.1.1'
+    s.version          = '2.0.0'
     s.summary          = 'Courier helps you build messaging infrastucture much faster!'
 
     s.homepage         = 'https://github.com/trycourier/courier-ios'
     s.license          = { :type => 'MIT', :text => <<-LICENSE
-                           Copyright 2022 TryCourier
+                           Copyright 2023 TryCourier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -23,6 +23,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.swift_version = '5.6'
         
     s.source_files = 'Sources/Courier/**/*'
+    
+    s.resources = 'Sources/Courier/Media.xcassets'
     
     s.dependency 'FirebaseMessaging', '10.6.0'
         
