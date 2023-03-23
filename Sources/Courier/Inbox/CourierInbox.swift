@@ -201,18 +201,14 @@ import UIKit
         
     }
     
-    private var listItemNib: UINib {
-        get {
-            return UINib(nibName: CourierInboxListItem.id, bundle: nil)
-        }
-    }
-    
     private func addTableView() {
         
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(listItemNib, forCellReuseIdentifier: CourierInboxListItem.id)
+        let bundle = Bundle(for: CourierInboxListItem.self)
+        let nib = UINib(nibName: CourierInboxListItem.id, bundle: bundle)
+        tableView.register(nib, forCellReuseIdentifier: CourierInboxListItem.id)
         tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = UITableView.automaticDimension
