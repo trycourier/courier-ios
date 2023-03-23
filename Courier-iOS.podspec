@@ -23,8 +23,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.swift_version = '5.6'
     
     s.source_files = 'Sources/Courier/**/*.{swift, xib, plist}'
+    s.resources = 'Sources/Courier/**/*.{pdf, xib, xcassets, json}'
     s.resource_bundles = {
-        'Courier-iOS' => ['Sources/Courier/**/*.{pdf, xib, xcassets, json}']
+        '{podName}' => [
+            'Sources/{podName}/*.xib',
+            'Sources/Courier/*.xib'
+        ]
     }
     
     s.ios.dependency 'FirebaseMessaging', '10.6.0'
