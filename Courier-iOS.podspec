@@ -21,11 +21,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         
     s.ios.deployment_target = '13.0'
     s.swift_version = '5.6'
-        
-    s.source_files = 'Sources/Courier/**/*'
     
-    s.resources = 'Sources/Courier/Media.xcassets'
+    s.source_files = 'Sources/Courier/**/*.{swift,xib,plist}'
+    s.resources = 'Sources/Courier/**/*.{pdf,xcassets,json}'
     
-    s.dependency 'FirebaseMessaging', '10.6.0'
+    s.ios.dependency 'FirebaseMessaging', '10.6.0'
         
 end
