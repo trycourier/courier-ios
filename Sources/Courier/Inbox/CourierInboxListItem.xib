@@ -82,7 +82,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="actionsStack" destination="Jtv-0J-TdE" id="KL6-ru-Lrs"/>
+                <outlet property="actionsStack" destination="Jtv-0J-TdE" id="raB-Ql-a1N"/>
                 <outlet property="bodyLabel" destination="Tcb-Y1-iXr" id="oIi-fC-6ct"/>
                 <outlet property="buttonStack" destination="5is-cr-EUW" id="6WA-RQ-jZi"/>
                 <outlet property="indicatorView" destination="cVo-mN-Urj" id="Pn5-ie-7VY"/>
