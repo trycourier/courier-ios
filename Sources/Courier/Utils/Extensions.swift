@@ -164,3 +164,17 @@ extension Date {
     }
     
 }
+
+extension Bundle {
+    
+    internal static var current: Bundle {
+        get {
+            #if SWIFT_PACKAGE
+                return Bundle.module
+            #else
+                return Bundle(for: Self.self)
+            #endif
+        }
+    }
+    
+}

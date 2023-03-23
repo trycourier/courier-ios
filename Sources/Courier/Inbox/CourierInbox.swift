@@ -206,7 +206,7 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
-        let bundle = Bundle(for: CourierInboxListItem.self)
+        let bundle = Bundle(for: self.classForCoder)
         let nib = UINib(nibName: CourierInboxListItem.id, bundle: bundle)
         tableView.register(nib, forCellReuseIdentifier: CourierInboxListItem.id)
         tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
