@@ -65,16 +65,16 @@ extension Courier {
         }
     }
     
-    static let resourceBundle: Bundle = {
+    internal static let resourceBundle: Bundle = {
         
-        let myBundle = Bundle(for: Courier.self)
+        let bundle = Bundle(for: Courier.self)
 
-        guard let resourceBundleURL = myBundle.url(forResource: "Courier-iOS", withExtension: "bundle") else {
-            fatalError("Courier-iOS.bundle not found!")
+        guard let resourceBundleURL = bundle.url(forResource: "Resources", withExtension: "bundle") else {
+            fatalError("Resources.bundle not found!")
         }
 
         guard let resourceBundle = Bundle(url: resourceBundleURL) else {
-            fatalError("Cannot access Courier-iOS.bundle!")
+            fatalError("Cannot access Resources.bundle!")
         }
 
         return resourceBundle
