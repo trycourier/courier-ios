@@ -29,6 +29,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             'Sources/Courier/*{.xcassets}'
         ]
     }
+    s.resource = 'Sources/Courier/Inbox/*.xib'
     
     s.ios.dependency 'FirebaseMessaging', '10.6.0'
         
