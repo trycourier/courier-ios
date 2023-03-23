@@ -203,7 +203,7 @@ import UIKit
     
     private var listItemNib: UINib {
         get {
-            return UINib(nibName: CourierInboxListItem.id, bundle: Bundle.current)
+            return UINib(nibName: CourierInboxListItem.id, bundle: nil)
         }
     }
     
