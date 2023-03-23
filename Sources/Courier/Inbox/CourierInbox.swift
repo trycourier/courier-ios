@@ -204,10 +204,10 @@ import UIKit
     private var listItemNib: UINib {
         get {
             
-            let frameworkBundle = Bundle(for: CourierInbox.self)
-            let bundleURL = frameworkBundle.resourceURL?.appendingPathComponent("Courier-iOS.bundle")
-            let resourceBundle = Bundle(url: bundleURL!)
-            return UINib(nibName: CourierInboxListItem.id, bundle: resourceBundle)
+//            let frameworkBundle = Bundle(for: CourierInbox.self)
+//            let bundleURL = frameworkBundle.resourceURL?.appendingPathComponent("Courier-iOS.bundle")
+//            let resourceBundle = Bundle(url: bundleURL!)
+            return UINib(nibName: CourierInboxListItem.id, bundle: Bundle(for: type(of: self)))
             
         }
     }
