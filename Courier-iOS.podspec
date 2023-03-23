@@ -22,7 +22,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.ios.deployment_target = '13.0'
     s.swift_version = '5.6'
     
-    s.source_files = 'Sources/**/*'
+    s.source_files = 'Sources/Courier/**/**'
     s.resource_bundles = {
         'Resources' => [
             'Sources/Courier/Inbox/*.xib',
