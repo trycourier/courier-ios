@@ -340,7 +340,7 @@ import UIKit
         if (indexPath.section == 0) {
             
             // Normal cell
-            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxListItem.id, for: indexPath) as? CourierInboxListItem {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
                 
                 let index = indexPath.row
                 let message = inboxMessages[index]

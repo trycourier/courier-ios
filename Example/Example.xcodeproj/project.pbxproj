@@ -592,7 +592,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "feature/inbox-ui";
+				branch = "feature/pod-inbox";
 				kind = branch;
 			};
 		};
