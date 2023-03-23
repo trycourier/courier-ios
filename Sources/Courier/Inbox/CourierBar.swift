@@ -106,16 +106,9 @@ internal class CourierBar: UIView {
     
     private var footerImage: UIImage? {
         get {
-            
-            // TODO: SPM
-            
-//            let frameworkBundle = Bundle(for: CourierInbox.self)
-//            let bundleURL = frameworkBundle.resourceURL?.appendingPathComponent("Courier-iOS.bundle")
-            let bundle = Bundle.resourceBundle(for: Self.self)
-            
             return UIImage(
                 named: "footer",
-                in: bundle,
+                in: Bundle.current,
                 compatibleWith: nil
             )
             

@@ -65,6 +65,22 @@ extension Courier {
         }
     }
     
+    static let resourceBundle: Bundle = {
+        
+        let myBundle = Bundle(for: Courier.self)
+
+        guard let resourceBundleURL = myBundle.url(forResource: "Courier-iOS", withExtension: "bundle") else {
+            fatalError("Courier-iOS.bundle not found!")
+        }
+
+        guard let resourceBundle = Bundle(url: resourceBundleURL) else {
+            fatalError("Cannot access Courier-iOS.bundle!")
+        }
+
+        return resourceBundle
+        
+    }()
+    
 }
 
 extension Date {
@@ -166,32 +182,13 @@ extension Date {
 }
 
 extension Bundle {
-
-    internal static func resourceBundle(for frameworkClass: AnyClass) -> Bundle {
-        guard let moduleName = String(reflecting: frameworkClass).components(separatedBy: ".").first else {
-            fatalError("Couldn't determine module name from class \(frameworkClass)")
-        }
-
-        let frameworkBundle = Bundle(for: frameworkClass)
-
-        guard let resourceBundleURL = frameworkBundle.url(forResource: moduleName, withExtension: "bundle"),
-              let resourceBundle = Bundle(url: resourceBundleURL) else {
-            fatalError("\(moduleName).bundle not found in \(frameworkBundle)")
-        }
-
-        return resourceBundle
-    }
-    
-}
-
-extension Bundle {
     
     internal static var current: Bundle {
         get {
             #if SWIFT_PACKAGE
-                return Bundle.module
+            return Bundle.module
             #else
-                return Bundle(for: Self.self)
+            return Courier.resourceBundle
             #endif
         }
     }
