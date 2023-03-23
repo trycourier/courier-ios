@@ -26,8 +26,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.resources = 'Sources/Courier/**/*.{pdf, xib, xcassets, json}'
     s.resource_bundles = {
         '{podName}' => [
-            'Sources/{podName}/*.xib',
-            'Sources/Courier/*.xib'
+            'Pod/**/*.xib'
         ]
     }
     
