@@ -130,7 +130,7 @@ internal class CourierBar: UIView {
         // Set foreground color
         let foregroundColor = color.luminance() < 0.5 ? CourierInboxTheme.darkBrandColor : CourierInboxTheme.lightBrandColor
 //        let logo = footerImage?.withRenderingMode(.alwaysTemplate).withTintColor(foregroundColor)
-        logoButton.setImage(logo, for: .normal)
+//        logoButton.setImage(logo, for: .normal)
         logoButton.tintColor = foregroundColor
         
     }
