@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
+		2735333B29CCB38500FF16CD /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 2735333A29CCB38500FF16CD /* Courier */; };
 		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
 		27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */; };
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
@@ -20,10 +21,8 @@
 		27895173292689470070F501 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27895171292689470070F501 /* LaunchScreen.storyboard */; };
 		2789518129268C400070F501 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789518029268C400070F501 /* Env.swift */; };
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
-		27A2BA3C29A6A53E001B7A77 /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27A2BA3B29A6A53E001B7A77 /* Courier */; };
 		27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */; };
 		27D4C01C2964886100CE972E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27D4C01B2964886100CE972E /* GoogleService-Info.plist */; };
-		27DAF06C29A6AC0E00D45FFB /* Courier in Frameworks */ = {isa = PBXBuildFile; productRef = 27DAF06B29A6AC0E00D45FFB /* Courier */; };
 		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
 		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -81,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27A2BA3C29A6A53E001B7A77 /* Courier in Frameworks */,
+				2735333B29CCB38500FF16CD /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,7 +88,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27DAF06C29A6AC0E00D45FFB /* Courier in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,7 +172,7 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				27A2BA3B29A6A53E001B7A77 /* Courier */,
+				2735333A29CCB38500FF16CD /* Courier */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
@@ -194,7 +192,6 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				27DAF06B29A6AC0E00D45FFB /* Courier */,
 			);
 			productName = CourierService;
 			productReference = 6729FFAA2926F779006A3EC2 /* CourierService.appex */;
@@ -228,8 +225,8 @@
 			);
 			mainGroup = 2789515A292689460070F501;
 			packageReferences = (
-				27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */,
 				272A238129B29FDE00B82CFE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				2735333929CCB38500FF16CD /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -588,25 +585,20 @@
 				kind = branch;
 			};
 		};
-		27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+		2735333929CCB38500FF16CD /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "feature/inbox-ui";
+				branch = 2.0.0;
 				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		27A2BA3B29A6A53E001B7A77 /* Courier */ = {
+		2735333A29CCB38500FF16CD /* Courier */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */;
-			productName = Courier;
-		};
-		27DAF06B29A6AC0E00D45FFB /* Courier */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27A2BA3A29A6A53D001B7A77 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 2735333929CCB38500FF16CD /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier;
 		};
 /* End XCSwiftPackageProductDependency section */
