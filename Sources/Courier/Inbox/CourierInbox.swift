@@ -300,9 +300,15 @@ import UIKit
         // Check if we need to insert
         let didInsert = newMessages.count - self.inboxMessages.count == 1
         if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
+            
+            // Add the new item
             self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
             self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle)
+            
+            // Open shown messages
+            self.openVisibleMessages()
+            
             return
         }
         
