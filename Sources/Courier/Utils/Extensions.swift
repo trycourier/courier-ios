@@ -169,7 +169,7 @@ extension Bundle {
     
     internal static func current(for className: AnyClass) -> Bundle {
         #if SWIFT_PACKAGE
-        return Bundle(for: className)
+        return Bundle.main
         #else
         return Bundle(for: className)
         #endif
