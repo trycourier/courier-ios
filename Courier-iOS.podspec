@@ -24,12 +24,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     
     s.source_files = 'Sources/Courier/**/*.{swift, plist}'
     s.resource_bundles = {
-        '{podName}' => [
+        '{s.name}' => [
             'Sources/Courier/Inbox/*.xib',
             'Sources/Courier/*{.xcassets}'
         ]
     }
-    s.resource = 'Sources/Courier/Resources/**'
     
     s.dependency 'FirebaseMessaging', '10.6.0'
         
