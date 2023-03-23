@@ -206,8 +206,7 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
-        let bundle = Bundle(for: CourierInboxListItem.self)
-        let nib = UINib(nibName: CourierInboxListItem.id, bundle: bundle)
+        let nib = UINib(nibName: CourierInboxListItem.id, bundle: Bundle.current(for: CourierInboxListItem.self))
         tableView.register(nib, forCellReuseIdentifier: CourierInboxListItem.id)
         tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
         tableView.rowHeight = UITableView.automaticDimension

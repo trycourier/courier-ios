@@ -65,22 +65,6 @@ extension Courier {
         }
     }
     
-    internal static let resourceBundle: Bundle = {
-        
-        let bundle = Bundle(for: Courier.self)
-
-        guard let resourceBundleURL = bundle.url(forResource: "Resources", withExtension: "bundle") else {
-            fatalError("Resources.bundle not found!")
-        }
-
-        guard let resourceBundle = Bundle(url: resourceBundleURL) else {
-            fatalError("Cannot access Resources.bundle!")
-        }
-
-        return resourceBundle
-        
-    }()
-    
 }
 
 extension Date {
@@ -183,14 +167,12 @@ extension Date {
 
 extension Bundle {
     
-    internal static var current: Bundle {
-        get {
-            #if SWIFT_PACKAGE
+    internal static func current(for: AnyClass) -> Bundle {
+        #if SWIFT_PACKAGE
             return Bundle.module
-            #else
-            return Courier.resourceBundle
-            #endif
-        }
+        #else
+            return Bundle(for: AnyClass)
+        #endif
     }
     
 }
