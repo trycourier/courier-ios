@@ -157,7 +157,7 @@ extension UIImage {
     // or use a system font
     internal static var footer: UIImage? {
         get {
-            return UIImage(named: "footer", in: .module, compatibleWith: nil)
+            return UIImage(named: "footer", in: Bundle.current, compatibleWith: nil)
         }
     }
     
@@ -174,6 +174,20 @@ extension Date {
                 formatter.formatOptions.insert(.withFractionalSeconds)
                 return formatter.string(from: self)
             }
+        }
+    }
+    
+}
+
+extension Bundle {
+    
+    internal static var current: Bundle {
+        get {
+            #if SWIFT_PACKAGE
+                return Bundle.module
+            #else
+                return Bundle.main
+            #endif
         }
     }
     

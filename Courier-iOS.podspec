@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name             = 'Courier-iOS'
-    s.version          = '2.0.01'
+    s.version          = '2.0.0'
     s.summary          = 'Courier helps you build messaging infrastucture much faster!'
 
     s.homepage         = 'https://github.com/trycourier/courier-ios'
@@ -23,9 +23,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.swift_version = '5.6'
     
     s.source_files = 'Sources/Courier/**/*.{swift, plist}'
-    s.resources = 'Sources/Courier/**/*.{pdf, xcassets, json}'
     s.resource_bundles = {
-        'Courier-iOS' => ['Sources/Courier/**/*.{xib}']
+        'Courier-iOS' => ['Sources/Courier/**/*.{pdf, xib, xcassets, json}']
     }
     
     s.ios.dependency 'FirebaseMessaging', '10.6.0'
