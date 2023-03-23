@@ -167,11 +167,11 @@ extension Date {
 
 extension Bundle {
     
-    internal static func current(for: AnyClass) -> Bundle {
+    internal static func current(for className: AnyClass) -> Bundle {
         #if SWIFT_PACKAGE
-            return Bundle.module
+        return Bundle.module
         #else
-            return Bundle(for: AnyClass)
+        return Bundle(for: className)
         #endif
     }
     
