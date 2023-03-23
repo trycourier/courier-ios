@@ -109,15 +109,11 @@ internal class CourierBar: UIView {
             
             // TODO: SPM
             
-            let frameworkBundle = Bundle(for: CourierInbox.self)
-            let bundleURL = frameworkBundle.resourceURL?.appendingPathComponent("Courier-iOS.bundle")
-            let resourceBundle = Bundle(url: bundleURL!)
+//            let frameworkBundle = Bundle(for: CourierInbox.self)
+//            let bundleURL = frameworkBundle.resourceURL?.appendingPathComponent("Courier-iOS.bundle")
+//            let resourceBundle = Bundle(url: bundleURL!)
             
-            return UIImage(
-                named: "footer",
-                in: resourceBundle,
-                compatibleWith: nil
-            )
+            return UIImage.init(fromPodAssetName: "footer")
             
         }
     }

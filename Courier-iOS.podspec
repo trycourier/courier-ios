@@ -24,7 +24,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     
     s.source_files = 'Sources/Courier/**/*.{swift, plist}'
     s.resource_bundles = {
-        '{s.name}' => [
+        'Resources' => [
             'Sources/Courier/Inbox/*.xib',
             'Sources/Courier/*{.xcassets}'
         ]

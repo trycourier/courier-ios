@@ -165,6 +165,17 @@ extension Date {
     
 }
 
+internal class RandomClass: Any { } // Necessary for UIImage extension below
+
+extension UIImage {
+    
+    internal convenience init?(fromPodAssetName name: String) {
+        let bundle = Bundle(for: RandomClass.self)
+        self.init(named: name, in: bundle, compatibleWith: nil)
+    }
+    
+}
+
 extension Bundle {
     
     internal static var current: Bundle {
