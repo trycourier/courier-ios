@@ -165,13 +165,21 @@ extension Date {
     
 }
 
-internal class RandomClass: Any { } // Necessary for UIImage extension below
+extension Bundle {
 
-extension UIImage {
-    
-    internal convenience init?(fromPodAssetName name: String) {
-        let bundle = Bundle(for: RandomClass.self)
-        self.init(named: name, in: bundle, compatibleWith: nil)
+    internal static func resourceBundle(for frameworkClass: AnyClass) -> Bundle {
+        guard let moduleName = String(reflecting: frameworkClass).components(separatedBy: ".").first else {
+            fatalError("Couldn't determine module name from class \(frameworkClass)")
+        }
+
+        let frameworkBundle = Bundle(for: frameworkClass)
+
+        guard let resourceBundleURL = frameworkBundle.url(forResource: moduleName, withExtension: "bundle"),
+              let resourceBundle = Bundle(url: resourceBundleURL) else {
+            fatalError("\(moduleName).bundle not found in \(frameworkBundle)")
+        }
+
+        return resourceBundle
     }
     
 }
