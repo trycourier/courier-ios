@@ -186,7 +186,7 @@ extension Bundle {
             #if SWIFT_PACKAGE
                 return Bundle.module
             #else
-                return Bundle(for: self.classForCoder)
+                return Bundle(for: Self.self)
             #endif
         }
     }
