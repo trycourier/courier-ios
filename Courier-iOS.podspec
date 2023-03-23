@@ -22,11 +22,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.ios.deployment_target = '13.0'
     s.swift_version = '5.6'
     
-    s.source_files = 'Sources/Courier/**/*.{swift, xib, plist}'
-    s.resources = 'Sources/Courier/**/*.{pdf, xib, xcassets, json}'
+    s.source_files = 'Sources/Courier/**/*.{swift, plist}'
     s.resource_bundles = {
         '{podName}' => [
-            'Sources/Courier/Inbox/*.xib'
+            'Sources/Courier/Inbox/*.xib',
+            'Sources/Courier/*{.xcassets}'
         ]
     }
     
