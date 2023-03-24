@@ -41,11 +41,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             containerStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             containerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
             containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 16),
+            containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
         ])
         
         // Test
-        containerStackView.addSubview(label)
+        containerStackView.addArrangedSubview(label)
         
     }
     
