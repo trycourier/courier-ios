@@ -24,7 +24,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "feature/pod-inbox",
-        "revision" : "a26c7ff12901e56527c82d548508c7d18d4d9c22"
+        "revision" : "fa8183c27edb68326f56303298d469e066fa9156"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/firebase/firebase-ios-sdk",
       "state" : {
         "branch" : "master",
-        "revision" : "3f845e524ddd6d0a948c4aaf7ac2a83ea809659c"
+        "revision" : "9613e1e536016b54475d3ae9fb1b05267ba02d77"
       }
     },
     {
