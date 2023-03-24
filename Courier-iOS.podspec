@@ -23,7 +23,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.swift_version = '5.6'
     
     s.source_files = 'Sources/Courier/**/*'
-    
-    s.dependency 'FirebaseMessaging', '10.6.0'
         
 end

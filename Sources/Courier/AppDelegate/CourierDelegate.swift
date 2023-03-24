@@ -6,10 +6,9 @@
 //
 
 import UIKit
-import FirebaseMessaging
 
 @available(iOSApplicationExtension, unavailable)
-open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
+open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     // MARK: Getters
     
@@ -88,19 +87,19 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, MessagingDelegat
     
     // MARK: Firebase Cloud Messaging
 
-    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-
-        guard let token = fcmToken else { return }
-
-        Task {
-            do {
-                try await Courier.shared.setFCMToken(token)
-            } catch {
-                Courier.log(error.friendlyMessage)
-            }
-        }
-
-    }
+//    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+//
+//        guard let token = fcmToken else { return }
+//
+//        Task {
+//            do {
+//                try await Courier.shared.setFCMToken(token)
+//            } catch {
+//                Courier.log(error.friendlyMessage)
+//            }
+//        }
+//
+//    }
     
     // MARK: Functions
     
