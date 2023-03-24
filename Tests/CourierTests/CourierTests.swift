@@ -1,5 +1,5 @@
 import XCTest
-@testable import Courier
+@testable import Courier_iOS
 
 final class CourierTests: XCTestCase {
     

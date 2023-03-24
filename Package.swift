@@ -10,20 +10,20 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Courier",
-            targets: ["Courier"]
+            name: "Courier_iOS",
+            targets: ["Courier_iOS"]
         )
     ],
     targets: [
         .target(
-            name: "Courier",
+            name: "Courier_iOS",
             resources: [
                 Resource.process("Media.xcassets")
             ]
         ),
         .testTarget(
             name: "CourierTests",
-            dependencies: ["Courier"]
+            dependencies: ["Courier_iOS"]
         ),
     ]
 )
