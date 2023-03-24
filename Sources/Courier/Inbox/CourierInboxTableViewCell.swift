@@ -11,7 +11,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
-    let label = UILabel()
+    private let label = UILabel()
     
     private let containerStackView = UIStackView()
     
@@ -43,6 +43,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
         ])
+        
+        label.numberOfLines = 0
         
         // Test
         containerStackView.addArrangedSubview(label)
