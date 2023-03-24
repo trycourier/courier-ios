@@ -4,13 +4,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "Courier",
+    name: "Courier_iOS",
     platforms: [
         .iOS(.v13)
     ],
     products: [
         .library(
-            name: "Courier_iOS",
+            name: "Courier",
             targets: ["Courier"]
         )
     ],
