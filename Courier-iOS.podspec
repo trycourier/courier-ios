@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 
-    s.name             = 'Courier-iOS'
+    s.name             = 'Courier_iOS'
     s.version          = '2.0.06'
     s.summary          = 'Courier helps you build messaging infrastucture much faster!'
 
