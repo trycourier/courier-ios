@@ -11,7 +11,7 @@ import FirebaseCore
 import FirebaseMessaging
 
 @main
-class AppDelegate: CourierDelegate {
+class AppDelegate: CourierDelegate, MessagingDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -46,6 +46,22 @@ class AppDelegate: CourierDelegate {
         
         showMessageAlert(title: "Message Clicked", message: "\(message)")
         
+    }
+    
+    // MARK: Firebase Cloud Messaging Support
+    
+    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+
+        guard let token = fcmToken else { return }
+
+        Task {
+            do {
+                try await Courier.shared.setFCMToken(token)
+            } catch {
+                print(String(describing: error))
+            }
+        }
+
     }
 
 
