@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"

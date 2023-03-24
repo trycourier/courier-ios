@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 internal class CourierInboxInfoView: UIView {
     
     private let stackView = UIStackView()

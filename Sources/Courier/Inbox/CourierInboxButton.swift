@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 internal class CourierInboxButton: UIButton {
     
     private let inboxAction: InboxAction?

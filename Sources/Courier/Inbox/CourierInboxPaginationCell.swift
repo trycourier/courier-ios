@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 internal class CourierInboxPaginationCell: UITableViewCell {
     
     internal static let id = "CourierInboxPaginationCell"

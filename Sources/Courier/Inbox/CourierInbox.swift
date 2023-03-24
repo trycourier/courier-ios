@@ -10,6 +10,7 @@ import UIKit
 /**
  A super simple way to implement a basic notification center into your app
  */
+@available(iOSApplicationExtension, unavailable)
 @objc open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     /**

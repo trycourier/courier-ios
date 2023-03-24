@@ -10,6 +10,7 @@ import UIKit
 /**
  Delegate functions for various CourierInbox events
  */
+@available(iOSApplicationExtension, unavailable)
 @objc public protocol CourierInboxDelegate {
     
     /**
