@@ -22,9 +22,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.ios.deployment_target = '13.0'
     s.swift_version = '5.6'
     
-    s.source_files = 'Sources/Courier_iOS/**/*'
+    s.source_files = 'Sources/Courier_iOS/**/*.{swift}'
     s.resource_bundles = {
-        'Courier_iOS' => ['Sources/Courier_iOS/**/*.{xib, storyboard, xcassets}']
+        'Resources' => ['Sources/Courier_iOS/Media.xcassets']
     }
         
 end
