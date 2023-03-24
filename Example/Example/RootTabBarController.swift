@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Courier
+import Courier_iOS
 
 class RootTabBarController: UITabBarController {
     
