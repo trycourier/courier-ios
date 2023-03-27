@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOSApplicationExtension, unavailable)
 public struct CourierInboxView: UIViewRepresentable {
     
     private let inbox: CourierInbox

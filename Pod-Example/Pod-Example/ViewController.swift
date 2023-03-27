@@ -8,7 +8,7 @@
 import UIKit
 import Courier_iOS
 
-class ViewController: UIViewController, CourierInboxDelegate {
+class ViewController: UIViewController {
 
     private let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
     private let primaryColor = UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
@@ -77,7 +77,17 @@ class ViewController: UIViewController, CourierInboxDelegate {
                 cellStyles: CourierInboxCellStyles(
                     separatorStyle: .none
                 )
-            )
+            ),
+            didClickInboxMessageAtIndex: { message, index in
+                message.isRead ? message.markAsUnread() : message.markAsRead()
+                print(index, message)
+            },
+            didClickInboxActionForMessageAtIndex: { action, message, index in
+                print(action, message, index)
+            },
+            didScrollInbox: { scrollView in
+                print(scrollView.contentOffset.y)
+            }
         )
     }()
 
@@ -102,8 +112,6 @@ class ViewController: UIViewController, CourierInboxDelegate {
 
         courierInbox.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(courierInbox)
-        
-        courierInbox.delegate = self
         
         NSLayoutConstraint.activate([
             courierInbox.topAnchor.constraint(equalTo: view.topAnchor),
