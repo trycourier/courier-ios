@@ -12,8 +12,12 @@ internal class CourierInboxInfoView: UIView {
     
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
-    private var actionButton: CourierInboxButton? = nil
     private let buttonContainer = UIView()
+    private lazy var actionButton: CourierInboxButton = {
+        CourierInboxButton { [weak self] in
+            self?.onButtonClick?()
+        }
+    }()
     
     internal var onButtonClick: (() -> Void)? = nil
     
@@ -29,6 +33,10 @@ internal class CourierInboxInfoView: UIView {
     
     private func setup() {
         
+        [stackView, titleLabel, actionButton, buttonContainer].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
         addStack()
         addTitle()
         addButton()
@@ -39,8 +47,6 @@ internal class CourierInboxInfoView: UIView {
         
         stackView.spacing = CourierInboxTheme.margin * 2
         stackView.axis = .vertical
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(stackView)
         
@@ -55,7 +61,6 @@ internal class CourierInboxInfoView: UIView {
     
     private func addTitle() {
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         titleLabel.textColor = .label
         titleLabel.textAlignment = .center
@@ -67,21 +72,13 @@ internal class CourierInboxInfoView: UIView {
     
     private func addButton() {
         
-        actionButton = CourierInboxButton { [weak self] in
-            self?.onButtonClick?()
-        }
-        
-        actionButton!.translatesAutoresizingMaskIntoConstraints = false
-        
-        buttonContainer.translatesAutoresizingMaskIntoConstraints = false
-        
-        buttonContainer.addSubview(actionButton!)
+        buttonContainer.addSubview(actionButton)
         
         NSLayoutConstraint.activate([
-            actionButton!.heightAnchor.constraint(equalToConstant: CourierInboxButtonStyles.maxHeight),
-            actionButton!.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
-            actionButton!.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-            actionButton!.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
+            actionButton.heightAnchor.constraint(equalToConstant: CourierInboxButtonStyles.maxHeight),
+            actionButton.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
+            actionButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+            actionButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
         ])
         
         stackView.addArrangedSubview(buttonContainer)
@@ -98,7 +95,7 @@ internal class CourierInboxInfoView: UIView {
         case .error(let error):
             titleLabel.isHidden = false
             buttonContainer.isHidden = false
-            actionButton?.title = "Retry"
+            actionButton.title = "Retry"
             titleLabel.text = error.friendlyMessage
         case .empty:
             titleLabel.isHidden = false
@@ -114,7 +111,7 @@ internal class CourierInboxInfoView: UIView {
     internal func setTheme(_ theme: CourierInboxTheme) {
         titleLabel.font = theme.detailTitleFont.font
         titleLabel.textColor = theme.detailTitleFont.color
-        actionButton?.setTheme(theme)
+        actionButton.setTheme(theme)
     }
     
 }
