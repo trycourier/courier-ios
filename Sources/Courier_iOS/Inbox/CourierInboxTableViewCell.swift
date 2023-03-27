@@ -131,6 +131,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonStack.addArrangedSubview(actionsStack)
         
+        NSLayoutConstraint.activate([
+            actionsStack.heightAnchor.constraint(equalToConstant: 34.333333333333336)
+        ])
+        
     }
     
     internal func setMessage(_ message: InboxMessage, _ theme: CourierInboxTheme, onActionClick: @escaping (InboxAction) -> Void) {
