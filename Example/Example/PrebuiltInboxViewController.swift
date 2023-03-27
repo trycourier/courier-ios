@@ -8,7 +8,7 @@
 import UIKit
 import Courier_iOS
 
-class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
+class PrebuiltInboxViewController: UIViewController {
     
     @IBOutlet weak var courierInbox: CourierInbox!
     
@@ -18,21 +18,19 @@ class PrebuiltInboxViewController: UIViewController, CourierInboxDelegate {
         title = "Prebuilt Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
-        courierInbox.delegate = self
+        courierInbox.didClickInboxMessageAtIndex = { message, index in
+            message.isRead ? message.markAsUnread() : message.markAsRead()
+            print(index, message)
+        }
+        
+        courierInbox.didClickInboxActionForMessageAtIndex = { action, message, index in
+            print(action, message, index)
+        }
         
     }
     
     @objc private func readAll() {
         Courier.shared.readAllInboxMessages()
-    }
-    
-    func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
-        message.isRead ? message.markAsUnread() : message.markAsRead()
-        print(index, message)
-    }
-    
-    func didClickInboxActionForMessageAtIndex(action: InboxAction, message: InboxMessage, index: Int) {
-        print(action, message, index)
     }
 
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2729767129D1FE3500B31EEB /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2729767029D1FE3500B31EEB /* Courier_iOS */; };
+		2729767729D2129300B31EEB /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2729767629D2129300B31EEB /* Courier_iOS */; };
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
 		2735336129CE40C200FF16CD /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2735336029CE40C200FF16CD /* FirebaseMessaging */; };
@@ -90,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2729767729D2129300B31EEB /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +197,7 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
+				2729767629D2129300B31EEB /* Courier_iOS */,
 			);
 			productName = CourierService;
 			productReference = 6729FFAA2926F779006A3EC2 /* CourierService.appex */;
@@ -600,6 +603,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		2729767029D1FE3500B31EEB /* Courier_iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2729766F29D1FE3500B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */;
+			productName = Courier_iOS;
+		};
+		2729767629D2129300B31EEB /* Courier_iOS */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2729766F29D1FE3500B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier_iOS;

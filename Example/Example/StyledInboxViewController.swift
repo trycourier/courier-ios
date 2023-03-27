@@ -8,7 +8,7 @@
 import UIKit
 import Courier_iOS
 
-class StyledInboxViewController: UIViewController, CourierInboxDelegate {
+class StyledInboxViewController: UIViewController {
     
     private let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
     private let primaryColor = UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
@@ -77,7 +77,17 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
                 cellStyles: CourierInboxCellStyles(
                     separatorStyle: .none
                 )
-            )
+            ),
+            didClickInboxMessageAtIndex: { message, index in
+                message.isRead ? message.markAsUnread() : message.markAsRead()
+                print(index, message)
+            },
+            didClickInboxActionForMessageAtIndex: { action, message, index in
+                print(action, message, index)
+            },
+            didScrollInbox: { scrollView in
+                print(scrollView.contentOffset.y)
+            }
         )
     }()
 
@@ -86,8 +96,6 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
 
         courierInbox.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(courierInbox)
-        
-        courierInbox.delegate = self
         
         NSLayoutConstraint.activate([
             courierInbox.topAnchor.constraint(equalTo: view.topAnchor),
@@ -103,19 +111,6 @@ class StyledInboxViewController: UIViewController, CourierInboxDelegate {
     
     @objc private func readAll() {
         Courier.shared.readAllInboxMessages()
-    }
-    
-    func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
-        message.isRead ? message.markAsUnread() : message.markAsRead()
-        print(index, message)
-    }
-    
-    func didClickInboxActionForMessageAtIndex(action: InboxAction, message: InboxMessage, index: Int) {
-        print(action, message, index)
-    }
-    
-    func didScrollInbox(scrollView: UIScrollView) {
-//         print(scrollView.contentOffset.y)
     }
 
 }
