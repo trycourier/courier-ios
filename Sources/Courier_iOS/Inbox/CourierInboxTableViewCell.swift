@@ -108,6 +108,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // Button Stack
         
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        buttonStack.axis = .vertical
         
         containerStackView.addArrangedSubview(buttonStack)
         
