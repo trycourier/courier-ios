@@ -20,6 +20,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let bodyLabel = UILabel()
     private let buttonStack = UIStackView()
     private let actionsStack = UIStackView()
+    private let spacer = UIView()
     
     private var inboxMessage: InboxMessage?
     
@@ -114,8 +115,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Add spacer
         
-        let spacer = UIView()
-        
         spacer.translatesAutoresizingMaskIntoConstraints = false
         
         buttonStack.addArrangedSubview(spacer)
@@ -131,15 +130,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         actionsStack.axis = .horizontal
         actionsStack.distribution = .fill
         
-        actionsStack.backgroundColor = .red
-        
         buttonStack.addArrangedSubview(actionsStack)
         
         NSLayoutConstraint.activate([
             actionsStack.heightAnchor.constraint(equalToConstant: 34.333333333333336)
         ])
         
-        actionsStack.layoutIfNeeded()
+        buttonStack.layoutIfNeeded()
         
     }
     
