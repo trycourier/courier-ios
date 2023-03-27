@@ -40,11 +40,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setup() {
         
+        [containerStackView, titleStackView, indicatorView, titleLabel, timeLabel, bodyLabel, buttonStack, actionsStack, spacer].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
         let margin = CourierInboxTheme.margin
         
         // Add indicator
-        
-        indicatorView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(indicatorView)
         
@@ -57,7 +59,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Add container
         
-        containerStackView.translatesAutoresizingMaskIntoConstraints = false
         containerStackView.spacing = margin / 2
         containerStackView.insetsLayoutMarginsFromSafeArea = false
         containerStackView.axis = .vertical
@@ -76,7 +77,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Add title stack
         
-        titleStackView.translatesAutoresizingMaskIntoConstraints = false
         titleStackView.alignment = .top
         titleStackView.spacing = margin * 2
         titleStackView.axis = .horizontal
@@ -85,7 +85,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Add title
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.numberOfLines = 0
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
@@ -93,7 +92,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Add time
         
-        timeLabel.translatesAutoresizingMaskIntoConstraints = false
         timeLabel.numberOfLines = 1
         timeLabel.textAlignment = .right
         
@@ -101,21 +99,17 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Add body
         
-        bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         bodyLabel.numberOfLines = 0
         
         containerStackView.addArrangedSubview(bodyLabel)
         
         // Button Stack
         
-        buttonStack.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.axis = .vertical
         
         containerStackView.addArrangedSubview(buttonStack)
         
         // Add spacer
-        
-        spacer.translatesAutoresizingMaskIntoConstraints = false
         
         buttonStack.addArrangedSubview(spacer)
         
@@ -125,7 +119,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // Add actions stack
         
-        actionsStack.translatesAutoresizingMaskIntoConstraints = false
         actionsStack.spacing = margin * 1.5
         actionsStack.axis = .horizontal
         actionsStack.distribution = .fill
@@ -135,8 +128,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             actionsStack.heightAnchor.constraint(equalToConstant: 34.333333333333336)
         ])
-        
-        buttonStack.layoutIfNeeded()
         
     }
     
