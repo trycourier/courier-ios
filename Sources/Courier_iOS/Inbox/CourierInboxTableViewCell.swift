@@ -57,6 +57,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
         containerStackView.spacing = margin / 2
         containerStackView.insetsLayoutMarginsFromSafeArea = false
+        containerStackView.axis = .vertical
         
         contentView.addSubview(containerStackView)
         
@@ -75,6 +76,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
         titleStackView.alignment = .top
         titleStackView.spacing = margin * 2
+        titleStackView.axis = .horizontal
         
         containerStackView.addArrangedSubview(titleStackView)
         
