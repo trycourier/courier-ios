@@ -128,6 +128,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         actionsStack.translatesAutoresizingMaskIntoConstraints = false
         actionsStack.spacing = margin * 1.5
         actionsStack.axis = .horizontal
+        actionsStack.distribution = .fill
+        
+        actionsStack.backgroundColor = .red
         
         buttonStack.addArrangedSubview(actionsStack)
         
