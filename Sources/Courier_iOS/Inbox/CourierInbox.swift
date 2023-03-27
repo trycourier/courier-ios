@@ -13,16 +13,16 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 @objc open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    /**
-     Attached the delegate needed to handle various interactions
-     More info can be found here: ``CourierInboxDelegate``
-     */
-    @objc public var delegate: CourierInboxDelegate? = nil
-    
     // MARK: Theme
     
     private let lightTheme: CourierInboxTheme
     private let darkTheme: CourierInboxTheme
+    
+    // MARK: Interaction
+    
+    private var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
+    private var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
+    private var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
@@ -106,11 +106,29 @@ import UIKit
     
     // MARK: Init
     
-    @objc public init(lightTheme: CourierInboxTheme = .defaultLight, darkTheme: CourierInboxTheme = .defaultDark) {
+    @objc public init(
+        lightTheme: CourierInboxTheme = .defaultLight,
+        darkTheme: CourierInboxTheme = .defaultDark,
+        didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
+        didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
+        didScrollInbox: ((UIScrollView) -> Void)? = nil
+    ) {
+        
+        // Theme
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
+        
+        // Init
         super.init(frame: .zero)
+        
+        // Callbacks
+        self.didClickInboxMessageAtIndex = didClickInboxMessageAtIndex
+        self.didClickInboxActionForMessageAtIndex = didClickInboxActionForMessageAtIndex
+        self.didScrollInbox = didScrollInbox
+        
+        // Styles and more
         setup()
+        
     }
 
     override init(frame: CGRect) {
@@ -348,10 +366,10 @@ import UIKit
                 let message = inboxMessages[index]
                 
                 cell.setMessage(message, theme) { [weak self] inboxAction in
-                    self?.delegate?.didClickInboxActionForMessageAtIndex?(
-                        action: inboxAction,
-                        message: message,
-                        index: index
+                    self?.didClickInboxActionForMessageAtIndex?(
+                        inboxAction,
+                        message,
+                        index
                     )
                 }
                 
@@ -385,15 +403,23 @@ import UIKit
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if (indexPath.section == 0) {
+            
+            // Click the cell
             let index = indexPath.row
             let message = self.inboxMessages[index]
-            self.delegate?.didClickInboxMessageAtIndex?(message: message, index: index)
+            self.didClickInboxMessageAtIndex?(message, index)
+            
+            // Deselect the row
+            tableView.deselectRow(at: indexPath, animated: true)
+            
         }
+        
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.delegate?.didScrollInbox?(scrollView: scrollView)
+        self.didScrollInbox?(scrollView)
         self.openVisibleMessages()
     }
     
