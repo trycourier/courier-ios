@@ -6,17 +6,37 @@
 //
 
 import SwiftUI
+import Courier_iOS
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+    
+    init() {
+        
+        Task {
+            
+            let COURIER_ACCESS_TOKEN = "pk_prod_H48Y2E9VV94YP5K60JAYPGY3M3NH"
+            let COURIER_CLIENT_KEY = "YWQxN2M2ZmMtNDU5OS00ZThlLWE4NTktZDQ4YzVlYjkxM2Mx"
+            
+            try await Courier.shared.signIn(
+                accessToken: COURIER_ACCESS_TOKEN,
+                clientKey: COURIER_CLIENT_KEY,
+                userId: "mike"
+            )
+            
         }
-        .padding()
+        
     }
+    
+    var body: some View {
+        NavigationView {
+            ZStack {
+                CourierInboxView()
+            }
+            .navigationTitle("Courier Inbox")
+            .ignoresSafeArea()
+        }
+    }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {

@@ -11,6 +11,7 @@
 		2729766229D1FC7300B31EEB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729766129D1FC7300B31EEB /* ContentView.swift */; };
 		2729766429D1FC7400B31EEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2729766329D1FC7400B31EEB /* Assets.xcassets */; };
 		2729766729D1FC7400B31EEB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2729766629D1FC7400B31EEB /* Preview Assets.xcassets */; };
+		2729767529D2009600B31EEB /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2729767429D2009600B31EEB /* Courier_iOS */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2729767529D2009600B31EEB /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +85,9 @@
 			dependencies = (
 			);
 			name = "SwiftUI-Example";
+			packageProductDependencies = (
+				2729767429D2009600B31EEB /* Courier_iOS */,
+			);
 			productName = "SwiftUI-Example";
 			productReference = 2729765C29D1FC7300B31EEB /* SwiftUI-Example.app */;
 			productType = "com.apple.product-type.application";
@@ -112,6 +117,7 @@
 			);
 			mainGroup = 2729765329D1FC7300B31EEB;
 			packageReferences = (
+				2729767329D2009600B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 2729765D29D1FC7300B31EEB /* Products */;
 			projectDirPath = "";
@@ -343,6 +349,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2729767329D2009600B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/trycourier/courier-ios";
+			requirement = {
+				branch = "feature/pod-inbox";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2729767429D2009600B31EEB /* Courier_iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2729767329D2009600B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */;
+			productName = Courier_iOS;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2729765429D1FC7300B31EEB /* Project object */;
 }
