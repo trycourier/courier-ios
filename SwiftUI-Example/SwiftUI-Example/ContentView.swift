@@ -30,7 +30,17 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                CourierInboxView()
+                CourierInboxView(
+                    didClickInboxMessageAtIndex: { message, index in
+                        print(message, index)
+                    },
+                    didClickInboxActionForMessageAtIndex: { action, message, index in
+                        print(action, message, index)
+                    },
+                    didScrollInbox: { scrollview in
+                        print(scrollview.contentOffset.y)
+                    }
+                )
             }
             .navigationTitle("Courier Inbox")
             .ignoresSafeArea()

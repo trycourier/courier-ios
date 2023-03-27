@@ -18,15 +18,15 @@ import UIKit
     private let lightTheme: CourierInboxTheme
     private let darkTheme: CourierInboxTheme
     
-    // MARK: Interaction
-    
-    private var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
-    private var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
-    private var didScrollInbox: ((UIScrollView) -> Void)? = nil
-    
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
     private var theme: CourierInboxTheme = .defaultLight
+    
+    // MARK: Interaction
+    
+    @objc public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
+    @objc public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
+    @objc public var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
     // MARK: Datasource
     
