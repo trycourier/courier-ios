@@ -73,6 +73,8 @@ internal class CourierInboxInfoView: UIView {
         
         actionButton!.translatesAutoresizingMaskIntoConstraints = false
         
+        buttonContainer.translatesAutoresizingMaskIntoConstraints = false
+        
         buttonContainer.addSubview(actionButton!)
         
         NSLayoutConstraint.activate([
