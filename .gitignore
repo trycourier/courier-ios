@@ -11,3 +11,4 @@ DerivedData/
 save_changes.sh
 GoogleService-Info.plist*
 Env.swift
+/Pod-Example/Pods
