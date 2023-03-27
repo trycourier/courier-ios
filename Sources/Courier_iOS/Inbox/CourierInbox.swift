@@ -147,7 +147,7 @@ import UIKit
     
     private func setup() {
         
-        [courierBar, infoView, loadingIndicator].forEach {
+        [tableView, courierBar, infoView, loadingIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
