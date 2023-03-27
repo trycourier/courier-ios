@@ -27,6 +27,10 @@ internal class CourierBar: UIView {
     
     private func setup() {
         
+        [border, logoButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
         subviews.forEach {
             $0.removeFromSuperview()
         }
@@ -51,8 +55,6 @@ internal class CourierBar: UIView {
         ])
         
         // Border
-        
-        border.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(border)
         
