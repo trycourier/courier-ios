@@ -14,12 +14,16 @@ public struct CourierInboxView: UIViewRepresentable {
     public init(
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
-        didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil)
-    {
+        didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
+        didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
+        didScrollInbox: ((UIScrollView) -> Void)? = nil
+    ) {
         self.inbox = CourierInbox(
             lightTheme: lightTheme,
             darkTheme: darkTheme,
-            didClickInboxMessageAtIndex: didClickInboxMessageAtIndex
+            didClickInboxMessageAtIndex: didClickInboxMessageAtIndex,
+            didClickInboxActionForMessageAtIndex: didClickInboxActionForMessageAtIndex,
+            didScrollInbox: didScrollInbox
         )
     }
     
@@ -29,20 +33,6 @@ public struct CourierInboxView: UIViewRepresentable {
     
     public func updateUIView(_ uiView: UIViewType, context: Context) {
         // Empty
-    }
-    
-    // MARK: Courier Inbox
-    
-    public func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
-        print(message)
-    }
-    
-    public func didClickInboxActionForMessageAtIndex(action: InboxAction, message: InboxMessage, index: Int) {
-        print(message, action)
-    }
-    
-    public func didScrollInbox(scrollView: UIScrollView) {
-        print(scrollView.contentOffset)
     }
     
 }
