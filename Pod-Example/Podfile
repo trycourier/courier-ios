@@ -1,0 +1,16 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'Pod-Example' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for Pod-Example
+  pod 'Courier_iOS', :git => 'https://github.com/trycourier/courier-ios.git', :branch => 'feature/pod-inbox'
+
+end
+
+target 'CourierService' do
+  use_frameworks!
+  pod 'Courier_iOS', :git => 'https://github.com/trycourier/courier-ios.git', :branch => 'feature/pod-inbox'
+end
