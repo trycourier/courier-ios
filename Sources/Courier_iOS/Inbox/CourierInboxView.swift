@@ -2,7 +2,7 @@
 //  CourierInboxView.swift
 //  
 //
-//  Created by Michael Miller on 3/27/23.
+//  Created by https://github.com/mikemilla on 3/27/23.
 //
 
 import SwiftUI
