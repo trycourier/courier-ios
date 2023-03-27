@@ -55,6 +55,7 @@ internal class CourierInboxInfoView: UIView {
     
     private func addTitle() {
         
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
         titleLabel.textColor = .label
         titleLabel.textAlignment = .center
