@@ -18,6 +18,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let titleLabel = UILabel()
     private let timeLabel = UILabel()
     private let bodyLabel = UILabel()
+    private let buttonStack = UIStackView()
+    private let actionsStack = UIStackView()
     
     private var inboxMessage: InboxMessage?
     
@@ -103,13 +105,39 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         containerStackView.addArrangedSubview(bodyLabel)
         
+        // Button Stack
+        
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerStackView.addArrangedSubview(buttonStack)
+        
+        // Add spacer
+        
+        let spacer = UIView()
+        
+        spacer.translatesAutoresizingMaskIntoConstraints = false
+        
+        buttonStack.addArrangedSubview(spacer)
+        
+        NSLayoutConstraint.activate([
+            spacer.heightAnchor.constraint(equalToConstant: margin)
+        ])
+        
+        // Add actions stack
+        
+        actionsStack.translatesAutoresizingMaskIntoConstraints = false
+        actionsStack.spacing = margin * 1.5
+        actionsStack.axis = .horizontal
+        
+        buttonStack.addArrangedSubview(actionsStack)
+        
     }
     
     internal func setMessage(_ message: InboxMessage, _ theme: CourierInboxTheme, onActionClick: @escaping (InboxAction) -> Void) {
         
         self.inboxMessage = message
         
-//        setupButtons(theme, onActionClick)
+        setupButtons(theme, onActionClick)
         setTheme(theme)
 
         indicatorView.isHidden = message.isRead
@@ -138,6 +166,38 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 
     }
     
+    private func setupButtons(_ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {
+        
+//        let actions = self.inboxMessage?.actions ?? []
+        let actions = [
+            InboxAction(content: "Something", href: "", style: "", background_color: ""),
+            InboxAction(content: "Something Else", href: "", style: "", background_color: ""),
+        ]
+        
+        // Create and add a button for each action
+        actions.forEach { action in
+            
+            let actionButton = CourierInboxButton(
+                inboxAction: action,
+                theme: theme,
+                actionClick: onActionClick
+            )
+            
+            actionsStack.addArrangedSubview(actionButton)
+            
+        }
+        
+        // Add spacer to end
+        // Pushes items to left
+        if (!actions.isEmpty) {
+            let spacer = UIView()
+            actionsStack.addArrangedSubview(spacer)
+        }
+        
+        buttonStack.isHidden = actions.isEmpty
+        
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         reset()
@@ -148,10 +208,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         titleLabel.text = nil
         timeLabel.text = nil
         bodyLabel.text = nil
-//        actionsStack.arrangedSubviews.forEach { subview in
-//            subview.removeFromSuperview()
-//        }
-//        buttonStack.isHidden = true
+        actionsStack.arrangedSubviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        buttonStack.isHidden = true
     }
 
 }
