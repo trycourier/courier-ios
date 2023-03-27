@@ -129,17 +129,4 @@ class ViewController: UIViewController {
         Courier.shared.readAllInboxMessages()
     }
     
-    func didClickInboxMessageAtIndex(message: InboxMessage, index: Int) {
-        message.isRead ? message.markAsUnread() : message.markAsRead()
-        print(index, message)
-    }
-    
-    func didClickInboxActionForMessageAtIndex(action: InboxAction, message: InboxMessage, index: Int) {
-        print(action, message, index)
-    }
-    
-    func didScrollInbox(scrollView: UIScrollView) {
-//         print(scrollView.contentOffset.y)
-    }
-    
 }
