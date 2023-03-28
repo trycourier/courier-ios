@@ -143,8 +143,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         timeLabel.text = message.time
         bodyLabel.text = message.subtitle
         
-        layoutIfNeeded()
-        
     }
     
     private func setTheme(_ theme: CourierInboxTheme) {
