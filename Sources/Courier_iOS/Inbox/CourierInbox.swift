@@ -183,15 +183,15 @@ import UIKit
             courierBar.setColors(with: superview?.backgroundColor)
             
             // Add content inset
-            tableView.verticalScrollIndicatorInsets.bottom = courierBar.frame.height
-            tableView.contentInset.bottom = courierBar.frame.height
+            tableView.verticalScrollIndicatorInsets.bottom = CourierBar.height
+            tableView.contentInset.bottom = CourierBar.height
             
             // Update position
-            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - courierBar.frame.height)
+            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - CourierBar.height)
             courierBar.layoutIfNeeded()
             
             // Update infoView position
-            infoViewY?.constant = -(courierBar.frame.height / 2)
+            infoViewY?.constant = -(CourierBar.height / 2)
             infoView.layoutIfNeeded()
             
         }

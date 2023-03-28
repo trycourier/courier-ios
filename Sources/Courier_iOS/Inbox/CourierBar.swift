@@ -10,6 +10,8 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 internal class CourierBar: UIView {
     
+    internal static let height: CGFloat = 48
+    
     private let border = UIView()
     private let logoContainer = UIView()
     private let logoButton = UIButton(type: .custom)
@@ -49,7 +51,7 @@ internal class CourierBar: UIView {
             bottomConstraint!,
             logoContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             logoContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            logoContainer.heightAnchor.constraint(equalToConstant: 48),
+            logoContainer.heightAnchor.constraint(equalToConstant: CourierBar.height),
         ])
         
         // Logo
