@@ -10,6 +10,40 @@ import Courier_iOS
 
 struct ContentView: View {
     
+    let theme = CourierInboxTheme(
+        messageAnimationStyle: .fade,
+        unreadIndicatorBarColor: .systemMint,
+        loadingIndicatorColor: .systemMint,
+        titleFont: CourierInboxFont(
+            font: UIFont(name: "Avenir Black", size: 20)!,
+            color: .label
+        ),
+        timeFont: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 16)!,
+            color: .label
+        ),
+        bodyFont: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 18)!,
+            color: .label
+        ),
+        detailTitleFont: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 20)!,
+            color: .label
+        ),
+        buttonStyles: CourierInboxButtonStyles(
+            font: CourierInboxFont(
+                font: UIFont(name: "Avenir Black", size: 16)!,
+                color: .white
+            ),
+            backgroundColor: .systemMint,
+            cornerRadius: 100
+        ),
+        cellStyles: CourierInboxCellStyles(
+            separatorStyle: .singleLine,
+            separatorInsets: .zero
+        )
+    )
+    
     init() {
         
         Task {
@@ -20,7 +54,7 @@ struct ContentView: View {
             try await Courier.shared.signIn(
                 accessToken: COURIER_ACCESS_TOKEN,
                 clientKey: COURIER_CLIENT_KEY,
-                userId: "mike"
+                userId: "dave"
             )
             
         }
@@ -31,6 +65,8 @@ struct ContentView: View {
         NavigationView {
             ZStack {
                 CourierInboxView(
+                    lightTheme: theme,
+                    darkTheme: theme,
                     didClickInboxMessageAtIndex: { message, index in
                         print(message, index)
                     },
