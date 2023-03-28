@@ -24,7 +24,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     
     s.source_files = 'Sources/Courier_iOS/**/*.{swift}'
     s.resource_bundles = {
-        'Resources' => ['Sources/Courier_iOS/Media.xcassets']
+        'Resources' => ['Sources/Courier_iOS/*.{xcassets}']
     }
         
 end

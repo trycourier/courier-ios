@@ -1,5 +1,3 @@
-import UIKit
-
 /*
  
      ,gggg,
@@ -21,6 +19,8 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 ===========================================================================
  
 */
+
+import Foundation
 
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
