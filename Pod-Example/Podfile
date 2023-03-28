@@ -6,11 +6,11 @@ target 'Pod-Example' do
   use_frameworks!
 
   # Pods for Pod-Example
-  pod 'Courier_iOS', :git => 'https://github.com/trycourier/courier-ios.git', :branch => 'feature/pod-inbox'
+  pod 'Courier_iOS', :git => 'https://github.com/trycourier/courier-ios.git', :branch => 'feature/inbox'
 
 end
 
 target 'CourierService' do
   use_frameworks!
-  pod 'Courier_iOS', :git => 'https://github.com/trycourier/courier-ios.git', :branch => 'feature/pod-inbox'
+  pod 'Courier_iOS', :git => 'https://github.com/trycourier/courier-ios.git', :branch => 'feature/inbox'
 end

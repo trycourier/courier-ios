@@ -54,7 +54,7 @@ struct ContentView: View {
             try await Courier.shared.signIn(
                 accessToken: COURIER_ACCESS_TOKEN,
                 clientKey: COURIER_CLIENT_KEY,
-                userId: "dave"
+                userId: "mike"
             )
             
         }

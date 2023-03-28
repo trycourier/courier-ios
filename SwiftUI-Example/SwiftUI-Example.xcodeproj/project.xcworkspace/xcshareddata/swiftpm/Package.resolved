@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "feature/pod-inbox",
-        "revision" : "008e9bc1898dba7328cf34d663bef6cd7009653f"
+        "branch" : "feature/inbox",
+        "revision" : "e4f7ecdd0c3140665aad608b0c1b9eda7d77a718"
       }
     }
   ],

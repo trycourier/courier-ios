@@ -2,11 +2,15 @@
 
 ```swift
 
+// =========
 // Debugging
+// =========
 
 Courier.shared.isDebugging = true
 
+// ==============
 // Authentication
+// ==============
 
 let userId = Courier.shared.userId
 let isUserSignedIn = Courier.shared.isUserSignedIn
@@ -19,7 +23,11 @@ try await Courier.shared.signIn(
 
 try await Courier.shared.signOut()
 
+// =============
 // Courier Inbox
+// =============
+
+// Prebuilt UI implementation
 
 let font = CourierInboxFont(
     font: UIFont(name: "Avenir Medium", size: 18)!,
@@ -61,6 +69,8 @@ let inboxView = CourierInbox(
     }
 )
 
+// Custom implementation
+
 let inboxListener = Courier.shared.addInboxListener(
     onInitialLoad: {
         print("Inbox listener is starting")
@@ -81,11 +91,13 @@ let inboxMessages = Courier.shared.inboxMessages
 
 try await Courier.shared.fetchNextPageOfMessages()
 try await Courier.shared.refreshInbox()
-try await Courier.shared.readMessage(messageId: "asdf...")
-try await Courier.shared.unreadMessage(messageId: "asdf...")
+try await Courier.shared.readMessage(messageId: "1-321...")
+try await Courier.shared.unreadMessage(messageId: "1-321...")
 try await Courier.shared.readAllInboxMessages()
 
+// ==================
 // Push Notifications
+// ==================
 
 try await Courier.shared.setFCMToken(token)
 try await Courier.shared.setAPNSToken(token)
@@ -95,6 +107,8 @@ let apnsToken = Courier.shared.apnsToken
 
 let currentPermissionStatus = try await Courier.shared.getNotificationPermissionStatus()
 let requestPermissionStatus = try await Courier.shared.requestNotificationPermission()
+
+// Delivery handlers
 
 class AppDelegate: CourierDelegate {
 

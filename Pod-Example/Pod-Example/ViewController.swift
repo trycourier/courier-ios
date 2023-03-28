@@ -100,7 +100,6 @@ class ViewController: UIViewController {
             
             let COURIER_ACCESS_TOKEN = "pk_prod_H48Y2E9VV94YP5K60JAYPGY3M3NH"
             let COURIER_CLIENT_KEY = "YWQxN2M2ZmMtNDU5OS00ZThlLWE4NTktZDQ4YzVlYjkxM2Mx"
-            let COURIER_AUTH_KEY = "pk_prod_H48Y2E9VV94YP5K60JAYPGY3M3NH"
             
             try await Courier.shared.signIn(
                 accessToken: COURIER_ACCESS_TOKEN,

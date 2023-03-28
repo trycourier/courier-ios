@@ -2,21 +2,21 @@ PODS:
   - Courier_iOS (2.0.07)
 
 DEPENDENCIES:
-  - Courier_iOS (from `https://github.com/trycourier/courier-ios.git`, branch `feature/pod-inbox`)
+  - Courier_iOS (from `https://github.com/trycourier/courier-ios.git`, branch `feature/inbox`)
 
 EXTERNAL SOURCES:
   Courier_iOS:
-    :branch: feature/pod-inbox
+    :branch: feature/inbox
     :git: https://github.com/trycourier/courier-ios.git
 
 CHECKOUT OPTIONS:
   Courier_iOS:
-    :commit: 008e9bc1898dba7328cf34d663bef6cd7009653f
+    :commit: e4f7ecdd0c3140665aad608b0c1b9eda7d77a718
     :git: https://github.com/trycourier/courier-ios.git
 
 SPEC CHECKSUMS:
   Courier_iOS: 59bc9b7f4093dee160db3f2946c877cbf1c0fe36
 
-PODFILE CHECKSUM: 371d0bfc9d19a3c18f63b65f6a171349910d04e1
+PODFILE CHECKSUM: 036b2a677adc519738dd99734fbd997e44628cc6
 
 COCOAPODS: 1.12.0
