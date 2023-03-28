@@ -13,6 +13,8 @@ internal class CourierBar: UIView {
     private let border = UIView()
     private let logoContainer = UIView()
     private let logoButton = UIButton(type: .custom)
+    
+    internal var bottomConstraint: NSLayoutConstraint? = nil
 
     // MARK: Init
 
@@ -39,10 +41,12 @@ internal class CourierBar: UIView {
         addSubview(logoContainer)
         
         logoContainer.backgroundColor = .green
+        
+        bottomConstraint = logoContainer.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: 0)
 
         NSLayoutConstraint.activate([
             logoContainer.topAnchor.constraint(equalTo: topAnchor),
-            logoContainer.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: 0),
+            bottomConstraint!,
             logoContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             logoContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
             logoContainer.heightAnchor.constraint(equalToConstant: 48),

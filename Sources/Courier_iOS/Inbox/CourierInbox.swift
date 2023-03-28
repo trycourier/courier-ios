@@ -49,7 +49,6 @@ import UIKit
     // MARK: Constraints
     
     private var infoViewY: NSLayoutConstraint? = nil
-    private var courierBarBottom: NSLayoutConstraint? = nil
     
     // MARK: State
     
@@ -188,7 +187,7 @@ import UIKit
             tableView.contentInset.bottom = courierBar.frame.height
             
             // Update position
-            courierBarBottom?.constant = -(tableView.adjustedContentInset.bottom - courierBar.frame.height)
+            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - courierBar.frame.height)
             courierBar.layoutIfNeeded()
             
             // Update infoView position
@@ -210,10 +209,8 @@ import UIKit
         
         addSubview(courierBar)
         
-        courierBarBottom = courierBar.bottomAnchor.constraint(equalTo: bottomAnchor)
-        
         NSLayoutConstraint.activate([
-            courierBarBottom!,
+            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
             courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
