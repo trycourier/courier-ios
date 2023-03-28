@@ -125,7 +125,6 @@ class AppDelegate: CourierDelegate {
 
 // Testing
 
-// TODO: Actions support
 let messageId = try await Courier.shared.sendPush(
     authKey: "pk_prod_H12...",
     userId: "example_user_id",
@@ -139,9 +138,9 @@ let messageId = try await Courier.shared.sendPush(
 
 # Requirements & Support
 
-| Min SDK | Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox | Courier Toast |
-| :-----: | :---: | :---: | :----------------------: | :-----------------------------: | :--: | :-------: | :-----------: | :-----------: |
-|  `13`   |  ✅   |  ✅   |            ✅            |               ✅                |  ❌  |    ❌     |      ❌       |      ❌       |
+| Min SDK | Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox |
+| :-----: | :---: | :---: | :----------------------: | :-----------------------------: | :--: | :-------: | :-----------: |
+|  `13`   |  ✅   |  ✅   |            ✅            |               ✅                |  ❌  |    ❌     |      ✅      |
 
 > Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
 
