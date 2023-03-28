@@ -11,6 +11,7 @@ import UIKit
 internal class CourierBar: UIView {
     
     private let border = UIView()
+    private let logoContainer = UIView()
     private let logoButton = UIButton(type: .custom)
 
     // MARK: Init
@@ -27,16 +28,24 @@ internal class CourierBar: UIView {
     
     private func setup() {
         
-        [border, logoButton].forEach {
+        [border, logoContainer, logoButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         subviews.forEach {
             $0.removeFromSuperview()
         }
+        
+        addSubview(logoContainer)
+        
+        logoContainer.backgroundColor = .green
 
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 48),
+            logoContainer.topAnchor.constraint(equalTo: topAnchor),
+            logoContainer.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: 0),
+            logoContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            logoContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            logoContainer.heightAnchor.constraint(equalToConstant: 48),
         ])
         
         // Logo
@@ -45,11 +54,11 @@ internal class CourierBar: UIView {
         logoButton.translatesAutoresizingMaskIntoConstraints = false
         logoButton.addTarget(self, action: #selector(showLaunchSheet), for: .touchUpInside)
         
-        addSubview(logoButton)
+        logoContainer.addSubview(logoButton)
         
         NSLayoutConstraint.activate([
-            logoButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            logoButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            logoButton.centerXAnchor.constraint(equalTo: logoContainer.centerXAnchor),
+            logoButton.centerYAnchor.constraint(equalTo: logoContainer.centerYAnchor),
             logoButton.heightAnchor.constraint(equalToConstant: 40),
             logoButton.widthAnchor.constraint(equalToConstant: 134),
         ])
