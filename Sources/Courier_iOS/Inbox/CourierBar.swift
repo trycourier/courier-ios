@@ -42,8 +42,6 @@ internal class CourierBar: UIView {
         
         addSubview(logoContainer)
         
-        logoContainer.backgroundColor = .green
-        
         bottomConstraint = logoContainer.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: 0)
 
         NSLayoutConstraint.activate([
