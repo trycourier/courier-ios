@@ -69,6 +69,7 @@ struct ContentView: View {
                     darkTheme: theme,
                     didClickInboxMessageAtIndex: { message, index in
                         print(message, index)
+                        message.isRead ? message.markAsUnread() : message.markAsRead()
                     },
                     didClickInboxActionForMessageAtIndex: { action, message, index in
                         print(action, message, index)
