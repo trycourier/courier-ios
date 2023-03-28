@@ -1,32 +1,100 @@
 # Courier iOS Overview
 
 ```swift
+
+// Debugging
+
 Courier.shared.isDebugging = true
 
-let userId = Courier.shared.userId
+// Authentication
 
-await Courier.shared.signIn(
-    accessToken: "asdf...",
-    userId: 'example_user_id',
+let userId = Courier.shared.userId
+let isUserSignedIn = Courier.shared.isUserSignedIn
+
+try await Courier.shared.signIn(
+    accessToken: "pk_prod_H12...",
+    clientKey: "YWQxN...",
+    userId: "example_user_id"
 )
 
-await Courier.shared.signOut()
+try await Courier.shared.signOut()
 
-let currentPermissionStatus = await Courier.shared.getNotificationPermissionStatus()
-let requestPermissionStatus = await Courier.shared.requestNotificationPermission()
+// Courier Inbox
 
-await Courier.shared.setFcmToken(token)
+let font = CourierInboxFont(
+    font: UIFont(name: "Avenir Medium", size: 18)!,
+    color: UIColor.systemBlue
+)
+
+let inboxTheme = CourierInboxTheme(
+    brandId: "AB123...",
+    messageAnimationStyle: UITableView.RowAnimation.fade,
+    unreadIndicatorBarColor: UIColor.systemBlue,
+    loadingIndicatorColor: UIColor.systemBlue,
+    titleFont: font,
+    timeFont: font,
+    bodyFont: font,
+    detailTitleFont: font,
+    buttonStyles: CourierInboxButtonStyles(
+        font: font,
+        backgroundColor: UIColor.systemBlue,
+        cornerRadius: 100
+    ),
+    cellStyles: CourierInboxCellStyles(
+        separatorStyle: .singleLine,
+        separatorInsets: .zero
+    )
+)
+
+let inboxView = CourierInbox(
+    lightTheme: inboxTheme,
+    darkTheme: inboxTheme,
+    didClickInboxMessageAtIndex: { message, index in
+        message.isRead ? message.markAsUnread() : message.markAsRead()
+        print(index, message)
+    },
+    didClickInboxActionForMessageAtIndex: { action, message, index in
+        print(action, message, index)
+    },
+    didScrollInbox: { scrollView in
+        print(scrollView.contentOffset.y)
+    }
+)
+
+let inboxListener = Courier.shared.addInboxListener(
+    onInitialLoad: {
+        print("Inbox listener is starting")
+    },
+    onError: { error in
+        print(String(describing: error))
+    },
+    onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+        print(messages, unreadMessageCount, totalMessageCount, canPaginate)
+    }
+)
+
+inboxListener.remove()
+Courier.shared.removeAllInboxListeners()
+
+Courier.shared.inboxPaginationLimit = 123
+let inboxMessages = Courier.shared.inboxMessages
+
+try await Courier.shared.fetchNextPageOfMessages()
+try await Courier.shared.refreshInbox()
+try await Courier.shared.readMessage(messageId: "asdf...")
+try await Courier.shared.unreadMessage(messageId: "asdf...")
+try await Courier.shared.readAllInboxMessages()
+
+// Push Notifications
+
+try await Courier.shared.setFCMToken(token)
+try await Courier.shared.setAPNSToken(token)
 
 let fcmToken = Courier.shared.fcmToken
 let apnsToken = Courier.shared.apnsToken
 
-let messageId = await Courier.shared.sendPush(
-    authKey: "asdf...",
-    userId: "example_user_id",
-    title: "Hey! 👋",
-    body: "Courier is awesome!!",
-    providers: [.apns, .fcm],
-)
+let currentPermissionStatus = try await Courier.shared.getNotificationPermissionStatus()
+let requestPermissionStatus = try await Courier.shared.requestNotificationPermission()
 
 class AppDelegate: CourierDelegate {
 
@@ -40,6 +108,18 @@ class AppDelegate: CourierDelegate {
     }
 
 }
+
+// Testing
+
+// TODO: Actions support
+let messageId = try await Courier.shared.sendPush(
+    authKey: "pk_prod_H12...",
+    userId: "example_user_id",
+    title: "Hey! 👋",
+    body: "Courier is awesome!!",
+    providers: [.apns, .fcm, .inbox],
+)
+
 ```
 &emsp;
 
