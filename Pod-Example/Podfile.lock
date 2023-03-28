@@ -11,7 +11,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Courier_iOS:
-    :commit: e2c9ac29583d7df7acbcaa05603d0de69b0fd592
+    :commit: 367b8e9fee9cd822375ff1de91c19d39d3906d07
     :git: https://github.com/trycourier/courier-ios.git
 
 SPEC CHECKSUMS:

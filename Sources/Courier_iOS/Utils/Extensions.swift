@@ -171,7 +171,8 @@ extension Bundle {
         #if SWIFT_PACKAGE
         return Bundle.module
         #else
-        return Bundle(for: className)
+        let bundle = Bundle(for: className)
+        return Bundle(url: bundle.url(forResource: "Media", withExtension: "bundle")!)!
         #endif
     }
     
