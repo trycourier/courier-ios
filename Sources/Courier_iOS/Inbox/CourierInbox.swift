@@ -181,9 +181,7 @@ import UIKit
         if (!courierBar.isHidden) {
          
             // Set the courier bar background color
-            if let backgroundColor = superview?.backgroundColor {
-                courierBar.setColors(with: backgroundColor)
-            }
+            courierBar.setColors(with: superview?.backgroundColor)
             
             // Add content inset
             tableView.verticalScrollIndicatorInsets.bottom = courierBar.frame.height
