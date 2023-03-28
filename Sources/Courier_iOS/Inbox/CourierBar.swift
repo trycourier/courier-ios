@@ -107,6 +107,23 @@ internal class CourierBar: UIView {
         
     }
     
+    internal struct ImagesHelper {
+        
+        private static var podsBundle: Bundle {
+            let bundle = Bundle(for: CourierBar.self)
+            return Bundle(url: bundle.url(forResource: "Media", withExtension: "bundle")!)!
+        }
+
+        private static func imageFor(name imageName: String) -> UIImage {
+            return UIImage.init(named: imageName, in: podsBundle, compatibleWith: nil)!
+        }
+
+        public static var footer: UIImage {
+            return imageFor(name: "footer")
+        }
+        
+    }
+    
     private var footerImage: UIImage? {
         get {
             
