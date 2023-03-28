@@ -110,8 +110,7 @@ internal class CourierBar: UIView {
     private var footerImage: UIImage? {
         get {
             
-            let bundle = Bundle(for: CourierBar.self)
-            return UIImage(named: "footer", in: bundle, compatibleWith: nil)!
+            return ImagesHelper.footer
             
 //            return UIImage(
 //                named: "footer",
