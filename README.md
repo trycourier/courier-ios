@@ -3,16 +3,16 @@
 <table>
     <thead>
         <tr>
-          <th width="500px" style="text-align:left">Feature</th>
+          <th width="500px" align="left">Feature</th>
           <th width="500px">Something</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td>
+            <td align="right">
                 Example
             </td>
-            <td>
+            <td style="text-align:center">
                 Example
             </td>
         </tr>
