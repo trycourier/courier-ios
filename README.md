@@ -1,14 +1,16 @@
 # Courier — iOS SDK
 
+<!--// Order-->
+<!--// 1. Requirements-->
+<!--// 2. Installation-->
+<!--// 3. Authentication-->
+<!--// 4. Inbox-->
+<!--// 5. Push-->
+<!--// 6. Production-->
 
+### **Install**
 
-### **Debugging** [`More >`](#going-to-production)
-
-```swift
-Courier.shared.isDebugging = true
-```
-
-### **[`Authentication`](https://github.com/trycourier/courier-ios/tree/master/Example)**
+### **Authentication**
 
 ```swift
 let userId = Courier.shared.userId
@@ -21,6 +23,12 @@ try await Courier.shared.signIn(
 )
 
 try await Courier.shared.signOut()
+```
+
+### **Debugging**
+
+```swift
+Courier.shared.isDebugging = true
 ```
 
 ```swift
@@ -137,20 +145,13 @@ let messageId = try await Courier.shared.sendPush(
 
 ```
 
-// Order
-// 1. Requirements
-// 2. Installation
-// 3. Authentication
-// 4. Inbox
-// 5. Push
-// 6. Production
-
 &emsp;
 
 # Requirements & Support
 
 | Feature | Support |
 | :-- | :--: |
+| Courier Account | [`Sign Up`](https://app.courier.com/signup) |
 | Min SDK | `13` |
 | Swift | ✅ |
 | Objective-C | ✅ |
