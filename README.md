@@ -40,7 +40,9 @@
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
             <td align="center">
-                <span>[`Sign Up Here`](https://app.courier.com/signup)</span>
+                <a href="https://google.com">
+                    <span>Test</span>
+                </a>
             </td>
         </tr>
         <tr width="600px">
