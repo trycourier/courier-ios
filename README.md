@@ -147,11 +147,11 @@ let messageId = try await Courier.shared.sendPush(
 
 &emsp;
 
-# Requirements & Support
+# Support
 
-| Feature | Support |
+| Feature / Requirement | |
 | :-- | :--: |
-| Courier Account | [`Sign Up`](https://app.courier.com/signup) |
+| Courier Account | [`Sign Up Here`](https://app.courier.com/signup) |
 | Min SDK | `13` |
 | Swift | ✅ |
 | Objective-C | ✅ |
@@ -161,9 +161,7 @@ let messageId = try await Courier.shared.sendPush(
 | Expo | ❌ |
 | OneSignal | ❌ |
 
-> Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
-
-> Testing push notifications requires a physical device. Simulators will not work.
+> ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
 
 &emsp;
 
