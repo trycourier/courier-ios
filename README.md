@@ -40,26 +40,46 @@
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
             <td align="center">
-                <a href="https://google.com">
-                    <code>Test</code>
+                <a href="https://app.courier.com/channels/courier">
+                    <code>More</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">Firebase Cloud Messaging (FCM)</td>
             <td align="center">✅</td>
+            <td align="center">
+                <a href="https://app.courier.com/channels/firebase-fcm">
+                    <code>More</code>
+                </a>
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">Apple Push Notification Service (APNS)</td>
             <td align="center">✅</td>
+            <td align="center">
+                <a href="https://app.courier.com/channels/apn">
+                    <code>More</code>
+                </a>
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">Expo</td>
             <td align="center">❌</td>
+            <td align="center">
+                <a href="https://app.courier.com/channels/expo">
+                    <code>More</code>
+                </a>
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">OneSignal</td>
             <td align="center">❌</td>
+            <td align="center">
+                <a href="https://app.courier.com/channels/onesignal">
+                    <code>More</code>
+                </a>
+            </td>
         </tr>
     </tbody>
 </table>
