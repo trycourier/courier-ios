@@ -3,8 +3,8 @@
 <table>
     <thead>
         <tr>
-          <th width="500px">API</th>
-          <th width="500px">CLI</th>
+          <th width="500px" text-align="left">Feature</th>
+          <th width="500px">Something</th>
         </tr>
     </thead>
     <tbody>
