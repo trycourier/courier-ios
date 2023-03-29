@@ -105,21 +105,21 @@ pod install
     </tbody>
 </table>
 
-# Examples
+# Example Projects
 
 <table>
     <thead>
         <tr>
-            <th width="400px" align="left">UI Framework</th>
-            <th width="200px" align="center">Language</th>
+            <th width="400px" align="left">Language</th>
+            <th width="200px" align="center">UI Framework</th>
             <th width="200px" align="center">Package Manager</th>
             <th width="200px" align="center">Project</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left"><code>UIKit</code></td>
-            <td align="center"><code>Swift</code></td>
+            <td align="left"><code>Swift</code></td>
+            <td align="center"><code>UIKit</code></td>
             <td align="center"><code>Swift</code></td>
             <td align="center">
                 <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Example">
@@ -128,8 +128,8 @@ pod install
             </td>
         </tr>
         <tr width="600px">
-            <td align="left"><code>UIKit</code></td>
-            <td align="center"><code>Swift</code></td>
+            <td align="left"><code>Swift</code></td>
+            <td align="center"><code>UIKit</code></td>
             <td align="center"><code>Cocoapods</code></td>
             <td align="center">
                 <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Pod-Example">
@@ -138,8 +138,8 @@ pod install
             </td>
         </tr>
         <tr width="600px">
-            <td align="left"><code>SwiftUI</code></td>
-            <td align="center"><code>Swift</code></td>
+            <td align="left"><code>Swift</code></td>
+            <td align="center"><code>SwiftUI</code></td>
             <td align="center"><code>Swift</code></td>
             <td align="center">
                 <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/SwiftUI-Example">
