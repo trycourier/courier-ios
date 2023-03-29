@@ -2,14 +2,14 @@ BANNER
 
 &emsp;
 
-# Requirements
+# Requirements & Support
 
 &emsp;
 
 <table>
     <thead>
         <tr>
-            <th width="880px" align="left">Requirement</th>
+            <th width="880px" align="left">Requirements</th>
             <th width="120px" align="center"></th>
         </tr>
     </thead>
@@ -23,7 +23,7 @@ BANNER
             </td>
         </tr>
         <tr width="600px">
-            <td align="left">Minimum SDK Version</td>
+            <td align="left">Minimum iOS SDK Version</td>
             <td align="center">
                 <code>13.0</code>
             </td>
@@ -36,8 +36,8 @@ BANNER
 <table>
     <thead>
         <tr>
-            <th width="880px" align="left">Language</th>
-            <th width="120px" align="center">Support</th>
+            <th width="880px" align="left">Supported Languages</th>
+            <th width="120px" align="center"></th>
         </tr>
     </thead>
     <tbody>
