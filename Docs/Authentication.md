@@ -1,11 +1,38 @@
-- [Requirements](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#requirements)
-- [Installation](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#installation)
-- [Authentication](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md)
-- [Inbox](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md)
-- [Push Notifications](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md)
-- [Testing](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md)
-
 # Authentication
+
+Manages the current user and api keys between app sessions.<br>
+The following features need this in order to work properly.
+
+<table>
+    <thead>
+        <tr>
+            <th width="250px" align="left">Feature</th>
+            <th width="750px" align="left">Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
+                    <code>Courier Inbox</code>
+                </a>
+            </td>
+            <td align="left">
+                Needs authentication in order to view the messages associated with the current user.
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md">
+                    <code>Push Notifications</code>
+                </a>
+            </td>
+            <td align="left">
+                Needs authentication to sync push notification device tokens to the current user.
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 ```swift
 let userId = Courier.shared.userId

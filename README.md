@@ -8,7 +8,7 @@ BANNER
 <table>
     <thead>
         <tr>
-            <th width="900px" align="left">iOS Feature</th>
+            <th width="900px" align="left">Platform Feature</th>
             <th width="100px" align="center">Support</th>
         </tr>
     </thead>
@@ -65,7 +65,7 @@ pod install
 
 # SDK Features
 
-These are all the available features of the SDK. Install all the ones that make sense for the user experience you are building.
+These are all the available features of the SDK.
 
 <table>
     <thead>
@@ -82,7 +82,7 @@ These are all the available features of the SDK. Install all the ones that make 
                 </a>
             </td>
             <td align="left">
-                Manages the current user and api keys between app sessions
+                Manages the current user and api keys between app sessions.
             </td>
         </tr>
         <tr width="600px">
@@ -102,7 +102,7 @@ These are all the available features of the SDK. Install all the ones that make 
                 </a>
             </td>
             <td align="left">
-                Automatically manages push notification tokens and gives convenient functions for handling push notification receiving and clicking.
+                Automatically manages push notification device tokens and gives convenient functions for handling push notification receiving and clicking.
             </td>
         </tr>
         <tr width="600px">
@@ -112,7 +112,7 @@ These are all the available features of the SDK. Install all the ones that make 
                 </a>
             </td>
             <td align="left">
-                Send inbox messages and push notifications to your device without needing any server side setup
+                Send inbox messages and push notifications to your device without needing any server side setup.
             </td>
         </tr>
     </tbody>
@@ -122,7 +122,7 @@ These are all the available features of the SDK. Install all the ones that make 
 
 # Example Projects
 
-These projects are working examples you can use as a base to build your project from.
+Several common starter projects using the SDK.
 
 <table>
     <thead>
