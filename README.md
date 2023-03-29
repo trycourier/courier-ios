@@ -1,23 +1,36 @@
-# Courier — iOS SDK
+# Support
+
+| Feature / Requirement | |
+| :-- | :--: |
+| Courier Account | [`Sign Up Here`](https://app.courier.com/signup) |
+| Min SDK | `13` |
+| Swift | ✅ |
+| Objective-C | ✅ |
+| Courier Inbox | ✅ |
+| Firebase Cloud Messaging (FCM) | ✅ |
+| Apple Push Notification Service (APNS) | ✅ |
+| Expo | ❌ |
+| OneSignal | ❌ |
 
 <table>
     <thead>
         <tr>
-          <th width="500px" align="left">Feature</th>
-          <th width="500px" align="center">Something</th>
+          <th width="500px" align="left">Feature / Requirement</th><th width="500px" align="center"></th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left">
-                Example
-            </td>
-            <td align="center">
-                Example
-            </td>
+            <td align="left">Courier Account</td><td align="center">[`Sign Up Here`](https://app.courier.com/signup)</td>
+            <td align="left">Min SDK</td><td align="center">`13`</td>
+            <td align="left">Swift</td><td align="center">✅</td>
+            <td align="left">Objective-C</td><td align="center">✅</td>
         </tr>
     </tbody>
 </table>
+
+> ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
+
+&emsp;
 
 <!--// Order-->
 <!--// 1. Requirements-->
@@ -164,24 +177,6 @@ let messageId = try await Courier.shared.sendPush(
 )
 
 ```
-
-&emsp;
-
-# Support
-
-| Feature / Requirement | |
-| :-- | :--: |
-| Courier Account | [`Sign Up Here`](https://app.courier.com/signup) |
-| Min SDK | `13` |
-| Swift | ✅ |
-| Objective-C | ✅ |
-| Courier Inbox | ✅ |
-| Firebase Cloud Messaging (FCM) | ✅ |
-| Apple Push Notification Service (APNS) | ✅ |
-| Expo | ❌ |
-| OneSignal | ❌ |
-
-> ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
 
 &emsp;
 
