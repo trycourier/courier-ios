@@ -10,6 +10,7 @@ Courier.shared.isDebugging = true
 
 // ==============
 // Authentication
+// [`More Info`](#going-to-production)
 // ==============
 
 let userId = Courier.shared.userId
@@ -135,6 +136,14 @@ let messageId = try await Courier.shared.sendPush(
 
 ```
 
+// Order
+// 1. Requirements
+// 2. Installation
+// 3. Authentication
+// 4. Inbox
+// 5. Push
+// 6. Production
+
 &emsp;
 
 # Requirements & Support
@@ -149,26 +158,6 @@ let messageId = try await Courier.shared.sendPush(
 | Apple Push Notification Service (APNS) | ✅ |
 | Expo | ❌ |
 | OneSignal | ❌ |
-
-> Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
-
-> Testing push notifications requires a physical device. Simulators will not work.
-
-// Order
-// 1. Requirements
-// 2. Installation
-// 3. Authentication
-// 4. Inbox
-// 5. Push
-// 6. Production
-
-&emsp;
-
-# Requirements & Support
-
-| Min SDK | Swift | Obj-C | Firebase Cloud Messaging | Apple Push Notification Service | Expo | OneSignal | Courier Inbox |
-| :-----: | :---: | :---: | :----------------------: | :-----------------------------: | :--: | :-------: | :-----------: |
-|  `13`   |  ✅   |  ✅   |            ✅            |               ✅                |  ❌  |    ❌     |      ✅      |
 
 > Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
 
