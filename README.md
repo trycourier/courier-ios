@@ -4,15 +4,15 @@
     <thead>
         <tr>
           <th width="500px" align="left">Feature</th>
-          <th width="500px">Something</th>
+          <th width="500px" align="center">Something</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="right">
+            <td align="left">
                 Example
             </td>
-            <td style="text-align:center">
+            <td align="center">
                 Example
             </td>
         </tr>
