@@ -1,5 +1,11 @@
 # Courier — iOS SDK
 
+<style>
+    table {
+        width: 100%;
+    }
+</style>
+
 <!--// Order-->
 <!--// 1. Requirements-->
 <!--// 2. Installation-->
