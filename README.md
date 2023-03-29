@@ -71,8 +71,8 @@ These are all the available features of the SDK. Install all the ones that make 
 <table>
     <thead>
         <tr>
-            <th width="500px" align="left">Feature</th>
-            <th width="500px" align="left">Description</th>
+            <th width="300px" align="left">Feature</th>
+            <th width="700px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
