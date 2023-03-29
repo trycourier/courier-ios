@@ -4,11 +4,13 @@ BANNER
 
 # Requirements
 
+&emsp;
+
 <table>
     <thead>
         <tr>
-            <th width="850px" align="left">Requirement</th>
-            <th width="150px" align="center"></th>
+            <th width="880px" align="left">Requirement</th>
+            <th width="120px" align="center"></th>
         </tr>
     </thead>
     <tbody>
@@ -29,11 +31,13 @@ BANNER
     </tbody>
 </table>
 
+&emsp;
+
 <table>
     <thead>
         <tr>
-            <th width="850px" align="left">Language</th>
-            <th width="150px" align="center">Support</th>
+            <th width="880px" align="left">Language</th>
+            <th width="120px" align="center">Support</th>
         </tr>
     </thead>
     <tbody>
