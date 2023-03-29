@@ -41,7 +41,7 @@
             <td align="center">✅</td>
             <td align="center">
                 <a href="https://google.com">
-                    <span>Test</span>
+                    <code>Test</code>
                 </a>
             </td>
         </tr>
