@@ -72,7 +72,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
         <tr>
             <th width="150px" align="left">Property</th>
             <th width="550px" align="left">Details</th>
-            <th width="300px" align="center">Location</th>
+            <th width="300px" align="center">Where is this?</th>
         </tr>
     </thead>
     <tbody>
@@ -84,7 +84,8 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>. More information about <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>generating an accessToken</code></a>.
             </td>
             <td align="center">
-                <a href="https://app.courier.com/settings/api-keys"><code>API Key (Safe for testing only)</code></a> or <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>Access Token (Safe for production)</code></a>
+                Safe for testing: <a href="https://app.courier.com/settings/api-keys"><code>API Key</code></a><br>
+                Safe for production: <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>Access Token</code></a>
             </td>
         </tr>
         <tr width="600px">
