@@ -1,12 +1,12 @@
 # Courier iOS Overview
 
-### [`**Debugging**`](https://github.com/trycourier/courier-ios/tree/master/Example)
+### **[`Debugging`](https://github.com/trycourier/courier-ios/tree/master/Example)**
 
 ```swift
 Courier.shared.isDebugging = true
 ```
 
-### [`**Authentication**`](https://github.com/trycourier/courier-ios/tree/master/Example)
+### **[`Authentication`](https://github.com/trycourier/courier-ios/tree/master/Example)**
 
 ```swift
 let userId = Courier.shared.userId
