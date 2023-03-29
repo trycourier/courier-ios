@@ -1,4 +1,4 @@
-# Requirements & Support
+# Requirements
 
 ### **Supported iOS Features**
 
@@ -109,7 +109,7 @@
 <!--// 6. Testing-->
 <!--// 7. Production-->
 
-### **Install**
+### **Installation**
 
 ### **Authentication**
 
