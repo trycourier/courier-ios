@@ -15,9 +15,9 @@ BANNER
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left">Min SDK</td>
+            <td align="left">Minimum iOS SDK Version</td>
             <td align="center">
-                <code>13</code>
+                <code>13.0</code>
             </td>
         </tr>
         <tr width="600px">
@@ -30,15 +30,6 @@ BANNER
         </tr>
     </tbody>
 </table>
-
-&emsp;
-
-- [Requirements](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#requirements)
-- [Installation](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#installation)
-- [Authentication](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md)
-- [Inbox](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md)
-- [Push Notifications](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md)
-- [Testing](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md)
 
 &emsp;
 
@@ -71,7 +62,48 @@ pod install
 ```
 &emsp;
 
-// Navigate
+<table>
+    <thead>
+        <tr>
+            <th width="800px" align="left">SDK Feature</th>
+            <th width="200px" align="center">Documentation</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">Authentication</td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
+                    <code>Auth Docs</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Courier Inbox (In-app notification center)</td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
+                    <code>Inbox Docs</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Push Notifications</td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md">
+                    <code>Push Docs</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Testing</td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md">
+                    <code>Testing Docs</code>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 # Examples
 
