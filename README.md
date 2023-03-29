@@ -4,23 +4,39 @@ BANNER
 
 # Requirements
 
-> ⚠️ You must have a Courier account in order to use this SDK<br>
-> [`Create a free Courier account`](https://app.courier.com/signup)
-
 <table>
     <thead>
         <tr>
-            <th width="900px" align="left">Platform Feature</th>
-            <th width="100px" align="center">Support</th>
+            <th width="850px" align="left">Requirement</th>
+            <th width="150px" align="center"></th>
         </tr>
     </thead>
     <tbody>
+        <tr width="600px">
+            <td align="left">Courier Account</td>
+            <td align="center">
+                <a href="https://app.courier.com/channels/courier">
+                    <code>Sign Up</code>
+                </a>
+            </td>
+        </tr>
         <tr width="600px">
             <td align="left">Minimum SDK Version</td>
             <td align="center">
                 <code>13.0</code>
             </td>
         </tr>
+    </tbody>
+</table>
+
+<table>
+    <thead>
+        <tr>
+            <th width="850px" align="left">Language</th>
+            <th width="150px" align="center">Support</th>
+        </tr>
+    </thead>
+    <tbody>
         <tr width="600px">
             <td align="left">Swift</td>
             <td align="center">✅</td>
