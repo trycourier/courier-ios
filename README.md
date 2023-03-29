@@ -1,5 +1,7 @@
 BANNER
 
+&emsp;
+
 # Requirements
 
 > ⚠️ You must have a Courier account in order to use this SDK<br>
