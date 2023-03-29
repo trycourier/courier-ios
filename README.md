@@ -21,9 +21,30 @@
     <tbody>
         <tr width="600px">
             <td align="left">Courier Account</td><td align="center">[`Sign Up Here`](https://app.courier.com/signup)</td>
-            <td align="left">Min SDK</td><td align="center">`13`</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Min SDK</td><td align="center">13</td>
+        </tr>
+        <tr width="600px">
             <td align="left">Swift</td><td align="center">✅</td>
+        </tr>
+        <tr width="600px">
             <td align="left">Objective-C</td><td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Courier Inbox</td><td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Firebase Cloud Messaging (FCM)</td><td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Apple Push Notification Service (APNS)</td><td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Expo</td><td align="center">❌</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">OneSignal</td><td align="center">❌</td>
         </tr>
     </tbody>
 </table>
