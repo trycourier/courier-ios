@@ -62,6 +62,10 @@ pod install
 ```
 &emsp;
 
+# SDK Features
+
+These are all the available features of the SDK. Install all the ones that make sense for the user experience you are building.
+
 <table>
     <thead>
         <tr>
@@ -104,6 +108,8 @@ pod install
         </tr>
     </tbody>
 </table>
+
+&emsp;
 
 # Example Projects
 
@@ -150,9 +156,7 @@ pod install
     </tbody>
 </table>
 
->
-> Link to [`Example App`](https://github.com/trycourier/courier-ios/tree/master/Example)
->
+&emsp;
 
 ## **Share feedback with Courier**
 
