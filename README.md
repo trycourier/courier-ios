@@ -16,39 +16,39 @@
     <thead>
         <tr>
           <th width="500px" align="left">Feature / Requirement</th>
-          <th width="100px" align="center"></th>
+          <th width="500px" align="center"></th>
         </tr>
     </thead>
     <tbody>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">Min SDK</td>
             <td align="center">13</td>
         </tr>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">Swift</td>
             <td align="center">✅</td>
         </tr>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">Objective-C</td>
             <td align="center">✅</td>
         </tr>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
         </tr>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">Firebase Cloud Messaging (FCM)</td>
             <td align="center">✅</td>
         </tr>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">Apple Push Notification Service (APNS)</td>
             <td align="center">✅</td>
         </tr>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">Expo</td>
             <td align="center">❌</td>
         </tr>
-        <tr width="1000px">
+        <tr width="600px">
             <td align="left">OneSignal</td>
             <td align="center">❌</td>
         </tr>
