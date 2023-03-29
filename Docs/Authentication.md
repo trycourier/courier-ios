@@ -42,17 +42,23 @@ Manages the current user and api keys between app sessions.
 Put this code where you normally manage your user's state. The user's access to [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) will automatically be managed by the SDK and stored in persistent storage. This means that if you user kills the app and start it back up, they will still be "signed in".
 
 ```swift
-// Saves credentials locally and accesses the Courier API with them
-// Uploads push notification devices tokens to Courier if needed
-try await Courier.shared.signIn(
-    accessToken: "pk_prod_H12...",
-    clientKey: "YWQxN...",
-    userId: "example_user_id"
-)
+import Courier_iOS
 
-// Removes the locally saved credentials
-// Deletes push notification devices tokens to Courier if needed
-try await Courier.shared.signOut()
+Task {
+
+    // Saves credentials locally and accesses the Courier API with them
+    // Uploads push notification devices tokens to Courier if needed
+    try await Courier.shared.signIn(
+        accessToken: "pk_prod_H12...",
+        clientKey: "YWQxN...",
+        userId: "example_user_id"
+    )
+
+    // Removes the locally saved credentials
+    // Deletes push notification devices tokens to Courier if needed
+    try await Courier.shared.signOut()
+
+}
 
 // Other available properties
 let userId = Courier.shared.userId
@@ -64,8 +70,9 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
 <table>
     <thead>
         <tr>
-            <th width="250px" align="left">Property</th>
-            <th width="750px" align="left">Details</th>
+            <th width="200px" align="left">Property</th>
+            <th width="600px" align="left">Details</th>
+            <th width="200px" align="left">Location</th>
         </tr>
     </thead>
     <tbody>
@@ -74,7 +81,10 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>accessToken</code>
             </td>
             <td align="left">
-                A <a href="https://app.courier.com/settings/api-keys"><code>Courier API Key</code></a> or an <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>Access Token</code></a>. Here is more information about generating an <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md"><code>Access Token</code></a>.
+                The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>. More information about <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>generating an access token</code></a>.
+            </td>
+            <td align="center">
+                <a href="https://app.courier.com/settings/api-keys"><code>API Key (Safe for testing only)</code></a> or <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>Access Token (Safe for production)</code></a>
             </td>
         </tr>
         <tr width="600px">
@@ -82,7 +92,10 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>clientKey</code>
             </td>
             <td align="left">
-                The key required to make Courier Inbox work. You can find the key <a href="https://app.courier.com/channels/courier"><code>here</code></a>.
+                The key required to get Courier Inbox messages for the current user.
+            </td>
+            <td align="center">
+                <a href="https://app.courier.com/channels/courier"><code>Get clientKey</code></a>.
             </td>
         </tr>
         <tr width="600px">
@@ -90,7 +103,10 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>userId</code>
             </td>
             <td align="left">
-                The id of the user you want to read and write to. This likely will be the same as the <code>userId</code> you are already using, but can be different if you'd like. You can view the users in the Courier studio <a href="https://app.courier.com/users"><code>here</code></a>.
+                The id of the user you want to read and write to. This likely will be the same as the <code>userId</code> you are already using in your authentication system, but it can be different if you'd like.
+            </td>
+            <td align="center">
+                <a href="https://app.courier.com/users"><code>See Courier Users</code></a>.
             </td>
         </tr>
     </tbody>
