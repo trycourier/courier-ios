@@ -71,40 +71,35 @@ These are all the available features of the SDK. Install all the ones that make 
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">Feature</th>
-            <th width="200px" align="center">Documentation</th>
+            <th width="1000px" align="left">Feature</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left">Authentication</td>
-            <td align="center">
+            <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
-                    <code>Auth Docs</code>
+                    <code>Authentication</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
-            <td align="left">Courier Inbox (In-app notification center)</td>
-            <td align="center">
+            <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
-                    <code>Inbox Docs</code>
+                    <code>Courier Inbox (In-app notification center)</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
-            <td align="left">Push Notifications</td>
-            <td align="center">
+            <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md">
-                    <code>Push Docs</code>
+                    <code>Push Notifications</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
-            <td align="left">Testing</td>
-            <td align="center">
+            <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md">
-                    <code>Testing Docs</code>
+                    <code>Testing</code>
                 </a>
             </td>
         </tr>
