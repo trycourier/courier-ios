@@ -81,7 +81,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>accessToken</code>
             </td>
             <td align="left">
-                The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>. More information about <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>generating an accessToken</code></a>.
+                The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>. More information about <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>Generating an accessToken</code></a>.
             </td>
             <td align="left">
                 For testing only: <a href="https://app.courier.com/settings/api-keys"><code>authKey</code></a><br>
@@ -135,7 +135,6 @@ curl --request POST \
   }'
 ```
 
-Or generate one here:
-[`Issue Courier Access Token`](https://www.courier.com/docs/reference/auth/issue-token/)
+Or generate one here: [`Generating an accessToken`](https://www.courier.com/docs/reference/auth/issue-token/)
 
 This request to issue a token should likely exist in a separate endpoint served on your backend.
