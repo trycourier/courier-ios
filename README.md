@@ -40,7 +40,7 @@
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
             <td align="center">
-                <a href="https://app.courier.com/channels/courier">
+                <a href="https://app.courier.com/channels/courier" target="_blank">
                     <code>More</code>
                 </a>
             </td>
