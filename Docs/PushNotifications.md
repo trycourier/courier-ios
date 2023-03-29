@@ -5,6 +5,6 @@
 - [Push Notifications](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md)
 - [Testing](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md)
 
-# **Push Notifications**
+# Push Notifications
 
 Something awesome
