@@ -2,8 +2,8 @@ BANNER
 
 # Requirements
 
-⚠️ You must have a Courier account in order to use this SDK<br>
-[`Create a free Courier account`](https://app.courier.com/signup)
+> ⚠️ You must have a Courier account in order to use this SDK
+> [`Create a free Courier account`](https://app.courier.com/signup)
 
 <table>
     <thead>
