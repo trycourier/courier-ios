@@ -38,54 +38,60 @@
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">Feature</th>
+            <th width="700px" align="left">Feature</th>
             <th width="100px" align="center">Support</th>
-            <th width="100px" align="center">Info</th>
+            <th width="100px" align="center">Type</th>
+            <th width="100px" align="center">Setup</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
+            <td align="center">In App</td>
             <td align="center">
                 <a href="https://app.courier.com/channels/courier">
-                    <code>More</code>
+                    <code>Setup</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">Firebase Cloud Messaging (FCM)</td>
             <td align="center">✅</td>
+            <td align="center">Push</td>
             <td align="center">
                 <a href="https://app.courier.com/channels/firebase-fcm">
-                    <code>More</code>
+                    <code>Setup</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">Apple Push Notification Service (APNS)</td>
             <td align="center">✅</td>
+            <td align="center">Push</td>
             <td align="center">
                 <a href="https://app.courier.com/channels/apn">
-                    <code>More</code>
+                    <code>Setup</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">Expo</td>
             <td align="center">❌</td>
+            <td align="center">Push</td>
             <td align="center">
                 <a href="https://app.courier.com/channels/expo">
-                    <code>More</code>
+                    <code>Setup</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">OneSignal</td>
             <td align="center">❌</td>
+            <td align="center">Push</td>
             <td align="center">
                 <a href="https://app.courier.com/channels/onesignal">
-                    <code>More</code>
+                    <code>Setup</code>
                 </a>
             </td>
         </tr>
