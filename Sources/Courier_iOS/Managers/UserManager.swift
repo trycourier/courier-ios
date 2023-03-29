@@ -18,7 +18,7 @@ internal class UserManager {
     static internal let shared = UserManager()
     
     @discardableResult
-    func setCredentials(userId: String, accessToken: String, clientKey: String) -> Dictionary<String, String>? {
+    func setCredentials(userId: String, accessToken: String, clientKey: String?) -> Dictionary<String, String>? {
         
         let dict = [
             userIdKey: userId,

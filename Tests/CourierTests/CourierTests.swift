@@ -43,7 +43,6 @@ final class CourierTests: XCTestCase {
 
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_ACCESS_TOKEN,
-            clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
 

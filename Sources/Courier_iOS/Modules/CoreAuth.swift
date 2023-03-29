@@ -11,11 +11,11 @@ internal class CoreAuth {
     
     internal let userManager = UserManager()
     
-    internal func signIn(accessToken: String, clientKey: String, userId: String, push: CorePush, inbox: CoreInbox) async throws {
+    internal func signIn(accessToken: String, clientKey: String?, userId: String, push: CorePush, inbox: CoreInbox) async throws {
         
         Courier.log("Updating Courier User Profile")
         Courier.log("Access Token: \(accessToken)")
-        Courier.log("Client Key: \(clientKey)")
+        Courier.log("Client Key: \(clientKey ?? "Not set")")
         Courier.log("User Id: \(userId)")
         
         userManager.setCredentials(
@@ -100,11 +100,11 @@ extension Courier {
      * Set the current credentials for the user and their access token
      * You should consider using this in areas where you update your local user's state
      */
-    @objc public func signIn(accessToken: String, clientKey: String, userId: String) async throws {
+    @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String) async throws {
         try await auth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: push, inbox: inbox)
     }
     
-    @objc public func signIn(accessToken: String, clientKey: String, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await auth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: push, inbox: inbox)
