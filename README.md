@@ -15,9 +15,9 @@
 <table>
     <thead>
         <tr>
-            <th width="600px" align="left">Feature</th>
-            <th width="200px" align="center">Support</th>
-            <th width="200px" align="center">Info</th>
+            <th width="800px" align="left">Feature</th>
+            <th width="100px" align="center">Support</th>
+            <th width="100px" align="center">Info</th>
         </tr>
     </thead>
     <tbody>
