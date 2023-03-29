@@ -3,7 +3,7 @@
 <table>
     <thead>
         <tr>
-          <th width="500px" text-align="left">Feature</th>
+          <th width="500px" style="text-align:left">Feature</th>
           <th width="500px">Something</th>
         </tr>
     </thead>
@@ -25,7 +25,8 @@
 <!--// 3. Authentication-->
 <!--// 4. Inbox-->
 <!--// 5. Push-->
-<!--// 6. Production-->
+<!--// 6. Testing-->
+<!--// 7. Production-->
 
 ### **Install**
 
