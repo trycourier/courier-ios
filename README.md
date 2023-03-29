@@ -2,7 +2,7 @@ BANNER
 
 # Requirements
 
-⚠️ You must have a Courier account in order to use this SDK.
+⚠️ You must have a Courier account in order to use this SDK<br>
 [`Create a Courier account for free here!`](https://app.courier.com/signup)
 
 ### **Supported iOS Features**
