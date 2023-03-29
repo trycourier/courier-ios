@@ -1,6 +1,6 @@
 # Courier iOS Overview
 
-### **[`Debugging`](https://github.com/trycourier/courier-ios/tree/master/Example)**
+### **Debugging** [`More ➡️`](#going-to-production)
 
 ```swift
 Courier.shared.isDebugging = true
