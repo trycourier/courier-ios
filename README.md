@@ -139,6 +139,8 @@ let messageId = try await Courier.shared.sendPush(
 
 # Requirements & Support
 
+| Feature | Support |
+| :--: | :--: |
 | Min SDK | `13` |
 | Swift | ✅ |
 | Objective-C | ✅ |
