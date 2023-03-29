@@ -136,5 +136,6 @@ curl --request POST \
 ```
 
 Or generate one here:
-[`Issue Courier Access Token`](https://www.courier.com/docs/reference/auth/issue-token/)<br>
+[`Issue Courier Access Token`](https://www.courier.com/docs/reference/auth/issue-token/)
+
 This request to issue a token should likely exist in a separate endpoint served on your backend.
