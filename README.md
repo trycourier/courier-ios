@@ -1,18 +1,14 @@
 # Courier iOS Overview
 
+### **Debugging**
+
 ```swift
-
-// =========
-// Debugging
-// =========
-
 Courier.shared.isDebugging = true
+```
 
-// ==============
-// Authentication
-// [`More Info`](#going-to-production)
-// ==============
+### **Authentication**
 
+```swift
 let userId = Courier.shared.userId
 let isUserSignedIn = Courier.shared.isUserSignedIn
 
@@ -23,6 +19,11 @@ try await Courier.shared.signIn(
 )
 
 try await Courier.shared.signOut()
+```
+
+// TODo
+
+```swift
 
 // =============
 // Courier Inbox
