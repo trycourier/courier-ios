@@ -7,15 +7,15 @@
 <table>
     <thead>
         <tr>
-            <th width="860px" align="left">Feature</th>
-            <th width="140px" align="center">Support</th>
+            <th width="900px" align="left">Feature</th>
+            <th width="100px" align="center">Support</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left">SDK</td>
+            <td align="left">Min SDK</td>
             <td align="center">
-                <code>iOS 13.0+</code>
+                <code>13</code>
             </td>
         </tr>
         <tr width="600px">
@@ -33,12 +33,14 @@
 
 ### **Supported Messaging Providers**
 
+> ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
+
 <table>
     <thead>
         <tr>
-            <th width="820px" align="left">Feature</th>
-            <th width="140px" align="center">Support</th>
-            <th width="140px" align="center">Info</th>
+            <th width="800px" align="left">Feature</th>
+            <th width="100px" align="center">Support</th>
+            <th width="100px" align="center">Info</th>
         </tr>
     </thead>
     <tbody>
@@ -89,8 +91,6 @@
         </tr>
     </tbody>
 </table>
-
-> ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
 
 &emsp;
 
