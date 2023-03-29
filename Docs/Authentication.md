@@ -1,7 +1,10 @@
 # Authentication
 
-Manages the current user and api keys between app sessions.<br>
-The following features need this in order to work properly.
+Manages the current user and api keys between app sessions.
+
+&emsp;
+
+## Features Requiring Authentication
 
 <table>
     <thead>
@@ -18,7 +21,7 @@ The following features need this in order to work properly.
                 </a>
             </td>
             <td align="left">
-                Needs authentication in order to view the messages associated with the current user.
+                Needs authentication to view inbox messages that belong to a user.
             </td>
         </tr>
         <tr width="600px">
@@ -28,7 +31,7 @@ The following features need this in order to work properly.
                 </a>
             </td>
             <td align="left">
-                Needs authentication to sync push notification device tokens to the current user.
+                Needs authentication to sync push notification device tokens to the current user and Courier.
             </td>
         </tr>
     </tbody>
