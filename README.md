@@ -134,6 +134,28 @@ let messageId = try await Courier.shared.sendPush(
 )
 
 ```
+
+&emsp;
+
+# Requirements & Support
+
+|  |  |
+| :-----: | :-----: |
+|  Min SDK   |  `13`   |
+|  Swift   |  ✅   |
+
+> Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
+
+> Testing push notifications requires a physical device. Simulators will not work.
+
+// Order
+// 1. Requirements
+// 2. Installation
+// 3. Authentication
+// 4. Inbox
+// 5. Push
+// 6. Production
+
 &emsp;
 
 # Requirements & Support
