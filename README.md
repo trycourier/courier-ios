@@ -110,10 +110,10 @@ pod install
 <table>
     <thead>
         <tr>
-            <th width="750px" align="left">UI Framework</th>
-            <th width="100px" align="center">Language</th>
-            <th width="100px" align="center">Package Manager</th>
-            <th width="150px" align="center">Project</th>
+            <th width="400px" align="left">UI Framework</th>
+            <th width="200px" align="center">Language</th>
+            <th width="200px" align="center">Package Manager</th>
+            <th width="200px" align="center">Project</th>
         </tr>
     </thead>
     <tbody>
