@@ -139,10 +139,14 @@ let messageId = try await Courier.shared.sendPush(
 
 # Requirements & Support
 
-|  |  |
-| :-----: | :-----: |
-|  Min SDK   |  `13`   |
-|  Swift   |  ✅   |
+| Min SDK | `13` |
+| Swift | ✅ |
+| Objective-C | ✅ |
+| Courier Inbox | ✅ |
+| Firebase Cloud Messaging (FCM) | ✅ |
+| Apple Push Notification Service (APNS) | ✅ |
+| Expo | ❌ |
+| OneSignal | ❌ |
 
 > Most of this SDK depends on a Courier account: [`Create a Courier account here`](https://app.courier.com/signup)
 
