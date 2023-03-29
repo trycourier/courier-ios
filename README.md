@@ -35,10 +35,7 @@ BANNER
 
 # Installation
 
-&emsp;
-
-## **Install the package**
-### Using Swift Package Manager
+## Using Swift Package Manager
 
 https://user-images.githubusercontent.com/29832989/202578202-32c0ebf7-c11f-46c0-905a-daa8fc3ba8bd.mov
 
@@ -50,12 +47,12 @@ https://user-images.githubusercontent.com/29832989/202578202-32c0ebf7-c11f-46c0-
 https://github.com/trycourier/courier-ios
 ```
 
-### Using Cocoapods
+## Using Cocoapods
 1. Update Podfile for ios 13.0+
 ```ruby
 platform :ios, '13.0'
 ```
-2. Add `pod 'Courier-iOS'` in your base target
+2. Add `pod 'Courier_iOS'` in your base target
 3. Open terminal in root directory and run
 ```sh
 pod install
@@ -69,7 +66,7 @@ These are all the available features of the SDK. Install all the ones that make 
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">SDK Feature</th>
+            <th width="800px" align="left">Feature</th>
             <th width="200px" align="center">Documentation</th>
         </tr>
     </thead>
@@ -112,6 +109,8 @@ These are all the available features of the SDK. Install all the ones that make 
 &emsp;
 
 # Example Projects
+
+These projects are working examples you can use as a base to build your project from.
 
 <table>
     <thead>
