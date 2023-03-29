@@ -24,18 +24,24 @@
         <tr width="600px">
             <td align="left">Min SDK</td>
             <td align="center">13</td>
+            <td align="center"></td>
         </tr>
         <tr width="600px">
             <td align="left">Swift</td>
             <td align="center">✅</td>
+            <td align="center"></td>
         </tr>
         <tr width="600px">
             <td align="left">Objective-C</td>
             <td align="center">✅</td>
+            <td align="center"></td>
         </tr>
         <tr width="600px">
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
+            <td align="center">
+                <span>[`Sign Up Here`](https://app.courier.com/signup)</span>
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">Firebase Cloud Messaging (FCM)</td>
