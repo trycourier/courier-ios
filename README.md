@@ -7,8 +7,8 @@
 <table>
     <thead>
         <tr>
-            <th width="900px" align="left">Feature</th>
-            <th width="100px" align="center">Support</th>
+            <th width="860px" align="left">Feature</th>
+            <th width="140px" align="center">Support</th>
         </tr>
     </thead>
     <tbody>
@@ -36,9 +36,9 @@
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">Feature</th>
-            <th width="100px" align="center">Support</th>
-            <th width="100px" align="center">Info</th>
+            <th width="820px" align="left">Feature</th>
+            <th width="140px" align="center">Support</th>
+            <th width="140px" align="center">Info</th>
         </tr>
     </thead>
     <tbody>
