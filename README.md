@@ -23,7 +23,9 @@
     <tbody>
         <tr width="600px">
             <td align="left">Min SDK</td>
-            <td align="center">13</td>
+            <td align="center">
+                <code>13</code>
+            </td>
             <td align="center"></td>
         </tr>
         <tr width="600px">
@@ -40,7 +42,7 @@
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
             <td align="center">
-                <a href="https://app.courier.com/channels/courier" target="_blank">
+                <a href="https://app.courier.com/channels/courier">
                     <code>More</code>
                 </a>
             </td>
