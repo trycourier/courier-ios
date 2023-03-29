@@ -1,10 +1,12 @@
 # Courier — iOS SDK
 
-<style>
-    table {
-        width: 100%;
-    }
-</style>
+<head>
+    <style>
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
 
 <!--// Order-->
 <!--// 1. Requirements-->
@@ -159,13 +161,13 @@ let messageId = try await Courier.shared.sendPush(
 | :-- | :--: |
 | Courier Account | [`Sign Up Here`](https://app.courier.com/signup) |
 | Min SDK | `13` |
-| Swift | ✅ |
-| Objective-C | ✅ |
-| Courier Inbox | ✅ |
-| Firebase Cloud Messaging (FCM) | ✅ |
-| Apple Push Notification Service (APNS) | ✅ |
-| Expo | ❌ |
-| OneSignal | ❌ |
+| Swift | [x] |
+| Objective-C | [x] |
+| Courier Inbox | [x] |
+| Firebase Cloud Messaging (FCM) | [x] |
+| Apple Push Notification Service (APNS) | [x] |
+| Expo | [ ] |
+| OneSignal | [ ] |
 
 > ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
 
