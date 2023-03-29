@@ -107,6 +107,49 @@ pod install
 
 # Examples
 
+<table>
+    <thead>
+        <tr>
+            <th width="750px" align="left">UI Framework</th>
+            <th width="100px" align="center">Language</th>
+            <th width="100px" align="center">Package Manager</th>
+            <th width="150px" align="center">Project</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">UIKit</td>
+            <td>Swift</td>
+            <td>Swift</td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Example">
+                    <code>Project</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">UIKit</td>
+            <td>Swift</td>
+            <td>Cocoapods</td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Pod-Example">
+                    <code>Project</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">SwiftUI</td>
+            <td>Swift</td>
+            <td>Swift</td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/SwiftUI-Example">
+                    <code>Project</code>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
 >
 > Link to [`Example App`](https://github.com/trycourier/courier-ios/tree/master/Example)
 >
