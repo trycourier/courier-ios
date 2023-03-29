@@ -72,7 +72,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
         <tr>
             <th width="150px" align="left">Property</th>
             <th width="550px" align="left">Details</th>
-            <th width="300px" align="center">Where is this?</th>
+            <th width="300px" align="left">Where is this?</th>
         </tr>
     </thead>
     <tbody>
@@ -83,7 +83,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
             <td align="left">
                 The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>. More information about <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>generating an accessToken</code></a>.
             </td>
-            <td align="center">
+            <td align="left">
                 Safe for testing: <a href="https://app.courier.com/settings/api-keys"><code>API Key</code></a><br>
                 Safe for production: <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>Access Token</code></a>
             </td>
@@ -95,7 +95,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
             <td align="left">
                 The key required to get Courier Inbox messages for the current user.
             </td>
-            <td align="center">
+            <td align="left">
                 <a href="https://app.courier.com/channels/courier"><code>Get clientKey</code></a>
             </td>
         </tr>
@@ -106,7 +106,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
             <td align="left">
                 The id of the user you want to read and write to. This likely will be the same as the <code>userId</code> you are already using in your authentication system, but it can be different if you'd like.
             </td>
-            <td align="center">
+            <td align="left">
                 <a href="https://app.courier.com/users"><code>See Courier Users</code></a>
             </td>
         </tr>
