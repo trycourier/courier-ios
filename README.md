@@ -51,9 +51,14 @@ https://github.com/trycourier/courier-ios
 1. Update Podfile for ios 13.0+
 ```ruby
 platform :ios, '13.0'
+..
+target 'YOUR_TARGET_NAME' do
+    ..
+    pod 'Courier_iOS'
+    ..
+end
 ```
-2. Add `pod 'Courier_iOS'` in your base target
-3. Open terminal in root directory and run
+2. Open terminal in root directory and run
 ```sh
 pod install
 ```
