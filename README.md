@@ -3,20 +3,18 @@ BANNER
 # Requirements
 
 ⚠️ You must have a Courier account in order to use this SDK<br>
-[`Create a Courier account for free here!`](https://app.courier.com/signup)
-
-### **Supported iOS Features**
+### [Create a Courier account for free here!](https://app.courier.com/signup)
 
 <table>
     <thead>
         <tr>
-            <th width="900px" align="left">Feature</th>
+            <th width="900px" align="left">iOS Feature</th>
             <th width="100px" align="center">Support</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left">Minimum iOS SDK Version</td>
+            <td align="left">Minimum SDK Version</td>
             <td align="center">
                 <code>13.0</code>
             </td>
