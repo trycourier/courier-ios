@@ -71,7 +71,8 @@ These are all the available features of the SDK. Install all the ones that make 
 <table>
     <thead>
         <tr>
-            <th width="1000px" align="left">Feature</th>
+            <th width="500px" align="left">Feature</th>
+            <th width="500px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -81,12 +82,18 @@ These are all the available features of the SDK. Install all the ones that make 
                     <code>Authentication</code>
                 </a>
             </td>
+            <td align="left">
+                Manages the current user and api keys between app sessions
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
-                    <code>Courier Inbox (In-app notification center)</code>
+                    <code>Courier Inbox</code>
                 </a>
+            </td>
+            <td align="left">
+                An in-app notification center list you can use to notify you users. Allows you to build experiences like the facebook notification feed very quickly.
             </td>
         </tr>
         <tr width="600px">
@@ -95,12 +102,18 @@ These are all the available features of the SDK. Install all the ones that make 
                     <code>Push Notifications</code>
                 </a>
             </td>
+            <td align="left">
+                Automatically manages push notification tokens and gives convenient functions for handling push notification receiving and clicking.
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md">
                     <code>Testing</code>
                 </a>
+            </td>
+            <td align="left">
+                Send inbox messages and push notifications to your device without needing any server side setup
             </td>
         </tr>
     </tbody>
