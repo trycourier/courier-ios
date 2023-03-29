@@ -1,16 +1,37 @@
-# Support
+# Requirements & Support
 
-| Feature / Requirement | |
-| :-- | :--: |
-| Courier Account | [`Sign Up Here`](https://app.courier.com/signup) |
-| Min SDK | `13` |
-| Swift | ✅ |
-| Objective-C | ✅ |
-| Courier Inbox | ✅ |
-| Firebase Cloud Messaging (FCM) | ✅ |
-| Apple Push Notification Service (APNS) | ✅ |
-| Expo | ❌ |
-| OneSignal | ❌ |
+### **Supported iOS Features**
+
+> ⚠️ You must have a Courier account in order to use this SDK. [`Create a Courier account for free here!`](https://app.courier.com/signup)
+
+<table>
+    <thead>
+        <tr>
+            <th width="900px" align="left">Feature</th>
+            <th width="100px" align="center">Support</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">SDK</td>
+            <td align="center">
+                <code>iOS 13.0+</code>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Swift</td>
+            <td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">Objective-C</td>
+            <td align="center">✅</td>
+        </tr>
+    </tbody>
+</table>
+
+&emsp;
+
+### **Supported Messaging Providers**
 
 <table>
     <thead>
@@ -21,23 +42,6 @@
         </tr>
     </thead>
     <tbody>
-        <tr width="600px">
-            <td align="left">Min SDK</td>
-            <td align="center">
-                <code>13</code>
-            </td>
-            <td align="center"></td>
-        </tr>
-        <tr width="600px">
-            <td align="left">Swift</td>
-            <td align="center">✅</td>
-            <td align="center"></td>
-        </tr>
-        <tr width="600px">
-            <td align="left">Objective-C</td>
-            <td align="center">✅</td>
-            <td align="center"></td>
-        </tr>
         <tr width="600px">
             <td align="left">Courier Inbox</td>
             <td align="center">✅</td>
