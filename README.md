@@ -15,7 +15,7 @@
 <table>
     <thead>
         <tr>
-          <th width="500px" align="left">Feature / Requirement</th><th width="500px" align="center"></th>
+          <th width="500px" align="left">Feature / Requirement</th><th align="center"></th>
         </tr>
     </thead>
     <tbody>
