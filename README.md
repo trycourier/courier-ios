@@ -1,12 +1,12 @@
 # Courier iOS Overview
 
-### **Debugging**
+### [`**Debugging**`](https://github.com/trycourier/courier-ios/tree/master/Example)
 
 ```swift
 Courier.shared.isDebugging = true
 ```
 
-### **Authentication**
+### [`**Authentication**`](https://github.com/trycourier/courier-ios/tree/master/Example)
 
 ```swift
 let userId = Courier.shared.userId
@@ -20,8 +20,6 @@ try await Courier.shared.signIn(
 
 try await Courier.shared.signOut()
 ```
-
-// TODo
 
 ```swift
 
