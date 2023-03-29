@@ -1,6 +1,8 @@
-# Courier iOS Overview
+# Courier — iOS SDK
 
-### **Debugging** [`More ➡️`](#going-to-production)
+
+
+### **Debugging** [`More >`](#going-to-production)
 
 ```swift
 Courier.shared.isDebugging = true
