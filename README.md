@@ -20,7 +20,7 @@
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left">Courier Account</td><td align="center">[`Sign Up Here`](https://app.courier.com/signup)</td>
+            <td align="left">Courier Account</td><td align="center">`[`Sign Up Here`](https://app.courier.com/signup)`</td>
         </tr>
         <tr width="600px">
             <td align="left">Min SDK</td><td align="center">13</td>
