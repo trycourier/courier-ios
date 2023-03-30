@@ -11,8 +11,8 @@ The easiest way to support push notifications in your app.
 <table>
     <thead>
         <tr>
-            <th width="400px" align="left">Feature</th>
-            <th width="600px" align="left">Description</th>
+            <th width="375px" align="left">Feature</th>
+            <th width="625px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -56,8 +56,8 @@ The easiest way to support push notifications in your app.
 <table>
     <thead>
         <tr>
-            <th width="250px" align="left">Feature</th>
-            <th width="750px" align="left">Reason</th>
+            <th width="300px" align="left">Feature</th>
+            <th width="700px" align="left">Reason</th>
         </tr>
     </thead>
     <tbody>
