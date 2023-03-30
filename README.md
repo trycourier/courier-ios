@@ -98,7 +98,9 @@ https://github.com/trycourier/courier-ios
 ```
 
 ## Using Cocoapods
-1. Update Podfile
+
+1. Open your iOS project and increase the min SDK target to iOS 13.0+
+2. Update Podfile
 
 ```ruby
 platform :ios, '13.0'
@@ -110,13 +112,11 @@ target 'YOUR_TARGET_NAME' do
 end
 ```
 
-2. Open terminal in root directory and run
+3. Open terminal in root directory and run
 
 ```sh
 pod install
 ```
-
-3. Open your iOS project and increase the min SDK target to iOS 13.0+
 
 &emsp;
 
