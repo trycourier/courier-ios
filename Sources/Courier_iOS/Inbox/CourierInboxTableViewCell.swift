@@ -166,11 +166,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setupButtons(_ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {
         
-//        let actions = self.inboxMessage?.actions ?? []
-        let actions = [
-            InboxAction(content: "Something", href: "", style: "", background_color: ""),
-            InboxAction(content: "Something Else", href: "", style: "", background_color: ""),
-        ]
+        let actions = self.inboxMessage?.actions ?? []
         
         // Create and add a button for each action
         actions.forEach { action in

@@ -12,7 +12,7 @@ struct ContentView: View {
     
     let theme = CourierInboxTheme(
         messageAnimationStyle: .fade,
-        unreadIndicatorBarColor: .systemMint,
+        unreadIndicatorBarColor: .blue,
         loadingIndicatorColor: .systemMint,
         titleFont: CourierInboxFont(
             font: UIFont(name: "Avenir Black", size: 20)!,
@@ -23,7 +23,7 @@ struct ContentView: View {
             color: .label
         ),
         bodyFont: CourierInboxFont(
-            font: UIFont(name: "Avenir Medium", size: 18)!,
+            font: UIFont(name: "Arial", size: 18)!,
             color: .label
         ),
         detailTitleFont: CourierInboxFont(
@@ -35,11 +35,11 @@ struct ContentView: View {
                 font: UIFont(name: "Avenir Black", size: 16)!,
                 color: .white
             ),
-            backgroundColor: .systemMint,
-            cornerRadius: 100
+            backgroundColor: .red,
+            cornerRadius: 0
         ),
         cellStyles: CourierInboxCellStyles(
-            separatorStyle: .singleLine,
+            separatorStyle: .none,
             separatorInsets: .zero
         )
     )
