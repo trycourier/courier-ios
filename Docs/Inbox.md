@@ -23,15 +23,15 @@ The following examples go over how to implement the `CourierInbox` View. This is
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left">UIKit</td>
+            <td align="left"><code>UIKit</code></td>
             <td align="center">✅</td>
         </tr>
         <tr width="600px">
-            <td align="left">XIB</td>
+            <td align="left"><code>XIB</code></td>
             <td align="center">⚠️ Works, but is not optimised</td>
         </tr>
         <tr width="600px">
-            <td align="left">SwiftUI</td>
+            <td align="left"><code>SwiftUI</code></td>
             <td align="center">✅</td>
         </tr>
     </tbody>
