@@ -4,15 +4,13 @@
 
 An in-app notification center list you can use to notify you users. Allows you to build user experiences like the Facebook notification feed very quickly.
 
-&emsp;
-
 ⚠️ Courier Inbox requires [`Authentication`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md) to view inbox messages that belong to a specific user.
 
 &emsp;
                                      
 # Usage
 
-The following examples go over how to implement the `CourierInbox` View. This is a view that contains a list of messages you can show to your user. `CourierInbox` works with all native UI frameworks.
+`CourierInbox` works with all native UI frameworks.
 
 <table>
     <thead>
@@ -41,7 +39,7 @@ The following examples go over how to implement the `CourierInbox` View. This is
 
 ## Default Example
 
-This example shows all default styles that come built in with Courier Inbox. All UI is rendered with native `UIKit` Views and supports system colors and dark mode.
+The default `CourierInbox` styles.
 
 <img width="810" alt="default-inbox-styles" src="https://user-images.githubusercontent.com/6370613/228881237-97534448-e8af-46e4-91de-d3423e95dc14.png">
 
@@ -79,7 +77,7 @@ NSLayoutConstraint.activate([
 
 ## Styled Example
 
-This sample shows all the available styles you can apply to the `CourierInbox` to customize the view quickly.
+The styles you can use to quickly customize the `CourierInbox`.
 
 <img width="415" alt="styled-inbox" src="https://user-images.githubusercontent.com/6370613/228883605-c8f5a63b-8be8-491d-9d19-ac2d2a666076.png">
 
