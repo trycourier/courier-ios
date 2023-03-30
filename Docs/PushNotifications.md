@@ -100,7 +100,7 @@ The easiest way to support push notifications in your app.
     <thead>
         <tr>
             <th width="400px" align="left">Provider</th>
-            <th width="400px" align="center">Configuration</th>
+            <th width="400px" align="center">Token Management</th>
             <th width="200px" align="center">Supported</th>
         </tr>
     </thead>
@@ -112,7 +112,7 @@ The easiest way to support push notifications in your app.
                 </a>
             </td>
             <td align="center">
-                <code>Tokens Automatically Synced</code>
+                <code>Automatic</code>
             </td>
             <td align="center">✅</td>
         </tr>
