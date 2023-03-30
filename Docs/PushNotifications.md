@@ -4,6 +4,103 @@
 
 # Push Notifications
 
+The easiest way to support push notifications.
+
+## Features
+
+<table>
+    <thead>
+        <tr>
+            <th width="200px" align="left">Feature</th>
+            <th width="800px" align="left">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="TODO">
+                    <code>Automatic Token Management</code>
+                </a>
+            </td>
+            <td align="left">
+                Skip manually managing push notification device tokens.
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="TODO">
+                    <code>Notification Tracking</code>
+                </a>
+            </td>
+            <td align="left">
+                Track if your users are receiving your notifications even if your app is not runnning or open.
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="TODO">
+                    <code>Easy Permissing Requests & Checking</code>
+                </a>
+            </td>
+            <td align="left">
+                Simple functions to request and check push notification permission settings.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+## Requirements
+
+<table>
+    <thead>
+        <tr>
+            <th width="250px" align="left">Feature</th>
+            <th width="750px" align="left">Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
+                    <code>Authentication</code>
+                </a>
+            </td>
+            <td align="left">
+                Needs Authentication to sync push notification device tokens to the current user and Courier.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+&emsp;
+
+You must send your push notifications through a Push Notification Provider. These are the providers Courier works with and this SDKs support status.
+
+<table>
+    <thead>
+        <tr>
+            <th width="500px" align="left">Provider</th>
+            <th width="250px" align="center">Configuration</th>
+            <th width="250px" align="center">Supported</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://app.courier.com/channels/apn">
+                    <code>(APNS) - Apple Push Notification Service</code>
+                </a>
+            </td>
+            <td align="center">
+                <code>Tokens Automatically Synced</code>
+            </td>
+            <td align="center">✅</td>
+        </tr>
+    </tbody>
+</table>
+
+&emsp;
+
 ### **Supported Messaging Providers**
 
 > ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
