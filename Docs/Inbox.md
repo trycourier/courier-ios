@@ -39,7 +39,7 @@ An in-app notification center list you can use to notify you users. Allows you t
 
 ## Default Example
 
-The default `CourierInbox` styles. [`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift)
+[`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift) The default `CourierInbox` styles.
 
 <img width="810" alt="default-inbox-styles" src="https://user-images.githubusercontent.com/6370613/228881237-97534448-e8af-46e4-91de-d3423e95dc14.png">
 
@@ -77,7 +77,7 @@ NSLayoutConstraint.activate([
 
 ## Styled Example
 
-The styles you can use to quickly customize the `CourierInbox`. [`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift)
+[`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift) The styles you can use to quickly customize the `CourierInbox`.
 
 <img width="415" alt="styled-inbox" src="https://user-images.githubusercontent.com/6370613/228883605-c8f5a63b-8be8-491d-9d19-ac2d2a666076.png">
 
@@ -148,7 +148,7 @@ view.addSubview(courierInbox)
 
 ## Custom Example
 
-The raw data you have to build any UI you'd like. This example is using a `UICollectionView`. [`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/CustomInboxViewController.swift)
+[`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/CustomInboxViewController.swift) The raw data you have to build any UI you'd like. This example is using a `UICollectionView`.
 
 <img width="415" alt="custom-inbox" src="https://user-images.githubusercontent.com/6370613/228886933-d6f1ef6a-c582-4269-af68-da988aa25063.png">
 
@@ -157,6 +157,8 @@ import UIKit
 import Courier_iOS
 
 class CustomInboxViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+
+    private var inboxListener: CourierInboxListener? = nil
     
     ...
 
@@ -167,10 +169,10 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
         self.inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: {
-                self.setState(.loading)
+                ...
             },
             onError: { error in
-                self.setState(.error, error: String(describing: error))
+                ...
             },
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
                 ...
@@ -180,42 +182,17 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
     }
     
-    @objc private func onPullRefresh() {
-        Task {
-            try await Courier.shared.refreshInbox()
-            self.collectionView.refreshControl?.endRefreshing()
-        }
-    }
-      
-    @objc private func readAll() {
-        Courier.shared.readAllInboxMessages()
-    }
-    
-    private func setState(_ state: State, error: String? = nil) {
-        ...
-    }
-    
     ...
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
         
-        if (indexPath.section == 0) {
-            let message = inboxMessages[indexPath.row]
-            cell.setMessage(message)
-        } else {
-            cell.showLoading()
-        }
+        let message = inboxMessages[indexPath.row]
+        cell.setMessage(message)
         
         return cell
         
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if (indexPath.section == 1) {
-            Courier.shared.fetchNextPageOfMessages()
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
