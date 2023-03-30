@@ -148,7 +148,7 @@ view.addSubview(courierInbox)
 
 ## Custom Inbox Example
 
-The raw data you use to build whatever UI you'd like.
+The raw data you can use to build whatever UI you'd like.
 
 <img width="415" alt="custom-inbox" src="https://user-images.githubusercontent.com/6370613/228886933-d6f1ef6a-c582-4269-af68-da988aa25063.png">
 
