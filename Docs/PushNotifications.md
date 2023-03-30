@@ -166,106 +166,67 @@ The easiest way to support push notifications in your app.
 
 &emsp;
 
-### **Supported Messaging Providers**
+# Setup 
 
-> ⚠️ Testing push notifications should be done with a physical iPhone or iPad. The iOS simulator is inconsistent to test with.
+## 1. Enable the "Push Notifications" capability 
 
-<table>
-    <thead>
-        <tr>
-            <th width="800px" align="left">Provider</th>
-            <th width="100px" align="center">Support</th>
-            <th width="100px" align="center">Config</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr width="600px">
-            <td align="left">Firebase Cloud Messaging (FCM)</td>
-            <td align="center">✅</td>
-            <td align="center">Push</td>
-            <td align="center">
-                <a href="https://app.courier.com/channels/firebase-fcm">
-                    <code>Setup</code>
-                </a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">Apple Push Notification Service (APNS)</td>
-            <td align="center">✅</td>
-            <td align="center">Push</td>
-            <td align="center">
-                <a href="https://app.courier.com/channels/apn">
-                    <code>Setup</code>
-                </a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">Expo</td>
-            <td align="center">❌</td>
-            <td align="center">Push</td>
-            <td align="center">
-                <a href="https://app.courier.com/channels/expo">
-                    <code>Setup</code>
-                </a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">OneSignal</td>
-            <td align="center">❌</td>
-            <td align="center">Push</td>
-            <td align="center">
-                <a href="https://app.courier.com/channels/onesignal">
-                    <code>Setup</code>
-                </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-8e8f-bf77dc0a2bf3.mov
+<ol start="1" type="1">
+   <li>Select your Xcode project file</li>
+   <li>Click your project Target</li>
+   <li>Click "Signing & Capabilities"</li>
+   <li>Click the small "+" to add a capability</li>
+   <li>Type "Push Notifications"</li>
+   <li>Press Enter</li>
+</ol>
 
 &emsp;
 
+## 2. Implement the `CourierDelegate`
+
+Change your `AppDelegate` to extend the `CourierDelegate` and add `import Courier_iOS` to the top of your `AppDelegate` file. By doing this you:
+    - Get simple functions to handle push notification interaction and delivery
+    - Automatically sync APNS tokens to Courier
+    
 ```swift
+import Courier_iOS
 
-try await Courier.shared.setFCMToken(token)
-try await Courier.shared.setAPNSToken(token)
-
-let fcmToken = Courier.shared.fcmToken
-let apnsToken = Courier.shared.apnsToken
-
-let currentPermissionStatus = try await Courier.shared.getNotificationPermissionStatus()
-let requestPermissionStatus = try await Courier.shared.requestNotificationPermission()
-
-// Delivery handlers
-
+@main
 class AppDelegate: CourierDelegate {
+    
+    ...
 
     override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
+        
+        print("\n=== 💌 Push Notification Delivered In Foreground ===\n")
         print(message)
+        print("\n=================================================\n")
+        
+        // This is how you want to show your notification in the foreground
+        // You can pass "[]" to not show the notification to the user or
+        // handle this with your own custom styles
         return [.sound, .list, .banner, .badge]
+        
     }
     
     override func pushNotificationClicked(message: [AnyHashable : Any]) {
+        
+        print("\n=== 👉 Push Notification Clicked ===\n")
         print(message)
+        print("\n=================================\n")
+        
+        showMessageAlert(title: "Message Clicked", message: "\(message)")
+        
     }
 
 }
-
 ```
 
-## **2. Setup**
+&emsp;
+
 1. Change your `AppDelegate` to extend the `CourierDelegate` and add `import Courier` to the top of your `AppDelegate` file
     - This automatically syncs APNS tokens to Courier
 2. Enable the "Push Notifications" capability
-
-https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-8e8f-bf77dc0a2bf3.mov
-   <ol start="1" type="1">
-       <li>Select your Xcode project file</li>
-       <li>Click your project Target</li>
-       <li>Click "Signing & Capabilities"</li>
-       <li>Click the small "+" to add a capability</li>
-       <li>Type "Push Notifications"</li>
-       <li>Press Enter</li>
-   </ol>
 
 &emsp;
 
@@ -365,4 +326,32 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 }
 ```
 
-&emsp;
+<!--&emsp;-->
+<!---->
+<!--```swift-->
+<!---->
+<!--try await Courier.shared.setFCMToken(token)-->
+<!--try await Courier.shared.setAPNSToken(token)-->
+<!---->
+<!--let fcmToken = Courier.shared.fcmToken-->
+<!--let apnsToken = Courier.shared.apnsToken-->
+<!---->
+<!--let currentPermissionStatus = try await Courier.shared.getNotificationPermissionStatus()-->
+<!--let requestPermissionStatus = try await Courier.shared.requestNotificationPermission()-->
+<!---->
+<!--// Delivery handlers-->
+<!---->
+<!--class AppDelegate: CourierDelegate {-->
+<!---->
+<!--    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {-->
+<!--        print(message)-->
+<!--        return [.sound, .list, .banner, .badge]-->
+<!--    }-->
+<!--    -->
+<!--    override func pushNotificationClicked(message: [AnyHashable : Any]) {-->
+<!--        print(message)-->
+<!--    }-->
+<!---->
+<!--}-->
+<!---->
+<!--```-->
