@@ -137,7 +137,7 @@ These are all the available features of the SDK.
                 </a>
             </td>
             <td align="left">
-                Manages the current user and api keys between app sessions.
+                Manages user credentials between app sessions.
             </td>
         </tr>
         <tr width="600px">

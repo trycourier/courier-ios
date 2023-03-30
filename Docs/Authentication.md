@@ -1,6 +1,6 @@
 # Authentication
 
-Manages the current user and api keys between app sessions.
+Manages user credentials between app sessions.
 
 &emsp;
 
