@@ -2,9 +2,9 @@
 
 # Courier Inbox
 
-An in-app notification center list you can use to notify you users. Allows you to build user experiences like the Facebook notification feed very quickly.
+An in-app notification center list you can use to notify you users. Allows you to build user experiences similar to the Facebook notification feed very quickly.
 
-⚠️ Courier Inbox requires [`Authentication`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md) to view inbox messages that belong to a specific user.
+⚠️ `CourierInbox` requires [`Authentication`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md) to view inbox messages that belong to a specific user.
 
 &emsp;
                                      
@@ -84,34 +84,38 @@ The styles you can use to quickly customize the `CourierInbox`.
 ```swift
 import Courier_iOS
 
+let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
+let primaryColor = UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
+let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
+
 // Theme object containing all the styles you want to apply 
 let inboxTheme = CourierInboxTheme(
-    messageAnimationStyle: .right,
-    unreadIndicatorBarColor: .systemPurple,
-    loadingIndicatorColor: .systemPink,
+    messageAnimationStyle: .fade,
+    unreadIndicatorBarColor: secondaryColor,
+    loadingIndicatorColor: primaryColor,
     titleFont: CourierInboxFont(
         font: UIFont(name: "Avenir Black", size: 20)!,
-        color: .black
+        color: textColor
     ),
     timeFont: CourierInboxFont(
         font: UIFont(name: "Avenir Medium", size: 16)!,
-        color: .black
+        color: textColor
     ),
     bodyFont: CourierInboxFont(
         font: UIFont(name: "Avenir Medium", size: 18)!,
-        color: .black
+        color: textColor
     ),
     detailTitleFont: CourierInboxFont(
         font: UIFont(name: "Avenir Medium", size: 20)!,
-        color: .black
+        color: textColor
     ),
     buttonStyles: CourierInboxButtonStyles(
         font: CourierInboxFont(
             font: UIFont(name: "Avenir Black", size: 16)!,
             color: .white
         ),
-        backgroundColor: .systemPink,
-        cornerRadius: 100 // 0 will be square & anything over 16 will be rounded
+        backgroundColor: primaryColor,
+        cornerRadius: 100
     ),
     cellStyles: CourierInboxCellStyles(
         separatorStyle: .singleLine,
