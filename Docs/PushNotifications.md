@@ -49,6 +49,8 @@ The easiest way to support push notifications in your app.
     </tbody>
 </table>
 
+&emsp;
+
 ## Requirements
 
 <table>
@@ -69,12 +71,30 @@ The easiest way to support push notifications in your app.
                 Needs Authentication to sync push notification device tokens to the current user and Courier.
             </td>
         </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://developer.apple.com/account/">
+                    <code>Apple Developer Membership</code>
+                </a>
+            </td>
+            <td align="left">
+                Apple requires all iOS developers to have a membership so you can manage your push notification certificates.
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                A phyical iOS device
+            </td>
+            <td align="left">
+                Although you can setup the Courier SDK without a device, a physical device is the only way to full ensure push notification tokens and notification delivery is working correctly. Simulators are not reliable.
+            </td>
+        </tr>
     </tbody>
 </table>
 
 &emsp;
 
-You must send your push notifications through a Push Notification Provider. These are the providers Courier works with and this SDKs support status.
+## Supported Providers
 
 <table>
     <thead>
