@@ -54,6 +54,35 @@
 
 &emsp;
 
+<table>
+    <thead>
+        <tr>
+            <th width="880px" align="left">Package Manager</th>
+            <th width="120px" align="center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#using-swift-package-manager">
+                    <code>Swift Package Manager</code>
+                </a>
+            </td>
+            <td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#using-cocoapods">
+                    <code>Cocoapods</code>
+                </a>
+            </td>
+            <td align="center">✅</td>
+        </tr>
+    </tbody>
+</table>
+
+&emsp;
+
 # Installation
 
 ## Using Swift Package Manager
