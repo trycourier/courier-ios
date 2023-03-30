@@ -183,10 +183,6 @@ https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-
 &emsp;
 
 ## 2. Implement the `CourierDelegate`
-
-Change your `AppDelegate` to extend the `CourierDelegate` and add `import Courier_iOS` to the top of your `AppDelegate` file. By doing this you:
-    - Get simple functions to handle push notification interaction and delivery
-    - Automatically sync APNS tokens to Courier
     
 ```swift
 import Courier_iOS
@@ -222,11 +218,10 @@ class AppDelegate: CourierDelegate {
 }
 ```
 
-&emsp;
-
-1. Change your `AppDelegate` to extend the `CourierDelegate` and add `import Courier` to the top of your `AppDelegate` file
-    - This automatically syncs APNS tokens to Courier
-2. Enable the "Push Notifications" capability
+1. In your `AppDelegate`, add `import Courier_iOS`
+2. Change your `AppDelegate` to extend the `CourierDelegate`
+ * This adds simple functions to handle push notification delivery and clicks
+ * This automatically sync APNS tokens to Courier
 
 &emsp;
 
