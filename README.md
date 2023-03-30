@@ -178,7 +178,7 @@ Several common starter projects using the SDK.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Pod-Example">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/SwiftUI-Example">
                     <code>Example</code>
                 </a>
             </td>
