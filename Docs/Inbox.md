@@ -14,6 +14,29 @@ An in-app notification center list you can use to notify you users. Allows you t
 
 The following examples go over how to implement the `CourierInbox` View. This is a view that contains a list of messages you can show to your user.
 
+<table>
+    <thead>
+        <tr>
+            <th width="800px" align="left">UI Framework</th>
+            <th width="200px" align="center">Support</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">UIKit</td>
+            <td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">XIB</td>
+            <td align="center">⚠️ Works, but is not optimised</td>
+        </tr>
+        <tr width="600px">
+            <td align="left">SwiftUI</td>
+            <td align="center">✅</td>
+        </tr>
+    </tbody>
+</table>
+
 &emsp;
 
 ## Default Example
