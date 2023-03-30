@@ -171,8 +171,7 @@ view.addSubview(courierInbox)
 
 ### Courier Studio Branding
 
-![brand-setting](https://user-images.githubusercontent.com/6370613/228931174-b3e62f20-1697-4c69-ae8d-b45c8d65ae96.png)
-
+<img width="782" alt="setting" src="https://user-images.githubusercontent.com/6370613/228931428-04dc2130-789a-4ac3-bf3f-0bbb49d5519a.png">
 
 You can control your branding from the [`Courier Studio`](https://app.courier.com/designer/brands). 
 
