@@ -133,7 +133,7 @@ The easiest way to support push notifications in your app.
                 </a>
             </td>
             <td align="center">
-                <a href="TODO">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
                     <code>Manual</code>
                 </a>
             </td>
@@ -222,6 +222,8 @@ class AppDelegate: CourierDelegate {
     
 ### FCM - Firebase Cloud Messaging Support
 
+Here is how you can configure your project to support FCM tokens.
+
 ```swift
 import Courier_iOS
 import FirebaseCore
@@ -258,8 +260,6 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 
 }
 ```
-
-1. Simply add snippet in `didReceiveRegistrationToken` to sync FCM tokens to Courier
 
 &emsp;
 
