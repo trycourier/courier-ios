@@ -56,21 +56,11 @@ The easiest way to support push notifications in your app.
 <table>
     <thead>
         <tr>
-            <th width="300px" align="left">Feature</th>
+            <th width="300px" align="left">Requirement</th>
             <th width="700px" align="left">Reason</th>
         </tr>
     </thead>
     <tbody>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
-                    <code>Authentication</code>
-                </a>
-            </td>
-            <td align="left">
-                Needs Authentication to sync push notification device tokens to the current user and Courier.
-            </td>
-        </tr>
         <tr width="600px">
             <td align="left">
                 <a href="https://developer.apple.com/account/">
@@ -89,6 +79,16 @@ The easiest way to support push notifications in your app.
                 Although you can setup the Courier SDK without a device, a physical device is the only way to full ensure push notification tokens and notification delivery is working correctly. Simulators are not reliable.
             </td>
         </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
+                    <code>Authentication</code>
+                </a>
+            </td>
+            <td align="left">
+                Needs Authentication to sync push notification device tokens to the current user and Courier.
+            </td>
+        </tr>
     </tbody>
 </table>
 
@@ -99,9 +99,9 @@ The easiest way to support push notifications in your app.
 <table>
     <thead>
         <tr>
-            <th width="500px" align="left">Provider</th>
-            <th width="250px" align="center">Configuration</th>
-            <th width="250px" align="center">Supported</th>
+            <th width="400px" align="left">Provider</th>
+            <th width="400px" align="center">Configuration</th>
+            <th width="200px" align="center">Supported</th>
         </tr>
     </thead>
     <tbody>
