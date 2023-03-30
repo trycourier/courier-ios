@@ -17,8 +17,8 @@ The following examples go over how to implement the `CourierInbox` View. This is
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">UI Framework</th>
-            <th width="200px" align="center">Support</th>
+            <th width="700px" align="left">UI Framework</th>
+            <th width="300px" align="center">Support</th>
         </tr>
     </thead>
     <tbody>
