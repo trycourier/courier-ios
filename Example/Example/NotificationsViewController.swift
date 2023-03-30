@@ -39,7 +39,7 @@ class NotificationsViewController: UIViewController {
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
                     "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ",
                     "Ullamco laboris nisi ut aliquip ex ea commodo consequat nisi ut aliquip ex ea commodo consequat duis aute irure dolor",
-                    "sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    "Lorem qui officia deserunt mollit anim id est laborum."
                 ]
                 
                 let messages = [
