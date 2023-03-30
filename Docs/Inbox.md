@@ -12,13 +12,13 @@ An in-app notification center list you can use to notify you users. Allows you t
                                      
 # Usage
 
-The following examples go over how to implement the `CourierInbox` View. This is a view that contains a list of messages you can show to your user.
+The following examples go over how to implement the `CourierInbox` View. This is a view that contains a list of messages you can show to your user. `CourierInbox` works with all native UI frameworks.
 
 <table>
     <thead>
         <tr>
-            <th width="700px" align="left">UI Framework</th>
-            <th width="300px" align="center">Support</th>
+            <th width="800px" align="left">UI Framework</th>
+            <th width="200px" align="center">Support</th>
         </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@ The following examples go over how to implement the `CourierInbox` View. This is
         </tr>
         <tr width="600px">
             <td align="left"><code>XIB</code></td>
-            <td align="center">⚠️ Works, but is not optimised</td>
+            <td align="center">⚠️ Not optimised</td>
         </tr>
         <tr width="600px">
             <td align="left"><code>SwiftUI</code></td>
