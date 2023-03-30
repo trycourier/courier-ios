@@ -295,7 +295,7 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 6. Link the Courier SDK to your extension
 
 #### Swift Package Manager Setup
-1. Select `Courier` from package dropdown
+1. Select `Courier_iOS` from package dropdown
 2. Click Finish
 3. Click on your project file
 4. Under Targets, click on your new Target
@@ -316,7 +316,7 @@ end
 
 &emsp;
 
-## 5. Send a test push notification
+## 5. Send a Test Push Notification
 
 ```swift
 class YourViewController: UIViewController {
