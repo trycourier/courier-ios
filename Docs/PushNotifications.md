@@ -99,8 +99,8 @@ The easiest way to support push notifications in your app.
 <table>
     <thead>
         <tr>
-            <th width="400px" align="left">Provider</th>
-            <th width="400px" align="center">Token Syncing</th>
+            <th width="580px" align="left">Provider</th>
+            <th width="220px" align="center">Token Syncing</th>
             <th width="200px" align="center">Supported</th>
         </tr>
     </thead>
