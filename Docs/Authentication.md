@@ -4,7 +4,7 @@ Manages the current user and api keys between app sessions.
 
 &emsp;
 
-## Features dependant on Authentication
+## SDK Features that need Authentication
 
 <table>
     <thead>

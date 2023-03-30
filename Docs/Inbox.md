@@ -1,13 +1,120 @@
-- [Requirements](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#requirements)
-- [Installation](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#installation)
-- [Authentication](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md)
-- [Inbox](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md)
-- [Push Notifications](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md)
-- [Testing](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md)
+// BANNER
 
-# Inbox
+# Courier Inbox
+
+An in-app notification center list you can use to notify you users. Allows you to build user experiences like the Facebook notification feed very quickly.
+
+&emsp;
+
+⚠️ Courier Inbox requires [`Authentication`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md) to view inbox messages that belong to a specific user.
+
+&emsp;
+                                     
+# Usage
+
+The following examples go over how to implement the `CourierInbox` View. This is a view that contains a list of messages you can show to your user.
+
+&emsp;
+
+## Default Example
+
+This sample shows all default styles that come built in with Courier Inbox. All UI is rendered with native `UIKit` Views and supports system colors and dark mode.
 
 ```swift
+import Courier_iOS
+
+// Create the view
+let courierInbox = CourierInbox(
+    didClickInboxMessageAtIndex: { message, index in
+        message.isRead ? message.markAsUnread() : message.markAsRead()
+        print(index, message)
+    },
+    didClickInboxActionForMessageAtIndex: { action, message, index in
+        print(action, message, index)
+    },
+    didScrollInbox: { scrollView in
+        print(scrollView.contentOffset.y)
+    }
+)
+
+// Add the view to your UI
+courierInbox.translatesAutoresizingMaskIntoConstraints = false
+view.addSubview(courierInbox)
+
+// Constrain the view how you'd like
+NSLayoutConstraint.activate([
+    courierInbox.topAnchor.constraint(equalTo: view.topAnchor),
+    courierInbox.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+    courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+    courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+])
+```
+
+&emsp;
+
+## Styled Example
+
+This sample shows all the available styles you can apply to the `CourierInbox` to customize the view quickly.
+
+```swift
+import Courier_iOS
+
+// Theme object containing all the styles you want to apply 
+let inboxTheme = CourierInboxTheme(
+    messageAnimationStyle: .right,
+    unreadIndicatorBarColor: .systemPurple,
+    loadingIndicatorColor: .systemPink,
+    titleFont: CourierInboxFont(
+        font: UIFont(name: "Avenir Black", size: 20)!,
+        color: .black
+    ),
+    timeFont: CourierInboxFont(
+        font: UIFont(name: "Avenir Medium", size: 16)!,
+        color: .black
+    ),
+    bodyFont: CourierInboxFont(
+        font: UIFont(name: "Avenir Medium", size: 18)!,
+        color: .black
+    ),
+    detailTitleFont: CourierInboxFont(
+        font: UIFont(name: "Avenir Medium", size: 20)!,
+        color: .black
+    ),
+    buttonStyles: CourierInboxButtonStyles(
+        font: CourierInboxFont(
+            font: UIFont(name: "Avenir Black", size: 16)!,
+            color: .white
+        ),
+        backgroundColor: .systemPink,
+        cornerRadius: 100 // 0 will be square & anything over 16 will be rounded
+    ),
+    cellStyles: CourierInboxCellStyles(
+        separatorStyle: .singleLine,
+        separatorInsets: .zero
+    )
+)
+
+// Pass the theme to the inbox
+// This example will use the same theme for light and dark mode
+let courierInbox = CourierInbox(
+    lightTheme: inboxTheme,
+    darkTheme: inboxTheme,
+    didClickInboxMessageAtIndex: { message, index in
+        message.isRead ? message.markAsUnread() : message.markAsRead()
+        print(index, message)
+    },
+    didClickInboxActionForMessageAtIndex: { action, message, index in
+        print(action, message, index)
+    },
+    didScrollInbox: { scrollView in
+        print(scrollView.contentOffset.y)
+    }
+)
+
+view.addSubview(courierInbox)
+
+...
+```
 
 // Prebuilt UI implementation
 

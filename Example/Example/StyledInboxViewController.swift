@@ -107,8 +107,6 @@ class StyledInboxViewController: UIViewController {
         title = "Styled Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
-        Courier.shared.inboxPaginationLimit = 20
-        
     }
     
     @objc private func readAll() {
