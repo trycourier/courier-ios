@@ -104,7 +104,11 @@ The easiest way to support push notifications in your app.
 
 &emsp;
 
-## Supported Providers
+# Setup 
+
+## 1. Setup a Push Notification Provider
+
+Select which push notification provider you would like Courier to route push notifications to. Choose APNS - Apple Push Notification Service if you are not sure which provider to use.
 
 <table>
     <thead>
@@ -159,6 +163,9 @@ The easiest way to support push notifications in your app.
             <td align="center">
                 —
             </td>
+            <td align="center">
+                —
+            </td>
             <td align="center">❌</td>
         </tr>
         <tr width="600px">
@@ -170,16 +177,15 @@ The easiest way to support push notifications in your app.
             <td align="center">
                 —
             </td>
+            <td align="center">
+                —
+            </td>
             <td align="center">❌</td>
         </tr>
     </tbody>
 </table>
 
-&emsp;
-
-# Setup 
-
-## 1. Enable the "Push Notifications" capability 
+## 2. Enable the "Push Notifications" capability 
 
 https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-8e8f-bf77dc0a2bf3.mov
 1. Select your Xcode project file
@@ -190,7 +196,7 @@ https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-
 
 &emsp;
 
-## 2. Implement the `CourierDelegate`
+## 3. Implement the `CourierDelegate`
     
 ```swift
 import Courier_iOS
@@ -274,7 +280,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 
 &emsp;
 
-## 3. Add the Notification Service Extension (Optional, but recommended)
+## 4. Add the Notification Service Extension (Optional, but recommended)
 
 To make sure Courier can track when a notification is delivered to the device, you need to add a Notification Service Extension. Here is how to add one.
 
@@ -288,7 +294,7 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 5. Give the Notification Service Extension a name (i.e. "CourierService").
 6. Link the Courier SDK to your extension
 
-#### If you are using Swift Package Manager
+#### Swift Package Manager Setup
 1. Select `Courier` from package dropdown
 2. Click Finish
 3. Click on your project file
@@ -296,7 +302,7 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 5. Under the General tab > Frameworks and Libraries, click the "+" icon
 6. Select the Courier package from the list under Courier Package > Courier
 
-#### If you are using Cocoapods
+#### Cocoapods Setup
 1. Select `Courier_iOS` from the package dropdown
 2. Add the following snippet to the bottom of your Podfile
 
@@ -310,14 +316,67 @@ end
 
 &emsp;
 
-## 333. Request push notification permissions
-
-## 4. Configure Push Provider
-
-See [`this section`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md#supported-providers) to setup your push notification provider
-
-&emsp;
-
 ## 5. Send a test push notification
 
-Here are several sample test messages.
+```swift
+class YourViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        Task {
+                    
+            // Make sure your user is signed into Courier
+            // This allows Courier to sync push notification tokens automatically
+            try await Courier.shared.signIn(
+                accessToken: Env.COURIER_ACCESS_TOKEN,
+                clientKey: Env.COURIER_CLIENT_KEY,
+                userId: "example_user_id"
+            )
+            
+            // Shows a popup where your user can allow or deny push notifications
+            // You should put this in a place that makes sense for your app
+            // You cannot ask the user for push notification permissions again
+            // if they deny, you will have to get them to open their device settings to change this
+            try await Courier.requestNotificationPermission()
+            
+        }
+        
+    }
+
+}
+```
+
+1. Register for push notifications
+
+
+```swift
+class YourViewController: UIViewController {
+
+    ...
+    
+    func sendTestMessage() {
+        
+        Task {
+        
+            // Sends a test message
+            // "YOUR_AUTH_KEY" is found here: https://app.courier.com/settings/api-keys
+            // DO NOT LEAVE "YOUR_AUTH_KEY" in your production app. This is only for testing.
+            try await Courier.shared.sendMessage(
+                authKey: "YOUR_AUTH_KEY",
+                userId: "example_user_id",
+                title: "Hello!",
+                message: "I hope you are having a great day",
+                providers: [.apns, .fcm]
+            )
+        
+        }
+        
+    }
+    
+}
+
+}
+```
+
+2. Send a test message
