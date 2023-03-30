@@ -10,7 +10,7 @@ An in-app notification center list you can use to notify you users. Allows you t
                                      
 # Usage
 
-`CourierInbox` works with all native UI frameworks.
+`CourierInbox` works with all native iOS UI frameworks.
 
 <table>
     <thead>
@@ -37,7 +37,7 @@ An in-app notification center list you can use to notify you users. Allows you t
 
 &emsp;
 
-## Default Example
+## Default Inbox Example
 
 [`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift) The default `CourierInbox` styles.
 
@@ -75,7 +75,7 @@ NSLayoutConstraint.activate([
 
 &emsp;
 
-## Styled Example
+## Styled Inbox Example
 
 [`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift) The styles you can use to quickly customize the `CourierInbox`.
 
@@ -146,9 +146,9 @@ view.addSubview(courierInbox)
 
 &emsp;
 
-## Custom Example
+## Custom Inbox Example
 
-[`Full Example`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/CustomInboxViewController.swift) The raw data you have to build any UI you'd like. This example is using a `UICollectionView`.
+The raw data you use to build whatever UI you'd like.
 
 <img width="415" alt="custom-inbox" src="https://user-images.githubusercontent.com/6370613/228886933-d6f1ef6a-c582-4269-af68-da988aa25063.png">
 
@@ -208,72 +208,97 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
 ...
 ```
 
-<!--// Prebuilt UI implementation-->
-<!---->
-<!--let font = CourierInboxFont(-->
-<!--    font: UIFont(name: "Avenir Medium", size: 18)!,-->
-<!--    color: UIColor.systemBlue-->
-<!--)-->
-<!---->
-<!--let inboxTheme = CourierInboxTheme(-->
-<!--    brandId: "AB123...",-->
-<!--    messageAnimationStyle: UITableView.RowAnimation.fade,-->
-<!--    unreadIndicatorBarColor: UIColor.systemBlue,-->
-<!--    loadingIndicatorColor: UIColor.systemBlue,-->
-<!--    titleFont: font,-->
-<!--    timeFont: font,-->
-<!--    bodyFont: font,-->
-<!--    detailTitleFont: font,-->
-<!--    buttonStyles: CourierInboxButtonStyles(-->
-<!--        font: font,-->
-<!--        backgroundColor: UIColor.systemBlue,-->
-<!--        cornerRadius: 100-->
-<!--    ),-->
-<!--    cellStyles: CourierInboxCellStyles(-->
-<!--        separatorStyle: .singleLine,-->
-<!--        separatorInsets: .zero-->
-<!--    )-->
-<!--)-->
-<!---->
-<!--let inboxView = CourierInbox(-->
-<!--    lightTheme: inboxTheme,-->
-<!--    darkTheme: inboxTheme,-->
-<!--    didClickInboxMessageAtIndex: { message, index in-->
-<!--        message.isRead ? message.markAsUnread() : message.markAsRead()-->
-<!--        print(index, message)-->
-<!--    },-->
-<!--    didClickInboxActionForMessageAtIndex: { action, message, index in-->
-<!--        print(action, message, index)-->
-<!--    },-->
-<!--    didScrollInbox: { scrollView in-->
-<!--        print(scrollView.contentOffset.y)-->
-<!--    }-->
-<!--)-->
-<!---->
-<!--// Custom implementation-->
-<!---->
-<!--let inboxListener = Courier.shared.addInboxListener(-->
-<!--    onInitialLoad: {-->
-<!--        print("Inbox listener is starting")-->
-<!--    },-->
-<!--    onError: { error in-->
-<!--        print(String(describing: error))-->
-<!--    },-->
-<!--    onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in-->
-<!--        print(messages, unreadMessageCount, totalMessageCount, canPaginate)-->
-<!--    }-->
-<!--)-->
-<!---->
-<!--inboxListener.remove()-->
-<!--Courier.shared.removeAllInboxListeners()-->
-<!---->
-<!--Courier.shared.inboxPaginationLimit = 123-->
-<!--let inboxMessages = Courier.shared.inboxMessages-->
-<!---->
-<!--try await Courier.shared.fetchNextPageOfMessages()-->
-<!--try await Courier.shared.refreshInbox()-->
-<!--try await Courier.shared.readMessage(messageId: "1-321...")-->
-<!--try await Courier.shared.unreadMessage(messageId: "1-321...")-->
-<!--try await Courier.shared.readAllInboxMessages()-->
-<!--            -->
-<!--```-->
+## Available Properties and Functions 
+
+```swift
+import Courier_iOS
+
+// Listen to all inbox events
+// Only one "pipe" of data is created behind the scenes for network / performance reasons
+let inboxListener = Courier.shared.addInboxListener(
+    onInitialLoad: {
+        // Called when the inbox starts up
+    },
+    onError: { error in
+        // Called if an error occurs
+    },
+    onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+        // Called when messages update
+    }
+)
+
+// Stop the current listener
+inboxListener.remove()
+
+// Remove all listeners
+// This will also remove the listener of the prebuilt UI
+Courier.shared.removeAllInboxListeners()
+
+// The amount of inbox messages to fetch at a time
+// Will affect prebuilt UI
+Courier.shared.inboxPaginationLimit = 123
+
+// The available messages the inbox has
+let inboxMessages = Courier.shared.inboxMessages
+
+// Fetches the next page of messages
+try await Courier.shared.fetchNextPageOfMessages()
+
+// Reloads the inbox
+// Commonly used with pull to refresh
+try await Courier.shared.refreshInbox()
+
+// Reads / Unreads a message
+// Writes the update instantly and performs request in background
+try await Courier.shared.readMessage(messageId: "1-321...")
+try await Courier.shared.unreadMessage(messageId: "1-321...")
+
+// Reads all the messages
+// Writes the update instantly and performs request in background
+try await Courier.shared.readAllInboxMessages()
+```
+
+## Full Examples
+
+<table>
+    <thead>
+        <tr>
+            <th width="800px" align="left">Link</th>
+            <th width="200px" align="center">Style</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift">
+                    <code>Default Example</code>
+                </a>
+            </td>
+            <td align="center"><code>Default</code></td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/StyledInboxViewController.swift">
+                    <code>Styled Example</code>
+                </a>
+            </td>
+            <td align="center"><code>Styled</code></td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/CustomInboxViewController.swift">
+                    <code>Custom Example</code>
+                </a>
+            </td>
+            <td align="center"><code>Custom</code></td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/SwiftUI-Example/SwiftUI-Example/ContentView.swift">
+                    <code>SwiftUI Example</code>
+                </a>
+            </td>
+            <td align="center"><code>Styled</code></td>
+        </tr>
+    </tbody>
+</table>
