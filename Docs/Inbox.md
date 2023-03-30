@@ -18,7 +18,7 @@ The following examples go over how to implement the `CourierInbox` View. This is
 
 ## Default Example
 
-![default-inbox-styles](https://user-images.githubusercontent.com/6370613/228879831-805dc8f6-d222-4ddf-8c7c-ec76e9a53de1.png)
+![default-inbox-styles](https://user-images.githubusercontent.com/6370613/228880296-faeac9ee-60c6-4d66-968a-9205c0553f61.png)
 
 This sample shows all default styles that come built in with Courier Inbox. All UI is rendered with native `UIKit` Views and supports system colors and dark mode.
 
