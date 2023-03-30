@@ -36,7 +36,7 @@
 <table>
     <thead>
         <tr>
-            <th width="880px" align="left">Supported Languages</th>
+            <th width="880px" align="left">Languages</th>
             <th width="120px" align="center"></th>
         </tr>
     </thead>
