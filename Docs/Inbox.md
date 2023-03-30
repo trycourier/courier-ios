@@ -169,6 +169,43 @@ view.addSubview(courierInbox)
 
 &emsp;
 
+### Courier Studio Branding Example
+
+You can control your branding from the [`Courier Studio`](https://app.courier.com/designer/brands). 
+
+```swift 
+let inboxTheme = CourierInboxTheme(
+    brandId: "EK44..."
+    loadingIndicatorColor: .red, // ⚠️ Will override the brand color
+)
+
+let courierInbox = CourierInbox(
+    lightTheme: inboxTheme,
+    darkTheme: inboxTheme
+)
+```
+
+<table>
+    <thead>
+        <tr>
+            <th width="800px" align="left">Support Brand Styles</th>
+            <th width="200px" align="center">Support</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left"><code>Primary Color</code></td>
+            <td align="center">✅</td>
+        </tr>
+        <tr width="600px">
+            <td align="left"><code>Show/Hide Courier Footer</code></td>
+            <td align="center">✅</td>
+        </tr>
+    </tbody>
+</table>
+
+&emsp;
+
 ## Custom Inbox Example
 
 The raw data you can use to build whatever UI you'd like.
