@@ -73,8 +73,8 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
     <thead>
         <tr>
             <th width="150px" align="left">Properties</th>
-            <th width="550px" align="left">Details</th>
-            <th width="300px" align="left">Where is this?</th>
+            <th width="450px" align="left">Details</th>
+            <th width="400px" align="left">Where is this?</th>
         </tr>
     </thead>
     <tbody>
@@ -83,11 +83,11 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>accessToken</code>
             </td>
             <td align="left">
-                The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>.
+                The key or token needed to authenticate requests to the Courier API.
             </td>
             <td align="left">
-                For testing only: <a href="https://app.courier.com/settings/api-keys"><code>authKey</code></a><br>
-                For production: <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>accessToken</code></a>
+                For development only: <a href="https://app.courier.com/settings/api-keys"><code>authKey</code></a><br>
+                For development or production: <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>accessToken</code></a>
             </td>
         </tr>
         <tr width="600px">
@@ -134,6 +134,6 @@ curl --request POST \
   }'
 ```
 
-[`Courier Issue Token Docs`](https://www.courier.com/docs/reference/auth/issue-token/)
+More Info: [`Courier Issue Token Docs`](https://www.courier.com/docs/reference/auth/issue-token/)
 
 This request should exist in a separate endpoint served by your backend.
