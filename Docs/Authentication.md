@@ -87,7 +87,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
             </td>
             <td align="left">
                 For development only: <a href="https://app.courier.com/settings/api-keys"><code>authKey</code></a><br>
-                For development or production: <a href="https://www.courier.com/docs/reference/auth/issue-token/"><code>accessToken</code></a>
+                For development or production: <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>accessToken</code></a>
             </td>
         </tr>
         <tr width="600px">
