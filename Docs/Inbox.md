@@ -1,4 +1,4 @@
-<img width="1000" alt="inbox-banner" src="https://user-images.githubusercontent.com/6370613/228923295-3a006e3c-5897-429b-88ce-68ecbb1948c5.png">
+<img width="1000" alt="inbox-banner" src="https://user-images.githubusercontent.com/6370613/228923687-afc608f1-90cd-4898-aae6-7c005dced39d.png">
 
 &emsp;
 
