@@ -169,14 +169,14 @@ view.addSubview(courierInbox)
 
 &emsp;
 
-### Courier Studio Branding Example
+### Courier Studio Branding
 
 You can control your branding from the [`Courier Studio`](https://app.courier.com/designer/brands). 
 
 ```swift 
 let brandedThemeWithLoadingColorOverride = CourierInboxTheme(
-    brandId: "EK44..."
-    loadingIndicatorColor: .red, // ⚠️ Will override the brand color
+    brandId: "YOUR_BRAND_ID"
+    loadingIndicatorColor: .red, // ⚠️ Will override the brand primary color
     ...
 )
 
