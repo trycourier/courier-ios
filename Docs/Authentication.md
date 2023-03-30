@@ -2,7 +2,9 @@
 
 Manages the current user and api keys between app sessions.
 
-## Dependencies
+&emsp;
+
+## Features dependant on Authentication
 
 <table>
     <thead>
@@ -19,7 +21,7 @@ Manages the current user and api keys between app sessions.
                 </a>
             </td>
             <td align="left">
-                Needs authentication to view inbox messages that belong to a user.
+                Needs Authentication to view inbox messages that belong to a user.
             </td>
         </tr>
         <tr width="600px">
@@ -29,7 +31,7 @@ Manages the current user and api keys between app sessions.
                 </a>
             </td>
             <td align="left">
-                Needs authentication to sync push notification device tokens to the current user and Courier.
+                Needs Authentication to sync push notification device tokens to the current user and Courier.
             </td>
         </tr>
     </tbody>
@@ -39,7 +41,7 @@ Manages the current user and api keys between app sessions.
 
 # Usage
 
-Put this code where you normally manage your user's state. The user's access to [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) will automatically be managed by the SDK and stored in persistent storage. This means that if you user kills the app and start it back up, they will still be "signed in".
+Put this code where you normally manage your user's state. The user's access to [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) will automatically be managed by the SDK and stored in persistent storage. This means that if your user fully closes your app and starts it back up, they will still be "signed in".
 
 ```swift
 import Courier_iOS
@@ -55,7 +57,7 @@ Task {
     )
 
     // Removes the locally saved credentials
-    // Deletes push notification devices tokens to Courier if needed
+    // Deletes the user's push notification device tokens in Courier if needed
     try await Courier.shared.signOut()
 
 }
@@ -70,7 +72,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
 <table>
     <thead>
         <tr>
-            <th width="150px" align="left">Property</th>
+            <th width="150px" align="left">Properties</th>
             <th width="550px" align="left">Details</th>
             <th width="300px" align="left">Where is this?</th>
         </tr>
@@ -81,7 +83,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>accessToken</code>
             </td>
             <td align="left">
-                The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>. More information about <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>Generating an accessToken</code></a>.
+                The key or token needed to authenticate requests to the Courier API. When you are ready for production, you should be using a generated <code>accessToken</code>.
             </td>
             <td align="left">
                 For testing only: <a href="https://app.courier.com/settings/api-keys"><code>authKey</code></a><br>
@@ -107,8 +109,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 The id of the user you want to read and write to. This likely will be the same as the <code>userId</code> you are already using in your authentication system, but it can be different if you'd like.
             </td>
             <td align="left">
-                —
-<!--                <a href="https://app.courier.com/users"><code>Courier Studio Users</code></a>-->
+                You are responsible for this
             </td>
         </tr>
     </tbody>
@@ -118,9 +119,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
 
 # Going to Production
 
-For security reasons, you should not keep your `authKey` (which looks like: `pk_prod_H12...`) in your production app. The `authKey` is safe to test with, but you will want to use an `accessToken` in production.
-
-To create a production ready `accessToken`, call this: 
+To create a production ready `accessToken`, call this:
 
 ```curl
 curl --request POST \
@@ -135,6 +134,6 @@ curl --request POST \
   }'
 ```
 
-Or generate one here: [`Generating an accessToken`](https://www.courier.com/docs/reference/auth/issue-token/)
+[`Courier Issue Token Docs`](https://www.courier.com/docs/reference/auth/issue-token/)
 
-This request to issue a token should likely exist in a separate endpoint served on your backend.
+This request should exist in a separate endpoint served by your backend.
