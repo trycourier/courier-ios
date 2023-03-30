@@ -18,7 +18,7 @@ The easiest way to support push notifications in your app.
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="TODO">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md#2-implement-the-courierdelegate">
                     <code>Automatic Token Management</code>
                 </a>
             </td>
@@ -28,7 +28,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="TODO">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md#2-implement-the-courierdelegate">
                     <code>Notification Tracking</code>
                 </a>
             </td>
@@ -109,8 +109,9 @@ The easiest way to support push notifications in your app.
 <table>
     <thead>
         <tr>
-            <th width="580px" align="left">Provider</th>
-            <th width="220px" align="center">Token Syncing</th>
+            <th width="400px" align="left">Provider</th>
+            <th width="200px" align="center">Token Syncing</th>
+            <th width="200px" align="center">Setup Guide</th>
             <th width="200px" align="center">Supported</th>
         </tr>
     </thead>
@@ -124,6 +125,11 @@ The easiest way to support push notifications in your app.
             <td align="center">
                 <code>Automatic</code>
             </td>
+            <td align="center">
+                <a href="https://www.courier.com/docs/guides/providers/push/apple-push-notification">
+                    <code>Setup</code>
+                </a>
+            </td>
             <td align="center">✅</td>
         </tr>
         <tr width="600px">
@@ -135,6 +141,11 @@ The easiest way to support push notifications in your app.
             <td align="center">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
                     <code>Manual</code>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://www.courier.com/docs/guides/providers/push/firebase-fcm/">
+                    <code>Setup</code>
                 </a>
             </td>
             <td align="center">✅</td>
@@ -263,7 +274,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 
 &emsp;
 
-## 3. Add the Notification Service Extension (Optional, but recommened)
+## 3. Add the Notification Service Extension (Optional, but recommended)
 
 To make sure Courier can track when a notification is delivered to the device, you need to add a Notification Service Extension. Here is how to add one.
 
@@ -291,7 +302,7 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 
 ```ruby 
 target 'CourierService' do
-    pod 'Courier-iOS'
+    pod 'Courier_iOS'
 end
 ```
 
@@ -299,92 +310,14 @@ end
 
 &emsp;
 
-## **3. Configure Push Provider**
+## 333. Request push notification permissions
 
-> If you don't need push notification support, you can skip this step.
+## 4. Configure Push Provider
 
-To get push notification to appear in your app, add support for the provider you would like to use:
-- [`APNS (Apple Push Notification Service)`](https://www.courier.com/docs/guides/providers/push/apple-push-notification)
-- [`FCM (Firebase Cloud Messaging)`](https://www.courier.com/docs/guides/providers/push/firebase-fcm/)
+See [`this section`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md#supported-providers) to setup your push notification provider
 
 &emsp;
 
-If you followed the steps above:
-- APNS tokens on iOS will automatically be synced to Courier
+## 5. Send a test push notification
 
-### **Support FCM (Firebase Cloud Messaging)**
-
-1. Add the Firebase Package
-
-#### If you are using Swift Package Manager
-- Add the Firebase Swift Package [`firebase-ios-sdk`](https://github.com/firebase/firebase-ios-sdk)
-- Select `firebase-messaging`
-
-#### If you are using Cocoapods
-- [`FirebaseCore`](https://cocoapods.org/pods/FirebaseCore)
-- [`FirebaseMessaging`](https://cocoapods.org/pods/FirebaseMessaging)
-
-2. Change your `AppDelegate` to also extend `MessagingDelegate`
-3. Add `import FirebaseCore`, `import FirebaseMessaging` to the top of your `AppDelegate` file
-4. Modify your `AppDelegate` according to the snippet below
-    - This will automatically sync FCM tokens to Courier when Firebase detects them
-    - If you need more custom integrations, you can call `Courier.shared.setFCMToken(token)` where ever works best for you
-```swift
-import UIKit
-import Courier
-import FirebaseCore
-import FirebaseMessaging
-
-@main
-class AppDelegate: CourierDelegate, MessagingDelegate {
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        FirebaseApp.configure()
-        Messaging.messaging().delegate = self
-        return true
-    }
-
-    ..
-    
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
-        guard let token = fcmToken else { return }
-        
-        Task {
-            try await Courier.shared.setFCMToken(token)    
-        }
-        
-    }
-
-}
-```
-
-<!--&emsp;-->
-<!---->
-<!--```swift-->
-<!---->
-<!--try await Courier.shared.setFCMToken(token)-->
-<!--try await Courier.shared.setAPNSToken(token)-->
-<!---->
-<!--let fcmToken = Courier.shared.fcmToken-->
-<!--let apnsToken = Courier.shared.apnsToken-->
-<!---->
-<!--let currentPermissionStatus = try await Courier.shared.getNotificationPermissionStatus()-->
-<!--let requestPermissionStatus = try await Courier.shared.requestNotificationPermission()-->
-<!---->
-<!--// Delivery handlers-->
-<!---->
-<!--class AppDelegate: CourierDelegate {-->
-<!---->
-<!--    override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {-->
-<!--        print(message)-->
-<!--        return [.sound, .list, .banner, .badge]-->
-<!--    }-->
-<!--    -->
-<!--    override func pushNotificationClicked(message: [AnyHashable : Any]) {-->
-<!--        print(message)-->
-<!--    }-->
-<!---->
-<!--}-->
-<!---->
-<!--```-->
+Here are several sample test messages.
