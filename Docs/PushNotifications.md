@@ -219,10 +219,51 @@ class AppDelegate: CourierDelegate {
 2. Change your `AppDelegate` to extend the `CourierDelegate`
     * This adds simple functions to handle push notification delivery and clicks
     * This automatically sync APNS tokens to Courier
+    
+### FCM - Firebase Cloud Messaging Support
+
+```swift
+import Courier_iOS
+import FirebaseCore
+import FirebaseMessaging
+
+@main
+class AppDelegate: CourierDelegate, MessagingDelegate {
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // Initialize Firebase and FCM
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        
+        return true
+        
+    }
+
+    ...
+    
+    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+
+        guard let token = fcmToken else { return }
+
+        Task {
+            do {
+                try await Courier.shared.setFCMToken(token)
+            } catch {
+                print(String(describing: error))
+            }
+        }
+
+    }
+
+}
+```
+
+1. Simply add snippet in `didReceiveRegistrationToken` to sync FCM tokens to Courier
 
 &emsp;
 
-### **Add the Notification Service Extension (Recommended)**
+## 3. Add the Notification Service Extension (Optional, but recommened)
 
 To make sure Courier can track when a notification is delivered to the device, you need to add a Notification Service Extension. Here is how to add one.
 
