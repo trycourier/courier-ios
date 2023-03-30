@@ -118,7 +118,7 @@ These are all the available features of the SDK.
                 </a>
             </td>
             <td align="left">
-                An in-app notification center list you can use to notify you users. Allows you to build user experiences like the Facebook notification feed very quickly.
+                An in-app notification center you can use to notify your users.
             </td>
         </tr>
         <tr width="600px">

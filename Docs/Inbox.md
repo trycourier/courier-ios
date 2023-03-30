@@ -4,7 +4,7 @@
 
 # Courier Inbox
 
-An in-app notification center list you can use to notify you users. Allows you to build user experiences similar to the Facebook notification feed very quickly.
+An in-app notification center list you can use to notify your users. Allows you to build high quality, flexible notification feeds very quickly.
 
 ⚠️ `CourierInbox` requires [`Authentication`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md) to view inbox messages that belong to a specific user.
 
