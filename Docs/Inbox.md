@@ -329,19 +329,23 @@ Courier.shared.inboxPaginationLimit = 123
 // The available messages the inbox has
 let inboxMessages = Courier.shared.inboxMessages
 
-// Fetches the next page of messages
-try await Courier.shared.fetchNextPageOfMessages()
+Task {
 
-// Reloads the inbox
-// Commonly used with pull to refresh
-try await Courier.shared.refreshInbox()
+    // Fetches the next page of messages
+    try await Courier.shared.fetchNextPageOfMessages()
 
-// Reads / Unreads a message
-// Writes the update instantly and performs request in background
-try await Courier.shared.readMessage(messageId: "1-321...")
-try await Courier.shared.unreadMessage(messageId: "1-321...")
+    // Reloads the inbox
+    // Commonly used with pull to refresh
+    try await Courier.shared.refreshInbox()
 
-// Reads all the messages
-// Writes the update instantly and performs request in background
-try await Courier.shared.readAllInboxMessages()
+    // Reads / Unreads a message
+    // Writes the update instantly and performs request in background
+    try await Courier.shared.readMessage(messageId: "1-321...")
+    try await Courier.shared.unreadMessage(messageId: "1-321...")
+
+    // Reads all the messages
+    // Writes the update instantly and performs request in background
+    try await Courier.shared.readAllInboxMessages()
+
+}
 ```
