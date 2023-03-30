@@ -95,7 +95,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>clientKey</code>
             </td>
             <td align="left">
-                The key required to get <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md"><code>Courier Inbox</code></a> messages for the current user.
+                The key required to get <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md"><code>Courier Inbox</code></a> messages for the current user. Can be <code>nil</code> if you do not need Courier Inbox.
             </td>
             <td align="left">
                 <a href="https://app.courier.com/channels/courier"><code>Courier Inbox clientKey</code></a>
