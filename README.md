@@ -149,42 +149,42 @@ Several common starter projects using the SDK.
 <table>
     <thead>
         <tr>
-            <th width="400px" align="left">Language</th>
+            <th width="400px" align="left">Project Link</th>
             <th width="200px" align="center">UI Framework</th>
             <th width="200px" align="center">Package Manager</th>
-            <th width="200px" align="center">Project</th>
+            <th width="200px" align="center">Language</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="left"><code>Swift</code></td>
-            <td align="center"><code>UIKit</code></td>
-            <td align="center"><code>Swift</code></td>
-            <td align="center">
+            <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Example">
-                    <code>Project Link</code>
+                    <code>Example</code>
                 </a>
             </td>
+            <td align="center"><code>UIKit</code></td>
+            <td align="center"><code>Swift</code></td>
+            <td align="center"><code>Swift</code></td>
         </tr>
         <tr width="600px">
-            <td align="left"><code>Swift</code></td>
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Pod-Example">
+                    <code>Example</code>
+                </a>
+            </td>
             <td align="center"><code>UIKit</code></td>
             <td align="center"><code>Cocoapods</code></td>
-            <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Pod-Example">
-                    <code>Project Link</code>
-                </a>
-            </td>
+            <td align="center"><code>Swift</code></td>
         </tr>
         <tr width="600px">
-            <td align="left"><code>Swift</code></td>
-            <td align="center"><code>SwiftUI</code></td>
-            <td align="center"><code>Swift</code></td>
-            <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/SwiftUI-Example">
-                    <code>Project Link</code>
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Pod-Example">
+                    <code>Example</code>
                 </a>
             </td>
+            <td align="center"><code>SwiftUI</code></td>
+            <td align="center"><code>Swift</code></td>
+            <td align="center"><code>Swift</code></td>
         </tr>
     </tbody>
 </table>
