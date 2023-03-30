@@ -1,9 +1,6 @@
-- [Requirements](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#requirements)
-- [Installation](https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#installation)
-- [Authentication](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md)
-- [Inbox](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md)
-- [Push Notifications](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md)
-- [Testing](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md)
+<img width="1000" alt="push-banner" src="https://user-images.githubusercontent.com/6370613/228949517-6c07244d-7228-4017-a22e-798c23bcc234.png">
+
+&emsp;
 
 # Push Notifications
 
