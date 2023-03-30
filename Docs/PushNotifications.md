@@ -171,14 +171,11 @@ The easiest way to support push notifications in your app.
 ## 1. Enable the "Push Notifications" capability 
 
 https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-8e8f-bf77dc0a2bf3.mov
-<ol start="1" type="1">
-   <li>Select your Xcode project file</li>
-   <li>Click your project Target</li>
-   <li>Click "Signing & Capabilities"</li>
-   <li>Click the small "+" to add a capability</li>
-   <li>Type "Push Notifications"</li>
-   <li>Press Enter</li>
-</ol>
+1. Select your Xcode project file
+2. Click your project Target
+3. Click "Signing & Capabilities"
+4. Click the small "+" to add a capability
+4. Press Enter
 
 &emsp;
 
@@ -222,12 +219,6 @@ class AppDelegate: CourierDelegate {
 2. Change your `AppDelegate` to extend the `CourierDelegate`
     * This adds simple functions to handle push notification delivery and clicks
     * This automatically sync APNS tokens to Courier
- 
-1. Item
-2. Item
- * Mixed
- * Mixed
-3. Item
 
 &emsp;
 
