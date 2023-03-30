@@ -1,5 +1,6 @@
 <img width="1000" alt="banner" src="https://user-images.githubusercontent.com/6370613/228920880-76fe5786-1baf-4525-a9d8-9f8a669ae95b.png">
 
+&emsp;
 
 # Requirements & Support
 
@@ -68,7 +69,8 @@ https://github.com/trycourier/courier-ios
 ```
 
 ## Using Cocoapods
-1. Update Podfile for ios 13.0+
+1. Update Podfile
+
 ```ruby
 platform :ios, '13.0'
 ..
@@ -78,10 +80,13 @@ target 'YOUR_TARGET_NAME' do
     ..
 end
 ```
+
 2. Open terminal in root directory and run
+
 ```sh
 pod install
 ```
+
 &emsp;
 
 # SDK Features
