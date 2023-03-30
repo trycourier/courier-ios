@@ -390,4 +390,13 @@ Task {
     try await Courier.shared.readAllInboxMessages()
 
 }
+
+// Mark message as read/unread
+let message = InboxMessage(...)
+
+// Calls Courier.shared.un/readMessage(messageId...) under the hood
+// Has optional callbacks
+message.markAsRead()
+message.markAsUnread()
+
 ```
