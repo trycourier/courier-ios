@@ -4,15 +4,15 @@
 
 # Push Notifications
 
-The easiest way to support push notifications.
+The easiest way to support push notifications in your app.
 
 ## Features
 
 <table>
     <thead>
         <tr>
-            <th width="200px" align="left">Feature</th>
-            <th width="800px" align="left">Description</th>
+            <th width="300px" align="left">Feature</th>
+            <th width="700px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
