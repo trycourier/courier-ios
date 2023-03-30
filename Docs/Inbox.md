@@ -151,7 +151,7 @@ view.addSubview(courierInbox)
 
 The raw data you have to build any UI you'd like.
 
-<img width="415" alt="styled-inbox" src="https://user-images.githubusercontent.com/6370613/228883605-c8f5a63b-8be8-491d-9d19-ac2d2a666076.png">
+<img width="415" alt="custom-inbox" src="https://user-images.githubusercontent.com/6370613/228886933-d6f1ef6a-c582-4269-af68-da988aa25063.png">
 
 ```swift
 import Courier_iOS
