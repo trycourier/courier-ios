@@ -226,7 +226,11 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                     <code>Default Example</code>
                 </a>
             </td>
-            <td align="center"><code>Default</code></td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#default-inbox-example">
+                    <code>Default</code>
+                </a>
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">
@@ -234,7 +238,11 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                     <code>Styled Example</code>
                 </a>
             </td>
-            <td align="center"><code>Styled</code></td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#styled-inbox-example">
+                    <code>Styled</code>
+                </a>
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">
@@ -242,7 +250,11 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                     <code>Custom Example</code>
                 </a>
             </td>
-            <td align="center"><code>Custom</code></td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#custom-inbox-example">
+                    <code>Custom</code>
+                </a>
+            </td>
         </tr>
         <tr width="600px">
             <td align="left">
@@ -250,7 +262,11 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                     <code>SwiftUI Example</code>
                 </a>
             </td>
-            <td align="center"><code>Styled</code></td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#styled-inbox-example">
+                    <code>Styled</code>
+                </a>
+            </td>
         </tr>
     </tbody>
 </table>
