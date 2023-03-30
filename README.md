@@ -116,9 +116,11 @@ end
 pod install
 ```
 
+3. Open your iOS project and increase the min SDK target to iOS 13.0+
+
 &emsp;
 
-# SDK Features
+# Getting Started
 
 These are all the available features of the SDK.
 

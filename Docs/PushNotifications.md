@@ -156,20 +156,6 @@ Select which push notification provider you would like Courier to route push not
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://app.courier.com/channels/expo">
-                    <code>Expo</code>
-                </a>
-            </td>
-            <td align="center">
-                —
-            </td>
-            <td align="center">
-                —
-            </td>
-            <td align="center">❌</td>
-        </tr>
-        <tr width="600px">
-            <td align="left">
                 <a href="https://app.courier.com/channels/onesignal">
                     <code>OneSignal</code>
                 </a>
@@ -374,8 +360,6 @@ class YourViewController: UIViewController {
         
     }
     
-}
-
 }
 ```
 
