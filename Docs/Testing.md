@@ -106,7 +106,8 @@ TODO Call out overrides with link
 
 <table>
 <tr>
-<td> Swift </td> <td> JSON </td>
+<td width="500px" align="left">Swift</td>
+<td width="500px" align="left">JSON</td>
 </tr>
 <tr>
 <td> 
