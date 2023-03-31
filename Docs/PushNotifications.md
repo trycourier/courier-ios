@@ -321,7 +321,7 @@ Task {
     // You should put this in a place that makes sense for your app
     // You cannot ask the user for push notification permissions again
     // if they deny, you will have to get them to open their device settings to change this
-    try await Courier.requestNotificationPermission()
+    let status = try await Courier.requestNotificationPermission()
 
 }
 ```
