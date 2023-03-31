@@ -64,7 +64,7 @@ curl --request POST \
 
 ### Result
 
-<img width="810" alt="default-inbox-styles" src="https://user-images.githubusercontent.com/6370613/228881237-97534448-e8af-46e4-91de-d3423e95dc14.png">
+<img width="894" alt="apns-push" src="https://user-images.githubusercontent.com/6370613/229195536-57ed3323-73cf-480a-89bf-d123063ff02a.png">
 
 &emsp;
 
@@ -121,4 +121,5 @@ curl --request POST \
 
 ### Result
 
-<img width="810" alt="default-inbox-styles" src="https://user-images.githubusercontent.com/6370613/228881237-97534448-e8af-46e4-91de-d3423e95dc14.png">
+<img width="894" alt="apns-push" src="https://user-images.githubusercontent.com/6370613/229195553-ebfd9d53-2a4e-48b6-8ea5-237cafd84ed2.png">
+
