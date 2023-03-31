@@ -15,6 +15,37 @@ TODO Call out overrides with link
 
 Requires [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) to receive messages
 
+<table>
+    <thead>
+        <tr>
+            <th width="800px" align="left">Requirement</th>
+            <th width="200px" align="center">Configure</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
+                    <code>Courier Inbox</code>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://app.courier.com/channels/courier">
+                    <code>Setup</code>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table>
+<tr>
+<td width="500px" align="left">Swift</td>
+<td width="500px" align="left">HTTP</td>
+</tr>
+<tr width="600px">
+<td> 
+
 ```swift
 try await Courier.shared.sendMessage(
     authKey: "YOUR_AUTH_KEY",
