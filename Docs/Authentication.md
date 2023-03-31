@@ -16,7 +16,7 @@ Manages user credentials between app sessions.
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md">
                     <code>Courier Inbox</code>
                 </a>
             </td>
@@ -26,7 +26,7 @@ Manages user credentials between app sessions.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md">
                     <code>Push Notifications</code>
                 </a>
             </td>
@@ -41,7 +41,7 @@ Manages user credentials between app sessions.
 
 # Usage
 
-Put this code where you normally manage your user's state. The user's access to [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) will automatically be managed by the SDK and stored in persistent storage. This means that if your user fully closes your app and starts it back up, they will still be "signed in".
+Put this code where you normally manage your user's state. The user's access to [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) will automatically be managed by the SDK and stored in persistent storage. This means that if your user fully closes your app and starts it back up, they will still be "signed in".
 
 ```swift
 import Courier_iOS
@@ -87,7 +87,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
             </td>
             <td align="left">
                 For development only: <a href="https://app.courier.com/settings/api-keys"><code>authKey</code></a><br>
-                For development or production: <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md#going-to-production"><code>accessToken</code></a>
+                For development or production: <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md#going-to-production"><code>accessToken</code></a>
             </td>
         </tr>
         <tr width="600px">
@@ -95,7 +95,7 @@ let isUserSignedIn = Courier.shared.isUserSignedIn
                 <code>clientKey</code>
             </td>
             <td align="left">
-                The key required to get <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md"><code>Courier Inbox</code></a> messages for the current user. Can be <code>nil</code> if you do not need Courier Inbox.
+                The key required to get <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md"><code>Courier Inbox</code></a> messages for the current user. Can be <code>nil</code> if you do not need Courier Inbox.
             </td>
             <td align="left">
                 <a href="https://app.courier.com/channels/courier"><code>Courier Inbox clientKey</code></a>

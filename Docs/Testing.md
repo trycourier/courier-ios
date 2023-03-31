@@ -4,7 +4,7 @@
 
 # Testing
 
-Common examples you can use to send [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) messages and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) to your users.
+Common examples you can use to send [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) messages and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) to your users.
 
 &emsp;
 
@@ -35,7 +35,7 @@ Common examples you can use to send [`Courier Inbox`](https://github.com/trycour
 
 ## Courier Inbox Message
 
-[`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) must be setup to receive messages.
+[`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) must be setup to receive messages.
 
 <table>
 <tr>
@@ -94,7 +94,7 @@ curl --request POST \
 
 ## Push Notification - Apple Push Notification Service (APNS)
 
-[`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) must be setup to receive messages.
+[`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) must be setup to receive messages.
 
 ⚠️ Courier automatically applies some overrides. View the overrides [`here`](https://app.courier.com/channels/apn).
 
@@ -155,7 +155,7 @@ curl --request POST \
 
 ## Push Notification - Firebase Cloud Messaging (FCM)
 
-[`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) must be setup to receive messages.
+[`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) must be setup to receive messages.
 
 ⚠️ Courier automatically applies some overrides. View the overrides [`here`](https://app.courier.com/channels/firebase-fcm).
 
