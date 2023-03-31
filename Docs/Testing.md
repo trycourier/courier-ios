@@ -4,11 +4,8 @@ Common examples you can use to send [`Courier Inbox`](https://github.com/trycour
 
 &emsp;
 
-# Courier Inbox
-
-
-
-&emsp;
+// Where to get auth key
+// Do not put this in prod
 
 https://app.courier.com/settings/api-keys
 
@@ -37,7 +34,7 @@ try await Courier.shared.sendMessage(
 </td>
 <td>
 
-```curl
+```bash
 curl --request POST \
   --url https://api.courier.com/send \
   --header 'Authorization: Bearer YOUR_AUTH_KEY' \
@@ -69,6 +66,8 @@ curl --request POST \
 
 <img width="810" alt="default-inbox-styles" src="https://user-images.githubusercontent.com/6370613/228881237-97534448-e8af-46e4-91de-d3423e95dc14.png">
 
+&emsp;
+
 ## Inbox Message with Actions
 
 <table>
@@ -92,7 +91,7 @@ try await Courier.shared.sendMessage(
 </td>
 <td>
 
-```curl
+```bash
 curl --request POST \
   --url https://api.courier.com/send \
   --header 'Authorization: Bearer YOUR_AUTH_KEY' \
