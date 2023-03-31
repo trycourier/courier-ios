@@ -18,7 +18,7 @@ The easiest way to support push notifications in your app.
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#2-implement-the-courierdelegate">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#3-implement-the-courierdelegate">
                     <code>Automatic Token Management</code>
                 </a>
             </td>
@@ -28,7 +28,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#2-implement-the-courierdelegate">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#3-implement-the-courierdelegate">
                     <code>Notification Tracking</code>
                 </a>
             </td>
@@ -38,7 +38,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="TODO">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#5-send-a-test-push-notification">
                     <code>Permission Requests & Checking</code>
                 </a>
             </td>
