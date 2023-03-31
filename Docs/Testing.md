@@ -14,102 +14,13 @@ TODO Call out overrides with link
 
 ## Inbox Message
 
-<table>
-    <thead>
-        <tr>
-            <th width="500px" align="left">Swift Example</th>
-            <th width="500px" align="left">Raw Curl</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr width="600px">
-            <td align="left">
-<pre>
-{
-    "message": {
-        "to": {
-            "user_id": "example_user_id"
-        },
-        "content": {
-            "title": "Hey there 👋",
-            "body": "Have a great day 😁"
-        },
-        "routing": {
-            "method": "all",
-            "channels": [
-                "inbox"
-            ]
-        }
-    }
-}
-</pre>
-            </td>
-            <td align="left">
-<pre>
-{
-    "message": {
-        "to": {
-            "user_id": "example_user_id"
-        },
-        "content": {
-            "title": "Hey there 👋",
-            "body": "Have a great day 😁"
-        },
-        "routing": {
-            "method": "all",
-            "channels": [
-                "inbox"
-            ]
-        }
-    }
-}
-</pre>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<table>
-    <tr>
-        <th width="500px" align="left">Swift Example</th>
-        <th width="500px" align="left">Raw Curl</th>
-    </tr>
-    <tr>
-        <td>
-```json
-{
-    "id": 10,
-    "username": "alanpartridge",
-    "email": "alan@alan.com",
-    "password_hash": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.CPCWCZsyqqa8./whhfzBZydX7yvahHS",
-    "password_salt": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.",
-    "created_at": "2015-02-14T20:45:26.433Z",
-    "updated_at": "2015-02-14T20:45:26.540Z"
-}
-```
-        </td>
-        <td>
-```json
-{
-    "id": 10,
-    "username": "alanpartridge",
-    "email": "alan@alan.com",
-    "password_hash": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.CPCWCZsyqqa8./whhfzBZydX7yvahHS",
-    "password_salt": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.",
-    "created_at": "2015-02-14T20:45:26.433Z",
-    "updated_at": "2015-02-14T20:45:26.540Z"
-}
-```
-        </td>
-    </tr>
-</table>
 
 <table>
 <tr>
 <td width="500px" align="left">Swift</td>
 <td width="500px" align="left">JSON</td>
 </tr>
-<tr>
+<tr width="600px">
 <td> 
 
 ```swift
