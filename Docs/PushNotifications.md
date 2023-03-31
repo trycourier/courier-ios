@@ -264,19 +264,18 @@ https://user-images.githubusercontent.com/29832989/202580269-863a9293-4c0b-48c9-
 3. Open your iOS app in Xcode and go to File > New > Target
 4. Select "Courier Service" and click "Next"
 5. Give the Notification Service Extension a name (i.e. "CourierService").
-6. Link the Courier SDK to your extension
+6. Click Finish
+
+### Link the Courier SDK to your extension:
 
 #### Swift Package Manager Setup
-1. Select `Courier_iOS` from package dropdown
-2. Click Finish
-3. Click on your project file
-4. Under Targets, click on your new Target
-5. Under the General tab > Frameworks and Libraries, click the "+" icon
-6. Select the Courier package from the list under Courier Package > Courier
+1. Click on your project file
+2. Under Targets, click on your new Target
+3. Under the General tab > Frameworks and Libraries, click the "+" icon
+4. Select the Courier package from the list under Courier Package > Courier
 
 #### Cocoapods Setup
-1. Select `Courier_iOS` from the package dropdown
-2. Add the following snippet to the bottom of your Podfile
+1. Add the following snippet to the bottom of your Podfile
 
 ```ruby 
 target 'CourierService' do
@@ -284,7 +283,7 @@ target 'CourierService' do
 end
 ```
 
-3. Run `pod install`
+2. Run `pod install`
 
 &emsp;
 
