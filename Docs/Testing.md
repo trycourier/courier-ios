@@ -25,7 +25,6 @@ TODO Call out overrides with link
         <tr width="600px">
             <td align="left">
                 <pre>
-                    ```swift
                     import Courier_iOS
 
                     Task {
@@ -42,7 +41,6 @@ TODO Call out overrides with link
                         )
 
                     }
-                    ```
                 </pre>
             </td>
             <td align="left">
