@@ -24,28 +24,46 @@ TODO Call out overrides with link
     <tbody>
         <tr width="600px">
             <td align="left">
-                Test
+<pre>
+{
+    "message": {
+        "to": {
+            "user_id": "example_user_id"
+        },
+        "content": {
+            "title": "Hey there 👋",
+            "body": "Have a great day 😁"
+        },
+        "routing": {
+            "method": "all",
+            "channels": [
+                "inbox"
+            ]
+        }
+    }
+}
+</pre>
             </td>
             <td align="left">
-                <pre>
-                {
-                    "message": {
-                        "to": {
-                            "user_id": "example_user_id"
-                        },
-                        "content": {
-                            "title": "Hey there 👋",
-                            "body": "Have a great day 😁"
-                        },
-                        "routing": {
-                            "method": "all",
-                            "channels": [
-                                "inbox"
-                            ]
-                        }
-                    }
-                }
-                </pre>
+<pre>
+{
+    "message": {
+        "to": {
+            "user_id": "example_user_id"
+        },
+        "content": {
+            "title": "Hey there 👋",
+            "body": "Have a great day 😁"
+        },
+        "routing": {
+            "method": "all",
+            "channels": [
+                "inbox"
+            ]
+        }
+    }
+}
+</pre>
             </td>
         </tr>
     </tbody>
