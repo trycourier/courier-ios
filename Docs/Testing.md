@@ -1,6 +1,8 @@
-# Testing
-
 ⚠️ Courier is actively working on improving our developer experience! More testing examples coming soon!
+
+---
+
+# Testing
 
 Common examples you can use to send [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) messages and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) to your users.
 
