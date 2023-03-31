@@ -24,30 +24,40 @@ TODO Call out overrides with link
 <td> 
 
 ```swift
-{
-    "id": 10,
-    "username": "alanpartridge",
-    "email": "alan@alan.com",
-    "password_hash": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.CPCWCZsyqqa8./whhfzBZydX7yvahHS",
-    "password_salt": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.",
-    "created_at": "2015-02-14T20:45:26.433Z",
-    "updated_at": "2015-02-14T20:45:26.540Z"
-}
+try await Courier.shared.sendMessage(
+    authKey: "YOUR_AUTH_KEY",
+    userId: "example_user_id",
+    title: "Hello!",
+    message: "I hope you are having a great day",
+    providers: [.apns, .fcm]
+)
 ```
 
 </td>
 <td>
 
-```json
-{
-    "id": 10,
-    "username": "alanpartridge",
-    "email": "alan@alan.com",
-    "password_hash": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.CPCWCZsyqqa8./whhfzBZydX7yvahHS",
-    "password_salt": "$2a$10$uhUIUmVWVnrBWx9rrDWhS.",
-    "created_at": "2015-02-14T20:45:26.433Z",
-    "updated_at": "2015-02-14T20:45:26.540Z"
-}
+```curl
+curl --request POST \
+  --url https://api.courier.com/send \
+  --header 'Authorization: Bearer YOUR_AUTH_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "message": {
+        "to": {
+            "user_id": "example_user_id"
+        },
+        "content": {
+            "title": "Hey there 👋",
+            "body": "Have a great day 😁"
+        },
+        "routing": {
+            "method": "all",
+            "channels": [
+                "inbox"
+            ]
+        }
+    }
+}'
 ```
 
 </td>
