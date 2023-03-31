@@ -121,5 +121,5 @@ curl --request POST \
 
 ### Result
 
-<img width="894" alt="apns-push" src="https://user-images.githubusercontent.com/6370613/229195553-ebfd9d53-2a4e-48b6-8ea5-237cafd84ed2.png">
+<img width="894" alt="apns-push" src="https://user-images.githubusercontent.com/6370613/229195948-1b49b58e-8f38-4fd3-ab6b-7e3844def61d.png">
 
