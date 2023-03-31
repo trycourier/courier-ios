@@ -68,7 +68,7 @@ curl --request POST \
 
 &emsp;
 
-## Inbox Message with Actions
+## Push Notification - Apple Push Notification Service (APNS)
 
 <table>
 <tr>
@@ -84,7 +84,7 @@ try await Courier.shared.sendMessage(
     userId: "example_user_id",
     title: "Hey there 👋",
     message: "Have a great day 😁",
-    providers: [.inbox]
+    providers: [.apns]
 )
 ```
 
@@ -94,7 +94,7 @@ try await Courier.shared.sendMessage(
 ```bash
 curl --request POST \
   --url https://api.courier.com/send \
-  --header 'Authorization: Bearer YOUR_AUTH_KEY' \
+  --header 'Authorization: Bearer pk_prod_H48Y2E9VV94YP5K60JAYPGY3M3NH' \
   --header 'Content-Type: application/json' \
   --data '{
     "message": {
@@ -108,8 +108,24 @@ curl --request POST \
         "routing": {
             "method": "all",
             "channels": [
-                "inbox"
+                "apn"
             ]
+        },
+        "providers": {
+            "apn": {
+                "override": {
+                    "body": {
+                        "aps": {
+                            "badge": 99,
+                            "alert": {
+                                "title": "Hey there 👋",
+                                "body": "Have a great day 😁"
+                            },
+                            "custom": "data"
+                        }
+                    }
+                }
+            }
         }
     }
 }'
