@@ -71,8 +71,8 @@ TODO Call out overrides with link
 
 <table>
     <tr>
-        <td>Status</td>
-        <td>Response</td>
+        <th width="500px" align="left">Swift Example</th>
+        <th width="500px" align="left">Raw Curl</th>
     </tr>
     <tr>
         <td>200</td>
