@@ -11,32 +11,9 @@ https://app.courier.com/settings/api-keys
 
 TODO Call out overrides with link
 
-## Inbox Message
+## Courier Inbox Message
 
-Requires [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) to receive messages
-
-<table>
-    <thead>
-        <tr>
-            <th width="800px" align="left">Requirement</th>
-            <th width="200px" align="center">Configure</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
-                    <code>Courier Inbox</code>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://app.courier.com/channels/courier">
-                    <code>Setup</code>
-                </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+[`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) must be setup to receive messages
 
 <table>
 <tr>
@@ -95,6 +72,8 @@ curl --request POST \
 
 ## Push Notification - Apple Push Notification Service (APNS)
 
+[`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) must be setup to receive messages
+
 <table>
 <tr>
 <td width="500px" align="left">Swift</td>
@@ -135,22 +114,6 @@ curl --request POST \
             "channels": [
                 "apn"
             ]
-        },
-        "providers": {
-            "apn": {
-                "override": {
-                    "body": {
-                        "aps": {
-                            "badge": 99,
-                            "alert": {
-                                "title": "Hey there 👋",
-                                "body": "Have a great day 😁"
-                            },
-                            "custom": "data"
-                        }
-                    }
-                }
-            }
         }
     }
 }'
