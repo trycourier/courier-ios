@@ -2,11 +2,13 @@
 
 Common examples you use to send [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md) messages and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md) to your users.
 
+&emsp;
+
 <table>
     <thead>
         <tr>
-            <th width="200px" align="left">Message</th>
-            <th width="800px" align="left">Expectation</th>
+            <th width="300px" align="left">Message</th>
+            <th width="700px" align="left">Expectation</th>
         </tr>
     </thead>
     <tbody>
