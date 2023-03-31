@@ -1,4 +1,4 @@
-cat Sources/Courier/Courier.swift | while read LINE; do
+cat Sources/Courier/Courier_iOS.swift | while read LINE; do
   if [[ $LINE == *"internal static let version"* ]]; then
 
     # Get version from Courier file
@@ -10,14 +10,14 @@ cat Sources/Courier/Courier.swift | while read LINE; do
         # Replace PODSPEC version
         NEW_SPEC_VERSION="s.version          = '$VERSION'"
         if [[ $SPEC_VERSION != "" && $NEW_SPEC_VERSION != "" ]]; then
-          sed -i '.bak' "s/$SPEC_VERSION/$NEW_SPEC_VERSION/g" "Courier-iOS.podspec"
+          sed -i '.bak' "s/$SPEC_VERSION/$NEW_SPEC_VERSION/g" "Courier_iOS.podspec"
         fi
 
       fi
     done
 
     # Delete backup file
-    rm "Courier-iOS.podspec.bak"
+    rm "Courier_iOS.podspec.bak"
 
     # Bump the version
     git add .
