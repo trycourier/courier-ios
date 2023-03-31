@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "courier-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/trycourier/courier-ios",
+      "state" : {
+        "branch" : "feature/inbox",
+        "revision" : "e4f7ecdd0c3140665aad608b0c1b9eda7d77a718"
+      }
+    }
+  ],
+  "version" : 2
+}

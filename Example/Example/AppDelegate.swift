@@ -2,19 +2,20 @@
 //  AppDelegate.swift
 //  Example
 //
-//  Created by Michael Miller on 11/17/22.
+//  Created by https://github.com/mikemilla on 11/17/22.
 //
 
 import UIKit
-import Courier
+import Courier_iOS
 import FirebaseCore
 import FirebaseMessaging
 
 @main
 class AppDelegate: CourierDelegate, MessagingDelegate {
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        // Initialize Firebase and FCM
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         
@@ -30,8 +31,6 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         print(message)
         print("\n=================================================\n")
         
-        showMessageAlert(title: "Push Delivered", message: "\(message)")
-        
         // This is how you want to show your notification in the foreground
         // You can pass "[]" to not show the notification to the user or
         // handle this with your own custom styles
@@ -45,20 +44,24 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         print(message)
         print("\n=================================\n")
         
-        showMessageAlert(title: "Push Clicked", message: "\(message)")
+        showMessageAlert(title: "Message Clicked", message: "\(message)")
         
     }
     
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        
+    // MARK: Firebase Cloud Messaging Support
+    
+    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+
         guard let token = fcmToken else { return }
-        
+
         Task {
-            
-            try await Courier.shared.setFCMToken(token)
-            
+            do {
+                try await Courier.shared.setFCMToken(token)
+            } catch {
+                print(String(describing: error))
+            }
         }
-        
+
     }
 
 

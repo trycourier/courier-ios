@@ -1,6 +1,7 @@
 .DS_Store
 /.build
 /Packages
+/Pods
 /*.xcodeproj
 xcuserdata/
 DerivedData/
@@ -10,3 +11,5 @@ DerivedData/
 save_changes.sh
 GoogleService-Info.plist*
 Env.swift
+/Pod-Example/Pods
+/.swiftpm

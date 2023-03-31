@@ -2,10 +2,11 @@
 //  Extras.swift
 //  Example
 //
-//  Created by Michael Miller on 11/17/22.
+//  Created by https://github.com/mikemilla on 11/17/22.
 //
 
 import UIKit
+import Courier_iOS
 
 let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
@@ -88,6 +89,22 @@ extension UIViewController {
                 }
             ))
             
+        }
+        
+    }
+    
+}
+
+extension InboxMessage {
+    
+    func toJson() -> String {
+        
+        do {
+            let jsonEncoder = JSONEncoder()
+            let jsonData = try jsonEncoder.encode(self)
+            return String(data: jsonData, encoding: String.Encoding.utf8) ?? ""
+        } catch {
+            return "Error"
         }
         
     }
