@@ -25,7 +25,9 @@ Common examples you can use to send [`Courier Inbox`](https://github.com/trycour
                 </a>
             </td>
             <td align="left">
-                Needed to authenticate your HTTP requests to the Courier <code>/send</code> api
+                Needed to authenticate your HTTP requests to the Courier <a href="https://www.courier.com/docs/reference/send/message/">
+                    <code>/send</code>
+                </a> api
             </td>
         </tr>
     </tbody>
