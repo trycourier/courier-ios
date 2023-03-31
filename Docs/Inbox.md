@@ -232,6 +232,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
         ...
         
+        // Allows you to listen to all inbox changes and build whatever you'd like
         self.inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: {
                 ...
