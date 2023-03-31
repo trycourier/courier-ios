@@ -4,6 +4,8 @@ Common examples you use to send [`Courier Inbox`](https://github.com/trycourier/
 
 &emsp;
 
+TODO Call out overrides with link
+
 <table>
     <thead>
         <tr>
@@ -19,7 +21,24 @@ Common examples you use to send [`Courier Inbox`](https://github.com/trycourier/
                 </a>
             </td>
             <td align="left">
-                Lorem ipsum dolor
+<code>{
+    "message": {
+        "to": {
+            "user_id": "example_user_id"
+        },
+        "content": {
+            "title": "Hey there 👋",
+            "body": "Have a great day 😁"
+        },
+        "routing": {
+            "method": "all",
+            "channels": [
+                "inbox"
+            ]
+        }
+    }
+}
+</code>
             </td>
         </tr>
         <tr width="600px">
