@@ -70,19 +70,14 @@ TODO Call out overrides with link
 </table>
 
 <table>
-    <thead>
-        <tr>
-            <th width="500px" align="left">Swift Example</th>
-            <th width="500px" align="left">Raw Curl</th>
-        </tr>
-    </thead>
+    <tr>
+        <th width="500px" align="left">Swift Example</th>
+        <th width="500px" align="left">Raw Curl</th>
+    </tr>
     <tr>
         <td>200</td>
         <td>
-
-^ Extra blank line above!
 ```json
-json
 {
     "id": 10,
     "username": "alanpartridge",
@@ -93,16 +88,6 @@ json
     "updated_at": "2015-02-14T20:45:26.540Z"
 }
 ```
-V Extra blank line below!
-
-        </td>
-    </tr>
-    <tr>
-        <td>400</td>
-        <td>
-
-**Markdown** _here_. (Blank lines needed before and after!)
-
         </td>
     </tr>
 </table>
