@@ -177,7 +177,7 @@ You can control your branding from the [`Courier Studio`](https://app.courier.co
 
 ```swift 
 let brandedThemeWithLoadingColorOverride = CourierInboxTheme(
-    brandId: "YOUR_BRAND_ID"
+    brandId: "YOUR_BRAND_ID",
     loadingIndicatorColor: .red, // ⚠️ Will override the brand primary color
     ...
 )
