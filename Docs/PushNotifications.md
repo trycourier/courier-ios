@@ -113,9 +113,8 @@ Select which push notification provider you would like Courier to route push not
 <table>
     <thead>
         <tr>
-            <th width="400px" align="left">Provider</th>
+            <th width="600px" align="left">Provider</th>
             <th width="200px" align="center">Token Syncing</th>
-            <th width="200px" align="center">Setup Guide</th>
             <th width="200px" align="center">Supported</th>
         </tr>
     </thead>
@@ -128,11 +127,6 @@ Select which push notification provider you would like Courier to route push not
             </td>
             <td align="center">
                 <code>Automatic</code>
-            </td>
-            <td align="center">
-                <a href="https://www.courier.com/docs/guides/providers/push/apple-push-notification">
-                    <code>Setup</code>
-                </a>
             </td>
             <td align="center">✅</td>
         </tr>
@@ -147,11 +141,6 @@ Select which push notification provider you would like Courier to route push not
                     <code>Manual</code>
                 </a>
             </td>
-            <td align="center">
-                <a href="https://www.courier.com/docs/guides/providers/push/firebase-fcm/">
-                    <code>Setup</code>
-                </a>
-            </td>
             <td align="center">✅</td>
         </tr>
         <tr width="600px">
@@ -159,9 +148,6 @@ Select which push notification provider you would like Courier to route push not
                 <a href="https://app.courier.com/channels/onesignal">
                     <code>OneSignal</code>
                 </a>
-            </td>
-            <td align="center">
-                —
             </td>
             <td align="center">
                 —
