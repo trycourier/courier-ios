@@ -28,7 +28,7 @@ An in-app notification center list you can use to notify your users. Allows you 
                 </td>
             </tr>
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md">
                     <code>Authentication</code>
                 </a>
             </td>
@@ -298,48 +298,48 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/PrebuiltInboxViewController.swift">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Example/Example/PrebuiltInboxViewController.swift">
                     <code>Default Example</code>
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#default-inbox-example">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#default-inbox-example">
                     <code>Default</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/StyledInboxViewController.swift">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Example/Example/StyledInboxViewController.swift">
                     <code>Styled Example</code>
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#styled-inbox-example">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#styled-inbox-example">
                     <code>Styled</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Example/Example/CustomInboxViewController.swift">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Example/Example/CustomInboxViewController.swift">
                     <code>Custom Example</code>
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#custom-inbox-example">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#custom-inbox-example">
                     <code>Custom</code>
                 </a>
             </td>
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/SwiftUI-Example/SwiftUI-Example/ContentView.swift">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/SwiftUI-Example/SwiftUI-Example/ContentView.swift">
                     <code>SwiftUI Example</code>
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md#styled-inbox-example">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#styled-inbox-example">
                     <code>Styled</code>
                 </a>
             </td>

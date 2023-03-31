@@ -64,7 +64,7 @@
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#using-swift-package-manager">
+                <a href="https://github.com/trycourier/courier-ios/tree/master#using-swift-package-manager">
                     <code>Swift Package Manager</code>
                 </a>
             </td>
@@ -72,7 +72,7 @@
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs#using-cocoapods">
+                <a href="https://github.com/trycourier/courier-ios/tree/master#using-cocoapods">
                     <code>Cocoapods</code>
                 </a>
             </td>
@@ -134,7 +134,7 @@ These are all the available features of the SDK.
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md">
                     <code>Authentication</code>
                 </a>
             </td>
@@ -144,7 +144,7 @@ These are all the available features of the SDK.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Inbox.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md">
                     <code>Courier Inbox</code>
                 </a>
             </td>
@@ -154,7 +154,7 @@ These are all the available features of the SDK.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/PushNotifications.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md">
                     <code>Push Notifications</code>
                 </a>
             </td>
@@ -164,7 +164,7 @@ These are all the available features of the SDK.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Testing.md">
                     <code>Testing</code>
                 </a>
             </td>
@@ -193,7 +193,7 @@ Several common starter projects using the SDK.
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Example">
+                <a href="https://github.com/trycourier/courier-ios/tree/master/Example">
                     <code>Example</code>
                 </a>
             </td>
@@ -203,7 +203,7 @@ Several common starter projects using the SDK.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/Pod-Example">
+                <a href="https://github.com/trycourier/courier-ios/tree/master/Pod-Example">
                     <code>Example</code>
                 </a>
             </td>
@@ -213,7 +213,7 @@ Several common starter projects using the SDK.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/feature/inbox-docs/SwiftUI-Example">
+                <a href="https://github.com/trycourier/courier-ios/tree/master/SwiftUI-Example">
                     <code>Example</code>
                 </a>
             </td>
