@@ -70,10 +70,12 @@ TODO Call out overrides with link
 </table>
 
 <table>
-    <tr>
-        <th width="500px" align="left">Swift Example</th>
-        <th width="500px" align="left">Raw Curl</th>
-    </tr>
+    <thead>
+        <tr>
+            <th width="500px" align="left">Swift Example</th>
+            <th width="500px" align="left">Raw Curl</th>
+        </tr>
+    </thead>
     <tr>
         <td>200</td>
         <td>
