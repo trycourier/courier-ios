@@ -17,6 +17,16 @@ An in-app notification center list you can use to notify your users. Allows you 
     </thead>
     <tbody>
         <tr width="600px">
+            <tr width="600px">
+                <td align="left">
+                    <a href="https://app.courier.com/channels/courier">
+                        <code>Courier Inbox Provider</code>
+                    </a>
+                </td>
+                <td align="left">
+                    Needed to link your Courier Inbox to the SDK
+                </td>
+            </tr>
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Authentication.md">
                     <code>Authentication</code>
