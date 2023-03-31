@@ -1,4 +1,4 @@
-cat Sources/Courier/Courier_iOS.swift | while read LINE; do
+cat Sources/Courier_iOS/Courier_iOS.swift | while read LINE; do
   if [[ $LINE == *"internal static let version"* ]]; then
 
     # Get version from Courier file
