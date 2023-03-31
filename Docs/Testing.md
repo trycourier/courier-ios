@@ -17,7 +17,7 @@ TODO Call out overrides with link
     <thead>
         <tr>
             <th width="800px" align="left">Requirement</th>
-            <th width="200px" align="left">Configure</th>
+            <th width="200px" align="center">Configure</th>
         </tr>
     </thead>
     <tbody>
@@ -27,7 +27,7 @@ TODO Call out overrides with link
                     <code>Courier Inbox</code>
                 </a>
             </td>
-            <td align="left">
+            <td align="center">
                 <a href="https://app.courier.com/channels/courier">
                     <code>Setup</code>
                 </a>

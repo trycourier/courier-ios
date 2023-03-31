@@ -11,7 +11,7 @@ An in-app notification center list you can use to notify your users. Allows you 
 <table>
     <thead>
         <tr>
-            <th width="250px" align="left">Feature</th>
+            <th width="250px" align="left">Requirement</th>
             <th width="750px" align="left">Reason</th>
         </tr>
     </thead>
