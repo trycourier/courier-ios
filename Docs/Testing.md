@@ -1,4 +1,4 @@
-⚠️ Courier is actively working on improving our developer experience! More testing examples coming soon!
+⚠️ Courier is actively working on improving our developer experience. More common/advanced testing examples coming soon.
 
 ---
 
