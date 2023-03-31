@@ -335,3 +335,5 @@ Task {
 ```
 
 2. Send a test message
+
+[`More Testing Examples Here`](https://github.com/trycourier/courier-ios/blob/feature/inbox-docs/Docs/Testing.md)
