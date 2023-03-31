@@ -4,6 +4,12 @@ Common examples you use to send [`Courier Inbox`](https://github.com/trycourier/
 
 &emsp;
 
+# Courier Inbox
+
+
+
+&emsp;
+
 TODO Call out overrides with link
 
 <table>
@@ -21,7 +27,7 @@ TODO Call out overrides with link
                 </a>
             </td>
             <td align="left">
-```json
+<pre>
 {
     "message": {
         "to": {
@@ -39,7 +45,7 @@ TODO Call out overrides with link
         }
     }
 }
-```
+</pre>
             </td>
         </tr>
         <tr width="600px">
