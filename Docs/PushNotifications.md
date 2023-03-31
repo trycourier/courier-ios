@@ -305,30 +305,23 @@ end
 ## 5. Send a Test Push Notification
 
 ```swift
-class YourViewController: UIViewController {
+import Courier_iOS
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        Task {
+Task {
                     
-            // Make sure your user is signed into Courier
-            // This allows Courier to sync push notification tokens automatically
-            try await Courier.shared.signIn(
-                accessToken: Env.COURIER_ACCESS_TOKEN,
-                clientKey: Env.COURIER_CLIENT_KEY,
-                userId: "example_user_id"
-            )
-            
-            // Shows a popup where your user can allow or deny push notifications
-            // You should put this in a place that makes sense for your app
-            // You cannot ask the user for push notification permissions again
-            // if they deny, you will have to get them to open their device settings to change this
-            try await Courier.requestNotificationPermission()
-            
-        }
-        
-    }
+    // Make sure your user is signed into Courier
+    // This allows Courier to sync push notification tokens automatically
+    try await Courier.shared.signIn(
+        accessToken: Env.COURIER_ACCESS_TOKEN,
+        clientKey: Env.COURIER_CLIENT_KEY,
+        userId: "example_user_id"
+    )
+
+    // Shows a popup where your user can allow or deny push notifications
+    // You should put this in a place that makes sense for your app
+    // You cannot ask the user for push notification permissions again
+    // if they deny, you will have to get them to open their device settings to change this
+    try await Courier.requestNotificationPermission()
 
 }
 ```
@@ -337,29 +330,21 @@ class YourViewController: UIViewController {
 
 
 ```swift
-class YourViewController: UIViewController {
+import Courier_iOS
 
-    ...
-    
-    func sendTestMessage() {
+Task {
         
-        Task {
-        
-            // Sends a test message
-            // "YOUR_AUTH_KEY" is found here: https://app.courier.com/settings/api-keys
-            // DO NOT LEAVE "YOUR_AUTH_KEY" in your production app. This is only for testing.
-            try await Courier.shared.sendMessage(
-                authKey: "YOUR_AUTH_KEY",
-                userId: "example_user_id",
-                title: "Hello!",
-                message: "I hope you are having a great day",
-                providers: [.apns, .fcm]
-            )
-        
-        }
-        
-    }
-    
+    // Sends a test message
+    // "YOUR_AUTH_KEY" is found here: https://app.courier.com/settings/api-keys
+    // DO NOT LEAVE "YOUR_AUTH_KEY" in your production app. This is only for testing.
+    try await Courier.shared.sendMessage(
+        authKey: "YOUR_AUTH_KEY",
+        userId: "example_user_id",
+        title: "Hello!",
+        message: "I hope you are having a great day",
+        providers: [.apns, .fcm]
+    )
+
 }
 ```
 
