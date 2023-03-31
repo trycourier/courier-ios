@@ -21,7 +21,8 @@ TODO Call out overrides with link
                 </a>
             </td>
             <td align="left">
-<code>{
+```json
+{
     "message": {
         "to": {
             "user_id": "example_user_id"
@@ -38,7 +39,7 @@ TODO Call out overrides with link
         }
     }
 }
-</code>
+```
             </td>
         </tr>
         <tr width="600px">
