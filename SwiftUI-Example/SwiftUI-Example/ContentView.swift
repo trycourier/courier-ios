@@ -48,13 +48,13 @@ struct ContentView: View {
         
         Task {
             
-            let COURIER_ACCESS_TOKEN = "pk_prod_H48Y2E9VV94YP5K60JAYPGY3M3NH"
-            let COURIER_CLIENT_KEY = "YWQxN2M2ZmMtNDU5OS00ZThlLWE4NTktZDQ4YzVlYjkxM2Mx"
+            let COURIER_ACCESS_TOKEN = "YOUR_ACCESS_TOKEN"
+            let COURIER_CLIENT_KEY = "YOUR_CLIENT_KEY"
             
             try await Courier.shared.signIn(
                 accessToken: COURIER_ACCESS_TOKEN,
                 clientKey: COURIER_CLIENT_KEY,
-                userId: "mike"
+                userId: "example_user_id"
             )
             
         }
