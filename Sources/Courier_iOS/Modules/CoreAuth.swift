@@ -11,6 +11,8 @@ internal class CoreAuth {
     
     internal let userManager = UserManager()
     
+    private var listeners: [CourierAuthenticationListener] = []
+    
     internal func signIn(accessToken: String, clientKey: String?, userId: String, push: CorePush, inbox: CoreInbox) async throws {
         
         Courier.log("Updating Courier User Profile")
@@ -31,6 +33,9 @@ internal class CoreAuth {
             
             // Batch all functions together
             let _ = try await [putTokens, connectInbox]
+            
+            // Notify
+            notifyListeners()
             
         } catch {
             
@@ -56,6 +61,37 @@ internal class CoreAuth {
         // existing tokens in Courier if failure
         userManager.removeCredentials()
         
+        // Notify
+        notifyListeners()
+        
+    }
+    
+    private func notifyListeners() {
+        Utils.runOnMainThread { [weak self] in
+            self?.listeners.forEach {
+                $0.onChange(Courier.shared.userId)
+            }
+        }
+    }
+    
+    internal func addAuthChangeListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
+        
+        // Create a new authentication listener
+        let listener = CourierAuthenticationListener(
+            onChange: onChange
+        )
+        
+        // Keep track of listener
+        listeners.append(listener)
+        
+        return listener
+        
+    }
+    
+    internal func removeAuthenticationListener(listener: CourierAuthenticationListener) {
+        listeners.removeAll(where: {
+            return $0 == listener
+        })
     }
     
 }
@@ -97,8 +133,8 @@ extension Courier {
     }
     
     /**
-     * Set the current credentials for the user and their access token
-     * You should consider using this in areas where you update your local user's state
+     Set the current credentials for the user and their access token
+     You should consider using this in areas where you update your local user's state
      */
     @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String) async throws {
         try await auth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: push, inbox: inbox)
@@ -116,9 +152,9 @@ extension Courier {
     }
     
     /**
-     * Clears the current user id and access token
-     * You should call this when your user signs out
-     * It will remove the current tokens used for this user in Courier so they do not receive pushes they should not get
+     Clears the current user id and access token
+     You should call this when your user signs out
+     It will remove the current tokens used for this user in Courier so they do not receive pushes they should not get
      */
     @objc public func signOut() async throws {
         try await auth.signOut(push: push, inbox: inbox)
@@ -133,6 +169,13 @@ extension Courier {
                 onFailure(error)
             }
         }
+    }
+    
+    /**
+     Gets called when the Authentication state for the current user changes in Courier
+     */
+    @discardableResult @objc public func addAuthenticationListener(_ onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
+        return auth.addAuthChangeListener(onChange: onChange)
     }
     
 }

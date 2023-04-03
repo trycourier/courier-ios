@@ -36,7 +36,6 @@ import UIKit
     
     // MARK: Repository
     
-    private lazy var brandsRepo = BrandsRepository()
     private lazy var inboxRepo = InboxRepository()
     
     // MARK: Subviews
@@ -49,6 +48,10 @@ import UIKit
     // MARK: Constraints
     
     private var infoViewY: NSLayoutConstraint? = nil
+    
+    // MARK: Authentication
+    
+    private var authListener: CourierAuthenticationListener? = nil
     
     // MARK: State
     
@@ -145,6 +148,16 @@ import UIKit
     }
     
     private func setup() {
+        
+        // Called when the auth state changes
+        authListener = Courier.shared.addAuthenticationListener { userId in
+            if (userId != nil) {
+                Task {
+                    await fetchBrands()
+                    traitCollectionDidChange(nil)
+                }
+            }
+        }
         
         [tableView, courierBar, infoView, loadingIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -506,9 +519,10 @@ import UIKit
     }
     
     /**
-     Kills the listener and timer if the view is deallocated
+     Clear the listeners
      */
     deinit {
+        self.authListener?.remove()
         self.inboxListener?.remove()
     }
 

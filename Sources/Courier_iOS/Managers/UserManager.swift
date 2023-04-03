@@ -20,13 +20,21 @@ internal class UserManager {
     @discardableResult
     func setCredentials(userId: String, accessToken: String, clientKey: String?) -> Dictionary<String, String>? {
         
-        let dict = [
+        // Create the dictionary
+        var dict = [
             userIdKey: userId,
-            accessTokenKey: accessToken,
-            clientKeyKey: clientKey
+            accessTokenKey: accessToken
         ]
         
+        // Add client key if possible
+        if let key = clientKey {
+            dict[clientKeyKey] = key
+        }
+        
+        // Set the values
         defaults.set(dict, forKey: credentialsKey)
+        
+        // Return the values
         return getCredentials()
         
     }

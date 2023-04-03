@@ -12,7 +12,33 @@
 		2729766429D1FC7400B31EEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2729766329D1FC7400B31EEB /* Assets.xcassets */; };
 		2729766729D1FC7400B31EEB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2729766629D1FC7400B31EEB /* Preview Assets.xcassets */; };
 		2729767529D2009600B31EEB /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2729767429D2009600B31EEB /* Courier_iOS */; };
+		2729768F29DB323A00B31EEB /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729768E29DB323A00B31EEB /* NotificationService.swift */; };
+		2729769329DB323A00B31EEB /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2729768C29DB323A00B31EEB /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2729769129DB323A00B31EEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2729765429D1FC7300B31EEB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2729768B29DB323900B31EEB;
+			remoteInfo = CourierService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2729768429DB2B6300B31EEB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2729769329DB323A00B31EEB /* CourierService.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2729765C29D1FC7300B31EEB /* SwiftUI-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftUI-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -20,6 +46,9 @@
 		2729766129D1FC7300B31EEB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2729766329D1FC7400B31EEB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2729766629D1FC7400B31EEB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2729768C29DB323A00B31EEB /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2729768E29DB323A00B31EEB /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		2729769029DB323A00B31EEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +60,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2729768929DB323900B31EEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -38,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				2729765E29D1FC7300B31EEB /* SwiftUI-Example */,
+				2729768D29DB323A00B31EEB /* CourierService */,
 				2729765D29D1FC7300B31EEB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -46,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				2729765C29D1FC7300B31EEB /* SwiftUI-Example.app */,
+				2729768C29DB323A00B31EEB /* CourierService.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -69,6 +107,15 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		2729768D29DB323A00B31EEB /* CourierService */ = {
+			isa = PBXGroup;
+			children = (
+				2729768E29DB323A00B31EEB /* NotificationService.swift */,
+				2729769029DB323A00B31EEB /* Info.plist */,
+			);
+			path = CourierService;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -79,10 +126,12 @@
 				2729765829D1FC7300B31EEB /* Sources */,
 				2729765929D1FC7300B31EEB /* Frameworks */,
 				2729765A29D1FC7300B31EEB /* Resources */,
+				2729768429DB2B6300B31EEB /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2729769229DB323A00B31EEB /* PBXTargetDependency */,
 			);
 			name = "SwiftUI-Example";
 			packageProductDependencies = (
@@ -91,6 +140,23 @@
 			productName = "SwiftUI-Example";
 			productReference = 2729765C29D1FC7300B31EEB /* SwiftUI-Example.app */;
 			productType = "com.apple.product-type.application";
+		};
+		2729768B29DB323900B31EEB /* CourierService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2729769429DB323A00B31EEB /* Build configuration list for PBXNativeTarget "CourierService" */;
+			buildPhases = (
+				2729768829DB323900B31EEB /* Sources */,
+				2729768929DB323900B31EEB /* Frameworks */,
+				2729768A29DB323900B31EEB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CourierService;
+			productName = CourierService;
+			productReference = 2729768C29DB323A00B31EEB /* CourierService.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -103,6 +169,9 @@
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					2729765B29D1FC7300B31EEB = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					2729768B29DB323900B31EEB = {
 						CreatedOnToolsVersion = 14.2;
 					};
 				};
@@ -124,6 +193,7 @@
 			projectRoot = "";
 			targets = (
 				2729765B29D1FC7300B31EEB /* SwiftUI-Example */,
+				2729768B29DB323900B31EEB /* CourierService */,
 			);
 		};
 /* End PBXProject section */
@@ -135,6 +205,13 @@
 			files = (
 				2729766729D1FC7400B31EEB /* Preview Assets.xcassets in Resources */,
 				2729766429D1FC7400B31EEB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2729768A29DB323900B31EEB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,7 +227,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2729768829DB323900B31EEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2729768F29DB323A00B31EEB /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2729769229DB323A00B31EEB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2729768B29DB323900B31EEB /* CourierService */;
+			targetProxy = 2729769129DB323A00B31EEB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2729766829D1FC7400B31EEB /* Debug */ = {
@@ -270,6 +363,7 @@
 		2729766B29D1FC7400B31EEB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -300,6 +394,7 @@
 		2729766C29D1FC7400B31EEB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -327,6 +422,54 @@
 			};
 			name = Release;
 		};
+		2729769529DB323A00B31EEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourierService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.ios-example.CourierService";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2729769629DB323A00B31EEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 83BJVWGX4Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CourierService/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.courier.ios-example.CourierService";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -344,6 +487,15 @@
 			buildConfigurations = (
 				2729766B29D1FC7400B31EEB /* Debug */,
 				2729766C29D1FC7400B31EEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2729769429DB323A00B31EEB /* Build configuration list for PBXNativeTarget "CourierService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2729769529DB323A00B31EEB /* Debug */,
+				2729769629DB323A00B31EEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
