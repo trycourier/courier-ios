@@ -171,20 +171,22 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing Inbox Get Messages")
         
         var canPage = true
+        var error: String? = nil
         
         let listener = Courier.shared.addInboxListener(
             onInitialLoad: {
                 print("Loading")
             },
-            onError: { error in
-                print(error)
+            onError: { e in
+                print(e)
+                error = String(describing: e)
             },
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
                 canPage = canPaginate
             }
         )
         
-        while (canPage) {
+        while (canPage && error != nil) {
             try await Courier.shared.fetchNextPageOfMessages()
         }
         
@@ -192,6 +194,8 @@ final class CourierTests: XCTestCase {
         exampleMessageId = Courier.shared.inboxMessages?.first?.messageId
         
         listener.remove()
+        
+        XCTAssertEqual(error, nil)
 
     }
     
@@ -300,10 +304,11 @@ final class CourierTests: XCTestCase {
 
         try await Courier.shared.signOut()
 
+        XCTAssertEqual(Courier.shared.accessToken, nil)
+        XCTAssertEqual(Courier.shared.clientKey, nil)
+        XCTAssertEqual(Courier.shared.userId, nil)
         XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
         XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
-        XCTAssertEqual(Courier.shared.accessToken, nil)
-        XCTAssertEqual(Courier.shared.userId, nil)
 
     }
     
