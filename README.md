@@ -134,7 +134,7 @@ These are all the available features of the SDK.
     </thead>
     <tbody>
         <tr width="600px">
-            <td align="right">
+            <td align="center">
                 1
             </td>
             <td align="left">
@@ -147,7 +147,7 @@ These are all the available features of the SDK.
             </td>
         </tr>
         <tr width="600px">
-            <td align="right">
+            <td align="center">
                 2
             </td>
             <td align="left">
@@ -160,7 +160,7 @@ These are all the available features of the SDK.
             </td>
         </tr>
         <tr width="600px">
-            <td align="right">
+            <td align="center">
                 3
             </td>
             <td align="left">
@@ -173,7 +173,7 @@ These are all the available features of the SDK.
             </td>
         </tr>
         <tr width="600px">
-            <td align="right">
+            <td align="center">
                 4
             </td>
             <td align="left">
