@@ -150,11 +150,11 @@ import UIKit
     private func setup() {
         
         // Called when the auth state changes
-        authListener = Courier.shared.addAuthenticationListener { userId in
+        authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
             if (userId != nil) {
                 Task {
-                    await fetchBrands()
-                    traitCollectionDidChange(nil)
+                    await self?.fetchBrands()
+                    self?.traitCollectionDidChange(nil)
                 }
             }
         }
