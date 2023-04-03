@@ -62,9 +62,17 @@ Task {
 
 }
 
-// Other available properties
+// Other available properties and functions
+
 let userId = Courier.shared.userId
 let isUserSignedIn = Courier.shared.isUserSignedIn
+
+let listener = Courier.shared.addAuthenticationListener { userId in
+    print(userId ?? "No userId found")
+}
+
+listener.remove()
+
 ```
 
 &emsp;

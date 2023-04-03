@@ -40,6 +40,10 @@ final class CourierTests: XCTestCase {
     func testC_signInWithAuthKey() async throws {
         
         print("\n🔬 Starting Courier SDK with JWT")
+        
+        Courier.shared.addAuthenticationListener { userId in
+            print(userId ?? "No userId found")
+        }
 
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_ACCESS_TOKEN,
@@ -48,7 +52,7 @@ final class CourierTests: XCTestCase {
 
         XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
+        XCTAssertEqual(Courier.shared.clientKey, nil)
         
     }
     
@@ -60,6 +64,10 @@ final class CourierTests: XCTestCase {
             authKey: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID
         )
+        
+        Courier.shared.addAuthenticationListener { userId in
+            print(userId ?? "No userId found")
+        }
 
         try await Courier.shared.signIn(
             accessToken: jwt,
@@ -285,6 +293,10 @@ final class CourierTests: XCTestCase {
     func testQ_signOut() async throws {
 
         print("\n🔬 Testing Sign Out")
+        
+        Courier.shared.addAuthenticationListener { userId in
+            print(userId ?? "No userId found")
+        }
 
         try await Courier.shared.signOut()
 
