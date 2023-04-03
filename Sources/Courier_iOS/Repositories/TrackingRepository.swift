@@ -9,9 +9,9 @@ import Foundation
 
 internal class TrackingRepository: Repository {
     
-    internal func postTrackingUrl(url: String, event: CourierPushEvent) async throws -> Void {
+    internal func postTrackingUrl(url: String, event: CourierPushEvent) async throws {
         
-        return try await post(url: url, body: [
+        try await post(url: url, body: [
             "event": event.rawValue
         ])
 

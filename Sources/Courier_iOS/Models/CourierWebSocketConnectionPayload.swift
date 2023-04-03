@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: Internal Classes
+
 internal struct WebSocketConnectionPayload: Codable {
     var query: String
 }

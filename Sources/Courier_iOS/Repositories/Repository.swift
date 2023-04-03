@@ -212,4 +212,14 @@ extension Repository {
         return try await http(accessToken: accessToken, userId: userId, url: url, method: "PUT", body: body, validCodes: validCodes)
     }
     
+    // MARK: PATCH
+    
+    internal func patch<T: Codable>(_ type: T.Type, accessToken: String, userId: String, url: String, body: Codable, validCodes: [Int] = [200]) async throws -> T {
+        return try await http(type, accessToken: accessToken, userId: userId, url: url, method: "PATCH", body: body, validCodes: validCodes)
+    }
+    
+    internal func patch(accessToken: String? = nil, userId: String? = nil, url: String, body: Codable, validCodes: [Int] = [200]) async throws {
+        return try await http(accessToken: accessToken, userId: userId, url: url, method: "PATCH", body: body, validCodes: validCodes)
+    }
+    
 }
