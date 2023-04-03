@@ -143,7 +143,7 @@ These are all the available features of the SDK.
                 </a>
             </td>
             <td align="left">
-                Manages user credentials between app sessions.
+                Manages user credentials between app sessions. Required if you would like to use `CourierInbox` and `Push Notifications`.
             </td>
         </tr>
         <tr width="600px">
@@ -156,7 +156,7 @@ These are all the available features of the SDK.
                 </a>
             </td>
             <td align="left">
-                An in-app notification center you can use to notify your users.
+                An in-app notification center you can use to notify your users. Comes with a prebuilt UI and also supports fully custom UIs.
             </td>
         </tr>
         <tr width="600px">
