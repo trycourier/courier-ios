@@ -143,7 +143,7 @@ These are all the available features of the SDK.
                 </a>
             </td>
             <td align="left">
-                Manages user credentials between app sessions. Required if you would like to use `CourierInbox` and `Push Notifications`.
+                Manages user credentials between app sessions. Required if you would like to use <code>CourierInbox</code> and <code>Push Notifications</code>.
             </td>
         </tr>
         <tr width="600px">
