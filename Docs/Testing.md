@@ -122,7 +122,7 @@ try await Courier.shared.sendMessage(
 ```bash
 curl --request POST \
   --url https://api.courier.com/send \
-  --header 'Authorization: Bearer pk_prod_H48Y2E9VV94YP5K60JAYPGY3M3NH' \
+  --header 'Authorization: Bearer YOUR_AUTH_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
     "message": {
@@ -183,7 +183,7 @@ try await Courier.shared.sendMessage(
 ```bash
 curl --request POST \
   --url https://api.courier.com/send \
-  --header 'Authorization: Bearer pk_prod_H48Y2E9VV94YP5K60JAYPGY3M3NH' \
+  --header 'Authorization: Bearer YOUR_AUTH_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
     "message": {
