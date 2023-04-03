@@ -127,12 +127,16 @@ These are all the available features of the SDK.
 <table>
     <thead>
         <tr>
+            <th width="25px"></th>
             <th width="250px" align="left">Feature</th>
-            <th width="750px" align="left">Description</th>
+            <th width="725px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
         <tr width="600px">
+            <td align="right">
+                1
+            </td>
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md">
                     <code>Authentication</code>
@@ -143,6 +147,9 @@ These are all the available features of the SDK.
             </td>
         </tr>
         <tr width="600px">
+            <td align="right">
+                2
+            </td>
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md">
                     <code>Courier Inbox</code>
@@ -153,6 +160,9 @@ These are all the available features of the SDK.
             </td>
         </tr>
         <tr width="600px">
+            <td align="right">
+                3
+            </td>
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md">
                     <code>Push Notifications</code>
@@ -163,6 +173,9 @@ These are all the available features of the SDK.
             </td>
         </tr>
         <tr width="600px">
+            <td align="right">
+                4
+            </td>
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Testing.md">
                     <code>Testing</code>
