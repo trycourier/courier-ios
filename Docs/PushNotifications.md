@@ -81,7 +81,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#supported-providers">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#1-setup-a-push-notification-provider">
                     <code>A Configured Provider</code>
                 </a>
             </td>
