@@ -587,7 +587,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "feature/inbox-brand-fix";
+				branch = master;
 				kind = branch;
 			};
 		};
