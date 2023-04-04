@@ -11,7 +11,7 @@ From here, you are all set to start working on the package! 🙌
 
 ## Developing
 
-1. Make your changes to the `Sources/Courier` directory
+1. Make your changes to the `Sources/Courier_iOS` directory
 2. When changes are ready, commit them to a branch in Github
   - Yes, this is weird, but it's what Apple recommends I guess 🤷‍♂️
 3. Open the `Example/Example.xcodeproj`
@@ -34,7 +34,7 @@ Courier supports 2 packages managers:
 2. Cocoapods (Used for traditional iOS apps, Flutter and React Native)
 
 To release the package:
-1. Update the `version` in `Sources/Courier/Courier.swift` to be the version you would like to release
+1. Update the `version` in `Sources/Courier_iOS/Courier_iOS.swift` to be the version you would like to release
 2. Run `sh release.sh` from root
 
 This will create a new release in github and cocoapods that anyone can install. Requires special Github permissions.
