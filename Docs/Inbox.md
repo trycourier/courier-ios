@@ -33,7 +33,7 @@ An in-app notification center list you can use to notify your users. Allows you 
                 </a>
             </td>
             <td align="left">
-                Needs Authentication to view inbox messages that belong to a user.
+                Needed to view inbox messages that belong to a user.
             </td>
         </tr>
     </tbody>
