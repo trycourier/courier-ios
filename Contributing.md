@@ -33,7 +33,7 @@ Courier supports 2 packages managers:
 1. Swift Package Manager (Which is the style the project is based on)
 2. Cocoapods (Used for traditional iOS apps, Flutter and React Native)
 
-To release the app:
+To release the package:
 1. Update the `version` in `Sources/Courier/Courier.swift` to be the version you would like to release
 2. Run `sh release.sh` from root
 
