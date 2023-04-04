@@ -211,6 +211,8 @@ class AppDelegate: CourierDelegate {
     
 ### FCM - Firebase Cloud Messaging Support
 
+⚠️ The [`Firebase iOS package`](https://firebase.google.com/docs/ios/setup) is required
+
 Here is how you can configure your project to support FCM tokens.
 
 ```swift
