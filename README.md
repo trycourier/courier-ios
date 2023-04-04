@@ -64,7 +64,7 @@
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/master#using-swift-package-manager">
+                <a href="https://github.com/trycourier/courier-ios#using-swift-package-manager">
                     <code>Swift Package Manager</code>
                 </a>
             </td>
@@ -72,7 +72,7 @@
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/master#using-cocoapods">
+                <a href="https://github.com/trycourier/courier-ios#using-cocoapods">
                     <code>Cocoapods</code>
                 </a>
             </td>
