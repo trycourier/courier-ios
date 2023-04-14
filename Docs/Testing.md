@@ -1,7 +1,3 @@
-⚠️ Courier is actively working on improving our developer experience. More common/advanced testing examples coming soon.
-
----
-
 # Testing
 
 Common examples you can use to send [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) messages and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) to your users.
@@ -86,9 +82,7 @@ curl --request POST \
 </tr>
 </table>
 
-<!--### Result-->
-<!---->
-<!--<img width="894" alt="apns-push" src="https://user-images.githubusercontent.com/6370613/229195536-57ed3323-73cf-480a-89bf-d123063ff02a.png">-->
+<img width="471" alt="inbox-example" src="https://user-images.githubusercontent.com/6370613/232109373-2e309171-fdb1-41f1-9652-c8a12c6f9d58.png">
 
 &emsp;
 
