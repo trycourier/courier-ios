@@ -82,6 +82,8 @@ curl --request POST \
 </tr>
 </table>
 
+### Result
+
 <img width="471" alt="inbox-example" src="https://user-images.githubusercontent.com/6370613/232109373-2e309171-fdb1-41f1-9652-c8a12c6f9d58.png">
 
 &emsp;
