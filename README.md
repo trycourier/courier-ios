@@ -1,4 +1,4 @@
-<img width="1000" alt="banner" src="https://user-images.githubusercontent.com/6370613/228920880-76fe5786-1baf-4525-a9d8-9f8a669ae95b.png">
+<img width="1000" alt="banner" src="https://user-images.githubusercontent.com/6370613/232106835-cf4e584c-9453-40bf-88be-7bf8dfe59886.png">
 
 &emsp;
 
