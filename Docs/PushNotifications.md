@@ -207,7 +207,7 @@ class AppDelegate: CourierDelegate {
 1. In your `AppDelegate`, add `import Courier_iOS`
 2. Change your `AppDelegate` to extend the `CourierDelegate`
     * This adds simple functions to handle push notification delivery and clicks
-    * This automatically sync APNS tokens to Courier
+    * This automatically syncs APNS tokens to Courier
     
 ### FCM - Firebase Cloud Messaging Support
 
