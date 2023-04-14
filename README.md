@@ -239,7 +239,7 @@ Several common starter projects using the SDK.
 
 &emsp;
 
-## **Share feedback with Courier**
+# **Share feedback with Courier**
 
 We are building the best SDKs for handling notifications! Have an idea or feedback about our SDKs? Here are some links to contact us:
 
