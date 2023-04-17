@@ -129,6 +129,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                         href
                         style
                         background_color
+                        data
                     }
                 }
             }
