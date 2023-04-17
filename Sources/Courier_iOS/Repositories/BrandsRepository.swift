@@ -29,15 +29,20 @@ internal class BrandsRepository: Repository {
         }
         """
         
-        let response = try await graphQLQuery(
-            CourierBrandResponse.self,
+        let data = try await graphQLQuery(
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.baseGraphQL,
             query: query
         )
         
-        return response.data.brand
+        do {
+            let res = try JSONDecoder().decode(CourierBrandResponse.self, from: data ?? Data())
+            return res.data.brand
+        } catch {
+            Courier.log(error.friendlyMessage)
+            throw CourierError.requestParsingError
+        }
         
     }
     

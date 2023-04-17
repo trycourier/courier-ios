@@ -27,8 +27,10 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 
     override func pushNotificationDeliveredInForeground(message: [AnyHashable : Any]) -> UNNotificationPresentationOptions {
         
+        let json = message.toJson() ?? "Error"
+        
         print("\n=== 💌 Push Notification Delivered In Foreground ===\n")
-        print(message)
+        print(json)
         print("\n=================================================\n")
         
         // This is how you want to show your notification in the foreground
@@ -40,11 +42,13 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
     
     override func pushNotificationClicked(message: [AnyHashable : Any]) {
         
+        let json = message.toJson() ?? "Error"
+        
         print("\n=== 👉 Push Notification Clicked ===\n")
-        print(message)
+        print(json)
         print("\n=================================\n")
         
-        showMessageAlert(title: "Message Clicked", message: "\(message)")
+        showMessageAlert(title: "Message Clicked", message: json)
         
     }
     

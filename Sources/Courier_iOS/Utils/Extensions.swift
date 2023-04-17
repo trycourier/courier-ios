@@ -107,6 +107,18 @@ extension Date {
         
     }
     
+    internal var timestamp: String {
+        get {
+            if #available(iOS 15.0, *) {
+                return ISO8601Format()
+            } else {
+                let formatter = ISO8601DateFormatter()
+                formatter.formatOptions.insert(.withFractionalSeconds)
+                return formatter.string(from: self)
+            }
+        }
+    }
+    
 }
 
 extension UIColor {
@@ -149,22 +161,6 @@ extension UIColor {
 
 }
 
-extension Date {
-    
-    internal var timestamp: String {
-        get {
-            if #available(iOS 15.0, *) {
-                return ISO8601Format()
-            } else {
-                let formatter = ISO8601DateFormatter()
-                formatter.formatOptions.insert(.withFractionalSeconds)
-                return formatter.string(from: self)
-            }
-        }
-    }
-    
-}
-
 extension Bundle {
     
     internal static func current(for className: AnyClass) -> Bundle {
@@ -174,6 +170,30 @@ extension Bundle {
         let bundle = Bundle(for: className)
         return Bundle(url: bundle.url(forResource: "Media", withExtension: "bundle")!)!
         #endif
+    }
+    
+}
+
+extension Dictionary {
+    
+    func toJson() -> Data? {
+        do {
+            return try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
+        } catch {
+            Courier.log(error.localizedDescription)
+            return nil
+        }
+    }
+    
+}
+
+extension Data {
+    
+    func toPreview() -> String {
+        guard let object = try? JSONSerialization.jsonObject(with: self, options: []),
+              let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
+              let prettyPrintedString = String(data: data, encoding: .utf8) else { return "" }
+        return prettyPrintedString
     }
     
 }

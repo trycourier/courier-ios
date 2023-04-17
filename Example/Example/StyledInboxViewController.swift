@@ -83,7 +83,7 @@ class StyledInboxViewController: UIViewController {
                 print(index, message)
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
-                print(action, message, index)
+                print(action.href, message, index)
             },
             didScrollInbox: { scrollView in
                 print(scrollView.contentOffset.y)

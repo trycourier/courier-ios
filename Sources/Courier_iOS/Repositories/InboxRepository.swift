@@ -135,15 +135,20 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         }
         """
         
-        let response = try await graphQLQuery(
-            InboxResponse.self,
+        let data = try await graphQLQuery(
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
             query: query
         )
         
-        return response.data
+        do {
+            let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
+            return res.data
+        } catch {
+            Courier.log(error.friendlyMessage)
+            throw CourierError.requestParsingError
+        }
 
     }
     
@@ -164,15 +169,20 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         }
         """
         
-        let response = try await graphQLQuery(
-            InboxResponse.self,
+        let data = try await graphQLQuery(
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
             query: query
         )
         
-        return response.data.count ?? 0
+        do {
+            let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
+            return res.data.count ?? 0
+        } catch {
+            Courier.log(error.friendlyMessage)
+            throw CourierError.requestParsingError
+        }
 
     }
     

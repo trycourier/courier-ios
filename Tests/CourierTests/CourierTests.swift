@@ -109,12 +109,29 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Sending APNS Message")
         
+        let title = "APNS message sent"
+        let body = "Hello from Xcode tests 👋"
+        
         let requestId = try await Courier.shared.sendMessage(
             authKey: Env.COURIER_ACCESS_TOKEN,
-            userId: Env.COURIER_USER_ID,
-            title: "🐤 Chirp Chirp from APNS",
-            message: "Message sent from Xcode tests",
-            providers: [.apns]
+            userIds: [Env.COURIER_USER_ID],
+            title: title,
+            body: body,
+            channels: [
+                ApplePushNotificationsServiceChannel(
+                    aps: [
+                        "alert": [
+                            "title": title,
+                            "body": body
+                        ],
+                        "sound": "ping.aiff",
+                        "badge": 123,
+                        "CUSTOM_NUMBER": 456,
+                        "CUSTOM_BOOLEAN": true,
+                        "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+                    ]
+                )
+            ]
         )
         
         print("Request ID: \(requestId)")
@@ -129,10 +146,23 @@ final class CourierTests: XCTestCase {
         
         let requestId = try await Courier.shared.sendMessage(
             authKey: Env.COURIER_ACCESS_TOKEN,
-            userId: Env.COURIER_USER_ID,
-            title: "🐤 Chirp Chirp from FCM!",
-            message: "Message sent from Xcode tests",
-            providers: [.fcm]
+            userIds: [Env.COURIER_USER_ID],
+            title: "FCM message sent",
+            body: "Hello from Xcode tests 👋",
+            channels: [
+                FirebaseCloudMessagingChannel(
+                    data: [
+                        "FCM_CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
+                    ],
+                    aps: [
+                        "sound": "ping.aiff",
+                        "badge": 123,
+                        "APNS_CUSTOM_NUMBER": 456,
+                        "APNS_CUSTOM_BOOLEAN": true,
+                        "APNS_CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+                    ]
+                )
+            ]
         )
         
         print("Request ID: \(requestId)")
@@ -253,10 +283,29 @@ final class CourierTests: XCTestCase {
         
         let requestId = try await Courier.shared.sendMessage(
             authKey: Env.COURIER_ACCESS_TOKEN,
-            userId: Env.COURIER_USER_ID,
+            userIds: [Env.COURIER_USER_ID],
             title: "🐤 Inbox Message",
-            message: "Message sent from Xcode tests",
-            providers: [.inbox]
+            body: "Message sent from Xcode tests",
+            channels: [
+                CourierInboxChannel(
+                    elements: [
+                        CourierElement(
+                            type: "action",
+                            content: "Button 1",
+                            data: [
+                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+                            ]
+                        ),
+                        CourierElement(
+                            type: "action",
+                            content: "Button 2",
+                            data: [
+                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+                            ]
+                        )
+                    ]
+                )
+            ]
         )
         
         print("Request ID: \(requestId)")

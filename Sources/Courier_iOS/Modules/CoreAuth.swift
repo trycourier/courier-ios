@@ -100,6 +100,7 @@ extension Courier {
     
     /**
      * A read only value set to the current user client key
+     * https://app.courier.com/channels/courier
      */
     internal var clientKey: String? {
         get {
@@ -109,6 +110,8 @@ extension Courier {
     
     /**
      * The key required to initialized the SDK
+     * https://app.courier.com/settings/api-keys
+     * or
      * https://www.courier.com/docs/reference/auth/issue-token/
      */
     internal var accessToken: String? {

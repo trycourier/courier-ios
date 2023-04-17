@@ -110,3 +110,18 @@ extension InboxMessage {
     }
     
 }
+
+extension Dictionary where Key == AnyHashable, Value == Any {
+    
+    func toJson() -> String? {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            return jsonString
+        } catch {
+            print("Error converting dictionary to JSON: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+}

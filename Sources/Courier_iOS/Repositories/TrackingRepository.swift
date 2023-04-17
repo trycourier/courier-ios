@@ -11,9 +11,11 @@ internal class TrackingRepository: Repository {
     
     internal func postTrackingUrl(url: String, event: CourierPushEvent) async throws {
         
-        try await post(url: url, body: [
+        let body = try JSONEncoder().encode([
             "event": event.rawValue
         ])
+        
+        try await post(url: url, body: body)
 
     }
     

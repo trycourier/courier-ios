@@ -11,14 +11,15 @@ internal class TokenRepository: Repository {
     
     internal func putUserToken(accessToken: String, userId: String, provider: CourierProvider, token: String) async throws {
         
+        let body = try? JSONEncoder().encode(CourierToken(
+            provider_key: provider.rawValue,
+            device: CourierDevice()
+        ))
+        
         try await put(
             accessToken: accessToken,
-            userId: userId,
             url: "\(CourierUrl.baseRest)/users/\(userId)/tokens/\(token)",
-            body: CourierToken(
-                provider_key: provider.rawValue,
-                device: CourierDevice()
-            ),
+            body: body,
             validCodes: [200, 204]
         )
         
@@ -28,7 +29,6 @@ internal class TokenRepository: Repository {
         
         try await delete(
             accessToken: accessToken,
-            userId: userId,
             url: "\(CourierUrl.baseRest)/users/\(userId)/tokens/\(token)",
             validCodes: [200, 204]
         )
