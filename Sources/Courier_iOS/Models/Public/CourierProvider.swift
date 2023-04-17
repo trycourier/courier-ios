@@ -31,7 +31,7 @@ import Foundation
     let content: String
     let data: [String : Any]?
     
-    internal init(type: String, content: String, data: [String : Any]?) {
+    public init(type: String, content: String, data: [String : Any]?) {
         self.type = type
         self.content = content
         self.data = data
