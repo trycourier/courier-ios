@@ -9,10 +9,10 @@ import Foundation
 
 internal class TokenRepository: Repository {
     
-    internal func putUserToken(accessToken: String, userId: String, provider: CourierProvider, token: String) async throws {
+    internal func putUserToken(accessToken: String, userId: String, provider: CourierChannel, token: String) async throws {
         
         let body = try? JSONEncoder().encode(CourierToken(
-            provider_key: provider.rawValue,
+            provider_key: provider.key,
             device: CourierDevice()
         ))
         
