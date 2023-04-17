@@ -60,6 +60,7 @@ import Foundation
         case href
         case style
         case backgroundColor = "background_color"
+        case data
     }
     
 }
