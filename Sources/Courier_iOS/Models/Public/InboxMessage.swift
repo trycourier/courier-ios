@@ -20,6 +20,7 @@ import Foundation
     @objc public let preview: String?
     @objc public let created: String?
     @objc public let actions: [InboxAction]?
+    @objc public let data: [String : Any]?
     
     internal var archived: Bool?
     internal var read: String?
@@ -45,6 +46,7 @@ import Foundation
         self.read = dictionary?["read"] as? String
         self.messageId = dictionary?["messageId"] as! String
         self.actions = buttons
+        self.data = dictionary?["data"] as? [String : Any]
         
     }
     

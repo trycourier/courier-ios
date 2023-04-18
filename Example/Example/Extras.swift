@@ -133,6 +133,7 @@ extension InboxMessage {
             "read": self.isRead,
             "opened": self.isOpened,
             "archived": self.isArchived,
+            "data": self.data ?? [:],
             "actions": actions?.map { action in
                 return [
                     "content": action.content ?? "",
