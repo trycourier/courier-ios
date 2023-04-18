@@ -124,7 +124,7 @@ internal class CoreInbox {
         
         self.inboxData = data
         self.unreadCount = unreadCount
-//        self.messages = data.messages?.nodes TODO
+        self.messages = data.messages?.nodes
         
         self.notifyMessagesChanged()
         
@@ -210,16 +210,13 @@ internal class CoreInbox {
             startCursor: cursor
         )
         
-//        TODO
-//        let newMessages = self.inboxData?.messages?.nodes ?? []
-//
-//        self.addPageToMessages(newMessages)
-//
-//        self.notifyMessagesChanged()
-//
-//        return newMessages
-        
-        return []
+        let newMessages = self.inboxData?.messages?.nodes ?? []
+
+        self.addPageToMessages(newMessages)
+
+        self.notifyMessagesChanged()
+
+        return newMessages
         
     }
     
