@@ -10,7 +10,7 @@ import Foundation
 /**
  The model used to structure CourierInbox messages
  */
-@objc public class InboxMessage: NSObject, Codable {
+@objc public class InboxMessage: NSObject {
     
     // MARK: Properties
     

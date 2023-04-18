@@ -7,29 +7,18 @@
 
 import Foundation
 
-@objc public class InboxAction: NSObject, Codable {
-    
-    // TODO: Decode data by hand...
+@objc public class InboxAction: NSObject {
     
     // MARK: Properties
     
     @objc public let content: String?
     @objc public let href: String?
-    @objc public let style: String?
-    @objc public let backgroundColor: String?
+    @objc public let data: [String: Any]?
     
-    public init(content: String?, href: String?, style: String?, backgroundColor: String?) {
+    public init(content: String?, href: String?, data: [String: Any]?) {
         self.content = content
         self.href = href
-        self.style = style
-        self.backgroundColor = backgroundColor
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case content
-        case href
-        case style
-        case backgroundColor = "background_color"
+        self.data = data
     }
     
 }

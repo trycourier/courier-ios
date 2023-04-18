@@ -20,7 +20,7 @@ internal struct InboxData: Codable {
 
 internal struct InboxNodes: Codable {
     let pageInfo: InboxPageInfo?
-    let nodes: [InboxMessage]?
+//    let nodes: [InboxMessage]? TODO
 }
 
 internal struct InboxPageInfo: Codable {
