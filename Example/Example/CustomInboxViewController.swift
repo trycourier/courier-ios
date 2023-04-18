@@ -126,7 +126,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let message = inboxMessages[indexPath.row].toJson()
-        appDelegate.showMessageAlert(title: "Message Clicked", message: message)
+        appDelegate.showMessageAlert(title: "Message Clicked", message: message ?? "")
     }
     
     deinit {

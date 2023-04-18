@@ -13,6 +13,7 @@ public enum CourierError: Error {
     case noAccessTokenFound
     case noUserIdFound
     case requestError
+    case requestParsingError
     case sendTestMessageFail
     case inboxWebSocketError
     case inboxWebSocketFail
@@ -34,6 +35,8 @@ extension CourierError {
                 return "No user found"
             case .requestError:
                 return "An error occurred. Please try again."
+            case .requestParsingError:
+                return "An error occurred data from server. Please try again."
             case .sendTestMessageFail:
                 return "An error occurred sending a test message."
             case .inboxWebSocketError:

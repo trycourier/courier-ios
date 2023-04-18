@@ -7,20 +7,18 @@
 
 import Foundation
 
-@objc public class InboxAction: NSObject, Codable {
+@objc public class InboxAction: NSObject {
     
     // MARK: Properties
     
     @objc public let content: String?
     @objc public let href: String?
-    @objc public let style: String?
-    @objc public let background_color: String?
+    @objc public let data: [String: Any]?
     
-    public init(content: String?, href: String?, style: String?, background_color: String?) {
+    public init(content: String?, href: String?, data: [String: Any]?) {
         self.content = content
         self.href = href
-        self.style = style
-        self.background_color = background_color
+        self.data = data
     }
     
 }

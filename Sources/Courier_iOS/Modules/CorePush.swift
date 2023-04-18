@@ -29,8 +29,8 @@ internal class CorePush {
     // Attempt to put the users tokens if we have them
     internal func putPushTokens() async throws {
         let _ = await [
-            putTokenIfNeeded(provider: .apns, token: Courier.shared.apnsToken),
-            putTokenIfNeeded(provider: .fcm, token: Courier.shared.fcmToken),
+            putTokenIfNeeded(provider: ApplePushNotificationsServiceChannel(), token: Courier.shared.apnsToken),
+            putTokenIfNeeded(provider: FirebaseCloudMessagingChannel(), token: Courier.shared.fcmToken),
         ]
     }
     
@@ -85,7 +85,7 @@ internal class CorePush {
         return try await tokenRepo.putUserToken(
             accessToken: accessToken,
             userId: userId,
-            provider: .apns,
+            provider: ApplePushNotificationsServiceChannel(),
             token: rawToken.string
         )
         
@@ -110,7 +110,7 @@ internal class CorePush {
         return try await tokenRepo.putUserToken(
             accessToken: accessToken,
             userId: userId,
-            provider: .fcm,
+            provider: FirebaseCloudMessagingChannel(),
             token: token
         )
         
@@ -118,13 +118,13 @@ internal class CorePush {
     
     // Tries add the token from Courier
     // Will silently fail if error occurs
-    private func putTokenIfNeeded(provider: CourierProvider, token: String?) async {
+    private func putTokenIfNeeded(provider: CourierChannel, token: String?) async {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId, let newToken = token else {
             return
         }
         
-        Courier.log("Puting \(provider.rawValue) Messaging Token: \(newToken)")
+        Courier.log("Puting \(provider.key) Messaging Token: \(newToken)")
         
         do {
             

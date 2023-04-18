@@ -22,35 +22,25 @@ class CourierTask {
         
         task = session.dataTask(with: req) { (data, response, error) in
             
-            do {
-             
-                Courier.log("📡 New Courier API Request")
-                Courier.log("URL: \(request.url?.absoluteString ?? "")")
-                Courier.log("Method: \(request.httpMethod ?? "")")
-                
-                if let body = request.httpBody, let json = String(data: body, encoding: .utf8) {
-                    if (!json.isEmpty) {
-                        Courier.log("Body: \(json)")
-                    }
-                }
-                
-                if let response = response as? HTTPURLResponse {
-                    let code = response.statusCode
-                    Courier.log("Status: \(code)")
-                }
-                
-                if let data = data, let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
-                    if (!json.isEmpty) {
-                        Courier.log("Response: \(String(describing: json))")
-                    } else {
-                        Courier.log("Response: Empty")
-                    }
-                }
-                
-            } catch {
-                
-                // Ignore
-                
+            // Print the request
+            Courier.log("\n📡 New Courier API Request")
+            Courier.log("URL: \(request.url?.absoluteString ?? "")")
+            Courier.log("Method: \(request.httpMethod ?? "")")
+            
+            if let body = request.httpBody {
+                let json = body.toPreview()
+                Courier.log("Body: \(json)")
+            }
+            
+            if let response = response as? HTTPURLResponse {
+                let code = response.statusCode
+                Courier.log("Response Status: \(code)")
+            }
+            
+            // Print the response
+            if let data = data {
+                let json = data.toPreview()
+                Courier.log("Response JSON: \(json.isEmpty ? "Empty" : json)\n")
             }
             
             let status = (response as? HTTPURLResponse)?.statusCode ?? 420

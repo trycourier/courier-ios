@@ -211,11 +211,11 @@ internal class CoreInbox {
         )
         
         let newMessages = self.inboxData?.messages?.nodes ?? []
-        
+
         self.addPageToMessages(newMessages)
-        
+
         self.notifyMessagesChanged()
-        
+
         return newMessages
         
     }

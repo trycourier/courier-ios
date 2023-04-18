@@ -76,7 +76,7 @@ cat Sources/Courier_iOS/Courier_iOS.swift | while read LINE; do
 
     # Bump the version
     git add .
-    git commit -m "Bump"
+    git commit -m "Release"
     git push
 
     # Create a new tag with the version and push

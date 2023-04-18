@@ -16,9 +16,9 @@ internal class Repository: NSObject {
         internal static let inboxWebSocket = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
     }
     
-    private func http<T: Codable>(_ type: T.Type, accessToken: String?, userId: String?, url: String, method: String, body: Codable? = nil, validCodes: [Int] = [200]) async throws -> T {
+    private func http(accessToken: String?, url: String, method: String, body: Data? = nil, validCodes: [Int] = [200]) async throws -> Data? {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<T, Error>) in
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Data?, Error>) in
 
             let u = URL(string: url)!
             var request = URLRequest(url: u)
@@ -29,7 +29,7 @@ internal class Repository: NSObject {
             }
             
             if let body = body {
-                request.httpBody = try? JSONEncoder().encode(body)
+                request.httpBody = body
             }
             
             let task = CourierTask(with: request, validCodes: validCodes) { (validCodes, data, response, error, status) in
@@ -39,13 +39,8 @@ internal class Repository: NSObject {
                     return
                 }
                 
-                do {
-                    let res = try JSONDecoder().decode(T.self, from: data ?? Data())
-                    continuation.resume(returning: res)
-                } catch {
-                    Courier.log(error.friendlyMessage)
-                    continuation.resume(throwing: CourierError.requestError)
-                }
+                // Return the raw data
+                continuation.resume(returning: data)
                 
             }
             
@@ -55,42 +50,9 @@ internal class Repository: NSObject {
         
     }
     
-    private func http(accessToken: String?, userId: String?, url: String, method: String, body: Codable? = nil, validCodes: [Int] = [200]) async throws {
+    private func graphQL(clientKey: String, userId: String, url: String, query: String) async throws -> Data? {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
-
-            let u = URL(string: url)!
-            var request = URLRequest(url: u)
-            request.httpMethod = method
-            
-            if let accessToken = accessToken {
-                request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-            }
-            
-            if let body = body {
-                request.httpBody = try? JSONEncoder().encode(body)
-            }
-            
-            let task = CourierTask(with: request, validCodes: validCodes) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-                
-                continuation.resume()
-                
-            }
-            
-            task.start()
-            
-        })
-        
-    }
-    
-    private func graphQL<T: Codable>(_ type: T.Type, clientKey: String, userId: String, url: String, query: String) async throws -> T {
-        
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<T, Error>) in
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Data?, Error>) in
 
             let u = URL(string: url)!
             var request = URLRequest(url: u)
@@ -110,45 +72,7 @@ internal class Repository: NSObject {
                     return
                 }
                 
-                do {
-                    let res = try JSONDecoder().decode(T.self, from: data ?? Data())
-                    continuation.resume(returning: res)
-                } catch {
-                    Courier.log(error.friendlyMessage)
-                    continuation.resume(throwing: CourierError.requestError)
-                }
-                
-            }
-            
-            task.start()
-            
-        })
-        
-    }
-    
-    private func graphQL(clientKey: String, userId: String, url: String, query: String) async throws {
-        
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
-
-            let u = URL(string: url)!
-            var request = URLRequest(url: u)
-            request.httpMethod = "POST"
-            
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
-            request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
-            
-            let payload = CourierGraphQLQuery(query: query)
-            request.httpBody = try! JSONEncoder().encode(payload)
-            
-            let task = CourierTask(with: request) { (validCodes, data, response, error, status) in
-                
-                if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
-                    return
-                }
-                
-                continuation.resume()
+                continuation.resume(returning: data)
                 
             }
             
@@ -164,62 +88,38 @@ extension Repository {
     
     // MARK: Query
     
-    internal func graphQLQuery<T: Codable>(_ type: T.Type, clientKey: String, userId: String, url: String, query: String) async throws -> T {
-        return try await graphQL(type, clientKey: clientKey, userId: userId, url: url, query: query)
-    }
-    
-    internal func graphQLQuery(clientKey: String, userId: String, url: String, query: String) async throws {
+    @discardableResult internal func graphQLQuery(clientKey: String, userId: String, url: String, query: String) async throws -> Data? {
         return try await graphQL(clientKey: clientKey, userId: userId, url: url, query: query)
     }
     
     // MARK: GET
     
-    internal func get<T: Codable>(_ type: T.Type, accessToken: String, userId: String, url: String, validCodes: [Int] = [200]) async throws -> T {
-        return try await http(type, accessToken: accessToken, userId: userId, url: url, method: "GET", body: nil, validCodes: validCodes)
-    }
-    
-    internal func get(accessToken: String, userId: String, url: String, validCodes: [Int] = [200]) async throws {
-        return try await http(accessToken: accessToken, userId: userId, url: url, method: "GET", body: nil, validCodes: validCodes)
+    @discardableResult internal func get(accessToken: String, url: String, validCodes: [Int] = [200]) async throws -> Data? {
+        return try await http(accessToken: accessToken, url: url, method: "GET", body: nil, validCodes: validCodes)
     }
     
     // MARK: POST
     
-    internal func post<T: Codable>(_ type: T.Type, accessToken: String, userId: String, url: String, body: Codable, validCodes: [Int] = [200]) async throws -> T {
-        return try await http(type, accessToken: accessToken, userId: userId, url: url, method: "POST", body: body, validCodes: validCodes)
-    }
-    
-    internal func post(accessToken: String? = nil, userId: String? = nil, url: String, body: Codable, validCodes: [Int] = [200]) async throws {
-        return try await http(accessToken: accessToken, userId: userId, url: url, method: "POST", body: body, validCodes: validCodes)
+    @discardableResult internal func post(accessToken: String? = nil, url: String, body: Data?, validCodes: [Int] = [200]) async throws -> Data? {
+        return try await http(accessToken: accessToken, url: url, method: "POST", body: body, validCodes: validCodes)
     }
     
     // MARK: DELETE
     
-    internal func delete<T: Codable>(_ type: T.Type, accessToken: String, userId: String, url: String, validCodes: [Int] = [200]) async throws -> T {
-        return try await http(type, accessToken: accessToken, userId: userId, url: url, method: "DELETE", body: nil, validCodes: validCodes)
-    }
-    
-    internal func delete(accessToken: String? = nil, userId: String? = nil, url: String, validCodes: [Int] = [200]) async throws {
-        return try await http(accessToken: accessToken, userId: userId, url: url, method: "DELETE", body: nil, validCodes: validCodes)
+    @discardableResult internal func delete(accessToken: String? = nil, url: String, validCodes: [Int] = [200]) async throws -> Data? {
+        return try await http(accessToken: accessToken, url: url, method: "DELETE", body: nil, validCodes: validCodes)
     }
     
     // MARK: PUT
     
-    internal func put<T: Codable>(_ type: T.Type, accessToken: String, userId: String, url: String, body: Codable, validCodes: [Int] = [200]) async throws -> T {
-        return try await http(type, accessToken: accessToken, userId: userId, url: url, method: "PUT", body: body, validCodes: validCodes)
-    }
-    
-    internal func put(accessToken: String? = nil, userId: String? = nil, url: String, body: Codable, validCodes: [Int] = [200]) async throws {
-        return try await http(accessToken: accessToken, userId: userId, url: url, method: "PUT", body: body, validCodes: validCodes)
+    @discardableResult internal func put(accessToken: String? = nil, url: String, body: Data?, validCodes: [Int] = [200]) async throws -> Data? {
+        return try await http(accessToken: accessToken, url: url, method: "PUT", body: body, validCodes: validCodes)
     }
     
     // MARK: PATCH
     
-    internal func patch<T: Codable>(_ type: T.Type, accessToken: String, userId: String, url: String, body: Codable, validCodes: [Int] = [200]) async throws -> T {
-        return try await http(type, accessToken: accessToken, userId: userId, url: url, method: "PATCH", body: body, validCodes: validCodes)
-    }
-    
-    internal func patch(accessToken: String? = nil, userId: String? = nil, url: String, body: Codable, validCodes: [Int] = [200]) async throws {
-        return try await http(accessToken: accessToken, userId: userId, url: url, method: "PATCH", body: body, validCodes: validCodes)
+    @discardableResult internal func patch(accessToken: String? = nil, url: String, body: Data?, validCodes: [Int] = [200]) async throws -> Data? {
+        return try await http(accessToken: accessToken, url: url, method: "PATCH", body: body, validCodes: validCodes)
     }
     
 }

@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2729767129D1FE3500B31EEB /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2729767029D1FE3500B31EEB /* Courier_iOS */; };
-		2729767729D2129300B31EEB /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2729767629D2129300B31EEB /* Courier_iOS */; };
+		2729769F29DB700400B31EEB /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2729769E29DB700400B31EEB /* FirebaseMessaging */; };
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
-		2735336129CE40C200FF16CD /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2735336029CE40C200FF16CD /* FirebaseMessaging */; };
 		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
 		27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */; };
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
+		27815B8429E7136A002D6DD0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27815B8329E7136A002D6DD0 /* GoogleService-Info.plist */; };
+		27815B8C29EF0C8C002D6DD0 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27815B8B29EF0C8C002D6DD0 /* Courier_iOS */; };
+		27815B8E29EF0D2F002D6DD0 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27815B8D29EF0D2F002D6DD0 /* Courier_iOS */; };
 		27895167292689460070F501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895166292689460070F501 /* AppDelegate.swift */; };
 		27895169292689460070F501 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895168292689460070F501 /* SceneDelegate.swift */; };
 		2789516B292689460070F501 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789516A292689460070F501 /* NotificationsViewController.swift */; };
@@ -24,7 +25,6 @@
 		2789518129268C400070F501 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789518029268C400070F501 /* Env.swift */; };
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
 		27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */; };
-		27D4C01C2964886100CE972E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27D4C01B2964886100CE972E /* GoogleService-Info.plist */; };
 		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
 		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -59,6 +59,7 @@
 		27644EEB29AE7378002F907B /* CustomInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxViewController.swift; sourceTree = "<group>"; };
 		27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxCollectionViewCell.swift; sourceTree = "<group>"; };
 		27644EF329AFF741002F907B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		27815B8329E7136A002D6DD0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		27895163292689460070F501 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27895166292689460070F501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27895168292689460070F501 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,7 +72,6 @@
 		2789519529268DB70070F501 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledInboxViewController.swift; sourceTree = "<group>"; };
-		27D4C01B2964886100CE972E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		6729FFAE2926F779006A3EC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -82,8 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2729767129D1FE3500B31EEB /* Courier_iOS in Frameworks */,
-				2735336129CE40C200FF16CD /* FirebaseMessaging in Frameworks */,
+				27815B8C29EF0C8C002D6DD0 /* Courier_iOS in Frameworks */,
+				2729769F29DB700400B31EEB /* FirebaseMessaging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2729767729D2129300B31EEB /* Courier_iOS in Frameworks */,
+				27815B8E29EF0D2F002D6DD0 /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +120,7 @@
 		27895165292689460070F501 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				27D4C01B2964886100CE972E /* GoogleService-Info.plist */,
+				27815B8329E7136A002D6DD0 /* GoogleService-Info.plist */,
 				2789519529268DB70070F501 /* Example.entitlements */,
 				2789518029268C400070F501 /* Env.swift */,
 				2789519629268E030070F501 /* Extras.swift */,
@@ -176,8 +176,8 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				2735336029CE40C200FF16CD /* FirebaseMessaging */,
-				2729767029D1FE3500B31EEB /* Courier_iOS */,
+				2729769E29DB700400B31EEB /* FirebaseMessaging */,
+				27815B8B29EF0C8C002D6DD0 /* Courier_iOS */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
@@ -197,7 +197,7 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				2729767629D2129300B31EEB /* Courier_iOS */,
+				27815B8D29EF0D2F002D6DD0 /* Courier_iOS */,
 			);
 			productName = CourierService;
 			productReference = 6729FFAA2926F779006A3EC2 /* CourierService.appex */;
@@ -231,8 +231,8 @@
 			);
 			mainGroup = 2789515A292689460070F501;
 			packageReferences = (
-				2735335F29CE40C200FF16CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				2729766F29D1FE3500B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */,
+				2729769D29DB700400B31EEB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				27815B8A29EF0C8C002D6DD0 /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -250,7 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27895173292689470070F501 /* LaunchScreen.storyboard in Resources */,
-				27D4C01C2964886100CE972E /* GoogleService-Info.plist in Resources */,
+				27815B8429E7136A002D6DD0 /* GoogleService-Info.plist in Resources */,
 				27895170292689470070F501 /* Assets.xcassets in Resources */,
 				2789516E292689460070F501 /* Main.storyboard in Resources */,
 			);
@@ -583,15 +583,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2729766F29D1FE3500B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/trycourier/courier-ios";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		2735335F29CE40C200FF16CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		2729769D29DB700400B31EEB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
@@ -599,23 +591,31 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		27815B8A29EF0C8C002D6DD0 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/trycourier/courier-ios";
+			requirement = {
+				branch = "feature/manual-parse-inbox";
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2729767029D1FE3500B31EEB /* Courier_iOS */ = {
+		2729769E29DB700400B31EEB /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2729766F29D1FE3500B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */;
-			productName = Courier_iOS;
-		};
-		2729767629D2129300B31EEB /* Courier_iOS */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2729766F29D1FE3500B31EEB /* XCRemoteSwiftPackageReference "courier-ios" */;
-			productName = Courier_iOS;
-		};
-		2735336029CE40C200FF16CD /* FirebaseMessaging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2735335F29CE40C200FF16CD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 2729769D29DB700400B31EEB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		27815B8B29EF0C8C002D6DD0 /* Courier_iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27815B8A29EF0C8C002D6DD0 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			productName = Courier_iOS;
+		};
+		27815B8D29EF0D2F002D6DD0 /* Courier_iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27815B8A29EF0C8C002D6DD0 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			productName = Courier_iOS;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

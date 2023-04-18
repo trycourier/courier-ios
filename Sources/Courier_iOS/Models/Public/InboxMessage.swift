@@ -10,7 +10,7 @@ import Foundation
 /**
  The model used to structure CourierInbox messages
  */
-@objc public class InboxMessage: NSObject, Codable {
+@objc public class InboxMessage: NSObject {
     
     // MARK: Properties
     
@@ -25,15 +25,27 @@ import Foundation
     internal var read: String?
     internal var opened: String?
     
-    public init(title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, messageId: String, actions: [InboxAction]?) {
-        self.title = title
-        self.body = body
-        self.preview = preview
-        self.created = created
-        self.archived = archived
-        self.read = read
-        self.messageId = messageId
-        self.actions = actions
+    internal init(_ dictionary: [String : Any]?) {
+        
+        let actions = dictionary?["actions"] as? [[String: Any]]
+
+        let buttons = actions?.map { action in
+            return InboxAction(
+                content: action["content"] as? String,
+                href: action["href"] as? String,
+                data: action["data"] as? [String : Any]
+            )
+        }
+        
+        self.title = dictionary?["title"] as? String
+        self.body = dictionary?["body"] as? String
+        self.preview = dictionary?["preview"] as? String
+        self.created = dictionary?["created"] as? String
+        self.archived = dictionary?["archived"] as? Bool
+        self.read = dictionary?["read"] as? String
+        self.messageId = dictionary?["messageId"] as! String
+        self.actions = buttons
+        
     }
     
     @objc public var subtitle: String? {

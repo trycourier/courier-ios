@@ -45,8 +45,8 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 switch message {
                 case .string(let str):
                     do {
-                        let data = str.data(using: .utf8) ?? Data()
-                        let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
+                        let dictionary = try (str.data(using: .utf8) ?? Data()).toDictionary()
+                        let newMessage = InboxMessage(dictionary)
                         self.onMessageReceived?(newMessage)
                     } catch {
                         Courier.log(error.friendlyMessage)
@@ -126,24 +126,30 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                     preview
                     actions {
                         content
+                        data
                         href
-                        style
-                        background_color
                     }
                 }
             }
         }
         """
         
-        let response = try await graphQLQuery(
-            InboxResponse.self,
+        let data = try await graphQLQuery(
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
             query: query
         )
         
-        return response.data
+        do {
+            let dictionary = try data?.toDictionary()
+            let res = InboxResponse(dictionary)
+            guard let data = res.data else { throw CourierError.requestParsingError }
+            return data
+        } catch {
+            Courier.log(error.friendlyMessage)
+            throw CourierError.requestParsingError
+        }
 
     }
     
@@ -164,15 +170,21 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         }
         """
         
-        let response = try await graphQLQuery(
-            InboxResponse.self,
+        let data = try await graphQLQuery(
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
             query: query
         )
         
-        return response.data.count ?? 0
+        do {
+            let dictionary = try data?.toDictionary()
+            let res = InboxResponse(dictionary)
+            return res.data?.count ?? 0
+        } catch {
+            Courier.log(error.friendlyMessage)
+            throw CourierError.requestParsingError
+        }
 
     }
     

@@ -95,18 +95,79 @@ extension UIViewController {
     
 }
 
-extension InboxMessage {
+extension InboxAction {
     
-    func toJson() -> String {
+    func toJson() -> String? {
+        
+        let dictionary: [String: Any] = [
+            "content": self.content ?? "",
+            "href": self.href ?? "",
+            "data": self.data ?? [:]
+        ]
         
         do {
-            let jsonEncoder = JSONEncoder()
-            let jsonData = try jsonEncoder.encode(self)
-            return String(data: jsonData, encoding: String.Encoding.utf8) ?? ""
+            let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted])
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
+            }
         } catch {
-            return "Error"
+            print(error.localizedDescription)
         }
         
+        return nil
+        
+    }
+    
+}
+
+extension InboxMessage {
+    
+    func toJson() -> String? {
+        
+        let dictionary: [String: Any] = [
+            "messageId": self.messageId,
+            "title": self.title ?? "",
+            "body": self.body ?? "",
+            "preview": self.preview ?? "",
+            "created": self.created ?? "",
+            "read": self.isRead,
+            "opened": self.isOpened,
+            "archived": self.isArchived,
+            "actions": actions?.map { action in
+                return [
+                    "content": action.content ?? "",
+                    "href": action.href ?? "",
+                    "data": action.data ?? [:]
+                ]
+            } ?? [],
+        ]
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted])
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return nil
+        
+    }
+    
+}
+
+extension Dictionary where Key == AnyHashable, Value == Any {
+    
+    func toJson() -> String? {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            return jsonString
+        } catch {
+            print("Error converting dictionary to JSON: \(error.localizedDescription)")
+            return nil
+        }
     }
     
 }
