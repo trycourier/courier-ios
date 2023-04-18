@@ -80,11 +80,10 @@ class StyledInboxViewController: UIViewController {
             ),
             didClickInboxMessageAtIndex: { message, index in
                 message.isRead ? message.markAsUnread() : message.markAsRead()
-                print(index, message)
+                print(message.toJson() ?? "")
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
-                print(action, message, index)
-                print(action.data)
+                print(action.toJson() ?? "")
             },
             didScrollInbox: { scrollView in
                 print(scrollView.contentOffset.y)

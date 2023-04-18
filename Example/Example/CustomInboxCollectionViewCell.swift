@@ -52,7 +52,7 @@ class CustomInboxCollectionViewCell: UICollectionViewCell {
     }
     
     func setMessage(_ message: InboxMessage) {
-        label.text = "\(message)" // TODO
+        label.text = message.toJson()
         contentView.backgroundColor = message.isRead ? .clear : .systemGreen
     }
     
