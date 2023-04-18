@@ -196,4 +196,8 @@ extension Data {
         return prettyPrintedString
     }
     
+    func toDictionary() throws -> [String : Any]? {
+        return try JSONSerialization.jsonObject(with: self, options: []) as? [String : Any]
+    }
+    
 }

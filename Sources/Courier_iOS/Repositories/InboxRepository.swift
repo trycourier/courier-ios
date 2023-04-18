@@ -45,9 +45,9 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 switch message {
                 case .string(let str):
                     do {
-//                        let data = str.data(using: .utf8) ?? Data()
-//                        let newMessage = try JSONDecoder().decode(InboxMessage.self, from: data)
-//                        self.onMessageReceived?(newMessage)
+                        let dictionary = try (str.data(using: .utf8) ?? Data()).toDictionary()
+                        let newMessage = InboxMessage(dictionary)
+                        self.onMessageReceived?(newMessage)
                     } catch {
                         Courier.log(error.friendlyMessage)
                         self.onMessageReceivedError?(CourierError.inboxWebSocketError)
@@ -142,65 +142,10 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         )
         
         do {
-            
-            print("JSON ===========================================\n")
-            
-            let json = try JSONSerialization.jsonObject(with: data!, options: []) as! [String : Any]
-            
-            let data = json["data"] as! [String : Any]
-            let messages = data["messages"] as! [String : Any]
-        
-            print(messages)
-            
-            print("KEYS ===========================================\n")
-            let keys = messages.keys
-            print(keys)
-            
-            print("NODES ===========================================\n")
-            let nodes = messages["nodes"] as? [[String: Any]]
-//            print(nodes)
-            
-            let msgs = nodes?.map { message in
-                
-                let actions = message["actions"] as? [[String: Any]]
-                
-                let buttons = actions?.map { action in
-                    return InboxAction(
-                        content: action["content"] as? String,
-                        href: action["href"] as? String,
-                        data: action["data"] as? [String : Any]
-                    )
-                }
-                
-                return InboxMessage(
-                    title: message["title"] as? String,
-                    body: message["body"] as? String,
-                    preview: message["preview"] as? String,
-                    created: message["created"] as? String,
-                    archived: message["archived"] as? Bool,
-                    read: message["read"] as? String,
-                    messageId: message["messageId"] as! String,
-                    actions: buttons
-                )
-                
-            }
-            
-            msgs?.forEach { msg in
-                msg.actions?.forEach { action in
-                    print(action.content)
-                    print(action.href)
-                    print(action.data)
-                }
-            }
-            
-            
-        } catch {
-            print("errorMsg")
-        }
-        
-        do {
-            let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
-            return res.data
+            let dictionary = try data?.toDictionary()
+            let res = InboxResponse(dictionary)
+            guard let data = res.data else { throw CourierError.requestParsingError }
+            return data
         } catch {
             Courier.log(error.friendlyMessage)
             throw CourierError.requestParsingError
@@ -233,8 +178,9 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         )
         
         do {
-            let res = try JSONDecoder().decode(InboxResponse.self, from: data ?? Data())
-            return res.data.count ?? 0
+            let dictionary = try data?.toDictionary()
+            let res = InboxResponse(dictionary)
+            return res.data?.count ?? 0
         } catch {
             Courier.log(error.friendlyMessage)
             throw CourierError.requestParsingError

@@ -9,40 +9,63 @@ import Foundation
 
 // MARK: Internal Classes
 
-internal struct InboxResponse: Codable {
-    let data: InboxData
+@objc internal class InboxResponse: NSObject {
+    
+    let data: InboxData?
+    
+    init(_ dictionary: [String : Any]?) {
+        let data = dictionary?["data"] as? [String: Any]
+        self.data = InboxData(data)
+    }
+    
 }
 
-internal struct InboxData: Codable {
+@objc internal class InboxData: NSObject {
+    
     var count: Int? = 0
     var messages: InboxNodes?
-}
-
-internal struct InboxNodes: Codable {
-    let pageInfo: InboxPageInfo?
-//    let nodes: [InboxMessage]? TODO
-}
-
-internal struct InboxPageInfo: Codable {
-    let startCursor: String?
-    let hasNextPage: Bool?
-}
-
-// MARK: Extensions
-
-extension InboxData {
     
-    // Increments the count
-    // This exists to allow instant loading after
-    // new messages arrive on the device
-    internal mutating func incrementCount() {
-        
+    init(_ dictionary: [String : Any]?) {
+        self.count = dictionary?["count"] as? Int
+        self.messages = InboxNodes(dictionary?["messages"] as? [String : Any])
+    }
+    
+    func incrementCount() {
         if (count == nil) {
             count = 0
         }
-        
         count! += 1
+    }
+    
+}
+
+
+@objc internal class InboxNodes: NSObject {
+    
+    let pageInfo: InboxPageInfo?
+    let nodes: [InboxMessage]?
+    
+    init(_ dictionary: [String : Any]?) {
         
+        self.pageInfo = InboxPageInfo(dictionary?["pageInfo"] as? [String : Any])
+        
+        let allNodes = dictionary?["nodes"] as? [[String: Any]]
+        self.nodes = allNodes?.map { messageDictionary in
+            return InboxMessage(messageDictionary)
+        }
+
+    }
+    
+}
+
+@objc internal class InboxPageInfo: NSObject {
+    
+    let startCursor: String?
+    let hasNextPage: Bool?
+    
+    init(_ dictionary: [String : Any]?) {
+        self.startCursor = dictionary?["count"] as? String
+        self.hasNextPage = dictionary?["hasNextPage"] as? Bool
     }
     
 }
