@@ -95,6 +95,9 @@ class NotificationsViewController: UIViewController {
                                 "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
                             ]
                         )
+                    ],
+                    data: [
+                        "CUSTOM_INBOX_MESSAGE_KEY": "YOUR_CUSTOM_VALUE"
                     ]
                 )
                 
