@@ -119,6 +119,9 @@ final class CourierTests: XCTestCase {
             body: body,
             channels: [
                 ApplePushNotificationsServiceChannel(
+                    data: [
+                        "DATA_APNS": "YOUR_CUSTOM_VALUE",
+                    ],
                     aps: [
                         "alert": [
                             "title": title,
@@ -152,6 +155,9 @@ final class CourierTests: XCTestCase {
             channels: [
                 FirebaseCloudMessagingChannel(
                     data: [
+                        "DATA_FCM": "YOUR_CUSTOM_VALUE",
+                    ],
+                    fcmData: [
                         "FCM_CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
                     ],
                     aps: [
@@ -303,6 +309,9 @@ final class CourierTests: XCTestCase {
                                 "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
                             ]
                         )
+                    ],
+                    data: [
+                        "DATA_INBOX": "YOUR_CUSTOM_VALUE",
                     ]
                 )
             ]

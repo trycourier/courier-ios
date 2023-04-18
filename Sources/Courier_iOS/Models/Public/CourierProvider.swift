@@ -12,10 +12,12 @@ import Foundation
 @objc public class CourierChannel: NSObject {
     
     let key: String
+    let data: [String : Any]?
     let elements: [CourierElement]
     
-    internal init(key: String, elements: [CourierElement]) {
+    internal init(key: String, data: [String : Any]? = nil, elements: [CourierElement]) {
         self.key = key
+        self.data = data
         self.elements = elements
     }
     
@@ -51,9 +53,9 @@ import Foundation
     
     let aps: [String : Any]?
     
-    public init(aps: [String : Any]? = nil, elements: [CourierElement] = []) {
+    public init(elements: [CourierElement] = [], data: [String : Any]? = nil, aps: [String : Any]? = nil) {
         self.aps = aps
-        super.init(key: "apn", elements: elements)
+        super.init(key: "apn", data: data, elements: elements)
     }
     
     required init(from decoder: Decoder) throws {
@@ -74,13 +76,13 @@ import Foundation
 
 @objc public class FirebaseCloudMessagingChannel: CourierChannel {
     
-    let data: [String : String]?
     let aps: [String : Any]?
+    let fcmData: [String : String]?
     
-    public init(data: [String : String]? = nil, aps: [String : Any]? = nil, elements: [CourierElement] = []) {
-        self.data = data
+    public init(elements: [CourierElement] = [], data: [String : Any]? = nil, fcmData: [String : String]? = nil, aps: [String : Any]? = nil) {
+        self.fcmData = fcmData
         self.aps = aps
-        super.init(key: "firebase-fcm", elements: elements)
+        super.init(key: "firebase-fcm", data: data, elements: elements)
     }
     
     required init(from decoder: Decoder) throws {
@@ -91,7 +93,7 @@ import Foundation
         return [
             "override": [
                 "body": [
-                    "data": data ?? "",
+                    "data": fcmData ?? "",
                     "apns": [
                         "payload": [
                             "aps": aps
@@ -106,8 +108,8 @@ import Foundation
 
 @objc public class CourierInboxChannel: CourierChannel {
     
-    public init(elements: [CourierElement] = []) {
-        super.init(key: "inbox", elements: elements)
+    public init(elements: [CourierElement] = [], data: [String : Any]? = nil) {
+        super.init(key: "inbox", data: data, elements: elements)
     }
     
     required init(from decoder: Decoder) throws {

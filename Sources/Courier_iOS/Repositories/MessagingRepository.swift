@@ -21,6 +21,11 @@ internal class MessagingRepository: Repository {
                     "version": "2020-01-01",
                     "elements": channels.flatMap { $0.elements }.map { $0.toMap() } // Get the elements
                 ],
+                "data": channels.map { $0.data ?? [:] }.reduce(into: [:]) { result, data in
+                    for (key, value) in data {
+                        result[key] = value
+                    }
+                },
                 "routing": [
                     "method": "all",
                     "channels": channels.map { $0.key } // Get the keys
