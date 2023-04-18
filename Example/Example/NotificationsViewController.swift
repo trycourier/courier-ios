@@ -61,7 +61,7 @@ class NotificationsViewController: UIViewController {
             if (fcmSwitch.isOn) {
                 
                 let channel = FirebaseCloudMessagingChannel(
-                    data: [
+                    fcmData: [
                         "FCM_CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
                     ],
                     aps: [
