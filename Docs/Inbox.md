@@ -264,7 +264,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
         
-        let message = inboxMessages[indexPath.row]
+        let message = Courier.shared.inboxMessages[indexPath.row]
         cell.setMessage(message)
         
         return cell
@@ -272,7 +272,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let message = inboxMessages[indexPath.row].toJson()
+        let message = Courier.shared.inboxMessages[indexPath.row]
         message.isRead ? message.markAsUnread() : message.markAsRead()
     }
     
