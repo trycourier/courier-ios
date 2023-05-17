@@ -157,6 +157,8 @@ Select which push notification provider you would like Courier to route push not
     </tbody>
 </table>
 
+&emsp;
+
 ## 2. Enable the "Push Notifications" capability 
 
 https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-8e8f-bf77dc0a2bf3.mov
