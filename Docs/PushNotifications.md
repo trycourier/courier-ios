@@ -293,6 +293,8 @@ end
 
 ## 5. Send a Test Push Notification
 
+1. Register for push notifications
+
 ```swift
 import Courier_iOS
 
@@ -315,8 +317,7 @@ Task {
 }
 ```
 
-1. Register for push notifications
-
+2. Send a test message
 
 ```swift
 import Courier_iOS
@@ -336,7 +337,5 @@ Task {
 
 }
 ```
-
-2. Send a test message
 
 [`More Testing Examples Here`](https://github.com/trycourier/courier-ios/blob/master/Docs/Testing.md)
