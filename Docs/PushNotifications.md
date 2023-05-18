@@ -76,7 +76,7 @@ The easiest way to support push notifications in your app.
                 A phyical iOS device
             </td>
             <td align="left">
-                Although you can setup the Courier SDK without a device, a physical device is the only way to full ensure push notification tokens and notification delivery is working correctly. Simulators are not reliable.
+                Although you can setup the Courier SDK without a device, a physical device is the only way to fully ensure push notification tokens and notification delivery is working correctly. Simulators are not reliable.
             </td>
         </tr>
         <tr width="600px">
