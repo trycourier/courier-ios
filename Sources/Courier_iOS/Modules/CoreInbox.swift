@@ -15,6 +15,7 @@ internal class CoreInbox {
     }
     
     private lazy var inboxRepo = InboxRepository()
+    private lazy var brandsRepo = BrandsRepository()
     
     // MARK: Getters
     
@@ -29,6 +30,8 @@ internal class CoreInbox {
     internal static let defaultMaxPaginationLimit = 200
     internal static let defaultMinPaginationLimit = 1
     internal var paginationLimit = defaultPaginationLimit
+    
+    internal var brandId: String? = nil
 
     private var listeners: [CourierInboxListener] = []
     
@@ -113,7 +116,13 @@ internal class CoreInbox {
             userId: userId
         )
         
-        let (data, unreadCount) = await (try dataTask, try unreadCountTask)
+        async let getBrandTask: (CourierBrand?) = getBrandIfNeeded(
+            clientKey: clientKey,
+            userId: userId,
+            brandId: brandId
+        )
+        
+        let (data, unreadCount, brand) = await (try dataTask, try unreadCountTask, try getBrandTask)
         
         try await connectWebSocket(
             clientKey: clientKey,
@@ -127,6 +136,20 @@ internal class CoreInbox {
         self.messages = data.messages?.nodes
         
         self.notifyMessagesChanged()
+        
+    }
+    
+    internal func getBrandIfNeeded(clientKey: String, userId: String, brandId: String?) async throws -> CourierBrand? {
+        
+        guard let brandId = brandId else {
+            return nil
+        }
+        
+        return try await brandsRepo.getBrand(
+            clientKey: clientKey,
+            userId: userId,
+            brandId: brandId
+        )
         
     }
     
@@ -519,6 +542,15 @@ internal class CoreInbox {
 }
 
 extension Courier {
+    
+    @objc public var inboxBrandId: String? {
+        get {
+            return inbox.brandId
+        }
+        set {
+            inbox.brandId = newValue
+        }
+    }
     
     @objc public var inboxMessages: [InboxMessage]? {
         get {

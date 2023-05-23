@@ -11,7 +11,6 @@ import UIKit
     
     // MARK: Styling
     
-    internal let brandId: String?
     internal let messageAnimationStyle: UITableView.RowAnimation
     private let unreadIndicatorBarColor: UIColor?
     private let loadingIndicatorColor: UIColor?
@@ -27,7 +26,6 @@ import UIKit
     // brandId will be overridden if other colors are provided
     
     public init(
-        brandId: String? = nil,
         messageAnimationStyle: UITableView.RowAnimation = .left,
         unreadIndicatorBarColor: UIColor? = nil,
         loadingIndicatorColor: UIColor? = nil,
@@ -50,7 +48,6 @@ import UIKit
         buttonStyles: CourierInboxButtonStyles = CourierInboxButtonStyles(),
         cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
     ) {
-        self.brandId = brandId
         self.messageAnimationStyle = messageAnimationStyle
         self.unreadIndicatorBarColor = unreadIndicatorBarColor
         self.loadingIndicatorColor = loadingIndicatorColor
@@ -118,38 +115,6 @@ import UIKit
     
     internal static let lightBrandColor: UIColor = UIColor("73819B") ?? .black
     internal static let darkBrandColor: UIColor = .white
-    
-}
-
-extension CourierInboxTheme {
-    
-    internal func attachBrand() async -> CourierInboxTheme {
-        
-        // Return if we have no keys, or no brandId, or an existing brand exists
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let brandId = brandId else {
-            return self
-        }
-        
-        // Do not continue if we have a brand already
-        if let _ = self.brand {
-            return self
-        }
-        
-        do {
-            
-            // Grabs the brand from the server if needed
-            // Sets it or fails silently
-            self.brand = try await BrandsRepository().getBrand(clientKey: clientKey, userId: userId, brandId: brandId)
-            
-        } catch {
-            
-            Courier.log(error.friendlyMessage)
-            
-        }
-        
-        return self
-        
-    }
     
 }
 

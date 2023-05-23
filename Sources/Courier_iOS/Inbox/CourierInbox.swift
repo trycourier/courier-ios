@@ -152,10 +152,7 @@ import UIKit
         // Called when the auth state changes
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
             if (userId != nil) {
-                Task {
-                    await self?.fetchBrands()
-                    self?.traitCollectionDidChange(nil)
-                }
+                self?.traitCollectionDidChange(nil)
             }
         }
         
@@ -163,28 +160,20 @@ import UIKit
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        Task {
-            
-            // Set state
-            state = .loading
-            
-            // Get the brands if possible
-            // Will silently fail
-            await fetchBrands()
+        // Set state
+        state = .loading
 
-            // Add the views
-            addTableView()
-            addLoadingIndicator()
-            addInfoView()
-            addCourierBar()
-            
-            // Refreshes theme
-            traitCollectionDidChange(nil)
-            
-            // Init the listener
-            makeListener()
-            
-        }
+        // Add the views
+        addTableView()
+        addLoadingIndicator()
+        addInfoView()
+        addCourierBar()
+        
+        // Refreshes theme
+        traitCollectionDidChange(nil)
+        
+        // Init the listener
+        makeListener()
         
     }
     
@@ -286,13 +275,6 @@ import UIKit
             infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CourierInboxTheme.margin),
         ])
         
-    }
-    
-    private func fetchBrands() async {
-        let _ = await [
-            lightTheme.attachBrand(),
-            darkTheme.attachBrand()
-        ]
     }
     
     private func makeListener() {
