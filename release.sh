@@ -1,14 +1,24 @@
 #!/bin/bash
 
+# Open simulator
+simulator_path="/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
+
+if [ -e "$simulator_path" ]; then
+    echo "✅ Opened Simulator.\n"
+else
+    echo "❌ Didn't open Simulator.\n"
+    exit 1
+fi
+
 # Build and run tests
 xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
 
 # Check the exit code of xcodebuild
 if [ $? -eq 0 ]; then
-  echo "✅ Tests passed.\n"
+    echo "✅ Tests passed.\n"
 else
-  echo "❌ Tests failed.\n"
-  exit 1
+    echo "❌ Tests failed.\n"
+    exit 1
 fi
 
 # Check if Homebrew is installed
