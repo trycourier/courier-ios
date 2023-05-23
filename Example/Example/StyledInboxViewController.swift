@@ -18,6 +18,8 @@ class StyledInboxViewController: UIViewController {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
                 messageAnimationStyle: .fade,
+                unreadIndicatorBarColor: .blue,
+                loadingIndicatorColor: .red,
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: textColor
