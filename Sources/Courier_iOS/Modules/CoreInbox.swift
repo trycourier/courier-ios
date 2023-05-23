@@ -32,6 +32,7 @@ internal class CoreInbox {
     internal var paginationLimit = defaultPaginationLimit
     
     internal var brandId: String? = nil
+    internal var brand: CourierBrand? = nil
 
     private var listeners: [CourierInboxListener] = []
     
@@ -134,6 +135,7 @@ internal class CoreInbox {
         self.inboxData = data
         self.unreadCount = unreadCount
         self.messages = data.messages?.nodes
+        self.brand = brand
         
         self.notifyMessagesChanged()
         
@@ -542,6 +544,12 @@ internal class CoreInbox {
 }
 
 extension Courier {
+    
+    @objc public var inboxBrand: CourierBrand? {
+        get {
+            return inbox.brand
+        }
+    }
     
     @objc public var inboxBrandId: String? {
         get {

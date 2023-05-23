@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "master",
-        "revision" : "7630c3fcbf24cec19fb50ca057e8d7a02c19c50c"
+        "branch" : "feature/brand-updates",
+        "revision" : "5a32df493830773e8b484092477b22c10b234fe0"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleDataTransport.git",
       "state" : {
-        "revision" : "cc7265b8e3906304e6e81f32c1662a94bbae2357",
-        "version" : "9.2.2"
+        "revision" : "7874c1b48cbffd086ce8a052c4be873a78613775",
+        "version" : "9.2.3"
       }
     },
     {

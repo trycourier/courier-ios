@@ -281,18 +281,28 @@ import UIKit
         
         self.inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: { [weak self] in
+                self?.refreshBrand()
                 self?.state = .loading
             },
             onError: { [weak self] error in
+                self?.refreshBrand()
                 self?.state = .error(error)
             },
             onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
+                self?.refreshBrand()
                 self?.state = newMessages.isEmpty ? .empty : .content
                 self?.canPaginate = canPaginate
                 self?.reloadMessages(newMessages)
             }
         )
         
+    }
+    
+    private func refreshBrand() {
+        if let brand = Courier.shared.inboxBrand {
+            theme.brand = brand
+        }
+        reloadViews()
     }
     
     // MARK: Reload
@@ -477,8 +487,11 @@ import UIKit
     }
     
     private func setTheme(isDarkMode: Bool) {
-            
         theme = isDarkMode ? darkTheme : lightTheme
+        reloadViews()
+    }
+    
+    private func reloadViews() {
         
         tableView.separatorStyle = theme.cellStyles.separatorStyle
         tableView.separatorInset = theme.cellStyles.separatorInsets

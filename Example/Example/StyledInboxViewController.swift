@@ -17,7 +17,6 @@ class StyledInboxViewController: UIViewController {
     private lazy var courierInbox = {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
-                brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
                 messageAnimationStyle: .fade,
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
@@ -49,7 +48,6 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             darkTheme: CourierInboxTheme(
-                brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: .white
