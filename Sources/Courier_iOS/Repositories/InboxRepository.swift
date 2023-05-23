@@ -101,7 +101,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         
     }
     
-    internal func getAllMessages(clientKey: String, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
+    internal func getMessages(clientKey: String, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
         
         let query = """
         query GetMessages(
@@ -124,6 +124,7 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                     opened
                     title
                     preview
+                    data
                     actions {
                         content
                         data

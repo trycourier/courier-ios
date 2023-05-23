@@ -15,7 +15,7 @@ internal class CoreAuth {
     
     internal func signIn(accessToken: String, clientKey: String?, userId: String, push: CorePush, inbox: CoreInbox) async throws {
         
-        Courier.log("Updating Courier User Profile")
+        Courier.log("Signing user in")
         Courier.log("Access Token: \(accessToken)")
         Courier.log("Client Key: \(clientKey ?? "Not set")")
         Courier.log("User Id: \(userId)")
@@ -51,7 +51,7 @@ internal class CoreAuth {
     
     internal func signOut(push: CorePush, inbox: CoreInbox) async throws {
         
-        Courier.log("Clearing Courier User Credentials")
+        Courier.log("Signing user out")
         
         await push.deletePushTokens()
         
@@ -131,7 +131,7 @@ extension Courier {
     
     @objc public var isUserSignedIn: Bool {
         get {
-            return userId != nil && clientKey != nil && accessToken != nil
+            return userId != nil && accessToken != nil
         }
     }
     

@@ -79,23 +79,26 @@ class NotificationsViewController: UIViewController {
             
             if (inboxSwitch.isOn) {
                 
+                let buttonCount = Int.random(in: 0...2)
+                
+                var elements: [CourierElement] = []
+                
+                for i in 0..<buttonCount {
+                    
+                    let element = CourierElement(
+                        type: "action",
+                        content: "Button \(i + 1)",
+                        data: [
+                            "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+                        ]
+                    )
+                    
+                    elements.append(element)
+                    
+                }
+                
                 let channel = CourierInboxChannel(
-                    elements: [
-                        CourierElement(
-                            type: "action",
-                            content: "Button 1",
-                            data: [
-                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                            ]
-                        ),
-                        CourierElement(
-                            type: "action",
-                            content: "Button 2",
-                            data: [
-                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                            ]
-                        )
-                    ],
+                    elements: elements,
                     data: [
                         "CUSTOM_INBOX_MESSAGE_KEY": "YOUR_CUSTOM_VALUE"
                     ]

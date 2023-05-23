@@ -102,7 +102,7 @@ internal class CoreInbox {
         let maxRefreshLimit = min(messageCount, CoreInbox.defaultMaxPaginationLimit)
         let limit = refresh ? maxRefreshLimit : paginationLimit
         
-        async let dataTask: (InboxData) = inboxRepo.getAllMessages(
+        async let dataTask: (InboxData) = inboxRepo.getMessages(
             clientKey: clientKey,
             userId: userId,
             paginationLimit: limit
@@ -203,7 +203,7 @@ internal class CoreInbox {
         
         let cursor = data.messages?.pageInfo?.startCursor
         
-        self.inboxData = try await inboxRepo.getAllMessages(
+        self.inboxData = try await inboxRepo.getMessages(
             clientKey: clientKey,
             userId: userId,
             paginationLimit: paginationLimit,
@@ -392,7 +392,7 @@ internal class CoreInbox {
         }
         
         // User is not signed
-        if (!Courier.shared.isUserSignedIn) {
+        if (!Courier.shared.isUserSignedIn || Courier.shared.clientKey == nil) {
             Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
             Utils.runOnMainThread {
                 listener.onError?(CourierError.inboxUserNotFound)

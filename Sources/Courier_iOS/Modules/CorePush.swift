@@ -124,7 +124,7 @@ internal class CorePush {
             return
         }
         
-        Courier.log("Puting \(provider.key) Messaging Token: \(newToken)")
+        Courier.log("Putting \(provider.key) Messaging Token: \(newToken)")
         
         do {
             

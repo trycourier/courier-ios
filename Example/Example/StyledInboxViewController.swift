@@ -17,9 +17,8 @@ class StyledInboxViewController: UIViewController {
     private lazy var courierInbox = {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
+                brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2",
                 messageAnimationStyle: .fade,
-                unreadIndicatorBarColor: secondaryColor,
-                loadingIndicatorColor: primaryColor,
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: textColor
@@ -79,8 +78,11 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             didClickInboxMessageAtIndex: { message, index in
+                
                 message.isRead ? message.markAsUnread() : message.markAsRead()
+                
                 print(message.toJson() ?? "")
+                
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
                 print(action.toJson() ?? "")

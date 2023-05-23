@@ -99,7 +99,7 @@ import Foundation
                             "aps": aps
                         ]
                     ]
-                ]
+                ] as [String : Any]
             ]
         ]
     }

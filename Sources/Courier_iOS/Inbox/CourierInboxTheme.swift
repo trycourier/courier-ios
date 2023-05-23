@@ -159,7 +159,7 @@ extension CourierInboxTheme {
     internal let backgroundColor: UIColor?
     internal let cornerRadius: CGFloat
     
-    static let maxHeight: CGFloat = 34.33
+    internal static let maxHeight: CGFloat = 34.33
     
     public init(font: CourierInboxFont = CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white), backgroundColor: UIColor? = nil, cornerRadius: CGFloat = 8) {
         self.font = font

@@ -253,7 +253,7 @@ final class CourierTests: XCTestCase {
     
     func testL_unreadMessage() async throws {
 
-        print("\n🔬 Testing Read Message")
+        print("\n🔬 Testing Unread Message")
         
         guard let messageId = exampleMessageId else {
             return
@@ -269,7 +269,7 @@ final class CourierTests: XCTestCase {
     
     func testM_openMessage() async throws {
 
-        print("\n🔬 Testing Read Message")
+        print("\n🔬 Testing Open Message")
         
         guard let messageId = exampleMessageId else {
             return
