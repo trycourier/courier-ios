@@ -76,7 +76,7 @@ The easiest way to support push notifications in your app.
                 A phyical iOS device
             </td>
             <td align="left">
-                Although you can setup the Courier SDK without a device, a physical device is the only way to full ensure push notification tokens and notification delivery is working correctly. Simulators are not reliable.
+                Although you can setup the Courier SDK without a device, a physical device is the only way to fully ensure push notification tokens and notification delivery is working correctly. Simulators are not reliable.
             </td>
         </tr>
         <tr width="600px">
@@ -156,6 +156,8 @@ Select which push notification provider you would like Courier to route push not
         </tr>
     </tbody>
 </table>
+
+&emsp;
 
 ## 2. Enable the "Push Notifications" capability 
 
@@ -291,6 +293,8 @@ end
 
 ## 5. Send a Test Push Notification
 
+1. Register for push notifications
+
 ```swift
 import Courier_iOS
 
@@ -313,8 +317,7 @@ Task {
 }
 ```
 
-1. Register for push notifications
-
+2. Send a test message
 
 ```swift
 import Courier_iOS
@@ -334,7 +337,5 @@ Task {
 
 }
 ```
-
-2. Send a test message
 
 [`More Testing Examples Here`](https://github.com/trycourier/courier-ios/blob/master/Docs/Testing.md)
