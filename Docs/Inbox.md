@@ -186,8 +186,12 @@ view.addSubview(courierInbox)
 You can control your branding from the [`Courier Studio`](https://app.courier.com/designer/brands). 
 
 ```swift 
+// Set the brand id globally
+// This will fetch the brand when you load the inbox
+Courier.shared.inboxBrandId = "YOUR_BRAND_ID"
+
+// To override the brand...
 let brandedThemeWithLoadingColorOverride = CourierInboxTheme(
-    brandId: "YOUR_BRAND_ID",
     loadingIndicatorColor: .red, // ⚠️ Will override the brand primary color
     ...
 )
