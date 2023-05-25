@@ -63,11 +63,11 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     
     // MARK: Token Management
 
-    public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    open func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         Courier.log("Unable to register for remote notifications: \(error.localizedDescription)")
     }
 
-    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    open func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Task {
             do {
                 
@@ -84,22 +84,6 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
             }
         }
     }
-    
-    // MARK: Firebase Cloud Messaging
-
-//    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-//
-//        guard let token = fcmToken else { return }
-//
-//        Task {
-//            do {
-//                try await Courier.shared.setFCMToken(token)
-//            } catch {
-//                Courier.log(error.friendlyMessage)
-//            }
-//        }
-//
-//    }
     
     // MARK: Functions
     
