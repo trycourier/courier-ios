@@ -24,7 +24,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "feature/delegate-passthrough",
-        "revision" : "59e2f05fa722382af03e89a8dda095376940223f"
+        "revision" : "ddfccce08dd01fd21408bab47787c38e160eb525"
       }
     },
     {
