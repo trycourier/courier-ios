@@ -37,7 +37,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     
     // MARK: Messaging
     
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    open func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         let message = notification.request.content.userInfo
         
@@ -49,7 +49,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
     }
     
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    open func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         let message = response.notification.request.content.userInfo
         
