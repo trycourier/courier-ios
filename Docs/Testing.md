@@ -81,48 +81,48 @@ curl --request POST \
 ⚠️ Courier automatically applies some overrides. View the overrides [`here`](https://app.courier.com/channels/apn).
 
 ```bash
-{
-  "message" : {
-    "routing" : {
-      "channels" : [
-        "apn"
-      ],
-      "method" : "all"
-    },
-    "to" : [
-      {
-        "user_id" : "maverick"
-      }
-    ],
-    "content" : {
-      "body" : "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "elements" : [
-
-      ],
-      "title" : "Lorem qui officia deserunt mollit anim id est laborum.",
-      "version" : "2020-01-01"
-    },
-    "providers" : {
-      "apn" : {
-        "override" : {
-          "body" : {
-            "aps" : {
-              "CUSTOM_NUMBER" : 456,
-              "sound" : "ping.aiff",
-              "alert" : {
-                "title" : "Lorem qui officia deserunt mollit anim id est laborum.",
-                "body" : "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-              },
-              "CUSTOM_KEY" : "YOUR_CUSTOM_VALUE",
-              "badge" : 123,
-              "CUSTOM_BOOLEAN" : true
-            }
-          }
-        }
-      }
-    }
-  }
-}
+curl --request POST \
+  --url https://api.courier.com/send \
+  --header 'Authorization: Bearer YOUR_AUTH_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"message": {
+		"to": [
+			{
+				"user_id": "YOUR_USER_ID"
+			}
+		],
+		"content": {
+			"title": "Lorem ipsum dolor sit amet",
+			"body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"
+		},
+		"routing": {
+			"channels": [
+				"apn"
+			],
+			"method": "all"
+		},
+		"providers": {
+			"apn": {
+				"override": {
+					"body": {
+						"aps": {
+							"alert": {
+								"title": "Lorem ipsum dolor sit amet",
+								"body": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"
+							},
+							"badge": 123,
+							"sound": "ping.aiff",
+							"CUSTOM_NUMBER": 456,
+							"CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
+							"CUSTOM_BOOLEAN": true
+						}
+					}
+				}
+			}
+		}
+	}
+}'
 ```
 
 ### Result
