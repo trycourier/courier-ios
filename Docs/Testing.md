@@ -35,54 +35,44 @@ Common examples for testing [`Courier Inbox`](https://github.com/trycourier/cour
 
 [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) must be setup to receive messages.
 
-<table>
-<tr>
-<td width="500px" align="left">Swift</td>
-<td width="500px" align="left">HTTP</td>
-</tr>
-<tr width="600px">
-<td> 
-
-```swift
-try await Courier.shared.sendMessage(
-    authKey: "YOUR_AUTH_KEY",
-    userId: "example_user_id",
-    title: "Hey there 👋",
-    message: "Have a great day 😁",
-    providers: [.inbox]
-)
-```
-
-</td>
-<td>
-
 ```bash
 curl --request POST \
   --url https://api.courier.com/send \
   --header 'Authorization: Bearer YOUR_AUTH_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
-    "message": {
-        "to": {
-            "user_id": "example_user_id"
-        },
-        "content": {
-            "title": "Hey there 👋",
-            "body": "Have a great day 😁"
-        },
-        "routing": {
-            "method": "all",
-            "channels": [
-                "inbox"
-            ]
-        }
-    }
+	"message": {
+		"to": [
+			{
+				"user_id": "YOUR_USER_ID"
+			}
+		],
+		"content": {
+			"version": "2020-01-01",
+			"body": "Lorem ipsum dolor sit amet",
+			"title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+			"elements": [
+				{
+					"type": "action",
+					"data": {
+						"CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+					},
+					"content": "Button 1"
+				}
+			]
+		},
+		"data": {
+			"CUSTOM_INBOX_MESSAGE_KEY": "YOUR_CUSTOM_VALUE"
+		},
+		"routing": {
+			"channels": [
+				"inbox"
+			],
+			"method": "all"
+		}
+	}
 }'
 ```
-
-</td>
-</tr>
-</table>
 
 ### Result
 
