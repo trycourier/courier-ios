@@ -64,7 +64,7 @@ import Foundation
     let hasNextPage: Bool?
     
     init(_ dictionary: [String : Any]?) {
-        self.startCursor = dictionary?["count"] as? String
+        self.startCursor = dictionary?["startCursor"] as? String
         self.hasNextPage = dictionary?["hasNextPage"] as? Bool
     }
     

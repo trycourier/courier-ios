@@ -20,6 +20,8 @@ public enum CourierError: Error {
     case inboxWebSocketDisconnect
     case inboxUserNotFound
     case inboxUnknownError
+    case inboxNotInitialized
+    case inboxMessageNotFound
 }
 
 // MARK: Extensions
@@ -49,6 +51,10 @@ extension CourierError {
                 return "No user found"
             case .inboxUnknownError:
                 return "Unknown Courier Inbox error occurred. Please try again."
+            case .inboxNotInitialized:
+                return "The Courier Inbox is not setup. Please add a CourierInbox view or call Courier.shared.addInboxListener"
+            case .inboxMessageNotFound:
+                return "Courier Inbox message not found"
             }
         }
     }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -215,17 +216,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Oy5-e3-xVI">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hXe-lU-poM">
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JYO-qU-pVs">
-                                    <size key="itemSize" width="390" height="128"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells/>
-                            </collectionView>
+                            </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M6f-Se-H0F">
                                 <rect key="frame" x="20" y="91" width="350" height="670"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -236,25 +230,25 @@
                         <viewLayoutGuide key="safeArea" id="J9B-jF-jox"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Oy5-e3-xVI" firstAttribute="trailing" secondItem="J9B-jF-jox" secondAttribute="trailing" id="5on-bk-1sZ"/>
+                            <constraint firstItem="hXe-lU-poM" firstAttribute="trailing" secondItem="J9B-jF-jox" secondAttribute="trailing" id="08z-kT-DuH"/>
                             <constraint firstItem="M6f-Se-H0F" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" constant="20" id="Gha-ym-02a"/>
-                            <constraint firstItem="Oy5-e3-xVI" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" id="Gvc-JC-D3S"/>
-                            <constraint firstItem="Oy5-e3-xVI" firstAttribute="top" secondItem="dws-37-khE" secondAttribute="top" id="IDX-av-ojd"/>
-                            <constraint firstAttribute="bottom" secondItem="Oy5-e3-xVI" secondAttribute="bottom" id="hkq-MR-trm"/>
+                            <constraint firstItem="hXe-lU-poM" firstAttribute="top" secondItem="dws-37-khE" secondAttribute="top" id="IyL-gT-QIF"/>
+                            <constraint firstItem="hXe-lU-poM" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" id="eJR-LG-erj"/>
                             <constraint firstItem="M6f-Se-H0F" firstAttribute="top" secondItem="J9B-jF-jox" secondAttribute="top" id="jt9-En-ndE"/>
                             <constraint firstItem="J9B-jF-jox" firstAttribute="trailing" secondItem="M6f-Se-H0F" secondAttribute="trailing" constant="20" id="kMb-CC-gbs"/>
                             <constraint firstItem="J9B-jF-jox" firstAttribute="bottom" secondItem="M6f-Se-H0F" secondAttribute="bottom" id="pxP-Qz-bg6"/>
+                            <constraint firstAttribute="bottom" secondItem="hXe-lU-poM" secondAttribute="bottom" id="ygt-G3-gBc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="qjV-kz-L6Q"/>
                     <connections>
-                        <outlet property="collectionView" destination="Oy5-e3-xVI" id="W1m-DB-TEE"/>
                         <outlet property="stateLabel" destination="M6f-Se-H0F" id="vuG-32-Rzf"/>
+                        <outlet property="tableView" destination="hXe-lU-poM" id="ixS-DI-3BD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Bg-2L-P5V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2445" y="245"/>
+            <point key="canvasLocation" x="2444.6153846153848" y="244.54976303317534"/>
         </scene>
         <!--Prebuilt Inbox-->
         <scene sceneID="wr9-zw-dg8">

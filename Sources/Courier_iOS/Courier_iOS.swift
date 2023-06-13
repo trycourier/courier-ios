@@ -40,18 +40,18 @@ import Foundation
     /**
      * The modules of the SDK
      */
-    internal lazy var auth = CoreAuth()
-    internal lazy var push = CorePush()
-    internal lazy var inbox = CoreInbox()
-    internal lazy var messaging = CoreMessaging()
-    internal let logging = CoreLogging()
+    internal lazy var coreAuth = CoreAuth()
+    internal lazy var corePush = CorePush()
+    internal lazy var coreInbox = CoreInbox()
+    internal lazy var coreMessaging = CoreMessaging()
+    internal let coreLogging = CoreLogging()
     
     // MARK: Init
     
     private override init() {
         
 #if DEBUG
-        logging.isDebugging = true
+        coreLogging.isDebugging = true
 #endif
         
         super.init()

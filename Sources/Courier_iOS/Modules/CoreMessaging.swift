@@ -32,7 +32,7 @@ extension Courier {
      * More info: https://www.courier.com/docs/reference/send/message/
      */
     @discardableResult public func sendMessage(authKey: String, userIds: [String], title: String, body: String, channels: [CourierChannel]) async throws -> String {
-        return try await messaging.sendMessage(
+        return try await coreMessaging.sendMessage(
             authKey: authKey,
             userIds: userIds,
             title: title,
@@ -44,7 +44,7 @@ extension Courier {
     @objc public func sendMessage(authKey: String, userIds: [String], title: String, body: String, channels: [CourierChannel], onSuccess: @escaping (String) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                let requestId = try await messaging.sendMessage(
+                let requestId = try await coreMessaging.sendMessage(
                     authKey: authKey,
                     userIds: userIds,
                     title: title,

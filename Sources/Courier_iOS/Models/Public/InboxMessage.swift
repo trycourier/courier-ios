@@ -10,7 +10,7 @@ import Foundation
 /**
  The model used to structure CourierInbox messages
  */
-@objc public class InboxMessage: NSObject {
+@objc public class InboxMessage: NSObject, NSCopying {
     
     // MARK: Properties
     
@@ -50,6 +50,23 @@ import Foundation
         
     }
     
+    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, actions: [InboxAction]?, data: [String : Any]?) {
+        self.title = title
+        self.body = body
+        self.preview = preview
+        self.created = created
+        self.archived = archived
+        self.read = read
+        self.messageId = messageId
+        self.actions = actions
+        self.data = data
+    }
+    
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data)
+        return copy
+    }
+    
     @objc public var subtitle: String? {
         get {
             return body ?? preview
@@ -78,6 +95,10 @@ import Foundation
         read = Date().timestamp
     }
     
+    internal func setUnread() {
+        read = nil
+    }
+    
     internal func setOpened() {
         opened = Date().timestamp
     }
@@ -102,13 +123,13 @@ import Foundation
 extension InboxMessage {
     
     @objc public func markAsRead() async throws {
-        try await Courier.shared.inbox.readMessage(messageId: messageId)
+        try await Courier.shared.coreInbox.readMessage(messageId: messageId)
     }
     
     @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
-                try await Courier.shared.inbox.readMessage(messageId: messageId)
+                try await Courier.shared.coreInbox.readMessage(messageId: messageId)
                 onSuccess?()
             } catch {
                 Courier.log(error.friendlyMessage)
@@ -118,13 +139,13 @@ extension InboxMessage {
     }
     
     @objc public func markAsUnread() async throws {
-        try await Courier.shared.inbox.unreadMessage(messageId: messageId)
+        try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
     }
     
     @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
-                try await Courier.shared.inbox.unreadMessage(messageId: messageId)
+                try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
                 onSuccess?()
             } catch {
                 Courier.log(error.friendlyMessage)

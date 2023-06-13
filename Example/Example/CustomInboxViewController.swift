@@ -8,9 +8,9 @@
 import UIKit
 import Courier_iOS
 
-class CustomInboxViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var stateLabel: UILabel!
     
     private var inboxListener: CourierInboxListener? = nil
@@ -30,15 +30,19 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
         title = "Custom Inbox"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
         
-        collectionView.refreshControl = UIRefreshControl()
-        collectionView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
 
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.collectionViewLayout = UICollectionViewFlowLayout()
-        collectionView.register(CustomInboxCollectionViewCell.self, forCellWithReuseIdentifier: CustomInboxCollectionViewCell.id)
+        tableView.delegate = self
+        tableView.dataSource = self
         
-        self.inboxListener = Courier.shared.addInboxListener(
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100
+        
+        tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: LoadingTableViewCell.id)
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.id)
+
+        inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: {
                 self.setState(.loading)
             },
@@ -49,7 +53,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
                 self.setState(messages.isEmpty ? .empty : .content)
                 self.canPaginate = canPaginate
                 self.inboxMessages = messages
-                self.collectionView.reloadData()
+                self.tableView.reloadData()
             }
         )
         
@@ -58,7 +62,7 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     @objc private func onPullRefresh() {
         Task {
             try await Courier.shared.refreshInbox()
-            self.collectionView.refreshControl?.endRefreshing()
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
       
@@ -69,68 +73,143 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
     private func setState(_ state: State, error: String? = nil) {
         switch (state) {
         case .loading:
-            self.collectionView.isHidden = true
+            self.tableView.isHidden = true
             self.stateLabel.isHidden = false
             self.stateLabel.text = "Loading..."
         case .error:
-            self.collectionView.isHidden = true
+            self.tableView.isHidden = true
             self.stateLabel.isHidden = false
             self.stateLabel.text = error ?? "Error"
         case .content:
-            self.collectionView.isHidden = false
+            self.tableView.isHidden = false
             self.stateLabel.isHidden = true
             self.stateLabel.text = ""
         case .empty:
-            self.collectionView.isHidden = true
+            self.tableView.isHidden = true
             self.stateLabel.isHidden = false
             self.stateLabel.text = "No messages found"
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 120)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.canPaginate ? 2 : 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? self.inboxMessages.count : 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
-        
-        if (indexPath.section == 0) {
-            let message = inboxMessages[indexPath.row]
-            cell.setMessage(message)
+        if indexPath.section == 0 {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.id, for: indexPath) as! CustomTableViewCell
+            let message = self.inboxMessages[indexPath.row]
+            cell.label.text = message.toJson()
+            cell.label.backgroundColor = !message.isRead ? .red : .clear
+            return cell
+            
         } else {
-            cell.showLoading()
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: LoadingTableViewCell.id, for: indexPath) as! LoadingTableViewCell
+            return cell
+            
         }
-        
-        return cell
         
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.section == 0 {
+            
+            let message = inboxMessages[indexPath.row]
+            message.isRead ? message.markAsUnread() : message.markAsRead()
+            tableView.deselectRow(at: indexPath, animated: true)
+            
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
         if (indexPath.section == 1) {
             Courier.shared.fetchNextPageOfMessages()
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let message = inboxMessages[indexPath.row].toJson()
-        appDelegate.showMessageAlert(title: "Message Clicked", message: message ?? "")
+        
     }
     
     deinit {
         self.inboxListener?.remove()
     }
 
+}
+
+class CustomTableViewCell: UITableViewCell {
+    
+    static let id = "CustomTableViewCell"
+    
+    let label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+        return label
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        // Add the label to the cell's content view
+        contentView.addSubview(label)
+        let padding: CGFloat = 16
+        label.numberOfLines = 0
+        
+        // Set up constraints for the label
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
+        ])
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+class LoadingTableViewCell: UITableViewCell {
+    
+    static let id = "LoadingTableViewCell"
+    
+    let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.startAnimating()
+        return activityIndicator
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        // Add the activity indicator to the cell's content view
+        contentView.addSubview(activityIndicator)
+        
+        // Set up constraints to center the activity indicator
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            activityIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+            activityIndicator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
+        ])
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
