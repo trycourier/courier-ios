@@ -13,7 +13,6 @@
 		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
 		27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */; };
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
-		27815B8429E7136A002D6DD0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27815B8329E7136A002D6DD0 /* GoogleService-Info.plist */; };
 		27815B8C29EF0C8C002D6DD0 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27815B8B29EF0C8C002D6DD0 /* Courier_iOS */; };
 		27815B8E29EF0D2F002D6DD0 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27815B8D29EF0D2F002D6DD0 /* Courier_iOS */; };
 		27895167292689460070F501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895166292689460070F501 /* AppDelegate.swift */; };
@@ -25,6 +24,7 @@
 		2789518129268C400070F501 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789518029268C400070F501 /* Env.swift */; };
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
 		27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */; };
+		27C40F852A28FE81001775BE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27C40F842A28FE81001775BE /* GoogleService-Info.plist */; };
 		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
 		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -59,7 +59,6 @@
 		27644EEB29AE7378002F907B /* CustomInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxViewController.swift; sourceTree = "<group>"; };
 		27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxCollectionViewCell.swift; sourceTree = "<group>"; };
 		27644EF329AFF741002F907B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
-		27815B8329E7136A002D6DD0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		27895163292689460070F501 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27895166292689460070F501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27895168292689460070F501 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -72,6 +71,7 @@
 		2789519529268DB70070F501 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledInboxViewController.swift; sourceTree = "<group>"; };
+		27C40F842A28FE81001775BE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		6729FFAE2926F779006A3EC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 		27895165292689460070F501 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				27815B8329E7136A002D6DD0 /* GoogleService-Info.plist */,
+				27C40F842A28FE81001775BE /* GoogleService-Info.plist */,
 				2789519529268DB70070F501 /* Example.entitlements */,
 				2789518029268C400070F501 /* Env.swift */,
 				2789519629268E030070F501 /* Extras.swift */,
@@ -250,7 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27895173292689470070F501 /* LaunchScreen.storyboard in Resources */,
-				27815B8429E7136A002D6DD0 /* GoogleService-Info.plist in Resources */,
+				27C40F852A28FE81001775BE /* GoogleService-Info.plist in Resources */,
 				27895170292689470070F501 /* Assets.xcassets in Resources */,
 				2789516E292689460070F501 /* Main.storyboard in Resources */,
 			);

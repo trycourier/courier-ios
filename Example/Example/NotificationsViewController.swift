@@ -18,28 +18,28 @@ class NotificationsViewController: UIViewController {
     @IBAction func sendPushAction(_ sender: Any) {
         
         Task {
-            
+
             let titles = [
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
                 "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ",
                 "Ullamco laboris nisi ut aliquip ex ea commodo consequat nisi ut aliquip ex ea commodo consequat duis aute irure dolor",
                 "Lorem qui officia deserunt mollit anim id est laborum."
             ]
-            
+
             let messages = [
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco",
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                 "Lorem ipsum dolor sit amet"
             ]
-            
+
             let title = titles.randomElement()!
             let body = messages.randomElement()!
-            
+
             var providers: [CourierChannel] = []
-            
+
             if (apnsSwitch.isOn) {
-                
+
                 let channel = ApplePushNotificationsServiceChannel(
                     aps: [
                         "alert": [
@@ -53,13 +53,13 @@ class NotificationsViewController: UIViewController {
                         "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
                     ]
                 )
-                
+
                 providers.append(channel)
-                
+
             }
-            
+
             if (fcmSwitch.isOn) {
-                
+
                 let channel = FirebaseCloudMessagingChannel(
                     fcmData: [
                         "FCM_CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
@@ -72,19 +72,19 @@ class NotificationsViewController: UIViewController {
                         "APNS_CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
                     ]
                 )
-                
+
                 providers.append(channel)
-                
+
             }
-            
+
             if (inboxSwitch.isOn) {
-                
+
                 let buttonCount = Int.random(in: 0...2)
-                
+
                 var elements: [CourierElement] = []
-                
+
                 for i in 0..<buttonCount {
-                    
+
                     let element = CourierElement(
                         type: "action",
                         content: "Button \(i + 1)",
@@ -92,24 +92,24 @@ class NotificationsViewController: UIViewController {
                             "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
                         ]
                     )
-                    
+
                     elements.append(element)
-                    
+
                 }
-                
+
                 let channel = CourierInboxChannel(
                     elements: elements,
                     data: [
                         "CUSTOM_INBOX_MESSAGE_KEY": "YOUR_CUSTOM_VALUE"
                     ]
                 )
-                
+
                 providers.append(channel)
-                
+
             }
-            
+
             if let userId = Courier.shared.userId {
-                
+
                 if (!providers.isEmpty) {
                     try await Courier.shared.sendMessage(
                         authKey: Env.COURIER_AUTH_KEY,
@@ -119,10 +119,26 @@ class NotificationsViewController: UIViewController {
                         channels: providers
                     )
                 }
-                
+
             }
-            
+
         }
+        
+    }
+    
+    private func send(title: String, body: String, elements: [CourierElement]) async throws {
+        
+        let channel = CourierInboxChannel(
+            elements: elements
+        )
+        
+        try await Courier.shared.sendMessage(
+            authKey: Env.COURIER_AUTH_KEY,
+            userIds: [Courier.shared.userId!],
+            title: title,
+            body: body,
+            channels: [channel]
+        )
         
     }
 
