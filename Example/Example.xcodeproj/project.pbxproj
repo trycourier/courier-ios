@@ -11,7 +11,6 @@
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
 		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
-		27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */; };
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
 		27815B8C29EF0C8C002D6DD0 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27815B8B29EF0C8C002D6DD0 /* Courier_iOS */; };
 		27815B8E29EF0D2F002D6DD0 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27815B8D29EF0D2F002D6DD0 /* Courier_iOS */; };
@@ -57,7 +56,6 @@
 		272A237F29B2886600B82CFE /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
 		272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltInboxViewController.swift; sourceTree = "<group>"; };
 		27644EEB29AE7378002F907B /* CustomInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxViewController.swift; sourceTree = "<group>"; };
-		27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxCollectionViewCell.swift; sourceTree = "<group>"; };
 		27644EF329AFF741002F907B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		27895163292689460070F501 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27895166292689460070F501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -129,7 +127,6 @@
 				272A237F29B2886600B82CFE /* RootTabBarController.swift */,
 				2789516A292689460070F501 /* NotificationsViewController.swift */,
 				27644EEB29AE7378002F907B /* CustomInboxViewController.swift */,
-				27644EF129AE7736002F907B /* CustomInboxCollectionViewCell.swift */,
 				272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */,
 				27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */,
 				27644EF329AFF741002F907B /* AuthViewController.swift */,
@@ -278,7 +275,6 @@
 				2789518129268C400070F501 /* Env.swift in Sources */,
 				27644EF429AFF741002F907B /* AuthViewController.swift in Sources */,
 				27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */,
-				27644EF229AE7736002F907B /* CustomInboxCollectionViewCell.swift in Sources */,
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,
 			);

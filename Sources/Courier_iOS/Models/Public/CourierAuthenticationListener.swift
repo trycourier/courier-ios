@@ -24,7 +24,7 @@ import Foundation
 extension CourierAuthenticationListener {
     
     @objc public func remove() {
-        Courier.shared.auth.removeAuthenticationListener(listener: self)
+        Courier.shared.coreAuth.removeAuthenticationListener(listener: self)
     }
     
 }

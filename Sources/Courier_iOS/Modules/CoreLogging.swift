@@ -33,10 +33,10 @@ extension Courier {
      */
     @objc public var isDebugging: Bool {
         get {
-            return logging.isDebugging
+            return coreLogging.isDebugging
         }
         set {
-            logging.isDebugging = newValue
+            coreLogging.isDebugging = newValue
         }
     }
     
@@ -44,15 +44,15 @@ extension Courier {
     // Used for React Native and Flutter SDKs
     @objc public var logListener: ((String) -> Void)? {
         get {
-            return logging.logListener
+            return coreLogging.logListener
         }
         set {
-            logging.logListener = newValue
+            coreLogging.logListener = newValue
         }
     }
     
     @objc public static func log(_ data: String) {
-        Courier.shared.logging.log(data)
+        Courier.shared.coreLogging.log(data)
     }
     
 }

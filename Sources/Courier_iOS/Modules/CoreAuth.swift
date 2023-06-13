@@ -104,7 +104,7 @@ extension Courier {
      */
     internal var clientKey: String? {
         get {
-            return auth.userManager.getClientKey()
+            return coreAuth.userManager.getClientKey()
         }
     }
     
@@ -116,7 +116,7 @@ extension Courier {
      */
     internal var accessToken: String? {
         get {
-            return auth.userManager.getAccessToken()
+            return coreAuth.userManager.getAccessToken()
         }
     }
     
@@ -125,7 +125,7 @@ extension Courier {
      */
     @objc public var userId: String? {
         get {
-            return auth.userManager.getUserId()
+            return coreAuth.userManager.getUserId()
         }
     }
     
@@ -140,13 +140,13 @@ extension Courier {
      You should consider using this in areas where you update your local user's state
      */
     @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String) async throws {
-        try await auth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: push, inbox: inbox)
+        try await coreAuth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: corePush, inbox: coreInbox)
     }
     
     @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                try await auth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: push, inbox: inbox)
+                try await coreAuth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: corePush, inbox: coreInbox)
                 onSuccess()
             } catch {
                 onFailure(error)
@@ -160,13 +160,13 @@ extension Courier {
      It will remove the current tokens used for this user in Courier so they do not receive pushes they should not get
      */
     @objc public func signOut() async throws {
-        try await auth.signOut(push: push, inbox: inbox)
+        try await coreAuth.signOut(push: corePush, inbox: coreInbox)
     }
     
     @objc public func signOut(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                try await auth.signOut(push: push, inbox: inbox)
+                try await coreAuth.signOut(push: corePush, inbox: coreInbox)
                 onSuccess()
             } catch {
                 onFailure(error)
@@ -178,7 +178,7 @@ extension Courier {
      Gets called when the Authentication state for the current user changes in Courier
      */
     @discardableResult @objc public func addAuthenticationListener(_ onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
-        return auth.addAuthChangeListener(onChange: onChange)
+        return coreAuth.addAuthChangeListener(onChange: onChange)
     }
     
 }

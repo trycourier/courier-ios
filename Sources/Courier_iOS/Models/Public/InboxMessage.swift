@@ -78,6 +78,10 @@ import Foundation
         read = Date().timestamp
     }
     
+    internal func setUnread() {
+        read = nil
+    }
+    
     internal func setOpened() {
         opened = Date().timestamp
     }
@@ -102,13 +106,13 @@ import Foundation
 extension InboxMessage {
     
     @objc public func markAsRead() async throws {
-        try await Courier.shared.inbox.readMessage(messageId: messageId)
+        try await Courier.shared.coreInbox.readMessage(messageId: messageId)
     }
     
     @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
-                try await Courier.shared.inbox.readMessage(messageId: messageId)
+                try await Courier.shared.coreInbox.readMessage(messageId: messageId)
                 onSuccess?()
             } catch {
                 Courier.log(error.friendlyMessage)
@@ -118,13 +122,13 @@ extension InboxMessage {
     }
     
     @objc public func markAsUnread() async throws {
-        try await Courier.shared.inbox.unreadMessage(messageId: messageId)
+        try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
     }
     
     @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
-                try await Courier.shared.inbox.unreadMessage(messageId: messageId)
+                try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
                 onSuccess?()
             } catch {
                 Courier.log(error.friendlyMessage)

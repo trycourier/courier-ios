@@ -179,7 +179,7 @@ extension Courier {
      */
     @objc public var apnsToken: String? {
         get {
-            return push.rawApnsToken?.string
+            return corePush.rawApnsToken?.string
         }
     }
     
@@ -188,7 +188,7 @@ extension Courier {
      */
     @objc public var fcmToken: String? {
         get {
-            return push.fcmToken
+            return corePush.fcmToken
         }
     }
     
@@ -243,13 +243,13 @@ extension Courier {
      * `CourierDelegate` will automatically track the urls
      */
     @objc public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) async throws {
-        try await push.trackNotification(message: message, event: event)
+        try await corePush.trackNotification(message: message, event: event)
     }
     
     @objc public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
-                try await push.trackNotification(message: message, event: event)
+                try await corePush.trackNotification(message: message, event: event)
                 onSuccess?()
             } catch {
                 Courier.log(error.friendlyMessage)
@@ -265,13 +265,13 @@ extension Courier {
      * This function requires a `Data` value as the token.
      */
     @objc public func setAPNSToken(_ rawToken: Data) async throws {
-        try await push.setAPNSToken(rawToken)
+        try await corePush.setAPNSToken(rawToken)
     }
     
     @objc public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                try await push.setAPNSToken(rawToken)
+                try await corePush.setAPNSToken(rawToken)
                 onSuccess()
             } catch {
                 onFailure(error)
@@ -284,13 +284,13 @@ extension Courier {
      * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
      */
     @objc public func setFCMToken(_ token: String) async throws {
-        try await push.setFCMToken(token)
+        try await corePush.setFCMToken(token)
     }
     
     @objc public func setFCMToken(_ token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                try await push.setFCMToken(token)
+                try await corePush.setFCMToken(token)
                 onSuccess()
             } catch {
                 onFailure(error)

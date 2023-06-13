@@ -392,7 +392,7 @@ import UIKit
         let indexToPageAt = self.inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 3)
         
         // Only fetch if we are safe to
-        if (indexPath.row == indexToPageAt && Courier.shared.inbox.canPage()) {
+        if (indexPath.row == indexToPageAt) {
             Courier.shared.fetchNextPageOfMessages()
         }
         
