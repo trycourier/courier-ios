@@ -125,12 +125,6 @@ curl --request POST \
 }'
 ```
 
-### Result
-
-<img width="894" alt="apns-push" src="https://user-images.githubusercontent.com/6370613/229195948-1b49b58e-8f38-4fd3-ab6b-7e3844def61d.png">
-
-&emsp;
-
 ## Push Notification - Firebase Cloud Messaging (FCM)
 
 [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) must be setup to receive messages.
