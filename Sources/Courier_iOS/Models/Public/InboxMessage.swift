@@ -10,7 +10,7 @@ import Foundation
 /**
  The model used to structure CourierInbox messages
  */
-@objc public class InboxMessage: NSObject {
+@objc public class InboxMessage: NSObject, NSCopying {
     
     // MARK: Properties
     
@@ -48,6 +48,23 @@ import Foundation
         self.actions = buttons
         self.data = dictionary?["data"] as? [String : Any]
         
+    }
+    
+    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, actions: [InboxAction]?, data: [String : Any]?) {
+        self.title = title
+        self.body = body
+        self.preview = preview
+        self.created = created
+        self.archived = archived
+        self.read = read
+        self.messageId = messageId
+        self.actions = actions
+        self.data = data
+    }
+    
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data)
+        return copy
     }
     
     @objc public var subtitle: String? {

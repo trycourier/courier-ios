@@ -105,8 +105,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
             
             let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.id, for: indexPath) as! CustomTableViewCell
             let message = self.inboxMessages[indexPath.row]
-//            cell.label.text = message.toJson()
-            cell.label.text = message.messageId
+            cell.label.text = message.toJson()
             cell.label.backgroundColor = !message.isRead ? .red : .clear
             return cell
             
