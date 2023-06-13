@@ -74,66 +74,56 @@ curl --request POST \
 }'
 ```
 
-### Result
-
-<img width="471" alt="inbox-example" src="https://user-images.githubusercontent.com/6370613/232109373-2e309171-fdb1-41f1-9652-c8a12c6f9d58.png">
-
-&emsp;
-
 ## Push Notification - Apple Push Notification Service (APNS)
 
 [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) must be setup to receive messages.
 
 ⚠️ Courier automatically applies some overrides. View the overrides [`here`](https://app.courier.com/channels/apn).
 
-<table>
-<tr>
-<td width="500px" align="left">Swift</td>
-<td width="500px" align="left">HTTP</td>
-</tr>
-<tr width="600px">
-<td> 
-
-```swift
-try await Courier.shared.sendMessage(
-    authKey: "YOUR_AUTH_KEY",
-    userId: "example_user_id",
-    title: "Hey there 👋",
-    message: "Have a great day 😁",
-    providers: [.apns]
-)
-```
-
-</td>
-<td>
-
 ```bash
-curl --request POST \
-  --url https://api.courier.com/send \
-  --header 'Authorization: Bearer YOUR_AUTH_KEY' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "message": {
-        "to": {
-            "user_id": "example_user_id"
-        },
-        "content": {
-            "title": "Hey there 👋",
-            "body": "Have a great day 😁"
-        },
-        "routing": {
-            "method": "all",
-            "channels": [
-                "apn"
-            ]
-        }
-    }
-}'
-```
+{
+  "message" : {
+    "routing" : {
+      "channels" : [
+        "apn"
+      ],
+      "method" : "all"
+    },
+    "to" : [
+      {
+        "user_id" : "maverick"
+      }
+    ],
+    "content" : {
+      "body" : "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "elements" : [
 
-</td>
-</tr>
-</table>
+      ],
+      "title" : "Lorem qui officia deserunt mollit anim id est laborum.",
+      "version" : "2020-01-01"
+    },
+    "providers" : {
+      "apn" : {
+        "override" : {
+          "body" : {
+            "aps" : {
+              "CUSTOM_NUMBER" : 456,
+              "sound" : "ping.aiff",
+              "alert" : {
+                "title" : "Lorem qui officia deserunt mollit anim id est laborum.",
+                "body" : "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+              },
+              "CUSTOM_KEY" : "YOUR_CUSTOM_VALUE",
+              "badge" : 123,
+              "CUSTOM_BOOLEAN" : true
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 ### Result
 
