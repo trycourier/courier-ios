@@ -139,7 +139,7 @@ curl --request POST \
 	"message": {
 		"to": [
 			{
-				"user_id": "maverick"
+				"user_id": "YOUR_USER_ID"
 			}
 		],
 		"content": {
