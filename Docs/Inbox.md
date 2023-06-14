@@ -235,7 +235,7 @@ The raw data you can use to build whatever UI you'd like.
 import UIKit
 import Courier_iOS
 
-class CustomInboxViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     private var inboxListener: CourierInboxListener? = nil
     
@@ -256,28 +256,36 @@ class CustomInboxViewController: UIViewController, UICollectionViewDataSource, U
             },
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
                 ...
-                self.collectionView.reloadData()
+                self.tableView.reloadData()
             }
         )
         
     }
     
     ...
+
+    private var messages: [InboxMessage] {
+        get {
+            return Courier.shared.inboxMessages ?? []
+        }
+    }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let message = messages[indexPath.row]
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CustomInboxCollectionViewCell.id, for: indexPath as IndexPath) as! CustomInboxCollectionViewCell
-        
-        let message = Courier.shared.inboxMessages[indexPath.row]
-        cell.setMessage(message)
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: YourCustomTableViewCell.id, for: indexPath) as! YourCustomTableViewCell
+        cell.message = message
         return cell
         
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let message = Courier.shared.inboxMessages[indexPath.row]
+
+        let message = messages[indexPath.row]
+        
         message.isRead ? message.markAsUnread() : message.markAsRead()
+        
     }
     
     deinit {
