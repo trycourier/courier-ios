@@ -237,6 +237,7 @@ import Courier_iOS
 
 class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var tableView: UITableView!
     private var inboxListener: CourierInboxListener? = nil
     
     ...
