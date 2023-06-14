@@ -229,7 +229,7 @@ let courierInbox = CourierInbox(
 
 The raw data you can use to build whatever UI you'd like.
 
-<img width="415" alt="custom-inbox" src="https://user-images.githubusercontent.com/6370613/228886933-d6f1ef6a-c582-4269-af68-da988aa25063.png">
+<img width="415" alt="custom-inbox" src="https://github.com/trycourier/courier-ios/assets/6370613/c5fe8e34-317b-463b-8d00-e397244add13">
 
 ```swift
 import UIKit
