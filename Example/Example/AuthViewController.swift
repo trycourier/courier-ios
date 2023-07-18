@@ -30,14 +30,24 @@ class AuthViewController: UIViewController {
                 
                 Task {
                     
-                    try await Courier.shared.signIn(
-                        accessToken: Env.COURIER_ACCESS_TOKEN,
-                        clientKey: Env.COURIER_CLIENT_KEY,
-                        userId: userId
-                    )
-                    
-                    self.refresh()
-                    try await Courier.requestNotificationPermission()
+                    do {
+                        
+                        try await Courier.shared.signIn(
+                            accessToken: Env.COURIER_ACCESS_TOKEN,
+                            clientKey: Env.COURIER_CLIENT_KEY,
+                            userId: userId
+                        )
+                        
+                        self.refresh()
+                        try await Courier.requestNotificationPermission()
+                        
+                    } catch {
+                        
+                        self.showInputAlert(title: error.localizedDescription, placeHolder: error.localizedDescription, action: error.localizedDescription, onComplete: { test in
+                            print(test)
+                        })
+                        
+                    }
                     
                 }
                 

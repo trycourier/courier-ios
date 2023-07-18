@@ -99,7 +99,7 @@ cat Sources/Courier_iOS/Courier_iOS.swift | while read LINE; do
     echo "✅ $VERSION github release created\n"
 
     # Push to pods
-    pod trunk push
+    pod trunk push --allow-warnings
     echo "✅ $VERSION Cocoapod released\n"
 
   fi

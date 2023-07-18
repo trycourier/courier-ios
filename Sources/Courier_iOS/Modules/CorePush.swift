@@ -28,9 +28,9 @@ internal class CorePush {
     
     // Attempt to put the users tokens if we have them
     internal func putPushTokens() async throws {
-        let _ = await [
+        let _ = try await [
             putTokenIfNeeded(provider: ApplePushNotificationsServiceChannel(), token: Courier.shared.apnsToken),
-            putTokenIfNeeded(provider: FirebaseCloudMessagingChannel(), token: Courier.shared.fcmToken),
+// TODO           putTokenIfNeeded(provider: FirebaseCloudMessagingChannel(), token: Courier.shared.fcmToken),
         ]
     }
     
@@ -118,28 +118,37 @@ internal class CorePush {
     
     // Tries add the token from Courier
     // Will silently fail if error occurs
-    private func putTokenIfNeeded(provider: CourierChannel, token: String?) async {
+    private func putTokenIfNeeded(provider: CourierChannel, token: String?) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId, let newToken = token else {
-            return
+            throw CourierError.inboxUserNotFound
+//            return TODO
         }
         
         Courier.log("Putting \(provider.key) Messaging Token: \(newToken)")
         
-        do {
-            
-            return try await tokenRepo.putUserToken(
-                accessToken: accessToken,
-                userId: userId,
-                provider: provider,
-                token: newToken
-            )
-            
-        } catch {
-            
-            Courier.log(error.friendlyMessage)
-            
-        }
+        // TODO: FIX ME
+        return try await tokenRepo.putUserToken(
+            accessToken: accessToken,
+            userId: userId,
+            provider: provider,
+            token: newToken
+        )
+        
+//        do {
+//
+//            return try await tokenRepo.putUserToken(
+//                accessToken: accessToken,
+//                userId: userId,
+//                provider: provider,
+//                token: newToken
+//            )
+//
+//        } catch {
+//
+//            Courier.log(error.friendlyMessage)
+//
+//        }
         
     }
     
