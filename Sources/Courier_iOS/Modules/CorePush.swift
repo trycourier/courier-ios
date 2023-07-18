@@ -30,7 +30,7 @@ internal class CorePush {
     internal func putPushTokens() async throws {
         let _ = try await [
             putTokenIfNeeded(provider: ApplePushNotificationsServiceChannel(), token: Courier.shared.apnsToken),
-// TODO           putTokenIfNeeded(provider: FirebaseCloudMessagingChannel(), token: Courier.shared.fcmToken),
+            putTokenIfNeeded(provider: FirebaseCloudMessagingChannel(), token: Courier.shared.fcmToken),
         ]
     }
     
@@ -121,13 +121,11 @@ internal class CorePush {
     private func putTokenIfNeeded(provider: CourierChannel, token: String?) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId, let newToken = token else {
-            throw CourierError.inboxUserNotFound
-//            return TODO
+            return
         }
         
         Courier.log("Putting \(provider.key) Messaging Token: \(newToken)")
         
-        // TODO: FIX ME
         return try await tokenRepo.putUserToken(
             accessToken: accessToken,
             userId: userId,
