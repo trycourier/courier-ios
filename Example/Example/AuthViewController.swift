@@ -30,61 +30,14 @@ class AuthViewController: UIViewController {
                 
                 Task {
                     
-                    do {
-                        
-//                        try await Courier.shared.signIn(
-//                            accessToken: Env.COURIER_ACCESS_TOKEN,
-//                            clientKey: Env.COURIER_CLIENT_KEY,
-//                            userId: userId
-//                        )
-                        
-                        try await Courier.shared.signIn(
-                            accessToken: Env.COURIER_ACCESS_TOKEN,
-                            userId: userId
-                        )
-                        
-                        self.refresh()
-                        try await Courier.requestNotificationPermission()
-                        
-                    } catch {
-                        
-                        if let e = error as? CourierError {
-                            
-                            var message = ""
-                            
-                            switch (e) {
-                            case .noAccessTokenFound:
-                                message = "No user found"
-                            case .noUserIdFound:
-                                message = "No user found"
-                            case .requestError:
-                                message = "An error occurred. Please try again."
-                            case .requestParsingError:
-                                message = "An error occurred data from server. Please try again."
-                            case .sendTestMessageFail:
-                                message = "An error occurred sending a test message."
-                            case .inboxWebSocketError:
-                                message = "An error occurred. Please try again."
-                            case .inboxWebSocketFail:
-                                message = "An error occurred. Please try again."
-                            case .inboxWebSocketDisconnect:
-                                message = "An error occurred. Please try again."
-                            case .inboxUserNotFound:
-                                message = "No user found"
-                            case .inboxUnknownError:
-                                message = "Unknown Courier Inbox error occurred. Please try again."
-                            case .inboxNotInitialized:
-                                message = "The Courier Inbox is not setup. Please add a CourierInbox view or call Courier.shared.addInboxListener"
-                            case .inboxMessageNotFound:
-                                message = "Courier Inbox message not found"
-                            }
-                            
-                            self.showInputAlert(title: message, placeHolder: message, action: error.localizedDescription, onComplete: { test in
-                                print(test)
-                            })
-                        }
-                        
-                    }
+                    try await Courier.shared.signIn(
+                        accessToken: Env.COURIER_ACCESS_TOKEN,
+                        clientKey: Env.COURIER_CLIENT_KEY,
+                        userId: userId
+                    )
+                    
+                    self.refresh()
+                    try await Courier.requestNotificationPermission()
                     
                 }
                 
