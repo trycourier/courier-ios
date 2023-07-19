@@ -70,7 +70,13 @@ internal class CorePush {
     internal func setAPNSToken(_ rawToken: Data) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
+            
+            // We save the raw apns token here
+            // This will keep track of the local token if needed
+            rawApnsToken = rawToken
+            
             return
+            
         }
         
         // Delete the current apns token
