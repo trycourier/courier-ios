@@ -1,10 +1,6 @@
 # Testing
 
-<<<<<<< HEAD
-Common examples for testing [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md)
-=======
 Common examples you can use to send [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) messages and [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) to your users.
->>>>>>> d935a39 (Clean up)
 
 &emsp;
 
@@ -31,19 +27,14 @@ Common examples you can use to send [`Courier Inbox`](https://github.com/trycour
     </tbody>
 </table>
 
-<<<<<<< HEAD
 ⚠️ Only use your `Authentication Key` while testing. For security reasons, Courier does not recommend you leave this key in your production app. More info can be found [`here`](https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md#usage).
 
-=======
->>>>>>> d935a39 (Clean up)
 &emsp;
 
 ## Courier Inbox Message
 
 [`Courier Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md) must be setup to receive messages.
 
-<<<<<<< HEAD
-=======
 <table>
 <tr>
 <td width="500px" align="left">Swift</td>
@@ -65,7 +56,6 @@ try await Courier.shared.sendMessage(
 </td>
 <td>
 
->>>>>>> d935a39 (Clean up)
 ```bash
 curl --request POST \
   --url https://api.courier.com/send \
@@ -106,7 +96,6 @@ curl --request POST \
 }'
 ```
 
-=======
     "message": {
         "to": {
             "user_id": "example_user_id"
@@ -135,15 +124,12 @@ curl --request POST \
 
 &emsp;
 
->>>>>>> d935a39 (Clean up)
 ## Push Notification - Apple Push Notification Service (APNS)
 
 [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) must be setup to receive messages.
 
 ⚠️ Courier automatically applies some overrides. View the overrides [`here`](https://app.courier.com/channels/apn).
 
-<<<<<<< HEAD
-=======
 <table>
 <tr>
 <td width="500px" align="left">Swift</td>
@@ -165,14 +151,12 @@ try await Courier.shared.sendMessage(
 </td>
 <td>
 
->>>>>>> d935a39 (Clean up)
 ```bash
 curl --request POST \
   --url https://api.courier.com/send \
   --header 'Authorization: Bearer YOUR_AUTH_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
-<<<<<<< HEAD
   "message": {
     "to": [
       {
@@ -211,8 +195,6 @@ curl --request POST \
   }
 }'
 ```
-
-=======
     "message": {
         "to": {
             "user_id": "example_user_id"
@@ -271,14 +253,12 @@ try await Courier.shared.sendMessage(
 </td>
 <td>
 
->>>>>>> d935a39 (Clean up)
 ```bash
 curl --request POST \
   --url https://api.courier.com/send \
   --header 'Authorization: Bearer YOUR_AUTH_KEY' \
   --header 'Content-Type: application/json' \
   --data '{
-<<<<<<< HEAD
   "message": {
     "to": [
       {
@@ -320,7 +300,6 @@ curl --request POST \
   }
 }'
 ```
-=======
     "message": {
         "to": {
             "user_id": "example_user_id"
@@ -346,4 +325,3 @@ curl --request POST \
 ### Result
 
 <img width="894" alt="apns-push" src="https://user-images.githubusercontent.com/6370613/229195948-1b49b58e-8f38-4fd3-ab6b-7e3844def61d.png">
->>>>>>> d935a39 (Clean up)
