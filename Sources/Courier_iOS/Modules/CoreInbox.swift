@@ -27,7 +27,7 @@ internal class CoreInbox {
      * Default pagination limit for messages
      */
     internal static let defaultPaginationLimit = 32
-    internal static let defaultMaxPaginationLimit = 200
+    internal static let defaultMaxPaginationLimit = 100
     internal static let defaultMinPaginationLimit = 1
     internal var paginationLimit = defaultPaginationLimit
     

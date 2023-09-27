@@ -29,7 +29,7 @@ import Foundation
      * Versioning
      */
     public static var agent = CourierAgent.native_ios
-    internal static let version = "2.0.4"
+    internal static let version = "2.1.0"
     
     /**
      * Singleton reference to the SDK
@@ -43,7 +43,6 @@ import Foundation
     internal lazy var coreAuth = CoreAuth()
     internal lazy var corePush = CorePush()
     internal lazy var coreInbox = CoreInbox()
-    internal lazy var coreMessaging = CoreMessaging()
     internal let coreLogging = CoreLogging()
     
     // MARK: Init

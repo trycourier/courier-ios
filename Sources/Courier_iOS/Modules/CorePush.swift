@@ -9,7 +9,7 @@ import UIKit
 
 internal class CorePush {
     
-    private lazy var tokenRepo = TokenRepository()
+    private lazy var usersRepo = UsersRepository()
     private lazy var trackingRepo = TrackingRepository()
     
     // MARK: Getters
@@ -53,7 +53,7 @@ internal class CorePush {
         
         do {
             
-            try await tokenRepo.deleteToken(
+            try await usersRepo.deleteToken(
                 accessToken: accessToken,
                 userId: userId,
                 token: prevToken
@@ -88,7 +88,7 @@ internal class CorePush {
         Courier.log("Apple Push Notification Service Token")
         Courier.log(rawToken.string)
         
-        return try await tokenRepo.putUserToken(
+        return try await usersRepo.putUserToken(
             accessToken: accessToken,
             userId: userId,
             provider: ApplePushNotificationsServiceChannel(),
@@ -113,7 +113,7 @@ internal class CorePush {
         Courier.log("Firebase Cloud Messaging Token")
         Courier.log(token)
         
-        return try await tokenRepo.putUserToken(
+        return try await usersRepo.putUserToken(
             accessToken: accessToken,
             userId: userId,
             provider: FirebaseCloudMessagingChannel(),
@@ -132,7 +132,7 @@ internal class CorePush {
         
         Courier.log("Putting \(provider.key) Messaging Token: \(newToken)")
         
-        return try await tokenRepo.putUserToken(
+        return try await usersRepo.putUserToken(
             accessToken: accessToken,
             userId: userId,
             provider: provider,
