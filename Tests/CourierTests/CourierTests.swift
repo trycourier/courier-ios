@@ -109,37 +109,37 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Sending APNS Message")
         
-        let title = "APNS message sent"
-        let body = "Hello from Xcode tests 👋"
-        
-        let requestId = try await Courier.shared.sendMessage(
-            authKey: Env.COURIER_ACCESS_TOKEN,
-            userIds: [Env.COURIER_USER_ID],
-            title: title,
-            body: body,
-            channels: [
-                ApplePushNotificationsServiceChannel(
-                    data: [
-                        "DATA_APNS": "YOUR_CUSTOM_VALUE",
-                    ],
-                    aps: [
-                        "alert": [
-                            "title": title,
-                            "body": body
-                        ],
-                        "sound": "ping.aiff",
-                        "badge": 123,
-                        "CUSTOM_NUMBER": 456,
-                        "CUSTOM_BOOLEAN": true,
-                        "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                    ]
-                )
-            ]
-        )
-        
-        print("Request ID: \(requestId)")
+//        let title = "APNS message sent"
+//        let body = "Hello from Xcode tests 👋"
+//        
+//        let requestId = try await Courier.shared.sendMessage(
+//            authKey: Env.COURIER_ACCESS_TOKEN,
+//            userIds: [Env.COURIER_USER_ID],
+//            title: title,
+//            body: body,
+//            channels: [
+//                ApplePushNotificationsServiceChannel(
+//                    data: [
+//                        "DATA_APNS": "YOUR_CUSTOM_VALUE",
+//                    ],
+//                    aps: [
+//                        "alert": [
+//                            "title": title,
+//                            "body": body
+//                        ],
+//                        "sound": "ping.aiff",
+//                        "badge": 123,
+//                        "CUSTOM_NUMBER": 456,
+//                        "CUSTOM_BOOLEAN": true,
+//                        "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+//                    ]
+//                )
+//            ]
+//        )
+//        
+//        print("Request ID: \(requestId)")
 
-        XCTAssertEqual(requestId.isEmpty, false)
+        XCTAssertEqual(true, false)
 
     }
     
@@ -147,33 +147,33 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Sending FCM Message")
         
-        let requestId = try await Courier.shared.sendMessage(
-            authKey: Env.COURIER_ACCESS_TOKEN,
-            userIds: [Env.COURIER_USER_ID],
-            title: "FCM message sent",
-            body: "Hello from Xcode tests 👋",
-            channels: [
-                FirebaseCloudMessagingChannel(
-                    data: [
-                        "DATA_FCM": "YOUR_CUSTOM_VALUE",
-                    ],
-                    fcmData: [
-                        "FCM_CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
-                    ],
-                    aps: [
-                        "sound": "ping.aiff",
-                        "badge": 123,
-                        "APNS_CUSTOM_NUMBER": 456,
-                        "APNS_CUSTOM_BOOLEAN": true,
-                        "APNS_CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                    ]
-                )
-            ]
-        )
-        
-        print("Request ID: \(requestId)")
+//        let requestId = try await Courier.shared.sendMessage(
+//            authKey: Env.COURIER_ACCESS_TOKEN,
+//            userIds: [Env.COURIER_USER_ID],
+//            title: "FCM message sent",
+//            body: "Hello from Xcode tests 👋",
+//            channels: [
+//                FirebaseCloudMessagingChannel(
+//                    data: [
+//                        "DATA_FCM": "YOUR_CUSTOM_VALUE",
+//                    ],
+//                    fcmData: [
+//                        "FCM_CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
+//                    ],
+//                    aps: [
+//                        "sound": "ping.aiff",
+//                        "badge": 123,
+//                        "APNS_CUSTOM_NUMBER": 456,
+//                        "APNS_CUSTOM_BOOLEAN": true,
+//                        "APNS_CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+//                    ]
+//                )
+//            ]
+//        )
+//        
+//        print("Request ID: \(requestId)")
 
-        XCTAssertEqual(requestId.isEmpty, false)
+        XCTAssertEqual(true, false)
 
     }
     
@@ -287,39 +287,39 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Sending Inbox Message")
         
-        let requestId = try await Courier.shared.sendMessage(
-            authKey: Env.COURIER_ACCESS_TOKEN,
-            userIds: [Env.COURIER_USER_ID],
-            title: "🐤 Inbox Message",
-            body: "Message sent from Xcode tests",
-            channels: [
-                CourierInboxChannel(
-                    elements: [
-                        CourierElement(
-                            type: "action",
-                            content: "Button 1",
-                            data: [
-                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                            ]
-                        ),
-                        CourierElement(
-                            type: "action",
-                            content: "Button 2",
-                            data: [
-                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                            ]
-                        )
-                    ],
-                    data: [
-                        "DATA_INBOX": "YOUR_CUSTOM_VALUE",
-                    ]
-                )
-            ]
-        )
-        
-        print("Request ID: \(requestId)")
+//        let requestId = try await Courier.shared.sendMessage(
+//            authKey: Env.COURIER_ACCESS_TOKEN,
+//            userIds: [Env.COURIER_USER_ID],
+//            title: "🐤 Inbox Message",
+//            body: "Message sent from Xcode tests",
+//            channels: [
+//                CourierInboxChannel(
+//                    elements: [
+//                        CourierElement(
+//                            type: "action",
+//                            content: "Button 1",
+//                            data: [
+//                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+//                            ]
+//                        ),
+//                        CourierElement(
+//                            type: "action",
+//                            content: "Button 2",
+//                            data: [
+//                                "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
+//                            ]
+//                        )
+//                    ],
+//                    data: [
+//                        "DATA_INBOX": "YOUR_CUSTOM_VALUE",
+//                    ]
+//                )
+//            ]
+//        )
+//        
+//        print("Request ID: \(requestId)")
 
-        XCTAssertEqual(requestId.isEmpty, false)
+        XCTAssertEqual(true, false)
 
     }
     
@@ -334,7 +334,7 @@ final class CourierTests: XCTestCase {
         XCTAssertEqual(Courier.shared.inboxPaginationLimit, 1)
 
         Courier.shared.inboxPaginationLimit = 1000
-        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 200)
+        XCTAssertEqual(Courier.shared.inboxPaginationLimit, 100)
 
     }
     
@@ -351,8 +351,67 @@ final class CourierTests: XCTestCase {
         print(brand)
 
     }
+    
+    func testQ_getUserPreferences() async throws {
 
-    func testQ_signOut() async throws {
+        print("\n🔬 Get User Preferences")
+        
+//        let jwt = try await ExampleServer().generateJwt(
+//            authKey: Env.COURIER_AUTH_KEY,
+//            userId: Env.COURIER_USER_ID
+//        )
+
+        let test = try await UsersRepository().getUserPreferences(
+            accessToken: Env.COURIER_AUTH_KEY,
+            userId: Env.COURIER_USER_ID
+        )
+        
+        print(test)
+
+    }
+    
+    func testR_getUserPreferences() async throws {
+
+        print("\n🔬 Put User Preference Topic")
+        
+//        let jwt = try await ExampleServer().generateJwt(
+//            authKey: Env.COURIER_AUTH_KEY,
+//            userId: Env.COURIER_USER_ID
+//        )
+        
+        // TODO: JWTs
+
+        try await UsersRepository().putUserPreferencesTopic(
+            accessToken: Env.COURIER_AUTH_KEY,
+            userId: Env.COURIER_USER_ID,
+            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF",
+            status: .optedOut,
+            hasCustomRouting: true,
+            customRouting: [.sms, .push]
+        )
+
+    }
+    
+    func testS_getUserPreferenceTopic() async throws {
+
+        print("\n🔬 Get User Preference Topic")
+        
+//        let jwt = try await ExampleServer().generateJwt(
+//            authKey: Env.COURIER_AUTH_KEY,
+//            userId: Env.COURIER_USER_ID
+//        )
+
+        let topic = try await UsersRepository().getUserPreferencesTopic(
+            accessToken: Env.COURIER_AUTH_KEY,
+            userId: Env.COURIER_USER_ID,
+            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF"
+        )
+        
+        print(topic)
+
+    }
+
+    func testZ_signOut() async throws {
 
         print("\n🔬 Testing Sign Out")
         
