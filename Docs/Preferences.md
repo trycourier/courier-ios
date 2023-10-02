@@ -55,7 +55,7 @@ try await Courier.shared.putUserPreferencesTopic(
 
 # Get Preference Topic
 
-Gets a specific preference topic. [`getUserSubscriptionTopic`](https://www.courier.com/docs/reference/user-preferences/get-subscription-topic-preferences/
+Gets a specific preference topic. [`getUserSubscriptionTopic`](https://www.courier.com/docs/reference/user-preferences/get-subscription-topic-preferences/)
 
 ```swift
 let topic = try await Courier.shared.getUserPreferencesTopic(
