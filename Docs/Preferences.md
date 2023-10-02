@@ -19,7 +19,7 @@ Allow users to update which types of notifications they would like to receive.
                 </a>
             </td>
             <td align="left">
-                Needed to view inbox messages that belong to a user.
+                Needed to view preferences that belong to a user.
             </td>
         </tr>
     </tbody>
