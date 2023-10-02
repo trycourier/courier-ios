@@ -12,7 +12,7 @@ The easiest way to support push notifications in your app.
     <thead>
         <tr>
             <th width="300px" align="left">Feature</th>
-            <th width="700px" align="left">Description</th>
+            <th width="750px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -57,7 +57,7 @@ The easiest way to support push notifications in your app.
     <thead>
         <tr>
             <th width="300px" align="left">Requirement</th>
-            <th width="700px" align="left">Reason</th>
+            <th width="750px" align="left">Reason</th>
         </tr>
     </thead>
     <tbody>
@@ -113,7 +113,7 @@ Select which push notification provider you would like Courier to route push not
 <table>
     <thead>
         <tr>
-            <th width="600px" align="left">Provider</th>
+            <th width="650px" align="left">Provider</th>
             <th width="200px" align="center">Token Syncing</th>
             <th width="200px" align="center">Supported</th>
         </tr>
