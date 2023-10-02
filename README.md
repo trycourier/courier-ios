@@ -9,7 +9,7 @@
 <table>
     <thead>
         <tr>
-            <th width="880px" align="left">Requirements</th>
+            <th width="940px" align="left">Requirements</th>
             <th width="120px" align="center"></th>
         </tr>
     </thead>
@@ -36,7 +36,7 @@
 <table>
     <thead>
         <tr>
-            <th width="880px" align="left">Languages</th>
+            <th width="940px" align="left">Languages</th>
             <th width="120px" align="center"></th>
         </tr>
     </thead>
@@ -57,7 +57,7 @@
 <table>
     <thead>
         <tr>
-            <th width="880px" align="left">Package Manager</th>
+            <th width="940px" align="left">Package Manager</th>
             <th width="120px" align="center"></th>
         </tr>
     </thead>
@@ -129,7 +129,7 @@ These are all the available features of the SDK.
         <tr>
             <th width="25px"></th>
             <th width="250px" align="left">Feature</th>
-            <th width="725px" align="left">Description</th>
+            <th width="750px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -210,7 +210,7 @@ Several common starter projects using the SDK.
 <table>
     <thead>
         <tr>
-            <th width="400px" align="left">Project Link</th>
+            <th width="450px" align="left">Project Link</th>
             <th width="200px" align="center">UI Framework</th>
             <th width="200px" align="center">Package Manager</th>
             <th width="200px" align="center">Language</th>
