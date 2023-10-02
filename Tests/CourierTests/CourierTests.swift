@@ -356,17 +356,11 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Get User Preferences")
         
-//        let jwt = try await ExampleServer().generateJwt(
-//            authKey: Env.COURIER_AUTH_KEY,
-//            userId: Env.COURIER_USER_ID
-//        )
-
-        let test = try await UsersRepository().getUserPreferences(
-            accessToken: Env.COURIER_AUTH_KEY,
-            userId: Env.COURIER_USER_ID
-        )
+        // TODO: JWTS
         
-        print(test)
+        let preferences = try await Courier.shared.getUserPreferences()
+        
+        XCTAssertEqual(preferences.items.isEmpty, false)
 
     }
     
@@ -374,17 +368,8 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Put User Preference Topic")
         
-//        let jwt = try await ExampleServer().generateJwt(
-//            authKey: Env.COURIER_AUTH_KEY,
-//            userId: Env.COURIER_USER_ID
-//        )
-        
-        // TODO: JWTs
-
-        try await UsersRepository().putUserPreferencesTopic(
-            accessToken: Env.COURIER_AUTH_KEY,
-            userId: Env.COURIER_USER_ID,
-            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF",
+        try await Courier.shared.putUserPreferencesTopic(
+            topicId: "6QHD7Z1D4Q436SMECGXENTQYWVQQ",
             status: .optedOut,
             hasCustomRouting: true,
             customRouting: [.sms, .push]
@@ -395,19 +380,12 @@ final class CourierTests: XCTestCase {
     func testS_getUserPreferenceTopic() async throws {
 
         print("\n🔬 Get User Preference Topic")
-        
-//        let jwt = try await ExampleServer().generateJwt(
-//            authKey: Env.COURIER_AUTH_KEY,
-//            userId: Env.COURIER_USER_ID
-//        )
 
-        let topic = try await UsersRepository().getUserPreferencesTopic(
-            accessToken: Env.COURIER_AUTH_KEY,
-            userId: Env.COURIER_USER_ID,
-            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF"
+        let topic = try await Courier.shared.getUserPreferencesTopic(
+            topicId: "6QHD7Z1D4Q436SMECGXENTQYWVQQ"
         )
         
-        print(topic)
+        XCTAssertEqual(topic.customRouting, [.sms, .push])
 
     }
 

@@ -39,11 +39,17 @@ internal class UsersRepository: Repository {
     
     // MARK: Preferences
     
-    internal func getUserPreferences(accessToken: String, userId: String) async throws -> CourierUserPreferences {
+    internal func getUserPreferences(accessToken: String, userId: String, paginationCursor: String? = nil) async throws -> CourierUserPreferences {
+        
+        var url = "\(CourierUrl.baseRest)/users/\(userId)/preferences"
+        
+        if let cursor = paginationCursor {
+            url += "?cursor=\(cursor)"
+        }
         
         let data = try await get(
             accessToken: accessToken,
-            url: "\(CourierUrl.baseRest)/users/\(userId)/preferences"
+            url: url
         )
         
         do {
