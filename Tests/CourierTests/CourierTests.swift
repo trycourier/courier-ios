@@ -109,7 +109,7 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Sending APNS Message")
         
-        try await ExampleServer().sendTest(
+        let _ = try await ExampleServer().sendTest(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
             key: "apn"
@@ -121,7 +121,7 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Sending FCM Message")
         
-        try await ExampleServer().sendTest(
+        let _ = try await ExampleServer().sendTest(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
             key: "firebase-fcm"
@@ -237,7 +237,7 @@ final class CourierTests: XCTestCase {
     
     func testN_sendInboxMessage() async throws {
         
-        try await ExampleServer().sendTest(
+        let _ = try await ExampleServer().sendTest(
             authKey: Env.COURIER_ACCESS_TOKEN,
             userId: Env.COURIER_USER_ID,
             key: "inbox"
@@ -278,8 +278,6 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Get User Preferences")
         
-        // TODO: JWTS
-        
         let preferences = try await Courier.shared.getUserPreferences()
         
         XCTAssertEqual(preferences.items.isEmpty, false)
@@ -291,7 +289,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Put User Preference Topic")
         
         try await Courier.shared.putUserPreferencesTopic(
-            topicId: "6QHD7Z1D4Q436SMECGXENTQYWVQQ",
+            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF",
             status: .optedOut,
             hasCustomRouting: true,
             customRouting: [.sms, .push]
@@ -304,7 +302,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Get User Preference Topic")
 
         let topic = try await Courier.shared.getUserPreferencesTopic(
-            topicId: "6QHD7Z1D4Q436SMECGXENTQYWVQQ"
+            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF"
         )
         
         XCTAssertEqual(topic.customRouting, [.sms, .push])

@@ -25,7 +25,7 @@ class ExampleServer {
             request.addValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
             
             request.httpBody = try? JSONEncoder().encode([
-                "scope": "user_id:\(userId) write:user-tokens",
+                "scope": "user_id:\(userId) write:user-tokens write:preferences read:preferences",
                 "expires_in": "2 days"
             ])
 
