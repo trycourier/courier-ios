@@ -44,4 +44,54 @@ class ExampleServer {
 
     }
     
+    internal func sendTest(authKey: String, userId: String, key: String) async throws -> Data? {
+        
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Data?, Error>) in
+            
+            let url = URL(string: "https://api.courier.com/send")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
+            
+            request.httpBody = [
+                "message": [
+                    "to": [
+                        "user_id": userId
+                    ],
+                    "content": [
+                        "title": "Test",
+                        "body": "Body"
+                    ],
+                    "routing": [
+                        "method": "all",
+                        "channels": [key]
+                    ]
+                ]
+            ].toJson()
+            
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                continuation.resume(returning: data)
+            }
+            
+            task.resume()
+            
+        })
+        
+    }
+    
+}
+
+extension Dictionary {
+    
+    func toJson() -> Data? {
+        do {
+            return try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
 }
