@@ -29,7 +29,7 @@ internal class CorePreferences {
         
     }
     
-    internal func putUserPreferencesTopic(topicId: String, status: CourierUserPreferences.Topic.Status, hasCustomRouting: Bool, customRouting: [CourierUserPreferences.Topic.Channel]) async throws {
+    internal func putUserPreferencesTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
         
         guard let accessToken = Courier.shared.accessToken else {
             throw CourierError.noAccessTokenFound
@@ -50,7 +50,7 @@ internal class CorePreferences {
         
     }
     
-    internal func getUserPreferencesTopic(topicId: String) async throws -> CourierUserPreferences.Topic {
+    internal func getUserPreferencesTopic(topicId: String) async throws -> CourierUserPreferencesTopic {
         
         guard let accessToken = Courier.shared.accessToken else {
             throw CourierError.noAccessTokenFound
@@ -93,11 +93,11 @@ extension Courier {
     /**
      * Updates a user's preference topic  
      */
-    public func putUserPreferencesTopic(topicId: String, status: CourierUserPreferences.Topic.Status, hasCustomRouting: Bool, customRouting: [CourierUserPreferences.Topic.Channel]) async throws {
+    public func putUserPreferencesTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
         try await corePreferences.putUserPreferencesTopic(topicId: topicId, status: status, hasCustomRouting: hasCustomRouting, customRouting: customRouting)
     }
     
-    public func putUserPreferencesTopic(topicId: String, status: CourierUserPreferences.Topic.Status, hasCustomRouting: Bool, customRouting: [CourierUserPreferences.Topic.Channel], onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    public func putUserPreferencesTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel], onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await corePreferences.putUserPreferencesTopic(topicId: topicId, status: status, hasCustomRouting: hasCustomRouting, customRouting: customRouting)
@@ -108,10 +108,10 @@ extension Courier {
         }
     }
     
-    @objc public func putUserPreferencesTopic(topicId: String, status: CourierUserPreferences.Topic.Status, hasCustomRouting: Bool, customRouting: [String], onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func putUserPreferencesTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [String], onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
-                let routing = customRouting.map { CourierUserPreferences.Topic.Channel(rawValue: $0) ?? .unknown }
+                let routing = customRouting.map { CourierUserPreferencesChannel(rawValue: $0) ?? .unknown }
                 try await corePreferences.putUserPreferencesTopic(topicId: topicId, status: status, hasCustomRouting: hasCustomRouting, customRouting: routing)
                 onSuccess()
             } catch {
@@ -123,11 +123,11 @@ extension Courier {
     /**
      * Gets a user's preference topic
      */
-    @objc public func getUserPreferencesTopic(topicId: String) async throws -> CourierUserPreferences.Topic {
+    @objc public func getUserPreferencesTopic(topicId: String) async throws -> CourierUserPreferencesTopic {
         return try await corePreferences.getUserPreferencesTopic(topicId: topicId)
     }
     
-    @objc public func getUserPreferencesTopic(topicId: String, onSuccess: @escaping (CourierUserPreferences.Topic) -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func getUserPreferencesTopic(topicId: String, onSuccess: @escaping (CourierUserPreferencesTopic) -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 let topic = try await corePreferences.getUserPreferencesTopic(topicId: topicId)

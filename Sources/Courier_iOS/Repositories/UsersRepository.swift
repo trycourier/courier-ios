@@ -71,7 +71,7 @@ internal class UsersRepository: Repository {
         let custom_routing: [String]
     }
     
-    internal func putUserPreferencesTopic(accessToken: String, userId: String, topicId: String, status: CourierUserPreferences.Topic.Status, hasCustomRouting: Bool, customRouting: [CourierUserPreferences.Topic.Channel]) async throws {
+    internal func putUserPreferencesTopic(accessToken: String, userId: String, topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
         
         let body = try? JSONEncoder().encode(
             TopicUpdate(
@@ -91,7 +91,7 @@ internal class UsersRepository: Repository {
         
     }
     
-    internal func getUserPreferencesTopic(accessToken: String, userId: String, topicId: String) async throws -> CourierUserPreferences.Topic {
+    internal func getUserPreferencesTopic(accessToken: String, userId: String, topicId: String) async throws -> CourierUserPreferencesTopic {
         
         let data = try await get(
             accessToken: accessToken,
@@ -99,7 +99,7 @@ internal class UsersRepository: Repository {
         )
         
         do {
-            let res = try JSONDecoder().decode(CourierUserPreferencesTopic.self, from: data ?? Data())
+            let res = try JSONDecoder().decode(CourierUserPreferencesTopicResponse.self, from: data ?? Data())
             return res.topic
         } catch {
             Courier.log(error.friendlyMessage)
