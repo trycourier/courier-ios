@@ -54,7 +54,7 @@ class NotificationsViewController: UIViewController {
 
                 if (!providers.isEmpty) {
                     
-                    let _ = try await ExampleServer().sendTest(
+                    let _ = try await SendAPI.sendTest(
                         authKey: Env.COURIER_AUTH_KEY,
                         userId: userId,
                         providers: providers,

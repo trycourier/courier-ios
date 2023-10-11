@@ -11,7 +11,7 @@ else
 fi
 
 # Build and run tests
-xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
+xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=15.4' test
 
 # Check the exit code of xcodebuild
 if [ $? -eq 0 ]; then
