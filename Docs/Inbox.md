@@ -12,7 +12,7 @@ An in-app notification center list you can use to notify your users. Allows you 
     <thead>
         <tr>
             <th width="250px" align="left">Requirement</th>
-            <th width="750px" align="left">Reason</th>
+            <th width="800px" align="left">Reason</th>
         </tr>
     </thead>
     <tbody>
@@ -48,7 +48,7 @@ An in-app notification center list you can use to notify your users. Allows you 
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">UI Framework</th>
+            <th width="850px" align="left">UI Framework</th>
             <th width="200px" align="center">Support</th>
         </tr>
     </thead>
@@ -207,7 +207,7 @@ let courierInbox = CourierInbox(
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">Supported Brand Styles</th>
+            <th width="850px" align="left">Supported Brand Styles</th>
             <th width="200px" align="center">Support</th>
         </tr>
     </thead>
@@ -304,7 +304,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
 <table>
     <thead>
         <tr>
-            <th width="800px" align="left">Link</th>
+            <th width="850px" align="left">Link</th>
             <th width="200px" align="center">Style</th>
         </tr>
     </thead>

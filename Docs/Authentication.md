@@ -10,7 +10,7 @@ Manages user credentials between app sessions.
     <thead>
         <tr>
             <th width="250px" align="left">Feature</th>
-            <th width="750px" align="left">Reason</th>
+            <th width="800px" align="left">Reason</th>
         </tr>
     </thead>
     <tbody>
@@ -82,7 +82,7 @@ listener.remove()
         <tr>
             <th width="150px" align="left">Properties</th>
             <th width="450px" align="left">Details</th>
-            <th width="400px" align="left">Where is this?</th>
+            <th width="450px" align="left">Where is this?</th>
         </tr>
     </thead>
     <tbody>
