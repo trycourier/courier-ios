@@ -177,7 +177,7 @@ These are all the available features of the SDK.
                 4
             </td>
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/master/Docs/Preferences.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Preferences.md">
                     <code>Preferences</code>
                 </a>
             </td>
