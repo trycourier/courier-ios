@@ -36,109 +36,37 @@ class NotificationsViewController: UIViewController {
             let title = titles.randomElement()!
             let body = messages.randomElement()!
 
-            var providers: [CourierChannel] = []
+            var providers: [String] = []
 
             if (apnsSwitch.isOn) {
-
-                let channel = ApplePushNotificationsServiceChannel(
-                    aps: [
-                        "alert": [
-                            "title": title,
-                            "body": body
-                        ],
-                        "sound": "ping.aiff",
-                        "badge": 123,
-                        "CUSTOM_NUMBER": 456,
-                        "CUSTOM_BOOLEAN": true,
-                        "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                    ]
-                )
-
-                providers.append(channel)
-
+                providers.append("apn")
             }
 
             if (fcmSwitch.isOn) {
-
-                let channel = FirebaseCloudMessagingChannel(
-                    fcmData: [
-                        "FCM_CUSTOM_KEY": "YOUR_CUSTOM_VALUE",
-                    ],
-                    aps: [
-                        "sound": "ping.aiff",
-                        "badge": 123,
-                        "APNS_CUSTOM_NUMBER": 456,
-                        "APNS_CUSTOM_BOOLEAN": true,
-                        "APNS_CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                    ]
-                )
-
-                providers.append(channel)
-
+                providers.append("firebase-fcm")
             }
 
             if (inboxSwitch.isOn) {
-
-                let buttonCount = Int.random(in: 0...2)
-
-                var elements: [CourierElement] = []
-
-                for i in 0..<buttonCount {
-
-                    let element = CourierElement(
-                        type: "action",
-                        content: "Button \(i + 1)",
-                        data: [
-                            "CUSTOM_KEY": "YOUR_CUSTOM_VALUE"
-                        ]
-                    )
-
-                    elements.append(element)
-
-                }
-
-                let channel = CourierInboxChannel(
-                    elements: elements,
-                    data: [
-                        "CUSTOM_INBOX_MESSAGE_KEY": "YOUR_CUSTOM_VALUE"
-                    ]
-                )
-
-                providers.append(channel)
-
+                providers.append("inbox")
             }
 
             if let userId = Courier.shared.userId {
 
                 if (!providers.isEmpty) {
-                    try await Courier.shared.sendMessage(
+                    
+                    let _ = try await SendAPI.sendTest(
                         authKey: Env.COURIER_AUTH_KEY,
-                        userIds: [userId],
+                        userId: userId,
+                        providers: providers,
                         title: title,
-                        body: body,
-                        channels: providers
+                        body: body
                     )
+                    
                 }
 
             }
 
         }
-        
-    }
-    
-    private func send(title: String, body: String, elements: [CourierElement]) async throws {
-        
-        let channel = CourierInboxChannel(
-            elements: elements
-        )
-        
-        try await Courier.shared.sendMessage(
-            authKey: Env.COURIER_AUTH_KEY,
-            userIds: [Courier.shared.userId!],
-            title: title,
-            body: body,
-            channels: [channel]
-        )
         
     }
 

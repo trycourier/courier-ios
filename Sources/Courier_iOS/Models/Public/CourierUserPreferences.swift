@@ -11,7 +11,7 @@ import Foundation
 
 @objc public class CourierUserPreferencesTopic: NSObject, Codable {
     
-    let topic: CourierUserPreferences.Topic
+    public let topic: CourierUserPreferences.Topic
     
     internal init(topic: CourierUserPreferences.Topic) {
         self.topic = topic
@@ -21,8 +21,8 @@ import Foundation
 
 @objc public class CourierUserPreferences: NSObject, Codable {
     
-    let items: [Topic]
-    let paging: Paging
+    public let items: [Topic]
+    public let paging: Paging
     
     internal init(items: [Topic], paging: Paging) {
         self.items = items
@@ -152,8 +152,8 @@ import Foundation
     
     @objc public class Paging: NSObject, Codable {
         
-        let cursor: String?
-        let more: Bool
+        public let cursor: String?
+        public let more: Bool
         
         internal init(cursor: String? = nil, more: Bool) {
             self.cursor = cursor
