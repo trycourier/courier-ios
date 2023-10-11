@@ -43,6 +43,7 @@ import Foundation
     internal lazy var coreAuth = CoreAuth()
     internal lazy var corePush = CorePush()
     internal lazy var coreInbox = CoreInbox()
+    internal lazy var corePreferences = CorePreferences()
     internal let coreLogging = CoreLogging()
     
     // MARK: Init

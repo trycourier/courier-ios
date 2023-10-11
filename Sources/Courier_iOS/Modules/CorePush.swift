@@ -139,21 +139,6 @@ internal class CorePush {
             token: newToken
         )
         
-//        do {
-//
-//            return try await tokenRepo.putUserToken(
-//                accessToken: accessToken,
-//                userId: userId,
-//                provider: provider,
-//                token: newToken
-//            )
-//
-//        } catch {
-//
-//            Courier.log(error.friendlyMessage)
-//
-//        }
-        
     }
     
     /**
