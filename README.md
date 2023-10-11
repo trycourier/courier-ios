@@ -177,12 +177,12 @@ These are all the available features of the SDK.
                 4
             </td>
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/feature/preferences-apis/Docs/Preferences.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/feature/master/Docs/Preferences.md">
                     <code>Preferences</code>
                 </a>
             </td>
             <td align="left">
-                Allow users to update which types of notifications they would like to receive
+                Allow users to update which types of notifications they would like to receive.
             </td>
         </tr>
         <tr width="600px">
