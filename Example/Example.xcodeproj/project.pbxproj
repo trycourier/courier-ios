@@ -24,6 +24,7 @@
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
 		27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */; };
 		27D4D2352A6767A100C3CC9A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27D4D2342A6767A100C3CC9A /* GoogleService-Info.plist */; };
+		27F80C742AD710FC000D7C07 /* ExampleServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F80C732AD710FC000D7C07 /* ExampleServer.swift */; };
 		6729FFAD2926F779006A3EC2 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729FFAC2926F779006A3EC2 /* NotificationService.swift */; };
 		6729FFB12926F779006A3EC2 /* CourierService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6729FFAA2926F779006A3EC2 /* CourierService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -70,6 +71,7 @@
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledInboxViewController.swift; sourceTree = "<group>"; };
 		27D4D2342A6767A100C3CC9A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		27F80C732AD710FC000D7C07 /* ExampleServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExampleServer.swift; path = ../../Tests/CourierTests/ExampleServer.swift; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		6729FFAE2926F779006A3EC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 			children = (
 				27D4D2342A6767A100C3CC9A /* GoogleService-Info.plist */,
 				2789519529268DB70070F501 /* Example.entitlements */,
+				27F80C732AD710FC000D7C07 /* ExampleServer.swift */,
 				2789518029268C400070F501 /* Env.swift */,
 				2789519629268E030070F501 /* Extras.swift */,
 				27895166292689460070F501 /* AppDelegate.swift */,
@@ -269,6 +272,7 @@
 			files = (
 				2789516B292689460070F501 /* NotificationsViewController.swift in Sources */,
 				272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */,
+				27F80C742AD710FC000D7C07 /* ExampleServer.swift in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
 				27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */,
 				272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */,
