@@ -46,11 +46,11 @@ final class CourierTests: XCTestCase {
         }
 
         try await Courier.shared.signIn(
-            accessToken: Env.COURIER_ACCESS_TOKEN,
+            accessToken: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID
         )
 
-        XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
+        XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_AUTH_KEY)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         XCTAssertEqual(Courier.shared.clientKey, nil)
         
