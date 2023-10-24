@@ -35,6 +35,12 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
     }
     
+    // MARK: Launching
+    
+    open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        return true
+    }
+    
     // MARK: Messaging
     
     open func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
