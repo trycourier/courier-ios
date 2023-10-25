@@ -1,24 +1,24 @@
 #!/bin/bash
 
 # Open simulator
-#simulator_path="/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
-#
-#if [ -e "$simulator_path" ]; then
-#    echo "✅ Opened Simulator.\n"
-#else
-#    echo "❌ Didn't open Simulator.\n"
-#    exit 1
-#fi
-#
-#xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 13 Pro,os=15.4' test
-#
-## Check the exit code of xcodebuild
-#if [ $? -eq 0 ]; then
-#    echo "✅ Tests passed.\n"
-#else
-#    echo "❌ Tests failed.\n"
-#    exit 1
-#fi
+simulator_path="/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
+
+if [ -e "$simulator_path" ]; then
+    echo "✅ Opened Simulator.\n"
+else
+    echo "❌ Didn't open Simulator.\n"
+    exit 1
+fi
+
+xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0' test
+
+# Check the exit code of xcodebuild
+if [ $? -eq 0 ]; then
+    echo "✅ Tests passed.\n"
+else
+    echo "❌ Tests failed.\n"
+    exit 1
+fi
 
 # Check if Homebrew is installed
 if ! which brew >/dev/null 2>&1; then
@@ -98,7 +98,7 @@ cat Sources/Courier_iOS/Courier_iOS.swift | while read LINE; do
     echo "✅ $VERSION github release created\n"
 
     # Push to pods
-    pod trunk push --allow-warnings
+    pod trunk push --allow-warnings --verbose
     echo "✅ $VERSION Cocoapod released\n"
 
   fi
