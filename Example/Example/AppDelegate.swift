@@ -13,14 +13,38 @@ import FirebaseMessaging
 @main
 class AppDelegate: CourierDelegate, MessagingDelegate {
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    let messaging = Messaging.messaging()
+    
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Initialize Firebase and FCM
         FirebaseApp.configure()
-        Messaging.messaging().delegate = self
+        messaging.delegate = self
         
         return true
         
+    }
+    
+    // MARK: Firebase Cloud Messaging Support
+    
+    override func deviceTokenDidChange(rawApnsToken: Data, isDebugging: Bool) {
+        
+        messaging.setAPNSToken(rawApnsToken, type: isDebugging ? .sandbox : .prod)
+        
+    }
+    
+    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+
+        guard let token = fcmToken else { return }
+
+        Task {
+            do {
+                try await Courier.shared.setFCMToken(token)
+            } catch {
+                print(String(describing: error))
+            }
+        }
+
     }
 
     // MARK: Push Notification Handlers
@@ -50,22 +74,6 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         
         showMessageAlert(title: "Message Clicked", message: json)
         
-    }
-    
-    // MARK: Firebase Cloud Messaging Support
-    
-    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-
-        guard let token = fcmToken else { return }
-
-        Task {
-            do {
-                try await Courier.shared.setFCMToken(token)
-            } catch {
-                print(String(describing: error))
-            }
-        }
-
     }
 
 

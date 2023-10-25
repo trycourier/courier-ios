@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Open simulator
+# Open simulator
 #simulator_path="/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
 #
 #if [ -e "$simulator_path" ]; then
@@ -9,11 +9,9 @@
 #    echo "❌ Didn't open Simulator.\n"
 #    exit 1
 #fi
-
-#xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 15 Pro' test
-echo "\n"
-read -p "🐣 Did you run the tests? Press Enter to continue..."
-
+#
+#xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 13 Pro,os=15.4' test
+#
 ## Check the exit code of xcodebuild
 #if [ $? -eq 0 ]; then
 #    echo "✅ Tests passed.\n"
