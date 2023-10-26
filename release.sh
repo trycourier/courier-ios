@@ -17,6 +17,7 @@ if [ $? -eq 0 ]; then
     echo "✅ Tests passed.\n"
 else
     echo "❌ Tests failed.\n"
+    echo "🐣 You may want to double check to make sure the correct Simulator is open.\n"
     exit 1
 fi
 
