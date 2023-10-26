@@ -211,6 +211,8 @@ class AppDelegate: CourierDelegate {
     * This adds simple functions to handle push notification delivery and clicks
     * This automatically syncs APNS tokens to Courier
     
+If you need to support other additional logic in did
+    
 ### FCM - Firebase Cloud Messaging Support
 
 ⚠️ The [`Firebase iOS package`](https://firebase.google.com/docs/ios/setup) is required

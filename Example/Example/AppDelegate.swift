@@ -13,13 +13,17 @@ import FirebaseMessaging
 @main
 class AppDelegate: CourierDelegate, MessagingDelegate {
     
-    let messaging = Messaging.messaging()
+    private var firebaseMessaging: Messaging {
+        get {
+            return Messaging.messaging()
+        }
+    }
     
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Initialize Firebase and FCM
         FirebaseApp.configure()
-        messaging.delegate = self
+        firebaseMessaging.delegate = self
         
         return true
         
@@ -29,7 +33,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
     
     override func deviceTokenDidChange(rawApnsToken: Data, isDebugging: Bool) {
         
-        messaging.setAPNSToken(rawApnsToken, type: isDebugging ? .sandbox : .prod)
+        firebaseMessaging.setAPNSToken(rawApnsToken, type: isDebugging ? .sandbox : .prod)
         
     }
     

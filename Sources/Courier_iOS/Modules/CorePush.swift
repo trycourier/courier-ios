@@ -79,10 +79,9 @@ internal class CorePush {
             
         }
         
-        // Delete the current apns token
+        // Delete the existing token if possible
         await deleteTokenIfNeeded(token: Courier.shared.apnsToken)
         
-        // We save the raw apns token here
         rawApnsToken = rawToken
         
         Courier.log("Apple Push Notification Service Token")
@@ -102,10 +101,15 @@ internal class CorePush {
     internal func setFCMToken(_ token: String) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
+            
+            // We save the raw apns token here
+            // This will keep track of the local token if needed
+            fcmToken = token
+            
             return
         }
         
-        // Delete the current fcm token
+        // Delete the existing token if possible
         await deleteTokenIfNeeded(token: fcmToken)
         
         fcmToken = token
