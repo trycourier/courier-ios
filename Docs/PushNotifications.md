@@ -211,11 +211,9 @@ class AppDelegate: CourierDelegate {
     * This adds simple functions to handle push notification delivery and clicks
     * This automatically syncs APNS tokens to Courier
     
-If you need to support other additional logic in did
-    
 ### FCM - Firebase Cloud Messaging Support
 
-⚠️ The [`Firebase iOS package`](https://firebase.google.com/docs/ios/setup) is required
+⚠️ The [`Firebase iOS package`](https://firebase.google.com/docs/ios/setup) is required and "Token Swizzling" must be disabled.
 
 Here is how you can configure your project to support FCM tokens.
 
@@ -226,12 +224,20 @@ import FirebaseMessaging
 
 @main
 class AppDelegate: CourierDelegate, MessagingDelegate {
+
+    private var firebaseMessaging: Messaging {
+        get {
+            return Messaging.messaging()
+        }
+    }
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Initialize Firebase and FCM
         FirebaseApp.configure()
-        Messaging.messaging().delegate = self
+            firebaseMessaging.delegate = self
+        
+        // Add any other additional code here :)
         
         return true
         
@@ -239,6 +245,14 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 
     ...
     
+    // This is called when Courier has an apns token refresh
+    override func deviceTokenDidChange(rawApnsToken: Data, isDebugging: Bool) {
+        
+        firebaseMessaging.setAPNSToken(rawApnsToken, type: isDebugging ? .sandbox : .prod)
+        
+    }
+    
+    // This is called when Firebase Cloud Messaging tokens are ready to be used
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
 
         guard let token = fcmToken else { return }
