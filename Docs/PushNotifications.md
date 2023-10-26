@@ -235,7 +235,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         
         // Initialize Firebase and FCM
         FirebaseApp.configure()
-            firebaseMessaging.delegate = self
+        firebaseMessaging.delegate = self
         
         // Add any other additional code here :)
         
@@ -245,14 +245,14 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
 
     ...
     
-    // This is called when Courier has an apns token refresh
+    // Called when Courier has an APNS token refresh
     override func deviceTokenDidChange(rawApnsToken: Data, isDebugging: Bool) {
         
         firebaseMessaging.setAPNSToken(rawApnsToken, type: isDebugging ? .sandbox : .prod)
         
     }
     
-    // This is called when Firebase Cloud Messaging tokens are ready to be used
+    // Called when Firebase has a Cloud Messaging token refresh
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
 
         guard let token = fcmToken else { return }
