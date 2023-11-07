@@ -148,7 +148,7 @@ Select which push notification provider you would like Courier to route push not
             </td>
             <td align="center">
                 <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
-                    <code>Manual</code>
+                    <code>TODO</code>
                 </a>
             </td>
         </tr>
@@ -168,7 +168,14 @@ https://user-images.githubusercontent.com/29832989/204891095-1b9ac4f4-8e5f-4c71-
 
 &emsp;
 
-## 3. Implement the `CourierDelegate`
+## 3. Sync Push Notification Tokens
+
+### Automatic Token Syncing (APNS Only)
+
+1. In your `AppDelegate`, add `import Courier_iOS`
+2. Change your `AppDelegate` to extend the `CourierDelegate`
+    * This automatically syncs APNS tokens to Courier
+    * This adds simple functions to handle push notification delivery and clicks
     
 ```swift
 import Courier_iOS
@@ -203,64 +210,47 @@ class AppDelegate: CourierDelegate {
 
 }
 ```
-
-1. In your `AppDelegate`, add `import Courier_iOS`
-2. Change your `AppDelegate` to extend the `CourierDelegate`
-    * This adds simple functions to handle push notification delivery and clicks
-    * This automatically syncs APNS tokens to Courier
     
-### FCM - Firebase Cloud Messaging Support
+### Manual Token Syncing
 
-⚠️ The [`Firebase iOS package`](https://firebase.google.com/docs/ios/setup) is required and "Token Swizzling" must be disabled.
-
-Here is how you can configure your project to support FCM tokens.
+Useful if you do not want to use `CourierDelegate` or you would like to sync tokens from another provider into Courier.
 
 ```swift
-import Courier_iOS
-import FirebaseCore
-import FirebaseMessaging
+import UIKit
 
 @main
-class AppDelegate: CourierDelegate, MessagingDelegate {
-
-    private var firebaseMessaging: Messaging {
-        get {
-            return Messaging.messaging()
-        }
-    }
-    
-    override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        // Initialize Firebase and FCM
-        FirebaseApp.configure()
-        firebaseMessaging.delegate = self
-        
-        // Add any other additional code here :)
-        
-        return true
-        
-    }
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     ...
-    
-    // Called when Courier has an APNS token refresh
-    override func deviceTokenDidChange(rawApnsToken: Data, isDebugging: Bool) {
-        
-        firebaseMessaging.setAPNSToken(rawApnsToken, type: isDebugging ? .sandbox : .prod)
-        
-    }
-    
-    // Called when Firebase has a Cloud Messaging token refresh
-    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
 
-        guard let token = fcmToken else { return }
+    // Manually Sync APNS tokens
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 
         Task {
-            do {
-                try await Courier.shared.setFCMToken(token)
-            } catch {
-                print(String(describing: error))
-            }
+
+            // Raw APNS token
+            try await Courier.shared.setAPNSToken(deviceToken)
+
+            // APNS token strings
+            try await Courier.shared.setToken(provider: .apn, token: deviceToken.string)
+            
+        }
+
+    }
+
+    // Commonly used with Firebase Cloud Messaging and other providers
+    func yourTokenFetchingFunction(token: String) {
+
+        Task {
+
+            // Sync with provider
+            // Available providers: .apn, .firebaseFcm, .expo, .oneSignal, .pusherBeams
+            try await Courier.shared.setToken(provider: .firebaseFcm, token: token)
+
+            // Sync with key
+            // Any string as key is supported. Make sure you are using the proper key for your needs.
+            try await Courier.shared.setToken(provider: "firebase-fcm", token: token)
+            
         }
 
     }
@@ -333,23 +323,37 @@ Task {
 
 2. Send a test message
 
-```swift
-import Courier_iOS
-
-Task {
-        
-    // Sends a test message
-    // "YOUR_AUTH_KEY" is found here: https://app.courier.com/settings/api-keys
-    // DO NOT LEAVE "YOUR_AUTH_KEY" in your production app. This is only for testing.
-    try await Courier.shared.sendMessage(
-        authKey: "YOUR_AUTH_KEY",
-        userId: "example_user_id",
-        title: "Hello!",
-        message: "I hope you are having a great day",
-        providers: [.apns, .fcm]
-    )
-
-}
-```
-
-[`More Testing Examples Here`](https://github.com/trycourier/courier-ios/blob/master/Docs/Testing.md)
+<table>
+    <thead>
+        <tr>
+            <th width="600px" align="left">Provider</th>
+            <th width="200px" align="center">Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://app.courier.com/channels/apn">
+                    <code>(APNS) - Apple Push Notification Service</code>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://www.courier.com/docs/platform/channels/push/apple-push-notification/#sending-messages">
+                    <code>Testing Docs</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://app.courier.com/channels/firebase-fcm">
+                    <code>(FCM) - Firebase Cloud Messaging</code>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://www.courier.com/docs/platform/channels/push/firebase-fcm/#sending-messages">
+                    <code>Testing Docs</code>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
