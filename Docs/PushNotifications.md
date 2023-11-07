@@ -137,7 +137,19 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
+                    <code>Manual</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://app.courier.com/channels/expo">
+                    <code>Expo</code>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
                     <code>Manual</code>
                 </a>
             </td>
@@ -149,8 +161,20 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
-                    <code>TODO</code>
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
+                    <code>Manual</code>
+                </a>
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://app.courier.com/channels/pusher-beams">
+                    <code>Pusher Beams</code>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
+                    <code>Manual</code>
                 </a>
             </td>
         </tr>
