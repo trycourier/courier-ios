@@ -125,7 +125,9 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <code>Automatic</code>
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#automatic-token-syncing-apns-only">
+                    <code>Automatic</code>
+                </a>
             </td>
         </tr>
         <tr width="600px">
