@@ -22,9 +22,9 @@ import Foundation
     @objc public let actions: [InboxAction]?
     @objc public let data: [String : Any]?
     
-    internal var archived: Bool?
-    internal var read: String?
-    internal var opened: String?
+    public var archived: Bool?
+    public var read: String?
+    public var opened: String?
     
     internal init(_ dictionary: [String : Any]?) {
         
