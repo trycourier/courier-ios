@@ -185,19 +185,6 @@ These are all the available features of the SDK.
                 Allow users to update which types of notifications they would like to receive.
             </td>
         </tr>
-        <tr width="600px">
-            <td align="center">
-                5
-            </td>
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Testing.md">
-                    <code>Testing</code>
-                </a>
-            </td>
-            <td align="left">
-                Send inbox messages and push notifications to your device without needing any server side setup.
-            </td>
-        </tr>
     </tbody>
 </table>
 
