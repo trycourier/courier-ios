@@ -146,9 +146,11 @@ Select which push notification provider you would like Courier to route push not
                     <code>OneSignal</code>
                 </a>
             </td>
-            <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
-                <code>Manual</code>
-            </a>
+            <td align="center">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
+                    <code>Manual</code>
+                </a>
+            </td>
         </tr>
     </tbody>
 </table>
