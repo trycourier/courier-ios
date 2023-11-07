@@ -113,9 +113,8 @@ Select which push notification provider you would like Courier to route push not
 <table>
     <thead>
         <tr>
-            <th width="650px" align="left">Provider</th>
+            <th width="850px" align="left">Provider</th>
             <th width="200px" align="center">Token Syncing</th>
-            <th width="200px" align="center">Supported</th>
         </tr>
     </thead>
     <tbody>
@@ -128,7 +127,6 @@ Select which push notification provider you would like Courier to route push not
             <td align="center">
                 <code>Automatic</code>
             </td>
-            <td align="center">✅</td>
         </tr>
         <tr width="600px">
             <td align="left">
@@ -141,7 +139,6 @@ Select which push notification provider you would like Courier to route push not
                     <code>Manual</code>
                 </a>
             </td>
-            <td align="center">✅</td>
         </tr>
         <tr width="600px">
             <td align="left">
@@ -149,10 +146,9 @@ Select which push notification provider you would like Courier to route push not
                     <code>OneSignal</code>
                 </a>
             </td>
-            <td align="center">
-                —
-            </td>
-            <td align="center">❌</td>
+            <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#fcm---firebase-cloud-messaging-support">
+                <code>Manual</code>
+            </a>
         </tr>
     </tbody>
 </table>
