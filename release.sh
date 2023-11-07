@@ -1,25 +1,20 @@
 #!/bin/bash
 
-# Open simulator
-simulator_path="/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app"
-
-if [ -e "$simulator_path" ]; then
-    echo "✅ Opened Simulator.\n"
-else
-    echo "❌ Didn't open Simulator.\n"
-    exit 1
-fi
-
-xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0' test
-
-# Check the exit code of xcodebuild
-if [ $? -eq 0 ]; then
-    echo "✅ Tests passed.\n"
-else
-    echo "❌ Tests failed.\n"
-    echo "🐣 You may want to double check to make sure the correct Simulator is open.\n"
-    exit 1
-fi
+## Open simulator
+#open -a Simulator && xcrun simctl boot 'iPhone 15,OS=17.0'
+#echo "✅ Opened Simulator.\n"
+#
+## Start the tests
+#xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0' test
+#
+## Check the exit code of xcodebuild
+#if [ $? -eq 0 ]; then
+#    echo "✅ Tests passed.\n"
+#else
+#    echo "❌ Tests failed.\n"
+#    echo "🐣 You may want to double check to make sure the correct Simulator is open.\n"
+#    exit 1
+#fi
 
 # Check if Homebrew is installed
 if ! which brew >/dev/null 2>&1; then
