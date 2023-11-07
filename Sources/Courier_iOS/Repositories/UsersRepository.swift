@@ -11,10 +11,10 @@ internal class UsersRepository: Repository {
     
     // MARK: Tokens
     
-    internal func putUserToken(accessToken: String, userId: String, provider: CourierChannel, token: String) async throws {
+    internal func putUserToken(accessToken: String, userId: String, provider: String, token: String) async throws {
         
         let body = try? JSONEncoder().encode(CourierToken(
-            provider_key: provider.key,
+            provider_key: provider,
             device: CourierDevice()
         ))
         

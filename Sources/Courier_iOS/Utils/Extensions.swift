@@ -14,7 +14,7 @@ internal var isDebuggerAttached: Bool {
 extension Data {
     
     // Converts the object to a string
-    var string: String {
+    public var string: String {
        return map { String(format: "%02.2hhx", $0) }.joined()
     }
     

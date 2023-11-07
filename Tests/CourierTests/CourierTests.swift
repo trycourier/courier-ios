@@ -17,7 +17,9 @@ final class CourierTests: XCTestCase {
             XCTAssertEqual(Courier.shared.accessToken, nil)
             XCTAssertEqual(Courier.shared.clientKey, nil)
             XCTAssertEqual(Courier.shared.userId, nil)
-            XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
+            XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken)
+            XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
+            XCTAssertEqual(Courier.shared.getToken(provider: .apn), rawApnsToken.string)
         }
 
     }
@@ -27,12 +29,13 @@ final class CourierTests: XCTestCase {
         print("🔬 Setting FCM Token before User")
         
         do {
-            try await Courier.shared.setFCMToken(fcmToken)
+            try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
         } catch {
             XCTAssertEqual(Courier.shared.accessToken, nil)
             XCTAssertEqual(Courier.shared.clientKey, nil)
             XCTAssertEqual(Courier.shared.userId, nil)
-            XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
+            XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
+            XCTAssertEqual(Courier.shared.getToken(providerKey: "firebase-fcm"), fcmToken)
         }
         
     }
@@ -89,7 +92,7 @@ final class CourierTests: XCTestCase {
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
+        XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
 
     }
 
@@ -97,11 +100,11 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing FCM Token Update")
         
-        try await Courier.shared.setFCMToken(fcmToken)
+        try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
+        XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
 
     }
     
@@ -322,8 +325,9 @@ final class CourierTests: XCTestCase {
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.clientKey, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
-        XCTAssertEqual(Courier.shared.fcmToken, fcmToken)
-        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken.string)
+        XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
+        XCTAssertEqual(Courier.shared.getToken(providerKey: "expo"), nil)
+        XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
 
     }
     

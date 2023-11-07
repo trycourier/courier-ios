@@ -12,6 +12,28 @@ internal class CorePush {
     private lazy var usersRepo = UsersRepository()
     private lazy var trackingRepo = TrackingRepository()
     
+    // Keep a reference to all tokens
+    internal var tokens: [String: String] = [:]
+    
+    /**
+     * The token issued by Apple on this device
+     * Can only be set by the Courier SDK, but can be read by external packages
+     */
+    public private(set) var apnsToken: Data? = nil {
+        didSet {
+            
+            let key = CourierPushProvider.apn.rawValue
+            
+            guard let token = apnsToken?.string else {
+                tokens.removeValue(forKey: key)
+                return
+            }
+            
+            tokens[key] = token
+            
+        }
+    }
+    
     // MARK: Getters
     
     internal static var userNotificationCenter: UNUserNotificationCenter {
@@ -20,127 +42,129 @@ internal class CorePush {
     
     // MARK: Token Management
     
-    /**
-     * The token issued by Apple to receive tokens on this device
-     * Can only be set by the Courier SDK, but can be read by external packages
-     */
-    public private(set) var rawApnsToken: Data? = nil
-    
-    // Attempt to put the users tokens if we have them
-    internal func putPushTokens() async throws {
-        let _ = try await [
-            putTokenIfNeeded(provider: ApplePushNotificationsServiceChannel(), token: Courier.shared.apnsToken),
-            putTokenIfNeeded(provider: FirebaseCloudMessagingChannel(), token: Courier.shared.fcmToken),
-        ]
-    }
-    
-    internal func deletePushTokens() async {
-        let _ = await [
-            deleteTokenIfNeeded(token: Courier.shared.apnsToken),
-            deleteTokenIfNeeded(token: Courier.shared.fcmToken),
-        ]
-    }
-    
-    // Tries to the remove the token from Courier
-    // Will silently fail if error occurs
-    private func deleteTokenIfNeeded(token: String?) async {
-        
-        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId, let prevToken = token else {
-            return
-        }
-        
-        Courier.log("Deleting Messaging Token: \(prevToken)")
-        
-        do {
-            
-            try await usersRepo.deleteToken(
-                accessToken: accessToken,
-                userId: userId,
-                token: prevToken
-            )
-            
-        } catch {
-            
-            Courier.log(error.friendlyMessage)
-            
-        }
-        
-    }
-    
-    internal func setAPNSToken(_ rawToken: Data) async throws {
+    internal func putToken(provider: String, token: String) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
-            
-            // We save the raw apns token here
-            // This will keep track of the local token if needed
-            rawApnsToken = rawToken
-            
-            return
-            
+            throw CourierError.noAccessTokenFound
         }
         
-        // Delete the existing token if possible
-        await deleteTokenIfNeeded(token: Courier.shared.apnsToken)
-        
-        rawApnsToken = rawToken
-        
-        Courier.log("Apple Push Notification Service Token")
-        Courier.log(rawToken.string)
-        
-        return try await usersRepo.putUserToken(
-            accessToken: accessToken,
-            userId: userId,
-            provider: ApplePushNotificationsServiceChannel(),
-            token: rawToken.string
-        )
-        
-    }
-    
-    internal private(set) var fcmToken: String? = nil
-    
-    internal func setFCMToken(_ token: String) async throws {
-        
-        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
-            
-            // We save the raw apns token here
-            // This will keep track of the local token if needed
-            fcmToken = token
-            
-            return
-        }
-        
-        // Delete the existing token if possible
-        await deleteTokenIfNeeded(token: fcmToken)
-        
-        fcmToken = token
-        
-        Courier.log("Firebase Cloud Messaging Token")
-        Courier.log(token)
-        
-        return try await usersRepo.putUserToken(
-            accessToken: accessToken,
-            userId: userId,
-            provider: FirebaseCloudMessagingChannel(),
-            token: token
-        )
-        
-    }
-    
-    // Tries add the token from Courier
-    // Will silently fail if error occurs
-    private func putTokenIfNeeded(provider: CourierChannel, token: String?) async throws {
-        
-        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId, let newToken = token else {
-            return
-        }
-        
-        Courier.log("Putting \(provider.key) Messaging Token: \(newToken)")
+        Courier.log("Putting \(provider) Token: \(token)")
         
         return try await usersRepo.putUserToken(
             accessToken: accessToken,
             userId: userId,
             provider: provider,
-            token: newToken
+            token: token
+        )
+        
+    }
+    
+    internal func putTokenIfNeeded(provider: String, token: String?) async {
+        
+        guard let _ = Courier.shared.accessToken, let _ = Courier.shared.userId, let newToken = token else {
+            return
+        }
+        
+        do {
+            try await putToken(provider: provider, token: newToken)
+        } catch {
+            Courier.log(error.friendlyMessage)
+        }
+        
+    }
+    
+    internal func deleteToken(provider: String, token: String) async throws {
+        
+        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
+            throw CourierError.noAccessTokenFound
+        }
+        
+        Courier.log("Deleting Token: \(token)")
+        
+        // Remove the token in Courier
+        try await usersRepo.deleteToken(
+            accessToken: accessToken,
+            userId: userId,
+            token: token
+        )
+        
+    }
+    
+    internal func deleteTokenIfNeeded(provider: String, token: String?) async {
+        
+        guard let _ = Courier.shared.accessToken, let _ = Courier.shared.userId, let prevToken = token else {
+            return
+        }
+        
+        do {
+            try await deleteToken(provider: provider, token: prevToken)
+        } catch {
+            Courier.log(error.friendlyMessage)
+        }
+        
+    }
+    
+    // Attempt to put the users tokens if we have them
+    internal func putPushTokens() async {
+        for (key, value) in tokens {
+            await putTokenIfNeeded(provider: key, token: value)
+        }
+    }
+    
+    internal func deletePushTokens() async {
+        for (key, value) in tokens {
+            await deleteTokenIfNeeded(provider: key, token: value)
+        }
+    }
+    
+    // MARK: APNS
+    
+    internal func setAPNSToken(_ rawToken: Data) async throws {
+        
+        guard let _ = Courier.shared.accessToken, let _ = Courier.shared.userId else {
+            apnsToken = rawToken
+            return
+        }
+        
+        // APNS key
+        let provider = CourierPushProvider.apn.rawValue
+        
+        // Delete the existing token
+        await deleteTokenIfNeeded(
+            provider: provider,
+            token: tokens[provider]
+        )
+        
+        // Save the local token
+        apnsToken = rawToken
+        
+        return try await putToken(
+            provider: provider,
+            token: provider
+        )
+        
+    }
+    
+    internal func setToken(provider: String, token: String) async throws {
+        
+        guard let _ = Courier.shared.accessToken, let _ = Courier.shared.userId else {
+            tokens[provider] = token
+            return
+        }
+        
+        // Delete the existing token
+        await deleteTokenIfNeeded(
+            provider: provider,
+            token: tokens[provider]
+        )
+        
+        // Save the token locally
+        tokens[provider] = token
+        
+        // Update the token
+        return try await putToken(
+            provider: provider,
+            token: token
         )
         
     }
@@ -177,20 +201,78 @@ internal class CorePush {
 extension Courier {
     
     /**
-     * The current apns token for the device
+     * The current APNS token for the device
      */
-    @objc public var apnsToken: String? {
+    @objc public var apnsToken: Data? {
         get {
-            return corePush.rawApnsToken?.string
+            return corePush.apnsToken
         }
     }
     
     /**
-     * The current firebase cloud messaging token for the device
+     * Gets the current token for a provider
      */
-    @objc public var fcmToken: String? {
-        get {
-            return corePush.fcmToken
+    public func getToken(provider: CourierPushProvider) -> String? {
+        return corePush.tokens[provider.rawValue]
+    }
+    
+    @objc public func getToken(providerKey: String) -> String? {
+        return corePush.tokens[providerKey]
+    }
+    
+    /**
+     * Sets the current token for a provider
+     */
+    public func setToken(provider: CourierPushProvider, token: String) async throws {
+        try await corePush.setToken(provider: provider.rawValue, token: token)
+    }
+    
+    public func setToken(provider: CourierPushProvider, token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) async throws {
+        Task {
+            do {
+                try await corePush.setToken(provider: provider.rawValue, token: token)
+                onSuccess()
+            } catch {
+                Courier.log(error.friendlyMessage)
+                onFailure(error)
+            }
+        }
+    }
+    
+    @objc public func setToken(providerKey: String, token: String) async throws {
+        try await corePush.setToken(provider: providerKey, token: token)
+    }
+    
+    @objc public func setToken(providerKey: String, token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) async throws {
+        Task {
+            do {
+                try await corePush.setToken(provider: providerKey, token: token)
+                onSuccess()
+            } catch {
+                Courier.log(error.friendlyMessage)
+                onFailure(error)
+            }
+        }
+    }
+    
+    /**
+     * Upserts the APNS token in Courier for the current user
+     * If you implement `CourierDelegate`, this will get set automattically
+     * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
+     * This function requires a `Data` value as the token.
+     */
+    @objc public func setAPNSToken(_ rawToken: Data) async throws {
+        try await corePush.setAPNSToken(rawToken)
+    }
+    
+    @objc public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await corePush.setAPNSToken(rawToken)
+                onSuccess()
+            } catch {
+                onFailure(error)
+            }
         }
     }
     
@@ -256,46 +338,6 @@ extension Courier {
             } catch {
                 Courier.log(error.friendlyMessage)
                 onFailure?(error)
-            }
-        }
-    }
-    
-    /**
-     * Upserts the APNS token in Courier for the current user
-     * If you implement `CourierDelegate`, this will get set automattically
-     * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
-     * This function requires a `Data` value as the token.
-     */
-    @objc public func setAPNSToken(_ rawToken: Data) async throws {
-        try await corePush.setAPNSToken(rawToken)
-    }
-    
-    @objc public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
-        Task {
-            do {
-                try await corePush.setAPNSToken(rawToken)
-                onSuccess()
-            } catch {
-                onFailure(error)
-            }
-        }
-    }
-    
-    /**
-     * Upserts the FCM token in Courier for the current user
-     * To get started with FCM, checkout the firebase docs here: https://firebase.google.com/docs/cloud-messaging/ios/client
-     */
-    @objc public func setFCMToken(_ token: String) async throws {
-        try await corePush.setFCMToken(token)
-    }
-    
-    @objc public func setFCMToken(_ token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
-        Task {
-            do {
-                try await corePush.setFCMToken(token)
-                onSuccess()
-            } catch {
-                onFailure(error)
             }
         }
     }
