@@ -307,10 +307,10 @@ import Courier_iOS
 Task {
                     
     // Make sure your user is signed into Courier
-    // This allows Courier to sync push notification tokens automatically
+    // This will take the tokens you are wanting to sync above, and save them to this user id
+    // Put this where you normally manage your user's state
     try await Courier.shared.signIn(
         accessToken: Env.COURIER_ACCESS_TOKEN,
-        clientKey: Env.COURIER_CLIENT_KEY,
         userId: "example_user_id"
     )
 
