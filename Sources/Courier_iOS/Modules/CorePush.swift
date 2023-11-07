@@ -227,7 +227,7 @@ extension Courier {
         try await corePush.setToken(provider: provider.rawValue, token: token)
     }
     
-    public func setToken(provider: CourierPushProvider, token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) async throws {
+    public func setToken(provider: CourierPushProvider, token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await corePush.setToken(provider: provider.rawValue, token: token)
@@ -243,7 +243,7 @@ extension Courier {
         try await corePush.setToken(provider: providerKey, token: token)
     }
     
-    @objc public func setToken(providerKey: String, token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) async throws {
+    @objc public func setToken(providerKey: String, token: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
         Task {
             do {
                 try await corePush.setToken(provider: providerKey, token: token)
