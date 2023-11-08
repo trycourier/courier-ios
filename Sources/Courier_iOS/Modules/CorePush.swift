@@ -73,7 +73,7 @@ internal class CorePush {
         
     }
     
-    internal func deleteToken(provider: String, token: String) async throws {
+    internal func deleteToken(token: String) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
             throw CourierError.noAccessTokenFound
@@ -90,14 +90,14 @@ internal class CorePush {
         
     }
     
-    internal func deleteTokenIfNeeded(provider: String, token: String?) async {
+    internal func deleteTokenIfNeeded(token: String?) async {
         
         guard let _ = Courier.shared.accessToken, let _ = Courier.shared.userId, let prevToken = token else {
             return
         }
         
         do {
-            try await deleteToken(provider: provider, token: prevToken)
+            try await deleteToken(token: prevToken)
         } catch {
             Courier.log(error.friendlyMessage)
         }
@@ -112,8 +112,8 @@ internal class CorePush {
     }
     
     internal func deletePushTokens() async {
-        for (key, value) in tokens {
-            await deleteTokenIfNeeded(provider: key, token: value)
+        for (_, value) in tokens {
+            await deleteTokenIfNeeded(token: value)
         }
     }
     
@@ -131,7 +131,6 @@ internal class CorePush {
         
         // Delete the existing token
         await deleteTokenIfNeeded(
-            provider: provider,
             token: tokens[provider]
         )
         
@@ -154,7 +153,6 @@ internal class CorePush {
         
         // Delete the existing token
         await deleteTokenIfNeeded(
-            provider: provider,
             token: tokens[provider]
         )
         
