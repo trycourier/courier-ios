@@ -15,6 +15,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let containerStackView = UIStackView()
     private let titleStackView = UIStackView()
     private let indicatorView = UIView()
+    private let dotView = UIView()
     private let titleLabel = UILabel()
     private let timeLabel = UILabel()
     private let bodyLabel = UILabel()
@@ -56,6 +57,19 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             indicatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
             indicatorView.widthAnchor.constraint(equalToConstant: 3)
         ])
+        
+        // Add dot
+        
+        contentView.addSubview(dotView)
+        
+        NSLayoutConstraint.activate([
+            dotView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
+            dotView.widthAnchor.constraint(equalToConstant: 3),
+            dotView.heightAnchor.constraint(equalToConstant: 3),
+        ])
+        
+        dotView.backgroundColor = .red
         
         // Add container
         
