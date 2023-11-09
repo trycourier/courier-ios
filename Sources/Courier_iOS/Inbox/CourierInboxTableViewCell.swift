@@ -140,8 +140,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         dotView.layer.cornerRadius = dotSize / 2
         
         NSLayoutConstraint.activate([
-            dotView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
             dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
+            dotView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             dotView.heightAnchor.constraint(equalToConstant: dotSize),
             dotView.widthAnchor.constraint(equalToConstant: dotSize),
         ])
