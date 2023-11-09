@@ -67,7 +67,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         rootStackView.insetsLayoutMarginsFromSafeArea = false
         rootStackView.axis = .horizontal
         
-        contentView.addSubview(containerStackView)
+        contentView.addSubview(rootStackView)
         
         let horizontal = margin * 2
         let vertical = margin * 1.5
