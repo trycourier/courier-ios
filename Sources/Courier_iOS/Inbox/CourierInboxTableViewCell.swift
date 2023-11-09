@@ -11,6 +11,7 @@ import UIKit
 internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
+    internal static let dotSize = 12.0
     
     private let containerStackView = UIStackView()
     private let titleStackView = UIStackView()
@@ -24,6 +25,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private let spacer = UIView()
     
     private var inboxMessage: InboxMessage?
+    
+    private var containerLeading: NSLayoutConstraint?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -69,10 +72,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         let horizontal = margin * 2
         let vertical = margin * 1.5
         
+        containerLeading = containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal)
+        
         NSLayoutConstraint.activate([
             containerStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: vertical),
             containerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -vertical),
-            containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal),
+            containerLeading!,
             containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
         ])
         
@@ -132,18 +137,16 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // TODO: Add dot
         
-        let dotSize = 12.0
-        
         contentView.addSubview(dotView)
         
         dotView.backgroundColor = .red
-        dotView.layer.cornerRadius = dotSize / 2
+        dotView.layer.cornerRadius = CourierInboxTableViewCell.dotSize / 2
         
         NSLayoutConstraint.activate([
             dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
             dotView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            dotView.heightAnchor.constraint(equalToConstant: dotSize),
-            dotView.widthAnchor.constraint(equalToConstant: dotSize),
+            dotView.heightAnchor.constraint(equalToConstant: CourierInboxTableViewCell.dotSize),
+            dotView.widthAnchor.constraint(equalToConstant: CourierInboxTableViewCell.dotSize),
         ])
         
     }
@@ -154,6 +157,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         setupButtons(theme, onActionClick)
         setTheme(theme)
+        
+        // DOES THIS WORK?
+        containerLeading?.constant = 40
 
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
