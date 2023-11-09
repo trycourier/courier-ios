@@ -41,7 +41,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setup() {
         
-        [containerStackView, titleStackView, indicatorView, titleLabel, timeLabel, bodyLabel, buttonStack, actionsStack, spacer].forEach {
+        [containerStackView, titleStackView, indicatorView, dotView, titleLabel, timeLabel, bodyLabel, buttonStack, actionsStack, spacer].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
@@ -138,7 +138,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         dotView.backgroundColor = .red
         dotView.layer.cornerRadius = dotSize / 2
-        dotView.frame.size = CGSize(width: dotSize, height: dotSize)
         
         NSLayoutConstraint.activate([
             dotView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
