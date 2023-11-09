@@ -132,14 +132,16 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         // TODO: Add dot
         
+        let dotSize = 10.0
+        
         contentView.addSubview(dotView)
         
         NSLayoutConstraint.activate([
             dotView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
-            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6)
+            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
+            dotView.heightAnchor.constraint(equalToConstant: dotSize),
+            dotView.widthAnchor.constraint(equalToConstant: dotSize),
         ])
-        
-        let dotSize = 8.0
         
         dotView.backgroundColor = .red
         dotView.layer.cornerRadius = dotSize / 2
