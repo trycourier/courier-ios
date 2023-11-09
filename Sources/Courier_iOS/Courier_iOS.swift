@@ -29,7 +29,7 @@ import Foundation
      * Versioning
      */
     public static var agent = CourierAgent.native_ios
-    internal static let version = "2.5.2"
+    internal static let version = "2.6.0"
     
     /**
      * Singleton reference to the SDK
