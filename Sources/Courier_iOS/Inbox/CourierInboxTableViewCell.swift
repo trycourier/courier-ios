@@ -12,7 +12,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
-    private let rootStackView = UIStackView()
     private let containerStackView = UIStackView()
     private let titleStackView = UIStackView()
     private let indicatorView = UIView()
@@ -42,7 +41,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setup() {
         
-        [rootStackView, containerStackView, titleStackView, indicatorView, dotView, titleLabel, timeLabel, bodyLabel, buttonStack, actionsStack, spacer].forEach {
+        [containerStackView, titleStackView, indicatorView, dotView, titleLabel, timeLabel, bodyLabel, buttonStack, actionsStack, spacer].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
@@ -59,41 +58,23 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             indicatorView.widthAnchor.constraint(equalToConstant: 3)
         ])
         
-        // Add Root
-        
-        rootStackView.backgroundColor = .blue
-        
-        rootStackView.spacing = margin / 2
-        rootStackView.insetsLayoutMarginsFromSafeArea = false
-        rootStackView.axis = .horizontal
-        
-        contentView.addSubview(rootStackView)
-        
-        let horizontal = margin * 2
-        let vertical = margin * 1.5
-        
-        NSLayoutConstraint.activate([
-            rootStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: vertical),
-            rootStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -vertical),
-            rootStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal),
-            rootStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
-        ])
-        
-        
         // Add container
         
         containerStackView.spacing = margin / 2
         containerStackView.insetsLayoutMarginsFromSafeArea = false
         containerStackView.axis = .vertical
         
-        rootStackView.addSubview(containerStackView)
+        contentView.addSubview(containerStackView)
         
-//        NSLayoutConstraint.activate([
-//            containerStackView.topAnchor.constraint(equalTo: rootStackView.topAnchor, constant: vertical),
-//            containerStackView.bottomAnchor.constraint(equalTo: rootStackView.bottomAnchor, constant: -vertical),
-//            containerStackView.leadingAnchor.constraint(equalTo: rootStackView.leadingAnchor, constant: horizontal),
-//            containerStackView.trailingAnchor.constraint(equalTo: rootStackView.trailingAnchor, constant: -horizontal),
-//        ])
+        let horizontal = margin * 2
+        let vertical = margin * 1.5
+        
+        NSLayoutConstraint.activate([
+            containerStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: vertical),
+            containerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -vertical),
+            containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal),
+            containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
+        ])
         
         // Add title stack
         
@@ -153,13 +134,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         let dotSize = 12.0
         
-        rootStackView.insertArrangedSubview(dotView, at: 0)
+        contentView.addSubview(dotView)
         
         dotView.backgroundColor = .red
         dotView.layer.cornerRadius = dotSize / 2
         
         NSLayoutConstraint.activate([
-//            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
+            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
             dotView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             dotView.heightAnchor.constraint(equalToConstant: dotSize),
             dotView.widthAnchor.constraint(equalToConstant: dotSize),
