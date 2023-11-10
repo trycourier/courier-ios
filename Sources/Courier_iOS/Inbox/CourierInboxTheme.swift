@@ -12,8 +12,8 @@ import UIKit
     // MARK: Styling
     
     internal let messageAnimationStyle: UITableView.RowAnimation
-    private let unreadIndicatorBarColor: UIColor?
     private let loadingIndicatorColor: UIColor?
+    internal let unreadIndicator: CourierUnreadIndicator?
     internal let titleFont: CourierInboxFont
     internal let timeFont: CourierInboxFont
     internal let bodyFont: CourierInboxFont
@@ -27,8 +27,8 @@ import UIKit
     
     public init(
         messageAnimationStyle: UITableView.RowAnimation = .left,
-        unreadIndicatorBarColor: UIColor? = nil,
         loadingIndicatorColor: UIColor? = nil,
+        unreadIndicator: CourierUnreadIndicator? = nil,
         titleFont: CourierInboxFont = CourierInboxFont(
             font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
             color: .label
@@ -49,7 +49,7 @@ import UIKit
         cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
     ) {
         self.messageAnimationStyle = messageAnimationStyle
-        self.unreadIndicatorBarColor = unreadIndicatorBarColor
+        self.unreadIndicator = unreadIndicator
         self.loadingIndicatorColor = loadingIndicatorColor
         self.titleFont = titleFont
         self.timeFont = timeFont
@@ -70,7 +70,7 @@ import UIKit
     
     internal var unreadColor: UIColor {
         get {
-            if let customColor = unreadIndicatorBarColor {
+            if let customColor = unreadIndicator?.color {
                 return customColor
             } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
                 return brandColor
@@ -162,6 +162,23 @@ import UIKit
     
     public init(font: UIFont, color: UIColor) {
         self.font = font
+        self.color = color
+    }
+    
+}
+
+public enum CourierUnreadIndicatorStyle {
+    case line
+    case dot
+}
+
+@objc public class CourierUnreadIndicator: NSObject {
+    
+    internal let style: CourierUnreadIndicatorStyle
+    internal let color: UIColor
+    
+    public init(style: CourierUnreadIndicatorStyle, color: UIColor) {
+        self.style = style
         self.color = color
     }
     

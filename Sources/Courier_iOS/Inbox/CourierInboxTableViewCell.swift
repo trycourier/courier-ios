@@ -11,7 +11,22 @@ import UIKit
 internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
-    internal static let dotSize = 12.0
+    
+    internal static let dotSize = 10.0
+    
+    private let margin = CourierInboxTheme.margin
+    
+    private var horizontal: CGFloat {
+        get {
+            return margin * 2
+        }
+    }
+    
+    private var vertical: CGFloat {
+        get {
+            return margin * 1.5
+        }
+    }
     
     private let containerStackView = UIStackView()
     private let titleStackView = UIStackView()
@@ -48,8 +63,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
-        let margin = CourierInboxTheme.margin
-        
         // Add indicator
         
         contentView.addSubview(indicatorView)
@@ -68,9 +81,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         containerStackView.axis = .vertical
         
         contentView.addSubview(containerStackView)
-        
-        let horizontal = margin * 2
-        let vertical = margin * 1.5
         
         containerLeading = containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal)
         
@@ -142,7 +152,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         dotView.layer.cornerRadius = CourierInboxTableViewCell.dotSize / 2
         
         NSLayoutConstraint.activate([
-            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 6),
+            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: CourierInboxTableViewCell.dotSize / 2),
             dotView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             dotView.heightAnchor.constraint(equalToConstant: CourierInboxTableViewCell.dotSize),
             dotView.widthAnchor.constraint(equalToConstant: CourierInboxTableViewCell.dotSize),
@@ -157,7 +167,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         setupButtons(theme, onActionClick)
         setTheme(theme)
 
-        indicatorView.isHidden = message.isRead
+        indicatorView.isHidden = theme.unreadIndicator?.style == .dot ? false : message.isRead
+        dotView.isHidden = theme.unreadIndicator?.style == .line ? false : message.isRead
+        
         titleLabel.text = message.title
         timeLabel.text = message.time
         bodyLabel.text = message.subtitle
@@ -167,7 +179,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func setTheme(_ theme: CourierInboxTheme) {
         
         // Adjust the margin leading
-        containerLeading?.constant = CourierInboxTableViewCell.dotSize + 12
+        containerLeading?.constant = theme.unreadIndicator?.style == .dot ? CourierInboxTableViewCell.dotSize * 2 : horizontal
 
         indicatorView.backgroundColor = theme.unreadColor
         dotView.backgroundColor = theme.unreadColor
