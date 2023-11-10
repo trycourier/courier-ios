@@ -175,9 +175,9 @@ public enum CourierInboxUnreadIndicatorStyle {
 @objc public class CourierInboxUnreadIndicator: NSObject {
     
     internal let style: CourierInboxUnreadIndicatorStyle
-    internal let color: UIColor
+    internal let color: UIColor?
     
-    public init(style: CourierInboxUnreadIndicatorStyle, color: UIColor) {
+    public init(style: CourierInboxUnreadIndicatorStyle, color: UIColor? = nil) {
         self.style = style
         self.color = color
     }

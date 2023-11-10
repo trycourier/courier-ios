@@ -167,8 +167,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         setupButtons(theme, onActionClick)
         setTheme(theme)
 
-        indicatorView.isHidden = theme.unreadIndicator?.style == .dot ? false : message.isRead
-        dotView.isHidden = theme.unreadIndicator?.style == .line ? false : message.isRead
+        indicatorView.isHidden = theme.unreadIndicator?.style == .line && message.isRead
+        dotView.isHidden = theme.unreadIndicator?.style == .dot && message.isRead
         
         titleLabel.text = message.title
         timeLabel.text = message.time

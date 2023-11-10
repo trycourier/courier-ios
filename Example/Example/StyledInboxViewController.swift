@@ -19,7 +19,7 @@ class StyledInboxViewController: UIViewController {
             lightTheme: CourierInboxTheme(
                 messageAnimationStyle: .fade,
                 loadingIndicatorColor: secondaryColor,
-                unreadIndicator: CourierUnreadIndicator(
+                unreadIndicator: CourierInboxUnreadIndicator(
                     style: .dot,
                     color: primaryColor
                 ),
@@ -53,7 +53,7 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             darkTheme: CourierInboxTheme(
-                unreadIndicator: CourierUnreadIndicator(
+                unreadIndicator: CourierInboxUnreadIndicator(
                     style: .dot,
                     color: .white
                 ),
