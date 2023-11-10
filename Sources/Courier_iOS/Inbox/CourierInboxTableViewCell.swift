@@ -12,7 +12,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
-    internal static let dotSize = 10.0
+    internal static let dotSize = 12.0
     
     private let margin = CourierInboxTheme.margin
     

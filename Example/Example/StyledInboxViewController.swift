@@ -21,7 +21,7 @@ class StyledInboxViewController: UIViewController {
                 loadingIndicatorColor: secondaryColor,
                 unreadIndicator: CourierInboxUnreadIndicator(
                     style: .dot,
-                    color: primaryColor
+                    color: secondaryColor
                 ),
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
