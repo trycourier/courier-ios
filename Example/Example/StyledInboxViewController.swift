@@ -18,8 +18,11 @@ class StyledInboxViewController: UIViewController {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
                 messageAnimationStyle: .fade,
-                unreadIndicatorBarColor: secondaryColor,
-                loadingIndicatorColor: primaryColor,
+                loadingIndicatorColor: secondaryColor,
+                unreadIndicator: CourierUnreadIndicator(
+                    style: .dot,
+                    color: primaryColor
+                ),
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: textColor
@@ -50,6 +53,10 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             darkTheme: CourierInboxTheme(
+                unreadIndicator: CourierUnreadIndicator(
+                    style: .dot,
+                    color: .white
+                ),
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: .white
