@@ -139,7 +139,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         contentView.addSubview(dotView)
         
-        dotView.backgroundColor = .red
         dotView.layer.cornerRadius = CourierInboxTableViewCell.dotSize / 2
         
         NSLayoutConstraint.activate([
@@ -157,9 +156,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         setupButtons(theme, onActionClick)
         setTheme(theme)
-        
-        // DOES THIS WORK?
-        containerLeading?.constant = 40
 
         indicatorView.isHidden = message.isRead
         titleLabel.text = message.title
@@ -169,8 +165,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     private func setTheme(_ theme: CourierInboxTheme) {
+        
+        // Adjust the margin leading
+        containerLeading?.constant = CourierInboxTableViewCell.dotSize + 12
 
         indicatorView.backgroundColor = theme.unreadColor
+        dotView.backgroundColor = theme.unreadColor
 
         // Font
         titleLabel.font = theme.titleFont.font
