@@ -13,7 +13,7 @@ import UIKit
     
     internal let messageAnimationStyle: UITableView.RowAnimation
     private let loadingIndicatorColor: UIColor?
-    internal let unreadIndicator: CourierInboxUnreadIndicator?
+    internal let unreadIndicator: CourierInboxUnreadIndicator
     internal let titleFont: CourierInboxFont
     internal let timeFont: CourierInboxFont
     internal let bodyFont: CourierInboxFont
@@ -28,7 +28,7 @@ import UIKit
     public init(
         messageAnimationStyle: UITableView.RowAnimation = .left,
         loadingIndicatorColor: UIColor? = nil,
-        unreadIndicator: CourierInboxUnreadIndicator? = nil,
+        unreadIndicator: CourierInboxUnreadIndicator = CourierInboxUnreadIndicator(),
         titleFont: CourierInboxFont = CourierInboxFont(
             font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
             color: .label
@@ -70,7 +70,7 @@ import UIKit
     
     internal var unreadColor: UIColor {
         get {
-            if let customColor = unreadIndicator?.color {
+            if let customColor = unreadIndicator.color {
                 return customColor
             } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
                 return brandColor
@@ -177,7 +177,7 @@ public enum CourierInboxUnreadIndicatorStyle {
     internal let style: CourierInboxUnreadIndicatorStyle
     internal let color: UIColor?
     
-    public init(style: CourierInboxUnreadIndicatorStyle, color: UIColor? = nil) {
+    public init(style: CourierInboxUnreadIndicatorStyle = .line, color: UIColor? = nil) {
         self.style = style
         self.color = color
     }

@@ -166,9 +166,17 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         setupButtons(theme, onActionClick)
         setTheme(theme)
-
-        indicatorView.isHidden = theme.unreadIndicator?.style == .line && message.isRead
-        dotView.isHidden = theme.unreadIndicator?.style == .dot && message.isRead
+        
+        switch (theme.unreadIndicator.style) {
+        case .line:
+            indicatorView.isHidden = message.isRead
+            dotView.isHidden = true
+            break
+        case .dot:
+            indicatorView.isHidden = true
+            dotView.isHidden = message.isRead
+            break
+        }
         
         titleLabel.text = message.title
         timeLabel.text = message.time
@@ -179,7 +187,14 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func setTheme(_ theme: CourierInboxTheme) {
         
         // Adjust the margin leading
-        containerLeading?.constant = theme.unreadIndicator?.style == .dot ? CourierInboxTableViewCell.dotSize * 2 : horizontal
+        switch (theme.unreadIndicator.style) {
+        case .line:
+            containerLeading?.constant = horizontal
+            break
+        case .dot:
+            containerLeading?.constant = CourierInboxTableViewCell.dotSize * 2
+            break
+        }
 
         indicatorView.backgroundColor = theme.unreadColor
         dotView.backgroundColor = theme.unreadColor

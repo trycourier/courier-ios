@@ -54,8 +54,7 @@ class StyledInboxViewController: UIViewController {
             ),
             darkTheme: CourierInboxTheme(
                 unreadIndicator: CourierInboxUnreadIndicator(
-                    style: .dot,
-                    color: .white
+                    style: .dot
                 ),
                 titleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Black", size: 20)!,
