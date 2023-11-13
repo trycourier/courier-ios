@@ -14,7 +14,7 @@ import UIKit
     internal let messageAnimationStyle: UITableView.RowAnimation
     private let loadingIndicatorColor: UIColor?
     internal let unreadIndicator: CourierInboxUnreadIndicator
-    internal let titleFont: CourierInboxFont
+    internal let titleStyles: CourierInboxTextStyles
     internal let timeFont: CourierInboxFont
     internal let bodyFont: CourierInboxFont
     internal let detailTitleFont: CourierInboxFont
@@ -29,9 +29,15 @@ import UIKit
         messageAnimationStyle: UITableView.RowAnimation = .left,
         loadingIndicatorColor: UIColor? = nil,
         unreadIndicator: CourierInboxUnreadIndicator = CourierInboxUnreadIndicator(),
-        titleFont: CourierInboxFont = CourierInboxFont(
-            font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
-            color: .label
+        titleStyles: CourierInboxTextStyles = CourierInboxTextStyles(
+            unread: CourierInboxFont(
+                font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                color: .label
+            ),
+            read: CourierInboxFont(
+                font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                color: .secondaryLabel
+            )
         ),
         timeFont: CourierInboxFont = CourierInboxFont(
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
@@ -51,7 +57,7 @@ import UIKit
         self.messageAnimationStyle = messageAnimationStyle
         self.unreadIndicator = unreadIndicator
         self.loadingIndicatorColor = loadingIndicatorColor
-        self.titleFont = titleFont
+        self.titleStyles = titleStyles
         self.timeFont = timeFont
         self.bodyFont = bodyFont
         self.detailTitleFont = detailTitleFont
@@ -151,6 +157,18 @@ import UIKit
         self.separatorInsets = separatorInsets
         self.separatorColor = separatorColor
         self.selectionStyle = selectionStyle
+    }
+    
+}
+
+@objc public class CourierInboxTextStyles: NSObject {
+    
+    internal let unread: CourierInboxFont
+    internal let read: CourierInboxFont
+    
+    public init(unread: CourierInboxFont, read: CourierInboxFont) {
+        self.unread = unread
+        self.read = read
     }
     
 }

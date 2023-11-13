@@ -145,8 +145,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             actionsStack.heightAnchor.constraint(equalToConstant: 34.333333333333336)
         ])
         
-        // TODO: Add dot
-        
         contentView.addSubview(dotView)
         
         dotView.layer.cornerRadius = CourierInboxTableViewCell.dotSize / 2
@@ -184,7 +182,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
-    private func setTheme(_ theme: CourierInboxTheme) {
+    private func setTheme(_ theme: CourierInboxTheme, isRead: Bool) {
         
         // Adjust the margin leading
         switch (theme.unreadIndicator.style) {
@@ -200,12 +198,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         dotView.backgroundColor = theme.unreadColor
 
         // Font
-        titleLabel.font = theme.titleFont.font
+        titleLabel.font = isRead ? theme.titleStyles.read.font : theme.titleStyles.unread.font
         timeLabel.font = theme.timeFont.font
         bodyLabel.font = theme.bodyFont.font
 
         // Color
-        titleLabel.textColor = theme.titleFont.color
+        titleLabel.textColor = isRead ? theme.titleStyles.read.color : theme.titleStyles.unread.color
         timeLabel.textColor = theme.timeFont.color
         bodyLabel.textColor = theme.bodyFont.color
 
