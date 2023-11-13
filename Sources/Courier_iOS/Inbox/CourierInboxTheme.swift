@@ -115,6 +115,16 @@ import UIKit
         }
     }
     
+    internal func getInfoButtonColor() -> UIColor {
+        if let customColor = infoViewStyle.button.backgroundColor {
+            return customColor
+        } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+            return brandColor
+        } else {
+            return .systemBlue
+        }
+    }
+    
     internal func getButtonColor(isRead: Bool) -> UIColor {
         
         let styleColor = isRead ? buttonStyle.read.backgroundColor : buttonStyle.unread.backgroundColor

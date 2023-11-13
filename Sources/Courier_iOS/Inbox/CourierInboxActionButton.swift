@@ -74,7 +74,7 @@ internal class CourierInboxActionButton: UIButton {
         titleLabel?.font = theme.infoViewStyle.font.font
         titleLabel?.textColor = theme.infoViewStyle.font.color
         setTitleColor(theme.infoViewStyle.font.color, for: .normal)
-        backgroundColor = theme.infoViewStyle.button.backgroundColor
+        backgroundColor = theme.getInfoButtonColor()
         layer.cornerRadius = theme.infoViewStyle.button.cornerRadius
         
     }
@@ -86,7 +86,7 @@ internal class CourierInboxActionButton: UIButton {
         titleLabel?.font = isRead ? theme.buttonStyle.read.font.font : theme.buttonStyle.unread.font.font
         titleLabel?.textColor = isRead ? theme.buttonStyle.read.font.color : theme.buttonStyle.unread.font.color
         setTitleColor(isRead ? theme.buttonStyle.read.font.color : theme.buttonStyle.unread.font.color, for: .normal)
-        backgroundColor = isRead ? theme.buttonStyle.read.backgroundColor : theme.buttonStyle.unread.backgroundColor
+        backgroundColor = theme.getButtonColor(isRead: isRead)
         layer.cornerRadius = isRead ? theme.buttonStyle.read.cornerRadius : theme.buttonStyle.unread.cornerRadius
         
     }
