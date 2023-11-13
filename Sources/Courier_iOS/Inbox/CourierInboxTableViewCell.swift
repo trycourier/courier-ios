@@ -165,7 +165,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         setupButtons(theme, onActionClick)
         setTheme(theme, isRead: message.isRead)
         
-        switch (theme.unreadIndicator.style) {
+        switch (theme.unreadIndicatorStyle.indicator) {
         case .line:
             indicatorView.isHidden = message.isRead
             dotView.isHidden = true
@@ -185,7 +185,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func setTheme(_ theme: CourierInboxTheme, isRead: Bool) {
         
         // Adjust the margin leading
-        switch (theme.unreadIndicator.style) {
+        switch (theme.unreadIndicatorStyle.indicator) {
         case .line:
             containerLeading?.constant = horizontal
             break
@@ -198,17 +198,17 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         dotView.backgroundColor = theme.unreadColor
 
         // Font
-        titleLabel.font = isRead ? theme.titleStyles.read.font : theme.titleStyles.unread.font
-        timeLabel.font = isRead ? theme.timeStyles.read.font : theme.timeStyles.unread.font
-        bodyLabel.font = isRead ? theme.bodyStyles.read.font : theme.bodyStyles.unread.font
+        titleLabel.font = isRead ? theme.titleStyle.read.font : theme.titleStyle.unread.font
+        timeLabel.font = isRead ? theme.timeStyle.read.font : theme.timeStyle.unread.font
+        bodyLabel.font = isRead ? theme.bodyStyle.read.font : theme.bodyStyle.unread.font
 
         // Color
-        titleLabel.textColor = isRead ? theme.titleStyles.read.color : theme.titleStyles.unread.color
-        timeLabel.textColor = isRead ? theme.timeStyles.read.color : theme.timeStyles.unread.color
-        bodyLabel.textColor = isRead ? theme.bodyStyles.read.color : theme.bodyStyles.unread.color
+        titleLabel.textColor = isRead ? theme.titleStyle.read.color : theme.titleStyle.unread.color
+        timeLabel.textColor = isRead ? theme.timeStyle.read.color : theme.timeStyle.unread.color
+        bodyLabel.textColor = isRead ? theme.bodyStyle.read.color : theme.bodyStyle.unread.color
 
         // Selection style
-        selectionStyle = theme.cellStyles.selectionStyle
+        selectionStyle = theme.cellStyle.selectionStyle
 
     }
     
@@ -219,7 +219,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // Create and add a button for each action
         actions.forEach { action in
             
-            let actionButton = CourierInboxButton(
+            let actionButton = CourierInboxActionButton(
+                isRead: self.inboxMessage?.isRead ?? true,
                 inboxAction: action,
                 theme: theme,
                 actionClick: onActionClick

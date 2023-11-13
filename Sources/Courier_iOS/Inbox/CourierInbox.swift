@@ -493,9 +493,9 @@ import UIKit
     
     private func reloadViews() {
         
-        tableView.separatorStyle = theme.cellStyles.separatorStyle
-        tableView.separatorInset = theme.cellStyles.separatorInsets
-        tableView.separatorColor = theme.cellStyles.separatorColor
+        tableView.separatorStyle = theme.cellStyle.separatorStyle
+        tableView.separatorInset = theme.cellStyle.separatorInsets
+        tableView.separatorColor = theme.cellStyle.separatorColor
         
         tableView.refreshControl?.tintColor = theme.loadingColor
         loadingIndicator.color = theme.loadingColor

@@ -33,13 +33,25 @@ class StyledInboxViewController: UIViewController {
                         color: textColor
                     )
                 ),
-                timeFont: CourierInboxFont(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
-                    color: textColor
+                timeStyles: CourierInboxTextStyles(
+                    unread: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
+                        color: textColor
+                    ),
+                    read: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
+                        color: textColor
+                    )
                 ),
-                bodyFont: CourierInboxFont(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
-                    color: textColor
+                bodyStyles: CourierInboxTextStyles(
+                    unread: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
+                        color: textColor
+                    ),
+                    read: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
+                        color: textColor
+                    )
                 ),
                 detailTitleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Medium", size: 20)!,
@@ -72,13 +84,25 @@ class StyledInboxViewController: UIViewController {
                         color: .gray
                     )
                 ),
-                timeFont: CourierInboxFont(
-                    font: UIFont(name: "Avenir Medium", size: 16)!,
-                    color: .white
+                timeStyles: CourierInboxTextStyles(
+                    unread: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 16)!,
+                        color: .white
+                    ),
+                    read: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 16)!,
+                        color: .gray
+                    )
                 ),
-                bodyFont: CourierInboxFont(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
-                    color: .white
+                bodyStyles: CourierInboxTextStyles(
+                    unread: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
+                        color: .white
+                    ),
+                    read: CourierInboxFont(
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
+                        color: .gray
+                    )
                 ),
                 detailTitleFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Medium", size: 20)!,

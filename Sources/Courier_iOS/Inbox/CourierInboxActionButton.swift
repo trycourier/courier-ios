@@ -1,5 +1,5 @@
 //
-//  CourierInboxButton.swift
+//  CourierInboxActionButton.swift
 //  
 //
 //  Created by https://github.com/mikemilla on 3/13/23.
@@ -8,7 +8,7 @@
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-internal class CourierInboxButton: UIButton {
+internal class CourierInboxActionButton: UIButton {
     
     private let inboxAction: InboxAction?
     private let actionClick: ((InboxAction) -> Void)?
@@ -20,7 +20,7 @@ internal class CourierInboxButton: UIButton {
         }
     }
     
-    init(inboxAction: InboxAction, theme: CourierInboxTheme, actionClick: @escaping (InboxAction) -> Void) {
+    init(isRead: Bool, inboxAction: InboxAction, theme: CourierInboxTheme, actionClick: @escaping (InboxAction) -> Void) {
         
         self.inboxAction = inboxAction
         self.actionClick = actionClick
@@ -30,7 +30,7 @@ internal class CourierInboxButton: UIButton {
         
         setTitle(inboxAction.content ?? "Action", for: .normal)
         addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
-        setTheme(theme)
+        setActionButtonTheme(theme, isRead: isRead)
         
     }
     
@@ -67,15 +67,27 @@ internal class CourierInboxButton: UIButton {
         onClick?()
     }
     
-    internal func setTheme(_ theme: CourierInboxTheme) {
+    internal func setInfoButtonTheme(_ theme: CourierInboxTheme) {
         
         let padding = CourierInboxTheme.margin * 1.5
         contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
-        titleLabel?.font = theme.buttonStyles.font.font
-        titleLabel?.textColor = theme.buttonStyles.font.color
-        setTitleColor(theme.buttonStyles.font.color, for: .normal)
-        backgroundColor = theme.buttonColor
-        layer.cornerRadius = theme.buttonStyles.cornerRadius
+        titleLabel?.font = theme.infoViewStyle.font.font
+        titleLabel?.textColor = theme.infoViewStyle.font.color
+        setTitleColor(theme.infoViewStyle.font.color, for: .normal)
+        backgroundColor = theme.infoViewStyle.button.backgroundColor
+        layer.cornerRadius = theme.infoViewStyle.button.cornerRadius
+        
+    }
+    
+    internal func setActionButtonTheme(_ theme: CourierInboxTheme, isRead: Bool) {
+        
+        let padding = CourierInboxTheme.margin * 1.5
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
+        titleLabel?.font = isRead ? theme.buttonStyle.read.font.font : theme.buttonStyle.unread.font.font
+        titleLabel?.textColor = isRead ? theme.buttonStyle.read.font.color : theme.buttonStyle.unread.font.color
+        setTitleColor(isRead ? theme.buttonStyle.read.font.color : theme.buttonStyle.unread.font.color, for: .normal)
+        backgroundColor = isRead ? theme.buttonStyle.read.backgroundColor : theme.buttonStyle.unread.backgroundColor
+        layer.cornerRadius = isRead ? theme.buttonStyle.read.cornerRadius : theme.buttonStyle.unread.cornerRadius
         
     }
     

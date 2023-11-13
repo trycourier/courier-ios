@@ -13,8 +13,8 @@ internal class CourierInboxInfoView: UIView {
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let buttonContainer = UIView()
-    private lazy var actionButton: CourierInboxButton = {
-        CourierInboxButton { [weak self] in
+    private lazy var actionButton: CourierInboxActionButton = {
+        CourierInboxActionButton { [weak self] in
             self?.onButtonClick?()
         }
     }()
@@ -75,7 +75,7 @@ internal class CourierInboxInfoView: UIView {
         buttonContainer.addSubview(actionButton)
         
         NSLayoutConstraint.activate([
-            actionButton.heightAnchor.constraint(equalToConstant: CourierInboxButtonStyles.maxHeight),
+            actionButton.heightAnchor.constraint(equalToConstant: CourierInboxButtonStyle.maxHeight),
             actionButton.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
             actionButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
             actionButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
@@ -109,9 +109,9 @@ internal class CourierInboxInfoView: UIView {
     }
     
     internal func setTheme(_ theme: CourierInboxTheme) {
-        titleLabel.font = theme.detailTitleFont.font
-        titleLabel.textColor = theme.detailTitleFont.color
-        actionButton.setTheme(theme)
+        titleLabel.font = theme.infoViewStyle.font.font
+        titleLabel.textColor = theme.infoViewStyle.font.color
+        actionButton.setInfoButtonTheme(theme)
     }
     
 }

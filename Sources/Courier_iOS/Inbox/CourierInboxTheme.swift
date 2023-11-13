@@ -13,13 +13,13 @@ import UIKit
     
     internal let messageAnimationStyle: UITableView.RowAnimation
     private let loadingIndicatorColor: UIColor?
-    internal let unreadIndicator: CourierInboxUnreadIndicator
-    internal let titleStyles: CourierInboxTextStyles
-    internal let timeStyles: CourierInboxTextStyles
-    internal let bodyStyles: CourierInboxTextStyles
-    internal let detailTitleFont: CourierInboxFont
-    internal let buttonStyles: CourierInboxButtonStyles
-    internal let cellStyles: CourierInboxCellStyles
+    internal let unreadIndicatorStyle: CourierInboxUnreadIndicatorStyle
+    internal let titleStyle: CourierInboxTextStyle
+    internal let timeStyle: CourierInboxTextStyle
+    internal let bodyStyle: CourierInboxTextStyle
+    internal let buttonStyle: CourierInboxButtonStyle
+    internal let cellStyle: CourierInboxCellStyle
+    internal let infoViewStyle: CourierInboxInfoViewStyle
     
     // MARK: Init
     
@@ -28,8 +28,8 @@ import UIKit
     public init(
         messageAnimationStyle: UITableView.RowAnimation = .left,
         loadingIndicatorColor: UIColor? = nil,
-        unreadIndicator: CourierInboxUnreadIndicator = CourierInboxUnreadIndicator(),
-        titleStyles: CourierInboxTextStyles = CourierInboxTextStyles(
+        unreadIndicatorStyle: CourierInboxUnreadIndicatorStyle = CourierInboxUnreadIndicatorStyle(),
+        titleStyle: CourierInboxTextStyle = CourierInboxTextStyle(
             unread: CourierInboxFont(
                 font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
                 color: .label
@@ -39,7 +39,7 @@ import UIKit
                 color: .secondaryLabel
             )
         ),
-        timeStyles: CourierInboxTextStyles = CourierInboxTextStyles(
+        timeStyle: CourierInboxTextStyle = CourierInboxTextStyle(
             unread: CourierInboxFont(
                 font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
                 color: .placeholderText
@@ -49,7 +49,7 @@ import UIKit
                 color: .tertiaryLabel
             )
         ),
-        bodyStyles: CourierInboxTextStyles = CourierInboxTextStyles(
+        bodyStyle: CourierInboxTextStyle = CourierInboxTextStyle(
             unread: CourierInboxFont(
                 font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
                 color: .label
@@ -59,22 +59,27 @@ import UIKit
                 color: .secondaryLabel
             )
         ),
-        detailTitleFont: CourierInboxFont = CourierInboxFont(
-            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
-            color: .label
-        ),
-        buttonStyles: CourierInboxButtonStyles = CourierInboxButtonStyles(),
-        cellStyles: CourierInboxCellStyles = CourierInboxCellStyles()
+        buttonStyle: CourierInboxButtonStyle = CourierInboxButtonStyle(),
+        cellStyle: CourierInboxCellStyle = CourierInboxCellStyle(),
+        infoViewStyle: CourierInboxInfoViewStyle = CourierInboxInfoViewStyle(
+            font: CourierInboxFont(
+                font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+                color: .label
+            ),
+            button: CourierInboxButton(
+                font: CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white)
+            )
+        )
     ) {
         self.messageAnimationStyle = messageAnimationStyle
-        self.unreadIndicator = unreadIndicator
+        self.unreadIndicatorStyle = unreadIndicatorStyle
         self.loadingIndicatorColor = loadingIndicatorColor
-        self.titleStyles = titleStyles
-        self.timeStyles = timeStyles
-        self.bodyStyles = bodyStyles
-        self.detailTitleFont = detailTitleFont
-        self.buttonStyles = buttonStyles
-        self.cellStyles = cellStyles
+        self.titleStyle = titleStyle
+        self.timeStyle = timeStyle
+        self.bodyStyle = bodyStyle
+        self.buttonStyle = buttonStyle
+        self.cellStyle = cellStyle
+        self.infoViewStyle = infoViewStyle
     }
     
     // MARK: Defaults
@@ -88,7 +93,7 @@ import UIKit
     
     internal var unreadColor: UIColor {
         get {
-            if let customColor = unreadIndicator.color {
+            if let customColor = unreadIndicatorStyle.color {
                 return customColor
             } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
                 return brandColor
@@ -110,16 +115,18 @@ import UIKit
         }
     }
     
-    internal var buttonColor: UIColor {
-        get {
-            if let customColor = buttonStyles.backgroundColor {
-                return customColor
-            } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
-                return brandColor
-            } else {
-                return .systemBlue
-            }
+    internal func getButtonColor(isRead: Bool) -> UIColor {
+        
+        let styleColor = isRead ? buttonStyle.read.backgroundColor : buttonStyle.unread.backgroundColor
+        
+        if let customColor = styleColor {
+            return customColor
+        } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+            return brandColor
+        } else {
+            return isRead ? .systemGray : .systemBlue
         }
+        
     }
     
     // MARK: Internal
@@ -135,22 +142,41 @@ import UIKit
     
 }
 
-@objc public class CourierInboxButtonStyles: NSObject {
+@objc public class CourierInboxButtonStyle: NSObject {
+    
+    internal let unread: CourierInboxButton
+    internal let read: CourierInboxButton
+    
+    internal static let maxHeight: CGFloat = 34.33
+    
+    public init(
+        unread: CourierInboxButton = CourierInboxButton(
+            font: CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white)
+        ),
+        read: CourierInboxButton = CourierInboxButton(
+            font: CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white)
+        )
+    ) {
+        self.unread = unread
+        self.read = read
+    }
+    
+}
+
+@objc public class CourierInboxButton: NSObject {
     
     internal let font: CourierInboxFont
     internal let backgroundColor: UIColor?
     internal let cornerRadius: CGFloat
     
-    internal static let maxHeight: CGFloat = 34.33
-    
-    public init(font: CourierInboxFont = CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white), backgroundColor: UIColor? = nil, cornerRadius: CGFloat = 8) {
+    public init(font: CourierInboxFont, backgroundColor: UIColor? = nil, cornerRadius: CGFloat = 8) {
         
         self.font = font
         self.backgroundColor = backgroundColor
         
         // This is the value of the container height / 2
         // This will create a perfect rounded corner
-        let fullRoundedCorner = CourierInboxButtonStyles.maxHeight / 2
+        let fullRoundedCorner = CourierInboxButtonStyle.maxHeight / 2
         
         self.cornerRadius = max(0, min(fullRoundedCorner, cornerRadius))
         
@@ -158,7 +184,7 @@ import UIKit
     
 }
 
-@objc public class CourierInboxCellStyles: NSObject {
+@objc public class CourierInboxCellStyle: NSObject {
     
     internal let separatorStyle: UITableViewCell.SeparatorStyle
     internal let separatorInsets: UIEdgeInsets
@@ -174,7 +200,7 @@ import UIKit
     
 }
 
-@objc public class CourierInboxTextStyles: NSObject {
+@objc public class CourierInboxTextStyle: NSObject {
     
     internal let unread: CourierInboxFont
     internal let read: CourierInboxFont
@@ -198,19 +224,31 @@ import UIKit
     
 }
 
-public enum CourierInboxUnreadIndicatorStyle {
+public enum CourierInboxUnreadIndicator {
     case line
     case dot
 }
 
-@objc public class CourierInboxUnreadIndicator: NSObject {
+@objc public class CourierInboxUnreadIndicatorStyle: NSObject {
     
-    internal let style: CourierInboxUnreadIndicatorStyle
+    internal let indicator: CourierInboxUnreadIndicator
     internal let color: UIColor?
     
-    public init(style: CourierInboxUnreadIndicatorStyle = .line, color: UIColor? = nil) {
-        self.style = style
+    public init(indicator: CourierInboxUnreadIndicator = .line, color: UIColor? = nil) {
+        self.indicator = indicator
         self.color = color
+    }
+    
+}
+
+@objc public class CourierInboxInfoViewStyle: NSObject {
+    
+    internal let font: CourierInboxFont
+    internal let button: CourierInboxButton
+    
+    public init(font: CourierInboxFont, button: CourierInboxButton) {
+        self.font = font
+        self.button = button
     }
     
 }
