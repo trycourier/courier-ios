@@ -124,35 +124,76 @@ let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, 
 // Theme object containing all the styles you want to apply 
 let inboxTheme = CourierInboxTheme(
     messageAnimationStyle: .fade,
-    unreadIndicatorBarColor: secondaryColor,
-    loadingIndicatorColor: primaryColor,
-    titleFont: CourierInboxFont(
-        font: UIFont(name: "Avenir Black", size: 20)!,
-        color: textColor
+    loadingIndicatorColor: secondaryColor,
+    unreadIndicatorStyle: CourierInboxUnreadIndicatorStyle(
+        indicator: .dot,
+        color: secondaryColor
     ),
-    timeFont: CourierInboxFont(
-        font: UIFont(name: "Avenir Medium", size: 16)!,
-        color: textColor
-    ),
-    bodyFont: CourierInboxFont(
-        font: UIFont(name: "Avenir Medium", size: 18)!,
-        color: textColor
-    ),
-    detailTitleFont: CourierInboxFont(
-        font: UIFont(name: "Avenir Medium", size: 20)!,
-        color: textColor
-    ),
-    buttonStyles: CourierInboxButtonStyles(
-        font: CourierInboxFont(
-            font: UIFont(name: "Avenir Black", size: 16)!,
-            color: .white
+    titleStyle: CourierInboxTextStyle(
+        unread: CourierInboxFont(
+            font: UIFont(name: "Avenir Black", size: 20)!,
+            color: textColor
         ),
-        backgroundColor: primaryColor,
-        cornerRadius: 100
+        read: CourierInboxFont(
+            font: UIFont(name: "Avenir Black", size: 20)!,
+            color: textColor
+        )
     ),
-    cellStyles: CourierInboxCellStyles(
+    timeStyle: CourierInboxTextStyle(
+        unread: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 18)!,
+            color: textColor
+        ),
+        read: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 18)!,
+            color: textColor
+        )
+    ),
+    bodyStyle: CourierInboxTextStyle(
+        unread: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 18)!,
+            color: textColor
+        ),
+        read: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 18)!,
+            color: textColor
+        )
+    ),
+    buttonStyle: CourierInboxButtonStyle(
+        unread: CourierInboxButton(
+            font: CourierInboxFont(
+                font: UIFont(name: "Avenir Black", size: 16)!,
+                color: .white
+            ),
+            backgroundColor: primaryColor,
+            cornerRadius: 100
+        ),
+        read: CourierInboxButton(
+            font: CourierInboxFont(
+                font: UIFont(name: "Avenir Black", size: 16)!,
+                color: .white
+            ),
+            backgroundColor: primaryColor,
+            cornerRadius: 100
+        )
+    ),
+    cellStyle: CourierInboxCellStyle(
         separatorStyle: .singleLine,
         separatorInsets: .zero
+    ),
+    infoViewStyle: CourierInboxInfoViewStyle(
+        font: CourierInboxFont(
+            font: UIFont(name: "Avenir Medium", size: 20)!,
+            color: textColor
+        ),
+        button: CourierInboxButton(
+            font: CourierInboxFont(
+                font: UIFont(name: "Avenir Black", size: 16)!,
+                color: .white
+            ),
+            backgroundColor: primaryColor,
+            cornerRadius: 100
+        )
     )
 )
 
