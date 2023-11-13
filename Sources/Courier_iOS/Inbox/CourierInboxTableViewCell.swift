@@ -199,13 +199,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 
         // Font
         titleLabel.font = isRead ? theme.titleStyles.read.font : theme.titleStyles.unread.font
-        timeLabel.font = theme.timeFont.font
-        bodyLabel.font = theme.bodyFont.font
+        timeLabel.font = isRead ? theme.timeStyles.read.font : theme.timeStyles.unread.font
+        bodyLabel.font = isRead ? theme.bodyStyles.read.font : theme.bodyStyles.unread.font
 
         // Color
         titleLabel.textColor = isRead ? theme.titleStyles.read.color : theme.titleStyles.unread.color
-        timeLabel.textColor = theme.timeFont.color
-        bodyLabel.textColor = theme.bodyFont.color
+        timeLabel.textColor = isRead ? theme.timeStyles.read.color : theme.timeStyles.unread.color
+        bodyLabel.textColor = isRead ? theme.bodyStyles.read.color : theme.bodyStyles.unread.color
 
         // Selection style
         selectionStyle = theme.cellStyles.selectionStyle

@@ -15,8 +15,8 @@ import UIKit
     private let loadingIndicatorColor: UIColor?
     internal let unreadIndicator: CourierInboxUnreadIndicator
     internal let titleStyles: CourierInboxTextStyles
-    internal let timeFont: CourierInboxFont
-    internal let bodyFont: CourierInboxFont
+    internal let timeStyles: CourierInboxTextStyles
+    internal let bodyStyles: CourierInboxTextStyles
     internal let detailTitleFont: CourierInboxFont
     internal let buttonStyles: CourierInboxButtonStyles
     internal let cellStyles: CourierInboxCellStyles
@@ -39,13 +39,25 @@ import UIKit
                 color: .secondaryLabel
             )
         ),
-        timeFont: CourierInboxFont = CourierInboxFont(
-            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
-            color: .placeholderText
+        timeStyles: CourierInboxTextStyles = CourierInboxTextStyles(
+            unread: CourierInboxFont(
+                font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+                color: .placeholderText
+            ),
+            read: CourierInboxFont(
+                font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+                color: .tertiaryLabel
+            )
         ),
-        bodyFont: CourierInboxFont = CourierInboxFont(
-            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
-            color: .label
+        bodyStyles: CourierInboxTextStyles = CourierInboxTextStyles(
+            unread: CourierInboxFont(
+                font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+                color: .label
+            ),
+            read: CourierInboxFont(
+                font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+                color: .secondaryLabel
+            )
         ),
         detailTitleFont: CourierInboxFont = CourierInboxFont(
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
@@ -58,8 +70,8 @@ import UIKit
         self.unreadIndicator = unreadIndicator
         self.loadingIndicatorColor = loadingIndicatorColor
         self.titleStyles = titleStyles
-        self.timeFont = timeFont
-        self.bodyFont = bodyFont
+        self.timeStyles = timeStyles
+        self.bodyStyles = bodyStyles
         self.detailTitleFont = detailTitleFont
         self.buttonStyles = buttonStyles
         self.cellStyles = cellStyles
@@ -132,6 +144,7 @@ import UIKit
     internal static let maxHeight: CGFloat = 34.33
     
     public init(font: CourierInboxFont = CourierInboxFont(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white), backgroundColor: UIColor? = nil, cornerRadius: CGFloat = 8) {
+        
         self.font = font
         self.backgroundColor = backgroundColor
         

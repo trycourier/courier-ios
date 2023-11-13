@@ -23,9 +23,15 @@ class StyledInboxViewController: UIViewController {
                     style: .dot,
                     color: secondaryColor
                 ),
-                titleFont: CourierInboxFont(
-                    font: UIFont(name: "Avenir Black", size: 20)!,
-                    color: textColor
+                titleStyles: CourierInboxTextStyles(
+                    unread: CourierInboxFont(
+                        font: UIFont(name: "Avenir Black", size: 20)!,
+                        color: textColor
+                    ),
+                    read: CourierInboxFont(
+                        font: UIFont(name: "Avenir Black", size: 20)!,
+                        color: textColor
+                    )
                 ),
                 timeFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Medium", size: 18)!,
@@ -56,9 +62,15 @@ class StyledInboxViewController: UIViewController {
                 unreadIndicator: CourierInboxUnreadIndicator(
                     style: .dot
                 ),
-                titleFont: CourierInboxFont(
-                    font: UIFont(name: "Avenir Black", size: 20)!,
-                    color: .white
+                titleStyles: CourierInboxTextStyles(
+                    unread: CourierInboxFont(
+                        font: UIFont(name: "Avenir Black", size: 20)!,
+                        color: .white
+                    ),
+                    read: CourierInboxFont(
+                        font: UIFont(name: "Avenir Black", size: 20)!,
+                        color: .gray
+                    )
                 ),
                 timeFont: CourierInboxFont(
                     font: UIFont(name: "Avenir Medium", size: 16)!,
