@@ -71,8 +71,8 @@ internal class CourierInboxActionButton: UIButton {
         
         let padding = CourierInboxTheme.margin * 1.5
         contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
-        titleLabel?.font = theme.infoViewStyle.font.font
-        titleLabel?.textColor = theme.infoViewStyle.font.color
+        titleLabel?.font = theme.infoViewStyle.button.font.font
+        titleLabel?.textColor = theme.infoViewStyle.button.font.color
         setTitleColor(theme.infoViewStyle.button.font.color, for: .normal)
         backgroundColor = theme.getInfoButtonColor()
         layer.cornerRadius = theme.infoViewStyle.button.cornerRadius
