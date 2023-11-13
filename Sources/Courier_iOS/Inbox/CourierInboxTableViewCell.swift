@@ -163,7 +163,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         self.inboxMessage = message
         
         setupButtons(theme, onActionClick)
-        setTheme(theme)
+        setTheme(theme, isRead: message.isRead)
         
         switch (theme.unreadIndicator.style) {
         case .line:
