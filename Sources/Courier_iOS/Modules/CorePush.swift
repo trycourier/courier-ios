@@ -24,12 +24,12 @@ internal class CorePush {
             
             let key = CourierPushProvider.apn.rawValue
             
-            guard let token = apnsToken?.string else {
+            // Save or remove the token
+            if let token = apnsToken?.string {
+                tokens[key] = token
+            } else {
                 tokens.removeValue(forKey: key)
-                return
             }
-            
-            tokens[key] = token
             
         }
     }
@@ -136,10 +136,10 @@ internal class CorePush {
         
         // Save the local token
         apnsToken = rawToken
-        
+
         return try await putToken(
             provider: provider,
-            token: provider
+            token: rawToken.string
         )
         
     }
