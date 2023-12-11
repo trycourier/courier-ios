@@ -11,16 +11,19 @@ final class CourierTests: XCTestCase {
         
         print("\n🔬 Setting APNS Token before User")
         
-        do {
-            try await Courier.shared.setAPNSToken(rawApnsToken)
-        } catch {
-            XCTAssertEqual(Courier.shared.accessToken, nil)
-            XCTAssertEqual(Courier.shared.clientKey, nil)
-            XCTAssertEqual(Courier.shared.userId, nil)
-            XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken)
-            XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
-            XCTAssertEqual(Courier.shared.getToken(provider: .apn), rawApnsToken.string)
-        }
+        // Empty
+        try await Courier.shared.setToken(provider: CourierPushProvider.apn, token: "")
+        try await Courier.shared.setToken(providerKey: "", token: rawApnsToken.string)
+        
+        // Valid
+        try await Courier.shared.setAPNSToken(rawApnsToken)
+        
+        XCTAssertEqual(Courier.shared.accessToken, nil)
+        XCTAssertEqual(Courier.shared.clientKey, nil)
+        XCTAssertEqual(Courier.shared.userId, nil)
+        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken)
+        XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
+        XCTAssertEqual(Courier.shared.getToken(provider: .apn), rawApnsToken.string)
 
     }
     
@@ -28,15 +31,13 @@ final class CourierTests: XCTestCase {
         
         print("🔬 Setting FCM Token before User")
         
-        do {
-            try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
-        } catch {
-            XCTAssertEqual(Courier.shared.accessToken, nil)
-            XCTAssertEqual(Courier.shared.clientKey, nil)
-            XCTAssertEqual(Courier.shared.userId, nil)
-            XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
-            XCTAssertEqual(Courier.shared.getToken(providerKey: "firebase-fcm"), fcmToken)
-        }
+        try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
+        
+        XCTAssertEqual(Courier.shared.accessToken, nil)
+        XCTAssertEqual(Courier.shared.clientKey, nil)
+        XCTAssertEqual(Courier.shared.userId, nil)
+        XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
+        XCTAssertEqual(Courier.shared.getToken(providerKey: "firebase-fcm"), fcmToken)
         
     }
     
@@ -292,7 +293,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Put User Preference Topic")
         
         try await Courier.shared.putUserPreferencesTopic(
-            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF",
+            topicId: "3PBVT6GFEVMDRHKQ3YGVFRCEV68M",
             status: .optedOut,
             hasCustomRouting: true,
             customRouting: [.sms, .push]
@@ -305,7 +306,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Get User Preference Topic")
 
         let topic = try await Courier.shared.getUserPreferencesTopic(
-            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF"
+            topicId: "3PBVT6GFEVMDRHKQ3YGVFRCEV68M"
         )
         
         XCTAssertEqual(topic.customRouting, [.sms, .push])

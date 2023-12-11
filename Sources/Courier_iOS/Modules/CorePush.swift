@@ -19,20 +19,7 @@ internal class CorePush {
      * The token issued by Apple on this device
      * Can only be set by the Courier SDK, but can be read by external packages
      */
-    public private(set) var apnsToken: Data? = nil {
-        didSet {
-            
-            let key = CourierPushProvider.apn.rawValue
-            
-            // Save or remove the token
-            if let token = apnsToken?.string {
-                tokens[key] = token
-            } else {
-                tokens.removeValue(forKey: key)
-            }
-            
-        }
-    }
+    public private(set) var apnsToken: Data? = nil
     
     // MARK: Getters
     
@@ -121,8 +108,11 @@ internal class CorePush {
     
     internal func setAPNSToken(_ rawToken: Data) async throws {
         
+        let key = CourierPushProvider.apn.rawValue
+        
         guard let _ = Courier.shared.accessToken, let _ = Courier.shared.userId else {
             apnsToken = rawToken
+            cacheToken(key: key, value: rawToken.string)
             return
         }
         
@@ -136,6 +126,7 @@ internal class CorePush {
         
         // Save the local token
         apnsToken = rawToken
+        cacheToken(key: key, value: rawToken.string)
 
         return try await putToken(
             provider: provider,
@@ -144,10 +135,36 @@ internal class CorePush {
         
     }
     
+    internal func cacheToken(key: String, value: String?) {
+        
+        // Ensure we have a key
+        if (key.isEmpty) {
+            Courier.log("Cannot cache token for provider. Provider key is empty.")
+            return
+        }
+        
+        // Check for token value
+        guard let token = value else {
+            tokens.removeValue(forKey: key)
+            Courier.log("Token cache cleared for provider \(key)")
+            return
+        }
+        
+        // Ensure token is not empty
+        if (token.isEmpty) {
+            Courier.log("Cannot cache token for provider \(key). Token value is empty.")
+            return
+        }
+        
+        // Cache the token
+        tokens[key] = token
+        
+    }
+    
     internal func setToken(provider: String, token: String) async throws {
         
         guard let _ = Courier.shared.accessToken, let _ = Courier.shared.userId else {
-            tokens[provider] = token
+            cacheToken(key: provider, value: token)
             return
         }
         
@@ -157,7 +174,7 @@ internal class CorePush {
         )
         
         // Save the token locally
-        tokens[provider] = token
+        cacheToken(key: provider, value: token)
         
         // Update the token
         return try await putToken(
