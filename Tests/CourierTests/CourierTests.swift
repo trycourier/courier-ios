@@ -18,12 +18,16 @@ final class CourierTests: XCTestCase {
         // Valid
         try await Courier.shared.setAPNSToken(rawApnsToken)
         
+        // Get the current APNS token
+        let apnsToken = await Courier.shared.getApnsToken()
+        let providerApnsToken = await Courier.shared.getToken(provider: .apn)
+        
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.clientKey, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
-        XCTAssertEqual(Courier.shared.apnsToken, rawApnsToken)
-        XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
-        XCTAssertEqual(Courier.shared.getToken(provider: .apn), rawApnsToken.string)
+        XCTAssertEqual(apnsToken, rawApnsToken)
+        XCTAssertEqual(apnsToken?.string, rawApnsToken.string)
+        XCTAssertEqual(providerApnsToken, rawApnsToken.string)
 
     }
     
@@ -33,11 +37,14 @@ final class CourierTests: XCTestCase {
         
         try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
         
+        let fcmProviderToken = await Courier.shared.getToken(provider: .firebaseFcm)
+        let fcmKeyToken = await Courier.shared.getToken(providerKey: "firebase-fcm")
+        
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.clientKey, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
-        XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
-        XCTAssertEqual(Courier.shared.getToken(providerKey: "firebase-fcm"), fcmToken)
+        XCTAssertEqual(fcmProviderToken, fcmToken)
+        XCTAssertEqual(fcmKeyToken, fcmToken)
         
     }
     
@@ -90,10 +97,12 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing APNS Token Update")
         
         try await Courier.shared.setAPNSToken(rawApnsToken)
+        
+        let apnsToken = await Courier.shared.getApnsToken()
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
+        XCTAssertEqual(apnsToken?.string, rawApnsToken.string)
 
     }
 
@@ -102,10 +111,12 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing FCM Token Update")
         
         try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
+        
+        let fcm = await Courier.shared.getToken(provider: .firebaseFcm)
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
+        XCTAssertEqual(fcm, fcmToken)
 
     }
     
@@ -322,13 +333,17 @@ final class CourierTests: XCTestCase {
         }
 
         try await Courier.shared.signOut()
+        
+        let apns = await Courier.shared.getApnsToken()
+        let fcm = await Courier.shared.getToken(providerKey: "firebase-fcm")
+        let expo = await Courier.shared.getToken(provider: .expo)
 
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.clientKey, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
-        XCTAssertEqual(Courier.shared.getToken(provider: .firebaseFcm), fcmToken)
-        XCTAssertEqual(Courier.shared.getToken(providerKey: "expo"), nil)
-        XCTAssertEqual(Courier.shared.apnsToken?.string, rawApnsToken.string)
+        XCTAssertEqual(fcm, fcmToken)
+        XCTAssertEqual(expo, nil)
+        XCTAssertEqual(apns?.string, rawApnsToken.string)
 
     }
     

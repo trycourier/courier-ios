@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal class CorePush {
+internal actor CorePush {
     
     private lazy var usersRepo = UsersRepository()
     private lazy var trackingRepo = TrackingRepository()
@@ -119,9 +119,11 @@ internal class CorePush {
         // APNS key
         let provider = CourierPushProvider.apn.rawValue
         
+        let currentToken = tokens[provider]
+        
         // Delete the existing token
         await deleteTokenIfNeeded(
-            token: tokens[provider]
+            token: currentToken
         )
         
         // Save the local token
@@ -168,9 +170,11 @@ internal class CorePush {
             return
         }
         
+        let currentToken = tokens[provider]
+        
         // Delete the existing token
         await deleteTokenIfNeeded(
-            token: tokens[provider]
+            token: currentToken
         )
         
         // Save the token locally
@@ -218,21 +222,19 @@ extension Courier {
     /**
      * The current APNS token for the device
      */
-    @objc public var apnsToken: Data? {
-        get {
-            return corePush.apnsToken
-        }
+    @objc public func getApnsToken() async -> Data? {
+        return await corePush.apnsToken
     }
     
     /**
      * Gets the current token for a provider
      */
-    public func getToken(provider: CourierPushProvider) -> String? {
-        return corePush.tokens[provider.rawValue]
+    public func getToken(provider: CourierPushProvider) async -> String? {
+        return await corePush.tokens[provider.rawValue]
     }
     
-    @objc public func getToken(providerKey: String) -> String? {
-        return corePush.tokens[providerKey]
+    @objc public func getToken(providerKey: String) async -> String? {
+        return await corePush.tokens[providerKey]
     }
     
     /**
