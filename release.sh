@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ## Open simulator
-#open -a Simulator && xcrun simctl boot 'iPhone 15,OS=17.0'
+#open -a Simulator && xcrun simctl boot 'iPhone 15,OS=17.0.1'
 #echo "✅ Opened Simulator.\n"
 #
 ## Start the tests
-#xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0' test
+#xcodebuild -scheme CourierTests -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0.1' test
 #
 ## Check the exit code of xcodebuild
 #if [ $? -eq 0 ]; then
