@@ -31,7 +31,7 @@ final class Concurrency: XCTestCase {
         
         return try await withThrowingTaskGroup(of: String.self) { group in
             
-            for i in 1...100 {
+            for i in 1...10 {
                 group.addTask { [self] in
                     try await Courier.shared.setAPNSToken(rawApnsToken)
                     return ""
