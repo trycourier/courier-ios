@@ -256,9 +256,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             // Raw APNS token
             try await Courier.shared.setAPNSToken(deviceToken)
-
-            // APNS token strings
-            try await Courier.shared.setToken(provider: .apn, token: deviceToken.string)
+            let apnsToken = await Courier.shared.getAPNSToken()
             
         }
 
@@ -272,10 +270,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Sync with provider
             // Available providers: .apn, .firebaseFcm, .expo, .oneSignal, .pusherBeams
             try await Courier.shared.setToken(provider: .firebaseFcm, token: token)
+            let token = await Courier.shared.getToken(provider: .firebaseFcm)
 
             // Sync with key
             // Any string as key is supported. Make sure you are using the proper key for your needs.
-            try await Courier.shared.setToken(provider: "firebase-fcm", token: token)
+            try await Courier.shared.setToken(providerKey: "firebase-fcm", token: token)
+            let token = await Courier.shared.getToken(providerKey: "firebase-fcm")
             
         }
 
