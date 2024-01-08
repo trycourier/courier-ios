@@ -222,8 +222,29 @@ extension Courier {
     /**
      * The current APNS token for the device
      */
-    @objc public func getApnsToken() async -> Data? {
+    @objc public func getAPNSToken() async -> Data? {
         return await corePush.apnsToken
+    }
+    
+    /**
+     * Upserts the APNS token in Courier for the current user
+     * If you implement `CourierDelegate`, this will get set automattically
+     * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
+     * This function requires a `Data` value as the token.
+     */
+    @objc public func setAPNSToken(_ rawToken: Data) async throws {
+        try await corePush.setAPNSToken(rawToken)
+    }
+    
+    @objc public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+        Task {
+            do {
+                try await corePush.setAPNSToken(rawToken)
+                onSuccess()
+            } catch {
+                onFailure(error)
+            }
+        }
     }
     
     /**
@@ -267,27 +288,6 @@ extension Courier {
                 onSuccess()
             } catch {
                 Courier.log(error.friendlyMessage)
-                onFailure(error)
-            }
-        }
-    }
-    
-    /**
-     * Upserts the APNS token in Courier for the current user
-     * If you implement `CourierDelegate`, this will get set automattically
-     * If you are not using `CourierDelegate`, please add this to `didRegisterForRemoteNotificationsWithDeviceToken`
-     * This function requires a `Data` value as the token.
-     */
-    @objc public func setAPNSToken(_ rawToken: Data) async throws {
-        try await corePush.setAPNSToken(rawToken)
-    }
-    
-    @objc public func setAPNSToken(_ rawToken: Data, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
-        Task {
-            do {
-                try await corePush.setAPNSToken(rawToken)
-                onSuccess()
-            } catch {
                 onFailure(error)
             }
         }

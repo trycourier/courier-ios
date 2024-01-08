@@ -19,7 +19,7 @@ final class CourierTests: XCTestCase {
         try await Courier.shared.setAPNSToken(rawApnsToken)
         
         // Get the current APNS token
-        let apnsToken = await Courier.shared.getApnsToken()
+        let apnsToken = await Courier.shared.getAPNSToken()
         let providerApnsToken = await Courier.shared.getToken(provider: .apn)
         
         XCTAssertEqual(Courier.shared.accessToken, nil)
@@ -98,7 +98,7 @@ final class CourierTests: XCTestCase {
         
         try await Courier.shared.setAPNSToken(rawApnsToken)
         
-        let apnsToken = await Courier.shared.getApnsToken()
+        let apnsToken = await Courier.shared.getAPNSToken()
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
@@ -334,7 +334,7 @@ final class CourierTests: XCTestCase {
 
         try await Courier.shared.signOut()
         
-        let apns = await Courier.shared.getApnsToken()
+        let apns = await Courier.shared.getAPNSToken()
         let fcm = await Courier.shared.getToken(providerKey: "firebase-fcm")
         let expo = await Courier.shared.getToken(provider: .expo)
 
