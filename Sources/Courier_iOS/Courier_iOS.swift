@@ -63,15 +63,6 @@ import UIKit
         
     }
     
-    deinit {
-        
-        NotificationCenter.default.removeObserver(self,
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        
-    }
-    
     @objc func didEnterBackgroundNotification() {
         // Perform actions upon receiving the applicationDidBecomeActive notification
         print("Application did go to background!")
