@@ -53,30 +53,29 @@ import UIKit
         
     }
     
-    @objc public static func configure(appDelegate: UIApplicationDelegate) {
+    @objc public static func configure() {
         
-        let appDelegateClass: AnyClass = type(of: appDelegate)
-        
-        // Swizzle applicationDidBecomeActive method for the AppDelegate
-        if let originalMethod = class_getInstanceMethod(appDelegateClass, #selector(UIApplicationDelegate.applicationDidBecomeActive(_:))),
-           let swizzledMethod = class_getInstanceMethod(self, #selector(self.courier_applicationDidBecomeActive(_:))) {
-            method_exchangeImplementations(originalMethod, swizzledMethod)
-        }
+        NotificationCenter.default.addObserver(self,
+           selector: #selector(applicationDidBecomeActiveNotification),
+           name: UIApplication.didBecomeActiveNotification,
+           object: nil
+        )
         
     }
     
-    @objc private func courier_applicationDidBecomeActive(_ application: UIApplication) {
-        // Perform any necessary actions before or after the original method invocation
+    deinit {
         
-        // Call the original method
-        let originalSelector = #selector(self.courier_applicationDidBecomeActive(_:))
-        let originalMethod = class_getInstanceMethod(type(of: self), originalSelector)
-        let castedOriginalMethod = unsafeBitCast(originalMethod, to: (@convention(c) (AnyObject, Selector, UIApplication) -> Void).self)
-        castedOriginalMethod(self, originalSelector, application)
+        NotificationCenter.default.removeObserver(self,
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
         
-        // Perform any necessary actions after the original method invocation
-        print("Called")
-        
+    }
+    
+    @objc func applicationDidBecomeActiveNotification() {
+        // Perform actions upon receiving the applicationDidBecomeActive notification
+        print("Application did become active!")
+        // Add your logic here
     }
     
     /**
