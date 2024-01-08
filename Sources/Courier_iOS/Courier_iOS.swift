@@ -56,8 +56,8 @@ import UIKit
     @objc public static func configure() {
         
         NotificationCenter.default.addObserver(self,
-           selector: #selector(applicationDidBecomeActiveNotification),
-           name: UIApplication.didBecomeActiveNotification,
+           selector: #selector(didEnterBackgroundNotification),
+           name: UIApplication.didEnterBackgroundNotification,
            object: nil
         )
         
@@ -66,15 +66,15 @@ import UIKit
     deinit {
         
         NotificationCenter.default.removeObserver(self,
-            name: UIApplication.didBecomeActiveNotification,
+            name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
         
     }
     
-    @objc func applicationDidBecomeActiveNotification() {
+    @objc func didEnterBackgroundNotification() {
         // Perform actions upon receiving the applicationDidBecomeActive notification
-        print("Application did become active!")
+        print("Application did go to background!")
         // Add your logic here
     }
     

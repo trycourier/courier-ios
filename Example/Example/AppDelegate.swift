@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        Courier.configure(appDelegate: self)
+        Courier.configure()
         
         // Initialize Firebase and FCM
         FirebaseApp.configure()
