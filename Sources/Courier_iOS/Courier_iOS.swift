@@ -21,15 +21,10 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 */
 
 import Foundation
+import UIKit
 
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
-    
-    /**
-     * Versioning
-     */
-    public static var agent = CourierAgent.native_ios
-    internal static let version = "2.7.4"
     
     /**
      * Singleton reference to the SDK
@@ -57,5 +52,37 @@ import Foundation
         super.init()
         
     }
+    
+    @objc public static func configure(appDelegate: UIApplicationDelegate) {
+        
+        let appDelegateClass: AnyClass = type(of: appDelegate)
+        
+        // Swizzle applicationDidBecomeActive method for the AppDelegate
+        if let originalMethod = class_getInstanceMethod(appDelegateClass, #selector(UIApplicationDelegate.applicationDidBecomeActive(_:))),
+           let swizzledMethod = class_getInstanceMethod(self, #selector(self.courier_applicationDidBecomeActive(_:))) {
+            method_exchangeImplementations(originalMethod, swizzledMethod)
+        }
+        
+    }
+    
+    @objc private func courier_applicationDidBecomeActive(_ application: UIApplication) {
+        // Perform any necessary actions before or after the original method invocation
+        
+        // Call the original method
+        let originalSelector = #selector(self.courier_applicationDidBecomeActive(_:))
+        let originalMethod = class_getInstanceMethod(type(of: self), originalSelector)
+        let castedOriginalMethod = unsafeBitCast(originalMethod, to: (@convention(c) (AnyObject, Selector, UIApplication) -> Void).self)
+        castedOriginalMethod(self, originalSelector, application)
+        
+        // Perform any necessary actions after the original method invocation
+        print("Called")
+        
+    }
+    
+    /**
+     * Versioning
+     */
+    internal static let version = "2.7.4"
+    public static var agent = CourierAgent.native_ios
     
 }
