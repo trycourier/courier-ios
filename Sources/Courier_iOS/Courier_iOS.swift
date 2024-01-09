@@ -53,12 +53,21 @@ import UIKit
         
     }
     
-    @objc public static func configure() {
+    @objc public static func configure(_ appDelegate: UIApplicationDelegate) {
         
-        NotificationCenter.default.addObserver(self,
+        NotificationCenter.default.addObserver(appDelegate,
            selector: #selector(didEnterBackgroundNotification),
            name: UIApplication.didEnterBackgroundNotification,
            object: nil
+        )
+        
+    }
+    
+    deinit {
+        
+        NotificationCenter.default.removeObserver(self,
+          name: UIApplication.didEnterBackgroundNotification,
+          object: nil
         )
         
     }
@@ -68,6 +77,10 @@ import UIKit
         print("Application did go to background!")
         // Add your logic here
     }
+    
+    // didRegisterToken
+    // didBecomeActive
+    // didEnterBackground
     
     /**
      * Versioning
