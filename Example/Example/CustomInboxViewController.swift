@@ -173,7 +173,7 @@ class CustomTableViewCell: UITableViewCell {
     let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
         return label
     }()
     

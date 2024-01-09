@@ -8,64 +8,42 @@
 import UIKit
 import Courier_iOS
 
-class PushViewController: UIViewController {
+class PushViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var apnsSwitch: UISwitch!
-    @IBOutlet weak var fcmSwitch: UISwitch!
-    @IBOutlet weak var inboxSwitch: UISwitch!
+    @IBOutlet weak var tableView: UITableView!
+    let refreshControl = UIRefreshControl()
     
-    @IBAction func sendPushAction(_ sender: Any) {
+    @IBAction func refreshAction(_ sender: Any) {
+        
+        refresh()
+        
+    }
+    
+    @IBAction func requestPermissionsButton(_ sender: Any) {
         
         Task {
-
-            let titles = [
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-                "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ",
-                "Ullamco laboris nisi ut aliquip ex ea commodo consequat nisi ut aliquip ex ea commodo consequat duis aute irure dolor",
-                "Lorem qui officia deserunt mollit anim id est laborum."
-            ]
-
-            let messages = [
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco",
-                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                "Lorem ipsum dolor sit amet"
-            ]
-
-            let title = titles.randomElement()!
-            let body = messages.randomElement()!
-
-            var providers: [String] = []
-
-            if (apnsSwitch.isOn) {
-                providers.append("apn")
-            }
-
-            if (fcmSwitch.isOn) {
-                providers.append("firebase-fcm")
-            }
-
-            if (inboxSwitch.isOn) {
-                providers.append("inbox")
-            }
-
-            if let userId = Courier.shared.userId {
-
-                if (!providers.isEmpty) {
-                    
-                    let _ = try await SendAPI.sendTest(
-                        authKey: Env.COURIER_AUTH_KEY,
-                        userId: userId,
-                        providers: providers,
-                        title: title,
-                        body: body
-                    )
-                    
-                }
-
-            }
-
+            
+            let _ = try await Courier.requestNotificationPermission()
+            
+            refresh()
+            
+        }
+        
+    }
+    
+    var tokens = [("APNS Token", "Empty"), ("FCM Token", "Empty")]
+    
+    @objc func refresh() {
+        
+        Task {
+            
+            tokens[0].1 = await Courier.shared.getToken(provider: .apn) ?? "Empty"
+            tokens[1].1 = await Courier.shared.getToken(provider: .firebaseFcm) ?? "Empty"
+            
+            tableView.reloadData()
+            
+            refreshControl.endRefreshing()
+            
         }
         
     }
@@ -75,6 +53,103 @@ class PushViewController: UIViewController {
         
         title = "Push"
         
+        tableView.register(TokenTableViewCell.self, forCellReuseIdentifier: TokenTableViewCell.id)
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        
+        refresh()
+        
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tokens.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TokenTableViewCell.id, for: indexPath) as! TokenTableViewCell
+        
+        let item = tokens[indexPath.row]
+        cell.configureCell(title: item.0, item: item.1)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let token = tokens[indexPath.row]
+        UIPasteboard.general.string = token.1
+        showMessageAlert(title: "\(token.0) Copied", message: token.1)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+    
+}
+
+class TokenTableViewCell: UITableViewCell {
+    
+    static let id = "TokenTableViewCell"
+    
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .bold)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        return label
+    }()
+    
+    let itemLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        return label
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+        setupConstraints()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupViews() {
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(itemLabel)
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
+            titleLabel.widthAnchor.constraint(equalToConstant: 100), // Adjust the fixed width here
+            
+            itemLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 16),
+            itemLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            itemLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
+        ])
+    }
+    
+    func configureCell(title: String, item: String) {
+        titleLabel.text = title
+        itemLabel.text = item
     }
     
 }

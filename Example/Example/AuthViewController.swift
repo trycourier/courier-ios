@@ -37,7 +37,6 @@ class AuthViewController: UIViewController {
                     )
                     
                     self.refresh()
-                    try await Courier.requestNotificationPermission()
                     
                 }
                 
