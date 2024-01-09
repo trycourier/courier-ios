@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Notifications View Controller-->
+        <!--Push View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="NotificationsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="PushViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -95,13 +95,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2445" y="-491"/>
+            <point key="canvasLocation" x="2445" y="235"/>
         </scene>
         <!--Auth-->
         <scene sceneID="9Ks-Gv-TMe">
             <objects>
                 <navigationController id="Tmj-8w-Ahx" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Auth" image="person.circle" catalog="system" id="b6q-ef-Sgl"/>
+                    <tabBarItem key="tabBarItem" title="Auth" image="person.circle.fill" catalog="system" id="b6q-ef-Sgl"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="aGh-i6-t8d">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -112,7 +112,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Awj-A7-Mqn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1574" y="1733"/>
+            <point key="canvasLocation" x="1574" y="-508"/>
         </scene>
         <!--Auth View Controller-->
         <scene sceneID="p5d-L8-ww8">
@@ -156,46 +156,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gi7-we-bW0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2445" y="1732"/>
+            <point key="canvasLocation" x="2445" y="-509"/>
         </scene>
-        <!--Styled Inbox-->
-        <scene sceneID="kS4-fe-WXD">
-            <objects>
-                <navigationController id="8Er-gv-SMv" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Styled Inbox" image="tray.and.arrow.down" catalog="system" id="Tf6-aV-IYe"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="uQJ-xc-Rpb">
-                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="yGi-Qb-gcc" kind="relationship" relationship="rootViewController" id="8pg-eM-MoU"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mEW-JY-7i3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1572" y="2479"/>
-        </scene>
-        <!--Styled Inbox View Controller-->
-        <scene sceneID="5qz-93-CO4">
-            <objects>
-                <viewController id="yGi-Qb-gcc" customClass="StyledInboxViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="RbE-Qe-Xhv">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="7tw-qd-FnO"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Uax-PW-Wyf"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4TK-Np-kci" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2445" y="2479"/>
-        </scene>
-        <!--Send-->
+        <!--Push-->
         <scene sceneID="EPn-Ql-4Sm">
             <objects>
                 <navigationController id="ntI-cU-afA" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Send" image="paperplane" catalog="system" id="I45-hq-6mt"/>
+                    <tabBarItem key="tabBarItem" title="Push" image="message.badge.filled.fill.rtl" catalog="system" id="I45-hq-6mt"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="CTu-9i-QZg">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -206,83 +173,73 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qCw-ud-L3c" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1574" y="-491"/>
+            <point key="canvasLocation" x="1574" y="235"/>
         </scene>
-        <!--Custom Inbox View Controller-->
-        <scene sceneID="ncF-hg-SPf">
-            <objects>
-                <viewController id="9PO-Mt-HrD" customClass="CustomInboxViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dws-37-khE">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hXe-lU-poM">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M6f-Se-H0F">
-                                <rect key="frame" x="20" y="91" width="350" height="670"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="J9B-jF-jox"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="hXe-lU-poM" firstAttribute="trailing" secondItem="J9B-jF-jox" secondAttribute="trailing" id="08z-kT-DuH"/>
-                            <constraint firstItem="M6f-Se-H0F" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" constant="20" id="Gha-ym-02a"/>
-                            <constraint firstItem="hXe-lU-poM" firstAttribute="top" secondItem="dws-37-khE" secondAttribute="top" id="IyL-gT-QIF"/>
-                            <constraint firstItem="hXe-lU-poM" firstAttribute="leading" secondItem="J9B-jF-jox" secondAttribute="leading" id="eJR-LG-erj"/>
-                            <constraint firstItem="M6f-Se-H0F" firstAttribute="top" secondItem="J9B-jF-jox" secondAttribute="top" id="jt9-En-ndE"/>
-                            <constraint firstItem="J9B-jF-jox" firstAttribute="trailing" secondItem="M6f-Se-H0F" secondAttribute="trailing" constant="20" id="kMb-CC-gbs"/>
-                            <constraint firstItem="J9B-jF-jox" firstAttribute="bottom" secondItem="M6f-Se-H0F" secondAttribute="bottom" id="pxP-Qz-bg6"/>
-                            <constraint firstAttribute="bottom" secondItem="hXe-lU-poM" secondAttribute="bottom" id="ygt-G3-gBc"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="qjV-kz-L6Q"/>
-                    <connections>
-                        <outlet property="stateLabel" destination="M6f-Se-H0F" id="vuG-32-Rzf"/>
-                        <outlet property="tableView" destination="hXe-lU-poM" id="ixS-DI-3BD"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="7Bg-2L-P5V" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2444.6153846153848" y="244.54976303317534"/>
-        </scene>
-        <!--Prebuilt Inbox-->
+        <!--Inbox-->
         <scene sceneID="wr9-zw-dg8">
             <objects>
                 <navigationController id="v6Y-PJ-VDb" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Prebuilt Inbox" image="tray.and.arrow.down" catalog="system" id="Rlp-7C-BSh"/>
+                    <tabBarItem key="tabBarItem" title="Inbox" image="tray.and.arrow.down.fill" catalog="system" id="Rlp-7C-BSh"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3if-g5-Sew">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="2Eg-mR-8mK" kind="relationship" relationship="rootViewController" id="oke-DT-FgU"/>
+                        <segue destination="S7I-Xz-L96" kind="relationship" relationship="rootViewController" id="Qse-zg-dTZ"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DzA-r0-5nX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1574" y="977"/>
         </scene>
-        <!--Custom Inbox-->
-        <scene sceneID="XAS-ae-2lZ">
+        <!--Inbox View Controller-->
+        <scene sceneID="TQa-DQ-aig">
             <objects>
-                <navigationController id="nH0-Ut-6va" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Custom Inbox" image="tray.and.arrow.down" catalog="system" id="f1p-GQ-bmz"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="30b-Yw-PzX">
+                <viewController id="S7I-Xz-L96" customClass="InboxViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hNa-O2-3S2">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="JY4-RC-Eaf"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="mUL-Ah-ZS1"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jUc-vb-ioU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2445" y="977"/>
+        </scene>
+        <!--Preferences-->
+        <scene sceneID="Le2-cm-yYg">
+            <objects>
+                <navigationController id="cjV-bH-sRX" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Preferences" image="wrench.adjustable.fill" catalog="system" id="dwl-8A-xUp"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="fMQ-1h-nyV">
                         <rect key="frame" x="0.0" y="47" width="390" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="9PO-Mt-HrD" kind="relationship" relationship="rootViewController" id="j82-p2-uYI"/>
+                        <segue destination="gmy-lR-Cf8" kind="relationship" relationship="rootViewController" id="ukN-Rk-Edc"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="K6f-7m-xg7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="S3p-bX-44w" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1574" y="245"/>
+            <point key="canvasLocation" x="1574" y="1774"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="04X-hn-I2k">
+            <objects>
+                <viewController id="gmy-lR-Cf8" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="nqn-08-NmP">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="tcF-cL-EfT"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Vou-8W-Ss0"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gWK-MC-qFa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2445" y="1774"/>
         </scene>
         <!--Root Tab Bar Controller-->
         <scene sceneID="Uxj-pF-x4e">
@@ -295,52 +252,21 @@
                     </tabBar>
                     <connections>
                         <segue destination="Tmj-8w-Ahx" kind="relationship" relationship="viewControllers" id="88V-8k-cvs"/>
-                        <segue destination="v6Y-PJ-VDb" kind="relationship" relationship="viewControllers" id="pzf-JH-ljC"/>
-                        <segue destination="8Er-gv-SMv" kind="relationship" relationship="viewControllers" id="wqk-TC-KsE"/>
-                        <segue destination="nH0-Ut-6va" kind="relationship" relationship="viewControllers" id="2UR-9Z-GFG"/>
                         <segue destination="ntI-cU-afA" kind="relationship" relationship="viewControllers" id="7ud-Fd-A2b"/>
+                        <segue destination="v6Y-PJ-VDb" kind="relationship" relationship="viewControllers" id="pzf-JH-ljC"/>
+                        <segue destination="cjV-bH-sRX" kind="relationship" relationship="viewControllers" id="9T1-8M-wav"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nnt-Hk-krp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-612" y="1258"/>
-        </scene>
-        <!--Prebuilt Inbox View Controller-->
-        <scene sceneID="JNc-cU-aTU">
-            <objects>
-                <viewController id="2Eg-mR-8mK" customClass="PrebuiltInboxViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="1M1-5A-65r">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f1X-pS-BdD" customClass="CourierInbox" customModule="Courier_iOS">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="JdG-qB-nqr"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="f1X-pS-BdD" firstAttribute="top" secondItem="1M1-5A-65r" secondAttribute="top" id="Oas-Q1-zPj"/>
-                            <constraint firstAttribute="bottom" secondItem="f1X-pS-BdD" secondAttribute="bottom" id="bGT-UY-Gcn"/>
-                            <constraint firstItem="f1X-pS-BdD" firstAttribute="trailing" secondItem="JdG-qB-nqr" secondAttribute="trailing" id="uQd-5V-Kiu"/>
-                            <constraint firstItem="f1X-pS-BdD" firstAttribute="leading" secondItem="JdG-qB-nqr" secondAttribute="leading" id="yCO-hD-Umi"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="wee-V5-J4q"/>
-                    <connections>
-                        <outlet property="courierInbox" destination="f1X-pS-BdD" id="3jF-kB-hNg"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="k1U-zU-ONl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2444.6153846153848" y="976.77725118483409"/>
+            <point key="canvasLocation" x="-483" y="235"/>
         </scene>
     </scenes>
     <resources>
-        <image name="paperplane" catalog="system" width="128" height="119"/>
-        <image name="person.circle" catalog="system" width="128" height="123"/>
-        <image name="tray.and.arrow.down" catalog="system" width="128" height="111"/>
+        <image name="message.badge.filled.fill.rtl" catalog="system" width="128" height="122"/>
+        <image name="person.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="117"/>
+        <image name="wrench.adjustable.fill" catalog="system" width="128" height="124"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

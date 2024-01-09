@@ -186,13 +186,6 @@ class StyledInboxViewController: UIViewController {
             courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
-        title = "Styled Inbox"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
-        
-    }
-    
-    @objc private func readAll() {
-        Courier.shared.readAllInboxMessages()
     }
 
 }

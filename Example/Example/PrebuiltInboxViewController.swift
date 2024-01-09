@@ -10,27 +10,31 @@ import Courier_iOS
 
 class PrebuiltInboxViewController: UIViewController {
     
-    @IBOutlet weak var courierInbox: CourierInbox!
-    
+    private lazy var courierInbox = {
+        return CourierInbox(
+            didClickInboxMessageAtIndex: { message, index in
+                message.isRead ? message.markAsUnread() : message.markAsRead()
+                print(message.toJson() ?? "")
+            },
+            didClickInboxActionForMessageAtIndex: { action, message, index in
+                print(action.toJson() ?? "")
+            }
+        )
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        courierInbox.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(courierInbox)
         
-        courierInbox.didClickInboxMessageAtIndex = { message, index in
-            print(index, message)
-            message.isRead ? message.markAsUnread() : message.markAsRead()
-        }
+        NSLayoutConstraint.activate([
+            courierInbox.topAnchor.constraint(equalTo: view.topAnchor),
+            courierInbox.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
         
-        courierInbox.didClickInboxActionForMessageAtIndex = { action, message, index in
-            print(action, message, index)
-        }
-        
-        title = "Prebuilt Inbox"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
-        
-    }
-    
-    @objc private func readAll() {
-        Courier.shared.readAllInboxMessages()
     }
 
 }

@@ -13,13 +13,14 @@
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
 		27895167292689460070F501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895166292689460070F501 /* AppDelegate.swift */; };
 		27895169292689460070F501 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895168292689460070F501 /* SceneDelegate.swift */; };
-		2789516B292689460070F501 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789516A292689460070F501 /* NotificationsViewController.swift */; };
+		2789516B292689460070F501 /* PushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789516A292689460070F501 /* PushViewController.swift */; };
 		2789516E292689460070F501 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2789516C292689460070F501 /* Main.storyboard */; };
 		27895170292689470070F501 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2789516F292689470070F501 /* Assets.xcassets */; };
 		27895173292689470070F501 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27895171292689470070F501 /* LaunchScreen.storyboard */; };
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
 		27AD11982AE9D0BE00867BF9 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AD11972AE9D0BE00867BF9 /* Env.swift */; };
 		27AD119A2AE9D18200867BF9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27AD11992AE9D18200867BF9 /* GoogleService-Info.plist */; };
+		27B18CDC2B4DCAA30005904E /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B18CDB2B4DCAA30005904E /* InboxViewController.swift */; };
 		27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */; };
 		27D8F1AF2AE885B400E54210 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27D8F1AE2AE885B400E54210 /* Courier_iOS */; };
 		27D8F1B22AE885DB00E54210 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 27D8F1B12AE885DB00E54210 /* FirebaseMessaging */; };
@@ -61,7 +62,7 @@
 		27895163292689460070F501 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27895166292689460070F501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27895168292689460070F501 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		2789516A292689460070F501 /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
+		2789516A292689460070F501 /* PushViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushViewController.swift; sourceTree = "<group>"; };
 		2789516D292689460070F501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2789516F292689470070F501 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27895172292689470070F501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -70,6 +71,7 @@
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27AD11972AE9D0BE00867BF9 /* Env.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
 		27AD11992AE9D18200867BF9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		27B18CDB2B4DCAA30005904E /* InboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewController.swift; sourceTree = "<group>"; };
 		27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledInboxViewController.swift; sourceTree = "<group>"; };
 		27F80C752AD71608000D7C07 /* SendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendAPI.swift; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,10 +130,11 @@
 				27895166292689460070F501 /* AppDelegate.swift */,
 				27895168292689460070F501 /* SceneDelegate.swift */,
 				272A237F29B2886600B82CFE /* RootTabBarController.swift */,
-				2789516A292689460070F501 /* NotificationsViewController.swift */,
-				27644EEB29AE7378002F907B /* CustomInboxViewController.swift */,
+				2789516A292689460070F501 /* PushViewController.swift */,
+				27B18CDB2B4DCAA30005904E /* InboxViewController.swift */,
 				272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */,
 				27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */,
+				27644EEB29AE7378002F907B /* CustomInboxViewController.swift */,
 				27644EF329AFF741002F907B /* AuthViewController.swift */,
 				2789516C292689460070F501 /* Main.storyboard */,
 				2789516F292689470070F501 /* Assets.xcassets */,
@@ -271,12 +274,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				27F80C762AD71608000D7C07 /* SendAPI.swift in Sources */,
-				2789516B292689460070F501 /* NotificationsViewController.swift in Sources */,
+				2789516B292689460070F501 /* PushViewController.swift in Sources */,
 				272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
 				27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */,
 				272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */,
 				27644EF429AFF741002F907B /* AuthViewController.swift in Sources */,
+				27B18CDC2B4DCAA30005904E /* InboxViewController.swift in Sources */,
 				27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */,
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,

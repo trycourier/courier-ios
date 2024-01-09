@@ -1,5 +1,5 @@
 //
-//  NotificationsViewController.swift
+//  PushViewController.swift
 //  Example
 //
 //  Created by https://github.com/mikemilla on 11/17/22.
@@ -8,7 +8,7 @@
 import UIKit
 import Courier_iOS
 
-class NotificationsViewController: UIViewController {
+class PushViewController: UIViewController {
     
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var apnsSwitch: UISwitch!
@@ -73,7 +73,7 @@ class NotificationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Send"
+        title = "Push"
         
     }
     
