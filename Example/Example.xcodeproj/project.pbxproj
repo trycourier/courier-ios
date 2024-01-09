@@ -19,9 +19,9 @@
 		27895173292689470070F501 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27895171292689470070F501 /* LaunchScreen.storyboard */; };
 		2789519729268E030070F501 /* Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789519629268E030070F501 /* Extras.swift */; };
 		27AD11982AE9D0BE00867BF9 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AD11972AE9D0BE00867BF9 /* Env.swift */; };
-		27AD119A2AE9D18200867BF9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27AD11992AE9D18200867BF9 /* GoogleService-Info.plist */; };
 		27B18CDC2B4DCAA30005904E /* InboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B18CDB2B4DCAA30005904E /* InboxViewController.swift */; };
 		27B18CDE2B4DF6460005904E /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B18CDD2B4DF6460005904E /* PreferencesViewController.swift */; };
+		27B18CE02B4E0A3F0005904E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27B18CDF2B4E0A3F0005904E /* GoogleService-Info.plist */; };
 		27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */; };
 		27D8F1AF2AE885B400E54210 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27D8F1AE2AE885B400E54210 /* Courier_iOS */; };
 		27D8F1B22AE885DB00E54210 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 27D8F1B12AE885DB00E54210 /* FirebaseMessaging */; };
@@ -70,9 +70,9 @@
 		2789519529268DB70070F501 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		2789519629268E030070F501 /* Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extras.swift; sourceTree = "<group>"; };
 		27AD11972AE9D0BE00867BF9 /* Env.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
-		27AD11992AE9D18200867BF9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		27B18CDB2B4DCAA30005904E /* InboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InboxViewController.swift; sourceTree = "<group>"; };
 		27B18CDD2B4DF6460005904E /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
+		27B18CDF2B4E0A3F0005904E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		27C1E45529C0DE2A00A7804C /* StyledInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledInboxViewController.swift; sourceTree = "<group>"; };
 		6729FFAA2926F779006A3EC2 /* CourierService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourierService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6729FFAC2926F779006A3EC2 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
@@ -122,8 +122,8 @@
 		27895165292689460070F501 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				27AD11992AE9D18200867BF9 /* GoogleService-Info.plist */,
 				2789519529268DB70070F501 /* Example.entitlements */,
+				27B18CDF2B4E0A3F0005904E /* GoogleService-Info.plist */,
 				27AD11972AE9D0BE00867BF9 /* Env.swift */,
 				2789519629268E030070F501 /* Extras.swift */,
 				27895166292689460070F501 /* AppDelegate.swift */,
@@ -252,8 +252,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27B18CE02B4E0A3F0005904E /* GoogleService-Info.plist in Resources */,
 				27895173292689470070F501 /* LaunchScreen.storyboard in Resources */,
-				27AD119A2AE9D18200867BF9 /* GoogleService-Info.plist in Resources */,
 				27895170292689470070F501 /* Assets.xcassets in Resources */,
 				2789516E292689460070F501 /* Main.storyboard in Resources */,
 			);

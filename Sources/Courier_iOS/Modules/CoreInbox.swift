@@ -179,8 +179,9 @@ internal class CoreInbox {
     
     private func connectWebSocket(clientKey: String, userId: String) async throws {
         
-        // Kill existing socket
-        inboxRepo.closeWebSocket()
+        if (inboxRepo.webSocket != nil) {
+            return
+        }
         
         // Create a new socket
         try await inboxRepo.createWebSocket(
