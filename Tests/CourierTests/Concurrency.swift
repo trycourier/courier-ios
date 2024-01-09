@@ -41,7 +41,7 @@ final class Concurrency: XCTestCase {
             try await group.waitForAll()
             print("All tasks have completed")
             
-            return (await Courier.shared.getApnsToken())?.string ?? "Missing"
+            return (await Courier.shared.getAPNSToken())?.string ?? "Missing"
             
         }
         

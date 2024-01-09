@@ -10,8 +10,17 @@ import Courier_iOS
 
 class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var stateLabel: UILabel!
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+    
+    private let stateLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
@@ -27,8 +36,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Custom Inbox"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAll))
+        view.addSubview(tableView)
         
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
@@ -41,6 +49,13 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
         
         tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: LoadingTableViewCell.id)
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.id)
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
 
         inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: {
@@ -56,6 +71,13 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
                 self.tableView.reloadData()
             }
         )
+
+        view.addSubview(stateLabel)
+        
+        NSLayoutConstraint.activate([
+            stateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
         
     }
     
@@ -64,10 +86,6 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
             try await Courier.shared.refreshInbox()
             self.tableView.refreshControl?.endRefreshing()
         }
-    }
-      
-    @objc private func readAll() {
-        Courier.shared.readAllInboxMessages()
     }
     
     private func setState(_ state: State, error: String? = nil) {
@@ -155,7 +173,7 @@ class CustomTableViewCell: UITableViewCell {
     let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+        label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
         return label
     }()
     

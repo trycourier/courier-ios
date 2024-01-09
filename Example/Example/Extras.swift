@@ -44,6 +44,20 @@ extension AppDelegate {
 
 extension UIViewController {
     
+    func showMessageAlert(title: String, message: String) {
+        
+        alert?.dismiss(animated: true)
+        
+        if let window = UIApplication.shared.currentWindow {
+            alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert!.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
+                // Empty
+            }))
+            window.rootViewController?.present(alert!, animated: true, completion: nil)
+        }
+        
+    }
+    
     func showInputAlert(title: String, placeHolder: String, action: String, onComplete: @escaping (String) -> Void) {
         
         alert?.dismiss(animated: true)
@@ -154,6 +168,25 @@ extension InboxMessage {
         
         return nil
         
+    }
+    
+}
+
+extension CourierUserPreferencesTopic {
+    
+    @objc func convertToJSONString() -> String? {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.outputFormatting = [.prettyPrinted]
+        do {
+            let jsonData = try encoder.encode(self)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                return jsonString
+            }
+        } catch {
+            print("Error converting to JSON: \(error.localizedDescription)")
+        }
+        return nil
     }
     
 }

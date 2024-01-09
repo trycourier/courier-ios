@@ -21,15 +21,10 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 */
 
 import Foundation
+import UIKit
 
 @available(iOS 13.0.0, *)
 @objc open class Courier: NSObject {
-    
-    /**
-     * Versioning
-     */
-    public static var agent = CourierAgent.native_ios
-    internal static let version = "2.7.3"
     
     /**
      * Singleton reference to the SDK
@@ -56,6 +51,50 @@ import Foundation
         
         super.init()
         
+        // Register Lifecycle Listeners
+        
+        NotificationCenter.default.addObserver(self,
+           selector: #selector(didEnterForeground),
+           name: UIApplication.didBecomeActiveNotification,
+           object: nil
+        )
+        
+        NotificationCenter.default.addObserver(self,
+           selector: #selector(didEnterBackground),
+           name: UIApplication.didEnterBackgroundNotification,
+           object: nil
+        )
+        
     }
+    
+    deinit {
+        
+        // Remove listeners
+        
+        NotificationCenter.default.removeObserver(self,
+          name: UIApplication.didBecomeActiveNotification,
+          object: nil
+        )
+        
+        NotificationCenter.default.removeObserver(self,
+          name: UIApplication.didEnterBackgroundNotification,
+          object: nil
+        )
+        
+    }
+    
+    @objc private func didEnterForeground() {
+        coreInbox.link()
+    }
+    
+    @objc private func didEnterBackground() {
+        coreInbox.unlink()
+    }
+    
+    /**
+     * Versioning
+     */
+    internal static let version = "2.7.4"
+    public static var agent = CourierAgent.native_ios
     
 }
