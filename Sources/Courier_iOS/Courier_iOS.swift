@@ -84,11 +84,11 @@ import UIKit
     }
     
     @objc private func didEnterForeground() {
-        print("Application did go to background!")
+        coreInbox.link()
     }
     
     @objc private func didEnterBackground() {
-        print("Application did go to background!")
+        coreInbox.unlink()
     }
     
     /**

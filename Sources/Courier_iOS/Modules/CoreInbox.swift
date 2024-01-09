@@ -71,17 +71,33 @@ internal class CoreInbox {
         }
     }
     
-    private func attachLifecycleObservers() {
+    // Reconnects and refreshes the data
+    // Called because the websocket may have disconnected or
+    // new data may have been sent when the user closed their app
+    internal func link() {
         
-        let events = [
-            UIApplication.didEnterBackgroundNotification : #selector(appDidMoveToBackground),
-            UIApplication.didBecomeActiveNotification : #selector(appDidBecomeActive)
-        ]
+        Task {
+            
+            if (!listeners.isEmpty && inboxRepo.webSocket != nil) {
+                
+                do {
+                    try await start(refresh: true)
+                } catch {
+                    notifyError(CourierError.inboxWebSocketError)
+                }
+                
+            }
+            
+        }
         
-        // Restart the observer
-        events.forEach { event in
-            CoreInbox.systemNotificationCenter.removeObserver(self, name: event.key, object: nil)
-            CoreInbox.systemNotificationCenter.addObserver(self, selector: event.value, name: event.key, object: nil)
+    }
+
+    // Disconnects the websocket
+    // Helps keep battery usage lower
+    internal func unlink() {
+        
+        if (!listeners.isEmpty && inboxRepo.webSocket != nil) {
+            inboxRepo.closeWebSocket()
         }
         
     }
@@ -121,8 +137,6 @@ internal class CoreInbox {
             clientKey: clientKey,
             userId: userId
         )
-        
-        self.attachLifecycleObservers()
         
         self.inbox = Inbox(
             messages: inboxData.messages?.nodes,
@@ -189,26 +203,6 @@ internal class CoreInbox {
                 
             }
         )
-        
-    }
-    
-    @objc private func appDidMoveToBackground() {
-        inboxRepo.closeWebSocket()
-    }
-
-    @objc private func appDidBecomeActive() {
-        
-        if (listeners.isEmpty) {
-            return
-        }
-
-        Task {
-            do {
-                try await self.start(refresh: true)
-            } catch {
-                self.notifyError(error)
-            }
-        }
         
     }
     
