@@ -51,15 +51,21 @@ import UIKit
         
         super.init()
         
-    }
-    
-    @objc public static func configure(_ appDelegate: UIApplicationDelegate) {
-        
-        NotificationCenter.default.addObserver(appDelegate,
+        NotificationCenter.default.addObserver(self,
            selector: #selector(didEnterBackgroundNotification),
            name: UIApplication.didEnterBackgroundNotification,
            object: nil
         )
+        
+    }
+    
+    @objc public static func configure(_ appDelegate: UIApplicationDelegate) {
+        
+//        NotificationCenter.default.addObserver(appDelegate,
+//           selector: #selector(didEnterBackgroundNotification),
+//           name: UIApplication.didEnterBackgroundNotification,
+//           object: nil
+//        )
         
     }
     
