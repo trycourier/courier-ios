@@ -50,18 +50,29 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         
         Task {
             
-            let topic = try await Courier.shared.getUserPreferencesTopic(
-                topicId: topicId
-            )
-            
-            try await Courier.shared.putUserPreferencesTopic(
-                topicId: topic.topicId,
-                status: .optedIn,
-                hasCustomRouting: true,
-                customRouting: getRandomChannels()
-            )
-            
-            refresh()
+            do {
+                
+                let topic = try await Courier.shared.getUserPreferencesTopic(
+                    topicId: topicId
+                )
+                
+                try await Courier.shared.putUserPreferencesTopic(
+                    topicId: topic.topicId,
+                    status: .optedIn,
+                    hasCustomRouting: true,
+                    customRouting: getRandomChannels()
+                )
+                
+                refresh()
+                
+            } catch {
+                
+                showMessageAlert(
+                    title: "Error Updating Preferences",
+                    message: error.localizedDescription
+                )
+                
+            }
             
         }
         

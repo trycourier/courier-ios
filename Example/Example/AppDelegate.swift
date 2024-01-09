@@ -35,12 +35,16 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         
         firebaseMessaging.setAPNSToken(rawApnsToken, type: isDebugging ? .sandbox : .prod)
         
+        firebaseMessaging.token { token, error in
+            if let token = token {
+                self.uploadFcmToken(token)
+            }
+        }
+        
     }
     
-    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-
-        guard let token = fcmToken else { return }
-
+    private func uploadFcmToken(_ token: String) {
+        
         Task {
             do {
                 try await Courier.shared.setToken(provider: .firebaseFcm, token: token)
@@ -48,6 +52,14 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
                 print(String(describing: error))
             }
         }
+        
+    }
+    
+    public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+
+        guard let token = fcmToken else { return }
+
+        uploadFcmToken(token)
 
     }
 
