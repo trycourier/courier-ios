@@ -51,25 +51,30 @@ import UIKit
         
         super.init()
         
+        // Register Lifecycle Listeners
+        
         NotificationCenter.default.addObserver(self,
-           selector: #selector(didEnterBackgroundNotification),
+           selector: #selector(didEnterForeground),
+           name: UIApplication.didBecomeActiveNotification,
+           object: nil
+        )
+        
+        NotificationCenter.default.addObserver(self,
+           selector: #selector(didEnterBackground),
            name: UIApplication.didEnterBackgroundNotification,
            object: nil
         )
         
     }
     
-    @objc public static func configure(_ appDelegate: UIApplicationDelegate) {
-        
-//        NotificationCenter.default.addObserver(appDelegate,
-//           selector: #selector(didEnterBackgroundNotification),
-//           name: UIApplication.didEnterBackgroundNotification,
-//           object: nil
-//        )
-        
-    }
-    
     deinit {
+        
+        // Remove listeners
+        
+        NotificationCenter.default.removeObserver(self,
+          name: UIApplication.didBecomeActiveNotification,
+          object: nil
+        )
         
         NotificationCenter.default.removeObserver(self,
           name: UIApplication.didEnterBackgroundNotification,
@@ -78,15 +83,13 @@ import UIKit
         
     }
     
-    @objc func didEnterBackgroundNotification() {
-        // Perform actions upon receiving the applicationDidBecomeActive notification
+    @objc private func didEnterForeground() {
         print("Application did go to background!")
-        // Add your logic here
     }
     
-    // didRegisterToken
-    // didBecomeActive
-    // didEnterBackground
+    @objc private func didEnterBackground() {
+        print("Application did go to background!")
+    }
     
     /**
      * Versioning
