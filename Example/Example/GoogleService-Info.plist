@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBmtois-AYp2SH0omZDrbwdZEVUg2vN_QU</string>
+	<string>AIzaSyCk_KZDga0LqAqeQH9TDzSmE9erO3R4zTI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>203941477875</string>
+	<string>313914309026</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.courier.ios-example</string>
 	<key>PROJECT_ID</key>
-	<string>test-courier-49bed</string>
+	<string>native-courier-315bb</string>
 	<key>STORAGE_BUCKET</key>
-	<string>test-courier-49bed.appspot.com</string>
+	<string>native-courier-315bb.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:203941477875:ios:41a65f12bbaaa68654a686</string>
+	<string>1:313914309026:ios:994369d3a0d4d8803a1afb</string>
 </dict>
 </plist>

@@ -73,6 +73,8 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         print(json)
         print("\n=================================================\n")
         
+        showMessageAlert(title: "Message Delivered", message: json)
+        
         // This is how you want to show your notification in the foreground
         // You can pass "[]" to not show the notification to the user or
         // handle this with your own custom styles

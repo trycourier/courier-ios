@@ -17,6 +17,8 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Preferences"
 
         tableView.register(TopicTableViewCell.self, forCellReuseIdentifier: TopicTableViewCell.id)
         tableView.delegate = self
