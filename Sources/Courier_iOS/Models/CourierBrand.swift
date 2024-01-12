@@ -70,7 +70,13 @@ internal struct CourierBrandData: Codable {
     
     @objc public var showCourierFooter: Bool {
         get {
-            return disableCourierFooter ?? false
+            
+            if let disabled = disableCourierFooter {
+                return !disabled
+            }
+            
+            return true
+            
         }
     }
     
