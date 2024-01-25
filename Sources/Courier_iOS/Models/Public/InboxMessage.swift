@@ -21,6 +21,7 @@ import Foundation
     @objc public let created: String?
     @objc public let actions: [InboxAction]?
     @objc public let data: [String : Any]?
+    @objc public let trackingIds: CourierTrackingIds?
     
     public var archived: Bool?
     public var read: String?
@@ -48,9 +49,20 @@ import Foundation
         self.actions = buttons
         self.data = dictionary?["data"] as? [String : Any]
         
+        let trackingIds = dictionary?["trackingIds"] as? [String : Any]
+        
+        self.trackingIds = CourierTrackingIds(
+            archiveTrackingId: trackingIds?["archiveTrackingId"] as? String,
+            openTrackingId: trackingIds?["openTrackingId"] as? String,
+            clickTrackingId: trackingIds?["clickTrackingId"] as? String,
+            deliverTrackingId: trackingIds?["deliverTrackingId"] as? String,
+            unreadTrackingId: trackingIds?["unreadTrackingId"] as? String,
+            readTrackingId: trackingIds?["readTrackingId"] as? String
+        )
+        
     }
     
-    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, actions: [InboxAction]?, data: [String : Any]?) {
+    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, actions: [InboxAction]?, data: [String : Any]?, trackingIds: CourierTrackingIds?) {
         self.title = title
         self.body = body
         self.preview = preview
@@ -60,10 +72,11 @@ import Foundation
         self.messageId = messageId
         self.actions = actions
         self.data = data
+        self.trackingIds = trackingIds
     }
     
     public func copy(with zone: NSZone? = nil) -> Any {
-        let copy = InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data)
+        let copy = InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data, trackingIds: trackingIds)
         return copy
     }
     
@@ -118,6 +131,22 @@ import Foundation
         }
     }
     
+    internal func getTrackingDetails(event: InboxTrackEvent) -> TrackingDetails? {
+        
+        var trackingId: String? = nil
+        
+        switch (event) {
+            case .read: trackingId = trackingIds?.readTrackingId
+            case .unread: trackingId = trackingIds?.unreadTrackingId
+            case .clicked: trackingId = trackingIds?.clickTrackingId
+        }
+        
+        guard let id = trackingId else { return nil }
+        
+        return TrackingDetails(event: event, messageId: messageId, trackingId: id)
+        
+    }
+    
 }
 
 extension InboxMessage {
@@ -154,4 +183,16 @@ extension InboxMessage {
         }
     }
     
+}
+
+internal enum InboxTrackEvent: String {
+    case read = "read"
+    case unread = "unread"
+    case clicked = "clicked"
+}
+
+internal struct TrackingDetails {
+    let event: InboxTrackEvent
+    let messageId: String
+    let trackingId: String
 }

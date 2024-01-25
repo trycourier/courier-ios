@@ -130,10 +130,20 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                         data
                         href
                     }
+                    trackingIds {
+                        openTrackingId
+                        archiveTrackingId
+                        clickTrackingId
+                        deliverTrackingId
+                        readTrackingId
+                        unreadTrackingId
+                    }
                 }
             }
         }
         """
+        
+        // TODO: Update errors
         
         let data = try await graphQLQuery(
             clientKey: clientKey,
@@ -187,6 +197,43 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
             throw CourierError.requestParsingError
         }
 
+    }
+    
+    internal func trackMessage(clientKey: String, userId: String, trackingDetails: TrackingDetails) async throws {
+        
+        var mutation = ""
+        
+        // 傻
+        if (trackingDetails.event == .clicked) {
+            
+            mutation = """
+            mutation TrackEvent(
+              $messageId: String = \"\(trackingDetails.messageId)\"
+              $trackingId: String = \"\(trackingDetails.trackingId)\"
+            ) {
+              \(trackingDetails.event)(messageId: $messageId, trackingId: $trackingId)
+            }
+            """
+            
+        } else {
+            
+            mutation = """
+            mutation TrackEvent(
+              $messageId: String = \"\(trackingDetails.messageId)\"
+            ) {
+              \(trackingDetails.event)(messageId: $messageId)
+            }
+            """
+            
+        }
+        
+        try await graphQLQuery(
+            clientKey: clientKey,
+            userId: userId,
+            url: CourierUrl.inboxGraphQL,
+            query: mutation
+        )
+        
     }
     
     internal func readMessage(clientKey: String, userId: String, messageId: String) async throws {

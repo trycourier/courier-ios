@@ -369,6 +369,24 @@ internal class CoreInbox {
         
     }
     
+    private func trackMessage(messageId: String, event: InboxTrackEvent) async throws {
+        
+        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+            throw CourierError.inboxUserNotFound
+        }
+        
+        if let message = inbox?.messages?.filter({ $0.messageId == messageId }).first, let details = message.getTrackingDetails(event: event) {
+            
+            try await inboxRepo.trackMessage(
+                clientKey: clientKey,
+                userId: userId,
+                trackingDetails: details
+            )
+            
+        }
+        
+    }
+    
     internal func readMessage(messageId: String) async throws {
 
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
@@ -387,15 +405,35 @@ internal class CoreInbox {
 
         // Perform datasource change in background
         do {
-            try await inboxRepo.readMessage(
+            
+            // Read the message
+            async let markRead: () = inboxRepo.readMessage(
                 clientKey: clientKey,
                 userId: userId,
                 messageId: messageId
             )
+            
+            // Track read
+            async let trackRead: () = trackMessage(
+                messageId: messageId,
+                event: .read
+            )
+            
+            // Track click
+            async let trackClick: () = trackMessage(
+                messageId: messageId,
+                event: .clicked
+            )
+            
+            // Perform all at same time
+            let (_, _, _) = await (try markRead, try trackRead, try trackClick)
+            
         } catch {
+            
             self.inbox?.resetUpdate(update: original)
             self.notifyMessagesChanged()
             self.notifyError(error)
+            
         }
 
     }
@@ -418,15 +456,29 @@ internal class CoreInbox {
 
         // Perform datasource change in background
         do {
-            try await inboxRepo.unreadMessage(
+            
+            // Unread the message
+            async let markUnread: () = inboxRepo.unreadMessage(
                 clientKey: clientKey,
                 userId: userId,
                 messageId: messageId
             )
+            
+            // Track unread
+            async let trackUnread: () = trackMessage(
+                messageId: messageId,
+                event: .unread
+            )
+            
+            // Perform all at same time
+            let (_, _) = await (try markUnread, try trackUnread)
+            
         } catch {
+            
             self.inbox?.resetUpdate(update: original)
             self.notifyMessagesChanged()
             self.notifyError(error)
+            
         }
 
     }

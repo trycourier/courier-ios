@@ -7,6 +7,15 @@ final class CourierTests: XCTestCase {
     let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20])
     let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9"
     
+    override class func setUp() {
+        super.setUp()
+        
+        Task {
+            try await Courier.shared.signOut()
+        }
+        
+    }
+    
     func testA_setAPNSTokenBeforeAuth() async throws {
         
         print("\n🔬 Setting APNS Token before User")
@@ -173,8 +182,19 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Inbox Get Messages")
         
-        var canPage = true
-        var error: String? = nil
+        var shouldHold = true
+        var error: String? = nil {
+            didSet {
+                shouldHold = false
+            }
+        }
+        var canPage = true {
+            didSet {
+                shouldHold = false
+            }
+        }
+        
+        Courier.shared.inboxPaginationLimit = 1
         
         let listener = Courier.shared.addInboxListener(
             onInitialLoad: {
@@ -186,9 +206,14 @@ final class CourierTests: XCTestCase {
             },
             onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
                 canPage = canPaginate
+                print(messages)
             }
         )
         
+        // Hold while can page
+        while (shouldHold) {}
+        
+        // Get new pages
         while (canPage && error != nil) {
             try await Courier.shared.fetchNextPageOfMessages()
         }
@@ -304,7 +329,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Put User Preference Topic")
         
         try await Courier.shared.putUserPreferencesTopic(
-            topicId: "3PBVT6GFEVMDRHKQ3YGVFRCEV68M",
+            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF",
             status: .optedOut,
             hasCustomRouting: true,
             customRouting: [.sms, .push]
@@ -317,7 +342,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Get User Preference Topic")
 
         let topic = try await Courier.shared.getUserPreferencesTopic(
-            topicId: "3PBVT6GFEVMDRHKQ3YGVFRCEV68M"
+            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF"
         )
         
         XCTAssertEqual(topic.customRouting, [.sms, .push])
