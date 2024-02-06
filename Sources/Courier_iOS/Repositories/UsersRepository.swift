@@ -55,8 +55,9 @@ internal class UsersRepository: Repository {
         do {
             return try JSONDecoder().decode(CourierUserPreferences.self, from: data ?? Data())
         } catch {
-            Courier.log(error.friendlyMessage)
-            throw CourierError.requestParsingError
+            let e = CourierError(from: error)
+            Courier.log(e.message)
+            throw e
         }
         
     }
@@ -102,8 +103,9 @@ internal class UsersRepository: Repository {
             let res = try JSONDecoder().decode(CourierUserPreferencesTopicResponse.self, from: data ?? Data())
             return res.topic
         } catch {
-            Courier.log(error.friendlyMessage)
-            throw CourierError.requestParsingError
+            let e = CourierError(from: error)
+            Courier.log(e.message)
+            throw e
         }
         
     }

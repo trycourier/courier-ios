@@ -405,6 +405,11 @@ import UIKit
             // Click the cell
             let index = indexPath.row
             let message = self.inboxMessages[index]
+            
+            // Track the click
+            Courier.shared.clickMessage(messageId: message.messageId)
+            
+            // Hit callback
             self.didClickInboxMessageAtIndex?(message, index)
             
             // Deselect the row
@@ -449,8 +454,9 @@ import UIKit
                         )
 
                     } catch {
-
-                        Courier.log(error.friendlyMessage)
+                        
+                        let e = CourierError(from: error)
+                        Courier.log(e.message)
 
                     }
 

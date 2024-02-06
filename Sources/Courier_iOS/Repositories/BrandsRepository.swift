@@ -40,8 +40,9 @@ internal class BrandsRepository: Repository {
             let res = try JSONDecoder().decode(CourierBrandResponse.self, from: data ?? Data())
             return res.data.brand
         } catch {
-            Courier.log(error.friendlyMessage)
-            throw CourierError.requestParsingError
+            let e = CourierError(from: error)
+            Courier.log(e.message)
+            throw e
         }
         
     }

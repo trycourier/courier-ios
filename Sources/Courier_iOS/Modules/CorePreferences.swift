@@ -13,12 +13,8 @@ internal class CorePreferences {
     
     internal func getUserPreferences(paginationCursor: String? = nil) async throws -> CourierUserPreferences {
         
-        guard let accessToken = Courier.shared.accessToken else {
-            throw CourierError.noAccessTokenFound
-        }
-        
-        guard let userId = Courier.shared.userId else {
-            throw CourierError.noUserIdFound
+        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
+            throw CourierError.missingUser
         }
         
         return try await usersRepo.getUserPreferences(
@@ -31,12 +27,8 @@ internal class CorePreferences {
     
     internal func putUserPreferencesTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
         
-        guard let accessToken = Courier.shared.accessToken else {
-            throw CourierError.noAccessTokenFound
-        }
-        
-        guard let userId = Courier.shared.userId else {
-            throw CourierError.noUserIdFound
+        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
+            throw CourierError.missingUser
         }
         
         return try await usersRepo.putUserPreferencesTopic(
@@ -52,12 +44,8 @@ internal class CorePreferences {
     
     internal func getUserPreferencesTopic(topicId: String) async throws -> CourierUserPreferencesTopic {
         
-        guard let accessToken = Courier.shared.accessToken else {
-            throw CourierError.noAccessTokenFound
-        }
-        
-        guard let userId = Courier.shared.userId else {
-            throw CourierError.noUserIdFound
+        guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
+            throw CourierError.missingUser
         }
         
         return try await usersRepo.getUserPreferencesTopic(

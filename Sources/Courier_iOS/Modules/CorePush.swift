@@ -32,7 +32,7 @@ internal actor CorePush {
     internal func putToken(provider: String, token: String) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
-            throw CourierError.noAccessTokenFound
+            throw CourierError.missingUser
         }
         
         Courier.log("Putting \(provider) Token: \(token)")
@@ -55,7 +55,8 @@ internal actor CorePush {
         do {
             try await putToken(provider: provider, token: newToken)
         } catch {
-            Courier.log(error.friendlyMessage)
+            let e = CourierError(from: error)
+            Courier.log(e.message)
         }
         
     }
@@ -63,7 +64,7 @@ internal actor CorePush {
     internal func deleteToken(token: String) async throws {
         
         guard let accessToken = Courier.shared.accessToken, let userId = Courier.shared.userId else {
-            throw CourierError.noAccessTokenFound
+            throw CourierError.missingUser
         }
         
         Courier.log("Deleting Token: \(token)")
@@ -86,7 +87,8 @@ internal actor CorePush {
         do {
             try await deleteToken(token: prevToken)
         } catch {
-            Courier.log(error.friendlyMessage)
+            let e = CourierError(from: error)
+            Courier.log(e.message)
         }
         
     }
@@ -271,8 +273,9 @@ extension Courier {
                 try await corePush.setToken(provider: provider.rawValue, token: token)
                 onSuccess()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure(e)
             }
         }
     }
@@ -287,8 +290,9 @@ extension Courier {
                 try await corePush.setToken(provider: providerKey, token: token)
                 onSuccess()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure(e)
             }
         }
     }
@@ -353,8 +357,9 @@ extension Courier {
                 try await corePush.trackNotification(message: message, event: event)
                 onSuccess?()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure?(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure?(e)
             }
         }
     }

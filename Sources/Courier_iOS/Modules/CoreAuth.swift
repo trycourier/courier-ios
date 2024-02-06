@@ -39,11 +39,12 @@ internal class CoreAuth {
             
         } catch {
             
-            Courier.log(error.friendlyMessage)
+            let e = CourierError(from: error)
+            Courier.log(e.message)
             
             try await signOut(push: push, inbox: inbox)
             
-            throw error
+            throw e
             
         }
         

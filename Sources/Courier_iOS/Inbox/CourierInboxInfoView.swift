@@ -96,7 +96,8 @@ internal class CourierInboxInfoView: UIView {
             titleLabel.isHidden = false
             buttonContainer.isHidden = false
             actionButton.title = "Retry"
-            titleLabel.text = error.friendlyMessage
+            let e = CourierError(from: error)
+            titleLabel.text = e.message
         case .empty:
             titleLabel.isHidden = false
             buttonContainer.isHidden = true

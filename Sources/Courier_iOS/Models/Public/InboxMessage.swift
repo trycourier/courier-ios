@@ -131,22 +131,6 @@ import Foundation
         }
     }
     
-    internal func getTrackingDetails(event: InboxTrackEvent) -> TrackingDetails? {
-        
-        var trackingId: String? = nil
-        
-        switch (event) {
-            case .read: trackingId = trackingIds?.readTrackingId
-            case .unread: trackingId = trackingIds?.unreadTrackingId
-            case .clicked: trackingId = trackingIds?.clickTrackingId
-        }
-        
-        guard let id = trackingId else { return nil }
-        
-        return TrackingDetails(event: event, messageId: messageId, trackingId: id)
-        
-    }
-    
 }
 
 extension InboxMessage {
@@ -161,8 +145,9 @@ extension InboxMessage {
                 try await Courier.shared.coreInbox.readMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure?(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure?(e)
             }
         }
     }
@@ -177,22 +162,11 @@ extension InboxMessage {
                 try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure?(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure?(e)
             }
         }
     }
     
-}
-
-internal enum InboxTrackEvent: String {
-    case read = "read"
-    case unread = "unread"
-    case clicked = "clicked"
-}
-
-internal struct TrackingDetails {
-    let event: InboxTrackEvent
-    let messageId: String
-    let trackingId: String
 }

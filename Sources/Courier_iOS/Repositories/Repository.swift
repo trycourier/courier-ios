@@ -35,8 +35,16 @@ internal class Repository: NSObject {
             let task = CourierTask(with: request, validCodes: validCodes) { (validCodes, data, response, error, status) in
                 
                 if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
+                    
+                    let json = try? JSONSerialization.jsonObject(with: data ?? Data(), options: []) as? [String: Any]
+                    let message = json?["message"] as? String ?? "Missing"
+                    let type = json?["type"] as? String
+                    
+                    let e = CourierError(code: status, message: message, type: type)
+                    continuation.resume(throwing: e)
+                    
                     return
+                    
                 }
                 
                 // Return the raw data
@@ -68,8 +76,16 @@ internal class Repository: NSObject {
             let task = CourierTask(with: request) { (validCodes, data, response, error, status) in
                 
                 if (!validCodes.contains(status)) {
-                    continuation.resume(throwing: CourierError.requestError)
+                    
+                    let json = try? JSONSerialization.jsonObject(with: data ?? Data(), options: []) as? [String: Any]
+                    let message = json?["message"] as? String ?? "Missing"
+                    let type = json?["type"] as? String
+                    
+                    let e = CourierError(code: status, message: message, type: type)
+                    continuation.resume(throwing: e)
+                    
                     return
+                    
                 }
                 
                 continuation.resume(returning: data)

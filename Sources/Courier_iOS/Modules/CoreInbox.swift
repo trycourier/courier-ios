@@ -83,7 +83,8 @@ internal class CoreInbox {
                 do {
                     try await start(refresh: true)
                 } catch {
-                    notifyError(CourierError.inboxWebSocketError)
+                    let e = CourierError(from: error)
+                    notifyError(e)
                 }
                 
             }
@@ -105,7 +106,7 @@ internal class CoreInbox {
     internal func start(refresh: Bool = false) async throws {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            self.notifyError(CourierError.inboxUserNotFound)
+            self.notifyError(CourierError.missingUser)
             return
         }
         
@@ -195,8 +196,8 @@ internal class CoreInbox {
             },
             onMessageReceivedError: { [weak self] error in
                 
-                // Prevent reporting the socket disconnect error
-                if (error == .inboxWebSocketDisconnect) {
+                // Catch the websocket disconnect error
+                if (error.code == 57) {
                     return
                 }
                 
@@ -210,7 +211,7 @@ internal class CoreInbox {
     @discardableResult internal func fetchNextPageOfMessages() async throws -> [InboxMessage] {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let inbox = self.inbox else {
-            throw CourierError.inboxUserNotFound
+            throw CourierError.missingUser
         }
         
         let inboxData = try await inboxRepo.getMessages(
@@ -257,7 +258,7 @@ internal class CoreInbox {
         if (!Courier.shared.isUserSignedIn || Courier.shared.clientKey == nil) {
             Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
             Utils.runOnMainThread {
-                listener.onError?(CourierError.inboxUserNotFound)
+                listener.onError?(CourierError.missingUser)
             }
             return listener
         }
@@ -304,7 +305,7 @@ internal class CoreInbox {
         self.inboxRepo.closeWebSocket()
         
         // Tell listeners about the change
-        self.notifyError(CourierError.inboxUserNotFound)
+        self.notifyError(CourierError.missingUser)
         
     }
     
@@ -346,7 +347,7 @@ internal class CoreInbox {
     @discardableResult internal func fetchNextPage() async throws -> [InboxMessage] {
         
         if self.inbox == nil {
-            throw CourierError.inboxUnknownError
+            return []
         }
         
         var msgs: [InboxMessage] = []
@@ -369,18 +370,20 @@ internal class CoreInbox {
         
     }
     
-    private func trackMessage(messageId: String, event: InboxTrackEvent) async throws {
+    internal func clickMessage(messageId: String) async throws {
         
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            throw CourierError.inboxUserNotFound
+            throw CourierError.missingUser
         }
         
-        if let message = inbox?.messages?.filter({ $0.messageId == messageId }).first, let details = message.getTrackingDetails(event: event) {
+        // 是的，这有点儿傻
+        if let message = inbox?.messages?.filter({ $0.messageId == messageId }).first, let channelId = message.trackingIds?.clickTrackingId {
             
-            try await inboxRepo.trackMessage(
+            try await inboxRepo.clickMessage(
                 clientKey: clientKey,
                 userId: userId,
-                trackingDetails: details
+                messageId: messageId,
+                channelId: channelId
             )
             
         }
@@ -390,15 +393,11 @@ internal class CoreInbox {
     internal func readMessage(messageId: String) async throws {
 
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            throw CourierError.inboxUserNotFound
-        }
-
-        if self.inbox == nil {
-            throw CourierError.inboxNotInitialized
+            throw CourierError.missingUser
         }
 
         // Mark the message as read instantly
-        let original = try self.inbox!.readMessage(messageId: messageId)
+        let original = try self.inbox?.readMessage(messageId: messageId)
 
         // Notify
         notifyMessagesChanged()
@@ -406,31 +405,18 @@ internal class CoreInbox {
         // Perform datasource change in background
         do {
             
-            // Read the message
-            async let markRead: () = inboxRepo.readMessage(
+            try await inboxRepo.readMessage(
                 clientKey: clientKey,
                 userId: userId,
                 messageId: messageId
             )
             
-            // Track read
-            async let trackRead: () = trackMessage(
-                messageId: messageId,
-                event: .read
-            )
-            
-            // Track click
-            async let trackClick: () = trackMessage(
-                messageId: messageId,
-                event: .clicked
-            )
-            
-            // Perform all at same time
-            let (_, _, _) = await (try markRead, try trackRead, try trackClick)
-            
         } catch {
             
-            self.inbox?.resetUpdate(update: original)
+            if let og = original {
+                self.inbox?.resetUpdate(update: og)
+            }
+            
             self.notifyMessagesChanged()
             self.notifyError(error)
             
@@ -441,15 +427,11 @@ internal class CoreInbox {
     internal func unreadMessage(messageId: String) async throws {
 
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            throw CourierError.inboxUserNotFound
-        }
-
-        if self.inbox == nil {
-            throw CourierError.inboxNotInitialized
+            throw CourierError.missingUser
         }
 
         // Mark the message as read instantly
-        let original = try self.inbox!.unreadMessage(messageId: messageId)
+        let original = try self.inbox?.unreadMessage(messageId: messageId)
 
         // Notify
         notifyMessagesChanged()
@@ -457,25 +439,18 @@ internal class CoreInbox {
         // Perform datasource change in background
         do {
             
-            // Unread the message
-            async let markUnread: () = inboxRepo.unreadMessage(
+            try await inboxRepo.unreadMessage(
                 clientKey: clientKey,
                 userId: userId,
                 messageId: messageId
             )
             
-            // Track unread
-            async let trackUnread: () = trackMessage(
-                messageId: messageId,
-                event: .unread
-            )
-            
-            // Perform all at same time
-            let (_, _) = await (try markUnread, try trackUnread)
-            
         } catch {
             
-            self.inbox?.resetUpdate(update: original)
+            if let og = original {
+                self.inbox?.resetUpdate(update: og)
+            }
+            
             self.notifyMessagesChanged()
             self.notifyError(error)
             
@@ -486,15 +461,11 @@ internal class CoreInbox {
     internal func readAllMessages() async throws {
 
         guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
-            throw CourierError.inboxUserNotFound
-        }
-
-        if self.inbox == nil {
-            return
+            throw CourierError.missingUser
         }
 
         // Read the messages
-        let original = self.inbox!.readAllMessages()
+        let original = self.inbox?.readAllMessages()
 
         // Notify
         self.notifyMessagesChanged()
@@ -506,9 +477,14 @@ internal class CoreInbox {
                 userId: userId
             )
         } catch {
-            self.inbox?.resetReadAll(update: original)
+            
+            if let og = original {
+                self.inbox?.resetReadAll(update: og)
+            }
+            
             self.notifyMessagesChanged()
             self.notifyError(error)
+            
         }
 
     }
@@ -576,9 +552,10 @@ extension Courier {
                     onSuccess?(newMessages)
                 }
             } catch {
-                Courier.log(error.friendlyMessage)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
                 Utils.runOnMainThread {
-                    onFailure?(error)
+                    onFailure?(e)
                 }
             }
         }
@@ -609,8 +586,9 @@ extension Courier {
                 try await coreInbox.readMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure?(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure?(e)
             }
         }
     }
@@ -628,8 +606,29 @@ extension Courier {
                 try await coreInbox.unreadMessage(messageId: messageId)
                 onSuccess?()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure?(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure?(e)
+            }
+        }
+    }
+    
+    /**
+     Sets the message as `clicked`
+     */
+    @objc public func clickMessage(messageId: String) async throws {
+        try await coreInbox.clickMessage(messageId: messageId)
+    }
+    
+    @objc public func clickMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await coreInbox.clickMessage(messageId: messageId)
+                onSuccess?()
+            } catch {
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure?(e)
             }
         }
     }
@@ -647,8 +646,9 @@ extension Courier {
                 try await coreInbox.readAllMessages()
                 onSuccess?()
             } catch {
-                Courier.log(error.friendlyMessage)
-                onFailure?(error)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onFailure?(e)
             }
         }
     }
@@ -722,7 +722,7 @@ internal class Inbox {
         
         let index = messages.firstIndex { $0.messageId == messageId }
         guard let i = index else {
-            throw CourierError.inboxMessageNotFound
+            throw CourierError.inboxNotInitialized
         }
 
         // Save copy
@@ -754,7 +754,7 @@ internal class Inbox {
         
         let index = messages.firstIndex { $0.messageId == messageId }
         guard let i = index else {
-            throw CourierError.inboxMessageNotFound
+            throw CourierError.inboxNotInitialized
         }
 
         // Save copy

@@ -49,8 +49,9 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                         let newMessage = InboxMessage(dictionary)
                         self.onMessageReceived?(newMessage)
                     } catch {
-                        Courier.log(error.friendlyMessage)
-                        self.onMessageReceivedError?(CourierError.inboxWebSocketError)
+                        let e = CourierError(from: error)
+                        Courier.log(e.message)
+                        self.onMessageReceivedError?(e)
                     }
                 case .data(_):
                     break
@@ -61,8 +62,9 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
                 self.handleMessageReceived()
                 
             case .failure(let error):
-                Courier.log(error.friendlyMessage)
-                self.onMessageReceivedError?(CourierError.inboxWebSocketDisconnect)
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                self.onMessageReceivedError?(e)
             }
             
         }
@@ -143,8 +145,6 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         }
         """
         
-        // TODO: Update errors
-        
         let data = try await graphQLQuery(
             clientKey: clientKey,
             userId: userId,
@@ -155,11 +155,12 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         do {
             let dictionary = try data?.toDictionary()
             let res = InboxResponse(dictionary)
-            guard let data = res.data else { throw CourierError.requestParsingError }
+            guard let data = res.data else { throw CourierError.parsingError }
             return data
         } catch {
-            Courier.log(error.friendlyMessage)
-            throw CourierError.requestParsingError
+            let e = CourierError(from: error)
+            Courier.log(e.message)
+            throw e
         }
 
     }
@@ -193,39 +194,23 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
             let res = InboxResponse(dictionary)
             return res.data?.count ?? 0
         } catch {
-            Courier.log(error.friendlyMessage)
-            throw CourierError.requestParsingError
+            let e = CourierError(from: error)
+            Courier.log(e.message)
+            throw e
         }
 
     }
     
-    internal func trackMessage(clientKey: String, userId: String, trackingDetails: TrackingDetails) async throws {
+    internal func clickMessage(clientKey: String, userId: String, messageId: String, channelId: String) async throws {
         
-        var mutation = ""
-        
-        // 傻
-        if (trackingDetails.event == .clicked) {
-            
-            mutation = """
-            mutation TrackEvent(
-              $messageId: String = \"\(trackingDetails.messageId)\"
-              $trackingId: String = \"\(trackingDetails.trackingId)\"
-            ) {
-              \(trackingDetails.event)(messageId: $messageId, trackingId: $trackingId)
-            }
-            """
-            
-        } else {
-            
-            mutation = """
-            mutation TrackEvent(
-              $messageId: String = \"\(trackingDetails.messageId)\"
-            ) {
-              \(trackingDetails.event)(messageId: $messageId)
-            }
-            """
-            
+        let mutation = """
+        mutation TrackEvent(
+          $messageId: String = \"\(messageId)\"
+          $trackingId: String = \"\(channelId)\"
+        ) {
+          clicked(messageId: $messageId, trackingId: $trackingId)
         }
+        """
         
         try await graphQLQuery(
             clientKey: clientKey,
@@ -274,11 +259,13 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         
     }
     
-    internal func readAllMessages(clientKey: String, userId: String) async throws {
+    internal func openMessage(clientKey: String, userId: String, messageId: String) async throws {
         
         let mutation = """
-        mutation TrackEvent {
-            markAllRead
+        mutation TrackEvent(
+          $messageId: String = \"\(messageId)\"
+        ) {
+          opened(messageId: $messageId)
         }
         """
         
@@ -291,13 +278,11 @@ internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
         
     }
     
-    internal func openMessage(clientKey: String, userId: String, messageId: String) async throws {
+    internal func readAllMessages(clientKey: String, userId: String) async throws {
         
         let mutation = """
-        mutation TrackEvent(
-          $messageId: String = \"\(messageId)\"
-        ) {
-          opened(messageId: $messageId)
+        mutation TrackEvent {
+            markAllRead
         }
         """
         

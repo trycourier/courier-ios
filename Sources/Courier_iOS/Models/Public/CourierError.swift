@@ -9,67 +9,38 @@ import Foundation
 
 // MARK: Public Classes
 
-public enum CourierError: Error {
-    case noAccessTokenFound
-    case noUserIdFound
-    case requestError
-    case requestParsingError
-    case sendTestMessageFail
-    case inboxWebSocketError
-    case inboxWebSocketFail
-    case inboxWebSocketDisconnect
-    case inboxUserNotFound
-    case inboxUnknownError
-    case inboxNotInitialized
-    case inboxMessageNotFound
-}
-
-// MARK: Extensions
-
-extension CourierError {
+public struct CourierError: Error {
     
-    internal var friendlyMessage: String {
-        get {
-            switch (self) {
-            case .noAccessTokenFound:
-                return "No user found"
-            case .noUserIdFound:
-                return "No user found"
-            case .requestError:
-                return "An error occurred. Please try again."
-            case .requestParsingError:
-                return "An error occurred data from server. Please try again."
-            case .sendTestMessageFail:
-                return "An error occurred sending a test message."
-            case .inboxWebSocketError:
-                return "An error occurred. Please try again."
-            case .inboxWebSocketFail:
-                return "An error occurred. Please try again."
-            case .inboxWebSocketDisconnect:
-                return "An error occurred. Please try again."
-            case .inboxUserNotFound:
-                return "No user found"
-            case .inboxUnknownError:
-                return "Unknown Courier Inbox error occurred. Please try again."
-            case .inboxNotInitialized:
-                return "The Courier Inbox is not setup. Please add a CourierInbox view or call Courier.shared.addInboxListener"
-            case .inboxMessageNotFound:
-                return "Courier Inbox message not found"
-            }
+    let code: Int
+    let message: String
+    let type: String?
+    
+    public init(from error: Error) {
+        if let courierError = error as? CourierError {
+            self = courierError
+        } else {
+            self.code = (error as NSError).code
+            self.message = error.localizedDescription
+            self.type = String(describing: Swift.type(of: error))
         }
     }
     
-}
-
-extension Error {
+    internal init(code: Int, message: String, type: String? = nil) {
+        self.code = code
+        self.message = message
+        self.type = type
+    }
     
-    internal var friendlyMessage: String {
-        get {
-            guard let courierError = self as? CourierError else {
-                return String(describing: self)
-            }
-            return courierError.friendlyMessage
-        }
+    internal static var parsingError: CourierError {
+        return CourierError(code: 420, message: "An error occurred getting data from server", type: "parsing_error")
+    }
+    
+    internal static var missingUser: CourierError {
+        return CourierError(code: 404, message: "No user found signed in", type: "authentication_error")
+    }
+    
+    internal static var inboxNotInitialized: CourierError {
+        return CourierError(code: 403, message: "Courier Inbox is not initialized", type: "initialization_error")
     }
     
 }

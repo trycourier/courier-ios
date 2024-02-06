@@ -86,7 +86,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
                 try await Courier.shared.setAPNSToken(deviceToken)
                 
             } catch {
-                Courier.log(error.friendlyMessage)
+                Courier.log(error.localizedDescription)
             }
         }
     }

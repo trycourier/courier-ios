@@ -44,9 +44,9 @@ class ExampleServer {
 
     }
     
-    internal func sendTest(authKey: String, userId: String, key: String) async throws -> Data? {
+    internal func sendTest(authKey: String, userId: String, key: String) async throws -> String {
         
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Data?, Error>) in
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             
             let url = URL(string: "https://api.courier.com/send")!
             var request = URLRequest(url: url)
@@ -72,7 +72,9 @@ class ExampleServer {
             ].toJson()
             
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-                continuation.resume(returning: data)
+                let json = try? JSONSerialization.jsonObject(with: data ?? Data(), options: []) as? [String: Any]
+                let requestId = json?["requestId"] as? String ?? "Error"
+                continuation.resume(returning: requestId)
             }
             
             task.resume()
