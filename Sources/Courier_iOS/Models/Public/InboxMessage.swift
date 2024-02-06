@@ -47,17 +47,17 @@ import Foundation
         self.read = dictionary?["read"] as? String
         self.messageId = dictionary?["messageId"] as! String
         self.actions = buttons
-        self.data = dictionary?["data"] as? [String : Any]
         
+        self.data = dictionary?["data"] as? [String : Any]
         let trackingIds = dictionary?["trackingIds"] as? [String : Any]
         
         self.trackingIds = CourierTrackingIds(
-            archiveTrackingId: trackingIds?["archiveTrackingId"] as? String,
-            openTrackingId: trackingIds?["openTrackingId"] as? String,
-            clickTrackingId: trackingIds?["clickTrackingId"] as? String,
-            deliverTrackingId: trackingIds?["deliverTrackingId"] as? String,
-            unreadTrackingId: trackingIds?["unreadTrackingId"] as? String,
-            readTrackingId: trackingIds?["readTrackingId"] as? String
+            archiveTrackingId: data?["archiveTrackingId"] as? String ?? trackingIds?["archiveTrackingId"] as? String,
+            openTrackingId: data?["openTrackingId"] as? String ?? trackingIds?["openTrackingId"] as? String,
+            clickTrackingId: data?["clickTrackingId"] as? String ?? trackingIds?["clickTrackingId"] as? String,
+            deliverTrackingId: data?["deliverTrackingId"] as? String ?? trackingIds?["deliverTrackingId"] as? String,
+            unreadTrackingId: data?["unreadTrackingId"] as? String ?? trackingIds?["unreadTrackingId"] as? String,
+            readTrackingId: data?["readTrackingId"] as? String ?? trackingIds?["readTrackingId"] as? String
         )
         
     }
