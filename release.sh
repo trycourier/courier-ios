@@ -7,13 +7,13 @@ error_exit() {
 }
 
 # 1. Test
-echo "ℹ️ Running Tests..."
+echo "ℹ️ Running Tests...\n"
 if ! sh test.sh; then
     error_exit "Tests failed. Aborting further actions."
 fi
 
 # 2. Push
-echo "ℹ️ Pushing Release..."
+echo "ℹ️ Pushing Release...\n"
 sh push.sh
 
 echo "🚀 Release Complete!"
