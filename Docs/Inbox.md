@@ -450,6 +450,9 @@ Task {
     try await Courier.shared.readMessage(messageId: "1-321...")
     try await Courier.shared.unreadMessage(messageId: "1-321...")
 
+    // Click a message
+    try await Courier.shared.clickMessage(messageId: "1-321...")
+
     // Reads all the messages
     // Writes the update instantly and performs request in background
     try await Courier.shared.readAllInboxMessages()
