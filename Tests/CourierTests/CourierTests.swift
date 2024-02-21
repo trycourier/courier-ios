@@ -205,7 +205,8 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Testing Tracking URL")
         
-        // This is just a random url from a sample project
+        // This is just an enxample tracking url
+        // You can find urls like this in the message payload send in the push
         let message = [
             "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/t/tzgspbr4jcmcy1qkhw96m0034bvy"
         ]

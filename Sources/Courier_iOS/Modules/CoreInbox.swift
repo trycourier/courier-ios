@@ -78,7 +78,7 @@ internal class CoreInbox {
         
         Task {
             
-            if (!listeners.isEmpty && inboxRepo.webSocket != nil) {
+            if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == false) {
                 
                 do {
                     try await start(refresh: true)
@@ -97,8 +97,8 @@ internal class CoreInbox {
     // Helps keep battery usage lower
     internal func unlink() {
         
-        if (!listeners.isEmpty && inboxRepo.webSocket != nil) {
-            inboxRepo.closeWebSocket()
+        if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == true) {
+            inboxRepo.closeInboxWebSocket()
         }
         
     }
@@ -169,7 +169,7 @@ internal class CoreInbox {
     internal func restartInboxIfNeeded() async throws {
         
         // Check if we need to start the inbox pipe
-        if (!listeners.isEmpty && inboxRepo.webSocket == nil) {
+        if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == false) {
             
             self.notifyInitialLoading()
             try await start()
@@ -180,12 +180,8 @@ internal class CoreInbox {
     
     private func connectWebSocket(clientKey: String, userId: String) async throws {
         
-        if (inboxRepo.webSocket != nil) {
-            return
-        }
-        
         // Create a new socket
-        try await inboxRepo.createWebSocket(
+        try await inboxRepo.connectInboxWebSocket(
             clientKey: clientKey,
             userId: userId,
             onMessageReceived: { [weak self] message in
@@ -302,7 +298,7 @@ internal class CoreInbox {
         
         // Clear out data and stop socket
         self.inbox = nil
-        self.inboxRepo.closeWebSocket()
+        self.inboxRepo.closeInboxWebSocket()
         
         // Tell listeners about the change
         self.notifyError(CourierError.missingUser)

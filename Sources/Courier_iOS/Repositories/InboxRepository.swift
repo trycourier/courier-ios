@@ -7,100 +7,37 @@
 
 import Foundation
 
-internal class InboxRepository: Repository, URLSessionWebSocketDelegate {
+internal class InboxRepository: Repository {
     
-    private(set) var webSocket: URLSessionWebSocketTask?
-    private var onMessageReceived: ((InboxMessage) -> Void)?
-    private var onMessageReceivedError: ((CourierError) -> Void)?
-    
-    internal func createWebSocket(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
+    internal func connectInboxWebSocket(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
         
-        // Open and connect to the server
-        self.webSocket = try await openWebSocket(
+        if (CourierInboxWebsocket.shared?.isSocketConnected == true || CourierInboxWebsocket.shared?.isSocketConnecting == true) {
+            return
+        }
+        
+        // Listen to new messages from the socket
+        CourierInboxWebsocket.onMessageReceived = { text in
+            do {
+                let dictionary = try (text.data(using: .utf8) ?? Data()).toDictionary()
+                let newMessage = InboxMessage(dictionary)
+                onMessageReceived(newMessage)
+            } catch {
+                let e = CourierError(from: error)
+                Courier.log(e.message)
+                onMessageReceivedError(e)
+            }
+        }
+        
+        // Connect the socket
+        CourierInboxWebsocket.connect(
             clientKey: clientKey,
             userId: userId
         )
-
-        // Save callbacks
-        self.onMessageReceived = onMessageReceived
-        self.onMessageReceivedError = onMessageReceivedError
-        
-        // Start receiving messages
-        self.handleMessageReceived()
         
     }
     
-    internal func closeWebSocket() {
-        webSocket?.cancel(with: .goingAway, reason: nil)
-        webSocket = nil
-        onMessageReceived = nil
-    }
-    
-    private func handleMessageReceived() {
-        webSocket?.receive { result in
-            
-            switch result {
-            case .success(let message):
-                
-                switch message {
-                case .string(let str):
-                    do {
-                        let dictionary = try (str.data(using: .utf8) ?? Data()).toDictionary()
-                        let newMessage = InboxMessage(dictionary)
-                        self.onMessageReceived?(newMessage)
-                    } catch {
-                        let e = CourierError(from: error)
-                        Courier.log(e.message)
-                        self.onMessageReceivedError?(e)
-                    }
-                case .data(_):
-                    break
-                @unknown default:
-                    break
-                }
-                
-                self.handleMessageReceived()
-                
-            case .failure(let error):
-                let e = CourierError(from: error)
-                Courier.log(e.message)
-                self.onMessageReceivedError?(e)
-            }
-            
-        }
-    }
-    
-    private func openWebSocket(clientKey: String, userId: String) async throws -> URLSessionWebSocketTask {
-        
-        // Return the socket if it is created
-        if let socket = webSocket {
-            return socket
-        }
-        
-        // Create a new socket if needed
-        let url = URL(string: "\(CourierUrl.inboxWebSocket)/?clientKey=\(clientKey)")!
-        let request = URLRequest(url: url)
-        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        let socket = session.webSocketTask(with: request)
-        socket.resume()
-        
-        let dict: [String : Any] = [
-            "action": "subscribe",
-            "data": [
-                "channel": userId,
-                "clientKey": clientKey,
-                "event": "*",
-                "version": "4"
-            ]
-        ]
-        
-        let json = try? JSONSerialization.data(withJSONObject: dict, options: [])
-        let body = String(data: json ?? Data(), encoding: .utf8) ?? ""
-        
-        try await socket.send(URLSessionWebSocketTask.Message.string(body))
-        
-        return socket
-        
+    internal func closeInboxWebSocket() {
+        CourierInboxWebsocket.disconnect()
     }
     
     internal func getMessages(clientKey: String, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
