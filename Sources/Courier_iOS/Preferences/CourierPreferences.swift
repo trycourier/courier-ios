@@ -77,6 +77,7 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(CourierTopicTableViewCell.self, forCellReuseIdentifier: CourierTopicTableViewCell.id)
 
         // Add the refresh control
