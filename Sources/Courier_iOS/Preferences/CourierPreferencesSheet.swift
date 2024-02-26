@@ -10,12 +10,16 @@ import UIKit
 internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableViewDataSource {
     
     static let marginTop: CGFloat = 10
+    static let marginBottom: CGFloat = 16
+    static let cellHeight: CGFloat = 64
     
     private let tableView = UITableView()
     
     lazy var navigationBar: UINavigationBar = {
         let navBar = UINavigationBar()
         navBar.translatesAutoresizingMaskIntoConstraints = false
+        navBar.setBackgroundImage(UIImage(), for: .default)
+        navBar.shadowImage = UIImage()
         return navBar
     }()
     
@@ -81,7 +85,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CourierPreferencesSheet.marginBottom),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
@@ -99,6 +103,10 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         cell.configureCell(channel: channel)
 
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CourierPreferencesSheet.cellHeight
     }
     
 }
@@ -135,8 +143,7 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         NSLayoutConstraint.activate([
             itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             itemLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            itemLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
+            itemLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     

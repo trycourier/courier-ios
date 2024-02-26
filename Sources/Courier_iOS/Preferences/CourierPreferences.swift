@@ -164,7 +164,7 @@ import UIKit
     
     private func getSheetHeight(sheet: CourierPreferencesSheet) -> CGFloat {
         
-        let margins = CourierPreferencesSheet.marginTop * 2
+        let margins = CourierPreferencesSheet.marginTop + CourierPreferencesSheet.marginBottom
         
         let navBarHeight = sheet.navigationBar.frame.height
         
