@@ -72,8 +72,6 @@ import UIKit
     
     private func addTableView() {
         
-        tableView.backgroundColor = .green
-        
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
@@ -96,7 +94,7 @@ import UIKit
     }
     
     @objc private func onRefresh() {
-        refreshControl.endRefreshing()
+        refresh()
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -135,16 +133,16 @@ import UIKit
         let contentVC = UIViewController()
         contentVC.view.backgroundColor = .white
         
-        let label = UILabel()
-        label.text = "This is a sheet"
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
+        let sheet = CourierPreferencesSheet()
+        sheet.translatesAutoresizingMaskIntoConstraints = false
         
-        contentVC.view.addSubview(label) // HERE
+        contentVC.view.addSubview(sheet)
         
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: contentVC.view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: contentVC.view.centerYAnchor)
+            sheet.topAnchor.constraint(equalTo: contentVC.view.topAnchor),
+            sheet.leadingAnchor.constraint(equalTo: contentVC.view.leadingAnchor),
+            sheet.trailingAnchor.constraint(equalTo: contentVC.view.trailingAnchor),
+            sheet.bottomAnchor.constraint(equalTo: contentVC.view.bottomAnchor)
         ])
         
         let sheetPresentationController = contentVC.sheetPresentationController

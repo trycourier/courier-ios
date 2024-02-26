@@ -150,6 +150,10 @@ internal class CourierUserPreferencesTopicResponse: NSObject, Codable {
         }
     }
     
+    public static var allCases: [CourierUserPreferencesChannel] {
+        return [.directMessage, .email, .push, .sms, .webhook, .unknown]
+    }
+    
 }
 
 // MARK: Pagination
