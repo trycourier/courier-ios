@@ -131,9 +131,22 @@ import UIKit
         }
         
         let contentVC = UIViewController()
-        contentVC.view.backgroundColor = .white
         
-        let sheet = CourierPreferencesSheet()
+        // Create the sheet controller
+        let sheetPresentationController = contentVC.sheetPresentationController
+        sheetPresentationController?.delegate = self
+        sheetPresentationController?.prefersGrabberVisible = true
+        sheetPresentationController?.preferredCornerRadius = 16
+        
+        let sheet = CourierPreferencesSheet(
+            title: topic.topicName,
+            channels: CourierUserPreferencesChannel.allCases,
+            onSheetDismiss: {
+                sheetPresentationController?.presentingViewController.dismiss(animated: true) {
+                    self.savePreferences()
+                }
+            }
+        )
         sheet.translatesAutoresizingMaskIntoConstraints = false
         
         contentVC.view.addSubview(sheet)
@@ -145,18 +158,7 @@ import UIKit
             sheet.bottomAnchor.constraint(equalTo: contentVC.view.bottomAnchor)
         ])
         
-        let sheetPresentationController = contentVC.sheetPresentationController
-        sheetPresentationController?.delegate = self
-        sheetPresentationController?.prefersGrabberVisible = true
-        sheetPresentationController?.preferredCornerRadius = 16
-        
         sheet.layoutIfNeeded()
-        
-        sheet.onCloseClick = {
-            sheetPresentationController?.presentingViewController.dismiss(animated: true) {
-                self.savePreferences()
-            }
-        }
         
         if #available(iOS 16.0, *) {
             let customDetent = UISheetPresentationController.Detent.custom { context in

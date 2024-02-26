@@ -15,8 +15,6 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     private let tableView = UITableView()
     
-    var onCloseClick: (() -> Void)?
-    
     lazy var navigationBar: UINavigationBar = {
         let navBar = UINavigationBar()
         navBar.translatesAutoresizingMaskIntoConstraints = false
@@ -38,32 +36,45 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         return button
     }()
     
-    init() {
+    private let title: String
+    private let channels: [CourierUserPreferencesChannel]
+    private let onSheetDismiss: () -> Void
+    
+    init(title: String, channels: [CourierUserPreferencesChannel], onSheetDismiss: @escaping () -> Void) {
+        self.title = title
+        self.channels = channels
+        self.onSheetDismiss = onSheetDismiss
         super.init(frame: .zero)
         setup()
     }
     
     override init(frame: CGRect) {
+        self.title = "Topic Title"
+        self.channels = CourierUserPreferencesChannel.allCases
+        self.onSheetDismiss = {}
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
+        self.title = "Topic Title"
+        self.channels = CourierUserPreferencesChannel.allCases
+        self.onSheetDismiss = {}
         super.init(coder: coder)
         setup()
     }
     
     private func setup() {
-        addTitleBar(title: "Title", rightButtonTitle: "Close")
+        addTitleBar()
         addTableView()
     }
     
-    private func addTitleBar(title: String, rightButtonTitle: String) {
+    private func addTitleBar() {
         
         addSubview(navigationBar)
         
         let navItem = UINavigationItem(title: title)
-        let rightButtonItem = UIBarButtonItem(title: rightButtonTitle, style: .plain, target: self, action: #selector(closeButtonClick))
+        let rightButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeButtonClick))
         navItem.rightBarButtonItem = rightButtonItem
         navigationBar.items = [navItem]
         
@@ -76,7 +87,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     @objc private func closeButtonClick() {
-        onCloseClick?()
+        onSheetDismiss()
     }
     
     private func addTableView() {
