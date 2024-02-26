@@ -11,6 +11,25 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     private let tableView = UITableView()
     
+    lazy var navigationBar: UINavigationBar = {
+        let navBar = UINavigationBar()
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        return navBar
+    }()
+    
+    lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var rightButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     init() {
         super.init(frame: .zero)
         setup()
@@ -27,7 +46,25 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     private func setup() {
+        addTitleBar(title: "Title", rightButtonTitle: "Close")
         addTableView()
+    }
+    
+    private func addTitleBar(title: String, rightButtonTitle: String) {
+        
+        addSubview(navigationBar)
+        
+        let navItem = UINavigationItem(title: title)
+        let rightButtonItem = UIBarButtonItem(title: rightButtonTitle, style: .plain, target: nil, action: nil)
+        navItem.rightBarButtonItem = rightButtonItem
+        navigationBar.items = [navItem]
+        
+        NSLayoutConstraint.activate([
+            navigationBar.topAnchor.constraint(equalTo: topAnchor),
+            navigationBar.leadingAnchor.constraint(equalTo: leadingAnchor),
+            navigationBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
     }
     
     private func addTableView() {
@@ -41,7 +78,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
