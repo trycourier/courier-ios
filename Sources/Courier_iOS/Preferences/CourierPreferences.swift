@@ -131,6 +131,7 @@ import UIKit
         }
         
         let contentVC = UIViewController()
+        contentVC.view.backgroundColor = .white // TODO: HERE
         
         // Create the sheet controller
         let sheetPresentationController = contentVC.sheetPresentationController
