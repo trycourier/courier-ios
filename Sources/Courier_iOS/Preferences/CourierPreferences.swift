@@ -149,11 +149,13 @@ import UIKit
         sheetPresentationController?.prefersGrabberVisible = true
         sheetPresentationController?.preferredCornerRadius = 16
         
+        sheet.layoutIfNeeded()
+        
         if #available(iOS 16.0, *) {
-            let fraction = UISheetPresentationController.Detent.custom { context in
+            let customDetent = UISheetPresentationController.Detent.custom { context in
                 self.getSheetHeight(sheet: sheet)
             }
-            sheetPresentationController?.detents = [fraction, .large()]
+            sheetPresentationController?.detents = [customDetent, .large()]
         } else {
             sheetPresentationController?.detents = [.medium(), .large()]
         }
