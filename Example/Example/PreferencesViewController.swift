@@ -15,6 +15,10 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
     
     var topics: [CourierUserPreferencesTopic] = []
     
+    private lazy var courierPreferences = {
+        return CourierPreferences()
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,6 +32,16 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         
         refresh()
+        
+        courierPreferences.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(courierPreferences)
+        
+        NSLayoutConstraint.activate([
+            courierPreferences.topAnchor.constraint(equalTo: view.topAnchor),
+            courierPreferences.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            courierPreferences.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            courierPreferences.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
         
     }
     

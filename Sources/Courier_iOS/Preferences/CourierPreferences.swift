@@ -31,6 +31,7 @@ import UIKit
         backgroundColor = .green
         
         let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Click Me", for: .normal)
         
         button.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
