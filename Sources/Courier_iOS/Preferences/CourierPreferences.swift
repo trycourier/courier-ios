@@ -153,7 +153,9 @@ import UIKit
         sheet.layoutIfNeeded()
         
         sheet.onCloseClick = {
-            sheetPresentationController?.presentingViewController.dismiss(animated: true)
+            sheetPresentationController?.presentingViewController.dismiss(animated: true) {
+                self.savePreferences()
+            }
         }
         
         if #available(iOS 16.0, *) {
