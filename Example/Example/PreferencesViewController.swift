@@ -24,14 +24,14 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         
         title = "Preferences"
 
-        tableView.register(TopicTableViewCell.self, forCellReuseIdentifier: TopicTableViewCell.id)
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        tableView.refreshControl = refreshControl
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        
-        refresh()
+//        tableView.register(TopicTableViewCell.self, forCellReuseIdentifier: TopicTableViewCell.id)
+//        tableView.delegate = self
+//        tableView.dataSource = self
+//        
+//        tableView.refreshControl = refreshControl
+//        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+//        
+//        refresh()
         
         courierPreferences.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(courierPreferences)

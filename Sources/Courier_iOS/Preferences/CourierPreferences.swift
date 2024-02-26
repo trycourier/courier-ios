@@ -35,6 +35,9 @@ import UIKit
     private func setup() {
 //        addCourierBar()
         addTableView()
+        
+        refresh()
+        
     }
     
     @objc func refresh() {
@@ -68,6 +71,8 @@ import UIKit
     }
     
     private func addTableView() {
+        
+        tableView.backgroundColor = .green
         
         // Create the table view
         tableView.delegate = self
