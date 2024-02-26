@@ -9,7 +9,7 @@ import UIKit
 
 @available(iOS 15.0, *)
 @available(iOSApplicationExtension, unavailable)
-@objc open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource {
+@objc open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource, UISheetPresentationControllerDelegate {
     
     @objc public let tableView = UITableView()
     private let refreshControl = UIRefreshControl()
@@ -146,10 +146,15 @@ import UIKit
         ])
         
         let sheetPresentationController = contentVC.sheetPresentationController
+        sheetPresentationController?.delegate = self
         sheetPresentationController?.prefersGrabberVisible = true
         sheetPresentationController?.preferredCornerRadius = 16
         
         sheet.layoutIfNeeded()
+        
+        sheet.onCloseClick = {
+            sheetPresentationController?.presentingViewController.dismiss(animated: true)
+        }
         
         if #available(iOS 16.0, *) {
             let customDetent = UISheetPresentationController.Detent.custom { context in
@@ -162,6 +167,14 @@ import UIKit
         
         parentViewController.present(contentVC, animated: true, completion: nil)
         
+    }
+    
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        savePreferences()
+    }
+    
+    private func savePreferences() {
+        print("Save!")
     }
     
     private func getSheetHeight(sheet: CourierPreferencesSheet) -> CGFloat {

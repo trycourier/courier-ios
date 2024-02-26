@@ -15,6 +15,8 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     private let tableView = UITableView()
     
+    var onCloseClick: (() -> Void)?
+    
     lazy var navigationBar: UINavigationBar = {
         let navBar = UINavigationBar()
         navBar.translatesAutoresizingMaskIntoConstraints = false
@@ -61,7 +63,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         addSubview(navigationBar)
         
         let navItem = UINavigationItem(title: title)
-        let rightButtonItem = UIBarButtonItem(title: rightButtonTitle, style: .plain, target: nil, action: nil)
+        let rightButtonItem = UIBarButtonItem(title: rightButtonTitle, style: .plain, target: self, action: #selector(closeButtonClick))
         navItem.rightBarButtonItem = rightButtonItem
         navigationBar.items = [navItem]
         
@@ -71,6 +73,10 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
             navigationBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
+    }
+    
+    @objc private func closeButtonClick() {
+        onCloseClick?()
     }
     
     private func addTableView() {
