@@ -151,7 +151,7 @@ import UIKit
         
         if #available(iOS 16.0, *) {
             let fraction = UISheetPresentationController.Detent.custom { context in
-                200 // TODO: Get the height
+                self.getSheetHeight(sheet: sheet)
             }
             sheetPresentationController?.detents = [fraction, .large()]
         } else {
@@ -159,6 +159,18 @@ import UIKit
         }
         
         parentViewController.present(contentVC, animated: true, completion: nil)
+        
+    }
+    
+    private func getSheetHeight(sheet: CourierPreferencesSheet) -> CGFloat {
+        
+        let margins = CourierPreferencesSheet.marginTop * 2
+        
+        let navBarHeight = sheet.navigationBar.frame.height
+        
+        let itemHeight: CGFloat = CGFloat(64 * CourierUserPreferencesChannel.allCases.count)
+        
+        return margins + navBarHeight + itemHeight
         
     }
     

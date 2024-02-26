@@ -9,6 +9,8 @@ import UIKit
 
 internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableViewDataSource {
     
+    static let marginTop: CGFloat = 10
+    
     private let tableView = UITableView()
     
     lazy var navigationBar: UINavigationBar = {
@@ -60,10 +62,9 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         navigationBar.items = [navItem]
         
         NSLayoutConstraint.activate([
-            navigationBar.topAnchor.constraint(equalTo: topAnchor),
+            navigationBar.topAnchor.constraint(equalTo: topAnchor, constant: CourierPreferencesSheet.marginTop),
             navigationBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             navigationBar.trailingAnchor.constraint(equalTo: trailingAnchor),
-            navigationBar.heightAnchor.constraint(equalToConstant: 80) // TODO: HEIGHT
         ])
         
     }
