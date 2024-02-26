@@ -85,7 +85,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CourierPreferencesSheet.marginBottom),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: CourierPreferencesSheet.marginBottom),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
