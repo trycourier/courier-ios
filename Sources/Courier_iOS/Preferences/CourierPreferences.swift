@@ -107,10 +107,10 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierTopicTableViewCell.id, for: indexPath) as! CourierTopicTableViewCell
-        
+
         let topic = topics[indexPath.row]
         cell.configureCell(topic: topic)
-        
+
         return cell
     }
     
@@ -118,7 +118,6 @@ import UIKit
         let topic = topics[indexPath.row]
         showSheet(topic: topic)
         tableView.deselectRow(at: indexPath, animated: true)
-        
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
