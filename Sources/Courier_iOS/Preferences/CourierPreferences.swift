@@ -77,10 +77,7 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
-        tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = UITableView.automaticDimension
+        tableView.register(CourierTopicTableViewCell.self, forCellReuseIdentifier: CourierTopicTableViewCell.id)
 
         // Add the refresh control
         tableView.refreshControl = refreshControl
