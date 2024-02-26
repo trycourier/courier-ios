@@ -64,10 +64,10 @@ import UIKit
         ])
         
         let sheetPresentationController = contentVC.sheetPresentationController
-        sheetPresentationController?.detents = [.medium(), .large()] // Define the possible sizes of the sheet
-        sheetPresentationController?.preferredCornerRadius = 16 // Set corner radius
+        sheetPresentationController?.detents = [.medium(), .large()]
+        sheetPresentationController?.prefersGrabberVisible = true
+        sheetPresentationController?.preferredCornerRadius = 16
         
-        // Present the view controller as a sheet
         parentViewController.present(contentVC, animated: true, completion: nil)
         
     }
