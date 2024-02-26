@@ -60,9 +60,10 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         navigationBar.items = [navItem]
         
         NSLayoutConstraint.activate([
-            navigationBar.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            navigationBar.topAnchor.constraint(equalTo: topAnchor),
             navigationBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             navigationBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+            navigationBar.heightAnchor.constraint(equalToConstant: 80) // TODO: HEIGHT
         ])
         
     }

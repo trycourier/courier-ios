@@ -146,13 +146,13 @@ import UIKit
         ])
         
         let sheetPresentationController = contentVC.sheetPresentationController
-        sheetPresentationController?.detents = [.medium()]
+        sheetPresentationController?.detents = [.medium(), .large()]
         sheetPresentationController?.prefersGrabberVisible = true
         sheetPresentationController?.preferredCornerRadius = 16
         
         if #available(iOS 16.0, *) {
             let fraction = UISheetPresentationController.Detent.custom { context in
-                200
+                200 // TODO: Get the height
             }
             sheetPresentationController?.detents = [fraction]
         }
