@@ -168,7 +168,7 @@ import UIKit
         
         let margins = CourierPreferencesSheet.marginTop + CourierPreferencesSheet.marginBottom
         
-        let navBarHeight = sheet.navigationBar.frame.height
+        let navBarHeight = sheet.navigationBar.frame.height == 0 ? 56 : sheet.navigationBar.frame.height
         
         let itemHeight: CGFloat = CGFloat(64 * CourierUserPreferencesChannel.allCases.count)
         
