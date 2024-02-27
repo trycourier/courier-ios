@@ -145,7 +145,6 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
     let toggleSwitch: UISwitch = {
         let toggle = UISwitch()
         toggle.translatesAutoresizingMaskIntoConstraints = false
-        toggle.addTarget(CourierPreferenceChannelCell.self, action: #selector(switchToggled(_:)), for: .valueChanged)
         return toggle
     }()
     
@@ -153,6 +152,7 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
         setupConstraints()
+        toggleSwitch.addTarget(self, action: #selector(switchToggled(_:)), for: .valueChanged)
     }
     
     required init?(coder aDecoder: NSCoder) {
