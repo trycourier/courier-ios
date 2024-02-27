@@ -132,7 +132,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return CourierUserPreferencesChannel.allCases.count
+        return channels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

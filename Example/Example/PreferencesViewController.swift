@@ -16,7 +16,7 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
     var topics: [CourierUserPreferencesTopic] = []
     
     private lazy var courierPreferences = {
-        return CourierPreferences()
+        return CourierPreferences(availableChannels: [.push, .sms])
     }()
     
     override func viewDidLoad() {

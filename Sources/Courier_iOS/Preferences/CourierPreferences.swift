@@ -160,17 +160,38 @@ import UIKit
         sheetPresentationController?.prefersGrabberVisible = true
         sheetPresentationController?.preferredCornerRadius = 16
         
+        // TODO: Handle all cases
+        // Create a map of the values
+        var switches = [CourierUserPreferencesChannel: CourierUserPreferencesStatus]()
+        
+        // If required prevent usage
+        // If "IN" default to on or do custom routing
+        // If "OUT" default to off or do custom routing
+        
+//        availableChannels.forEach { channel in
+//            
+//            switch (topic.status) {
+//            case .optedIn:
+//                switches[channel] = topic.customRouting.isEmpty ? .optedIn :
+////            case .optedOut:
+////            case .required:
+////            default:
+//            }
+//            
+////            switches[channel] = topic.customRouting.isEmpty ? topic.status :
+//        }
+        
         let sheet = CourierPreferencesSheet(
             title: topic.topicName,
             channels: availableChannels, 
             topic: topic,
             viewController: sheetViewController,
             onSheetClose: {
-                sheetPresentationController?.presentingViewController.dismiss(animated: true) {
-                    if let newTopic = sheetViewController.topic {
-                        self.savePreferences(newTopic: newTopic)
-                    }
-                }
+//                sheetPresentationController?.presentingViewController.dismiss(animated: true) {
+//                    if let newTopic = sheetViewController.topic {
+//                        self.savePreferences(newTopic: newTopic)
+//                    }
+//                }
             }
         )
         
