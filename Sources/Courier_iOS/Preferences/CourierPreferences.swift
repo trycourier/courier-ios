@@ -164,9 +164,12 @@ import UIKit
             title: topic.topicName,
             channels: availableChannels, 
             topic: topic,
+            viewController: sheetViewController,
             onSheetClose: {
                 sheetPresentationController?.presentingViewController.dismiss(animated: true) {
-                    self.savePreferences(topic: topic)
+                    if let newTopic = sheetViewController.topic {
+                        self.savePreferences(newTopic: newTopic)
+                    }
                 }
             }
         )
@@ -196,29 +199,33 @@ import UIKit
         
     }
     
+    // Called when the view controller sheet is closed
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         
+        // Get the view controller
         let viewController = presentationController.presentedViewController as? PreferencesSheetViewController
         
-        print(viewController?.topic?.topicId)
+        // Get the topic of the view controller
+        if let topic = viewController?.topic {
+            savePreferences(newTopic: topic)
+        }
         
-//        savePreferences()
     }
     
-    private func savePreferences(topic: CourierUserPreferencesTopic) {
+    private func savePreferences(newTopic: CourierUserPreferencesTopic) {
         
-//        Courier.shared.putUserPreferencesTopic(
-//            topicId: topic.topicId,
-//            status: <#T##CourierUserPreferencesStatus#>,
-//            hasCustomRouting: <#T##Bool#>,
-//            customRouting: <#T##[CourierUserPreferencesChannel]#>,
-//            onSuccess: {
-//                print("YAY")
-//            },
-//            onFailure: { error in
-//                print(error)
-//            }
-//        )
+        Courier.shared.putUserPreferencesTopic(
+            topicId: newTopic.topicId,
+            status: newTopic.status,
+            hasCustomRouting: newTopic.hasCustomRouting,
+            customRouting: newTopic.customRouting,
+            onSuccess: {
+                print("YAY")
+            },
+            onFailure: { error in
+                print(error)
+            }
+        )
         
     }
     

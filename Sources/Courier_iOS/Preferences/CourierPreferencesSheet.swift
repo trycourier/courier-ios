@@ -38,13 +38,15 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     private let title: String
     private let channels: [CourierUserPreferencesChannel]
+    private let viewController: PreferencesSheetViewController
     private let onSheetClose: () -> Void
     private let topic: CourierUserPreferencesTopic
     
-    init(title: String, channels: [CourierUserPreferencesChannel], topic: CourierUserPreferencesTopic, onSheetClose: @escaping () -> Void) {
+    init(title: String, channels: [CourierUserPreferencesChannel], topic: CourierUserPreferencesTopic, viewController: PreferencesSheetViewController, onSheetClose: @escaping () -> Void) {
         self.title = title
         self.channels = channels
         self.topic = topic
+        self.viewController = viewController
         self.onSheetClose = onSheetClose
         super.init(frame: .zero)
         setup()
@@ -61,6 +63,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
             topicId: "",
             topicName: ""
         )
+        self.viewController = PreferencesSheetViewController()
         self.onSheetClose = {}
         super.init(frame: frame)
         setup()
@@ -77,6 +80,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
             topicId: "",
             topicName: ""
         )
+        self.viewController = PreferencesSheetViewController()
         self.onSheetClose = {}
         super.init(coder: coder)
         setup()
@@ -134,10 +138,26 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceChannelCell.id, for: indexPath) as! CourierPreferenceChannelCell
+        
+        let channel = self.channels[indexPath.row]
 
         cell.configureCell(
-            channel: self.channels[indexPath.row],
-            topic: self.topic
+            channel: channel,
+            topic: self.topic,
+            onToggle: { isOn in
+                
+                // Get the current topic from the viewController
+                guard var currentTopic = self.viewController.topic else {
+                    return
+                }
+
+                // Update the current topic based on the value of isOn
+                currentTopic = isOn ? currentTopic.addCustomChannel(channel: channel) : currentTopic.removeCustomChannel(channel: channel)
+
+                // Assign the updated topic back to the viewController
+                self.viewController.topic = currentTopic
+                
+            }
         )
 
         return cell
@@ -182,6 +202,8 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         return toggle
     }()
     
+    private var onToggle: ((Bool) -> Void)? = nil
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -207,21 +229,32 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         ])
     }
     
-    func configureCell(channel: CourierUserPreferencesChannel, topic: CourierUserPreferencesTopic) {
+    func configureCell(channel: CourierUserPreferencesChannel, topic: CourierUserPreferencesTopic, onToggle: @escaping (Bool) -> Void) {
         
-        itemLabel.text = channel.rawValue
+        self.itemLabel.text = channel.rawValue
+        self.onToggle = onToggle
         
+        // If required, users cannot change this
         if (topic.status == .required) {
             toggleSwitch.isOn = true
             toggleSwitch.isEnabled = false
+            toggleSwitch.isUserInteractionEnabled = false
             return
         }
         
+        // If opted out, disable all toggles
+        if (topic.status == .optedOut) {
+            toggleSwitch.isOn = false
+            return
+        }
+        
+        // Enable all as the fallback
         if (topic.customRouting.isEmpty) {
             toggleSwitch.isOn = true
             return
         }
         
+        // Apply custom settings
         let isToggled = topic.customRouting.contains { $0.rawValue == channel.rawValue }
         toggleSwitch.isOn = isToggled
         
@@ -233,8 +266,7 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
     }
     
     @objc private func switchToggled(_ sender: UISwitch) {
-        // Handle switch toggle event
-        // You can add your logic here to respond to the switch toggle
+        self.onToggle?(sender.isOn)
     }
     
 }
