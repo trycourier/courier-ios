@@ -11,23 +11,43 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 @objc open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource, UISheetPresentationControllerDelegate {
     
+    // MARK: Channels
+    
+    private let availableChannels: [CourierUserPreferencesChannel]
+    
+    // MARK: Data
+    
+    private(set) var topics: [CourierUserPreferencesTopic] = []
+    
+    // MARK: UI
+    
     @objc public let tableView = UITableView()
     private let refreshControl = UIRefreshControl()
     private let courierBar = CourierBar()
     
-    var topics: [CourierUserPreferencesTopic] = []
-    
-    @objc public init() {
+    public init(
+        availableChannels: [CourierUserPreferencesChannel] = CourierUserPreferencesChannel.allCases
+    ) {
+        
+        self.availableChannels = availableChannels
+        
+        if (availableChannels.isEmpty) {
+            fatalError("Must pass at least 1 channel to the CourierPreferences initializer.")
+        }
+        
         super.init(frame: .zero)
         setup()
+        
     }
     
     override init(frame: CGRect) {
+        self.availableChannels = CourierUserPreferencesChannel.allCases
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
+        self.availableChannels = CourierUserPreferencesChannel.allCases
         super.init(coder: coder)
         setup()
     }
@@ -127,7 +147,7 @@ import UIKit
     private func showSheet(topic: CourierUserPreferencesTopic) {
         
         guard let parentViewController = parentViewController else {
-            fatalError("CourierPreferences must be added to a view hierarchy with a view controller.")
+            fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")
         }
         
         let contentVC = UIViewController()
@@ -141,7 +161,8 @@ import UIKit
         
         let sheet = CourierPreferencesSheet(
             title: topic.topicName,
-            channels: CourierUserPreferencesChannel.allCases,
+            channels: availableChannels, 
+            topic: topic,
             onSheetDismiss: {
                 sheetPresentationController?.presentingViewController.dismiss(animated: true) {
                     self.savePreferences()

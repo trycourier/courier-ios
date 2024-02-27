@@ -39,10 +39,12 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     private let title: String
     private let channels: [CourierUserPreferencesChannel]
     private let onSheetDismiss: () -> Void
+    private let topic: CourierUserPreferencesTopic
     
-    init(title: String, channels: [CourierUserPreferencesChannel], onSheetDismiss: @escaping () -> Void) {
+    init(title: String, channels: [CourierUserPreferencesChannel], topic: CourierUserPreferencesTopic, onSheetDismiss: @escaping () -> Void) {
         self.title = title
         self.channels = channels
+        self.topic = topic
         self.onSheetDismiss = onSheetDismiss
         super.init(frame: .zero)
         setup()
@@ -51,6 +53,14 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     override init(frame: CGRect) {
         self.title = "Topic Title"
         self.channels = CourierUserPreferencesChannel.allCases
+        self.topic = CourierUserPreferencesTopic(
+            defaultStatus: "",
+            hasCustomRouting: false,
+            customRouting: [],
+            status: "",
+            topicId: "",
+            topicName: ""
+        )
         self.onSheetDismiss = {}
         super.init(frame: frame)
         setup()
@@ -59,6 +69,14 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     public required init?(coder: NSCoder) {
         self.title = "Topic Title"
         self.channels = CourierUserPreferencesChannel.allCases
+        self.topic = CourierUserPreferencesTopic(
+            defaultStatus: "",
+            hasCustomRouting: false,
+            customRouting: [],
+            status: "",
+            topicId: "",
+            topicName: ""
+        )
         self.onSheetDismiss = {}
         super.init(coder: coder)
         setup()
@@ -114,12 +132,16 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceChannelCell.id, for: indexPath) as! CourierPreferenceChannelCell
 
-        let channel = CourierUserPreferencesChannel.allCases[indexPath.row]
-        cell.configureCell(channel: channel)
+        cell.configureCell(
+            channel: self.channels[indexPath.row],
+            topic: self.topic
+        )
 
         return cell
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -173,8 +195,18 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         ])
     }
     
-    func configureCell(channel: CourierUserPreferencesChannel) {
+    func configureCell(channel: CourierUserPreferencesChannel, topic: CourierUserPreferencesTopic) {
+        
         itemLabel.text = channel.rawValue
+        
+        if (topic.customRouting.isEmpty) {
+            toggleSwitch.isOn = true
+            return
+        }
+        
+        let isToggled = topic.customRouting.contains { $0.rawValue == channel.rawValue }
+        toggleSwitch.isOn = isToggled
+        
     }
     
     @objc private func switchToggled(_ sender: UISwitch) {
