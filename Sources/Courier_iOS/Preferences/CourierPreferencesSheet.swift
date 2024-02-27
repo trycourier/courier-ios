@@ -38,14 +38,14 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     private let title: String
     private let channels: [CourierUserPreferencesChannel]
-    private let onSheetDismiss: () -> Void
+    private let onSheetClose: () -> Void
     private let topic: CourierUserPreferencesTopic
     
-    init(title: String, channels: [CourierUserPreferencesChannel], topic: CourierUserPreferencesTopic, onSheetDismiss: @escaping () -> Void) {
+    init(title: String, channels: [CourierUserPreferencesChannel], topic: CourierUserPreferencesTopic, onSheetClose: @escaping () -> Void) {
         self.title = title
         self.channels = channels
         self.topic = topic
-        self.onSheetDismiss = onSheetDismiss
+        self.onSheetClose = onSheetClose
         super.init(frame: .zero)
         setup()
     }
@@ -61,7 +61,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
             topicId: "",
             topicName: ""
         )
-        self.onSheetDismiss = {}
+        self.onSheetClose = {}
         super.init(frame: frame)
         setup()
     }
@@ -77,7 +77,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
             topicId: "",
             topicName: ""
         )
-        self.onSheetDismiss = {}
+        self.onSheetClose = {}
         super.init(coder: coder)
         setup()
     }
@@ -105,7 +105,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     @objc private func closeButtonClick() {
-        onSheetDismiss()
+        onSheetClose()
     }
     
     private func addTableView() {
@@ -211,7 +211,7 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         
         itemLabel.text = channel.rawValue
         
-        if (topic.defaultStatus == .required) {
+        if (topic.status == .required) {
             toggleSwitch.isOn = true
             toggleSwitch.isEnabled = false
             return

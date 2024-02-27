@@ -150,11 +150,12 @@ import UIKit
             fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")
         }
         
-        let contentVC = UIViewController()
-        contentVC.view.backgroundColor = .white // TODO: HERE
+        let sheetViewController = PreferencesSheetViewController()
+        sheetViewController.topic = topic
+        sheetViewController.view.backgroundColor = .white // TODO: HERE
         
         // Create the sheet controller
-        let sheetPresentationController = contentVC.sheetPresentationController
+        let sheetPresentationController = sheetViewController.sheetPresentationController
         sheetPresentationController?.delegate = self
         sheetPresentationController?.prefersGrabberVisible = true
         sheetPresentationController?.preferredCornerRadius = 16
@@ -163,21 +164,21 @@ import UIKit
             title: topic.topicName,
             channels: availableChannels, 
             topic: topic,
-            onSheetDismiss: {
+            onSheetClose: {
                 sheetPresentationController?.presentingViewController.dismiss(animated: true) {
-                    self.savePreferences()
+                    self.savePreferences(topic: topic)
                 }
             }
         )
         
         sheet.translatesAutoresizingMaskIntoConstraints = false
-        contentVC.view.addSubview(sheet)
+        sheetViewController.view.addSubview(sheet)
         
         NSLayoutConstraint.activate([
-            sheet.topAnchor.constraint(equalTo: contentVC.view.topAnchor),
-            sheet.leadingAnchor.constraint(equalTo: contentVC.view.leadingAnchor),
-            sheet.trailingAnchor.constraint(equalTo: contentVC.view.trailingAnchor),
-            sheet.bottomAnchor.constraint(equalTo: contentVC.view.bottomAnchor)
+            sheet.topAnchor.constraint(equalTo: sheetViewController.view.topAnchor),
+            sheet.leadingAnchor.constraint(equalTo: sheetViewController.view.leadingAnchor),
+            sheet.trailingAnchor.constraint(equalTo: sheetViewController.view.trailingAnchor),
+            sheet.bottomAnchor.constraint(equalTo: sheetViewController.view.bottomAnchor)
         ])
         
         sheet.layoutIfNeeded()
@@ -191,16 +192,32 @@ import UIKit
             sheetPresentationController?.detents = [.medium(), .large()]
         }
         
-        parentViewController.present(contentVC, animated: true, completion: nil)
+        parentViewController.present(sheetViewController, animated: true, completion: nil)
         
     }
     
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        savePreferences()
+        
+        let viewController = presentationController.presentingViewController as? PreferencesSheetViewController
+        
+//        savePreferences()
     }
     
-    private func savePreferences() {
-        print("Save!")
+    private func savePreferences(topic: CourierUserPreferencesTopic) {
+        
+//        Courier.shared.putUserPreferencesTopic(
+//            topicId: topic.topicId,
+//            status: <#T##CourierUserPreferencesStatus#>,
+//            hasCustomRouting: <#T##Bool#>,
+//            customRouting: <#T##[CourierUserPreferencesChannel]#>,
+//            onSuccess: {
+//                print("YAY")
+//            },
+//            onFailure: { error in
+//                print(error)
+//            }
+//        )
+        
     }
     
     private func getSheetHeight(sheet: CourierPreferencesSheet) -> CGFloat {
@@ -290,4 +307,8 @@ extension UIView {
         }
         return nil
     }
+}
+
+internal class PreferencesSheetViewController: UIViewController {
+    var topic: CourierUserPreferencesTopic? = nil
 }

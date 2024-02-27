@@ -37,10 +37,10 @@ internal class CourierUserPreferencesTopicResponse: NSObject, Codable {
 
 @objc public class CourierUserPreferencesTopic: NSObject, Codable {
     
-    @objc public let defaultStatus: CourierUserPreferencesStatus
-    @objc public let hasCustomRouting: Bool
     public let customRouting: [CourierUserPreferencesChannel]
-    @objc public let status: String
+    @objc public let defaultStatus: CourierUserPreferencesStatus
+    @objc public let status: CourierUserPreferencesStatus
+    @objc public let hasCustomRouting: Bool
     @objc public let topicId: String
     @objc public let topicName: String
     
@@ -57,7 +57,7 @@ internal class CourierUserPreferencesTopicResponse: NSObject, Codable {
         self.defaultStatus = CourierUserPreferencesStatus(rawValue: defaultStatus) ?? .unknown
         self.hasCustomRouting = hasCustomRouting
         self.customRouting = customRouting.map { CourierUserPreferencesChannel(rawValue: $0) ?? .unknown }
-        self.status = status
+        self.status = CourierUserPreferencesStatus(rawValue: status) ?? .unknown
         self.topicId = topicId
         self.topicName = topicName
     }
