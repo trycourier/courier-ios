@@ -198,7 +198,7 @@ import UIKit
     
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         
-        let viewController = presentationController.presentingViewController as? PreferencesSheetViewController
+        let viewController = presentationController.presentedViewController as? PreferencesSheetViewController
         
         print(viewController?.topic?.topicId)
         
