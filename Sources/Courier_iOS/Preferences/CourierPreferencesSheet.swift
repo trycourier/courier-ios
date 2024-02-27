@@ -144,6 +144,18 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // Toggle the cell
+        if let cell = tableView.cellForRow(at: indexPath) as? CourierPreferenceChannelCell {
+            cell.toggleSwitch.setOn(!cell.toggleSwitch.isOn, animated: true)
+        }
+        
+        // Deselect the row
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return CourierPreferencesSheet.cellHeight
     }
