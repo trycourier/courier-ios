@@ -256,7 +256,7 @@ import UIKit
         
         let navBarHeight = sheet.navigationBar.frame.height == 0 ? 56 : sheet.navigationBar.frame.height
         
-        let itemHeight: CGFloat = CGFloat(64 * CourierUserPreferencesChannel.allCases.count)
+        let itemHeight: CGFloat = CGFloat(64 * availableChannels.count)
         
         return margins + navBarHeight + itemHeight
         
