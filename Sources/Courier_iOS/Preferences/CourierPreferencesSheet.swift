@@ -148,7 +148,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         
         // Toggle the cell
         if let cell = tableView.cellForRow(at: indexPath) as? CourierPreferenceChannelCell {
-            cell.toggleSwitch.setOn(!cell.toggleSwitch.isOn, animated: true)
+            cell.toggle()
         }
         
         // Deselect the row
@@ -211,6 +211,12 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         
         itemLabel.text = channel.rawValue
         
+        if (topic.defaultStatus == .required) {
+            toggleSwitch.isOn = true
+            toggleSwitch.isEnabled = false
+            return
+        }
+        
         if (topic.customRouting.isEmpty) {
             toggleSwitch.isOn = true
             return
@@ -219,6 +225,11 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         let isToggled = topic.customRouting.contains { $0.rawValue == channel.rawValue }
         toggleSwitch.isOn = isToggled
         
+    }
+    
+    internal func toggle() {
+        toggleSwitch.setOn(!toggleSwitch.isOn, animated: true)
+        switchToggled(toggleSwitch)
     }
     
     @objc private func switchToggled(_ sender: UISwitch) {
