@@ -200,6 +200,8 @@ import UIKit
         
         let viewController = presentationController.presentingViewController as? PreferencesSheetViewController
         
+        print(viewController?.topic?.topicId)
+        
 //        savePreferences()
     }
     
