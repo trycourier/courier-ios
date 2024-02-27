@@ -142,6 +142,13 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
         return label
     }()
     
+    let toggleSwitch: UISwitch = {
+        let toggle = UISwitch()
+        toggle.translatesAutoresizingMaskIntoConstraints = false
+        toggle.addTarget(CourierPreferenceChannelCell.self, action: #selector(switchToggled(_:)), for: .valueChanged)
+        return toggle
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -154,18 +161,25 @@ internal class CourierPreferenceChannelCell: UITableViewCell {
     
     private func setupViews() {
         contentView.addSubview(itemLabel)
+        contentView.addSubview(toggleSwitch)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            itemLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            itemLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            itemLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            toggleSwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            toggleSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     
     func configureCell(channel: CourierUserPreferencesChannel) {
         itemLabel.text = channel.rawValue
+    }
+    
+    @objc private func switchToggled(_ sender: UISwitch) {
+        // Handle switch toggle event
+        // You can add your logic here to respond to the switch toggle
     }
     
 }

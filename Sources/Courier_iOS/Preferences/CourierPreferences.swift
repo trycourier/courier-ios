@@ -148,8 +148,8 @@ import UIKit
                 }
             }
         )
-        sheet.translatesAutoresizingMaskIntoConstraints = false
         
+        sheet.translatesAutoresizingMaskIntoConstraints = false
         contentVC.view.addSubview(sheet)
         
         NSLayoutConstraint.activate([
