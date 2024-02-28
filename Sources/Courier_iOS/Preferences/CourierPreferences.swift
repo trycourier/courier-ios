@@ -166,7 +166,10 @@ import UIKit
                     isOn: true,
                     isDisabled: false
                 )
-            ]
+            ],
+            onDismiss: { items in
+                print(items)
+            }
         )
         
         // Present the sheet

@@ -9,7 +9,7 @@ import UIKit
 
 internal struct CourierSheetItem {
     let title: String
-    let isOn: Bool
+    var isOn: Bool
     let isDisabled: Bool
 }
 
@@ -123,23 +123,12 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceCell.id, for: indexPath) as! CourierPreferenceCell
         
-        let item = self.items[indexPath.row]
+        var item = self.items[indexPath.row]
 
         cell.configureCell(
             item: item,
             onToggle: { isOn in
-                
-//                // Get the current topic from the viewController
-//                guard var currentTopic = self.viewController.topic else {
-//                    return
-//                }
-//
-//                // Update the current topic based on the value of isOn
-//                currentTopic = isOn ? currentTopic.addCustomChannel(channel: channel) : currentTopic.removeCustomChannel(channel: channel)
-//
-//                // Assign the updated topic back to the viewController
-//                self.viewController.topic = currentTopic
-                
+                item.isOn = isOn
             }
         )
 

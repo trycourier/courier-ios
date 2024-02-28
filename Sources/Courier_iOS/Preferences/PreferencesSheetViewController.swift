@@ -12,10 +12,12 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     
     let topic: CourierUserPreferencesTopic
     let items: [CourierSheetItem]
+    let onDismiss: ([CourierSheetItem]) -> Void
         
-    init(topic: CourierUserPreferencesTopic, items: [CourierSheetItem]) {
+    init(topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
         self.topic = topic
         self.items = items
+        self.onDismiss = onDismiss
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -30,7 +32,6 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         view.backgroundColor = .white
         
         // Create the sheet controller
-        let sheetPresentationController = sheetPresentationController
         sheetPresentationController?.delegate = self
         sheetPresentationController?.prefersGrabberVisible = true
         sheetPresentationController?.preferredCornerRadius = 16
@@ -49,7 +50,12 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
             title: self.topic.topicName,
             items: self.items,
             onSheetClose: {
-                // Handle on close actions if needed
+                
+                // Call delegate function on close
+                if let vc = self.sheetPresentationController {
+                    self.presentationControllerDidDismiss(vc)
+                }
+                
             }
         )
         
@@ -79,13 +85,8 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         
-//        // Get the view controller
-//        let viewController = presentationController.presentedViewController as? PreferencesSheetViewController
-//        
-//        // Get the topic of the view controller
-//        if let topic = viewController?.topic {
-//            savePreferences(newTopic: topic)
-//        }
+        // Hit call back with items
+        self.onDismiss(self.items)
         
     }
     
