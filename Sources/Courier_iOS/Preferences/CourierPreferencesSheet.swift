@@ -43,7 +43,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }()
     
     private let title: String
-    private let items: [CourierSheetItem]
+    private var items: [CourierSheetItem]
     private let onSheetClose: () -> Void
     
     init(title: String, items: [CourierSheetItem], onSheetClose: @escaping () -> Void) {
@@ -128,7 +128,11 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         cell.configureCell(
             item: item,
             onToggle: { isOn in
+                
+                // Update the item at index
                 item.isOn = isOn
+                self.items[indexPath.row] = item
+                
             }
         )
 
