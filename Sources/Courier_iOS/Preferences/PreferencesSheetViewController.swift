@@ -11,12 +11,12 @@ import UIKit
 internal class PreferencesSheetViewController: UIViewController, UISheetPresentationControllerDelegate {
     
     let topic: CourierUserPreferencesTopic
-    let items: [CourierSheetItem]
+    static var items: [CourierSheetItem] = []
     let onDismiss: ([CourierSheetItem]) -> Void
         
     init(topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
         self.topic = topic
-        self.items = items
+        PreferencesSheetViewController.items = items
         self.onDismiss = onDismiss
         super.init(nibName: nil, bundle: nil)
     }
@@ -48,7 +48,6 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         // Create the sheet
         let sheet = CourierPreferencesSheet(
             title: self.topic.topicName,
-            items: self.items,
             onSheetClose: {
                 
                 // Call delegate function on close
@@ -74,7 +73,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         // Set up sheet presentation controller
         if #available(iOS 16.0, *) {
             let customDetent = UISheetPresentationController.Detent.custom { context in
-                self.getSheetHeight(sheet: sheet, items: self.items)
+                self.getSheetHeight(sheet: sheet, items: PreferencesSheetViewController.items)
             }
             sheetPresentationController?.detents = [customDetent, .large()]
         } else {
@@ -86,7 +85,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         
         // Hit call back with items
-        self.onDismiss(self.items)
+        self.onDismiss(PreferencesSheetViewController.items)
         
     }
     

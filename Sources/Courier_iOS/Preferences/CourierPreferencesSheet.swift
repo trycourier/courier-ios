@@ -13,6 +13,7 @@ internal struct CourierSheetItem {
     let isDisabled: Bool
 }
 
+@available(iOS 15.0, *)
 internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableViewDataSource {
     
     static let marginTop: CGFloat = 10
@@ -43,12 +44,10 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }()
     
     private let title: String
-    private var items: [CourierSheetItem]
     private let onSheetClose: () -> Void
     
-    init(title: String, items: [CourierSheetItem], onSheetClose: @escaping () -> Void) {
+    init(title: String, onSheetClose: @escaping () -> Void) {
         self.title = title
-        self.items = items
         self.onSheetClose = onSheetClose
         super.init(frame: .zero)
         setup()
@@ -56,7 +55,6 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     override init(frame: CGRect) {
         self.title = "Title"
-        self.items = []
         self.onSheetClose = {}
         super.init(frame: frame)
         setup()
@@ -64,7 +62,6 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     public required init?(coder: NSCoder) {
         self.title = "Title"
-        self.items = []
         self.onSheetClose = {}
         super.init(coder: coder)
         setup()
@@ -116,23 +113,17 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return PreferencesSheetViewController.items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceCell.id, for: indexPath) as! CourierPreferenceCell
-        
-        var item = self.items[indexPath.row]
 
         cell.configureCell(
-            item: item,
+            item: PreferencesSheetViewController.items[indexPath.row],
             onToggle: { isOn in
-                
-                // Update the item at index
-                item.isOn = isOn
-                self.items[indexPath.row] = item
-                
+                PreferencesSheetViewController.items[indexPath.row].isOn = isOn
             }
         )
 
