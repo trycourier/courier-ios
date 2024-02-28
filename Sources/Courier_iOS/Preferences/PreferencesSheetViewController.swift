@@ -52,7 +52,9 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
                 
                 // Call delegate function on close
                 if let vc = self.sheetPresentationController {
-                    self.presentationControllerDidDismiss(vc)
+                    self.presentingViewController?.dismiss(animated: true) {
+                        self.presentationControllerDidDismiss(vc)
+                    }
                 }
                 
             }
