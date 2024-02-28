@@ -96,7 +96,7 @@ import UIKit
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(CourierTopicTableViewCell.self, forCellReuseIdentifier: CourierTopicTableViewCell.id)
+        tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
 
         // Add the refresh control
         tableView.refreshControl = refreshControl
@@ -122,18 +122,25 @@ import UIKit
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: CourierTopicTableViewCell.id, for: indexPath) as! CourierTopicTableViewCell
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
 
         let topic = topics[indexPath.row]
         cell.configureCell(topic: topic)
 
         return cell
+        
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // Present the sheet
         let topic = topics[indexPath.row]
         showSheet(topic: topic)
+        
+        // Deselect the cell
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -150,72 +157,19 @@ import UIKit
             fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")
         }
         
-        let sheetViewController = PreferencesSheetViewController()
-        sheetViewController.topic = topic
-        sheetViewController.view.backgroundColor = .white // TODO: HERE
-        
-        // Create the sheet controller
-        let sheetPresentationController = sheetViewController.sheetPresentationController
-        sheetPresentationController?.delegate = self
-        sheetPresentationController?.prefersGrabberVisible = true
-        sheetPresentationController?.preferredCornerRadius = 16
-        
-        // TODO: Handle all cases
-        // Create a map of the values
-        var switches = [CourierUserPreferencesChannel: CourierUserPreferencesStatus]()
-        
-        // If required prevent usage
-        // If "IN" default to on or do custom routing
-        // If "OUT" default to off or do custom routing
-        
-//        availableChannels.forEach { channel in
-//            
-//            switch (topic.status) {
-//            case .optedIn:
-//                switches[channel] = topic.customRouting.isEmpty ? .optedIn :
-////            case .optedOut:
-////            case .required:
-////            default:
-//            }
-//            
-////            switches[channel] = topic.customRouting.isEmpty ? topic.status :
-//        }
-        
-        let sheet = CourierPreferencesSheet(
-            title: topic.topicName,
-            channels: availableChannels, 
+        // Build the sheet
+        let sheetViewController = PreferencesSheetViewController(
             topic: topic,
-            viewController: sheetViewController,
-            onSheetClose: {
-//                sheetPresentationController?.presentingViewController.dismiss(animated: true) {
-//                    if let newTopic = sheetViewController.topic {
-//                        self.savePreferences(newTopic: newTopic)
-//                    }
-//                }
-            }
+            items: [
+                CourierSheetItem(
+                    title: "Topic", 
+                    isOn: true,
+                    isDisabled: false
+                )
+            ]
         )
         
-        sheet.translatesAutoresizingMaskIntoConstraints = false
-        sheetViewController.view.addSubview(sheet)
-        
-        NSLayoutConstraint.activate([
-            sheet.topAnchor.constraint(equalTo: sheetViewController.view.topAnchor),
-            sheet.leadingAnchor.constraint(equalTo: sheetViewController.view.leadingAnchor),
-            sheet.trailingAnchor.constraint(equalTo: sheetViewController.view.trailingAnchor),
-            sheet.bottomAnchor.constraint(equalTo: sheetViewController.view.bottomAnchor)
-        ])
-        
-        sheet.layoutIfNeeded()
-        
-        if #available(iOS 16.0, *) {
-            let customDetent = UISheetPresentationController.Detent.custom { context in
-                self.getSheetHeight(sheet: sheet)
-            }
-            sheetPresentationController?.detents = [customDetent, .large()]
-        } else {
-            sheetPresentationController?.detents = [.medium(), .large()]
-        }
-        
+        // Present the sheet
         parentViewController.present(sheetViewController, animated: true, completion: nil)
         
     }
@@ -264,49 +218,6 @@ import UIKit
     
 }
 
-internal class CourierTopicTableViewCell: UITableViewCell {
-    
-    static let id = "CourierTopicTableViewCell"
-    
-    let itemLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.setContentHuggingPriority(.required, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
-        return label
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
-        setupConstraints()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupViews() {
-        contentView.addSubview(itemLabel)
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            itemLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            itemLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
-        ])
-    }
-    
-    func configureCell(topic: CourierUserPreferencesTopic) {
-        itemLabel.text = topic.convertToJSONString()
-    }
-    
-}
-
 extension CourierUserPreferencesTopic {
     
     @objc func convertToJSONString() -> String? {
@@ -324,21 +235,4 @@ extension CourierUserPreferencesTopic {
         return nil
     }
     
-}
-
-extension UIView {
-    var parentViewController: UIViewController? {
-        var parentResponder: UIResponder? = self
-        while let responder = parentResponder {
-            if let viewController = responder as? UIViewController {
-                return viewController
-            }
-            parentResponder = responder.next
-        }
-        return nil
-    }
-}
-
-internal class PreferencesSheetViewController: UIViewController {
-    var topic: CourierUserPreferencesTopic? = nil
 }
