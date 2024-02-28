@@ -157,16 +157,40 @@ import UIKit
             fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")
         }
         
+        var items = [CourierSheetItem]()
+        
+        // TODO: Handle opting things
+        
+        items = CourierUserPreferencesChannel.allCases.map { channel in
+            
+            // Handle all cases
+            // If required prevent usage
+            // If "IN" default to on or do custom routing
+            // If "OUT" default to off or do custom routing
+            // Loop through availableChannels and set switches
+            
+            let isRequired = topic.status == .required
+            
+            var isOn = true
+            
+            if (topic.customRouting.isEmpty) {
+                isOn = topic.status != .optedOut
+            } else {
+                isOn = topic.customRouting.contains { $0.rawValue == channel.rawValue }
+            }
+            
+            return CourierSheetItem(
+                title: channel.rawValue,
+                isOn: isOn,
+                isDisabled: isRequired
+            )
+            
+        }
+        
         // Build the sheet
         let sheetViewController = PreferencesSheetViewController(
             topic: topic,
-            items: [
-                CourierSheetItem(
-                    title: "Topic", 
-                    isOn: true,
-                    isDisabled: false
-                )
-            ],
+            items: items,
             onDismiss: { items in
                 print(items)
             }

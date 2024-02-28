@@ -36,15 +36,6 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         sheetPresentationController?.prefersGrabberVisible = true
         sheetPresentationController?.preferredCornerRadius = 16
         
-        // Create a map of the values
-//        var switches = [CourierUserPreferencesChannel: CourierUserPreferencesStatus]()
-        
-        // Handle all cases
-        // If required prevent usage
-        // If "IN" default to on or do custom routing
-        // If "OUT" default to off or do custom routing
-        // Loop through availableChannels and set switches
-        
         // Create the sheet
         let sheet = CourierPreferencesSheet(
             title: self.topic.topicName,
