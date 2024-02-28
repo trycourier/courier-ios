@@ -11,6 +11,8 @@ internal class CourierPreferenceCell: UITableViewCell {
     
     static let id = "CourierPreferenceCell"
     
+    private var item: CourierSheetItem? = nil
+    
     let itemLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
@@ -56,38 +58,33 @@ internal class CourierPreferenceCell: UITableViewCell {
     
     func configureCell(item: CourierSheetItem, onToggle: @escaping (Bool) -> Void) {
         
+        self.item = item
+        
         self.itemLabel.text = item.title
+        self.toggleSwitch.isOn = item.isOn
+        self.toggleSwitch.isEnabled = !item.isDisabled
+        
+        self.contentView.isUserInteractionEnabled = !item.isDisabled
+        
         self.onToggle = onToggle
-        
-//        // If required, users cannot change this
-//        if (topic.status == .required) {
-//            toggleSwitch.isOn = true
-//            toggleSwitch.isEnabled = false
-//            toggleSwitch.isUserInteractionEnabled = false
-//            return
-//        }
-//        
-//        // If opted out, disable all toggles
-//        if (topic.status == .optedOut) {
-//            toggleSwitch.isOn = false
-//            return
-//        }
-//        
-//        // Enable all as the fallback
-//        if (topic.customRouting.isEmpty) {
-//            toggleSwitch.isOn = true
-//            return
-//        }
-        
-        // Apply custom settings
-//        let isToggled = topic.customRouting.contains { $0.rawValue == channel.rawValue }
-        toggleSwitch.isOn = item.isOn
         
     }
     
     internal func toggle() {
-        toggleSwitch.setOn(!toggleSwitch.isOn, animated: true)
-        switchToggled(toggleSwitch)
+        
+        // Get the item
+        if let item = self.item {
+            
+            if (item.isDisabled) {
+                return
+            }
+            
+            // Toggle the item
+            toggleSwitch.setOn(!toggleSwitch.isOn, animated: true)
+            switchToggled(toggleSwitch)
+            
+        }
+        
     }
     
     @objc private func switchToggled(_ sender: UISwitch) {
