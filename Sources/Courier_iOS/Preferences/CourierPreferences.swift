@@ -194,9 +194,6 @@ import UIKit
                 }
                 
                 let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
-                let selectedValues = selectedItems.map { $0.rawValue }
-                let customRoutingValues = topic.customRouting.map { $0.rawValue }
-                let didChange = selectedValues.containSameElements(customRoutingValues)
                 
                 var newStatus: CourierUserPreferencesStatus = .unknown
                 
@@ -242,60 +239,24 @@ import UIKit
                     hasCustomRouting: hasCustomRouting,
                     customRouting: customRouting,
                     onSuccess: {
-                        print("Done")
+                        Courier.log("Topic updated: \(topic.topicId)")
                     },
                     onFailure: { error in
-                        print(error)
+                        Courier.log(error.localizedDescription)
                     }
                 )
+                
+                // Reload the table
+                if let index = self.topics.firstIndex(where: { $0.topicId == topic.topicId }) {
+                    self.topics[index] = newTopic
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+                }
                 
             }
         )
         
         // Present the sheet
         parentViewController.present(sheetViewController, animated: true, completion: nil)
-        
-    }
-    
-    // Called when the view controller sheet is closed
-    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        
-        // Get the view controller
-        let viewController = presentationController.presentedViewController as? PreferencesSheetViewController
-        
-        // Get the topic of the view controller
-        if let topic = viewController?.topic {
-            savePreferences(newTopic: topic)
-        }
-        
-    }
-    
-    private func savePreferences(newTopic: CourierUserPreferencesTopic) {
-        
-        Courier.shared.putUserPreferencesTopic(
-            topicId: newTopic.topicId,
-            status: newTopic.status,
-            hasCustomRouting: newTopic.hasCustomRouting,
-            customRouting: newTopic.customRouting,
-            onSuccess: {
-                print("YAY")
-            },
-            onFailure: { error in
-                print(error)
-            }
-        )
-        
-    }
-    
-    private func getSheetHeight(sheet: CourierPreferencesSheet) -> CGFloat {
-        
-        let margins = CourierPreferencesSheet.marginTop + CourierPreferencesSheet.marginBottom
-        
-        let navBarHeight = sheet.navigationBar.frame.height == 0 ? 56 : sheet.navigationBar.frame.height
-        
-        let itemHeight: CGFloat = CGFloat(64 * availableChannels.count)
-        
-        return margins + navBarHeight + itemHeight
         
     }
     
