@@ -196,12 +196,14 @@ import UIKit
                 let selectedItems = items.filter { $0.isOn }
                 
                 // Nothing has changed.
-                if (topic.defaultStatus == .optedIn && selectedItems.count == items.count) {
+                let allSelected = selectedItems.count == items.count
+                if (topic.defaultStatus == .optedIn && topic.status == .optedIn && allSelected) {
                     return
                 }
                 
                 // Nothing has changed.
-                if (topic.defaultStatus == .optedOut && selectedItems.count == 0) {
+                let noneSelected = selectedItems.count == 0
+                if (topic.defaultStatus == .optedOut && topic.status == .optedOut && selectedItems.count == 0) {
                     return
                 }
                 
