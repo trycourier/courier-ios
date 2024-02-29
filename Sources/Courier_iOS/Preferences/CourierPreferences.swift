@@ -189,17 +189,17 @@ import UIKit
             onDismiss: { items in
                 
                 // Unable to save. Settings required.
-                if (topic.defaultStatus == .required) {
+                if (topic.defaultStatus == .required && topic.status == .required) {
                     return
                 }
                 
                 // Nothing has changed.
-                if (topic.defaultStatus == .optedIn && items.filter { $0.isOn }.count == items.count) {
+                if ((topic.defaultStatus == .optedIn && topic.status == .optedIn) && items.filter { $0.isOn }.count == items.count) {
                     return
                 }
                 
                 // Nothing has changed.
-                if (topic.defaultStatus == .optedOut && items.filter { !$0.isOn }.count == items.count) {
+                if ((topic.defaultStatus == .optedOut && topic.status == .optedOut) && items.filter { !$0.isOn }.count == items.count) {
                     return
                 }
                 
