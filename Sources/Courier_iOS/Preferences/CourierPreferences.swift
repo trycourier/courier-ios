@@ -188,33 +188,34 @@ import UIKit
             items: items,
             onDismiss: { items in
                 
-                // Unable to save. Settings required.
-                if (topic.defaultStatus == .required && topic.status == .required) {
-                    return
-                }
+                let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
+                let didChange = topic.customRouting.map { $0.rawValue }.containSameElements(selectedItems.map { $0.rawValue })
                 
-                let selectedItems = items.filter { $0.isOn }
-                
-                // Nothing has changed.
-                let allSelected = selectedItems.count == items.count
-                if (topic.defaultStatus == .optedIn && topic.status == .optedIn && allSelected) {
-                    return
-                }
-                
-                // Nothing has changed.
-                let noneSelected = selectedItems.count == 0
-                if (topic.defaultStatus == .optedOut && topic.status == .optedOut && selectedItems.count == 0) {
-                    return
-                }
-                
-                let customRouting = selectedItems.map { $0.data as! CourierUserPreferencesChannel }
+//                // Unable to save. Settings required.
+//                if (topic.defaultStatus == .required && topic.status == .required) {
+//                    return
+//                }
+//                
+//                let selectedItems = items.filter { $0.isOn }
+//                
+//                // Nothing has changed.
+//                let allSelected = selectedItems.count == items.count
+//                if (topic.defaultStatus == .optedIn && topic.status == .optedIn && allSelected) {
+//                    return
+//                }
+//                
+//                // Nothing has changed.
+//                let noneSelected = selectedItems.count == 0
+//                if (topic.defaultStatus == .optedOut && topic.status == .optedOut && selectedItems.count == 0) {
+//                    return
+//                }
                 
                 // Update the preferences
                 Courier.shared.putUserPreferencesTopic(
                     topicId: topic.topicId,
-                    status: !customRouting.isEmpty ? .optedIn : .optedOut,
-                    hasCustomRouting: !customRouting.isEmpty,
-                    customRouting: customRouting,
+                    status: !selectedItems.isEmpty ? .optedIn : .optedOut,
+                    hasCustomRouting: !selectedItems.isEmpty,
+                    customRouting: selectedItems,
                     onSuccess: {
                         print("Done")
                     },

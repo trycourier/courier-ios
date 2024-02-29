@@ -216,3 +216,13 @@ extension UIView {
     }
     
 }
+
+extension Array where Element == String {
+    
+    func containSameElements(_ otherArray: [String]) -> Bool {
+        let sortedSelf = self.sorted()
+        let sortedOther = otherArray.sorted()
+        return sortedSelf == sortedOther
+    }
+    
+}
