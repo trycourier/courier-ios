@@ -11,6 +11,7 @@ internal struct CourierSheetItem {
     let title: String
     var isOn: Bool
     let isDisabled: Bool
+    let data: Any?
 }
 
 @available(iOS 15.0, *)

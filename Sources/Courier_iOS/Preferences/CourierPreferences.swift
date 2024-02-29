@@ -157,17 +157,11 @@ import UIKit
             fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")
         }
         
-        var items = [CourierSheetItem]()
-        
         // TODO: Handle opting things
         
+        var items = [CourierSheetItem]()
+        
         items = CourierUserPreferencesChannel.allCases.map { channel in
-            
-            // Handle all cases
-            // If required prevent usage
-            // If "IN" default to on or do custom routing
-            // If "OUT" default to off or do custom routing
-            // Loop through availableChannels and set switches
             
             let isRequired = topic.status == .required
             
@@ -182,7 +176,8 @@ import UIKit
             return CourierSheetItem(
                 title: channel.rawValue,
                 isOn: isOn,
-                isDisabled: isRequired
+                isDisabled: isRequired,
+                data: channel
             )
             
         }
@@ -192,7 +187,24 @@ import UIKit
             topic: topic,
             items: items,
             onDismiss: { items in
-                print(items)
+                
+                let selectedItems = items.filter { $0.isOn }
+                let customRouting = selectedItems.map { $0.data as! CourierUserPreferencesChannel }
+                
+                // Update the preferences
+                Courier.shared.putUserPreferencesTopic(
+                    topicId: topic.topicId,
+                    status: .optedIn,
+                    hasCustomRouting: !customRouting.isEmpty,
+                    customRouting: customRouting,
+                    onSuccess: {
+                        print("Done")
+                    },
+                    onFailure: { error in
+                        print(error)
+                    }
+                )
+                
             }
         )
         
