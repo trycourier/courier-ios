@@ -188,34 +188,47 @@ import UIKit
             items: items,
             onDismiss: { items in
                 
-                let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
-                let didChange = topic.customRouting.map { $0.rawValue }.containSameElements(selectedItems.map { $0.rawValue })
+                // Unable to save. Settings required.
+                if (topic.defaultStatus == .required && topic.status == .required) {
+                    return
+                }
                 
-//                // Unable to save. Settings required.
-//                if (topic.defaultStatus == .required && topic.status == .required) {
-//                    return
-//                }
-//                
-//                let selectedItems = items.filter { $0.isOn }
-//                
-//                // Nothing has changed.
-//                let allSelected = selectedItems.count == items.count
-//                if (topic.defaultStatus == .optedIn && topic.status == .optedIn && allSelected) {
-//                    return
-//                }
-//                
-//                // Nothing has changed.
-//                let noneSelected = selectedItems.count == 0
-//                if (topic.defaultStatus == .optedOut && topic.status == .optedOut && selectedItems.count == 0) {
-//                    return
-//                }
+                let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
+                let selectedValues = selectedItems.map { $0.rawValue }
+                let customRoutingValues = topic.customRouting.map { $0.rawValue }
+                let didChange = selectedValues.containSameElements(customRoutingValues)
+                
+                var newStatus: CourierUserPreferencesStatus = .unknown
+                
+                if (selectedItems.isEmpty) {
+                    newStatus = .optedOut
+                } else {
+                    newStatus = .optedIn
+                }
+                
+                var hasCustomRouting = false
+                var customRouting = [CourierUserPreferencesChannel]()
+                let areAllSelected = selectedItems.count == items.count
+                
+                if (areAllSelected && topic.defaultStatus == .optedIn) {
+                    hasCustomRouting = false
+                    customRouting = []
+                } else if (selectedItems.isEmpty && topic.defaultStatus == .optedOut) {
+                    hasCustomRouting = false
+                    customRouting = []
+                } else {
+                    hasCustomRouting = true
+                    customRouting = selectedItems
+                }
+                
+                // Default != Status -> Get status
                 
                 // Update the preferences
                 Courier.shared.putUserPreferencesTopic(
                     topicId: topic.topicId,
-                    status: !selectedItems.isEmpty ? .optedIn : .optedOut,
-                    hasCustomRouting: !selectedItems.isEmpty,
-                    customRouting: selectedItems,
+                    status: newStatus,
+                    hasCustomRouting: hasCustomRouting,
+                    customRouting: customRouting,
                     onSuccess: {
                         print("Done")
                     },
