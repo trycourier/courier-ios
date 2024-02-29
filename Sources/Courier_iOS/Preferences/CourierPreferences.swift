@@ -188,13 +188,28 @@ import UIKit
             items: items,
             onDismiss: { items in
                 
+                // Unable to save. Settings required.
+                if (topic.defaultStatus == .required) {
+                    return
+                }
+                
+                // Nothing has changed.
+                if (topic.defaultStatus == .optedIn && items.filter { $0.isOn }.count == items.count) {
+                    return
+                }
+                
+                // Nothing has changed.
+                if (topic.defaultStatus == .optedOut && items.filter { !$0.isOn }.count == items.count) {
+                    return
+                }
+                
                 let selectedItems = items.filter { $0.isOn }
                 let customRouting = selectedItems.map { $0.data as! CourierUserPreferencesChannel }
                 
                 // Update the preferences
                 Courier.shared.putUserPreferencesTopic(
                     topicId: topic.topicId,
-                    status: .optedIn,
+                    status: !customRouting.isEmpty ? .optedIn : .optedOut,
                     hasCustomRouting: !customRouting.isEmpty,
                     customRouting: customRouting,
                     onSuccess: {
