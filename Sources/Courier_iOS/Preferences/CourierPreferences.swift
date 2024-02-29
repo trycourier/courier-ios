@@ -188,36 +188,25 @@ import UIKit
             items: items,
             onDismiss: { items in
                 
-                // Unable to save. Settings required.
-                if (topic.defaultStatus == .required && topic.status == .required) {
+                // Check if required settings are provided
+                guard topic.defaultStatus != .required || topic.status != .required else {
                     return
                 }
-                
+
+                // Determine new status
                 let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
-                
-                var newStatus: CourierUserPreferencesStatus = .unknown
-                
-                if (selectedItems.isEmpty) {
-                    newStatus = .optedOut
-                } else {
-                    newStatus = .optedIn
-                }
-                
-                var hasCustomRouting = false
-                var customRouting = [CourierUserPreferencesChannel]()
-                let areAllSelected = selectedItems.count == items.count
-                
-                if (areAllSelected && topic.defaultStatus == .optedIn) {
+                let newStatus: CourierUserPreferencesStatus = selectedItems.isEmpty ? .optedOut : .optedIn
+
+                // Determine custom routing
+                var hasCustomRouting = !selectedItems.isEmpty
+                var customRouting = selectedItems
+
+                // If all selected or none selected with respective default statuses, reset custom routing
+                if selectedItems.isEmpty && topic.defaultStatus == newStatus {
                     hasCustomRouting = false
-                    customRouting = []
-                } else if (selectedItems.isEmpty && topic.defaultStatus == .optedOut) {
-                    hasCustomRouting = false
-                    customRouting = []
-                } else {
-                    hasCustomRouting = true
-                    customRouting = selectedItems
+                    customRouting.removeAll()
                 }
-                
+
                 let newTopic = CourierUserPreferencesTopic(
                     defaultStatus: topic.defaultStatus.rawValue,
                     hasCustomRouting: hasCustomRouting,
@@ -226,13 +215,16 @@ import UIKit
                     topicId: topic.topicId,
                     topicName: topic.topicName
                 )
-                
-                // Unchanged
-                if (newTopic.isEqual(to: topic)) {
+
+                // If topic remains unchanged, return
+                guard !newTopic.isEqual(to: topic) else {
                     return
                 }
-                
-                // Update the Topic
+
+                // Update the topic
+                self.updateTopic(topicId: topic.topicId, newTopic: newTopic)
+
+                // Update the topic
                 Courier.shared.putUserPreferencesTopic(
                     topicId: topic.topicId,
                     status: newStatus,
@@ -243,20 +235,24 @@ import UIKit
                     },
                     onFailure: { error in
                         Courier.log(error.localizedDescription)
+                        self.updateTopic(topicId: topic.topicId, newTopic: topic)
                     }
                 )
-                
-                // Reload the table
-                if let index = self.topics.firstIndex(where: { $0.topicId == topic.topicId }) {
-                    self.topics[index] = newTopic
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
-                }
                 
             }
         )
         
         // Present the sheet
         parentViewController.present(sheetViewController, animated: true, completion: nil)
+        
+    }
+    
+    private func updateTopic(topicId: String, newTopic: CourierUserPreferencesTopic) {
+        
+        if let index = self.topics.firstIndex(where: { $0.topicId == topicId }) {
+            self.topics[index] = newTopic
+            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+        }
         
     }
     
