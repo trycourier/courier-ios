@@ -44,8 +44,20 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         ])
     }
     
-    func configureCell(topic: CourierUserPreferencesTopic) {
-        itemLabel.text = topic.convertToJSONString()
+    func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel]) {
+        
+        var subTitle = ""
+        
+        if (topic.status == .optedOut) {
+            subTitle = "Off"
+        } else if (topic.status == .optedIn && topic.customRouting.isEmpty) {
+            subTitle = "On: \(availableChannels.map { $0.rawValue }.joined(separator: ", "))"
+        } else {
+            subTitle = "On: \(topic.customRouting.map { $0.rawValue }.joined(separator: ", "))"
+        }
+        
+        itemLabel.text = "\(topic.topicName)\n\(subTitle)"
+        
     }
     
 }

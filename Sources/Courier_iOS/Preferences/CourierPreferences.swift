@@ -125,8 +125,11 @@ import UIKit
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
 
-        let topic = topics[indexPath.row]
-        cell.configureCell(topic: topic)
+        let topic = self.topics[indexPath.row]
+        cell.configureCell(
+            topic: topic, 
+            availableChannels: self.availableChannels
+        )
 
         return cell
         
