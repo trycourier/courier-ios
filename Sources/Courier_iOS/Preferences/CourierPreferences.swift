@@ -188,25 +188,36 @@ import UIKit
             items: items,
             onDismiss: { items in
                 
-                // Check if required settings are provided
-                guard topic.defaultStatus != .required || topic.status != .required else {
+                // Unable to save. Settings required.
+                if (topic.defaultStatus == .required && topic.status == .required) {
                     return
                 }
-
-                // Determine new status
+                
                 let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
-                let newStatus: CourierUserPreferencesStatus = selectedItems.isEmpty ? .optedOut : .optedIn
-
-                // Determine custom routing
-                var hasCustomRouting = !selectedItems.isEmpty
-                var customRouting = selectedItems
-
-                // If all selected or none selected with respective default statuses, reset custom routing
-                if selectedItems.isEmpty && topic.defaultStatus == newStatus {
-                    hasCustomRouting = false
-                    customRouting.removeAll()
+                
+                var newStatus: CourierUserPreferencesStatus = .unknown
+                
+                if (selectedItems.isEmpty) {
+                    newStatus = .optedOut
+                } else {
+                    newStatus = .optedIn
                 }
-
+                
+                var hasCustomRouting = false
+                var customRouting = [CourierUserPreferencesChannel]()
+                let areAllSelected = selectedItems.count == items.count
+                
+                if (areAllSelected && topic.defaultStatus == .optedIn) {
+                    hasCustomRouting = false
+                    customRouting = []
+                } else if (selectedItems.isEmpty && topic.defaultStatus == .optedOut) {
+                    hasCustomRouting = false
+                    customRouting = []
+                } else {
+                    hasCustomRouting = true
+                    customRouting = selectedItems
+                }
+                
                 let newTopic = CourierUserPreferencesTopic(
                     defaultStatus: topic.defaultStatus.rawValue,
                     hasCustomRouting: hasCustomRouting,
@@ -215,16 +226,15 @@ import UIKit
                     topicId: topic.topicId,
                     topicName: topic.topicName
                 )
-
-                // If topic remains unchanged, return
-                guard !newTopic.isEqual(to: topic) else {
+                
+                // Unchanged
+                if (newTopic.isEqual(to: topic)) {
                     return
                 }
-
-                // Update the topic
+                
                 self.updateTopic(topicId: topic.topicId, newTopic: newTopic)
-
-                // Update the topic
+                
+                // Update the Topic
                 Courier.shared.putUserPreferencesTopic(
                     topicId: topic.topicId,
                     status: newStatus,
