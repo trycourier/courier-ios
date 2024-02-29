@@ -221,9 +221,21 @@ import UIKit
                     customRouting = selectedItems
                 }
                 
-                // Default != Status -> Get status
+                let newTopic = CourierUserPreferencesTopic(
+                    defaultStatus: topic.defaultStatus.rawValue,
+                    hasCustomRouting: hasCustomRouting,
+                    customRouting: customRouting.map { $0.rawValue },
+                    status: newStatus.rawValue,
+                    topicId: topic.topicId,
+                    topicName: topic.topicName
+                )
                 
-                // Update the preferences
+                // Unchanged
+                if (newTopic.isEqual(to: topic)) {
+                    return
+                }
+                
+                // Update the Topic
                 Courier.shared.putUserPreferencesTopic(
                     topicId: topic.topicId,
                     status: newStatus,

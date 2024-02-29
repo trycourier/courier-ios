@@ -62,42 +62,17 @@ internal class CourierUserPreferencesTopicResponse: NSObject, Codable {
         self.topicName = topicName
     }
     
-    func addCustomChannel(channel: CourierUserPreferencesChannel) -> CourierUserPreferencesTopic {
-        
-        var channels = customRouting.map { $0 }
-        
-        if !channels.contains(channel) {
-            channels.append(channel)
-        }
-        
-        return CourierUserPreferencesTopic(
-            defaultStatus: self.defaultStatus.rawValue,
-            hasCustomRouting: !channels.isEmpty,
-            customRouting: channels.map { $0.rawValue },
-            status: self.status.rawValue,
-            topicId: self.topicId,
-            topicName: self.topicName
-        )
-        
-    }
+}
+
+extension CourierUserPreferencesTopic {
     
-    func removeCustomChannel(channel: CourierUserPreferencesChannel) -> CourierUserPreferencesTopic {
-        
-        var channels = customRouting.map { $0 }
-        
-        if let index = channels.firstIndex(of: channel) {
-            channels.remove(at: index)
-        }
-        
-        return CourierUserPreferencesTopic(
-            defaultStatus: self.defaultStatus.rawValue,
-            hasCustomRouting: !channels.isEmpty,
-            customRouting: channels.map { $0.rawValue },
-            status: self.status.rawValue,
-            topicId: self.topicId,
-            topicName: self.topicName
-        )
-        
+    internal func isEqual(to other: CourierUserPreferencesTopic) -> Bool {
+        return self.defaultStatus == other.defaultStatus &&
+               self.status == other.status &&
+               self.hasCustomRouting == other.hasCustomRouting &&
+               self.topicId == other.topicId &&
+               self.topicName == other.topicName &&
+               self.customRouting == other.customRouting
     }
     
 }
