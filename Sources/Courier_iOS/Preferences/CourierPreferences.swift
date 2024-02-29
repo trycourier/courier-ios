@@ -193,17 +193,18 @@ import UIKit
                     return
                 }
                 
-                // Nothing has changed.
-                if ((topic.defaultStatus == .optedIn && topic.status == .optedIn) && items.filter { $0.isOn }.count == items.count) {
-                    return
-                }
-                
-                // Nothing has changed.
-                if ((topic.defaultStatus == .optedOut && topic.status == .optedOut) && items.filter { !$0.isOn }.count == items.count) {
-                    return
-                }
-                
                 let selectedItems = items.filter { $0.isOn }
+                
+                // Nothing has changed.
+                if (topic.defaultStatus == .optedIn && selectedItems.count == items.count) {
+                    return
+                }
+                
+                // Nothing has changed.
+                if (topic.defaultStatus == .optedOut && selectedItems.count == 0) {
+                    return
+                }
+                
                 let customRouting = selectedItems.map { $0.data as! CourierUserPreferencesChannel }
                 
                 // Update the preferences
