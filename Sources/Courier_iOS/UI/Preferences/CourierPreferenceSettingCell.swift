@@ -7,9 +7,9 @@
 
 import UIKit
 
-internal class CourierPreferenceCell: UITableViewCell {
+internal class CourierPreferenceSettingCell: UITableViewCell {
     
-    static let id = "CourierPreferenceCell"
+    static let id = "CourierPreferenceSettingCell"
     
     private var item: CourierSheetItem? = nil
     
@@ -49,9 +49,9 @@ internal class CourierPreferenceCell: UITableViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
             itemLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            toggleSwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            toggleSwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             toggleSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }

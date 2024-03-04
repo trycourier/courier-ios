@@ -37,10 +37,10 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            itemLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            itemLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
+            itemLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
+            itemLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
+            itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
+            itemLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Theme.margin)
         ])
     }
     

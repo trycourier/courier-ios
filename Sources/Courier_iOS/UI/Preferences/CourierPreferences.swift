@@ -261,10 +261,17 @@ import UIKit
     }
     
     private func updateTopic(topicId: String, newTopic: CourierUserPreferencesTopic) {
-        
+            
         if let index = self.topics.firstIndex(where: { $0.topicId == topicId }) {
+            
+            // Update the topic
             self.topics[index] = newTopic
-            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+            
+            // Run on main queue
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+            }
+            
         }
         
     }

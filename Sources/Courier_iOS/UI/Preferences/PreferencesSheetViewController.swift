@@ -10,8 +10,8 @@ import UIKit
 @available(iOS 15.0, *)
 internal class PreferencesSheetViewController: UIViewController, UISheetPresentationControllerDelegate {
     
-    let topic: CourierUserPreferencesTopic
     static var items: [CourierSheetItem] = []
+    let topic: CourierUserPreferencesTopic
     let onDismiss: ([CourierSheetItem]) -> Void
         
     init(topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
@@ -34,7 +34,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         // Create the sheet controller
         sheetPresentationController?.delegate = self
         sheetPresentationController?.prefersGrabberVisible = true
-        sheetPresentationController?.preferredCornerRadius = 16
+        sheetPresentationController?.preferredCornerRadius = Theme.Preferences.Sheet.cornerRadius
         
         // Create the sheet
         let sheet = CourierPreferencesSheet(
@@ -76,17 +76,14 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     }
     
     public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        
-        // Hit call back with items
         self.onDismiss(PreferencesSheetViewController.items)
-        
     }
     
     private func getSheetHeight(sheet: CourierPreferencesSheet, items: [CourierSheetItem]) -> CGFloat {
         
         let margins = CourierPreferencesSheet.marginTop + CourierPreferencesSheet.marginBottom
         
-        let navBarHeight = sheet.navigationBar.frame.height == 0 ? 56 : sheet.navigationBar.frame.height
+        let navBarHeight = sheet.navigationBar.frame.height == 0 ? Theme.Preferences.Sheet.navBarHeight : sheet.navigationBar.frame.height
         
         let itemHeight = CourierPreferencesSheet.cellHeight * CGFloat(items.count)
         

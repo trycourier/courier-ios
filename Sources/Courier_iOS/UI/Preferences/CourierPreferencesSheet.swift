@@ -104,7 +104,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(CourierPreferenceCell.self, forCellReuseIdentifier: CourierPreferenceCell.id)
+        tableView.register(CourierPreferenceSettingCell.self, forCellReuseIdentifier: CourierPreferenceSettingCell.id)
         
         addSubview(tableView)
         
@@ -123,7 +123,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceCell.id, for: indexPath) as! CourierPreferenceCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceSettingCell.id, for: indexPath) as! CourierPreferenceSettingCell
 
         cell.configureCell(
             item: PreferencesSheetViewController.items[indexPath.row],
@@ -139,7 +139,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // Toggle the cell
-        if let cell = tableView.cellForRow(at: indexPath) as? CourierPreferenceCell {
+        if let cell = tableView.cellForRow(at: indexPath) as? CourierPreferenceSettingCell {
             cell.toggle()
         }
         
