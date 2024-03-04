@@ -29,7 +29,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         super.viewDidLoad()
         
         // Set up the view
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         // Create the sheet controller
         sheetPresentationController?.delegate = self
