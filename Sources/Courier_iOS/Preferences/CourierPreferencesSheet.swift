@@ -78,8 +78,12 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         addSubview(navigationBar)
         
         let navItem = UINavigationItem(title: title)
-        let rightButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeButtonClick))
-        navItem.rightBarButtonItem = rightButtonItem
+        
+        let closeButton = UIButton(type: .close)
+        closeButton.addTarget(self, action: #selector(closeButtonClick), for: .touchUpInside)
+        let closeBarButtonItem = UIBarButtonItem(customView: closeButton)
+        
+        navItem.rightBarButtonItem = closeBarButtonItem
         navigationBar.items = [navItem]
         
         NSLayoutConstraint.activate([
