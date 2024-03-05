@@ -41,8 +41,8 @@ internal class CourierInboxPaginationCell: UITableViewCell {
         contentView.addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([
-            loadingIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: CourierInboxTheme.margin * 4),
-            loadingIndicator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -CourierInboxTheme.margin * 24),
+            loadingIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: (Theme.margin / 2) * 4),
+            loadingIndicator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -(Theme.margin / 2) * Theme.Inbox.loadingIndicatorBottom),
             loadingIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
         

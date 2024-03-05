@@ -69,7 +69,7 @@ internal class CourierInboxActionButton: UIButton {
     
     internal func setInfoButtonTheme(_ theme: CourierInboxTheme) {
         
-        let padding = CourierInboxTheme.margin * 1.5
+        let padding = (Theme.margin / 2) * 1.5
         contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
         titleLabel?.font = theme.infoViewStyle.button.font.font
         titleLabel?.textColor = theme.infoViewStyle.button.font.color
@@ -81,7 +81,7 @@ internal class CourierInboxActionButton: UIButton {
     
     internal func setActionButtonTheme(_ theme: CourierInboxTheme, isRead: Bool) {
         
-        let padding = CourierInboxTheme.margin * 1.5
+        let padding = (Theme.margin / 2) * 1.5
         contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
         titleLabel?.font = isRead ? theme.buttonStyle.read.font.font : theme.buttonStyle.unread.font.font
         titleLabel?.textColor = isRead ? theme.buttonStyle.read.font.color : theme.buttonStyle.unread.font.color

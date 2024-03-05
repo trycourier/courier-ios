@@ -12,9 +12,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
-    internal static let dotSize = 12.0
-    
-    private let margin = CourierInboxTheme.margin
+    private let margin = Theme.margin / 2
     
     private var horizontal: CGFloat {
         get {
@@ -147,13 +145,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         contentView.addSubview(dotView)
         
-        dotView.layer.cornerRadius = CourierInboxTableViewCell.dotSize / 2
+        dotView.layer.cornerRadius = Theme.Inbox.indicatorDotSize / 2
         
         NSLayoutConstraint.activate([
-            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: CourierInboxTableViewCell.dotSize / 2),
+            dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.Inbox.indicatorDotSize / 2),
             dotView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-            dotView.heightAnchor.constraint(equalToConstant: CourierInboxTableViewCell.dotSize),
-            dotView.widthAnchor.constraint(equalToConstant: CourierInboxTableViewCell.dotSize),
+            dotView.heightAnchor.constraint(equalToConstant: Theme.Inbox.indicatorDotSize),
+            dotView.widthAnchor.constraint(equalToConstant: Theme.Inbox.indicatorDotSize),
         ])
         
     }
@@ -190,7 +188,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
             containerLeading?.constant = horizontal
             break
         case .dot:
-            containerLeading?.constant = CourierInboxTableViewCell.dotSize * 2
+            containerLeading?.constant = Theme.Inbox.indicatorDotSize * 2
             break
         }
 

@@ -185,15 +185,15 @@ import UIKit
             courierBar.setColors(with: superview?.backgroundColor)
             
             // Add content inset
-            tableView.verticalScrollIndicatorInsets.bottom = CourierBar.height
-            tableView.contentInset.bottom = CourierBar.height
+            tableView.verticalScrollIndicatorInsets.bottom = Theme.Bar.barHeight
+            tableView.contentInset.bottom = Theme.Bar.barHeight
             
             // Update position
-            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - CourierBar.height)
+            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - Theme.Bar.barHeight)
             courierBar.layoutIfNeeded()
             
             // Update infoView position
-            infoViewY?.constant = -(CourierBar.height / 2)
+            infoViewY?.constant = -(Theme.Bar.barHeight / 2)
             infoView.layoutIfNeeded()
             
         }
@@ -271,8 +271,8 @@ import UIKit
         
         NSLayoutConstraint.activate([
             infoViewY!,
-            infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: CourierInboxTheme.margin),
-            infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -CourierInboxTheme.margin),
+            infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: (Theme.margin / 2)),
+            infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(Theme.margin / 2)),
         ])
         
     }

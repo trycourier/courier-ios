@@ -45,7 +45,7 @@ internal class CourierInboxInfoView: UIView {
     
     private func addStack() {
         
-        stackView.spacing = CourierInboxTheme.margin * 2
+        stackView.spacing = (Theme.margin / 2) * 2
         stackView.axis = .vertical
         
         addSubview(stackView)
@@ -75,7 +75,7 @@ internal class CourierInboxInfoView: UIView {
         buttonContainer.addSubview(actionButton)
         
         NSLayoutConstraint.activate([
-            actionButton.heightAnchor.constraint(equalToConstant: CourierInboxButtonStyle.maxHeight),
+            actionButton.heightAnchor.constraint(equalToConstant: Theme.Inbox.actionButtonMaxHeight),
             actionButton.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
             actionButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
             actionButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),

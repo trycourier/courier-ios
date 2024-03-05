@@ -17,10 +17,6 @@ internal struct CourierSheetItem {
 @available(iOS 15.0, *)
 internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    static let marginTop: CGFloat = 10
-    static let marginBottom: CGFloat = 16
-    static let cellHeight: CGFloat = 64
-    
     private let tableView = UITableView()
     
     lazy var navigationBar: UINavigationBar = {
@@ -87,7 +83,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         navigationBar.items = [navItem]
         
         NSLayoutConstraint.activate([
-            navigationBar.topAnchor.constraint(equalTo: topAnchor, constant: CourierPreferencesSheet.marginTop),
+            navigationBar.topAnchor.constraint(equalTo: topAnchor, constant: Theme.margin / 2),
             navigationBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             navigationBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
@@ -110,7 +106,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: navigationBar.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: CourierPreferencesSheet.marginBottom),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: Theme.margin),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
@@ -149,7 +145,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return CourierPreferencesSheet.cellHeight
+        return Theme.Preferences.settingsCellHeight
     }
     
 }

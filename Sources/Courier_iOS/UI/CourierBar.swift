@@ -10,8 +10,6 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 internal class CourierBar: UIView {
     
-    internal static let height: CGFloat = 48
-    
     private let border = UIView()
     private let logoContainer = UIView()
     private let logoButton = UIButton(type: .custom)
@@ -49,7 +47,7 @@ internal class CourierBar: UIView {
             bottomConstraint!,
             logoContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             logoContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            logoContainer.heightAnchor.constraint(equalToConstant: CourierBar.height),
+            logoContainer.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight),
         ])
         
         // Logo
@@ -151,7 +149,7 @@ internal class CourierBar: UIView {
         backgroundColor = superViewBackground
         
         // Set foreground color
-        let foregroundColor = superViewBackground.luminance() < 0.5 ? CourierInboxTheme.darkBrandColor : CourierInboxTheme.lightBrandColor
+        let foregroundColor = superViewBackground.luminance() < 0.5 ? Theme.Inbox.darkBrandColor : Theme.Inbox.lightBrandColor
         let logo = footerImage?.withRenderingMode(.alwaysTemplate).withTintColor(foregroundColor)
         logoButton.setImage(logo, for: .normal)
         logoButton.tintColor = foregroundColor

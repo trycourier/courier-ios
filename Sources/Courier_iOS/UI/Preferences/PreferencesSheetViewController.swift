@@ -34,7 +34,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         // Create the sheet controller
         sheetPresentationController?.delegate = self
         sheetPresentationController?.prefersGrabberVisible = true
-        sheetPresentationController?.preferredCornerRadius = Theme.Preferences.Sheet.cornerRadius
+        sheetPresentationController?.preferredCornerRadius = Theme.Preferences.sheetCornerRadius
         
         // Create the sheet
         let sheet = CourierPreferencesSheet(
@@ -81,11 +81,11 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     
     private func getSheetHeight(sheet: CourierPreferencesSheet, items: [CourierSheetItem]) -> CGFloat {
         
-        let margins = CourierPreferencesSheet.marginTop + CourierPreferencesSheet.marginBottom
+        let margins = (Theme.margin / 2) + Theme.margin
         
-        let navBarHeight = sheet.navigationBar.frame.height == 0 ? Theme.Preferences.Sheet.navBarHeight : sheet.navigationBar.frame.height
+        let navBarHeight = sheet.navigationBar.frame.height == 0 ? Theme.Preferences.sheetNavBarHeight : sheet.navigationBar.frame.height
         
-        let itemHeight = CourierPreferencesSheet.cellHeight * CGFloat(items.count)
+        let itemHeight = Theme.Preferences.settingsCellHeight * CGFloat(items.count)
         
         return margins + navBarHeight + itemHeight
         
