@@ -31,6 +31,7 @@ import UIKit
     @objc public let tableView = UITableView()
     private let refreshControl = UIRefreshControl()
     private let courierBar = CourierBar()
+    private var sheetViewController: PreferencesSheetViewController?
     
     public init(
         availableChannels: [CourierUserPreferencesChannel] = CourierUserPreferencesChannel.allCases,
@@ -139,12 +140,17 @@ import UIKit
         
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             setTheme(isDarkMode: traitCollection.userInterfaceStyle == .dark)
+            reloadViews()
         }
         
     }
     
     private func setTheme(isDarkMode: Bool) {
         theme = isDarkMode ? darkTheme : lightTheme
+    }
+    
+    private func reloadViews() {
+        sheetViewController?.setTheme(theme: self.theme)
     }
     
     @objc private func onRefresh() {
@@ -218,7 +224,7 @@ import UIKit
         }
         
         // Build the sheet
-        let sheetViewController = PreferencesSheetViewController(
+        sheetViewController = PreferencesSheetViewController(
             theme: theme,
             topic: topic,
             items: items,
@@ -285,11 +291,14 @@ import UIKit
                     }
                 )
                 
+                // Remove the sheet reference
+                self.sheetViewController = nil
+                
             }
         )
         
         // Present the sheet
-        parentViewController.present(sheetViewController, animated: true, completion: nil)
+        parentViewController.present(sheetViewController!, animated: true, completion: nil)
         
     }
     

@@ -11,35 +11,12 @@ import UIKit
 internal class PreferencesSheetViewController: UIViewController, UISheetPresentationControllerDelegate {
     
     static var items: [CourierSheetItem] = []
-    let theme: CourierPreferencesTheme
+    private(set) var theme: CourierPreferencesTheme
     let topic: CourierUserPreferencesTopic
     let onDismiss: ([CourierSheetItem]) -> Void
-        
-    init(theme: CourierPreferencesTheme, topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
-        self.theme = theme
-        self.topic = topic
-        PreferencesSheetViewController.items = items
-        self.onDismiss = onDismiss
-        super.init(nibName: nil, bundle: nil)
-    }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // Set up the view
-        view.backgroundColor = .systemBackground
-        
-        // Create the sheet controller
-        sheetPresentationController?.delegate = self
-        sheetPresentationController?.prefersGrabberVisible = true
-        sheetPresentationController?.preferredCornerRadius = Theme.Preferences.sheetCornerRadius
-        
-        // Create the sheet
-        let sheet = CourierPreferencesSheet(
+    lazy var sheet: CourierPreferencesSheet = {
+        return CourierPreferencesSheet(
             theme: self.theme,
             title: self.topic.topicName,
             onSheetClose: {
@@ -53,6 +30,35 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
                 
             }
         )
+    }()
+        
+    init(theme: CourierPreferencesTheme, topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
+        self.theme = theme
+        self.topic = topic
+        PreferencesSheetViewController.items = items
+        self.onDismiss = onDismiss
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setTheme(theme: CourierPreferencesTheme) {
+        self.theme = theme
+        self.sheet.setTheme(theme: theme)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Set up the view
+        view.backgroundColor = .systemBackground
+        
+        // Create the sheet controller
+        sheetPresentationController?.delegate = self
+        sheetPresentationController?.prefersGrabberVisible = true
+        sheetPresentationController?.preferredCornerRadius = Theme.Preferences.sheetCornerRadius
         
         // Add the sheet to the view
         sheet.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +75,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         // Set up sheet presentation controller
         if #available(iOS 16.0, *) {
             let customDetent = UISheetPresentationController.Detent.custom { context in
-                self.getSheetHeight(sheet: sheet, items: PreferencesSheetViewController.items)
+                self.getSheetHeight(sheet: self.sheet, items: PreferencesSheetViewController.items)
             }
             sheetPresentationController?.detents = [customDetent, .large()]
         } else {

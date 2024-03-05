@@ -40,7 +40,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         return button
     }()
     
-    private let theme: CourierPreferencesTheme
+    private var theme: CourierPreferencesTheme
     private let title: String
     private let onSheetClose: () -> Void
     
@@ -68,9 +68,36 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         setup()
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+    }
+    
     private func setup() {
         addTitleBar()
         addTableView()
+    }
+    
+    func setTheme(theme: CourierPreferencesTheme) {
+        self.theme = theme
+        self.reloadViews()
+    }
+    
+    private func reloadViews() {
+        
+        // Update navbar
+        navigationBar.titleTextAttributes = [
+            .font: self.theme.sheetTitleFont.font,
+            .foregroundColor: self.theme.sheetTitleFont.color
+        ]
+        
+        // Update all cells
+        for row in 0..<tableView.numberOfRows(inSection: 0) {
+            let indexPath = IndexPath(row: row, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) as? CourierPreferenceSettingCell {
+                cell.setTheme(theme: self.theme)
+            }
+        }
+        
     }
     
     private func addTitleBar() {
@@ -80,10 +107,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
 
         // Title
         let navItem = UINavigationItem(title: title)
-        navigationBar.titleTextAttributes = [
-            .font: self.theme.sheetTitleFont.font,
-            .foregroundColor: self.theme.sheetTitleFont.color
-        ]
+        reloadViews()
         
         // Close button
         let closeButton = UIButton(type: .close)
@@ -140,6 +164,8 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
                 PreferencesSheetViewController.items[indexPath.row].isOn = isOn
             }
         )
+        
+        cell.setTheme(theme: self.theme)
 
         return cell
         
