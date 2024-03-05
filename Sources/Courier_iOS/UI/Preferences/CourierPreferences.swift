@@ -70,6 +70,10 @@ import UIKit
     }
     
     private func setup() {
+        
+        // Refreshes theme
+        traitCollectionDidChange(nil)
+        
 //        addCourierBar()
         addTableView()
         
@@ -189,8 +193,6 @@ import UIKit
         guard let parentViewController = parentViewController else {
             fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")
         }
-        
-        // TODO: Handle opting things
         
         var items = [CourierSheetItem]()
         

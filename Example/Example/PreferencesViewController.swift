@@ -16,7 +16,14 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
     var topics: [CourierUserPreferencesTopic] = []
     
     private lazy var courierPreferences = {
-        return CourierPreferences()
+        return CourierPreferences(
+            lightTheme: CourierPreferencesTheme(
+                sheetTitleFont: CourierStyles.Font(
+                    font: UIFont(name: "Avenir Black", size: 20)!,
+                    color: UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
+                )
+            )
+        )
     }()
     
     override func viewDidLoad() {

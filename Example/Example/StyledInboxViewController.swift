@@ -19,51 +19,51 @@ class StyledInboxViewController: UIViewController {
             lightTheme: CourierInboxTheme(
                 messageAnimationStyle: .fade,
                 loadingIndicatorColor: secondaryColor,
-                unreadIndicatorStyle: CourierInboxUnreadIndicatorStyle(
+                unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
                     indicator: .dot,
                     color: secondaryColor
                 ),
-                titleStyle: CourierInboxTextStyle(
-                    unread: CourierInboxFont(
+                titleStyle: CourierStyles.Inbox.TextStyle(
+                    unread: CourierStyles.Font(
                         font: UIFont(name: "Avenir Black", size: 20)!,
                         color: textColor
                     ),
-                    read: CourierInboxFont(
+                    read: CourierStyles.Font(
                         font: UIFont(name: "Avenir Black", size: 20)!,
                         color: textColor
                     )
                 ),
-                timeStyle: CourierInboxTextStyle(
-                    unread: CourierInboxFont(
+                timeStyle: CourierStyles.Inbox.TextStyle(
+                    unread: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 18)!,
                         color: textColor
                     ),
-                    read: CourierInboxFont(
+                    read: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 18)!,
                         color: textColor
                     )
                 ),
-                bodyStyle: CourierInboxTextStyle(
-                    unread: CourierInboxFont(
+                bodyStyle: CourierStyles.Inbox.TextStyle(
+                    unread: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 18)!,
                         color: textColor
                     ),
-                    read: CourierInboxFont(
+                    read: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 18)!,
                         color: textColor
                     )
                 ),
-                buttonStyle: CourierInboxButtonStyle(
-                    unread: CourierInboxButton(
-                        font: CourierInboxFont(
+                buttonStyle: CourierStyles.Inbox.ButtonStyle(
+                    unread: CourierStyles.Button(
+                        font: CourierStyles.Font(
                             font: UIFont(name: "Avenir Black", size: 16)!,
                             color: .white
                         ),
                         backgroundColor: primaryColor,
                         cornerRadius: 100
                     ),
-                    read: CourierInboxButton(
-                        font: CourierInboxFont(
+                    read: CourierStyles.Button(
+                        font: CourierStyles.Font(
                             font: UIFont(name: "Avenir Black", size: 16)!,
                             color: .white
                         ),
@@ -71,17 +71,17 @@ class StyledInboxViewController: UIViewController {
                         cornerRadius: 100
                     )
                 ),
-                cellStyle: CourierInboxCellStyle(
+                cellStyle: CourierStyles.Inbox.CellStyle(
                     separatorStyle: .singleLine,
                     separatorInsets: .zero
                 ),
-                infoViewStyle: CourierInboxInfoViewStyle(
-                    font: CourierInboxFont(
+                infoViewStyle: CourierStyles.Inbox.InfoViewStyle(
+                    font: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 20)!,
                         color: textColor
                     ),
-                    button: CourierInboxButton(
-                        font: CourierInboxFont(
+                    button: CourierStyles.Button(
+                        font: CourierStyles.Font(
                             font: UIFont(name: "Avenir Black", size: 16)!,
                             color: .white
                         ),
@@ -91,65 +91,65 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             darkTheme: CourierInboxTheme(
-                unreadIndicatorStyle: CourierInboxUnreadIndicatorStyle(
+                unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
                     indicator: .dot
                 ),
-                titleStyle: CourierInboxTextStyle(
-                    unread: CourierInboxFont(
+                titleStyle: CourierStyles.Inbox.TextStyle(
+                    unread: CourierStyles.Font(
                         font: UIFont(name: "Avenir Black", size: 20)!,
                         color: .white
                     ),
-                    read: CourierInboxFont(
+                    read: CourierStyles.Font(
                         font: UIFont(name: "Avenir Black", size: 20)!,
                         color: .gray
                     )
                 ),
-                timeStyle: CourierInboxTextStyle(
-                    unread: CourierInboxFont(
+                timeStyle: CourierStyles.Inbox.TextStyle(
+                    unread: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 16)!,
                         color: .white
                     ),
-                    read: CourierInboxFont(
+                    read: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 16)!,
                         color: .gray
                     )
                 ),
-                bodyStyle: CourierInboxTextStyle(
-                    unread: CourierInboxFont(
+                bodyStyle: CourierStyles.Inbox.TextStyle(
+                    unread: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 18)!,
                         color: .white
                     ),
-                    read: CourierInboxFont(
+                    read: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 18)!,
                         color: .gray
                     )
                 ),
-                buttonStyle: CourierInboxButtonStyle(
-                    unread: CourierInboxButton(
-                        font: CourierInboxFont(
+                buttonStyle: CourierStyles.Inbox.ButtonStyle(
+                    unread: CourierStyles.Button(
+                        font: CourierStyles.Font(
                             font: UIFont(name: "Avenir Black", size: 16)!,
                             color: .white
                         ),
                         cornerRadius: 0
                     ),
-                    read: CourierInboxButton(
-                        font: CourierInboxFont(
+                    read: CourierStyles.Button(
+                        font: CourierStyles.Font(
                             font: UIFont(name: "Avenir Black", size: 16)!,
                             color: .white
                         ),
                         cornerRadius: 0
                     )
                 ),
-                cellStyle: CourierInboxCellStyle(
+                cellStyle: CourierStyles.Inbox.CellStyle(
                     separatorStyle: .none
                 ),
-                infoViewStyle: CourierInboxInfoViewStyle(
-                    font: CourierInboxFont(
+                infoViewStyle: CourierStyles.Inbox.InfoViewStyle(
+                    font: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 20)!,
                         color: .white
                     ),
-                    button: CourierInboxButton(
-                        font: CourierInboxFont(
+                    button: CourierStyles.Button(
+                        font: CourierStyles.Font(
                             font: UIFont(name: "Avenir Black", size: 16)!,
                             color: .white
                         ),

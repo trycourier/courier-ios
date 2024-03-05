@@ -9,7 +9,7 @@ import UIKit
 
 internal enum Theme {
     
-    static let margin: CGFloat = 16.0
+    static let margin: CGFloat = 12.0
     
     enum Bar {
         static let barHeight: CGFloat = 48.0
