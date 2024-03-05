@@ -1,5 +1,5 @@
 //
-//  Elements.swift
+//  CourierStyles.swift
 //
 //
 //  Created by https://github.com/mikemilla on 3/5/24.
@@ -87,6 +87,24 @@ public enum CourierStyles {
             public init(indicator: UnreadIndicator = .line, color: UIColor? = nil) {
                 self.indicator = indicator
                 self.color = color
+            }
+            
+        }
+        
+    }
+    
+    // MARK: Preferences
+    
+    public enum Preferences {
+        
+        public class SettingStyles: NSObject {
+            
+            internal let font: CourierStyles.Font?
+            internal let toggleColor: UIColor?
+            
+            public init(font: CourierStyles.Font? = nil, toggleColor: UIColor? = nil) {
+                self.font = font
+                self.toggleColor = toggleColor
             }
             
         }

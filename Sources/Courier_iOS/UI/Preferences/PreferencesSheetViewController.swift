@@ -11,10 +11,12 @@ import UIKit
 internal class PreferencesSheetViewController: UIViewController, UISheetPresentationControllerDelegate {
     
     static var items: [CourierSheetItem] = []
+    let theme: CourierPreferencesTheme
     let topic: CourierUserPreferencesTopic
     let onDismiss: ([CourierSheetItem]) -> Void
         
-    init(topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
+    init(theme: CourierPreferencesTheme, topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
+        self.theme = theme
         self.topic = topic
         PreferencesSheetViewController.items = items
         self.onDismiss = onDismiss
@@ -38,6 +40,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         
         // Create the sheet
         let sheet = CourierPreferencesSheet(
+            theme: self.theme,
             title: self.topic.topicName,
             onSheetClose: {
                 

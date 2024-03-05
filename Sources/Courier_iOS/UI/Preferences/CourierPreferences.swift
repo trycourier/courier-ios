@@ -11,9 +11,16 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 @objc open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource, UISheetPresentationControllerDelegate {
     
-    // MARK: Channels
+    // MARK: Theme
     
     private let availableChannels: [CourierUserPreferencesChannel]
+    
+    private let lightTheme: CourierPreferencesTheme
+    private let darkTheme: CourierPreferencesTheme
+    
+    // Sets the theme and propagates the change
+    // Defaults to light mode, but will change when the theme is set
+    private var theme: CourierPreferencesTheme = .defaultLight
     
     // MARK: Data
     
@@ -26,14 +33,20 @@ import UIKit
     private let courierBar = CourierBar()
     
     public init(
-        availableChannels: [CourierUserPreferencesChannel] = CourierUserPreferencesChannel.allCases
+        availableChannels: [CourierUserPreferencesChannel] = CourierUserPreferencesChannel.allCases,
+        lightTheme: CourierPreferencesTheme = .defaultLight,
+        darkTheme: CourierPreferencesTheme = .defaultDark
     ) {
-        
-        self.availableChannels = availableChannels
         
         if (availableChannels.isEmpty) {
             fatalError("Must pass at least 1 channel to the CourierPreferences initializer.")
         }
+        
+        self.availableChannels = availableChannels
+        
+        // Theme
+        self.lightTheme = lightTheme
+        self.darkTheme = darkTheme
         
         super.init(frame: .zero)
         setup()
@@ -41,12 +54,16 @@ import UIKit
     }
     
     override init(frame: CGRect) {
+        self.lightTheme = .defaultLight
+        self.darkTheme = .defaultDark
         self.availableChannels = CourierUserPreferencesChannel.allCases
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
+        self.lightTheme = .defaultLight
+        self.darkTheme = .defaultDark
         self.availableChannels = CourierUserPreferencesChannel.allCases
         super.init(coder: coder)
         setup()
@@ -111,6 +128,19 @@ import UIKit
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            setTheme(isDarkMode: traitCollection.userInterfaceStyle == .dark)
+        }
+        
+    }
+    
+    private func setTheme(isDarkMode: Bool) {
+        theme = isDarkMode ? darkTheme : lightTheme
     }
     
     @objc private func onRefresh() {
@@ -187,6 +217,7 @@ import UIKit
         
         // Build the sheet
         let sheetViewController = PreferencesSheetViewController(
+            theme: theme,
             topic: topic,
             items: items,
             onDismiss: { items in

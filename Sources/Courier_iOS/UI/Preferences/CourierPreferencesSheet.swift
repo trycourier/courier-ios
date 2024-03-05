@@ -40,10 +40,12 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         return button
     }()
     
+    private let theme: CourierPreferencesTheme
     private let title: String
     private let onSheetClose: () -> Void
     
-    init(title: String, onSheetClose: @escaping () -> Void) {
+    init(theme: CourierPreferencesTheme, title: String, onSheetClose: @escaping () -> Void) {
+        self.theme = theme
         self.title = title
         self.onSheetClose = onSheetClose
         super.init(frame: .zero)
@@ -51,14 +53,16 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     override init(frame: CGRect) {
-        self.title = "Title"
+        self.theme = CourierPreferencesTheme()
+        self.title = "Topic"
         self.onSheetClose = {}
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
-        self.title = "Title"
+        self.theme = CourierPreferencesTheme()
+        self.title = "Topic"
         self.onSheetClose = {}
         super.init(coder: coder)
         setup()
@@ -71,17 +75,26 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     private func addTitleBar() {
         
+        // Add the bar
         addSubview(navigationBar)
-        
+
+        // Title
         let navItem = UINavigationItem(title: title)
+        navigationBar.titleTextAttributes = [
+            .font: self.theme.sheetTitleFont.font,
+            .foregroundColor: self.theme.sheetTitleFont.color
+        ]
         
+        // Close button
         let closeButton = UIButton(type: .close)
         closeButton.addTarget(self, action: #selector(closeButtonClick), for: .touchUpInside)
         let closeBarButtonItem = UIBarButtonItem(customView: closeButton)
         
+        // Add items
         navItem.rightBarButtonItem = closeBarButtonItem
         navigationBar.items = [navItem]
         
+        // Position the nav bar
         NSLayoutConstraint.activate([
             navigationBar.topAnchor.constraint(equalTo: topAnchor, constant: Theme.margin / 2),
             navigationBar.leadingAnchor.constraint(equalTo: leadingAnchor),
