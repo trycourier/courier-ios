@@ -14,6 +14,7 @@ import UIKit
     internal let sheetTitleFont: CourierStyles.Font
     internal let sheetSettingStyles: CourierStyles.Preferences.SettingStyles
     internal let sheetCornerRadius: CGFloat
+    internal let sheetCellStyles: CourierStyles.Cell
     
     // MARK: Init
     
@@ -23,11 +24,13 @@ import UIKit
             color: .label
         ),
         sheetSettingStyles: CourierStyles.Preferences.SettingStyles = CourierStyles.Preferences.SettingStyles(),
-        sheetCornerRadius: CGFloat = Theme.Preferences.sheetCornerRadius
+        sheetCornerRadius: CGFloat = Theme.Preferences.sheetCornerRadius,
+        sheetCellStyles: CourierStyles.Cell = CourierStyles.Cell()
     ) {
         self.sheetTitleFont = sheetTitleFont
         self.sheetSettingStyles = sheetSettingStyles
         self.sheetCornerRadius = sheetCornerRadius
+        self.sheetCellStyles = sheetCellStyles
     }
     
     // MARK: Defaults

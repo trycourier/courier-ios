@@ -75,6 +75,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     private func setup() {
         addTitleBar()
         addTableView()
+        reloadViews()
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
@@ -98,6 +99,11 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
             }
         }
         
+        // Table theme
+        tableView.separatorStyle = self.theme.sheetCellStyles.separatorStyle
+        tableView.separatorInset = self.theme.sheetCellStyles.separatorInsets
+        tableView.separatorColor = self.theme.sheetCellStyles.separatorColor
+        
     }
     
     private func addTitleBar() {
@@ -107,7 +113,6 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
 
         // Title
         let navItem = UINavigationItem(title: title)
-        reloadViews()
         
         // Close button
         let closeButton = UIButton(type: .close)

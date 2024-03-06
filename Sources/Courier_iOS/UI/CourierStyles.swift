@@ -56,22 +56,6 @@ public enum CourierStyles {
             
         }
         
-        public class CellStyle: NSObject {
-            
-            internal let separatorStyle: UITableViewCell.SeparatorStyle
-            internal let separatorInsets: UIEdgeInsets
-            internal let separatorColor: UIColor?
-            internal let selectionStyle: UITableViewCell.SelectionStyle
-            
-            public init(separatorStyle: UITableViewCell.SeparatorStyle = .singleLine, separatorInsets: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0), separatorColor: UIColor? = nil, selectionStyle: UITableViewCell.SelectionStyle = .default) {
-                self.separatorStyle = separatorStyle
-                self.separatorInsets = separatorInsets
-                self.separatorColor = separatorColor
-                self.selectionStyle = selectionStyle
-            }
-            
-        }
-        
         // MARK: Indicator
         
         public enum UnreadIndicator {
@@ -107,6 +91,24 @@ public enum CourierStyles {
                 self.toggleColor = toggleColor
             }
             
+        }
+        
+    }
+    
+    // MARK: Cell
+    
+    public class Cell: NSObject {
+        
+        internal let separatorStyle: UITableViewCell.SeparatorStyle
+        internal let separatorInsets: UIEdgeInsets
+        internal let separatorColor: UIColor?
+        internal let selectionStyle: UITableViewCell.SelectionStyle
+        
+        public init(separatorStyle: UITableViewCell.SeparatorStyle = .singleLine, separatorInsets: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0), separatorColor: UIColor? = nil, selectionStyle: UITableViewCell.SelectionStyle = .default) {
+            self.separatorStyle = separatorStyle
+            self.separatorInsets = separatorInsets
+            self.separatorColor = separatorColor
+            self.selectionStyle = selectionStyle
         }
         
     }

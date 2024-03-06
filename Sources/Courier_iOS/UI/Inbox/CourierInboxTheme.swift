@@ -18,7 +18,7 @@ import UIKit
     internal let timeStyle: CourierStyles.Inbox.TextStyle
     internal let bodyStyle: CourierStyles.Inbox.TextStyle
     internal let buttonStyle: CourierStyles.Inbox.ButtonStyle
-    internal let cellStyle: CourierStyles.Inbox.CellStyle
+    internal let cellStyle: CourierStyles.Cell
     internal let infoViewStyle: CourierStyles.Inbox.InfoViewStyle
     
     // MARK: Init
@@ -60,7 +60,7 @@ import UIKit
             )
         ),
         buttonStyle: CourierStyles.Inbox.ButtonStyle = CourierStyles.Inbox.ButtonStyle(),
-        cellStyle:  CourierStyles.Inbox.CellStyle = CourierStyles.Inbox.CellStyle(),
+        cellStyle:  CourierStyles.Cell = CourierStyles.Cell(),
         infoViewStyle: CourierStyles.Inbox.InfoViewStyle = CourierStyles.Inbox.InfoViewStyle(
             font: CourierStyles.Font(
                 font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
