@@ -15,20 +15,23 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
     
     var topics: [CourierUserPreferencesTopic] = []
     
+    private let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
+    private let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
+    
     private lazy var courierPreferences = {
         return CourierPreferences(
             availableChannels: [.push, .sms, .email],
             lightTheme: CourierPreferencesTheme(
                 sheetTitleFont: CourierStyles.Font(
                     font: UIFont(name: "Avenir Black", size: 20)!,
-                    color: UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
+                    color: textColor
                 ),
                 sheetSettingStyles: CourierStyles.Preferences.SettingStyles(
                     font: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: .red
+                        color: textColor
                     ),
-                    toggleColor: .red
+                    toggleColor: secondaryColor
                 )
             )
         )

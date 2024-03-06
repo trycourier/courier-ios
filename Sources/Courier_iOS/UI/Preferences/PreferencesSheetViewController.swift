@@ -58,7 +58,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         // Create the sheet controller
         sheetPresentationController?.delegate = self
         sheetPresentationController?.prefersGrabberVisible = true
-        sheetPresentationController?.preferredCornerRadius = Theme.Preferences.sheetCornerRadius
+        sheetPresentationController?.preferredCornerRadius = self.theme.sheetCornerRadius
         
         // Add the sheet to the view
         sheet.translatesAutoresizingMaskIntoConstraints = false

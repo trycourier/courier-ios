@@ -163,6 +163,23 @@ extension CourierUserPreferencesTopic {
         }
     }
     
+    var title: String {
+        switch self {
+        case .directMessage:
+            return "Inbox"
+        case .email:
+            return "Email"
+        case .push:
+            return "Push"
+        case .sms:
+            return "SMS"
+        case .webhook:
+            return "Webhook"
+        case .unknown:
+            return "Unknown"
+        }
+    }
+    
     public static var allCases: [CourierUserPreferencesChannel] {
         return [.push, .sms, .email, .directMessage, .webhook]
     }

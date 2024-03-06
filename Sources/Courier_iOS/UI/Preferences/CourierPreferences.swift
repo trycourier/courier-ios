@@ -215,7 +215,7 @@ import UIKit
             }
             
             return CourierSheetItem(
-                title: channel.rawValue,
+                title: channel.title,
                 isOn: isOn,
                 isDisabled: isRequired,
                 data: channel
