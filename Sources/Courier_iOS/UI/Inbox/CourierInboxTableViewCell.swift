@@ -217,7 +217,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // Create and add a button for each action
         actions.forEach { action in
             
-            let actionButton = CourierInboxActionButton(
+            let actionButton = CourierActionButton(
                 isRead: self.inboxMessage?.isRead ?? true,
                 inboxAction: action,
                 theme: theme,

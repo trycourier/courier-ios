@@ -38,12 +38,11 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         return stackView
     }()
     
-    let editButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Edit", for: .normal)
+    let editButton: CourierActionButton = {
+        let button = CourierActionButton(onClick: {
+            print("PKL")
+        })
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .green
-        button.titleLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         return button
     }()
     
@@ -105,6 +104,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
+        self.editButton.setPreferencesTheme(theme, title: "Edit")
         self.selectionStyle = theme.topicCellStyles.selectionStyle
         self.titleLabel.font = theme.topicTitleFont.font
         self.titleLabel.textColor = theme.topicTitleFont.color

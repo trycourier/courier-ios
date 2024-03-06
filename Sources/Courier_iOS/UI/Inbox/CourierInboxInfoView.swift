@@ -13,8 +13,8 @@ internal class CourierInboxInfoView: UIView {
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let buttonContainer = UIView()
-    private lazy var actionButton: CourierInboxActionButton = {
-        CourierInboxActionButton { [weak self] in
+    private lazy var actionButton: CourierActionButton = {
+        CourierActionButton { [weak self] in
             self?.onButtonClick?()
         }
     }()
@@ -112,7 +112,7 @@ internal class CourierInboxInfoView: UIView {
     internal func setTheme(_ theme: CourierInboxTheme) {
         titleLabel.font = theme.infoViewStyle.font.font
         titleLabel.textColor = theme.infoViewStyle.font.color
-        actionButton.setInfoButtonTheme(theme)
+        actionButton.setInfoButtonInboxTheme(theme)
     }
     
 }

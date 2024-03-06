@@ -1,6 +1,6 @@
 //
-//  CourierInboxActionButton.swift
-//  
+//  CourierActionButton.swift
+//
 //
 //  Created by https://github.com/mikemilla on 3/13/23.
 //
@@ -8,7 +8,7 @@
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-internal class CourierInboxActionButton: UIButton {
+internal class CourierActionButton: UIButton {
     
     private let inboxAction: InboxAction?
     private let actionClick: ((InboxAction) -> Void)?
@@ -30,7 +30,7 @@ internal class CourierInboxActionButton: UIButton {
         
         setTitle(inboxAction.content ?? "Action", for: .normal)
         addTarget(self, action: #selector(onButtonClick), for: .touchUpInside)
-        setActionButtonTheme(theme, isRead: isRead)
+        setActionInboxTheme(theme, isRead: isRead)
         
     }
     
@@ -67,7 +67,21 @@ internal class CourierInboxActionButton: UIButton {
         onClick?()
     }
     
-    internal func setInfoButtonTheme(_ theme: CourierInboxTheme) {
+    internal func setPreferencesTheme(_ theme: CourierPreferencesTheme, title: String) {
+        
+        setTitle(title, for: .normal)
+        
+        let padding = (Theme.margin / 2) * 1.5
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
+        titleLabel?.font = theme.topicButton.font.font
+        titleLabel?.textColor = theme.topicButton.font.color
+        setTitleColor(theme.topicButton.font.color, for: .normal)
+        backgroundColor = theme.topicButton.backgroundColor
+        layer.cornerRadius = theme.topicButton.cornerRadius
+        
+    }
+    
+    internal func setInfoButtonInboxTheme(_ theme: CourierInboxTheme) {
         
         let padding = (Theme.margin / 2) * 1.5
         contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
@@ -79,7 +93,7 @@ internal class CourierInboxActionButton: UIButton {
         
     }
     
-    internal func setActionButtonTheme(_ theme: CourierInboxTheme, isRead: Bool) {
+    internal func setActionInboxTheme(_ theme: CourierInboxTheme, isRead: Bool) {
         
         let padding = (Theme.margin / 2) * 1.5
         contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
