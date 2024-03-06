@@ -16,7 +16,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentHuggingPriority(.required, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
         return label
     }()
     
@@ -26,7 +25,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.setContentHuggingPriority(.required, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
         return label
     }()
     
@@ -35,6 +33,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         button.setTitle("Edit", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .red // Setting background color to red
+        button.setContentCompressionResistancePriority(.required, for: .horizontal)
         return button
     }()
     
