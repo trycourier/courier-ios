@@ -33,7 +33,8 @@ import UIKit
             color: .label
         ),
         topicButton: CourierStyles.Button = CourierStyles.Button(
-            font: CourierStyles.Font(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white)
+            font: CourierStyles.Font(font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), color: .label),
+            backgroundColor: .systemGray
         ),
         sheetTitleFont: CourierStyles.Font = CourierStyles.Font(
             font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
