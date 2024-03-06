@@ -70,7 +70,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Theme.margin),
-            editButton.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: Theme.margin),
+            stackView.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
             editButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             editButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
