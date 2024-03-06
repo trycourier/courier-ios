@@ -35,12 +35,20 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         return button
     }()
     
-    let stackView: UIStackView = {
+    let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = Theme.margin
+        stackView.backgroundColor = .red
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    let verticalStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Theme.margin
         stackView.backgroundColor = .cyan
-        stackView.distribution = .fillProportionally
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -56,25 +64,25 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     }
     
     private func setupViews() {
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(subtitleLabel)
-        contentView.addSubview(stackView)
-        contentView.addSubview(editButton)
+        verticalStackView.addArrangedSubview(titleLabel)
+        verticalStackView.addArrangedSubview(subtitleLabel)
+        
+        contentStackView.addArrangedSubview(verticalStackView)
+        contentStackView.addArrangedSubview(editButton)
+        
+        contentView.addSubview(contentStackView)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
-            stackView.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
-            editButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
-            editButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
+            contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
+            contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin)
         ])
     }
     
     func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel]) {
-        
         var subTitle = ""
                 
         if (topic.status == .optedOut) {
@@ -89,7 +97,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         
         titleLabel.text = topic.topicName
         subtitleLabel.text = subTitle
-        
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
