@@ -34,6 +34,14 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         return button
     }()
     
+    let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -45,19 +53,18 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     }
     
     private func setupViews() {
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(subtitleLabel)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(subtitleLabel)
+        contentView.addSubview(stackView)
         contentView.addSubview(editButton)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
-            titleLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
-            subtitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Theme.margin / 2),
-            subtitleLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
+            stackView.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
             editButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             editButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
