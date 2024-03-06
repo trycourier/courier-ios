@@ -150,7 +150,22 @@ import UIKit
     }
     
     private func reloadViews() {
+        
         sheetViewController?.setTheme(theme: self.theme)
+        
+        // Table theme
+        tableView.separatorStyle = self.theme.topicCellStyles.separatorStyle
+        tableView.separatorInset = self.theme.topicCellStyles.separatorInsets
+        tableView.separatorColor = self.theme.topicCellStyles.separatorColor
+        
+        // Update all cells
+        for row in 0..<tableView.numberOfRows(inSection: 0) {
+            let indexPath = IndexPath(row: row, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) as? CourierPreferenceTopicCell {
+                cell.setTheme(theme: self.theme)
+            }
+        }
+        
     }
     
     @objc private func onRefresh() {
@@ -170,6 +185,7 @@ import UIKit
             topic: topic, 
             availableChannels: self.availableChannels
         )
+        cell.setTheme(theme: self.theme)
 
         return cell
         

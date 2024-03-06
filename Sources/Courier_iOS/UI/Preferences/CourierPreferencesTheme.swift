@@ -11,6 +11,9 @@ import UIKit
     
     // MARK: Styling
     
+    internal let topicCellStyles: CourierStyles.Cell
+    internal let topicTitleFont: CourierStyles.Font
+    internal let topicSubtitleFont: CourierStyles.Font
     internal let sheetTitleFont: CourierStyles.Font
     internal let sheetSettingStyles: CourierStyles.Preferences.SettingStyles
     internal let sheetCornerRadius: CGFloat
@@ -19,6 +22,15 @@ import UIKit
     // MARK: Init
     
     public init(
+        topicCellStyles: CourierStyles.Cell = CourierStyles.Cell(),
+        topicTitleFont: CourierStyles.Font = CourierStyles.Font(
+            font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+            color: .label
+        ),
+        topicSubtitleFont: CourierStyles.Font = CourierStyles.Font(
+            font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+            color: .label
+        ),
         sheetTitleFont: CourierStyles.Font = CourierStyles.Font(
             font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
             color: .label
@@ -27,6 +39,9 @@ import UIKit
         sheetCornerRadius: CGFloat = Theme.Preferences.sheetCornerRadius,
         sheetCellStyles: CourierStyles.Cell = CourierStyles.Cell()
     ) {
+        self.topicCellStyles = topicCellStyles
+        self.topicTitleFont = topicTitleFont
+        self.topicSubtitleFont = topicSubtitleFont
         self.sheetTitleFont = sheetTitleFont
         self.sheetSettingStyles = sheetSettingStyles
         self.sheetCornerRadius = sheetCornerRadius
