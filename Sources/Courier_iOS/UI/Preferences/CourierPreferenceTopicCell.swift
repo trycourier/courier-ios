@@ -26,6 +26,16 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         return label
     }()
     
+    let verticalStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = Theme.margin
+        stackView.backgroundColor = .cyan
+        stackView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     let editButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Edit", for: .normal)
@@ -40,15 +50,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.spacing = Theme.margin
         stackView.backgroundColor = .red
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    let verticalStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = Theme.margin
-        stackView.backgroundColor = .cyan
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
