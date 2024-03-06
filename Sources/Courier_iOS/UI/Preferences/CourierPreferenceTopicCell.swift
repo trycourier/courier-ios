@@ -55,7 +55,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             titleLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
-            
             subtitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Theme.margin / 2),
             subtitleLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
