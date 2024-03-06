@@ -202,7 +202,7 @@ import UIKit
         
         var items = [CourierSheetItem]()
         
-        items = CourierUserPreferencesChannel.allCases.map { channel in
+        items = availableChannels.map { channel in
             
             let isRequired = topic.status == .required
             
