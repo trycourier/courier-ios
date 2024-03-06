@@ -32,6 +32,10 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
                         color: textColor
                     ),
                     toggleColor: secondaryColor
+                ),
+                sheetCornerRadius: 0,
+                sheetCellStyles: CourierStyles.Cell(
+                    separatorStyle: .none
                 )
             )
         )

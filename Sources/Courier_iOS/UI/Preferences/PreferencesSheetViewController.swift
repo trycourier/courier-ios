@@ -47,6 +47,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     func setTheme(theme: CourierPreferencesTheme) {
         self.theme = theme
         self.sheet.setTheme(theme: theme)
+        sheetPresentationController?.preferredCornerRadius = self.theme.sheetCornerRadius
     }
     
     override func viewDidLoad() {

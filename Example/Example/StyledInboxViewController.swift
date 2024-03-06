@@ -71,7 +71,7 @@ class StyledInboxViewController: UIViewController {
                         cornerRadius: 100
                     )
                 ),
-                cellStyle: CourierStyles.Inbox.CellStyle(
+                cellStyle: CourierStyles.Cell(
                     separatorStyle: .singleLine,
                     separatorInsets: .zero
                 ),
@@ -140,7 +140,7 @@ class StyledInboxViewController: UIViewController {
                         cornerRadius: 0
                     )
                 ),
-                cellStyle: CourierStyles.Inbox.CellStyle(
+                cellStyle: CourierStyles.Cell(
                     separatorStyle: .none
                 ),
                 infoViewStyle: CourierStyles.Inbox.InfoViewStyle(
