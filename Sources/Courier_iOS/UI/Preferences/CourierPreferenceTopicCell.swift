@@ -44,6 +44,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = Theme.margin / 2
         stackView.backgroundColor = .green // Setting background color to green
+        stackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return stackView
     }()
     
