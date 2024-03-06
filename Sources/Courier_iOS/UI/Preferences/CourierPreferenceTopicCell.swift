@@ -15,6 +15,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -23,6 +24,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -51,6 +53,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         stackView.spacing = Theme.margin
         stackView.backgroundColor = .red
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .fillProportionally
         return stackView
     }()
     
