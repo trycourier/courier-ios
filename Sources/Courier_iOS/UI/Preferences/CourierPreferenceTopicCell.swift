@@ -40,6 +40,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.spacing = Theme.margin
         stackView.backgroundColor = .cyan
+        stackView.distribution = .fillProportionally
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
