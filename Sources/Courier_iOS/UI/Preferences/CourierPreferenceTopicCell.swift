@@ -15,16 +15,14 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }()
     
     let subtitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.setContentHuggingPriority(.required, for: .vertical)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -32,19 +30,8 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("Edit", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .red // Setting background color to red
-        button.setContentCompressionResistancePriority(.required, for: .horizontal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
         return button
-    }()
-    
-    let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = Theme.margin / 2
-        stackView.backgroundColor = .green // Setting background color to green
-        stackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        return stackView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -58,21 +45,22 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     }
     
     private func setupViews() {
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(subtitleLabel)
-        
-        contentView.addSubview(stackView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(subtitleLabel)
         contentView.addSubview(editButton)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Theme.margin),
-            stackView.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
+            titleLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
+            
+            subtitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Theme.margin / 2),
+            subtitleLabel.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -Theme.margin),
             editButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
-            editButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            editButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     
