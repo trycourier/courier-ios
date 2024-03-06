@@ -31,7 +31,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     let verticalStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = Theme.margin / 2
+        stackView.spacing = Theme.margin / 4
         stackView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -81,7 +81,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
-            editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 100),
+            editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 72),
             editButton.heightAnchor.constraint(equalToConstant: Theme.actionButtonMaxHeight)
         ])
     }
