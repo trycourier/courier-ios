@@ -31,7 +31,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     let verticalStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = Theme.margin
+        stackView.spacing = Theme.margin / 2
         stackView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -48,6 +48,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     let contentStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
+        stackView.alignment = .center
         stackView.spacing = Theme.margin
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fillProportionally
