@@ -34,6 +34,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("Edit", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .red // Setting background color to red
         return button
     }()
     
@@ -42,6 +43,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.spacing = Theme.margin / 2
+        stackView.backgroundColor = .green // Setting background color to green
         return stackView
     }()
     
@@ -70,7 +72,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -Theme.margin),
             editButton.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: Theme.margin),
             editButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
-            editButton.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
+            editButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
     }
     
