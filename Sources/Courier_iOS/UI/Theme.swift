@@ -10,6 +10,7 @@ import UIKit
 public enum Theme {
     
     public static let margin: CGFloat = 16.0
+    public static let actionButtonMaxHeight: CGFloat = 34.33
     
     public enum Bar {
         static let barHeight: CGFloat = 48.0
@@ -20,7 +21,6 @@ public enum Theme {
         static let indicatorDotSize: CGFloat = 12.0
         static let lightBrandColor: UIColor = UIColor("73819B") ?? .black
         static let darkBrandColor: UIColor = .white
-        static let actionButtonMaxHeight: CGFloat = 34.33
     }
     
     public enum Preferences {

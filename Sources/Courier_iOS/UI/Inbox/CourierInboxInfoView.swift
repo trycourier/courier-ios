@@ -75,7 +75,7 @@ internal class CourierInboxInfoView: UIView {
         buttonContainer.addSubview(actionButton)
         
         NSLayoutConstraint.activate([
-            actionButton.heightAnchor.constraint(equalToConstant: Theme.Inbox.actionButtonMaxHeight),
+            actionButton.heightAnchor.constraint(equalToConstant: Theme.actionButtonMaxHeight),
             actionButton.centerXAnchor.constraint(equalTo: buttonContainer.centerXAnchor),
             actionButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
             actionButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),

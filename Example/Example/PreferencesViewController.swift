@@ -22,6 +22,25 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         return CourierPreferences(
             availableChannels: [.push, .sms, .email],
             lightTheme: CourierPreferencesTheme(
+                topicCellStyles: CourierStyles.Cell(
+                    separatorStyle: .none
+                ),
+                topicTitleFont: CourierStyles.Font(
+                    font: UIFont(name: "Avenir Medium", size: 18)!,
+                    color: textColor
+                ),
+                topicSubtitleFont: CourierStyles.Font(
+                    font: UIFont(name: "Avenir Medium", size: 14)!,
+                    color: .gray
+                ),
+                topicButton: CourierStyles.Button(
+                    font: CourierStyles.Font(
+                        font: UIFont(name: "Avenir Medium", size: 16)!,
+                        color: textColor
+                    ),
+                    backgroundColor: secondaryColor,
+                    cornerRadius: 0
+                ),
                 sheetTitleFont: CourierStyles.Font(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: textColor
