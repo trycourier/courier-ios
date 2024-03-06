@@ -166,15 +166,15 @@ extension CourierUserPreferencesTopic {
     var title: String {
         switch self {
         case .directMessage:
-            return "Inbox"
+            return "In App Messages"
         case .email:
-            return "Email"
+            return "Emails"
         case .push:
-            return "Push"
+            return "Push Notifications"
         case .sms:
-            return "SMS"
+            return "Text Messages"
         case .webhook:
-            return "Webhook"
+            return "Webhooks"
         case .unknown:
             return "Unknown"
         }
