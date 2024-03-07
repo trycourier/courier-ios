@@ -29,12 +29,12 @@ import UIKit
             color: .label
         ),
         topicSubtitleFont: CourierStyles.Font = CourierStyles.Font(
-            font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+            font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
             color: .label
         ),
         topicButton: CourierStyles.Button = CourierStyles.Button(
-            font: CourierStyles.Font(font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), color: .darkGray),
-            backgroundColor: Theme.Preferences.actionButtonColor,
+            font: CourierStyles.Font(font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), color: .label),
+            backgroundColor: .systemBackground,
             cornerRadius: Theme.Preferences.actionButtonCornerRadius
         ),
         sheetTitleFont: CourierStyles.Font = CourierStyles.Font(
