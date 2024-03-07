@@ -113,16 +113,23 @@ import UIKit
     
     private func setup() {
         
+        backgroundColor = .red
+        
+        [tableView, courierBar, infoView, loadingIndicator].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
         // Set state
         state = .loading
         
-        // Refreshes theme
-        traitCollectionDidChange(nil)
-        
+        // Add the views
         addTableView()
         addLoadingIndicator()
         addInfoView()
         addCourierBar()
+        
+        // Refreshes theme
+        traitCollectionDidChange(nil)
         
         refresh()
         
@@ -216,7 +223,6 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
 
         // Add the refresh control
