@@ -68,7 +68,7 @@ import UIKit
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
                 self.infoView.isHidden = false
-                self.infoView.updateView(state)
+                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
             case .content:
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = false
@@ -77,7 +77,7 @@ import UIKit
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
                 self.infoView.isHidden = false
-                self.infoView.updateView(state)
+                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
             }
             
             // Scroll to top if needed

@@ -89,19 +89,19 @@ internal class CourierInfoView: UIView {
         onButtonClick?()
     }
     
-    internal func updateView(_ state: State) {
+    internal func updateView(_ state: State, actionTitle: String, contentTitle: String) {
         
         switch (state) {
         case .error(let error):
             titleLabel.isHidden = false
             buttonContainer.isHidden = false
-            actionButton.title = "Retry"
+            actionButton.title = actionTitle
             let e = CourierError(from: error)
             titleLabel.text = e.message
         case .empty:
             titleLabel.isHidden = false
             buttonContainer.isHidden = true
-            titleLabel.text = "No messages found"
+            titleLabel.text = contentTitle
         default:
             titleLabel.isHidden = true
             buttonContainer.isHidden = true

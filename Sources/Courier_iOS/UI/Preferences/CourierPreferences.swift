@@ -54,7 +54,7 @@ import UIKit
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
                 self.infoView.isHidden = false
-                self.infoView.updateView(state)
+                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No preferences found")
             case .content:
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = false
@@ -63,7 +63,7 @@ import UIKit
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
                 self.infoView.isHidden = false
-                self.infoView.updateView(state)
+                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No preferences found")
             }
             
             // Scroll to top if needed
@@ -134,8 +134,18 @@ import UIKit
             
             refreshControl.beginRefreshing()
             
-            let preferences = try await Courier.shared.getUserPreferences()
-            topics = preferences.items
+            do {
+                
+                let preferences = try await Courier.shared.getUserPreferences()
+                topics = preferences.items
+                
+                state = .content
+                
+            } catch {
+                
+                state = .error(error)
+                
+            }
             
             tableView.reloadData()
             refreshControl.endRefreshing()
