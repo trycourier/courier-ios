@@ -138,8 +138,9 @@ import UIKit
                 
                 let preferences = try await Courier.shared.getUserPreferences()
                 topics = preferences.items
+                tableView.reloadData()
                 
-                state = .content
+                state = topics.isEmpty ? .empty : .content
                 
             } catch {
                 
@@ -147,7 +148,6 @@ import UIKit
                 
             }
             
-            tableView.reloadData()
             refreshControl.endRefreshing()
             
             
