@@ -115,6 +115,8 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         self.subtitleLabel.font = theme.topicSubtitleFont.font
         self.subtitleLabel.textColor = theme.topicSubtitleFont.color
         self.editButton.setPreferencesTheme(theme, title: "Edit")
+        self.layoutIfNeeded()
+        self.layoutSubviews()
     }
     
 }
