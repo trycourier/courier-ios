@@ -7,6 +7,11 @@
 
 import UIKit
 
+// TODO:
+// 1. Fallbacks for business tier
+// 2. Brands
+// 3. UI view heirachy stuff
+
 @available(iOS 15.0, *)
 @available(iOSApplicationExtension, unavailable)
 @objc open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource, UISheetPresentationControllerDelegate {
@@ -293,6 +298,10 @@ import UIKit
         tableView.separatorStyle = self.theme.topicCellStyles.separatorStyle
         tableView.separatorInset = self.theme.topicCellStyles.separatorInsets
         tableView.separatorColor = self.theme.topicCellStyles.separatorColor
+        
+        // Loading indicators
+        tableView.refreshControl?.tintColor = self.theme.loadingColor
+        loadingIndicator.color = self.theme.loadingColor
         
         // Update all cells
         for row in 0..<tableView.numberOfRows(inSection: 0) {

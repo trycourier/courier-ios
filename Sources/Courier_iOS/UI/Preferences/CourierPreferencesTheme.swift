@@ -63,4 +63,20 @@ import UIKit
     @objc public static let defaultDark = CourierPreferencesTheme()
     @objc public static let defaultLight = CourierPreferencesTheme()
     
+    // MARK: Brand
+    
+    internal var brand: CourierBrand? = nil
+    
+    internal var loadingColor: UIColor? {
+        get {
+            if let customColor = loadingIndicatorColor {
+                return customColor
+            } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+                return brandColor
+            } else {
+                return nil
+            }
+        }
+    }
+    
 }
