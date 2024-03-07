@@ -83,9 +83,10 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
-            editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 72),
+//            editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 72),
             editButton.heightAnchor.constraint(equalToConstant: Theme.Preferences.actionButtonMaxHeight)
         ])
+        editButton.sizeToFit()
     }
     
     func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel], onEditButtonClick: @escaping () -> Void) {

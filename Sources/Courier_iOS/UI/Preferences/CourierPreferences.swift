@@ -113,8 +113,6 @@ import UIKit
     
     private func setup() {
         
-        backgroundColor = .red
-        
         [tableView, courierBar, infoView, loadingIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
