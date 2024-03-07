@@ -303,6 +303,8 @@ import UIKit
     
     private func reloadViews() {
         
+        courierBar.setTheme(theme)
+        
         sheetViewController?.setTheme(theme: self.theme)
         
         // Table theme

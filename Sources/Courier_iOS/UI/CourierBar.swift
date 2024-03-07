@@ -141,6 +141,19 @@ internal class CourierBar: UIView {
         
     }
     
+    internal func setTheme(_ theme: CourierPreferencesTheme) {
+        
+        border.backgroundColor = theme.topicCellStyles.separatorColor ?? .separator
+        
+        if let showFooter = theme.brand?.settings?.inapp?.showCourierFooter {
+            isHidden = !showFooter
+            return
+        }
+        
+        isHidden = false
+        
+    }
+    
     internal func setColors(with color: UIColor?) {
         
         let superViewBackground = color ?? .systemBackground
