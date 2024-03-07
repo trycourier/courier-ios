@@ -233,6 +233,8 @@ import UIKit
     
     private func addTableView() {
         
+        tableView.backgroundColor = .systemBackground
+        
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
@@ -326,13 +328,10 @@ import UIKit
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        print("Section count: \(preferences.keys.count)")
         return preferences.keys.count
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("Items in section count: \(getTopicsForSection(at: section).count)")
-        print(getTopicsForSection(at: section).count)
         return getTopicsForSection(at: section).count
     }
     
