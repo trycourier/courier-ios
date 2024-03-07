@@ -83,7 +83,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
-//            editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 72),
+            editButton.widthAnchor.constraint(equalToConstant: editButton.intrinsicContentSize.width),
             editButton.heightAnchor.constraint(equalToConstant: Theme.Preferences.actionButtonMaxHeight)
         ])
     }
@@ -115,7 +115,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         self.subtitleLabel.font = theme.topicSubtitleFont.font
         self.subtitleLabel.textColor = theme.topicSubtitleFont.color
         self.editButton.setPreferencesTheme(theme, title: "Edit")
-        self.editButton.sizeToFit()
     }
     
 }
