@@ -89,7 +89,7 @@ internal class CourierInfoView: UIView {
         onButtonClick?()
     }
     
-    internal func updateView(_ state: CourierInbox.State) {
+    internal func updateView(_ state: State) {
         
         switch (state) {
         case .error(let error):
