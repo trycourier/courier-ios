@@ -239,8 +239,8 @@ import UIKit
         tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
         
-        // Disable section scroll
-        tableView.sectionHeaderTopPadding = 0
+        // Disable styles
+        tableView.backgroundView = nil
 
         // Add the refresh control
         tableView.refreshControl = refreshControl
