@@ -42,7 +42,7 @@ import UIKit
     
     @objc public let tableView = UITableView()
     private let courierBar = CourierBar()
-    private let infoView = CourierInboxInfoView()
+    private let infoView = CourierInfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
     
     // MARK: Constraints
@@ -54,24 +54,6 @@ import UIKit
     private var authListener: CourierAuthenticationListener? = nil
     
     // MARK: State
-    
-    enum State {
-        
-        case loading
-        case error(_ error: Error)
-        case content
-        case empty
-        
-        func error() -> Error? {
-            switch self {
-            case .error(let value):
-                return value
-            default:
-                return nil
-            }
-        }
-        
-    }
     
     private var state: State = .loading {
         didSet {

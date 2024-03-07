@@ -1,6 +1,6 @@
 //
-//  CourierInboxInfoView.swift
-//  
+//  CourierInfoView.swift
+//
 //
 //  Created by https://github.com/mikemilla on 3/13/23.
 //
@@ -8,7 +8,7 @@
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-internal class CourierInboxInfoView: UIView {
+internal class CourierInfoView: UIView {
     
     private let stackView = UIStackView()
     private let titleLabel = UILabel()

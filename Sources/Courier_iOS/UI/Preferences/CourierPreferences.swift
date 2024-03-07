@@ -29,9 +29,50 @@ import UIKit
     // MARK: UI
     
     @objc public let tableView = UITableView()
+    private let infoView = CourierInfoView()
+    private let loadingIndicator = UIActivityIndicatorView(style: .large)
     private let refreshControl = UIRefreshControl()
     private let courierBar = CourierBar()
     private var sheetViewController: PreferencesSheetViewController?
+    
+    // MARK: Constraints
+    
+    private var infoViewY: NSLayoutConstraint? = nil
+    
+    // MARK: State
+    
+    private var state: State = .loading {
+        didSet {
+            
+            // Update UI
+            switch (state) {
+            case .loading:
+                self.loadingIndicator.startAnimating()
+                self.tableView.isHidden = true
+                self.infoView.isHidden = true
+            case .error:
+                self.loadingIndicator.stopAnimating()
+                self.tableView.isHidden = true
+                self.infoView.isHidden = false
+                self.infoView.updateView(state)
+            case .content:
+                self.loadingIndicator.stopAnimating()
+                self.tableView.isHidden = false
+                self.infoView.isHidden = true
+            case .empty:
+                self.loadingIndicator.stopAnimating()
+                self.tableView.isHidden = true
+                self.infoView.isHidden = false
+                self.infoView.updateView(state)
+            }
+            
+            // Scroll to top if needed
+            if ("\(oldValue)" != "\(state)") {
+                self.scrollToTop(animated: false)
+            }
+            
+        }
+    }
     
     public init(
         availableChannels: [CourierUserPreferencesChannel] = CourierUserPreferencesChannel.allCases,
@@ -72,11 +113,16 @@ import UIKit
     
     private func setup() {
         
+        // Set state
+        state = .loading
+        
         // Refreshes theme
         traitCollectionDidChange(nil)
         
-//        addCourierBar()
         addTableView()
+        addLoadingIndicator()
+        addInfoView()
+        addCourierBar()
         
         refresh()
         
@@ -99,7 +145,50 @@ import UIKit
         
     }
     
-    // TODO: This
+    @objc public func scrollToTop(animated: Bool) {
+        
+        if (self.topics.isEmpty) {
+            return
+        }
+        
+        self.tableView.scrollToRow(
+            at: IndexPath(row: 0, section: 0),
+            at: .top,
+            animated: animated
+        )
+        
+    }
+    
+    private func refreshCourierBarIfNeeded() {
+        
+        if (!courierBar.isHidden) {
+         
+            // Set the courier bar background color
+            courierBar.setColors(with: superview?.backgroundColor)
+            
+            // Add content inset
+            tableView.verticalScrollIndicatorInsets.bottom = Theme.Bar.barHeight
+            tableView.contentInset.bottom = Theme.Bar.barHeight
+            
+            // Update position
+            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - Theme.Bar.barHeight)
+            courierBar.layoutIfNeeded()
+            
+            // Update infoView position
+            infoViewY?.constant = -(Theme.Bar.barHeight / 2)
+            infoView.layoutIfNeeded()
+            
+        }
+        
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        refreshCourierBarIfNeeded()
+        
+    }
+    
     private func addCourierBar() {
         
         addSubview(courierBar)
@@ -131,6 +220,39 @@ import UIKit
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
+    }
+    
+    private func addLoadingIndicator() {
+        
+        loadingIndicator.hidesWhenStopped = true
+        
+        addSubview(loadingIndicator)
+        
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+        
+    }
+    
+    private func addInfoView() {
+        
+        // Refresh the inbox
+        infoView.onButtonClick = { [weak self] in
+            self?.state = .loading
+            self?.onRefresh()
+        }
+        
+        addSubview(infoView)
+        
+        infoViewY = infoView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        
+        NSLayoutConstraint.activate([
+            infoViewY!,
+            infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: (Theme.margin / 2)),
+            infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(Theme.margin / 2)),
         ])
         
     }

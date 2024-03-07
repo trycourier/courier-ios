@@ -26,23 +26,23 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
                     separatorStyle: .none
                 ),
                 topicTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
+                    font: UIFont(name: "Avenir Black", size: 18)!,
                     color: textColor
                 ),
                 topicSubtitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 14)!,
+                    font: UIFont(name: "Avenir Medium", size: 16)!,
                     color: .gray
                 ),
                 topicButton: CourierStyles.Button(
                     font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: textColor
+                        font: UIFont(name: "Avenir Medium", size: 16)!,
+                        color: .white
                     ),
                     backgroundColor: secondaryColor,
-                    cornerRadius: 0
+                    cornerRadius: 8
                 ),
                 sheetTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Black", size: 20)!,
+                    font: UIFont(name: "Avenir Black", size: 18)!,
                     color: textColor
                 ),
                 sheetSettingStyles: CourierStyles.Preferences.SettingStyles(
