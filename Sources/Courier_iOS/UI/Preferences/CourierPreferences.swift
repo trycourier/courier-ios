@@ -240,6 +240,7 @@ import UIKit
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
         
         // Disable styles
+        tableView.backgroundColor = .clear
         tableView.backgroundView = nil
 
         // Add the refresh control
