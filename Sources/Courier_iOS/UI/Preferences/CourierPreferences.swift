@@ -324,11 +324,14 @@ import UIKit
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
+        print("Section count: \(preferences.keys.count)")
         return preferences.keys.count
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Array(preferences.keys)[section].count
+        print("Items in section count: \(getTopicsForSection(at: section).count)")
+        print(getTopicsForSection(at: section).count)
+        return getTopicsForSection(at: section).count
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -351,13 +354,8 @@ import UIKit
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
-        
-        let sectionName = Array(preferences.keys)[indexPath.section]
-        guard let topicsForSection = preferences[sectionName] else {
-            return cell
-        }
 
-        let topic = topicsForSection[indexPath.row]
+        let topic = getTopicsForSection(at: indexPath.section)[indexPath.row]
         cell.configureCell(
             topic: topic, 
             availableChannels: self.availableChannels,
@@ -373,14 +371,8 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // Get the section
-        let sectionName = Array(preferences.keys)[indexPath.section]
-        guard let topicsForSection = preferences[sectionName] else {
-            return
-        }
-        
         // Present the sheet
-        let topic = topicsForSection[indexPath.row]
+        let topic = getTopicsForSection(at: indexPath.section)[indexPath.row]
         showSheet(topic: topic)
         
         // Deselect the cell
@@ -398,6 +390,11 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return Theme.Preferences.topicCellHeight
+    }
+    
+    private func getTopicsForSection(at index: Int) -> [CourierUserPreferencesTopic] {
+        let sectionName = Array(preferences.keys)[index]
+        return preferences[sectionName] ?? []
     }
     
     private func showSheet(topic: CourierUserPreferencesTopic) {
