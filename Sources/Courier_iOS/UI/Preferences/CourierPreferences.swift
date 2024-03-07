@@ -238,10 +238,6 @@ import UIKit
         tableView.dataSource = self
         tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
-        
-        // Disable styles
-        tableView.backgroundColor = .clear
-        tableView.backgroundView = nil
 
         // Add the refresh control
         tableView.refreshControl = refreshControl

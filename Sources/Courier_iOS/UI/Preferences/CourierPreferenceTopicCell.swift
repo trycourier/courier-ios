@@ -106,6 +106,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         
         titleLabel.text = topic.topicName
         subtitleLabel.text = subTitle
+        backgroundColor = .clear
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
