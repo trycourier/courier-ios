@@ -97,11 +97,11 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         if (topic.status == .optedOut) {
             subTitle = "Off"
         } else if (topic.status == .required && topic.customRouting.isEmpty) {
-            subTitle = "On: \(availableChannels.map { $0.rawValue }.joined(separator: ", "))"
+            subTitle = "On: \(availableChannels.map { $0.title }.joined(separator: ", "))"
         } else if (topic.status == .optedIn && topic.customRouting.isEmpty) {
-            subTitle = "On: \(availableChannels.map { $0.rawValue }.joined(separator: ", "))"
+            subTitle = "On: \(availableChannels.map { $0.title }.joined(separator: ", "))"
         } else {
-            subTitle = "On: \(topic.customRouting.map { $0.rawValue }.joined(separator: ", "))"
+            subTitle = "On: \(topic.customRouting.map { $0.title }.joined(separator: ", "))"
         }
         
         titleLabel.text = topic.topicName

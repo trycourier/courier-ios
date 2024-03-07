@@ -22,6 +22,7 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         return CourierPreferences(
             availableChannels: [.push, .sms, .email],
             lightTheme: CourierPreferencesTheme(
+                loadingIndicatorColor: secondaryColor,
                 topicCellStyles: CourierStyles.Cell(
                     separatorStyle: .none
                 ),
