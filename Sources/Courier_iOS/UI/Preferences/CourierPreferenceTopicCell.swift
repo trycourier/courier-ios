@@ -78,14 +78,19 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     }
     
     private func setupConstraints() {
+        
+        let widthConstraint = editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 68)
+        widthConstraint.priority = .defaultHigh
+        
         NSLayoutConstraint.activate([
             contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
-//            editButton.widthAnchor.constraint(equalToConstant: editButton.intrinsicContentSize.width),
+            widthConstraint,
             editButton.heightAnchor.constraint(equalToConstant: Theme.Preferences.actionButtonMaxHeight)
         ])
+        
     }
     
     func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel], onEditButtonClick: @escaping () -> Void) {
@@ -109,13 +114,12 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
+        self.editButton.setPreferencesTheme(theme, title: "Edit")
         self.selectionStyle = theme.topicCellStyles.selectionStyle
         self.titleLabel.font = theme.topicTitleFont.font
         self.titleLabel.textColor = theme.topicTitleFont.color
         self.subtitleLabel.font = theme.topicSubtitleFont.font
         self.subtitleLabel.textColor = theme.topicSubtitleFont.color
-        self.editButton.setPreferencesTheme(theme, title: "Edit")
-        self.editButton.layoutIfNeeded()
     }
     
 }
