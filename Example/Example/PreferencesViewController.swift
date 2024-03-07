@@ -35,10 +35,10 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
                 ),
                 topicButton: CourierStyles.Button(
                     font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 16)!,
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
                         color: textColor
                     ),
-                    backgroundColor: .lightGray,
+                    backgroundColor: secondaryColor,
                     cornerRadius: 0
                 ),
                 sheetTitleFont: CourierStyles.Font(

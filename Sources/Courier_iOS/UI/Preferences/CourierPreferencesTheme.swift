@@ -33,7 +33,7 @@ import UIKit
             color: .label
         ),
         topicButton: CourierStyles.Button = CourierStyles.Button(
-            font: CourierStyles.Font(font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), color: .label),
+            font: CourierStyles.Font(font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), color: .darkGray),
             backgroundColor: Theme.Preferences.actionButtonColor,
             cornerRadius: Theme.Preferences.actionButtonCornerRadius
         ),
