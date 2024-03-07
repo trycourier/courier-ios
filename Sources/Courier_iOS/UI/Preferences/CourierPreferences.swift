@@ -29,7 +29,7 @@ import UIKit
     
     // MARK: Data
     
-    private(set) var topics: [CourierUserPreferencesTopic] = []
+    private(set) var preferences: [String : [CourierUserPreferencesTopic]] = [:]
     
     // MARK: UI
     
@@ -146,11 +146,21 @@ import UIKit
             
             do {
                 
-                let preferences = try await Courier.shared.getUserPreferences()
-                topics = preferences.items
-                tableView.reloadData()
+                let prefs = try await Courier.shared.getUserPreferences()
                 
-                state = topics.isEmpty ? .empty : .content
+                // Map to section names
+                preferences = prefs.items.reduce(into: [:]) { result, item in
+                    if var array = result[item.sectionName] {
+                        array.append(item)
+                        result[item.sectionName] = array
+                    } else {
+                        result[item.sectionName] = [item]
+                    }
+                }
+                
+                // Reload the state
+                tableView.reloadData()
+                state = preferences.isEmpty ? .empty : .content
                 
             } catch {
                 
@@ -167,7 +177,7 @@ import UIKit
     
     @objc public func scrollToTop(animated: Bool) {
         
-        if (self.topics.isEmpty) {
+        if (self.preferences.isEmpty) {
             return
         }
         
@@ -226,6 +236,7 @@ import UIKit
         // Create the table view
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
 
         // Add the refresh control
@@ -304,12 +315,7 @@ import UIKit
         loadingIndicator.color = self.theme.loadingColor
         
         // Update all cells
-        for row in 0..<tableView.numberOfRows(inSection: 0) {
-            let indexPath = IndexPath(row: row, section: 0)
-            if let cell = tableView.cellForRow(at: indexPath) as? CourierPreferenceTopicCell {
-                cell.setTheme(theme: self.theme)
-            }
-        }
+        tableView.reloadData()
         
     }
     
@@ -317,15 +323,41 @@ import UIKit
         refresh()
     }
     
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return preferences.count
+    }
+    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return topics.count
+        return Array(preferences.keys)[section].count
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        guard !preferences.isEmpty else {
+            return nil
+        }
+        
+        let sectionName = Array(preferences.keys)[section]
+        
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CourierPreferenceSectionHeaderView.id) as! CourierPreferenceSectionHeaderView
+        
+        headerView.configureCell(title: sectionName)
+        headerView.setTheme(theme: self.theme)
+        
+        return headerView
+        
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
+        
+        let sectionName = Array(preferences.keys)[indexPath.section]
+        guard let topicsForSection = preferences[sectionName] else {
+            return cell
+        }
 
-        let topic = self.topics[indexPath.row]
+        let topic = topicsForSection[indexPath.row]
         cell.configureCell(
             topic: topic, 
             availableChannels: self.availableChannels,
@@ -341,13 +373,23 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // Get the section
+        let sectionName = Array(preferences.keys)[indexPath.section]
+        guard let topicsForSection = preferences[sectionName] else {
+            return
+        }
+        
         // Present the sheet
-        let topic = topics[indexPath.row]
+        let topic = topicsForSection[indexPath.row]
         showSheet(topic: topic)
         
         // Deselect the cell
         tableView.deselectRow(at: indexPath, animated: true)
         
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return Theme.Preferences.topicSectionHeight
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -469,19 +511,15 @@ import UIKit
     }
     
     private func updateTopic(topicId: String, newTopic: CourierUserPreferencesTopic) {
-            
-        if let index = self.topics.firstIndex(where: { $0.topicId == topicId }) {
-            
-            // Update the topic
-            self.topics[index] = newTopic
-            
-            // Run on main queue
-            DispatchQueue.main.async {
-                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+        DispatchQueue.main.async {
+            for (sectionName, topics) in self.preferences {
+                if let index = topics.firstIndex(where: { $0.topicId == topicId }) {
+                    self.preferences[sectionName]?[index] = newTopic
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: Array(self.preferences.keys).firstIndex(of: sectionName) ?? 0)], with: .fade)
+                    return
+                }
             }
-            
         }
-        
     }
     
 }
