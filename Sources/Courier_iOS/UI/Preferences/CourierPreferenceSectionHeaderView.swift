@@ -19,15 +19,15 @@ class CourierPreferenceSectionHeaderView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
+        
         contentView.addSubview(titleLabel)
         
-        // Add constraints for titleLabel
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,7 +39,8 @@ class CourierPreferenceSectionHeaderView: UITableViewHeaderFooterView {
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
-        
+        titleLabel.font = theme.sectionTitleFont.font
+        titleLabel.textColor = theme.sectionTitleFont.color
     }
     
 }

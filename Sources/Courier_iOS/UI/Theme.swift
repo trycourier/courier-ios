@@ -26,6 +26,7 @@ public enum Theme {
     public enum Preferences {
         static let topicSectionHeight: CGFloat = 56.0
         static let topicCellHeight: CGFloat = 74.0
+        public static let sectionTitleFontSize: CGFloat = 20.0
         static let settingsCellHeight: CGFloat = 64.0
         static let sheetNavBarHeight: CGFloat = 56.0
         static let actionButtonMaxHeight: CGFloat = 40

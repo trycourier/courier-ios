@@ -13,6 +13,7 @@ import UIKit
     
     private let loadingIndicatorColor: UIColor?
     internal let topicCellStyles: CourierStyles.Cell
+    internal let sectionTitleFont: CourierStyles.Font
     internal let topicTitleFont: CourierStyles.Font
     internal let topicSubtitleFont: CourierStyles.Font
     internal let topicButton: CourierStyles.Button
@@ -25,6 +26,10 @@ import UIKit
     
     public init(
         loadingIndicatorColor: UIColor? = nil,
+        sectionTitleFont: CourierStyles.Font = CourierStyles.Font(
+            font: UIFont.boldSystemFont(ofSize: Theme.Preferences.sectionTitleFontSize),
+            color: .label
+        ),
         topicCellStyles: CourierStyles.Cell = CourierStyles.Cell(),
         topicTitleFont: CourierStyles.Font = CourierStyles.Font(
             font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
@@ -49,6 +54,7 @@ import UIKit
     ) {
         self.loadingIndicatorColor = loadingIndicatorColor
         self.topicCellStyles = topicCellStyles
+        self.sectionTitleFont = sectionTitleFont
         self.topicTitleFont = topicTitleFont
         self.topicSubtitleFont = topicSubtitleFont
         self.topicButton = topicButton
