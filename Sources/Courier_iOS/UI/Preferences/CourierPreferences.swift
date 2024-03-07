@@ -324,7 +324,7 @@ import UIKit
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return preferences.count
+        return preferences.keys.count
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
