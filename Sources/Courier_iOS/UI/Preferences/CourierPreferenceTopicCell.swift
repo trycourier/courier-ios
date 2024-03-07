@@ -86,7 +86,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
 //            editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 72),
             editButton.heightAnchor.constraint(equalToConstant: Theme.Preferences.actionButtonMaxHeight)
         ])
-        editButton.sizeToFit()
     }
     
     func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel], onEditButtonClick: @escaping () -> Void) {
@@ -110,12 +109,13 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
-        self.editButton.setPreferencesTheme(theme, title: "Edit")
         self.selectionStyle = theme.topicCellStyles.selectionStyle
         self.titleLabel.font = theme.topicTitleFont.font
         self.titleLabel.textColor = theme.topicTitleFont.color
         self.subtitleLabel.font = theme.topicSubtitleFont.font
         self.subtitleLabel.textColor = theme.topicSubtitleFont.color
+        self.editButton.setPreferencesTheme(theme, title: "Edit")
+        self.editButton.sizeToFit()
     }
     
 }
