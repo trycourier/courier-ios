@@ -43,6 +43,8 @@ internal class CourierUserPreferencesTopicResponse: NSObject, Codable {
     @objc public let hasCustomRouting: Bool
     @objc public let topicId: String
     @objc public let topicName: String
+    @objc public let sectionName: String
+    @objc public let sectionId: String
     
     private enum CodingKeys: String, CodingKey {
         case defaultStatus = "default_status"
@@ -51,15 +53,19 @@ internal class CourierUserPreferencesTopicResponse: NSObject, Codable {
         case status = "status"
         case topicId = "topic_id"
         case topicName = "topic_name"
+        case sectionName = "section_name"
+        case sectionId = "section_id"
     }
     
-    @objc internal init(defaultStatus: String, hasCustomRouting: Bool, customRouting: [String], status: String, topicId: String, topicName: String) {
+    @objc internal init(defaultStatus: String, hasCustomRouting: Bool, customRouting: [String], status: String, topicId: String, topicName: String, sectionName: String, sectionId: String) {
         self.defaultStatus = CourierUserPreferencesStatus(rawValue: defaultStatus) ?? .unknown
         self.hasCustomRouting = hasCustomRouting
         self.customRouting = customRouting.map { CourierUserPreferencesChannel(rawValue: $0) ?? .unknown }
         self.status = CourierUserPreferencesStatus(rawValue: status) ?? .unknown
         self.topicId = topicId
         self.topicName = topicName
+        self.sectionName = sectionName
+        self.sectionId = sectionId
     }
     
 }

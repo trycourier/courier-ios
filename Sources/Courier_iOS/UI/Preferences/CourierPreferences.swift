@@ -430,7 +430,9 @@ import UIKit
                     customRouting: customRouting.map { $0.rawValue },
                     status: newStatus.rawValue,
                     topicId: topic.topicId,
-                    topicName: topic.topicName
+                    topicName: topic.topicName,
+                    sectionName: topic.sectionName,
+                    sectionId: topic.sectionId
                 )
                 
                 // Unchanged
