@@ -183,7 +183,10 @@ import UIKit
         let topic = self.topics[indexPath.row]
         cell.configureCell(
             topic: topic, 
-            availableChannels: self.availableChannels
+            availableChannels: self.availableChannels,
+            onEditButtonClick: {
+                self.tableView(tableView, didSelectRowAt: indexPath)
+            }
         )
         cell.setTheme(theme: self.theme)
 

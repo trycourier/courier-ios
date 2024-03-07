@@ -128,7 +128,7 @@ public enum CourierStyles {
             
             // This is the value of the container height / 2
             // This will create a perfect rounded corner
-            let fullRoundedCorner = Theme.actionButtonMaxHeight / 2
+            let fullRoundedCorner = Theme.Inbox.actionButtonMaxHeight / 2
             
             self.cornerRadius = max(0, min(fullRoundedCorner, cornerRadius))
             

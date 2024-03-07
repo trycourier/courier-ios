@@ -33,14 +33,14 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
                     font: UIFont(name: "Avenir Medium", size: 14)!,
                     color: .gray
                 ),
-//                topicButton: CourierStyles.Button(
-//                    font: CourierStyles.Font(
-//                        font: UIFont(name: "Avenir Medium", size: 16)!,
-//                        color: textColor
-//                    ),
-//                    backgroundColor: secondaryColor,
-//                    cornerRadius: 0
-//                ),
+                topicButton: CourierStyles.Button(
+                    font: CourierStyles.Font(
+                        font: UIFont(name: "Avenir Medium", size: 16)!,
+                        color: textColor
+                    ),
+                    backgroundColor: .lightGray,
+                    cornerRadius: 0
+                ),
                 sheetTitleFont: CourierStyles.Font(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: textColor

@@ -10,7 +10,6 @@ import UIKit
 public enum Theme {
     
     public static let margin: CGFloat = 16.0
-    public static let actionButtonMaxHeight: CGFloat = 34.33
     
     public enum Bar {
         static let barHeight: CGFloat = 48.0
@@ -21,11 +20,15 @@ public enum Theme {
         static let indicatorDotSize: CGFloat = 12.0
         static let lightBrandColor: UIColor = UIColor("73819B") ?? .black
         static let darkBrandColor: UIColor = .white
+        static let actionButtonMaxHeight: CGFloat = 34.33
     }
     
     public enum Preferences {
         static let settingsCellHeight: CGFloat = 64.0
         static let sheetNavBarHeight: CGFloat = 56.0
+        static let actionButtonMaxHeight: CGFloat = 40
+        public static let actionButtonCornerRadius: CGFloat = 16
+        public static let actionButtonColor: UIColor = UIColor("F2F2F7") ?? .lightGray
         public static let sheetCornerRadius: CGFloat = 16.0
     }
     

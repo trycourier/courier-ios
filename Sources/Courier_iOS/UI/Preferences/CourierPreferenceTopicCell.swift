@@ -37,9 +37,9 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         return stackView
     }()
     
-    let editButton: CourierActionButton = {
+    lazy var editButton: CourierActionButton = {
         let button = CourierActionButton(onClick: {
-            print("PKL")
+            self.onEditButtonClick?()
         })
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -54,6 +54,8 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         stackView.distribution = .fillProportionally
         return stackView
     }()
+    
+    private var onEditButtonClick: (() -> Void)? = nil
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -82,11 +84,14 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
             editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 72),
-            editButton.heightAnchor.constraint(equalToConstant: Theme.actionButtonMaxHeight)
+            editButton.heightAnchor.constraint(equalToConstant: Theme.Preferences.actionButtonMaxHeight)
         ])
     }
     
-    func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel]) {
+    func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel], onEditButtonClick: @escaping () -> Void) {
+        
+        self.onEditButtonClick = onEditButtonClick
+        
         var subTitle = ""
                 
         if (topic.status == .optedOut) {

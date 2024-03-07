@@ -34,7 +34,8 @@ import UIKit
         ),
         topicButton: CourierStyles.Button = CourierStyles.Button(
             font: CourierStyles.Font(font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), color: .label),
-            backgroundColor: .systemGray
+            backgroundColor: Theme.Preferences.actionButtonColor,
+            cornerRadius: Theme.Preferences.actionButtonCornerRadius
         ),
         sheetTitleFont: CourierStyles.Font = CourierStyles.Font(
             font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
