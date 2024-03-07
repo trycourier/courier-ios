@@ -33,7 +33,7 @@ import UIKit
     
     // MARK: UI
     
-    @objc public let tableView = UITableView()
+    @objc public let tableView = UITableView(frame: .zero, style: .grouped)
     private let infoView = CourierInfoView()
     private let loadingIndicator = UIActivityIndicatorView(style: .large)
     private let refreshControl = UIRefreshControl()
@@ -238,6 +238,9 @@ import UIKit
         tableView.dataSource = self
         tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
+        
+        // Disable section scroll
+        tableView.sectionHeaderTopPadding = 0
 
         // Add the refresh control
         tableView.refreshControl = refreshControl
