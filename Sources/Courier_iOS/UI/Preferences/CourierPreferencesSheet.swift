@@ -17,7 +17,14 @@ internal struct CourierSheetItem {
 @available(iOS 15.0, *)
 internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    private let tableView = UITableView()
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(CourierPreferenceSettingCell.self, forCellReuseIdentifier: CourierPreferenceSettingCell.id)
+        return tableView
+    }()
     
     lazy var navigationBar: UINavigationBar = {
         let navBar = UINavigationBar()
@@ -137,12 +144,6 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     }
     
     private func addTableView() {
-        
-        // Create the table view
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(CourierPreferenceSettingCell.self, forCellReuseIdentifier: CourierPreferenceSettingCell.id)
         
         addSubview(tableView)
         

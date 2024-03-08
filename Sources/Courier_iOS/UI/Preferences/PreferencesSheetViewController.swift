@@ -16,7 +16,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     let onDismiss: ([CourierSheetItem]) -> Void
     
     lazy var sheet: CourierPreferencesSheet = {
-        return CourierPreferencesSheet(
+        let sheet = CourierPreferencesSheet(
             theme: self.theme,
             title: self.topic.topicName,
             onSheetClose: {
@@ -30,6 +30,8 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
                 
             }
         )
+        sheet.translatesAutoresizingMaskIntoConstraints = false
+        return sheet
     }()
         
     init(theme: CourierPreferencesTheme, topic: CourierUserPreferencesTopic, items: [CourierSheetItem], onDismiss: @escaping ([CourierSheetItem]) -> Void) {
@@ -62,7 +64,6 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         sheetPresentationController?.preferredCornerRadius = self.theme.sheetCornerRadius
         
         // Add the sheet to the view
-        sheet.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(sheet)
         NSLayoutConstraint.activate([
             sheet.topAnchor.constraint(equalTo: view.topAnchor),

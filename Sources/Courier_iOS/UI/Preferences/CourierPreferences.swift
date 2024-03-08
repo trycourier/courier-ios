@@ -32,23 +32,59 @@ import UIKit
     
     // MARK: UI
     
-    @objc public let tableView = UITableView(frame: .zero, style: .grouped)
-    private let infoView = CourierInfoView()
-    private let loadingIndicator = UIActivityIndicatorView(style: .large)
-    private let refreshControl = UIRefreshControl()
-    private let courierBar = CourierBar()
     private var sheetViewController: PreferencesSheetViewController?
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .systemBackground
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
+        tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
+        tableView.refreshControl = refreshControl
+        tableView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+        return tableView
+    }()
+    
+    private lazy var infoView: CourierInfoView = {
+        let infoView = CourierInfoView()
+        infoView.translatesAutoresizingMaskIntoConstraints = false
+        infoView.onButtonClick = { [weak self] in
+            self?.state = .loading
+            self?.onRefresh()
+        }
+        return infoView
+    }()
+    
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let loadingIndicator = UIActivityIndicatorView(style: .large)
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.hidesWhenStopped = true
+        return loadingIndicator
+    }()
+    
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.translatesAutoresizingMaskIntoConstraints = false
+        return refreshControl
+    }()
+    
+    private let courierBar: CourierBar = {
+        let courierBar = CourierBar()
+        courierBar.translatesAutoresizingMaskIntoConstraints = false
+        return courierBar
+    }()
     
     // MARK: Constraints
     
-    private var infoViewY: NSLayoutConstraint? = nil
+    private var infoViewY: NSLayoutConstraint?
     
     // MARK: State
     
     private var state: State = .loading {
         didSet {
             
-            // Update UI
             switch (state) {
             case .loading:
                 self.loadingIndicator.startAnimating()
@@ -83,21 +119,14 @@ import UIKit
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark
     ) {
-        
-        if (availableChannels.isEmpty) {
-            fatalError("Must pass at least 1 channel to the CourierPreferences initializer.")
-        }
-        
         self.availableChannels = availableChannels
-        
-        // Theme
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
-        
         super.init(frame: .zero)
         setup()
-        
     }
+    
+    // MARK: Other Initializers
     
     override init(frame: CGRect) {
         self.lightTheme = .defaultLight
@@ -117,18 +146,14 @@ import UIKit
     
     private func setup() {
         
-        [tableView, courierBar, infoView, loadingIndicator].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
-        // Set state
-        state = .loading
-        
         // Add the views
         addTableView()
         addLoadingIndicator()
         addInfoView()
         addCourierBar()
+        
+        // Set state
+        state = .loading
         
         // Refreshes theme
         traitCollectionDidChange(nil)
@@ -197,7 +222,7 @@ import UIKit
     private func refreshCourierBarIfNeeded() {
         
         if (!courierBar.isHidden) {
-         
+            
             // Set the courier bar background color
             courierBar.setColors(with: superview?.backgroundColor)
             
@@ -219,9 +244,7 @@ import UIKit
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
         refreshCourierBarIfNeeded()
-        
     }
     
     private func addCourierBar() {
@@ -238,18 +261,6 @@ import UIKit
     
     private func addTableView() {
         
-        tableView.backgroundColor = .systemBackground
-        
-        // Create the table view
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
-        tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
-
-        // Add the refresh control
-        tableView.refreshControl = refreshControl
-        tableView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
-        
         addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -263,8 +274,6 @@ import UIKit
     
     private func addLoadingIndicator() {
         
-        loadingIndicator.hidesWhenStopped = true
-        
         addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([
@@ -275,12 +284,6 @@ import UIKit
     }
     
     private func addInfoView() {
-        
-        // Refresh the inbox
-        infoView.onButtonClick = { [weak self] in
-            self?.state = .loading
-            self?.onRefresh()
-        }
         
         addSubview(infoView)
         
@@ -360,17 +363,17 @@ import UIKit
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
-
+        
         let topic = getTopicsForSection(at: indexPath.section)[indexPath.row]
         cell.configureCell(
-            topic: topic, 
+            topic: topic,
             availableChannels: self.availableChannels,
             onEditButtonClick: {
                 self.tableView(tableView, didSelectRowAt: indexPath)
             }
         )
         cell.setTheme(theme: self.theme)
-
+        
         return cell
         
     }
@@ -523,25 +526,6 @@ import UIKit
                 }
             }
         }
-    }
-    
-}
-
-extension CourierUserPreferencesTopic {
-    
-    @objc func convertToJSONString() -> String? {
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        encoder.outputFormatting = [.prettyPrinted]
-        do {
-            let jsonData = try encoder.encode(self)
-            if let jsonString = String(data: jsonData, encoding: .utf8) {
-                return jsonString
-            }
-        } catch {
-            print("Error converting to JSON: \(error.localizedDescription)")
-        }
-        return nil
     }
     
 }
