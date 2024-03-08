@@ -37,6 +37,7 @@ import UIKit
      */
     internal lazy var coreAuth = CoreAuth()
     internal lazy var corePush = CorePush()
+    internal lazy var coreBrand = CoreBrand()
     internal lazy var coreInbox = CoreInbox()
     internal lazy var corePreferences = CorePreferences()
     internal let coreLogging = CoreLogging()

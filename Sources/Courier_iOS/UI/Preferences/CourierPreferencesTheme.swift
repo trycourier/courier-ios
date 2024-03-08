@@ -11,6 +11,7 @@ import UIKit
     
     // MARK: Styling
     
+    internal let brandId: String?
     private let loadingIndicatorColor: UIColor?
     internal let topicCellStyles: CourierStyles.Cell
     internal let sectionTitleFont: CourierStyles.Font
@@ -25,6 +26,7 @@ import UIKit
     // MARK: Init
     
     public init(
+        brandId: String? = nil,
         loadingIndicatorColor: UIColor? = nil,
         sectionTitleFont: CourierStyles.Font = CourierStyles.Font(
             font: UIFont.boldSystemFont(ofSize: Theme.Preferences.sectionTitleFontSize),
@@ -52,6 +54,7 @@ import UIKit
         sheetCornerRadius: CGFloat = Theme.Preferences.sheetCornerRadius,
         sheetCellStyles: CourierStyles.Cell = CourierStyles.Cell()
     ) {
+        self.brandId = brandId
         self.loadingIndicatorColor = loadingIndicatorColor
         self.topicCellStyles = topicCellStyles
         self.sectionTitleFont = sectionTitleFont

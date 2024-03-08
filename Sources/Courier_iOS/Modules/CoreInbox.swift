@@ -31,13 +31,6 @@ internal class CoreInbox {
     internal static let defaultMinPaginationLimit = 1
     internal var paginationLimit = defaultPaginationLimit
     
-    internal var brandId: String? = nil
-    internal var brand: CourierBrand? {
-        get {
-            return self.inbox?.brand
-        }
-    }
-    
     internal var inbox: Inbox? = nil
 
     private var listeners: [CourierInboxListener] = []
@@ -126,13 +119,7 @@ internal class CoreInbox {
             userId: userId
         )
         
-        async let getBrandTask: (CourierBrand?) = getBrandIfNeeded(
-            clientKey: clientKey,
-            userId: userId,
-            brandId: brandId
-        )
-        
-        let (inboxData, unreadCount, brand) = await (try dataTask, try unreadCountTask, try getBrandTask)
+        let (inboxData, unreadCount) = await (try dataTask, try unreadCountTask)
         
         try await connectWebSocket(
             clientKey: clientKey,
@@ -144,25 +131,10 @@ internal class CoreInbox {
             totalCount: inboxData.count ?? 0,
             unreadCount: unreadCount,
             hasNextPage: inboxData.messages?.pageInfo?.hasNextPage,
-            startCursor: inboxData.messages?.pageInfo?.startCursor,
-            brand: brand
+            startCursor: inboxData.messages?.pageInfo?.startCursor
         )
         
         self.notifyMessagesChanged()
-        
-    }
-    
-    internal func getBrandIfNeeded(clientKey: String, userId: String, brandId: String?) async throws -> CourierBrand? {
-        
-        guard let brandId = brandId else {
-            return nil
-        }
-        
-        return try await brandsRepo.getBrand(
-            clientKey: clientKey,
-            userId: userId,
-            brandId: brandId
-        )
         
     }
     
@@ -489,21 +461,6 @@ internal class CoreInbox {
 
 extension Courier {
     
-    @objc public var inboxBrand: CourierBrand? {
-        get {
-            return coreInbox.brand
-        }
-    }
-    
-    @objc public var inboxBrandId: String? {
-        get {
-            return coreInbox.brandId
-        }
-        set {
-            coreInbox.brandId = newValue
-        }
-    }
-    
     @objc public var inboxMessages: [InboxMessage]? {
         get {
             return coreInbox.inbox?.messages
@@ -658,15 +615,13 @@ internal class Inbox {
     var unreadCount: Int
     var hasNextPage: Bool?
     var startCursor: String?
-    let brand: CourierBrand?
     
-    init(messages: [InboxMessage]?, totalCount: Int, unreadCount: Int, hasNextPage: Bool?, startCursor: String?, brand: CourierBrand?) {
+    init(messages: [InboxMessage]?, totalCount: Int, unreadCount: Int, hasNextPage: Bool?, startCursor: String?) {
         self.messages = messages
         self.totalCount = totalCount
         self.unreadCount = unreadCount
         self.hasNextPage = hasNextPage
         self.startCursor = startCursor
-        self.brand = brand
     }
     
     func addNewMessage(message: InboxMessage) {

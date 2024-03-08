@@ -11,6 +11,7 @@ import UIKit
     
     // MARK: Styling
     
+    internal let brandId: String?
     internal let messageAnimationStyle: UITableView.RowAnimation
     private let loadingIndicatorColor: UIColor?
     internal let unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle
@@ -26,6 +27,7 @@ import UIKit
     // brandId will be overridden if other colors are provided
     
     public init(
+        brandId: String? = nil,
         messageAnimationStyle: UITableView.RowAnimation = .left,
         loadingIndicatorColor: UIColor? = nil,
         unreadIndicatorStyle:  CourierStyles.Inbox.UnreadIndicatorStyle =  CourierStyles.Inbox.UnreadIndicatorStyle(),
@@ -71,6 +73,7 @@ import UIKit
             )
         )
     ) {
+        self.brandId = brandId
         self.messageAnimationStyle = messageAnimationStyle
         self.unreadIndicatorStyle = unreadIndicatorStyle
         self.loadingIndicatorColor = loadingIndicatorColor

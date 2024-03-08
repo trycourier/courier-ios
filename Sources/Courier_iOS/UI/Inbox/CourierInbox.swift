@@ -261,33 +261,39 @@ import UIKit
     
     private func makeListener() {
         
-        self.inboxListener = Courier.shared.addInboxListener(
-            onInitialLoad: { [weak self] in
-                self?.refreshBrand()
-                self?.state = .loading
-            },
-            onError: { [weak self] error in
-                self?.refreshBrand()
-                self?.state = .error(error)
-            },
-            onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
-                self?.refreshBrand()
-                self?.state = newMessages.isEmpty ? .empty : .content
-                self?.canPaginate = canPaginate
-                self?.reloadMessages(newMessages)
+        Task {
+            
+            do {
+                try await refreshBrand()
+            } catch {
+                Courier.log(error.localizedDescription)
             }
-        )
+            
+            self.inboxListener = Courier.shared.addInboxListener(
+                onInitialLoad: { [weak self] in
+                    self?.state = .loading
+                },
+                onError: { [weak self] error in
+                    self?.state = .error(error)
+                },
+                onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
+                    self?.state = newMessages.isEmpty ? .empty : .content
+                    self?.canPaginate = canPaginate
+                    self?.reloadMessages(newMessages)
+                }
+            )
+            
+        }
         
     }
     
-    private func refreshBrand() {
-        if let brand = Courier.shared.inboxBrand {
-            theme.brand = brand
-        }
-        reloadViews()
-    }
+    // MARK: Reloading
     
-    // MARK: Reload
+    private func refreshBrand() async throws {
+        if let brandId = self.theme.brandId {
+            self.theme.brand = try await Courier.shared.getBrand(brandId: brandId)
+        }
+    }
     
     /**
      Adds the new message at top if needed
@@ -320,9 +326,19 @@ import UIKit
     }
     
     @objc private func onRefresh() {
-        Courier.shared.refreshInbox {
-            self.tableView.refreshControl?.endRefreshing()
+        
+        Task {
+            
+            do {
+                try await refreshBrand()
+                try await Courier.shared.refreshInbox()
+                self.tableView.refreshControl?.endRefreshing()
+            } catch {
+                Courier.log(error.localizedDescription)
+            }
+            
         }
+        
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {

@@ -134,6 +134,7 @@ import UIKit
         // Refreshes theme
         traitCollectionDidChange(nil)
         
+        // Grab details
         refresh()
         
     }
@@ -145,6 +146,11 @@ import UIKit
             refreshControl.beginRefreshing()
             
             do {
+                
+                // Fetch the brand if needed
+                if let brandId = self.theme.brandId {
+                    theme.brand = try await Courier.shared.getBrand(brandId: brandId)
+                }
                 
                 let prefs = try await Courier.shared.getUserPreferences()
                 
