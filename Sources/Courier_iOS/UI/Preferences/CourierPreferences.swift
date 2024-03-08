@@ -29,7 +29,7 @@ import UIKit
     
     private(set) var preferences: [String : [CourierUserPreferencesTopic]] = [:]
     
-    // MARK: UI
+    // MARK: Subviews
     
     private var sheetViewController: PreferencesSheetViewController?
     
@@ -113,14 +113,20 @@ import UIKit
         }
     }
     
+    // MARK: Error handling
+    
+    private var onError: ((CourierError) -> Void)? = nil
+    
     public init(
         availableChannels: [CourierUserPreferencesChannel] = CourierUserPreferencesChannel.allCases,
         lightTheme: CourierPreferencesTheme = .defaultLight,
-        darkTheme: CourierPreferencesTheme = .defaultDark
+        darkTheme: CourierPreferencesTheme = .defaultDark,
+        onError: ((CourierError) -> Void)? = nil
     ) {
         self.availableChannels = availableChannels
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
+        self.onError = onError
         super.init(frame: .zero)
         setup()
     }
@@ -131,6 +137,7 @@ import UIKit
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
         self.availableChannels = CourierUserPreferencesChannel.allCases
+        self.onError = nil
         super.init(frame: frame)
         setup()
     }
@@ -139,6 +146,7 @@ import UIKit
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
         self.availableChannels = CourierUserPreferencesChannel.allCases
+        self.onError = nil
         super.init(coder: coder)
         setup()
     }
@@ -500,6 +508,7 @@ import UIKit
                     },
                     onFailure: { error in
                         Courier.log(error.localizedDescription)
+                        self.onError?(CourierError(from: error))
                         self.updateTopic(topicId: topic.topicId, newTopic: topic)
                     }
                 )
