@@ -14,14 +14,16 @@ public struct CourierPreferencesView: UIViewRepresentable {
     private let preferences: CourierPreferences
     
     public init(
-        availableChannels: [CourierUserPreferencesChannel] = CourierUserPreferencesChannel.allCases,
+        mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
-        darkTheme: CourierPreferencesTheme = .defaultDark
+        darkTheme: CourierPreferencesTheme = .defaultDark,
+        onError: ((CourierError) -> Void)? = nil
     ) {
         self.preferences = CourierPreferences(
-            availableChannels: availableChannels,
+            mode: mode,
             lightTheme: lightTheme,
-            darkTheme: darkTheme
+            darkTheme: darkTheme,
+            onError: onError
         )
     }
     

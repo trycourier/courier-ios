@@ -60,7 +60,10 @@ class PreferencesViewController: UIViewController {
                 sheetCellStyles: CourierStyles.Cell(
                     separatorStyle: .none
                 )
-            )
+            ),
+            onError: { error in
+                print(error)
+            }
         )
     }()
     

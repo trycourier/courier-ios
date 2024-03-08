@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOS 15.0, *)
 internal class CourierPreferenceTopicCell: UITableViewCell {
     
     static let id = "CourierPreferenceTopicCell"
@@ -88,25 +89,35 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         ])
     }
     
-    func configureCell(topic: CourierUserPreferencesTopic, availableChannels: [CourierUserPreferencesChannel], onEditButtonClick: @escaping () -> Void) {
+    func configureCell(topic: CourierUserPreferencesTopic, mode: CourierPreferences.Mode, onEditButtonClick: @escaping () -> Void) {
         
+        backgroundColor = .clear
+        
+        self.titleLabel.text = topic.topicName
         self.onEditButtonClick = onEditButtonClick
         
-        var subTitle = ""
-                
-        if (topic.status == .optedOut) {
-            subTitle = "Off"
-        } else if (topic.status == .required && topic.customRouting.isEmpty) {
-            subTitle = "On: \(availableChannels.map { $0.title }.joined(separator: ", "))"
-        } else if (topic.status == .optedIn && topic.customRouting.isEmpty) {
-            subTitle = "On: \(availableChannels.map { $0.title }.joined(separator: ", "))"
-        } else {
-            subTitle = "On: \(topic.customRouting.map { $0.title }.joined(separator: ", "))"
+        switch (mode) {
+        case .topic:
+            
+            subtitleLabel.text = topic.status.rawValue
+            
+        case .channels(let availableChannels):
+            
+            var subTitle = ""
+    
+            if (topic.status == .optedOut) {
+                subTitle = "Off"
+            } else if (topic.status == .required && topic.customRouting.isEmpty) {
+                subTitle = "On: \(availableChannels.map { $0.title }.joined(separator: ", "))"
+            } else if (topic.status == .optedIn && topic.customRouting.isEmpty) {
+                subTitle = "On: \(availableChannels.map { $0.title }.joined(separator: ", "))"
+            } else {
+                subTitle = "On: \(topic.customRouting.map { $0.title }.joined(separator: ", "))"
+            }
+            
+            subtitleLabel.text = subTitle
         }
         
-        titleLabel.text = topic.topicName
-        subtitleLabel.text = subTitle
-        backgroundColor = .clear
     }
     
     func setTheme(theme: CourierPreferencesTheme) {
