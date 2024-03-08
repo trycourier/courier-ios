@@ -20,7 +20,8 @@ class PreferencesViewController: UIViewController {
         return CourierPreferences(
             availableChannels: [.push, .sms, .email],
             lightTheme: CourierPreferencesTheme(
-                loadingIndicatorColor: secondaryColor,
+                brandId: "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M",
+//                loadingIndicatorColor: secondaryColor,
                 sectionTitleFont: CourierStyles.Font(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: textColor

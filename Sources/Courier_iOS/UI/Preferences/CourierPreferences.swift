@@ -165,7 +165,7 @@ import UIKit
                 }
                 
                 // Reload the state
-                tableView.reloadData()
+                reloadViews()
                 state = preferences.isEmpty ? .empty : .content
                 
             } catch {
