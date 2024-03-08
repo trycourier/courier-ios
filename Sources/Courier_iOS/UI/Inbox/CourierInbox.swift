@@ -292,6 +292,7 @@ import UIKit
     private func refreshBrand() async throws {
         if let brandId = self.theme.brandId {
             self.theme.brand = try await Courier.shared.getBrand(brandId: brandId)
+            self.reloadViews()
         }
     }
     
