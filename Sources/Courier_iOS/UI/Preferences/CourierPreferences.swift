@@ -435,7 +435,7 @@ import UIKit
             }
             
             let item = CourierSheetItem(
-                title: topic.status.rawValue,
+                title: "Receive Notifications",
                 isOn: isOn,
                 isDisabled: isRequired,
                 data: nil

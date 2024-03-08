@@ -99,7 +99,7 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         switch (mode) {
         case .topic:
             
-            subtitleLabel.text = "Receive Notifications"
+            subtitleLabel.text = topic.status.rawValue
             
         case .channels(let availableChannels):
             
