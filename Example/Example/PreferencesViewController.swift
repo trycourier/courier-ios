@@ -18,7 +18,7 @@ class PreferencesViewController: UIViewController {
     
     private lazy var courierPreferences = {
         return CourierPreferences(
-            availableChannels: [.push, .sms, .email],
+            mode: .topic,
             lightTheme: CourierPreferencesTheme(
                 brandId: "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M",
 //                loadingIndicatorColor: secondaryColor,

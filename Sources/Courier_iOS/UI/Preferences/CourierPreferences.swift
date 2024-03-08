@@ -474,72 +474,7 @@ import UIKit
             topic: topic,
             items: items,
             onDismiss: { items in
-                
-//                // Unable to save. Settings required.
-//                if (topic.defaultStatus == .required && topic.status == .required) {
-//                    return
-//                }
-//                
-//                let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
-//                
-//                var newStatus: CourierUserPreferencesStatus = .unknown
-//                
-//                if (selectedItems.isEmpty) {
-//                    newStatus = .optedOut
-//                } else {
-//                    newStatus = .optedIn
-//                }
-//                
-//                var hasCustomRouting = false
-//                var customRouting = [CourierUserPreferencesChannel]()
-//                let areAllSelected = selectedItems.count == items.count
-//                
-//                if (areAllSelected && topic.defaultStatus == .optedIn) {
-//                    hasCustomRouting = false
-//                    customRouting = []
-//                } else if (selectedItems.isEmpty && topic.defaultStatus == .optedOut) {
-//                    hasCustomRouting = false
-//                    customRouting = []
-//                } else {
-//                    hasCustomRouting = true
-//                    customRouting = selectedItems
-//                }
-//                
-//                let newTopic = CourierUserPreferencesTopic(
-//                    defaultStatus: topic.defaultStatus.rawValue,
-//                    hasCustomRouting: hasCustomRouting,
-//                    customRouting: customRouting.map { $0.rawValue },
-//                    status: newStatus.rawValue,
-//                    topicId: topic.topicId,
-//                    topicName: topic.topicName,
-//                    sectionName: topic.sectionName,
-//                    sectionId: topic.sectionId
-//                )
-//                
-//                // Unchanged
-//                if (newTopic.isEqual(to: topic)) {
-//                    return
-//                }
-//                
-//                self.updateTopic(topicId: topic.topicId, newTopic: newTopic)
-//                
-//                // Update the Topic
-//                Courier.shared.putUserPreferencesTopic(
-//                    topicId: topic.topicId,
-//                    status: newStatus,
-//                    hasCustomRouting: hasCustomRouting,
-//                    customRouting: customRouting,
-//                    onSuccess: {
-//                        Courier.log("Topic updated: \(topic.topicId)")
-//                    },
-//                    onFailure: { error in
-//                        Courier.log(error.localizedDescription)
-//                        self.onError?(CourierError(from: error))
-//                        self.updateTopic(topicId: topic.topicId, newTopic: topic)
-//                    }
-//                )
-                
-                // Remove the sheet reference
+                self.handleChangeForMode(mode: self.mode, topic: topic, items: items)
                 self.sheetViewController = nil
                 
             }
@@ -547,6 +482,127 @@ import UIKit
         
         // Present the sheet
         parentViewController.present(sheetViewController!, animated: true, completion: nil)
+        
+    }
+    
+    private func handleChangeForMode(mode: Mode, topic: CourierUserPreferencesTopic, items: [CourierSheetItem]) {
+        
+        if (topic.defaultStatus == .required && topic.status == .required) {
+            return
+        }
+        
+        switch (mode) {
+        case .topic:
+            
+            let selectedItems = items.filter { $0.isOn }
+            let isSelected = !selectedItems.isEmpty
+            
+            if (topic.status == .optedIn && isSelected) {
+                return
+            }
+            
+            if (topic.status == .optedOut && !isSelected) {
+                return
+            }
+            
+            let newStatus: CourierUserPreferencesStatus = isSelected ? .optedIn : .optedOut
+            
+            let newTopic = CourierUserPreferencesTopic(
+                defaultStatus: topic.defaultStatus.rawValue,
+                hasCustomRouting: false,
+                customRouting: [],
+                status: newStatus.rawValue,
+                topicId: topic.topicId,
+                topicName: topic.topicName,
+                sectionName: topic.sectionName,
+                sectionId: topic.sectionId
+            )
+
+            // Unchanged
+            if (newTopic.isEqual(to: topic)) {
+                return
+            }
+
+            self.updateTopic(topicId: topic.topicId, newTopic: newTopic)
+
+            // Update the Topic
+            Courier.shared.putUserPreferencesTopic(
+                topicId: topic.topicId,
+                status: newStatus,
+                hasCustomRouting: newTopic.hasCustomRouting,
+                customRouting: newTopic.customRouting,
+                onSuccess: {
+                    Courier.log("Topic updated: \(topic.topicId)")
+                },
+                onFailure: { error in
+                    Courier.log(error.localizedDescription)
+                    self.onError?(CourierError(from: error))
+                    self.updateTopic(topicId: topic.topicId, newTopic: topic)
+                }
+            )
+            
+        case .channels(_):
+
+            let selectedItems = items.filter { $0.isOn }.map { $0.data as! CourierUserPreferencesChannel }
+
+            var newStatus: CourierUserPreferencesStatus = .unknown
+
+            if (selectedItems.isEmpty) {
+                newStatus = .optedOut
+            } else {
+                newStatus = .optedIn
+            }
+
+            var hasCustomRouting = false
+            var customRouting = [CourierUserPreferencesChannel]()
+            let areAllSelected = selectedItems.count == items.count
+
+            if (areAllSelected && topic.defaultStatus == .optedIn) {
+                hasCustomRouting = false
+                customRouting = []
+            } else if (selectedItems.isEmpty && topic.defaultStatus == .optedOut) {
+                hasCustomRouting = false
+                customRouting = []
+            } else {
+                hasCustomRouting = true
+                customRouting = selectedItems
+            }
+
+            let newTopic = CourierUserPreferencesTopic(
+                defaultStatus: topic.defaultStatus.rawValue,
+                hasCustomRouting: hasCustomRouting,
+                customRouting: customRouting.map { $0.rawValue },
+                status: newStatus.rawValue,
+                topicId: topic.topicId,
+                topicName: topic.topicName,
+                sectionName: topic.sectionName,
+                sectionId: topic.sectionId
+            )
+
+            // Unchanged
+            if (newTopic.isEqual(to: topic)) {
+                return
+            }
+
+            self.updateTopic(topicId: topic.topicId, newTopic: newTopic)
+
+            // Update the Topic
+            Courier.shared.putUserPreferencesTopic(
+                topicId: topic.topicId,
+                status: newStatus,
+                hasCustomRouting: hasCustomRouting,
+                customRouting: customRouting,
+                onSuccess: {
+                    Courier.log("Topic updated: \(topic.topicId)")
+                },
+                onFailure: { error in
+                    Courier.log(error.localizedDescription)
+                    self.onError?(CourierError(from: error))
+                    self.updateTopic(topicId: topic.topicId, newTopic: topic)
+                }
+            )
+            
+        }
         
     }
     
