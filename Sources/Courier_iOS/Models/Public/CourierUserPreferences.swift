@@ -120,6 +120,19 @@ extension CourierUserPreferencesTopic {
         }
     }
     
+    var title: String {
+        switch self {
+        case .optedIn:
+            return "Opted In"
+        case .optedOut:
+            return "Opted Out"
+        case .required:
+            return "Required"
+        case .unknown:
+            return "Unknown"
+        }
+    }
+    
 }
 
 // MARK: Channel
