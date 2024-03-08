@@ -12,7 +12,12 @@ internal class CourierInboxPaginationCell: UITableViewCell {
     
     internal static let id = "CourierInboxPaginationCell"
     
-    private let loadingIndicator = UIActivityIndicatorView()
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+        return indicator
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -37,7 +42,6 @@ internal class CourierInboxPaginationCell: UITableViewCell {
         }
         
         // Add indicator view
-        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([

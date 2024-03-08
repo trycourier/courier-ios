@@ -12,30 +12,91 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
-    private let margin = Theme.margin / 2
+    private lazy var margin = Theme.margin / 2
     
     private var horizontal: CGFloat {
-        get {
-            return margin * 2
-        }
+        return margin * 2
     }
     
     private var vertical: CGFloat {
-        get {
-            return margin * 1.5
-        }
+        return margin * 1.5
     }
     
-    private let containerStackView = UIStackView()
-    private let titleStackView = UIStackView()
-    private let indicatorView = UIView()
-    private let dotView = UIView()
-    private let titleLabel = UILabel()
-    private let timeLabel = UILabel()
-    private let bodyLabel = UILabel()
-    private let buttonStack = UIStackView()
-    private let actionsStack = UIStackView()
-    private let spacer = UIView()
+    private lazy var containerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = margin / 2
+        stackView.insetsLayoutMarginsFromSafeArea = false
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var titleStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.alignment = .top
+        stackView.spacing = margin * 2
+        stackView.axis = .horizontal
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var indicatorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var dotView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = Theme.Inbox.indicatorDotSize / 2
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var bodyLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var buttonStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var actionsStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = margin * 1.5
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var spacer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private var inboxMessage: InboxMessage?
     
@@ -58,100 +119,28 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     private func setup() {
         
         [containerStackView, titleStackView, indicatorView, dotView, titleLabel, timeLabel, bodyLabel, buttonStack, actionsStack, spacer].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview($0)
         }
-        
-        // Add indicator
-        
-        contentView.addSubview(indicatorView)
         
         NSLayoutConstraint.activate([
             indicatorView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
             indicatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2),
             indicatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
-            indicatorView.widthAnchor.constraint(equalToConstant: 3)
-        ])
-        
-        // Add container
-        
-        containerStackView.spacing = margin / 2
-        containerStackView.insetsLayoutMarginsFromSafeArea = false
-        containerStackView.axis = .vertical
-        
-        contentView.addSubview(containerStackView)
-        
-        containerLeading = containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: horizontal)
-        
-        NSLayoutConstraint.activate([
+            indicatorView.widthAnchor.constraint(equalToConstant: 3),
+            
             containerStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: vertical),
             containerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -vertical),
             containerLeading!,
             containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -horizontal),
-        ])
-        
-        // Add title stack
-        
-        titleStackView.alignment = .top
-        titleStackView.spacing = margin * 2
-        titleStackView.axis = .horizontal
-        
-        containerStackView.addArrangedSubview(titleStackView)
-        
-        // Add title
-        
-        titleLabel.numberOfLines = 0
-        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        
-        titleStackView.addArrangedSubview(titleLabel)
-        
-        // Add time
-        
-        timeLabel.numberOfLines = 1
-        timeLabel.textAlignment = .right
-        
-        titleStackView.addArrangedSubview(timeLabel)
-        
-        // Add body
-        
-        bodyLabel.numberOfLines = 0
-        
-        containerStackView.addArrangedSubview(bodyLabel)
-        
-        // Button Stack
-        
-        buttonStack.axis = .vertical
-        
-        containerStackView.addArrangedSubview(buttonStack)
-        
-        // Add spacer
-        
-        buttonStack.addArrangedSubview(spacer)
-        
-        NSLayoutConstraint.activate([
-            spacer.heightAnchor.constraint(equalToConstant: margin)
-        ])
-        
-        // Add actions stack
-        
-        actionsStack.spacing = margin * 1.5
-        actionsStack.axis = .horizontal
-        actionsStack.distribution = .fill
-        
-        buttonStack.addArrangedSubview(actionsStack)
-        
-        NSLayoutConstraint.activate([
-            actionsStack.heightAnchor.constraint(equalToConstant: 34.333333333333336)
-        ])
-        
-        contentView.addSubview(dotView)
-        
-        dotView.layer.cornerRadius = Theme.Inbox.indicatorDotSize / 2
-        
-        NSLayoutConstraint.activate([
+            
             dotView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.Inbox.indicatorDotSize / 2),
             dotView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             dotView.heightAnchor.constraint(equalToConstant: Theme.Inbox.indicatorDotSize),
             dotView.widthAnchor.constraint(equalToConstant: Theme.Inbox.indicatorDotSize),
+            
+            spacer.heightAnchor.constraint(equalToConstant: margin),
+            
+            actionsStack.heightAnchor.constraint(equalToConstant: 34.333333333333336)
         ])
         
     }

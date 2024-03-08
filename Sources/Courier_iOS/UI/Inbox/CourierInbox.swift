@@ -38,12 +38,44 @@ import UIKit
     
     private lazy var inboxRepo = InboxRepository()
     
-    // MARK: Subviews
+    // MARK: UI
     
-    @objc public let tableView = UITableView()
-    private let courierBar = CourierBar()
-    private let infoView = CourierInfoView()
-    private let loadingIndicator = UIActivityIndicatorView(style: .large)
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
+        tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = UITableView.automaticDimension
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+    
+    private lazy var courierBar: CourierBar = {
+        let bar = CourierBar()
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        return bar
+    }()
+    
+    private lazy var infoView: CourierInfoView = {
+        let view = CourierInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.onButtonClick = { [weak self] in
+            self?.state = .loading
+            self?.onRefresh()
+        }
+        return view
+    }()
+    
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
     
     // MARK: Constraints
     
@@ -138,10 +170,6 @@ import UIKit
             }
         }
         
-        [tableView, courierBar, infoView, loadingIndicator].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
         // Set state
         state = .loading
 
@@ -184,9 +212,7 @@ import UIKit
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
         refreshCourierBarIfNeeded()
-        
     }
     
     private func addCourierBar() {
@@ -203,18 +229,6 @@ import UIKit
     
     private func addTableView() {
         
-        // Create the table view
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
-        tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = UITableView.automaticDimension
-
-        // Add the refresh control
-        tableView.refreshControl = UIRefreshControl()
-        tableView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
-        
         addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -228,8 +242,6 @@ import UIKit
     
     private func addLoadingIndicator() {
         
-        loadingIndicator.hidesWhenStopped = true
-        
         addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([
@@ -240,12 +252,6 @@ import UIKit
     }
     
     private func addInfoView() {
-        
-        // Refresh the inbox
-        infoView.onButtonClick = { [weak self] in
-            self?.state = .loading
-            self?.onRefresh()
-        }
         
         addSubview(infoView)
         

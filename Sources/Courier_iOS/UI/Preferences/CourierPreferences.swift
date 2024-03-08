@@ -9,7 +9,6 @@ import UIKit
 
 // TODO:
 // 1. Fallbacks for business tier
-// 3. UI view heirachy stuff
 
 @available(iOS 15.0, *)
 @available(iOSApplicationExtension, unavailable)
