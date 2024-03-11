@@ -110,29 +110,3 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
     }
     
 }
-
-class ContentCollectionViewCell: UICollectionViewCell {
-    
-    static let identifier = "ContentCollectionViewCell"
-    
-    var embeddedViewController: UIViewController? {
-        willSet {
-            // Remove the previously embedded view controller
-            embeddedViewController?.willMove(toParent: nil)
-            embeddedViewController?.view.removeFromSuperview()
-            embeddedViewController?.removeFromParent()
-        }
-        didSet {
-            if let newViewController = embeddedViewController {
-                newViewController.view.frame = contentView.bounds
-                contentView.addSubview(newViewController.view)
-            }
-        }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        embeddedViewController = nil
-    }
-    
-}

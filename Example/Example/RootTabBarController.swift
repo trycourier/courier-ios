@@ -14,8 +14,6 @@ class RootTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        Courier.shared.inboxBrandId = "EK44JHXWFX4A9AGC8QWVNTBDTKC2"
 
         self.inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: {

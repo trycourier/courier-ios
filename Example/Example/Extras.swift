@@ -174,7 +174,7 @@ extension InboxMessage {
 
 extension CourierUserPreferencesTopic {
     
-    @objc func convertToJSONString() -> String? {
+    @objc func toJson() -> String? {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.outputFormatting = [.prettyPrinted]
