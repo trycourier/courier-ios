@@ -82,8 +82,12 @@ class CustomPreferencesViewController: UIViewController, UITableViewDelegate, UI
     
     @objc private func onRefresh() {
         Task {
-            let prefs = try await Courier.shared.getUserPreferences()
-            self.topics = prefs.items
+            do {
+                let prefs = try await Courier.shared.getUserPreferences()
+                self.topics = prefs.items
+            } catch {
+                self.showMessageAlert(title: "Error", message: CourierError(from: error).message)
+            }
             self.setState(self.topics.isEmpty ? .empty : .content)
             self.tableView.reloadData()
             self.tableView.refreshControl?.endRefreshing()
