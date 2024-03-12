@@ -58,6 +58,48 @@ class StyledPreferencesViewController: UIViewController {
                     separatorStyle: .none
                 )
             ),
+            darkTheme: CourierPreferencesTheme(
+                brandId: "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M",
+                loadingIndicatorColor: secondaryColor,
+                sectionTitleFont: CourierStyles.Font(
+                    font: UIFont(name: "Avenir Black", size: 20)!,
+                    color: .white
+                ),
+                topicCellStyles: CourierStyles.Cell(
+                    separatorStyle: .none
+                ),
+                topicTitleFont: CourierStyles.Font(
+                    font: UIFont(name: "Avenir Medium", size: 18)!,
+                    color: .white
+                ),
+                topicSubtitleFont: CourierStyles.Font(
+                    font: UIFont(name: "Avenir Medium", size: 16)!,
+                    color: .white
+                ),
+                topicButton: CourierStyles.Button(
+                    font: CourierStyles.Font(
+                        font: UIFont(name: "Avenir Medium", size: 16)!,
+                        color: .white
+                    ),
+                    backgroundColor: secondaryColor,
+                    cornerRadius: 8
+                ),
+                sheetTitleFont: CourierStyles.Font(
+                    font: UIFont(name: "Avenir Medium", size: 18)!,
+                    color: .white
+                ),
+                sheetSettingStyles: CourierStyles.Preferences.SettingStyles(
+                    font: CourierStyles.Font(
+                        font: UIFont(name: "Avenir Medium", size: 18)!,
+                        color: .white
+                    ),
+                    toggleColor: secondaryColor
+                ),
+                sheetCornerRadius: 0,
+                sheetCellStyles: CourierStyles.Cell(
+                    separatorStyle: .none
+                )
+            ),
             onError: { error in
                 self.showMessageAlert(title: "Preferences Error", message: error.localizedDescription)
             }
