@@ -17,7 +17,7 @@ internal class CoreAuth {
         
         // Check if the current user exists
         if let currentUser = Courier.shared.userId {
-            Courier.log("User already signed in. Please sign out to change the current user.")
+            Courier.log("User Id '\(currentUser)' is already signed in. Please call Courier.shared.signOut() to change the current user.")
             return
         }
         
@@ -59,7 +59,7 @@ internal class CoreAuth {
     internal func signOut(push: CorePush, inbox: CoreInbox) async throws {
         
         // Check if the current user exists
-        guard let currentUser = Courier.shared.userId else {
+        guard Courier.shared.userId != nil else {
             Courier.log("No user signed into Courier. A user must be signed in on order to sign out.")
             return
         }

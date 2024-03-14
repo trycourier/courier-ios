@@ -118,6 +118,29 @@ final class CourierTests: XCTestCase {
         
     }
     
+    func testAuth() async throws {
+        
+        print("🔬 Testing Authentication Limits")
+        
+        try await Courier.shared.signOut()
+        
+        try await Courier.shared.signIn(
+            accessToken: Env.COURIER_AUTH_KEY,
+            userId: Env.COURIER_USER_ID
+        )
+        
+        try await Courier.shared.signIn(
+            accessToken: "different_token",
+            userId: "different_id"
+        )
+        
+        XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_AUTH_KEY)
+        XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
+        
+        try await Courier.shared.signOut()
+        
+    }
+    
     func testSignInWithJWT() async throws {
         
         print("\n🔬 Starting Courier SDK with JWT")

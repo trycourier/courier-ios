@@ -27,6 +27,12 @@ import UIKit
 @objc open class Courier: NSObject {
     
     /**
+     * Versioning
+     */
+    internal static let version = "3.0.0"
+    public static var agent = CourierAgent.native_ios
+    
+    /**
      * Singleton reference to the SDK
      * Please ensure you use this to maintain state
      */
@@ -91,11 +97,5 @@ import UIKit
     @objc private func didEnterBackground() {
         coreInbox.unlink()
     }
-    
-    /**
-     * Versioning
-     */
-    internal static let version = "2.9.0"
-    public static var agent = CourierAgent.native_ios
     
 }
