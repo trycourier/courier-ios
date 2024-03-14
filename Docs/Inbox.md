@@ -123,53 +123,53 @@ let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, 
 
 // Theme object containing all the styles you want to apply 
 let inboxTheme = CourierInboxTheme(
+    brandId: "7S9R...3Q1M", // Optional
     messageAnimationStyle: .fade,
-    loadingIndicatorColor: secondaryColor,
-    unreadIndicatorStyle: CourierInboxUnreadIndicatorStyle(
+    unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
         indicator: .dot,
         color: secondaryColor
     ),
-    titleStyle: CourierInboxTextStyle(
-        unread: CourierInboxFont(
+    titleStyle: CourierStyles.Inbox.TextStyle(
+        unread: CourierStyles.Font(
             font: UIFont(name: "Avenir Black", size: 20)!,
             color: textColor
         ),
-        read: CourierInboxFont(
+        read: CourierStyles.Font(
             font: UIFont(name: "Avenir Black", size: 20)!,
             color: textColor
         )
     ),
-    timeStyle: CourierInboxTextStyle(
-        unread: CourierInboxFont(
+    timeStyle: CourierStyles.Inbox.TextStyle(
+        unread: CourierStyles.Font(
             font: UIFont(name: "Avenir Medium", size: 18)!,
             color: textColor
         ),
-        read: CourierInboxFont(
+        read: CourierStyles.Font(
             font: UIFont(name: "Avenir Medium", size: 18)!,
             color: textColor
         )
     ),
-    bodyStyle: CourierInboxTextStyle(
-        unread: CourierInboxFont(
+    bodyStyle: CourierStyles.Inbox.TextStyle(
+        unread: CourierStyles.Font(
             font: UIFont(name: "Avenir Medium", size: 18)!,
             color: textColor
         ),
-        read: CourierInboxFont(
+        read: CourierStyles.Font(
             font: UIFont(name: "Avenir Medium", size: 18)!,
             color: textColor
         )
     ),
-    buttonStyle: CourierInboxButtonStyle(
-        unread: CourierInboxButton(
-            font: CourierInboxFont(
+    buttonStyle: CourierStyles.Inbox.ButtonStyle(
+        unread: CourierStyles.Button(
+            font: CourierStyles.Font(
                 font: UIFont(name: "Avenir Black", size: 16)!,
                 color: .white
             ),
             backgroundColor: primaryColor,
             cornerRadius: 100
         ),
-        read: CourierInboxButton(
-            font: CourierInboxFont(
+        read: CourierStyles.Button(
+            font: CourierStyles.Font(
                 font: UIFont(name: "Avenir Black", size: 16)!,
                 color: .white
             ),
@@ -177,17 +177,17 @@ let inboxTheme = CourierInboxTheme(
             cornerRadius: 100
         )
     ),
-    cellStyle: CourierInboxCellStyle(
+    cellStyle: CourierStyles.Cell(
         separatorStyle: .singleLine,
         separatorInsets: .zero
     ),
-    infoViewStyle: CourierInboxInfoViewStyle(
-        font: CourierInboxFont(
+    infoViewStyle: CourierStyles.Inbox.InfoViewStyle(
+        font: CourierStyles.Font(
             font: UIFont(name: "Avenir Medium", size: 20)!,
             color: textColor
         ),
-        button: CourierInboxButton(
-            font: CourierInboxFont(
+        button: CourierStyles.Button(
+            font: CourierStyles.Font(
                 font: UIFont(name: "Avenir Black", size: 16)!,
                 color: .white
             ),
@@ -218,30 +218,7 @@ view.addSubview(courierInbox)
 ...
 ```
 
-&emsp;
-
-### Courier Studio Branding (Optional)
-
-<img width="782" alt="setting" src="https://user-images.githubusercontent.com/6370613/228931428-04dc2130-789a-4ac3-bf3f-0bbb49d5519a.png">
-
-You can control your branding from the [`Courier Studio`](https://app.courier.com/designer/brands). 
-
-```swift 
-// Set the brand id globally
-// This will fetch the brand when you load the inbox
-Courier.shared.inboxBrandId = "YOUR_BRAND_ID"
-
-// To override the brand...
-let brandedThemeWithLoadingColorOverride = CourierInboxTheme(
-    loadingIndicatorColor: .red, // ⚠️ Will override the brand primary color
-    ...
-)
-
-let courierInbox = CourierInbox(
-    lightTheme: brandedThemeWithLoadingColorOverride,
-    ...
-)
-```
+If you are interested in using a Courier "Brand", here is where you can adjust that: [`Courier Studio`](https://app.courier.com/designer/brands). 
 
 &emsp;
 
