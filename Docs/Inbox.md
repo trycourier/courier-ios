@@ -123,7 +123,7 @@ let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, 
 
 // Theme object containing all the styles you want to apply 
 let inboxTheme = CourierInboxTheme(
-    brandId: "7S9R...3Q1M", // Optional
+    brandId: "7S9R...3Q1M", // Optional. Theme colors will override this brand.
     messageAnimationStyle: .fade,
     unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
         indicator: .dot,
