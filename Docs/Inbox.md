@@ -197,8 +197,7 @@ let inboxTheme = CourierInboxTheme(
     )
 )
 
-// Pass the theme to the inbox
-// This example will use the same theme for light and dark mode
+// Pass the theme to the view
 let courierInbox = CourierInbox(
     lightTheme: inboxTheme,
     darkTheme: inboxTheme,
@@ -219,8 +218,6 @@ view.addSubview(courierInbox)
 ```
 
 If you are interested in using a Courier "Brand", here is where you can adjust that: [`Courier Studio`](https://app.courier.com/designer/brands). 
-
-&emsp;
 
 <table>
     <thead>
