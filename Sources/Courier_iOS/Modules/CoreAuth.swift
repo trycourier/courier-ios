@@ -15,6 +15,12 @@ internal class CoreAuth {
     
     internal func signIn(accessToken: String, clientKey: String?, userId: String, push: CorePush, inbox: CoreInbox) async throws {
         
+        // Check if the current user exists
+        if let currentUser = Courier.shared.userId {
+            Courier.log("User already signed in. Please sign out to change the current user.")
+            return
+        }
+        
         Courier.log("Signing user in")
         Courier.log("Access Token: \(accessToken)")
         Courier.log("Client Key: \(clientKey ?? "Not set")")
@@ -51,6 +57,12 @@ internal class CoreAuth {
     }
     
     internal func signOut(push: CorePush, inbox: CoreInbox) async throws {
+        
+        // Check if the current user exists
+        guard let currentUser = Courier.shared.userId else {
+            Courier.log("No user signed into Courier. A user must be signed in on order to sign out.")
+            return
+        }
         
         Courier.log("Signing user out")
         
