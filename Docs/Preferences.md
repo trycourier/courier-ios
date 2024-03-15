@@ -58,7 +58,7 @@ In-app notification settings that allow your users to customize which of your no
 
 &emsp;
 
-## Default Preferences Example
+## Default Preferences View
 
 The default `CourierPreferences` styles.
 
@@ -90,7 +90,7 @@ NSLayoutConstraint.activate([
 
 &emsp;
 
-## Styled Preferences Example
+## Styled Preferences View
 
 The styles you can use to quickly customize the `CourierPreferences`.
 
@@ -184,11 +184,11 @@ If you are interested in using a Courier "Brand", here is where you can adjust t
 
 &emsp;
 
-## Custom Preferences
+## Custom Preferences APIs
 
 The raw data you can use to build whatever UI you'd like.
 
-# Get All User Preferences
+## Get All User Preferences
 
 Returns all the user's preferences. [`listAllUserPreferences`](https://www.courier.com/docs/reference/user-preferences/list-all-user-preferences/)
 
@@ -196,8 +196,6 @@ Returns all the user's preferences. [`listAllUserPreferences`](https://www.couri
 // paginationCursor is optional
 let preferences = try await Courier.shared.getUserPreferences()
 ```
-
-&emsp;
 
 # Update Preference Topic
 
@@ -211,8 +209,6 @@ try await Courier.shared.putUserPreferencesTopic(
     customRouting: [.sms, .push]
 )
 ```
-
-&emsp;
 
 # Get Preference Topic
 
