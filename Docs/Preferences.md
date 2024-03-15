@@ -94,7 +94,7 @@ NSLayoutConstraint.activate([
 
 The styles you can use to quickly customize the `CourierPreferences`.
 
-<img width="431" alt="..." src="...">
+<img width="296" alt="default-inbox-styles" src="https://github.com/trycourier/courier-ios/assets/6370613/4291c507-ffe4-41de-b551-596e5f33ff72.gif">
 
 ```swift
 import Courier_iOS
