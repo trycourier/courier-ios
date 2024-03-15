@@ -197,7 +197,7 @@ Returns all the user's preferences. [`listAllUserPreferences`](https://www.couri
 let preferences = try await Courier.shared.getUserPreferences()
 ```
 
-# Update Preference Topic
+## Update Preference Topic
 
 Updates a specific user preference topic. [`updateUserSubscriptionTopic`](https://www.courier.com/docs/reference/user-preferences/update-subscription-topic-preferences/)
 
@@ -210,7 +210,7 @@ try await Courier.shared.putUserPreferencesTopic(
 )
 ```
 
-# Get Preference Topic
+## Get Preference Topic
 
 Gets a specific preference topic. [`getUserSubscriptionTopic`](https://www.courier.com/docs/reference/user-preferences/get-subscription-topic-preferences/)
 
