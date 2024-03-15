@@ -62,7 +62,7 @@ In-app notification settings that allow your users to customize which of your no
 
 The default `CourierPreferences` styles.
 
-<img width="810" alt="..." src="...png">
+![default_preferences](https://github.com/trycourier/courier-ios/assets/6370613/aa289306-4942-4680-970a-985cc0b3b085)
 
 ```swift
 import Courier_iOS
