@@ -200,9 +200,9 @@ import UIKit
                     let sectionId = topic.sectionId
                     
                     // Add the item to the proper section
-                    if var existingSection = sections.first(where: { $0.id == sectionId }) {
+                    if let sectionIndex = sections.firstIndex(where: { $0.id == sectionId }) {
                         
-                        existingSection.topics.append(topic)
+                        sections[sectionIndex].topics.append(topic)
                         
                     } else {
                         
