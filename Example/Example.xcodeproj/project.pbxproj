@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		270E8E9D2BA4A793007E21EF /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 270E8E9C2BA4A793007E21EF /* ShowTime */; };
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
 		276425A42B9F87EC00DB08E1 /* Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425A32B9F87EC00DB08E1 /* Cells.swift */; };
@@ -95,6 +96,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27D8F1B22AE885DB00E54210 /* FirebaseMessaging in Frameworks */,
+				270E8E9D2BA4A793007E21EF /* ShowTime in Frameworks */,
 				27D8F1AF2AE885B400E54210 /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,6 +230,7 @@
 			packageProductDependencies = (
 				27D8F1AE2AE885B400E54210 /* Courier_iOS */,
 				27D8F1B12AE885DB00E54210 /* FirebaseMessaging */,
+				270E8E9C2BA4A793007E21EF /* ShowTime */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
@@ -283,6 +286,7 @@
 			packageReferences = (
 				27D8F1AD2AE885B400E54210 /* XCRemoteSwiftPackageReference "courier-ios" */,
 				27D8F1B02AE885DB00E54210 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				270E8E9B2BA4A793007E21EF /* XCRemoteSwiftPackageReference "ShowTime" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -641,6 +645,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		270E8E9B2BA4A793007E21EF /* XCRemoteSwiftPackageReference "ShowTime" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/KaneCheshire/ShowTime.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.3;
+			};
+		};
 		27D8F1AD2AE885B400E54210 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
@@ -660,6 +672,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		270E8E9C2BA4A793007E21EF /* ShowTime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 270E8E9B2BA4A793007E21EF /* XCRemoteSwiftPackageReference "ShowTime" */;
+			productName = ShowTime;
+		};
 		27D8F1AE2AE885B400E54210 /* Courier_iOS */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 27D8F1AD2AE885B400E54210 /* XCRemoteSwiftPackageReference "courier-ios" */;

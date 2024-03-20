@@ -7,11 +7,16 @@
 
 import UIKit
 import Courier_iOS
+import ShowTime
 
 class AuthViewController: UIViewController {
     
     @IBOutlet weak var authLabel: UILabel!
     @IBOutlet weak var authButton: UIButton!
+    @IBOutlet weak var showTouchesSwitch: UISwitch!
+    @IBAction func showTouchesAction(_ sender: Any) {
+        ShowTime.enabled = showTouchesSwitch.isOn ? .always : .never
+    }
     
     @IBAction func authButtonAction(_ sender: Any) {
         
@@ -50,6 +55,9 @@ class AuthViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Auth"
+        
+        ShowTime.enabled = .never
+        showTouchesSwitch.setOn(ShowTime.enabled == .always, animated: false)
 
         refresh()
         

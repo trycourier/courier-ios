@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -99,21 +99,41 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="hUi-Ky-cAY">
+                                <rect key="frame" x="107.33333333333333" y="714" width="175.66666666666669" height="31"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show Touches" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iBo-AB-A07">
+                                        <rect key="frame" x="0.0" y="0.0" width="110.66666666666667" height="31"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Idu-NA-CuY">
+                                        <rect key="frame" x="126.66666666666669" y="0.0" width="51" height="31"/>
+                                        <connections>
+                                            <action selector="showTouchesAction:" destination="miz-bH-rnm" eventType="valueChanged" id="j9w-x6-gzN"/>
+                                        </connections>
+                                    </switch>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aGi-VM-S4U"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="hUi-Ky-cAY" firstAttribute="bottom" secondItem="aGi-VM-S4U" secondAttribute="bottom" constant="-16" id="HcT-hG-gbr"/>
                             <constraint firstItem="BLd-SX-o9O" firstAttribute="top" secondItem="emG-u0-i0I" secondAttribute="bottom" constant="20" id="M6o-wV-ExL"/>
                             <constraint firstItem="BLd-SX-o9O" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="QGj-8L-kiy"/>
                             <constraint firstItem="BLd-SX-o9O" firstAttribute="top" secondItem="emG-u0-i0I" secondAttribute="bottom" constant="20" id="aFF-zO-UL6"/>
                             <constraint firstItem="emG-u0-i0I" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="kIq-X3-YAQ"/>
                             <constraint firstItem="BLd-SX-o9O" firstAttribute="centerY" secondItem="aGi-VM-S4U" secondAttribute="centerY" id="kr3-QL-DXd"/>
+                            <constraint firstItem="hUi-Ky-cAY" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="vtK-Dk-kZC"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="UCa-K7-8wT"/>
                     <connections>
                         <outlet property="authButton" destination="BLd-SX-o9O" id="2gF-tH-4YX"/>
                         <outlet property="authLabel" destination="emG-u0-i0I" id="n8b-mC-4QK"/>
+                        <outlet property="showTouchesSwitch" destination="Idu-NA-CuY" id="Kuw-ll-t8T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gi7-we-bW0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
