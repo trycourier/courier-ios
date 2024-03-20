@@ -29,7 +29,13 @@ import UIKit
     
     // MARK: Data
     
-    private(set) var preferences: [String : [CourierUserPreferencesTopic]] = [:]
+    internal struct Section {
+        let title: String
+        let id: String
+        var topics: [CourierUserPreferencesTopic]
+    }
+    
+    private(set) var preferences = [CourierPreferences.Section]()
     
     // MARK: Subviews
     
@@ -187,15 +193,32 @@ import UIKit
                 
                 let prefs = try await Courier.shared.getUserPreferences()
                 
-                // Map to section names
-                preferences = prefs.items.reduce(into: [:]) { result, item in
-                    if var array = result[item.sectionName] {
-                        array.append(item)
-                        result[item.sectionName] = array
+                var sections = [CourierPreferences.Section]()
+                
+                prefs.items.forEach { topic in
+                    
+                    let sectionId = topic.sectionId
+                    
+                    // Add the item to the proper section
+                    if var existingSection = preferences.first(where: { $0.id == sectionId }) {
+                        
+                        existingSection.topics.append(topic)
+                        
                     } else {
-                        result[item.sectionName] = [item]
+                        
+                        let newSection = CourierPreferences.Section(
+                            title: topic.sectionName,
+                            id: topic.sectionId,
+                            topics: [topic]
+                        )
+                        
+                        sections.append(newSection)
+                        
                     }
+                    
                 }
+                
+                self.preferences = sections
                 
                 // Reload the state
                 reloadViews()
@@ -345,11 +368,11 @@ import UIKit
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return preferences.keys.count
+        return preferences.count
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return getTopicsForSection(at: section).count
+        return preferences[section].topics.count
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -358,7 +381,7 @@ import UIKit
             return nil
         }
         
-        let sectionName = Array(preferences.keys)[section]
+        let sectionName = preferences[section].title
         
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: CourierPreferenceSectionHeaderView.id) as! CourierPreferenceSectionHeaderView
         
@@ -373,7 +396,7 @@ import UIKit
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
         
-        let topic = getTopicsForSection(at: indexPath.section)[indexPath.row]
+        let topic = preferences[indexPath.section].topics[indexPath.row]
         cell.configureCell(
             topic: topic,
             mode: self.mode,
@@ -390,7 +413,7 @@ import UIKit
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // Present the sheet
-        let topic = getTopicsForSection(at: indexPath.section)[indexPath.row]
+        let topic = preferences[indexPath.section].topics[indexPath.row]
         showSheet(topic: topic)
         
         // Deselect the cell
@@ -408,11 +431,6 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return Theme.Preferences.topicCellHeight
-    }
-    
-    private func getTopicsForSection(at index: Int) -> [CourierUserPreferencesTopic] {
-        let sectionName = Array(preferences.keys)[index]
-        return preferences[sectionName] ?? []
     }
     
     private func showSheet(topic: CourierUserPreferencesTopic) {
@@ -608,10 +626,10 @@ import UIKit
     
     private func updateTopic(topicId: String, newTopic: CourierUserPreferencesTopic) {
         DispatchQueue.main.async {
-            for (sectionName, topics) in self.preferences {
-                if let index = topics.firstIndex(where: { $0.topicId == topicId }) {
-                    self.preferences[sectionName]?[index] = newTopic
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: Array(self.preferences.keys).firstIndex(of: sectionName) ?? 0)], with: .fade)
+            for (sectionIndex, section) in self.preferences.enumerated() {
+                if let topicIndex = section.topics.firstIndex(where: { $0.topicId == topicId }) {
+                    self.preferences[sectionIndex].topics[topicIndex] = newTopic
+                    self.tableView.reloadRows(at: [IndexPath(row: topicIndex, section: sectionIndex)], with: .fade)
                     return
                 }
             }
