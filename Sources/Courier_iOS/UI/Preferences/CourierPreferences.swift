@@ -200,7 +200,7 @@ import UIKit
                     let sectionId = topic.sectionId
                     
                     // Add the item to the proper section
-                    if var existingSection = preferences.first(where: { $0.id == sectionId }) {
+                    if var existingSection = sections.first(where: { $0.id == sectionId }) {
                         
                         existingSection.topics.append(topic)
                         

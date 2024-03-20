@@ -657,7 +657,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "feature/preferences-ui";
+				branch = "bug/pref-order";
 				kind = branch;
 			};
 		};
