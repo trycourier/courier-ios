@@ -68,10 +68,6 @@ final class Concurrency: XCTestCase {
         })
         
         _ = try await spamMessages(userId: userId)
-        
-        while (true) {
-            // HOLD
-        }
 
     }
     
