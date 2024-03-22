@@ -288,7 +288,9 @@ final class CourierTests: XCTestCase {
             
         }
         
-        print("Total Inbox Messages: \(Courier.shared.inboxMessages?.count ?? 0)")
+        let messages = await Courier.shared.getInboxMessages()
+        
+        print("Total Inbox Messages: \(messages?.count ?? 0)")
         
         return listener
         
@@ -302,7 +304,9 @@ final class CourierTests: XCTestCase {
         
         let listener = try await loadAllInboxMessages()
         
-        XCTAssertNotNil(Courier.shared.inboxMessages)
+        let messages = await Courier.shared.getInboxMessages()
+        
+        XCTAssertNotNil(messages)
         
         listener.remove()
 
@@ -337,7 +341,8 @@ final class CourierTests: XCTestCase {
         
         // Find the first message
         // Needed because we need to ensure the inbox ref has data
-        let firstMessage = Courier.shared.inboxMessages?.first
+        let messages = await Courier.shared.getInboxMessages()
+        let firstMessage = messages?.first
         
         // Click the message
         try await Courier.shared.clickMessage(

@@ -54,14 +54,24 @@ internal class CoreInbox {
         }
     }
     
-    private func notifyMessagesChanged() {
+    private func notifyMessagesChanged() async {
+        
+        let messages = await self.inbox?.messages
+        let unreadCount = await self.inbox?.unreadCount
+        let totalCount = await self.inbox?.totalCount
+        let hasNextPage = await self.inbox?.hasNextPage
+        
         Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
                 $0.callMessageChanged(
-                    inbox: self?.inbox
+                    messages: messages,
+                    unreadCount: unreadCount,
+                    totalCount: totalCount,
+                    hasNextPage: hasNextPage
                 )
             }
         }
+        
     }
     
     // Reconnects and refreshes the data
@@ -104,7 +114,7 @@ internal class CoreInbox {
         }
         
         // Determine a safe limit
-        let messageCount = inbox?.messages?.count ?? paginationLimit
+        let messageCount = await inbox?.messages?.count ?? paginationLimit
         let maxRefreshLimit = min(messageCount, CoreInbox.defaultMaxPaginationLimit)
         let limit = refresh ? maxRefreshLimit : paginationLimit
         
@@ -134,7 +144,7 @@ internal class CoreInbox {
             startCursor: inboxData.messages?.pageInfo?.startCursor
         )
         
-        self.notifyMessagesChanged()
+        await self.notifyMessagesChanged()
         
     }
     
@@ -156,10 +166,13 @@ internal class CoreInbox {
         try await inboxRepo.connectInboxWebSocket(
             clientKey: clientKey,
             userId: userId,
-            onMessageReceived: { [weak self] message in
+            onMessageReceived: { message in
                 
-                self?.inbox?.addNewMessage(message: message)
-                self?.notifyMessagesChanged()
+                // Perform update with single reference
+                Task { [weak self] in
+                    await self?.inbox?.addNewMessage(message: message)
+                    await self?.notifyMessagesChanged()
+                }
                 
             },
             onMessageReceivedError: { [weak self] error in
@@ -193,13 +206,13 @@ internal class CoreInbox {
         let hasNextPage = inboxData.messages?.pageInfo?.hasNextPage
         let startCursor = inboxData.messages?.pageInfo?.startCursor
 
-        self.inbox?.addPage(
+        await self.inbox?.addPage(
             newMessages: newMessages,
             startCursor: startCursor,
             hasNextPage: hasNextPage
         )
 
-        self.notifyMessagesChanged()
+        await self.notifyMessagesChanged()
 
         return newMessages
         
@@ -237,8 +250,22 @@ internal class CoreInbox {
             
         } else if let inbox = self.inbox {
             
-            Utils.runOnMainThread {
-                listener.callMessageChanged(inbox: inbox)
+            Task {
+                
+                let messages = await inbox.messages
+                let unreadCount = await inbox.unreadCount
+                let totalCount = await inbox.totalCount
+                let hasNextPage = await inbox.hasNextPage
+                
+                Utils.runOnMainThread {
+                    listener.callMessageChanged(
+                        messages: messages,
+                        unreadCount: unreadCount,
+                        totalCount: totalCount,
+                        hasNextPage: hasNextPage
+                    )
+                }
+                
             }
             
         }
@@ -320,7 +347,9 @@ internal class CoreInbox {
         
         var msgs: [InboxMessage] = []
         
-        if (isPaging || self.inbox?.hasNextPage == false) {
+        let hasNextPage = await inbox?.hasNextPage
+        
+        if (isPaging || hasNextPage == false) {
             return msgs
         }
         
@@ -344,8 +373,9 @@ internal class CoreInbox {
             throw CourierError.missingUser
         }
         
-        // 是的，这有点儿傻
-        if let message = inbox?.messages?.filter({ $0.messageId == messageId }).first, let channelId = message.trackingIds?.clickTrackingId {
+        let messages = await inbox?.messages
+        
+        if let message = messages?.filter({ $0.messageId == messageId }).first, let channelId = message.trackingIds?.clickTrackingId {
             
             try await inboxRepo.clickMessage(
                 clientKey: clientKey,
@@ -365,10 +395,10 @@ internal class CoreInbox {
         }
 
         // Mark the message as read instantly
-        let original = try self.inbox?.readMessage(messageId: messageId)
+        let original = try await self.inbox?.readMessage(messageId: messageId)
 
         // Notify
-        notifyMessagesChanged()
+        await notifyMessagesChanged()
 
         // Perform datasource change in background
         do {
@@ -382,10 +412,10 @@ internal class CoreInbox {
         } catch {
             
             if let og = original {
-                self.inbox?.resetUpdate(update: og)
+                await self.inbox?.resetUpdate(update: og)
             }
             
-            self.notifyMessagesChanged()
+            await self.notifyMessagesChanged()
             self.notifyError(error)
             
         }
@@ -399,10 +429,10 @@ internal class CoreInbox {
         }
 
         // Mark the message as read instantly
-        let original = try self.inbox?.unreadMessage(messageId: messageId)
+        let original = try await self.inbox?.unreadMessage(messageId: messageId)
 
         // Notify
-        notifyMessagesChanged()
+        await notifyMessagesChanged()
 
         // Perform datasource change in background
         do {
@@ -416,10 +446,10 @@ internal class CoreInbox {
         } catch {
             
             if let og = original {
-                self.inbox?.resetUpdate(update: og)
+                await self.inbox?.resetUpdate(update: og)
             }
             
-            self.notifyMessagesChanged()
+            await self.notifyMessagesChanged()
             self.notifyError(error)
             
         }
@@ -433,10 +463,10 @@ internal class CoreInbox {
         }
 
         // Read the messages
-        let original = self.inbox?.readAllMessages()
+        let original = await self.inbox?.readAllMessages()
 
         // Notify
-        self.notifyMessagesChanged()
+        await self.notifyMessagesChanged()
 
         // Perform datasource change in background
         do {
@@ -447,10 +477,10 @@ internal class CoreInbox {
         } catch {
             
             if let og = original {
-                self.inbox?.resetReadAll(update: og)
+                await self.inbox?.resetReadAll(update: og)
             }
             
-            self.notifyMessagesChanged()
+            await self.notifyMessagesChanged()
             self.notifyError(error)
             
         }
@@ -461,10 +491,8 @@ internal class CoreInbox {
 
 extension Courier {
     
-    @objc public var inboxMessages: [InboxMessage]? {
-        get {
-            return coreInbox.inbox?.messages
-        }
+    @objc public func getInboxMessages() async -> [InboxMessage]? {
+        return await coreInbox.inbox?.messages
     }
     
     @objc public var inboxPaginationLimit: Int {
@@ -608,7 +636,7 @@ extension Courier {
     
 }
 
-internal class Inbox {
+internal actor Inbox {
     
     var messages: [InboxMessage]?
     var totalCount: Int
@@ -624,13 +652,13 @@ internal class Inbox {
         self.startCursor = startCursor
     }
     
-    func addNewMessage(message: InboxMessage) {
+    func addNewMessage(message: InboxMessage) async {
         self.messages?.insert(message, at: 0)
         self.totalCount += 1
         self.unreadCount += 1
     }
     
-    func addPage(newMessages: [InboxMessage], startCursor: String?, hasNextPage: Bool?) {
+    func addPage(newMessages: [InboxMessage], startCursor: String?, hasNextPage: Bool?) async {
         self.messages?.append(contentsOf: newMessages)
         self.startCursor = startCursor
         self.hasNextPage = hasNextPage

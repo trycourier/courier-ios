@@ -29,22 +29,17 @@ import Foundation
 
 extension CourierInboxListener {
     
-    internal func callMessageChanged(inbox: Inbox?) {
+    internal func callMessageChanged(messages: [InboxMessage]?, unreadCount: Int?, totalCount: Int?, hasNextPage: Bool?) {
         
         if (!isInitialized) {
             return
         }
         
-        let messages = inbox?.messages ?? []
-        let unreadCount = inbox?.unreadCount ?? 0
-        let totalCount = inbox?.totalCount ?? 0
-        let canPaginate = inbox?.hasNextPage ?? false
-        
         self.onMessagesChanged?(
-            messages,
-            unreadCount,
-            totalCount,
-            canPaginate
+            messages ?? [],
+            unreadCount ?? 0,
+            totalCount ?? 0,
+            hasNextPage ?? false
         )
         
     }

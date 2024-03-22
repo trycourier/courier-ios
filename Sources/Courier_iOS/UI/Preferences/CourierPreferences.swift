@@ -494,7 +494,6 @@ import UIKit
             onDismiss: { items in
                 self.handleChangeForMode(mode: self.mode, topic: topic, items: items)
                 self.sheetViewController = nil
-                
             }
         )
         
