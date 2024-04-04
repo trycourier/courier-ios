@@ -9,24 +9,22 @@ import Foundation
 
 internal class CoreAuth {
     
-    internal let userManager = UserManager()
-    
     private var listeners: [CourierAuthenticationListener] = []
     
     internal func signIn(accessToken: String, clientKey: String?, userId: String, push: CorePush, inbox: CoreInbox) async throws {
         
         // Check if the current user exists
-        if let currentUser = Courier.shared.userId {
-            Courier.log("User Id '\(currentUser)' is already signed in. Please call Courier.shared.signOut() to change the current user.")
+        if (Courier.shared.isUserSignedIn) {
+            Courier.log("User Id '\(Courier.shared.userId ?? "")' is already signed in. Please call Courier.shared.signOut() to change the current user.")
             return
         }
         
         Courier.log("Signing user in")
+        Courier.log("User Id: \(userId)")
         Courier.log("Access Token: \(accessToken)")
         Courier.log("Client Key: \(clientKey ?? "Not set")")
-        Courier.log("User Id: \(userId)")
         
-        userManager.setCredentials(
+        UserManager.shared.setCredentials(
             userId: userId,
             accessToken: accessToken,
             clientKey: clientKey
@@ -59,7 +57,7 @@ internal class CoreAuth {
     internal func signOut(push: CorePush, inbox: CoreInbox) async throws {
         
         // Check if the current user exists
-        guard Courier.shared.userId != nil else {
+        if (!Courier.shared.isUserSignedIn) {
             Courier.log("No user signed into Courier. A user must be signed in on order to sign out.")
             return
         }
@@ -72,7 +70,7 @@ internal class CoreAuth {
         
         // Sign out will still work, but will keep
         // existing tokens in Courier if failure
-        userManager.removeCredentials()
+        UserManager.shared.removeCredentials()
         
         // Notify
         notifyListeners()
@@ -112,12 +110,11 @@ internal class CoreAuth {
 extension Courier {
     
     /**
-     * A read only value set to the current user client key
-     * https://app.courier.com/channels/courier
+     * A read only value set to the current user id
      */
-    internal var clientKey: String? {
+    @objc public var userId: String? {
         get {
-            return coreAuth.userManager.getClientKey()
+            return UserManager.shared.getUserId()
         }
     }
     
@@ -129,16 +126,17 @@ extension Courier {
      */
     internal var accessToken: String? {
         get {
-            return coreAuth.userManager.getAccessToken()
+            return UserManager.shared.getAccessToken()
         }
     }
     
     /**
-     * A read only value set to the current user id
+     * A read only value set to the current user client key
+     * https://app.courier.com/channels/courier
      */
-    @objc public var userId: String? {
+    internal var clientKey: String? {
         get {
-            return coreAuth.userManager.getUserId()
+            return UserManager.shared.getClientKey()
         }
     }
     
