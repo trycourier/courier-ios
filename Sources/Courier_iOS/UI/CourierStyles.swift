@@ -44,18 +44,6 @@ public enum CourierStyles {
             
         }
         
-        public class InfoViewStyle: NSObject {
-            
-            internal let font: CourierStyles.Font
-            internal let button: CourierStyles.Button
-            
-            public init(font: CourierStyles.Font, button: CourierStyles.Button) {
-                self.font = font
-                self.button = button
-            }
-            
-        }
-        
         // MARK: Indicator
         
         public enum UnreadIndicator {
@@ -91,6 +79,20 @@ public enum CourierStyles {
                 self.toggleColor = toggleColor
             }
             
+        }
+        
+    }
+    
+    // MARK: InfoView
+    
+    public class InfoViewStyle: NSObject {
+        
+        internal let font: CourierStyles.Font
+        internal let button: CourierStyles.Button
+        
+        public init(font: CourierStyles.Font, button: CourierStyles.Button) {
+            self.font = font
+            self.button = button
         }
         
     }

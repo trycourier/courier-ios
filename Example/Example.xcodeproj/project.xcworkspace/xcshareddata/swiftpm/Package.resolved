@@ -25,7 +25,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "feature/jwt-upgrades",
-        "revision" : "160230d51b1ff7d745d63e54ab7f0826df732725"
+        "revision" : "c687811c1124a6ca40abd99a2816e0583fc6c35f"
       }
     },
     {

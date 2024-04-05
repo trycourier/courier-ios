@@ -105,6 +105,18 @@ internal class CourierActionButton: UIButton {
         
     }
     
+    internal func setInfoButtonPreferencesTheme(_ theme: CourierPreferencesTheme) {
+        
+        let padding = (Theme.margin / 2) * 1.5
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: padding, bottom: 0, right: padding)
+        titleLabel?.font = theme.infoViewStyle.button.font.font
+        titleLabel?.textColor = theme.infoViewStyle.button.font.color
+        setTitleColor(theme.infoViewStyle.button.font.color, for: .normal)
+        backgroundColor = theme.getInfoButtonColor()
+        layer.cornerRadius = theme.infoViewStyle.button.cornerRadius
+        
+    }
+    
     private func animate(fadeIn: Bool) {
         UIView.animate(withDuration: 0.35, delay: 0, options: .allowUserInteraction, animations: {
             self.alpha = fadeIn ? 1 : 0.5

@@ -22,6 +22,7 @@ import UIKit
     internal let sheetSettingStyles: CourierStyles.Preferences.SettingStyles
     internal let sheetCornerRadius: CGFloat
     internal let sheetCellStyles: CourierStyles.Cell
+    internal let infoViewStyle: CourierStyles.InfoViewStyle
     
     // MARK: Init
     
@@ -52,7 +53,16 @@ import UIKit
         ),
         sheetSettingStyles: CourierStyles.Preferences.SettingStyles = CourierStyles.Preferences.SettingStyles(),
         sheetCornerRadius: CGFloat = Theme.Preferences.sheetCornerRadius,
-        sheetCellStyles: CourierStyles.Cell = CourierStyles.Cell()
+        sheetCellStyles: CourierStyles.Cell = CourierStyles.Cell(),
+        infoViewStyle: CourierStyles.InfoViewStyle = CourierStyles.InfoViewStyle(
+            font: CourierStyles.Font(
+                font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
+                color: .label
+            ),
+            button: CourierStyles.Button(
+                font: CourierStyles.Font(font: UIFont.systemFont(ofSize: UIFont.labelFontSize), color: .white)
+            )
+        )
     ) {
         self.brandId = brandId
         self.loadingIndicatorColor = loadingIndicatorColor
@@ -65,6 +75,7 @@ import UIKit
         self.sheetSettingStyles = sheetSettingStyles
         self.sheetCornerRadius = sheetCornerRadius
         self.sheetCellStyles = sheetCellStyles
+        self.infoViewStyle = infoViewStyle
     }
     
     // MARK: Defaults
@@ -85,6 +96,16 @@ import UIKit
             } else {
                 return nil
             }
+        }
+    }
+    
+    internal func getInfoButtonColor() -> UIColor {
+        if let customColor = infoViewStyle.button.backgroundColor {
+            return customColor
+        } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+            return brandColor
+        } else {
+            return .systemBlue
         }
     }
     

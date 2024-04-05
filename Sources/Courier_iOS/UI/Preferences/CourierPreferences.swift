@@ -377,6 +377,9 @@ import UIKit
         // Update all cells
         tableView.reloadData()
         
+        // Update infoview
+        infoView.setTheme(theme)
+        
     }
     
     @objc private func onRefresh() {
