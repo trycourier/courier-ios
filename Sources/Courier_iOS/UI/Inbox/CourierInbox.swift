@@ -344,6 +344,7 @@ import UIKit
                 self.tableView.refreshControl?.endRefreshing()
             } catch {
                 Courier.log(error.localizedDescription)
+                self.state = .error(error)
             }
             
         }
