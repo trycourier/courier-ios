@@ -24,7 +24,7 @@ class CourierPreferenceSectionHeaderView: UITableViewHeaderFooterView {
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.margin),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
+//            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
         
