@@ -167,6 +167,8 @@ import UIKit
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
             if (userId != nil) {
                 self?.traitCollectionDidChange(nil)
+                self?.state = .loading
+                self?.onRefresh()
             }
         }
         
