@@ -55,6 +55,20 @@ class StyledPreferencesViewController: UIViewController {
                 sheetCornerRadius: 0,
                 sheetCellStyles: CourierStyles.Cell(
                     separatorStyle: .none
+                ),
+                infoViewStyle: CourierStyles.InfoViewStyle(
+                    font: CourierStyles.Font(
+                        font: UIFont(name: "Avenir Medium", size: 20)!,
+                        color: textColor
+                    ),
+                    button: CourierStyles.Button(
+                        font: CourierStyles.Font(
+                            font: UIFont(name: "Avenir Medium", size: 16)!,
+                            color: .white
+                        ),
+                        backgroundColor: secondaryColor,
+                        cornerRadius: 8
+                    )
                 )
             ),
             darkTheme: CourierPreferencesTheme(
@@ -97,6 +111,20 @@ class StyledPreferencesViewController: UIViewController {
                 sheetCornerRadius: 0,
                 sheetCellStyles: CourierStyles.Cell(
                     separatorStyle: .none
+                ),
+                infoViewStyle: CourierStyles.InfoViewStyle(
+                    font: CourierStyles.Font(
+                        font: UIFont(name: "Avenir Medium", size: 20)!,
+                        color: .white
+                    ),
+                    button: CourierStyles.Button(
+                        font: CourierStyles.Font(
+                            font: UIFont(name: "Avenir Medium", size: 16)!,
+                            color: .white
+                        ),
+                        backgroundColor: secondaryColor,
+                        cornerRadius: 8
+                    )
                 )
             ),
             onError: { error in

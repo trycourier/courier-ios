@@ -75,7 +75,7 @@ class StyledInboxViewController: UIViewController {
                     separatorStyle: .singleLine,
                     separatorInsets: .zero
                 ),
-                infoViewStyle: CourierStyles.Inbox.InfoViewStyle(
+                infoViewStyle: CourierStyles.InfoViewStyle(
                     font: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 20)!,
                         color: textColor
@@ -144,7 +144,7 @@ class StyledInboxViewController: UIViewController {
                 cellStyle: CourierStyles.Cell(
                     separatorStyle: .none
                 ),
-                infoViewStyle: CourierStyles.Inbox.InfoViewStyle(
+                infoViewStyle: CourierStyles.InfoViewStyle(
                     font: CourierStyles.Font(
                         font: UIFont(name: "Avenir Medium", size: 20)!,
                         color: .white
