@@ -167,11 +167,14 @@ import UIKit
         
         // Called when the auth state changes
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
+            
             if (userId != nil) {
                 self?.traitCollectionDidChange(nil)
                 self?.state = .loading
-                self?.onRefresh()
             }
+            
+            self?.onRefresh()
+            
         }
         
         // Add the views
