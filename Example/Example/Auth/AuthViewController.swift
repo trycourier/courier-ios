@@ -35,9 +35,13 @@ class AuthViewController: UIViewController {
                 
                 Task {
                     
+                    let jwt = try await ExampleServer().generateJwt(
+                        authKey: Env.COURIER_AUTH_KEY,
+                        userId: userId
+                    )
+                    
                     try await Courier.shared.signIn(
-                        accessToken: Env.COURIER_ACCESS_TOKEN,
-                        clientKey: Env.COURIER_CLIENT_KEY,
+                        accessToken: jwt,
                         userId: userId
                     )
                     

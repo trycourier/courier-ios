@@ -657,7 +657,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = master;
+				branch = "feature/jwt-upgrades";
 				kind = branch;
 			};
 		};
