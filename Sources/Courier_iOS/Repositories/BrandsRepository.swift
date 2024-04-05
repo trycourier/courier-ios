@@ -9,7 +9,7 @@ import Foundation
 
 internal class BrandsRepository: Repository {
     
-    internal func getBrand(clientKey: String, userId: String, brandId: String) async throws -> CourierBrand {
+    internal func getBrand(clientKey: String? = nil, jwt: String? = nil, userId: String, brandId: String) async throws -> CourierBrand {
         
         let query = """
         query GetBrand($brandId: String = "\(brandId)") {
@@ -30,6 +30,7 @@ internal class BrandsRepository: Repository {
         """
         
         let data = try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.baseGraphQL,

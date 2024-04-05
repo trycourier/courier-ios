@@ -108,7 +108,7 @@ internal class CoreInbox {
     
     internal func start(refresh: Bool = false) async throws {
         
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+        guard let userId = Courier.shared.userId else {
             self.notifyError(CourierError.missingUser)
             return
         }
@@ -119,20 +119,22 @@ internal class CoreInbox {
         let limit = refresh ? maxRefreshLimit : paginationLimit
         
         async let dataTask: (InboxData) = inboxRepo.getMessages(
-            clientKey: clientKey,
+            clientKey: Courier.shared.clientKey, 
+            jwt: Courier.shared.jwt,
             userId: userId,
             paginationLimit: limit
         )
         
         async let unreadCountTask: (Int) = inboxRepo.getUnreadMessageCount(
-            clientKey: clientKey,
+            clientKey: Courier.shared.clientKey,
+            jwt: Courier.shared.jwt,
             userId: userId
         )
         
         let (inboxData, unreadCount) = await (try dataTask, try unreadCountTask)
         
         try await connectWebSocket(
-            clientKey: clientKey,
+            clientKey: Courier.shared.clientKey,
             userId: userId
         )
         
@@ -160,7 +162,7 @@ internal class CoreInbox {
         
     }
     
-    private func connectWebSocket(clientKey: String, userId: String) async throws {
+    private func connectWebSocket(clientKey: String?, userId: String) async throws {
         
         // Create a new socket
         try await inboxRepo.connectInboxWebSocket(
@@ -191,12 +193,13 @@ internal class CoreInbox {
     
     @discardableResult internal func fetchNextPageOfMessages() async throws -> [InboxMessage] {
         
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId, let inbox = self.inbox else {
+        guard let userId = Courier.shared.userId, let inbox = self.inbox else {
             throw CourierError.missingUser
         }
         
         let inboxData = try await inboxRepo.getMessages(
-            clientKey: clientKey,
+            clientKey: Courier.shared.clientKey,
+            jwt: Courier.shared.jwt,
             userId: userId,
             paginationLimit: paginationLimit,
             startCursor: inbox.startCursor
@@ -236,7 +239,7 @@ internal class CoreInbox {
         }
         
         // User is not signed
-        if (!Courier.shared.isUserSignedIn || Courier.shared.clientKey == nil) {
+        if (!Courier.shared.isUserSignedIn) {
             Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
             Utils.runOnMainThread {
                 listener.onError?(CourierError.missingUser)
@@ -369,7 +372,7 @@ internal class CoreInbox {
     
     internal func clickMessage(messageId: String) async throws {
         
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+        guard let userId = Courier.shared.userId else {
             throw CourierError.missingUser
         }
         
@@ -378,7 +381,8 @@ internal class CoreInbox {
         if let message = messages?.filter({ $0.messageId == messageId }).first, let channelId = message.trackingIds?.clickTrackingId {
             
             try await inboxRepo.clickMessage(
-                clientKey: clientKey,
+                clientKey: Courier.shared.clientKey,
+                jwt: Courier.shared.jwt,
                 userId: userId,
                 messageId: messageId,
                 channelId: channelId
@@ -390,7 +394,7 @@ internal class CoreInbox {
     
     internal func readMessage(messageId: String) async throws {
 
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+        guard let userId = Courier.shared.userId else {
             throw CourierError.missingUser
         }
 
@@ -404,7 +408,8 @@ internal class CoreInbox {
         do {
             
             try await inboxRepo.readMessage(
-                clientKey: clientKey,
+                clientKey: Courier.shared.clientKey,
+                jwt: Courier.shared.jwt,
                 userId: userId,
                 messageId: messageId
             )
@@ -424,7 +429,7 @@ internal class CoreInbox {
     
     internal func unreadMessage(messageId: String) async throws {
 
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+        guard let userId = Courier.shared.userId else {
             throw CourierError.missingUser
         }
 
@@ -438,7 +443,8 @@ internal class CoreInbox {
         do {
             
             try await inboxRepo.unreadMessage(
-                clientKey: clientKey,
+                clientKey: Courier.shared.clientKey,
+                jwt: Courier.shared.jwt,
                 userId: userId,
                 messageId: messageId
             )
@@ -458,7 +464,7 @@ internal class CoreInbox {
     
     internal func readAllMessages() async throws {
 
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+        guard let userId = Courier.shared.userId else {
             throw CourierError.missingUser
         }
 
@@ -471,7 +477,8 @@ internal class CoreInbox {
         // Perform datasource change in background
         do {
             try await inboxRepo.readAllMessages(
-                clientKey: clientKey,
+                clientKey: Courier.shared.clientKey,
+                jwt: Courier.shared.jwt,
                 userId: userId
             )
         } catch {

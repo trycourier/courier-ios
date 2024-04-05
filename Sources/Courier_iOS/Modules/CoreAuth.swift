@@ -140,6 +140,16 @@ extension Courier {
         }
     }
     
+    /**
+     * Token needed to authenticate with JWTs for GraphQL requests
+     */
+    internal var jwt: String? {
+        get {
+            if let _ = clientKey { return nil }
+            return accessToken
+        }
+    }
+    
     @objc public var isUserSignedIn: Bool {
         get {
             return userId != nil && accessToken != nil

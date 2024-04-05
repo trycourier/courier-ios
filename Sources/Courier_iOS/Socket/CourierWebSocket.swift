@@ -14,12 +14,17 @@ internal class CourierInboxWebsocket {
     
     static var shared: CourierWebsocket? {
         
-        guard let clientKey = Courier.shared.clientKey else {
+        if (Courier.shared.clientKey == nil || Courier.shared.jwt == nil) {
             disconnect()
             return instance
         }
         
-        let url = "\(Repository.CourierUrl.inboxWebSocket)/?clientKey=\(clientKey)"
+        var url = Repository.CourierUrl.inboxWebSocket
+        if let jwt = Courier.shared.jwt {
+            url += "/?auth=\(jwt)"
+        } else if let clientKey = Courier.shared.clientKey {
+            url += "/?clientKey=\(clientKey)"
+        }
         
         if instance?.url.absoluteString != url {
             instance = CourierWebsocket(url: URL(string: url)!) { text in
@@ -31,14 +36,14 @@ internal class CourierInboxWebsocket {
         
     }
     
-    static func connect(clientKey: String, userId: String) {
+    static func connect(clientKey: String?, userId: String) {
         
         let json = """
         {
             "action": "subscribe",
             "data": {
                 "channel": "\(userId)",
-                "clientKey": "\(clientKey)",
+                "clientKey": "\(clientKey ?? "")",
                 "event": "*",
                 "version": "4"
             }

@@ -9,7 +9,7 @@ import Foundation
 
 internal class InboxRepository: Repository {
     
-    internal func connectInboxWebSocket(clientKey: String, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
+    internal func connectInboxWebSocket(clientKey: String? = nil, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
         
         if (CourierInboxWebsocket.shared?.isSocketConnected == true || CourierInboxWebsocket.shared?.isSocketConnecting == true) {
             return
@@ -40,7 +40,7 @@ internal class InboxRepository: Repository {
         CourierInboxWebsocket.disconnect()
     }
     
-    internal func getMessages(clientKey: String, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
+    internal func getMessages(clientKey: String? = nil, jwt: String? = nil, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
         
         let query = """
         query GetMessages(
@@ -83,6 +83,7 @@ internal class InboxRepository: Repository {
         """
         
         let data = try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
@@ -102,7 +103,7 @@ internal class InboxRepository: Repository {
 
     }
     
-    internal func getUnreadMessageCount(clientKey: String, userId: String, startCursor: String? = nil) async throws -> Int {
+    internal func getUnreadMessageCount(clientKey: String? = nil, jwt: String? = nil, userId: String, startCursor: String? = nil) async throws -> Int {
         
         let query = """
         query GetMessages(
@@ -120,6 +121,7 @@ internal class InboxRepository: Repository {
         """
         
         let data = try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
@@ -138,7 +140,7 @@ internal class InboxRepository: Repository {
 
     }
     
-    internal func clickMessage(clientKey: String, userId: String, messageId: String, channelId: String) async throws {
+    internal func clickMessage(clientKey: String? = nil, jwt: String? = nil, userId: String, messageId: String, channelId: String) async throws {
         
         let mutation = """
         mutation TrackEvent(
@@ -150,6 +152,7 @@ internal class InboxRepository: Repository {
         """
         
         try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
@@ -158,7 +161,7 @@ internal class InboxRepository: Repository {
         
     }
     
-    internal func readMessage(clientKey: String, userId: String, messageId: String) async throws {
+    internal func readMessage(clientKey: String? = nil, jwt: String? = nil, userId: String, messageId: String) async throws {
         
         let mutation = """
         mutation TrackEvent(
@@ -169,6 +172,7 @@ internal class InboxRepository: Repository {
         """
         
         try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
@@ -177,7 +181,7 @@ internal class InboxRepository: Repository {
         
     }
     
-    internal func unreadMessage(clientKey: String, userId: String, messageId: String) async throws {
+    internal func unreadMessage(clientKey: String? = nil, jwt: String? = nil, userId: String, messageId: String) async throws {
         
         let mutation = """
         mutation TrackEvent(
@@ -188,6 +192,7 @@ internal class InboxRepository: Repository {
         """
         
         try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
@@ -196,7 +201,7 @@ internal class InboxRepository: Repository {
         
     }
     
-    internal func openMessage(clientKey: String, userId: String, messageId: String) async throws {
+    internal func openMessage(clientKey: String? = nil, jwt: String? = nil, userId: String, messageId: String) async throws {
         
         let mutation = """
         mutation TrackEvent(
@@ -207,6 +212,7 @@ internal class InboxRepository: Repository {
         """
         
         try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
@@ -215,7 +221,7 @@ internal class InboxRepository: Repository {
         
     }
     
-    internal func readAllMessages(clientKey: String, userId: String) async throws {
+    internal func readAllMessages(clientKey: String? = nil, jwt: String? = nil, userId: String) async throws {
         
         let mutation = """
         mutation TrackEvent {
@@ -224,6 +230,7 @@ internal class InboxRepository: Repository {
         """
         
         try await graphQLQuery(
+            jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,

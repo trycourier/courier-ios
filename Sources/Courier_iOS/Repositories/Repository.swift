@@ -58,7 +58,7 @@ internal class Repository: NSObject {
         
     }
     
-    private func graphQL(clientKey: String, userId: String, url: String, query: String) async throws -> Data? {
+    private func graphQL(jwt: String?, clientKey: String?, userId: String, url: String, query: String) async throws -> Data? {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Data?, Error>) in
 
@@ -67,8 +67,13 @@ internal class Repository: NSObject {
             request.httpMethod = "POST"
             
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
             request.addValue(userId, forHTTPHeaderField: "x-courier-user-id")
+            
+            if let jwt = jwt {
+                request.addValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
+            } else if let clientKey = clientKey {
+                request.addValue(clientKey, forHTTPHeaderField: "x-courier-client-key")
+            }
             
             let payload = CourierGraphQLQuery(query: query)
             request.httpBody = try! JSONEncoder().encode(payload)
@@ -104,8 +109,8 @@ extension Repository {
     
     // MARK: Query
     
-    @discardableResult internal func graphQLQuery(clientKey: String, userId: String, url: String, query: String) async throws -> Data? {
-        return try await graphQL(clientKey: clientKey, userId: userId, url: url, query: query)
+    @discardableResult internal func graphQLQuery(jwt: String?, clientKey: String?, userId: String, url: String, query: String) async throws -> Data? {
+        return try await graphQL(jwt: jwt, clientKey: clientKey, userId: userId, url: url, query: query)
     }
     
     // MARK: GET
