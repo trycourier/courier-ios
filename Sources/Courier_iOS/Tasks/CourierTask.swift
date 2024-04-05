@@ -26,7 +26,10 @@ class CourierTask {
             Courier.log("\n📡 New Courier API Request")
             Courier.log("URL: \(request.url?.absoluteString ?? "")")
             Courier.log("Method: \(request.httpMethod ?? "")")
-            Courier.log("Headers: \(String(describing: request.allHTTPHeaderFields))")
+            
+            if let headers = request.allHTTPHeaderFields {
+                Courier.log("Headers: \(String(describing: headers))")
+            }
             
             if let body = request.httpBody {
                 let json = body.toPreview()

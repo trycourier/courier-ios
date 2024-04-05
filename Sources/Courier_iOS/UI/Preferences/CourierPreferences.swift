@@ -35,6 +35,10 @@ import UIKit
         var topics: [CourierUserPreferencesTopic]
     }
     
+    // MARK: Authentication
+    
+    private var authListener: CourierAuthenticationListener? = nil
+    
     private(set) var preferences = [CourierPreferences.Section]()
     
     // MARK: Subviews
@@ -160,6 +164,15 @@ import UIKit
     }
     
     private func setup() {
+        
+        // Called when the auth state changes
+        authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
+            if (userId != nil) {
+                self?.traitCollectionDidChange(nil)
+                self?.state = .loading
+                self?.onRefresh()
+            }
+        }
         
         // Add the views
         addTableView()
@@ -633,6 +646,13 @@ import UIKit
                 }
             }
         }
+    }
+    
+    /**
+     Clear the listeners
+     */
+    deinit {
+        self.authListener?.remove()
     }
     
 }
