@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "feature/jwt-upgrades",
-        "revision" : "0bec8a591497e13e2c193e91f6fd784742bef865"
+        "branch" : "master",
+        "revision" : "6689ac43298f9f5aa9c8f4499005481df2978e76"
       }
     },
     {
