@@ -7,7 +7,7 @@ final class CourierTests: XCTestCase {
     let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20])
     let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9"
     
-    private func signInUser(shouldUseJWT: Bool = false) async throws {
+    private func signInUser(shouldUseJWT: Bool = true) async throws {
         
         // Add listener. Just to make sure the listener is working
         
@@ -17,38 +17,45 @@ final class CourierTests: XCTestCase {
         
         // Sign the user out, if there is one
         
-        try await Courier.shared.signOut()
+        if let _ = Courier.shared.userId {
+            try await Courier.shared.signOut()
+        }
         
         // Check if we need to use the access token
         
-        var accessToken = Env.COURIER_ACCESS_TOKEN
-        
         if (shouldUseJWT) {
             
-            accessToken = try await ExampleServer().generateJwt(
+            let jwt = try await ExampleServer().generateJwt(
                 authKey: Env.COURIER_AUTH_KEY,
                 userId: Env.COURIER_USER_ID
             )
             
+            try await Courier.shared.signIn(
+                accessToken: jwt,
+                userId: Env.COURIER_USER_ID
+            )
+            
+            XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
+            XCTAssertEqual(Courier.shared.accessToken, jwt)
+            XCTAssertEqual(Courier.shared.clientKey, nil)
+            
+        } else {
+            
+            try await Courier.shared.signIn(
+                accessToken: Env.COURIER_ACCESS_TOKEN,
+                clientKey: Env.COURIER_CLIENT_KEY,
+                userId: Env.COURIER_USER_ID
+            )
+            
+            XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
+            XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
+            XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
+            
         }
-        
-        // Sign the user in
-        
-        try await Courier.shared.signIn(
-            accessToken: accessToken,
-            clientKey: Env.COURIER_CLIENT_KEY,
-            userId: Env.COURIER_USER_ID
-        )
         
         // Remove the listener
         
         listener.remove()
-        
-        // Test values
-        
-        XCTAssertEqual(Courier.shared.accessToken, accessToken)
-        XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
         
     }
     
