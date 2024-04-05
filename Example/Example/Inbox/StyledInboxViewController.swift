@@ -17,7 +17,7 @@ class StyledInboxViewController: UIViewController {
     private lazy var courierInbox = {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
-                brandId: "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M",
+                brandId: Env.COURIER_BRAND_ID,
                 messageAnimationStyle: .fade,
                 unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
                     indicator: .dot,
@@ -91,6 +91,7 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             darkTheme: CourierInboxTheme(
+                brandId: Env.COURIER_BRAND_ID,
                 unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
                     indicator: .dot
                 ),

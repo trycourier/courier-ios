@@ -17,7 +17,7 @@ class StyledPreferencesViewController: UIViewController {
         return CourierPreferences(
             mode: .channels([.push, .sms, .email]),
             lightTheme: CourierPreferencesTheme(
-                brandId: "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M",
+                brandId: Env.COURIER_BRAND_ID,
                 sectionTitleFont: CourierStyles.Font(
                     font: UIFont(name: "Avenir Black", size: 20)!,
                     color: textColor
@@ -58,7 +58,7 @@ class StyledPreferencesViewController: UIViewController {
                 )
             ),
             darkTheme: CourierPreferencesTheme(
-                brandId: "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M",
+                brandId: Env.COURIER_BRAND_ID,
                 loadingIndicatorColor: secondaryColor,
                 sectionTitleFont: CourierStyles.Font(
                     font: UIFont(name: "Avenir Black", size: 20)!,

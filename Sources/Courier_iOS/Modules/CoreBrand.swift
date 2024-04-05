@@ -13,12 +13,13 @@ internal class CoreBrand {
 
     internal func getBrand(brandId: String) async throws -> CourierBrand {
         
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+        guard let userId = Courier.shared.userId else {
             throw CourierError.missingUser
         }
         
         return try await brandsRepo.getBrand(
-            clientKey: clientKey,
+            clientKey: Courier.shared.clientKey,
+            jwt: Courier.shared.jwt,
             userId: userId,
             brandId: brandId
         )
