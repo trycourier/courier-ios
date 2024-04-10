@@ -116,12 +116,13 @@ final class CourierTests: XCTestCase {
 
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_AUTH_KEY,
+            clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
 
         XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_AUTH_KEY)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.clientKey, nil)
+        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
         
     }
     
@@ -133,15 +134,18 @@ final class CourierTests: XCTestCase {
         
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_AUTH_KEY,
+            clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
         
         try await Courier.shared.signIn(
             accessToken: "different_token",
+            clientKey: "different_key",
             userId: "different_id"
         )
         
         XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_AUTH_KEY)
+        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         
         try await Courier.shared.signOut()
@@ -165,13 +169,12 @@ final class CourierTests: XCTestCase {
 
         try await Courier.shared.signIn(
             accessToken: jwt,
-            clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
 
         XCTAssertEqual(Courier.shared.accessToken, jwt)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
+        XCTAssertEqual(Courier.shared.clientKey, nil)
         
     }
     
@@ -316,6 +319,60 @@ final class CourierTests: XCTestCase {
         XCTAssertNotNil(messages)
         
         listener.remove()
+
+    }
+    
+    func testInboxListenerWithAuth() async throws {
+
+        print("\n🔬 Testing Inbox Auth States")
+        
+        Courier.shared.isDebugging = false
+        
+        try await Courier.shared.signOut()
+        
+        // 0. Add a listener
+        Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("onInitialLoad 1")
+            },
+            onError: { e in
+                print("onError 1")
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+                print("onMessagesChanged 1")
+            }
+        )
+        
+        // 1. Sign user in
+        try await signInUser()
+        
+        // 2. Add another listener
+        var isLoading = true
+        
+        Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("onInitialLoad 2")
+                isLoading = true
+            },
+            onError: { e in
+                print("onError 2")
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+                print("onMessagesChanged 2")
+                isLoading = false
+            }
+        )
+        
+        // 3. Sign user in again
+        try await signInUser()
+        
+        while (isLoading) {
+            // Empty
+        }
+        
+        Courier.shared.removeAllInboxListeners()
+        
+        Courier.shared.isDebugging = true
 
     }
     

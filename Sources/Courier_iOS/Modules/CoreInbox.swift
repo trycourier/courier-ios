@@ -109,8 +109,14 @@ internal class CoreInbox {
     internal func start(refresh: Bool = false) async throws {
         
         guard let userId = Courier.shared.userId else {
-            self.notifyError(CourierError.missingUser)
+            close()
+            notifyError(CourierError.missingUser)
             return
+        }
+        
+        // Show initial loading state
+        if (!refresh) {
+            close()
         }
         
         // Determine a safe limit
@@ -147,18 +153,6 @@ internal class CoreInbox {
         )
         
         await self.notifyMessagesChanged()
-        
-    }
-    
-    internal func restartInboxIfNeeded() async throws {
-        
-        // Check if we need to start the inbox pipe
-        if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == false) {
-            
-            self.notifyInitialLoading()
-            try await start()
-            
-        }
         
     }
     
@@ -238,28 +232,17 @@ internal class CoreInbox {
             listener.initialize()
         }
         
-        // User is not signed
-        if (!Courier.shared.isUserSignedIn) {
-            Courier.log("User is not signed in. Please sign in to setup the inbox listener.")
-            Utils.runOnMainThread {
-                listener.onError?(CourierError.missingUser)
-            }
-            return listener
-        }
-        
-        if (listeners.count == 1) {
+        // Return existing inbox to listener or start the inbox
+        Task {
             
-            fetchStart()
-            
-        } else if let inbox = self.inbox {
-            
-            Task {
+            if let inbox = self.inbox {
                 
                 let messages = await inbox.messages
                 let unreadCount = await inbox.unreadCount
                 let totalCount = await inbox.totalCount
                 let hasNextPage = await inbox.hasNextPage
                 
+                // Give data to the listener
                 Utils.runOnMainThread {
                     listener.callMessageChanged(
                         messages: messages,
@@ -268,6 +251,10 @@ internal class CoreInbox {
                         hasNextPage: hasNextPage
                     )
                 }
+                
+            } else if (listeners.count == 1) {
+                
+                fetchStart()
                 
             }
             
@@ -287,6 +274,7 @@ internal class CoreInbox {
         // Kill the pipes if nothing is listening
         if (listeners.isEmpty) {
             close()
+            notifyError(CourierError.missingUser)
         }
         
     }
@@ -294,17 +282,12 @@ internal class CoreInbox {
     internal func removeAllListeners() {
         listeners.removeAll()
         close()
+        notifyError(CourierError.missingUser)
     }
     
     internal func close() {
-        
-        // Clear out data and stop socket
         self.inbox = nil
         self.inboxRepo.closeInboxWebSocket()
-        
-        // Tell listeners about the change
-        self.notifyError(CourierError.missingUser)
-        
     }
     
     internal func refresh() async throws {
@@ -700,15 +683,15 @@ internal actor Inbox {
         self.unreadCount = update.unreadCount
     }
     
-    func readMessage(messageId: String) throws -> UpdateOperation {
+    func readMessage(messageId: String) throws -> UpdateOperation? {
         
         guard let messages = self.messages else {
-            throw CourierError.inboxNotInitialized
+            return nil
         }
         
         let index = messages.firstIndex { $0.messageId == messageId }
         guard let i = index else {
-            throw CourierError.inboxNotInitialized
+            return nil
         }
 
         // Save copy
@@ -732,15 +715,15 @@ internal actor Inbox {
         
     }
     
-    func unreadMessage(messageId: String) throws -> UpdateOperation {
+    func unreadMessage(messageId: String) throws -> UpdateOperation? {
         
         guard let messages = self.messages else {
-            throw CourierError.inboxNotInitialized
+            return nil
         }
         
         let index = messages.firstIndex { $0.messageId == messageId }
         guard let i = index else {
-            throw CourierError.inboxNotInitialized
+            return nil
         }
 
         // Save copy

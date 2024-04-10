@@ -20,6 +20,7 @@ final class Concurrency: XCTestCase {
         
         try await Courier.shared.signIn(
             accessToken: Env.COURIER_AUTH_KEY,
+            clientKey: Env.COURIER_CLIENT_KEY,
             userId: "example_1"
         )
         
