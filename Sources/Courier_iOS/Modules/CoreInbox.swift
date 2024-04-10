@@ -290,6 +290,11 @@ internal class CoreInbox {
         self.inboxRepo.closeInboxWebSocket()
     }
     
+    internal func stop() {
+        self.close()
+        notifyError(CourierError.missingUser)
+    }
+    
     internal func refresh() async throws {
         try await start(refresh: true)
     }

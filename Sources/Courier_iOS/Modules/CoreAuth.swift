@@ -66,7 +66,7 @@ internal class CoreAuth {
         
         await push.deletePushTokens()
         
-        inbox.close()
+        inbox.stop()
         
         // Sign out will still work, but will keep
         // existing tokens in Courier if failure
