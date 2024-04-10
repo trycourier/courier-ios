@@ -15,6 +15,7 @@ internal struct CourierSheetItem {
 }
 
 @available(iOS 15.0, *)
+@available(iOSApplicationExtension, unavailable)
 internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private lazy var tableView: UITableView = {

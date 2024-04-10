@@ -8,6 +8,7 @@
 import UIKit
 
 @available(iOS 15.0, *)
+@available(iOSApplicationExtension, unavailable)
 internal class CourierPreferenceTopicCell: UITableViewCell {
     
     static let id = "CourierPreferenceTopicCell"
