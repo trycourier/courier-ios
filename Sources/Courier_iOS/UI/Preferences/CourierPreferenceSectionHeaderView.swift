@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 class CourierPreferenceSectionHeaderView: UITableViewHeaderFooterView {
     
     static let id = "CourierPreferenceSectionHeaderView"
