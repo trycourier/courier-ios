@@ -11,18 +11,18 @@ import UIKit
     
     // MARK: Styling
     
-    internal let brandId: String?
-    private let loadingIndicatorColor: UIColor?
-    internal let topicCellStyles: CourierStyles.Cell
-    internal let sectionTitleFont: CourierStyles.Font
-    internal let topicTitleFont: CourierStyles.Font
-    internal let topicSubtitleFont: CourierStyles.Font
-    internal let topicButton: CourierStyles.Button
-    internal let sheetTitleFont: CourierStyles.Font
-    internal let sheetSettingStyles: CourierStyles.Preferences.SettingStyles
-    internal let sheetCornerRadius: CGFloat
-    internal let sheetCellStyles: CourierStyles.Cell
-    internal let infoViewStyle: CourierStyles.InfoViewStyle
+    let brandId: String?
+    let loadingIndicatorColor: UIColor?
+    let topicCellStyles: CourierStyles.Cell
+    let sectionTitleFont: CourierStyles.Font
+    let topicTitleFont: CourierStyles.Font
+    let topicSubtitleFont: CourierStyles.Font
+    let topicButton: CourierStyles.Button
+    let sheetTitleFont: CourierStyles.Font
+    let sheetSettingStyles: CourierStyles.Preferences.SettingStyles
+    let sheetCornerRadius: CGFloat
+    let sheetCellStyles: CourierStyles.Cell
+    let infoViewStyle: CourierStyles.InfoViewStyle
     
     // MARK: Init
     

@@ -11,16 +11,16 @@ import UIKit
     
     // MARK: Styling
     
-    internal let brandId: String?
-    internal let messageAnimationStyle: UITableView.RowAnimation
-    private let loadingIndicatorColor: UIColor?
-    internal let unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle
-    internal let titleStyle: CourierStyles.Inbox.TextStyle
-    internal let timeStyle: CourierStyles.Inbox.TextStyle
-    internal let bodyStyle: CourierStyles.Inbox.TextStyle
-    internal let buttonStyle: CourierStyles.Inbox.ButtonStyle
-    internal let cellStyle: CourierStyles.Cell
-    internal let infoViewStyle: CourierStyles.InfoViewStyle
+    let brandId: String?
+    let messageAnimationStyle: UITableView.RowAnimation
+    let loadingIndicatorColor: UIColor?
+    let unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle
+    let titleStyle: CourierStyles.Inbox.TextStyle
+    let timeStyle: CourierStyles.Inbox.TextStyle
+    let bodyStyle: CourierStyles.Inbox.TextStyle
+    let buttonStyle: CourierStyles.Inbox.ButtonStyle
+    let cellStyle: CourierStyles.Cell
+    let infoViewStyle: CourierStyles.InfoViewStyle
     
     // MARK: Init
     
