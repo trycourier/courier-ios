@@ -15,8 +15,8 @@ public enum CourierStyles {
      
         public class TextStyle: NSObject {
             
-            internal let unread: CourierStyles.Font
-            internal let read: CourierStyles.Font
+            public let unread: CourierStyles.Font
+            public let read: CourierStyles.Font
             
             public init(unread: CourierStyles.Font, read: CourierStyles.Font) {
                 self.unread = unread
@@ -27,8 +27,8 @@ public enum CourierStyles {
         
         public class ButtonStyle: NSObject {
             
-            internal let unread: CourierStyles.Button
-            internal let read: CourierStyles.Button
+            public let unread: CourierStyles.Button
+            public let read: CourierStyles.Button
             
             public init(
                 unread: CourierStyles.Button = CourierStyles.Button(
@@ -53,8 +53,8 @@ public enum CourierStyles {
 
         public class UnreadIndicatorStyle: NSObject {
             
-            internal let indicator: UnreadIndicator
-            internal let color: UIColor?
+            public let indicator: UnreadIndicator
+            public let color: UIColor?
             
             public init(indicator: UnreadIndicator = .line, color: UIColor? = nil) {
                 self.indicator = indicator
@@ -71,8 +71,8 @@ public enum CourierStyles {
         
         public class SettingStyles: NSObject {
             
-            internal let font: CourierStyles.Font?
-            internal let toggleColor: UIColor?
+            public let font: CourierStyles.Font?
+            public let toggleColor: UIColor?
             
             public init(font: CourierStyles.Font? = nil, toggleColor: UIColor? = nil) {
                 self.font = font
@@ -87,8 +87,8 @@ public enum CourierStyles {
     
     public class InfoViewStyle: NSObject {
         
-        internal let font: CourierStyles.Font
-        internal let button: CourierStyles.Button
+        public let font: CourierStyles.Font
+        public let button: CourierStyles.Button
         
         public init(font: CourierStyles.Font, button: CourierStyles.Button) {
             self.font = font
@@ -101,10 +101,10 @@ public enum CourierStyles {
     
     public class Cell: NSObject {
         
-        internal let separatorStyle: UITableViewCell.SeparatorStyle
-        internal let separatorInsets: UIEdgeInsets
-        internal let separatorColor: UIColor?
-        internal let selectionStyle: UITableViewCell.SelectionStyle
+        public let separatorStyle: UITableViewCell.SeparatorStyle
+        public let separatorInsets: UIEdgeInsets
+        public let separatorColor: UIColor?
+        public let selectionStyle: UITableViewCell.SelectionStyle
         
         public init(separatorStyle: UITableViewCell.SeparatorStyle = .singleLine, separatorInsets: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 0), separatorColor: UIColor? = nil, selectionStyle: UITableViewCell.SelectionStyle = .default) {
             self.separatorStyle = separatorStyle
@@ -119,9 +119,9 @@ public enum CourierStyles {
     
     public class Button: NSObject {
         
-        internal let font: CourierStyles.Font
-        internal let backgroundColor: UIColor?
-        internal let cornerRadius: CGFloat
+        public let font: CourierStyles.Font
+        public let backgroundColor: UIColor?
+        public let cornerRadius: CGFloat
         
         public init(font: CourierStyles.Font, backgroundColor: UIColor? = nil, cornerRadius: CGFloat = 8) {
             
@@ -142,8 +142,8 @@ public enum CourierStyles {
     
     public class Font: NSObject {
         
-        internal let font: UIFont
-        internal let color: UIColor
+        public let font: UIFont
+        public let color: UIColor
         
         public init(font: UIFont, color: UIColor) {
             self.font = font
