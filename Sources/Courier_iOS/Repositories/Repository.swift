@@ -20,7 +20,7 @@ internal class Repository: NSObject {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Data?, Error>) in
 
-            let u = URL(string: url)!
+            let u = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
             var request = URLRequest(url: u)
             request.httpMethod = method
             
@@ -62,7 +62,7 @@ internal class Repository: NSObject {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Data?, Error>) in
 
-            let u = URL(string: url)!
+            let u = URL(string: url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)!
             var request = URLRequest(url: u)
             request.httpMethod = "POST"
             

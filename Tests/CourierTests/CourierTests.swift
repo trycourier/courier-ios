@@ -6,6 +6,7 @@ final class CourierTests: XCTestCase {
     // Fake Token Values
     let rawApnsToken = Data([110, 157, 218, 189, 21, 13, 6, 181, 101, 205, 146, 170, 48, 254, 173, 48, 181, 30, 113, 220, 237, 83, 213, 213, 237, 248, 254, 211, 130, 206, 45, 20])
     let fcmToken = "F15C9C75-D8D3-48A7-989F-889BEE3BE8D9"
+    let expoToken = "ExponentPushToken[_Example_Token]"
     
     private func signInUser(shouldUseJWT: Bool = true) async throws {
         
@@ -201,12 +202,15 @@ final class CourierTests: XCTestCase {
         try await signInUser()
         
         try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
-        
         let fcm = await Courier.shared.getToken(provider: .firebaseFcm)
+        
+        try await Courier.shared.setToken(provider: .expo, token: expoToken)
+        let expo = await Courier.shared.getToken(provider: .expo)
 
         XCTAssertEqual(Courier.shared.accessToken != nil, true)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         XCTAssertEqual(fcm, fcmToken)
+        XCTAssertEqual(expo, expoToken)
 
     }
     
@@ -580,12 +584,14 @@ final class CourierTests: XCTestCase {
         let apns = await Courier.shared.getAPNSToken()
         let fcm = await Courier.shared.getToken(providerKey: "firebase-fcm")
         let expo = await Courier.shared.getToken(provider: .expo)
+        let oneSignal = await Courier.shared.getToken(provider: .oneSignal)
 
         XCTAssertEqual(Courier.shared.accessToken, nil)
         XCTAssertEqual(Courier.shared.clientKey, nil)
         XCTAssertEqual(Courier.shared.userId, nil)
         XCTAssertEqual(fcm, fcmToken)
-        XCTAssertEqual(expo, nil)
+        XCTAssertEqual(expo, expoToken)
+        XCTAssertEqual(oneSignal, nil)
         XCTAssertEqual(apns?.string, rawApnsToken.string)
 
     }
