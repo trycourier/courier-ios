@@ -33,10 +33,10 @@ internal class CoreAuth {
         do {
             
             async let putTokens: () = push.putPushTokens()
-            async let startInbox: () = inbox.start()
+//            async let startInbox: () = inbox.start()
             
             // Batch all functions together
-            let _ = try await [putTokens, startInbox]
+            let _ = try await [putTokens]
             
             // Notify
             notifyListeners()

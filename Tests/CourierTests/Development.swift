@@ -56,6 +56,18 @@ final class Concurrency: XCTestCase {
         
         try await Courier.shared.signOut()
         
+        Courier.shared.addInboxListener(
+            onInitialLoad: {
+               print("Load")
+            },
+            onError: { error in
+               print(error)
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+                print(messages.count)
+            }
+        )
+        
         let userId = "asdf"
         
         try await Courier.shared.signIn(
@@ -64,11 +76,8 @@ final class Concurrency: XCTestCase {
             userId: userId
         )
         
-        Courier.shared.addInboxListener(onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
-            print(messages.count)
-        })
-        
-        _ = try await spamMessages(userId: userId)
+        let expectation = XCTestExpectation(description: "Test should hold indefinitely")
+        await XCTWaiter().fulfillment(of: [expectation], timeout: .infinity, enforceOrder: true)
 
     }
     

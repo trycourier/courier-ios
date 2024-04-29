@@ -91,11 +91,11 @@ import UIKit
     }
     
     @objc private func didEnterForeground() {
-        coreInbox.link()
+//        coreInbox.link()
     }
     
     @objc private func didEnterBackground() {
-        coreInbox.unlink()
+//        coreInbox.unlink()
     }
     
 }
