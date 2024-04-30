@@ -255,7 +255,7 @@ internal class CoreInbox {
         listeners.append(listener)
         
         // Start the inbox data pipeline
-        if (listeners.count == 1 && fetchInboxData == nil) {
+        if (fetchInboxData == nil) {
             start()
             return listener
         }
