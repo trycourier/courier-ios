@@ -30,9 +30,21 @@ class RootTabBarController: UITabBarController {
     }
     
     private func setBadge(_ count: Int) {
+        
         let tabTitle = count <= 0 ? nil : "\(count)"
         self.tabBar.items?[2].badgeValue = tabTitle
-        UIApplication.shared.applicationIconBadgeNumber = count
+        
+        Task {
+            
+            let center = UNUserNotificationCenter.current()
+            do {
+                 try await center.setBadgeCount(count)
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+        }
+        
     }
     
     deinit {

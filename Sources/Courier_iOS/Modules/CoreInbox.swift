@@ -542,9 +542,11 @@ extension Courier {
      Could be used for pull to refresh functionality
      */
     @objc public func refreshInbox() async throws {
-        coreInbox.refresh {
-            // Empty
-        }
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+            coreInbox.refresh {
+                continuation.resume()
+            }
+        })
     }
     
     @objc public func refreshInbox(onComplete: @escaping () -> Void) {
