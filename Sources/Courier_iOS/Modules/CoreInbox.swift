@@ -78,32 +78,19 @@ internal class CoreInbox {
     // Called because the websocket may have disconnected or
     // new data may have been sent when the user closed their app
     internal func link() {
-        
-        Task {
-            
-            if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == false) {
-                
-                do {
-                    try await start(refresh: true)
-                } catch {
-                    let e = CourierError(from: error)
-                    notifyError(e)
-                }
-                
+        if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == false) {
+            refresh {
+                Courier.log("Inbox refreshed")
             }
-            
         }
-        
     }
 
     // Disconnects the websocket
     // Helps keep battery usage lower
     internal func unlink() {
-        
         if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == true) {
-            inboxRepo.closeInboxWebSocket()
+            close()
         }
-        
     }
     
     internal func start(refresh: Bool = false, onComplete: (() -> Void)? = nil) {
