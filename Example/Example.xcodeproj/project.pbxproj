@@ -657,7 +657,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = feature/socket430;
+				branch = master;
 				kind = branch;
 			};
 		};
