@@ -101,14 +101,17 @@ internal class CoreInbox {
             return
         }
         
-        // Already fetching or fetched. End now
-        if (self.fetchInboxData != nil || self.inbox != nil) {
+        // End if we already have inbox data
+        if (self.inbox != nil) {
             return
         }
         
         // Get auth keys
         let clientKey = Courier.shared.clientKey
         let jwt = Courier.shared.jwt
+        
+        // Start the fetch again
+        self.fetchInboxData?.cancel()
         
         // Keep track of the initial setup
         self.fetchInboxData = Task {

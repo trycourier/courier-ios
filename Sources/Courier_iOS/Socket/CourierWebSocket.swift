@@ -14,7 +14,7 @@ internal class CourierInboxWebsocket {
     
     static var shared: CourierWebsocket? {
         
-        if (Courier.shared.clientKey == nil || Courier.shared.jwt == nil) {
+        if (Courier.shared.clientKey == nil && Courier.shared.jwt == nil) {
             disconnect()
             return instance
         }
