@@ -541,12 +541,14 @@ extension Courier {
      Reloads and rebuilds the inbox with new messages and a new socket
      Could be used for pull to refresh functionality
      */
-    @objc public func refreshInbox() async throws {
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+    @objc public func refreshInbox() async {
+        return await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             coreInbox.refresh {
-                continuation.resume()
+                Utils.runOnMainThread {
+                    continuation.resume()
+                }
             }
-        })
+        }
     }
     
     @objc public func refreshInbox(onComplete: @escaping () -> Void) {
