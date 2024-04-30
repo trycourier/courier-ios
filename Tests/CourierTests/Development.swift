@@ -8,7 +8,7 @@
 import XCTest
 @testable import Courier_iOS
 
-final class Concurrency: XCTestCase {
+final class Development: XCTestCase {
     
     let rawApnsToken = Data([110, 157, 218, 189])
     
@@ -54,6 +54,31 @@ final class Concurrency: XCTestCase {
         
         print("\n🔬 Testing Inbox Listener")
         
+        var hold1 = true
+        var hold2 = true
+        var hold3 = true
+        
+        Courier.shared.isDebugging = false
+        
+        try await Courier.shared.signOut()
+        
+        print(Courier.shared.isUserSignedIn)
+        
+        let listener1 = Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("Loading 1")
+            },
+            onError: { error in
+                print("Error 1")
+                print(error)
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+                print("Messages 1")
+                print(messages.count)
+                hold1 = false
+            }
+        )
+        
         try await Courier.shared.signOut()
         
         let userId = "asdf"
@@ -64,11 +89,34 @@ final class Concurrency: XCTestCase {
             userId: userId
         )
         
-        Courier.shared.addInboxListener(onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
-            print(messages.count)
-        })
+        let listener2 = Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("Loading 2")
+            },
+            onError: { error in
+                print("Error 2")
+                print(error)
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+                
+                print("Messages 2")
+                print(messages.count)
+                hold2 = false
+                
+                // Trigger a refresh
+                Courier.shared.refreshInbox {
+                    hold3 = false
+                }
+                
+            }
+        )
         
-        _ = try await spamMessages(userId: userId)
+        while (hold1 || hold2 || hold3) {
+            // Empty
+        }
+        
+        listener1.remove()
+        listener2.remove()
 
     }
     
@@ -128,9 +176,9 @@ final class Concurrency: XCTestCase {
         request.httpMethod = "PUT"
         request.httpBody = postData
         
-        print(request.url)
-        print(request.allHTTPHeaderFields)
-        print(request.httpMethod)
+        print(request.url ?? "")
+        print(request.allHTTPHeaderFields ?? [:])
+        print(request.httpMethod ?? "")
         
         let (data, response) = try await URLSession.shared.data(for: request)
             

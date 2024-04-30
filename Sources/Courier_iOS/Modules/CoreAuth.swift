@@ -30,27 +30,12 @@ internal class CoreAuth {
             clientKey: clientKey
         )
         
-        do {
-            
-            async let putTokens: () = push.putPushTokens()
-            async let startInbox: () = inbox.start()
-            
-            // Batch all functions together
-            let _ = try await [putTokens, startInbox]
-            
-            // Notify
-            notifyListeners()
-            
-        } catch {
-            
-            let e = CourierError(from: error)
-            Courier.log(e.message)
-            
-            try await signOut(push: push, inbox: inbox)
-            
-            throw e
-            
-        }
+        // Batch all functions together
+        async let putTokens: () = push.putPushTokens()
+        async let startInbox: () = inbox.start()
+        let _ = await [putTokens, startInbox]
+        
+        notifyListeners()
         
     }
     

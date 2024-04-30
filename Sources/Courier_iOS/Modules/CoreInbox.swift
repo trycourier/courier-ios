@@ -35,7 +35,7 @@ internal class CoreInbox {
 
     private var listeners: [CourierInboxListener] = []
     
-    private var fetch: Task<Void, Error>? = nil
+    private var fetchInboxData: Task<Void, Error>? = nil
     private var isPaging = false
     
     private func notifyInitialLoading() {
@@ -106,53 +106,93 @@ internal class CoreInbox {
         
     }
     
-    internal func start(refresh: Bool = false) async throws {
+    internal func start(refresh: Bool = false, onComplete: (() -> Void)? = nil) {
         
+        // Get the current userId
         guard let userId = Courier.shared.userId else {
-            close()
-            notifyError(CourierError.missingUser)
+            stop()
             return
         }
         
-        // Show initial loading state
-        if (!refresh) {
-            close()
+        // Already fetching or fetched. End now
+        if (self.fetchInboxData != nil || self.inbox != nil) {
+            return
         }
         
-        // Determine a safe limit
+        // Get auth keys
+        let clientKey = Courier.shared.clientKey
+        let jwt = Courier.shared.jwt
+        
+        // Keep track of the initial setup
+        self.fetchInboxData = Task {
+            
+            // Initial load call
+            if (!refresh) {
+                notifyInitialLoading()
+            }
+            
+            do {
+                
+                // Grab the initial inbox data
+                let (inboxData, unreadCount) = try await self.fetchInitialInbox(
+                    clientKey: clientKey,
+                    jwt: jwt,
+                    userId: userId,
+                    refresh: refresh
+                )
+                
+                // Connect the websocket
+                try await self.connectWebSocket(
+                    clientKey: clientKey,
+                    userId: userId
+                )
+                
+                // Set the inbox data
+                self.inbox = Inbox(
+                    messages: inboxData.messages?.nodes,
+                    totalCount: inboxData.count ?? 0,
+                    unreadCount: unreadCount,
+                    hasNextPage: inboxData.messages?.pageInfo?.hasNextPage,
+                    startCursor: inboxData.messages?.pageInfo?.startCursor
+                )
+        
+                // Tell the listeners
+                await notifyMessagesChanged()
+                
+            } catch {
+                
+                close()
+                
+                notifyError(error)
+                
+            }
+            
+            onComplete?()
+            
+        }
+        
+    }
+    
+    private func fetchInitialInbox(clientKey: String?, jwt: String?, userId: String, refresh: Bool) async throws -> (InboxData, Int) {
+        
         let messageCount = await inbox?.messages?.count ?? paginationLimit
         let maxRefreshLimit = min(messageCount, CoreInbox.defaultMaxPaginationLimit)
         let limit = refresh ? maxRefreshLimit : paginationLimit
-        
+
         async let dataTask: (InboxData) = inboxRepo.getMessages(
-            clientKey: Courier.shared.clientKey, 
-            jwt: Courier.shared.jwt,
+            clientKey: clientKey,
+            jwt: jwt,
             userId: userId,
             paginationLimit: limit
         )
-        
+
         async let unreadCountTask: (Int) = inboxRepo.getUnreadMessageCount(
-            clientKey: Courier.shared.clientKey,
-            jwt: Courier.shared.jwt,
+            clientKey: clientKey,
+            jwt: jwt,
             userId: userId
         )
-        
-        let (inboxData, unreadCount) = await (try dataTask, try unreadCountTask)
-        
-        try await connectWebSocket(
-            clientKey: Courier.shared.clientKey,
-            userId: userId
-        )
-        
-        self.inbox = Inbox(
-            messages: inboxData.messages?.nodes,
-            totalCount: inboxData.count ?? 0,
-            unreadCount: unreadCount,
-            hasNextPage: inboxData.messages?.pageInfo?.hasNextPage,
-            startCursor: inboxData.messages?.pageInfo?.startCursor
-        )
-        
-        await self.notifyMessagesChanged()
+
+        return await (try dataTask, try unreadCountTask)
         
     }
     
@@ -227,21 +267,23 @@ internal class CoreInbox {
         // Keep track of listener
         listeners.append(listener)
         
-        // Call initial load
-        Utils.runOnMainThread {
-            listener.initialize()
+        // Start the inbox data pipeline
+        if (listeners.count == 1 && fetchInboxData == nil) {
+            start()
+            return listener
         }
         
-        // Return existing inbox to listener or start the inbox
-        Task {
+        // Inbox data is available
+        if let inbox = self.inbox {
             
-            if let inbox = self.inbox {
-                
+            Task {
+
+                // Return the existing inbox data
                 let messages = await inbox.messages
                 let unreadCount = await inbox.unreadCount
                 let totalCount = await inbox.totalCount
                 let hasNextPage = await inbox.hasNextPage
-                
+
                 // Give data to the listener
                 Utils.runOnMainThread {
                     listener.callMessageChanged(
@@ -251,11 +293,7 @@ internal class CoreInbox {
                         hasNextPage: hasNextPage
                     )
                 }
-                
-            } else if (listeners.count == 1) {
-                
-                fetchStart()
-                
+
             }
             
         }
@@ -273,7 +311,7 @@ internal class CoreInbox {
         
         // Kill the pipes if nothing is listening
         if (listeners.isEmpty) {
-            close()
+            stop()
             notifyError(CourierError.missingUser)
         }
         
@@ -281,53 +319,28 @@ internal class CoreInbox {
     
     internal func removeAllListeners() {
         listeners.removeAll()
+        stop()
+    }
+    
+    internal func close() {
+        fetchInboxData?.cancel()
+        fetchInboxData = nil
+        inbox = nil
+        inboxRepo.closeInboxWebSocket()
+    }
+    
+    internal func stop() {
         close()
         notifyError(CourierError.missingUser)
     }
     
-    internal func close() {
-        self.inbox = nil
-        self.inboxRepo.closeInboxWebSocket()
-    }
-    
-    internal func stop() {
-        self.close()
-        notifyError(CourierError.missingUser)
-    }
-    
-    internal func refresh() async throws {
-        try await start(refresh: true)
-    }
-    
     internal func refresh(onComplete: @escaping () -> Void) {
-        Task {
-            do {
-                try await refresh()
-            } catch {
-                self.notifyError(error)
-            }
+        close()
+        start(refresh: true) {
             Utils.runOnMainThread {
                 onComplete()
             }
         }
-    }
-    
-    internal func fetchStart() {
-        
-        fetch?.cancel()
-        
-        fetch = Task {
-            
-            do {
-                try await start()
-            } catch {
-                self.notifyError(error)
-            }
-            
-            fetch = nil
-            
-        }
-        
     }
     
     @discardableResult internal func fetchNextPage() async throws -> [InboxMessage] {
@@ -542,7 +555,9 @@ extension Courier {
      Could be used for pull to refresh functionality
      */
     @objc public func refreshInbox() async throws {
-        try await coreInbox.refresh()
+        coreInbox.refresh {
+            // Empty
+        }
     }
     
     @objc public func refreshInbox(onComplete: @escaping () -> Void) {
