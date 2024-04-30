@@ -101,11 +101,6 @@ internal class CoreInbox {
             return
         }
         
-        // End if we already have inbox data
-        if (self.inbox != nil) {
-            return
-        }
-        
         // Get auth keys
         let clientKey = Courier.shared.clientKey
         let jwt = Courier.shared.jwt
