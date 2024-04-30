@@ -35,6 +35,10 @@ import UIKit
         var topics: [CourierUserPreferencesTopic]
     }
     
+    // MARK: Interaction
+    
+    @objc public var didScrollPreferences: ((UIScrollView) -> Void)? = nil
+    
     // MARK: Authentication
     
     private var authListener: CourierAuthenticationListener? = nil
@@ -133,11 +137,13 @@ import UIKit
         mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
+        didScrollPreferences: ((UIScrollView) -> Void)? = nil,
         onError: ((CourierError) -> Void)? = nil
     ) {
         self.mode = mode
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
+        self.didScrollPreferences = didScrollPreferences
         self.onError = onError
         super.init(frame: .zero)
         setup()
@@ -384,6 +390,10 @@ import UIKit
     
     @objc private func onRefresh() {
         refresh()
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.didScrollPreferences?(scrollView)
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
