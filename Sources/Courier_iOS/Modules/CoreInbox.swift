@@ -81,8 +81,12 @@ internal class CoreInbox {
         
         Task {
             
-            if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == false) {
+            if (!listeners.isEmpty) {
                 
+                // Close the socket if needed
+                self.inboxRepo.closeInboxWebSocket()
+                
+                // Fetch all the latest data
                 do {
                     try await start(refresh: true)
                 } catch {
@@ -100,7 +104,7 @@ internal class CoreInbox {
     // Helps keep battery usage lower
     internal func unlink() {
         
-        if (!listeners.isEmpty && CourierInboxWebsocket.shared?.isSocketConnected == true) {
+        if (!listeners.isEmpty) {
             inboxRepo.closeInboxWebSocket()
         }
         
