@@ -132,6 +132,7 @@
                     <connections>
                         <outlet property="authButton" destination="BLd-SX-o9O" id="2gF-tH-4YX"/>
                         <outlet property="authLabel" destination="emG-u0-i0I" id="n8b-mC-4QK"/>
+                        <outlet property="showTouchesLabel" destination="iBo-AB-A07" id="fE3-ny-l24"/>
                         <outlet property="showTouchesSwitch" destination="Idu-NA-CuY" id="Kuw-ll-t8T"/>
                     </connections>
                 </viewController>

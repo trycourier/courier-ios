@@ -125,8 +125,6 @@ final class CourierTests: XCTestCase {
         
         print("🔬 Testing Authentication Limits")
         
-        await Courier.shared.signOut()
-        
         await Courier.shared.signIn(
             accessToken: Env.COURIER_AUTH_KEY,
             clientKey: Env.COURIER_CLIENT_KEY,
@@ -139,11 +137,9 @@ final class CourierTests: XCTestCase {
             userId: "different_id"
         )
         
-        XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_AUTH_KEY)
-        XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
-        XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-        
-        await Courier.shared.signOut()
+        XCTAssertEqual(Courier.shared.accessToken, "different_token")
+        XCTAssertEqual(Courier.shared.clientKey, "different_key")
+        XCTAssertEqual(Courier.shared.userId, "different_id")
         
     }
     
@@ -497,7 +493,7 @@ final class CourierTests: XCTestCase {
         let brand = try await BrandsRepository().getBrand(
             clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID,
-            brandId: "EK44JHXWFX4A9AGC8QWVNTBDTKC2"
+            brandId: "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M"
         )
         
         print(brand)
@@ -523,7 +519,7 @@ final class CourierTests: XCTestCase {
         try await signInUser()
         
         try await Courier.shared.putUserPreferencesTopic(
-            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF",
+            topicId: "0ZR4JTDHZ0MHVSMSM3MW0YX62X6N",
             status: .optedOut,
             hasCustomRouting: true,
             customRouting: [.sms, .push]
@@ -538,7 +534,7 @@ final class CourierTests: XCTestCase {
         try await signInUser()
 
         let topic = try await Courier.shared.getUserPreferencesTopic(
-            topicId: "VFPW1YD8Y64FRYNVQCKC9QFQCFVF"
+            topicId: "0ZR4JTDHZ0MHVSMSM3MW0YX62X6N"
         )
         
         XCTAssertEqual(topic.customRouting, [.sms, .push])

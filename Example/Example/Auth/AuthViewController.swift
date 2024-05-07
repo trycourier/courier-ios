@@ -13,6 +13,7 @@ class AuthViewController: UIViewController {
     
     @IBOutlet weak var authLabel: UILabel!
     @IBOutlet weak var authButton: UIButton!
+    @IBOutlet weak var showTouchesLabel: UILabel!
     @IBOutlet weak var showTouchesSwitch: UISwitch!
     @IBAction func showTouchesAction(_ sender: Any) {
         ShowTime.enabled = showTouchesSwitch.isOn ? .always : .never
@@ -69,6 +70,10 @@ class AuthViewController: UIViewController {
         
         ShowTime.enabled = .never
         showTouchesSwitch.setOn(ShowTime.enabled == .always, animated: false)
+        
+        let mono = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
+        authLabel.font = mono
+        showTouchesLabel.font = mono
 
         Task {
             
@@ -109,7 +114,7 @@ class AuthViewController: UIViewController {
         
         if let userId = userId {
             authButton.setTitle("Sign Out", for: .normal)
-            authLabel.text = "Courier User Id: \(userId)\nTenant Id: \(Courier.shared.tenantId ?? "None")"
+            authLabel.text = "Courier User Id: \(userId)\n\nTenant Id: \(Courier.shared.tenantId ?? "None")"
         } else {
             authButton.setTitle("Sign In", for: .normal)
             authLabel.text = "No Courier User Id Found"
