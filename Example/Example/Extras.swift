@@ -58,7 +58,7 @@ extension UIViewController {
         
     }
     
-    func showInputAlert(title: String, placeHolder: String, action: String, onComplete: @escaping (String) -> Void) {
+    func showInputAlert(title: String, inputs: [String], action: String, onComplete: @escaping ([String]) -> Void) {
         
         alert?.dismiss(animated: true)
         
@@ -72,12 +72,14 @@ extension UIViewController {
             
             present(alert, animated: true)
             
-            alert.addTextField { field in
-                field.placeholder = placeHolder
-                field.keyboardType = .default
-                field.autocorrectionType = .no
-                field.autocapitalizationType = .none
-                field.returnKeyType = .continue
+            inputs.forEach { input in
+                alert.addTextField { field in
+                    field.placeholder = input
+                    field.keyboardType = .default
+                    field.autocorrectionType = .no
+                    field.autocapitalizationType = .none
+                    field.returnKeyType = .continue
+                }
             }
             
             alert.addAction(UIAlertAction(
@@ -90,16 +92,8 @@ extension UIViewController {
                 title: action,
                 style: .default,
                 handler: { _ in
-                    
-                    let textField = alert.textFields?[0]
-                    let text = textField?.text ?? ""
-                    
-                    if (text.isEmpty) {
-                        return
-                    }
-                    
-                    onComplete(text)
-                   
+                    let values = alert.textFields?.compactMap { $0.text } ?? []
+                    onComplete(values)
                 }
             ))
             

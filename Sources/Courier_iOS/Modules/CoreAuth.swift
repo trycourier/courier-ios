@@ -138,7 +138,7 @@ extension Courier {
         }
     }
     
-    internal var tenantId: String? {
+    @objc public var tenantId: String? {
         get {
             return UserManager.shared.getTenantId()
         }

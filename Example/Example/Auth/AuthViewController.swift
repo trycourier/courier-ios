@@ -28,26 +28,30 @@ class AuthViewController: UIViewController {
                 
                 self.authButton.isEnabled = false
             
-                try await Courier.shared.signOut()
+                await Courier.shared.signOut()
                 
             }
             
         } else {
             
-            showInputAlert(title: "Sign in", placeHolder: "Enter Courier User Id", action: "Sign In") { userId in
+            showInputAlert(title: "Sign in", inputs: ["Enter Courier User Id", "Tenant Id"], action: "Sign In") { values in
                 
                 Task {
                     
                     self.authButton.isEnabled = false
+                    
+                    let userId = values[0]
+                    let tenantId = values[1]
                     
                     let jwt = try await ExampleServer().generateJwt(
                         authKey: Env.COURIER_AUTH_KEY,
                         userId: userId
                     )
                     
-                    try await Courier.shared.signIn(
+                    await Courier.shared.signIn(
                         accessToken: jwt,
-                        userId: userId
+                        userId: userId,
+                        tenantId: tenantId.isEmpty ? nil : tenantId
                     )
                     
                 }
@@ -74,7 +78,7 @@ class AuthViewController: UIViewController {
                 self.authLabel.text = "Refreshing JWT..."
                 
                 // Remove the existing user
-                try await Courier.shared.signOut()
+                await Courier.shared.signOut()
                 
                 // Get the JWT
                 let jwt = try await ExampleServer().generateJwt(
@@ -83,9 +87,10 @@ class AuthViewController: UIViewController {
                 )
                 
                 // Sign in with JWT
-                try await Courier.shared.signIn(
+                await Courier.shared.signIn(
                     accessToken: jwt,
-                    userId: userId
+                    userId: userId,
+                    tenantId: Courier.shared.tenantId
                 )
                 
                 self.refresh(userId)
