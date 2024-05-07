@@ -36,21 +36,42 @@ internal class CourierInboxWebsocket {
         
     }
     
-    static func connect(clientKey: String?, userId: String) {
+    static func connect(clientKey: String?, tenantId: String?, userId: String) {
         
-        let json = """
-        {
+        var jsonData: [String: Any] = [
             "action": "subscribe",
-            "data": {
-                "channel": "\(userId)",
-                "clientKey": "\(clientKey ?? "")",
+            "data": [
+                "channel": userId,
                 "event": "*",
                 "version": "4"
+            ]
+        ]
+        
+        if let clientKey = clientKey {
+            if var data = jsonData["data"] as? [String: Any] {
+                data["clientKey"] = clientKey
+                jsonData["data"] = data
             }
         }
-        """
         
-        shared?.connect(json: json)
+        if let tenantId = tenantId {
+            if var data = jsonData["data"] as? [String: Any] {
+                data["accountId"] = tenantId
+                jsonData["data"] = data
+            }
+
+        }
+        
+        do {
+            let json = try JSONSerialization.data(withJSONObject: jsonData, options: .prettyPrinted)
+            if let jsonString = String(data: json, encoding: .utf8) {
+                shared?.connect(json: jsonString)
+            } else {
+                Courier.log("Error converting data to string")
+            }
+        } catch {
+            Courier.log(error.localizedDescription)
+        }
         
     }
     

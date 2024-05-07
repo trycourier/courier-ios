@@ -13,12 +13,13 @@ internal class UserManager {
     private let userIdKey = "courier_user_id"
     private let accessTokenKey = "courier_access_token"
     private let clientKeyKey = "courier_client_key"
+    private let tenantIdKey = "courier_tenant_id"
     
     private let defaults = UserDefaults.standard
     static internal let shared = UserManager()
     
     @discardableResult
-    func setCredentials(userId: String, accessToken: String, clientKey: String?) -> Dictionary<String, String>? {
+    func setCredentials(userId: String, accessToken: String, clientKey: String?, tenantId: String?) -> Dictionary<String, String>? {
         
         // Create the dictionary
         var dict = [
@@ -29,6 +30,11 @@ internal class UserManager {
         // Add client key if possible
         if let key = clientKey {
             dict[clientKeyKey] = key
+        }
+        
+        // Add tenant id if possible
+        if let key = tenantId {
+            dict[tenantIdKey] = key
         }
         
         // Set the values
@@ -53,6 +59,10 @@ internal class UserManager {
     
     func getAccessToken() -> String? {
         return getCredentials()?[accessTokenKey]
+    }
+    
+    func getTenantId() -> String? {
+        return getCredentials()?[tenantIdKey]
     }
     
     func removeCredentials() {

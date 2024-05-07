@@ -11,50 +11,38 @@ internal class CoreAuth {
     
     private var listeners: [CourierAuthenticationListener] = []
     
-    internal func signIn(accessToken: String, clientKey: String?, userId: String, push: CorePush, inbox: CoreInbox) async throws {
+    internal func signIn(accessToken: String, clientKey: String?, userId: String, tenantId: String?, push: CorePush, inbox: CoreInbox) async {
         
         // Check if the current user exists
         if (Courier.shared.isUserSignedIn) {
-            Courier.log("User Id '\(Courier.shared.userId ?? "")' is already signed in. Please call Courier.shared.signOut() to change the current user.")
-            return
+            await signOut(push: push, inbox: inbox)
         }
         
         Courier.log("Signing user in")
         Courier.log("User Id: \(userId)")
         Courier.log("Access Token: \(accessToken)")
         Courier.log("Client Key: \(clientKey ?? "Not set")")
+        Courier.log("Tenant Id: \(tenantId ?? "Not set")")
         
         UserManager.shared.setCredentials(
             userId: userId,
             accessToken: accessToken,
-            clientKey: clientKey
+            clientKey: clientKey,
+            tenantId: tenantId
         )
         
-        do {
-            
-            async let putTokens: () = push.putPushTokens()
-            async let startInbox: () = inbox.start()
-            
-            // Batch all functions together
-            let _ = try await [putTokens, startInbox]
-            
-            // Notify
-            notifyListeners()
-            
-        } catch {
-            
-            let e = CourierError(from: error)
-            Courier.log(e.message)
-            
-            try await signOut(push: push, inbox: inbox)
-            
-            throw e
-            
-        }
+        async let putTokens: () = push.putPushTokens()
+        async let startInbox: () = inbox.startSoft()
+        
+        // Batch all functions together
+        let _ = await [putTokens, startInbox]
+        
+        // Notify
+        notifyListeners()
         
     }
     
-    internal func signOut(push: CorePush, inbox: CoreInbox) async throws {
+    internal func signOut(push: CorePush, inbox: CoreInbox) async {
         
         // Check if the current user exists
         if (!Courier.shared.isUserSignedIn) {
@@ -150,6 +138,12 @@ extension Courier {
         }
     }
     
+    internal var tenantId: String? {
+        get {
+            return UserManager.shared.getTenantId()
+        }
+    }
+    
     @objc public var isUserSignedIn: Bool {
         get {
             return userId != nil && accessToken != nil
@@ -160,18 +154,14 @@ extension Courier {
      Set the current credentials for the user and their access token
      You should consider using this in areas where you update your local user's state
      */
-    @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String) async throws {
-        try await coreAuth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: corePush, inbox: coreInbox)
+    @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String, tenantId: String? = nil) async {
+        await coreAuth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, tenantId: tenantId, push: corePush, inbox: coreInbox)
     }
     
-    @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String, onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func signIn(accessToken: String, clientKey: String? = nil, userId: String, tenantId: String? = nil, onComplete: @escaping () -> Void) {
         Task {
-            do {
-                try await coreAuth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, push: corePush, inbox: coreInbox)
-                onSuccess()
-            } catch {
-                onFailure(error)
-            }
+            await coreAuth.signIn(accessToken: accessToken, clientKey: clientKey, userId: userId, tenantId: tenantId, push: corePush, inbox: coreInbox)
+            onComplete()
         }
     }
     
@@ -180,18 +170,14 @@ extension Courier {
      You should call this when your user signs out
      It will remove the current tokens used for this user in Courier so they do not receive pushes they should not get
      */
-    @objc public func signOut() async throws {
-        try await coreAuth.signOut(push: corePush, inbox: coreInbox)
+    @objc public func signOut() async {
+        await coreAuth.signOut(push: corePush, inbox: coreInbox)
     }
     
-    @objc public func signOut(onSuccess: @escaping () -> Void, onFailure: @escaping (Error) -> Void) {
+    @objc public func signOut(onComplete: @escaping () -> Void) {
         Task {
-            do {
-                try await coreAuth.signOut(push: corePush, inbox: coreInbox)
-                onSuccess()
-            } catch {
-                onFailure(error)
-            }
+            await coreAuth.signOut(push: corePush, inbox: coreInbox)
+            onComplete()
         }
     }
     

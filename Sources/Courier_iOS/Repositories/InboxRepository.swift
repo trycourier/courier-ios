@@ -9,7 +9,7 @@ import Foundation
 
 internal class InboxRepository: Repository {
     
-    internal func connectInboxWebSocket(clientKey: String? = nil, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
+    internal func connectInboxWebSocket(clientKey: String? = nil, tenantId: String?, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
         
         if (CourierInboxWebsocket.shared?.isSocketConnected == true || CourierInboxWebsocket.shared?.isSocketConnecting == true) {
             return
@@ -31,6 +31,7 @@ internal class InboxRepository: Repository {
         // Connect the socket
         CourierInboxWebsocket.connect(
             clientKey: clientKey,
+            tenantId: tenantId,
             userId: userId
         )
         
@@ -40,7 +41,7 @@ internal class InboxRepository: Repository {
         CourierInboxWebsocket.disconnect()
     }
     
-    internal func getMessages(clientKey: String? = nil, jwt: String? = nil, userId: String, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
+    internal func getMessages(clientKey: String? = nil, jwt: String? = nil, userId: String, tenantId: String?, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
         
         let query = """
         query GetMessages(
@@ -82,12 +83,26 @@ internal class InboxRepository: Repository {
         }
         """
         
+        var variables = "{}"
+        
+        // Attach tenant id if needed
+        if let tenantId = tenantId {
+            variables = """
+            {
+                \"params\": {
+                    \"accountId\": \"\(tenantId)\"
+                }
+            }
+            """
+        }
+        
         let data = try await graphQLQuery(
             jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
-            query: query
+            query: query,
+            variables: variables
         )
         
         do {
@@ -103,7 +118,7 @@ internal class InboxRepository: Repository {
 
     }
     
-    internal func getUnreadMessageCount(clientKey: String? = nil, jwt: String? = nil, userId: String, startCursor: String? = nil) async throws -> Int {
+    internal func getUnreadMessageCount(clientKey: String? = nil, jwt: String? = nil, userId: String, tenantId: String? = nil, startCursor: String? = nil) async throws -> Int {
         
         let query = """
         query GetMessages(
@@ -120,12 +135,26 @@ internal class InboxRepository: Repository {
         }
         """
         
+        var variables = "{}"
+        
+        // Attach tenant id if needed
+        if let tenantId = tenantId {
+            variables = """
+            {
+                \"params\": {
+                    \"accountId\": \"\(tenantId)\"
+                }
+            }
+            """
+        }
+        
         let data = try await graphQLQuery(
             jwt: jwt,
             clientKey: clientKey,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
-            query: query
+            query: query,
+            variables: variables
         )
         
         do {

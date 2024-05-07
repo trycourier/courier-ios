@@ -16,12 +16,6 @@ final class CourierTests: XCTestCase {
             print(userId ?? "No userId found")
         }
         
-        // Sign the user out, if there is one
-        
-        if let _ = Courier.shared.userId {
-            try await Courier.shared.signOut()
-        }
-        
         // Check if we need to use the access token
         
         if (shouldUseJWT) {
@@ -31,7 +25,7 @@ final class CourierTests: XCTestCase {
                 userId: Env.COURIER_USER_ID
             )
             
-            try await Courier.shared.signIn(
+            await Courier.shared.signIn(
                 accessToken: jwt,
                 userId: Env.COURIER_USER_ID
             )
@@ -42,7 +36,7 @@ final class CourierTests: XCTestCase {
             
         } else {
             
-            try await Courier.shared.signIn(
+            await Courier.shared.signIn(
                 accessToken: Env.COURIER_ACCESS_TOKEN,
                 clientKey: Env.COURIER_CLIENT_KEY,
                 userId: Env.COURIER_USER_ID
@@ -64,7 +58,7 @@ final class CourierTests: XCTestCase {
         
         print("\n🔬 Setting APNS Token before User")
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
         
         // Empty
         try await Courier.shared.setToken(provider: CourierPushProvider.apn, token: "")
@@ -90,7 +84,7 @@ final class CourierTests: XCTestCase {
         
         print("🔬 Setting Other Token before User")
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
         
         try await Courier.shared.setToken(provider: .firebaseFcm, token: fcmToken)
         
@@ -113,9 +107,9 @@ final class CourierTests: XCTestCase {
             print(userId ?? "No userId found")
         }
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
 
-        try await Courier.shared.signIn(
+        await Courier.shared.signIn(
             accessToken: Env.COURIER_AUTH_KEY,
             clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
@@ -131,15 +125,15 @@ final class CourierTests: XCTestCase {
         
         print("🔬 Testing Authentication Limits")
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
         
-        try await Courier.shared.signIn(
+        await Courier.shared.signIn(
             accessToken: Env.COURIER_AUTH_KEY,
             clientKey: Env.COURIER_CLIENT_KEY,
             userId: Env.COURIER_USER_ID
         )
         
-        try await Courier.shared.signIn(
+        await Courier.shared.signIn(
             accessToken: "different_token",
             clientKey: "different_key",
             userId: "different_id"
@@ -149,7 +143,7 @@ final class CourierTests: XCTestCase {
         XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
         XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
         
     }
     
@@ -166,9 +160,9 @@ final class CourierTests: XCTestCase {
             print(userId ?? "No userId found")
         }
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
 
-        try await Courier.shared.signIn(
+        await Courier.shared.signIn(
             accessToken: jwt,
             userId: Env.COURIER_USER_ID
         )
@@ -332,7 +326,7 @@ final class CourierTests: XCTestCase {
         
         Courier.shared.isDebugging = false
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
         
         // 0. Add a listener
         Courier.shared.addInboxListener(
@@ -481,7 +475,7 @@ final class CourierTests: XCTestCase {
 
         print("\n🔬 Setting Inbox Pagination Limit")
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
 
         Courier.shared.inboxPaginationLimit = 10
         XCTAssertEqual(Courier.shared.inboxPaginationLimit, 10)
@@ -551,15 +545,59 @@ final class CourierTests: XCTestCase {
 
     }
     
+    func testTenants() async throws {
+        
+        let tenantId = "t1"
+        let userId = "test_1"
+        
+        let jwt = try await ExampleServer().generateJwt(
+            authKey: Env.COURIER_AUTH_KEY,
+            userId: userId
+        )
+        
+        print(jwt)
+        
+        await Courier.shared.signIn(
+            accessToken: jwt,
+            userId: userId,
+            tenantId: tenantId
+        )  
+        
+        XCTAssertEqual(Courier.shared.tenantId, tenantId)
+        
+        var isLoading = true
+        
+        Courier.shared.addInboxListener(
+            onInitialLoad: {
+                print("onInitialLoad")
+            },
+            onError: { e in
+                print("onError")
+                isLoading = false
+            },
+            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
+                isLoading = false
+                print("======")
+                print("Messages fetched for: \(Courier.shared.tenantId ?? "user"). Count is \(messages.count)")
+                print("======")
+            }
+        )
+        
+        while (isLoading) {
+            // Empty
+        }
+        
+    }
+    
     func testErrors() async throws {
         
         print("\n🔬 Testing Errors")
         
         do {
             
-            try await Courier.shared.signOut()
+            await Courier.shared.signOut()
             
-            try await Courier.shared.signIn(accessToken: "", userId: "")
+            await Courier.shared.signIn(accessToken: "", userId: "")
             
             try await Courier.shared.setToken(providerKey: "", token: "something")
             
@@ -579,7 +617,7 @@ final class CourierTests: XCTestCase {
             print(userId ?? "No userId found")
         }
 
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
         
         let apns = await Courier.shared.getAPNSToken()
         let fcm = await Courier.shared.getToken(providerKey: "firebase-fcm")

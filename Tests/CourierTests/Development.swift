@@ -8,7 +8,7 @@
 import XCTest
 @testable import Courier_iOS
 
-final class Concurrency: XCTestCase {
+final class Development: XCTestCase {
     
     let rawApnsToken = Data([110, 157, 218, 189])
     

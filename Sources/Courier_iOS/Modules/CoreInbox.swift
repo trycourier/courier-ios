@@ -39,19 +39,31 @@ internal class CoreInbox {
     private var isPaging = false
     
     private func notifyInitialLoading() {
+        
+        if (!Courier.shared.isUserSignedIn) {
+            return
+        }
+        
         Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
                 $0.initialize()
             }
         }
+        
     }
     
     private func notifyError(_ error: Error) {
+        
+        if (!Courier.shared.isUserSignedIn) {
+            return
+        }
+        
         Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
                 $0.onError?(error)
             }
         }
+        
     }
     
     private func notifyMessagesChanged() async {
@@ -60,6 +72,10 @@ internal class CoreInbox {
         let unreadCount = await self.inbox?.unreadCount
         let totalCount = await self.inbox?.totalCount
         let hasNextPage = await self.inbox?.hasNextPage
+        
+        if (!Courier.shared.isUserSignedIn) {
+            return
+        }
         
         Utils.runOnMainThread { [weak self] in
             self?.listeners.forEach {
@@ -110,6 +126,15 @@ internal class CoreInbox {
         
     }
     
+    internal func startSoft() async {
+        do {
+            if (listeners.isEmpty) { return }
+            try await start()
+        } catch {
+            Courier.log(error.localizedDescription)
+        }
+    }
+    
     internal func start(refresh: Bool = false) async throws {
         
         guard let userId = Courier.shared.userId else {
@@ -132,19 +157,22 @@ internal class CoreInbox {
             clientKey: Courier.shared.clientKey, 
             jwt: Courier.shared.jwt,
             userId: userId,
+            tenantId: Courier.shared.tenantId,
             paginationLimit: limit
         )
         
         async let unreadCountTask: (Int) = inboxRepo.getUnreadMessageCount(
             clientKey: Courier.shared.clientKey,
             jwt: Courier.shared.jwt,
-            userId: userId
+            userId: userId,
+            tenantId: Courier.shared.tenantId
         )
         
         let (inboxData, unreadCount) = await (try dataTask, try unreadCountTask)
         
         try await connectWebSocket(
             clientKey: Courier.shared.clientKey,
+            tenantId: Courier.shared.tenantId,
             userId: userId
         )
         
@@ -160,11 +188,12 @@ internal class CoreInbox {
         
     }
     
-    private func connectWebSocket(clientKey: String?, userId: String) async throws {
+    private func connectWebSocket(clientKey: String?, tenantId: String?, userId: String) async throws {
         
         // Create a new socket
         try await inboxRepo.connectInboxWebSocket(
             clientKey: clientKey,
+            tenantId: tenantId,
             userId: userId,
             onMessageReceived: { message in
                 
@@ -199,6 +228,7 @@ internal class CoreInbox {
             clientKey: Courier.shared.clientKey,
             jwt: Courier.shared.jwt,
             userId: userId,
+            tenantId: Courier.shared.tenantId,
             paginationLimit: paginationLimit,
             startCursor: inbox.startCursor
         )
