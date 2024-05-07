@@ -17,7 +17,7 @@ Manages user credentials between app sessions.
         <tr width="600px">
             <td align="left">
                 <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md">
-                    <code>Courier Inbox</code>
+                    <code>Inbox</code>
                 </a>
             </td>
             <td align="left">
@@ -34,6 +34,16 @@ Manages user credentials between app sessions.
                 Needs Authentication to sync push notification device tokens to the current user and Courier.
             </td>
         </tr>
+        <tr width="600px">
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Preferences.md">
+                    <code>Preferences</code>
+                </a>
+            </td>
+            <td align="left">
+                Needs Authentication to get and update notification preferences that belong to a user.
+            </td>
+        </tr>
     </tbody>
 </table>
 
@@ -48,26 +58,41 @@ import Courier_iOS
 
 Task {
 
-    // Saves credentials locally and accesses the Courier API with them
-    // Uploads push notification devices tokens to Courier if needed
-    try await Courier.shared.signIn(
-        accessToken: "pk_prod_H12...",
-        clientKey: "YWQxN...",
-        userId: "example_user_id"
+    // 1. To authenticate your app with Courier. You will need production safe JWT.
+    // Here is how to generate this key: https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md#going-to-production
+
+    let userId = "example_user"
+    
+    let jwt = try await YourBackend().getCourierAccessToken(for: userId)
+
+    // 2. Sign your user in
+
+    await Courier.shared.signIn(
+        accessToken: jwt,
+        userId: userId
     )
 
-    // If you are going to production
-    // You can skip using clientKey and initialize with only JWT
-    // You will need to sign the user out and back in if the JWT changes
-    // Courier.shared.signOut()
-    // Courier.shared.signIn(
-    //    accessToken: "YOUR_JWT",
-    //    userId: "example_user_id"
-    // )
+    // 3. (Optional) If you want to support a specific tenant, useful for Inbox only at the moment
 
-    // Removes the locally saved credentials
-    // Deletes the user's push notification device tokens in Courier if needed
-    try await Courier.shared.signOut()
+    let tenantId = "your_tenant"
+
+    await Courier.shared.signIn(
+        accessToken: jwt,
+        userId: userId,
+        tenantId: tenantId
+    )
+
+    // 4. Sign your user out. Needed when you no longer want to sync push tokens, view inbox messages, or use preferences
+
+    await Courier.shared.signOut()
+
+    // NOTE: You can use auth keys and client keys to test, but it is not recommended for production use
+    
+    await Courier.shared.signIn(
+        accessToken: "pk_prod_V1...SF2",
+        clientKey: "NmE1M....hMGY1",
+        userId: userId
+    )
 
 }
 
@@ -136,7 +161,7 @@ listener.remove()
 
 # Going to Production
 
-To create a production ready `accessToken`, call this:
+To create a production ready `accessToken` (aka jwt), call this:
 
 ```curl
 curl --request POST \
