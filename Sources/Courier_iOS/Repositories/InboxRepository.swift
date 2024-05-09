@@ -123,15 +123,8 @@ internal class InboxRepository: Repository {
         let query = """
         query GetMessages(
             $params: FilterParamsInput = { status: "unread" }
-            $limit: Int = \(1)
-            $after: String
         ) {
             count(params: $params)
-            messages(params: $params, limit: $limit, after: $after) {
-                nodes {
-                    messageId
-                }
-            }
         }
         """
         
@@ -142,6 +135,7 @@ internal class InboxRepository: Repository {
             variables = """
             {
                 \"params\": {
+                    \"status\": \"unread\",
                     \"accountId\": \"\(tenantId)\"
                 }
             }
