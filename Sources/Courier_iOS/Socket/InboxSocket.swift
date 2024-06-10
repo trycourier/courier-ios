@@ -9,24 +9,24 @@ import Foundation
 
 public class InboxSocket: CourierSocket {
     
-    enum PayloadType: String, Codable {
+    internal enum PayloadType: String, Codable {
         case event
         case message
     }
     
-    enum EventType: String, Codable {
+    internal enum EventType: String, Codable {
         case read
         case unread
         case markAllRead
         case opened
     }
     
-    struct SocketPayload: Codable {
+    internal struct SocketPayload: Codable {
         let type: PayloadType
         let event: EventType?
     }
     
-    struct MessageEvent: Codable {
+    internal struct MessageEvent: Codable {
         let event: EventType
         let messageId: String?
         let type: String

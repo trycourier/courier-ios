@@ -31,7 +31,8 @@ internal class BrandsRepository: Repository {
         
         let data = try await graphQLQuery(
             jwt: jwt,
-            clientKey: clientKey,
+            clientKey: clientKey, 
+            clientSourceId: nil,
             userId: userId,
             url: CourierUrl.baseGraphQL,
             query: query

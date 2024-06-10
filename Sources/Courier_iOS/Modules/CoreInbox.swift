@@ -34,6 +34,7 @@ internal class CoreInbox {
     internal var socket: InboxSocket? = nil
     
     internal var inbox: Inbox? = nil
+    private let connectionId = UUID().uuidString
 
     private var listeners: [CourierInboxListener] = []
     
@@ -209,20 +210,49 @@ internal class CoreInbox {
         
         // Listen to the events
         socket?.receivedMessage = { message in
+            
             Task { [weak self] in
+                
                 await self?.inbox?.addNewMessage(message: message)
                 await self?.notifyMessagesChanged()
+                
             }
+            
         }
         
-        socket?.receivedMessageEvent = { [weak self] event in
-            print(event)
+        socket?.receivedMessageEvent = { messageEvent in
+            
+            Task { [weak self] in
+                
+                switch (messageEvent.event) {
+                case .markAllRead:
+                    
+                    await self?.inbox?.readAllMessages()
+                    await self?.notifyMessagesChanged()
+                    
+                case .read:
+                    
+                    if let messageId = messageEvent.messageId {
+                        try await self?.inbox?.readMessage(messageId: messageId)
+                        await self?.notifyMessagesChanged()
+                    }
+                    
+                case .unread:
+                    
+                    if let messageId = messageEvent.messageId {
+                        try await self?.inbox?.unreadMessage(messageId: messageId)
+                        await self?.notifyMessagesChanged()
+                    }
+                    
+                default: return
+                }
+                
+            }
+            
         }
         
         // Connect the socket
         try await socket?.connect()
-        
-        let connectionId = UUID().uuidString
         
         // Subscribe to the events
         try await socket?.sendSubscribe(
@@ -420,6 +450,7 @@ internal class CoreInbox {
             try await inboxRepo.clickMessage(
                 clientKey: Courier.shared.clientKey,
                 jwt: Courier.shared.jwt,
+                clientSourceId: connectionId,
                 userId: userId,
                 messageId: messageId,
                 channelId: channelId
@@ -447,6 +478,7 @@ internal class CoreInbox {
             try await inboxRepo.readMessage(
                 clientKey: Courier.shared.clientKey,
                 jwt: Courier.shared.jwt,
+                clientSourceId: connectionId,
                 userId: userId,
                 messageId: messageId
             )
@@ -482,6 +514,7 @@ internal class CoreInbox {
             try await inboxRepo.unreadMessage(
                 clientKey: Courier.shared.clientKey,
                 jwt: Courier.shared.jwt,
+                clientSourceId: connectionId,
                 userId: userId,
                 messageId: messageId
             )
@@ -516,6 +549,7 @@ internal class CoreInbox {
             try await inboxRepo.readAllMessages(
                 clientKey: Courier.shared.clientKey,
                 jwt: Courier.shared.jwt,
+                clientSourceId: connectionId,
                 userId: userId
             )
         } catch {
@@ -708,7 +742,7 @@ internal actor Inbox {
         self.hasNextPage = hasNextPage
     }
     
-    func readAllMessages() -> ReadAllOperation {
+    @discardableResult func readAllMessages() -> ReadAllOperation {
         
         guard let messages = self.messages else {
             return ReadAllOperation(
@@ -737,7 +771,7 @@ internal actor Inbox {
         self.unreadCount = update.unreadCount
     }
     
-    func readMessage(messageId: String) throws -> UpdateOperation? {
+    @discardableResult func readMessage(messageId: String) throws -> UpdateOperation? {
         
         guard let messages = self.messages else {
             return nil
@@ -769,7 +803,7 @@ internal actor Inbox {
         
     }
     
-    func unreadMessage(messageId: String) throws -> UpdateOperation? {
+    @discardableResult func unreadMessage(messageId: String) throws -> UpdateOperation? {
         
         guard let messages = self.messages else {
             return nil
