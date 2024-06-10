@@ -15,10 +15,10 @@ public class InboxSocket: CourierSocket {
     }
     
     internal enum EventType: String, Codable {
-        case read
-        case unread
-        case markAllRead
-        case opened
+        case read = "read"
+        case unread = "unread"
+        case markAllRead = "mark-all-read"
+        case opened = "opened"
     }
     
     internal struct SocketPayload: Codable {
