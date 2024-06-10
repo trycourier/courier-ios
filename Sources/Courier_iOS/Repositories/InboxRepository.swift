@@ -9,38 +9,6 @@ import Foundation
 
 internal class InboxRepository: Repository {
     
-    internal func connectInboxWebSocket(clientKey: String? = nil, tenantId: String?, userId: String, onMessageReceived: @escaping (InboxMessage) -> Void, onMessageReceivedError: @escaping (CourierError) -> Void) async throws {
-        
-        if (CourierInboxWebsocket.shared?.isSocketConnected == true || CourierInboxWebsocket.shared?.isSocketConnecting == true) {
-            return
-        }
-        
-        // Listen to new messages from the socket
-        CourierInboxWebsocket.onMessageReceived = { text in
-            do {
-                let dictionary = try (text.data(using: .utf8) ?? Data()).toDictionary()
-                let newMessage = InboxMessage(dictionary)
-                onMessageReceived(newMessage)
-            } catch {
-                let e = CourierError(from: error)
-                Courier.log(e.message)
-                onMessageReceivedError(e)
-            }
-        }
-        
-        // Connect the socket
-        CourierInboxWebsocket.connect(
-            clientKey: clientKey,
-            tenantId: tenantId,
-            userId: userId
-        )
-        
-    }
-    
-    internal func closeInboxWebSocket() {
-        CourierInboxWebsocket.disconnect()
-    }
-    
     internal func getMessages(clientKey: String? = nil, jwt: String? = nil, userId: String, tenantId: String?, paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxData {
         
         let query = """

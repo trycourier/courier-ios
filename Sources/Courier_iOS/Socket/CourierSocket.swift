@@ -1,0 +1,119 @@
+//
+//  CourierSocket.swift
+//
+//
+//  Created by Michael Miller on 6/10/24.
+//
+
+import Foundation
+
+public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
+    
+    internal var webSocketTask: URLSessionWebSocketTask!
+    internal var urlSession: URLSession!
+    
+    var onMessageReceived: ((String) -> Void)?
+    
+    internal var onOpen: (() -> Void)?
+    internal var onClose: ((URLSessionWebSocketTask.CloseCode, Data?) -> Void)?
+    internal var onError: ((Error) -> Void)?
+    
+    private let url: String
+    
+    init(url: String, onClose: @escaping (URLSessionWebSocketTask.CloseCode, Data?) -> Void, onError: @escaping (Error) -> Void) {
+        self.url = url
+        self.onClose = onClose
+        self.onError = onError
+        super.init()
+        setup()
+    }
+
+    private func setup() {
+        let sessionConfiguration = URLSessionConfiguration.default
+        urlSession = URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
+    }
+    
+    func connect() async throws {
+        
+        // Disconnect if already connected
+        if let task = self.webSocketTask {
+            disconnect()
+        }
+        
+        // Validate URL
+        guard let url = URL(string: self.url) else {
+            throw URLError(.badURL)
+        }
+        
+        // Connect
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+            
+            self.onOpen = {
+                continuation.resume()
+            }
+            
+            self.webSocketTask = urlSession.webSocketTask(with: url)
+            self.webSocketTask.resume()
+            
+            self.receiveData()
+            
+        })
+        
+    }
+    
+    func disconnect() {
+        webSocketTask.cancel(with: .goingAway, reason: nil)
+    }
+    
+    public func send(_ message: [String: Any]) async throws {
+        
+        // Convert the map to JSON
+        let jsonData = try JSONSerialization.data(withJSONObject: message, options: [])
+        guard let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+        let message = URLSessionWebSocketTask.Message.string(jsonString)
+        
+        // Send message to socket
+        return try await webSocketTask.send(message)
+        
+    }
+    
+    func receiveData() {
+        webSocketTask.receive { result in
+            switch result {
+            case .success(let message):
+                switch message {
+                case .string(let text):
+                    self.onMessageReceived?(text)
+                case .data(let data):
+                    if let str = String(data: data, encoding: .utf8) {
+                        self.onMessageReceived?(str)
+                    }
+                @unknown default:
+                    fatalError()
+                }
+                self.receiveData()
+            case .failure(let error):
+                
+                let e = error as NSError
+                
+                // Handle closing socket
+                if e.domain == NSPOSIXErrorDomain && e.code == 57 {
+                    Courier.log("WebSocket closed")
+                    return
+                }
+                
+                self.onError?(e)
+                
+            }
+        }
+    }
+    
+    public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+        self.onOpen?()
+    }
+    
+    public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+        self.onClose?(closeCode, reason)
+    }
+    
+}

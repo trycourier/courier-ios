@@ -50,15 +50,123 @@ final class Development: XCTestCase {
         
     }
     
+    func testSocketCore() async throws {
+        
+        var hold = true
+        
+        let userId = "test_1"
+        let clientKey = Env.COURIER_CLIENT_KEY
+        let clientSourceId = UUID().uuidString
+        
+        let socket = CourierSocket(
+            url: "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production/?clientKey=\(clientKey)",
+            onClose: { code, reason in
+                print(code, reason ?? "No reason")
+            },
+            onError: { error in
+                print(error)
+            }
+        )
+        
+        socket.onMessageReceived = { message in
+            print(message)
+            hold = false
+        }
+        
+        try await socket.connect()
+        
+        let subscribe: [String: Any] = [
+            "action": "subscribe",
+            "data": [
+                "channel": userId,
+                "event": "*",
+                "version": 5,
+                "clientKey": clientKey,
+                "clientSourceId": clientSourceId
+            ]
+        ]
+        
+        try await socket.send(subscribe)
+
+        let notify: [String: Any] = [
+            "action": "notify",
+            "data": [
+                "channel": userId,
+                "event": "read",
+                "version": 5,
+                "messageId": "1-66635f83-355c711baae4cfa9db385902",
+                "clientKey": clientKey,
+                "clientSourceId": clientSourceId
+            ]
+        ]
+        
+        try await socket.send(notify)
+        
+        while (hold) {}
+        
+        socket.disconnect()
+        
+    }
+    
+    func testInboxSocket() async throws {
+        
+        var hold = true
+        
+        let userId = "test_1"
+        let clientKey = Env.COURIER_CLIENT_KEY
+        let clientSourceId = UUID().uuidString
+        
+        let socket = InboxSocket(
+            clientKey: clientKey, 
+            jwt: nil,
+            onClose: { code, reason in
+                print(code, reason ?? "No reason")
+            },
+            onError: { error in
+                print(error)
+            }
+        )
+        
+        socket.receivedMessageEvent = { event in
+            print(event)
+        }
+        
+        socket.receivedMessage = { message in
+            print(message)
+            hold = false
+        }
+        
+        try await socket.connect()
+        
+        try await socket.sendSubscribe(
+            userId: userId,
+            tenantId: nil,
+            clientSourceId: clientSourceId
+        )
+        
+        let messageId = try await ExampleServer().sendTest(
+            authKey: Env.COURIER_AUTH_KEY,
+            userId: userId,
+            key: "inbox"
+        )
+        
+        print(messageId)
+        
+        while (hold) {}
+        
+        socket.disconnect()
+        
+    }
+    
     func testInboxListener() async throws {
         
         print("\n🔬 Testing Inbox Listener")
         
-        try await Courier.shared.signOut()
+        await Courier.shared.signOut()
         
         let userId = "asdf"
         
-        try await Courier.shared.signIn(
+        await Courier.shared.signIn(
             accessToken: Env.COURIER_AUTH_KEY,
             clientKey: Env.COURIER_CLIENT_KEY,
             userId: userId

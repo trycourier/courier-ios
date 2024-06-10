@@ -31,6 +31,8 @@ internal class CoreInbox {
     internal static let defaultMinPaginationLimit = 1
     internal var paginationLimit = defaultPaginationLimit
     
+    internal var socket: InboxSocket? = nil
+    
     internal var inbox: Inbox? = nil
 
     private var listeners: [CourierInboxListener] = []
@@ -99,8 +101,8 @@ internal class CoreInbox {
             
             if (!listeners.isEmpty) {
                 
-                // Close the socket if needed
-                self.inboxRepo.closeInboxWebSocket()
+                // Connect the socket if needed
+                try await socket?.connect()
                 
                 // Fetch all the latest data
                 do {
@@ -121,7 +123,7 @@ internal class CoreInbox {
     internal func unlink() {
         
         if (!listeners.isEmpty) {
-            inboxRepo.closeInboxWebSocket()
+            socket?.disconnect()
         }
         
     }
@@ -171,9 +173,10 @@ internal class CoreInbox {
         let (inboxData, unreadCount) = await (try dataTask, try unreadCountTask)
         
         try await connectWebSocket(
+            userId: userId,
             clientKey: Courier.shared.clientKey,
-            tenantId: Courier.shared.tenantId,
-            userId: userId
+            jwt: Courier.shared.jwt, 
+            tenantId: Courier.shared.tenantId
         )
         
         self.inbox = Inbox(
@@ -188,32 +191,44 @@ internal class CoreInbox {
         
     }
     
-    private func connectWebSocket(clientKey: String?, tenantId: String?, userId: String) async throws {
+    private func connectWebSocket(userId: String, clientKey: String?, jwt: String?, tenantId: String?) async throws {
         
-        // Create a new socket
-        try await inboxRepo.connectInboxWebSocket(
+        self.socket?.disconnect()
+        
+        // Create the socket
+        self.socket = InboxSocket(
             clientKey: clientKey,
-            tenantId: tenantId,
-            userId: userId,
-            onMessageReceived: { message in
-                
-                // Perform update with single reference
-                Task { [weak self] in
-                    await self?.inbox?.addNewMessage(message: message)
-                    await self?.notifyMessagesChanged()
-                }
-                
+            jwt: jwt,
+            onClose: { code, reason in
+                Courier.log("\(code) :: \(String(describing: reason))")
             },
-            onMessageReceivedError: { [weak self] error in
-                
-                // Catch the websocket disconnect error
-                if (error.code == 57) {
-                    return
-                }
-                
+            onError: { [weak self] error in
                 self?.notifyError(error)
-                
             }
+        )
+        
+        // Listen to the events
+        socket?.receivedMessage = { message in
+            Task { [weak self] in
+                await self?.inbox?.addNewMessage(message: message)
+                await self?.notifyMessagesChanged()
+            }
+        }
+        
+        socket?.receivedMessageEvent = { [weak self] event in
+            print(event)
+        }
+        
+        // Connect the socket
+        try await socket?.connect()
+        
+        let connectionId = UUID().uuidString
+        
+        // Subscribe to the events
+        try await socket?.sendSubscribe(
+            userId: userId,
+            tenantId: tenantId,
+            clientSourceId: connectionId
         )
         
     }
@@ -321,7 +336,7 @@ internal class CoreInbox {
     
     internal func close() {
         self.inbox = nil
-        self.inboxRepo.closeInboxWebSocket()
+        self.socket?.disconnect()
     }
     
     internal func stop() {
