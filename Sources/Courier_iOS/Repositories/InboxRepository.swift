@@ -197,7 +197,7 @@ internal class InboxRepository: Repository {
         
     }
     
-    internal func openMessage(clientKey: String? = nil, jwt: String? = nil, clientSourceId: String, userId: String, messageId: String) async throws {
+    internal func openMessage(clientKey: String? = nil, jwt: String? = nil, userId: String, messageId: String) async throws {
         
         let mutation = """
         mutation TrackEvent(
@@ -210,7 +210,7 @@ internal class InboxRepository: Repository {
         try await graphQLQuery(
             jwt: jwt,
             clientKey: clientKey,
-            clientSourceId: clientSourceId,
+            clientSourceId: nil,
             userId: userId,
             url: CourierUrl.inboxGraphQL,
             query: mutation
