@@ -34,13 +34,6 @@ internal class CoreAuth {
         async let putTokens: () = push.putPushTokens()
         async let startInbox: () = inbox.startSoft()
         
-        if let tenantId = tenantId {
-            
-            // Add tenant to user
-            
-            
-        }
-        
         // Batch all functions together
         let _ = await [putTokens, startInbox]
         

@@ -15,10 +15,19 @@ public class InboxSocket: CourierSocket {
     }
     
     internal enum EventType: String, Codable {
+        
         case read = "read"
         case unread = "unread"
         case markAllRead = "mark-all-read"
         case opened = "opened"
+        case unknown
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            let rawValue = try? container.decode(String.self)
+            self = EventType(rawValue: rawValue ?? "") ?? .unknown
+        }
+        
     }
     
     internal struct SocketPayload: Codable {

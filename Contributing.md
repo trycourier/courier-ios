@@ -4,7 +4,7 @@
 
 1. Clone the repo
 2. Open the entire project file (`courier-ios`) in Xcode
-3. Run `sh env-setup` from root
+3. Run `sh env_setup` from root
 4. Update the `Env.swift` files located in `Example/Example/Env.swift` and `Tests/CourierTests/Env.swift` to match the Courier credentials you'd like to test with
 
 From here, you are all set to start working on the package! 🙌

@@ -36,7 +36,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     func connect() async throws {
         
         // Disconnect if already connected
-        if let task = self.webSocketTask {
+        if self.webSocketTask != nil {
             disconnect()
         }
         

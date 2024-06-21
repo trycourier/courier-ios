@@ -50,6 +50,7 @@ final class Development: XCTestCase {
         
     }
     
+    @available(iOS 16.0, *)
     func testSocketCore() async throws {
         
         var hold = true
@@ -87,6 +88,8 @@ final class Development: XCTestCase {
         ]
         
         try await socket.send(subscribe)
+        
+        try await Task.sleep(for: .seconds(3))
 
         let notify: [String: Any] = [
             "action": "notify",
