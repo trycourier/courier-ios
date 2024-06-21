@@ -31,7 +31,15 @@ suggest_next_version() {
 # Function to update the version in Sources/Courier_iOS/Courier_iOS.swift
 update_version() {
     local new_version=$1
+    
+    # Update the Root Swift File
     sed -i '' "s/internal static let version = \".*\"/internal static let version = \"$new_version\"/" Sources/Courier_iOS/Courier_iOS.swift
+    
+    # Update the podspec version
+    sed -i '.bak' "s/s.version = .*/s.version = '$new_version'/" Courier_iOS.podspec
+    
+    # Clean up backup file
+    rm Courier_iOS.podspec.bak
 }
 
 # Get the current version
