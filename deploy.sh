@@ -1,27 +1,48 @@
 #!/bin/bash
 
+# Move to Scripts
+cd Scripts
+
+# Function to handle errors and exit
 error_exit() {
     echo "❌ Error: $1" >&2
     exit 1
 }
 
-# 1. Go to scripts
-cd Scripts
+# Define steps as an indexed array with title and script
+declare -a steps=(
+    "Run Tests:sh run_tests.sh"
+    "Build Demo App:sh build_demo_app.sh"
+    "Update Build Version:sh update_version.sh"
+    "Create Git Release:sh git_release.sh"
+    "Distribute Release:sh distribute_release.sh"
+)
 
-# 2. Update the build version
-sh update_version.sh
+# Display available steps with indices
+echo "Available steps:"
+index=0
+for step in "${steps[@]}"; do
+    echo "$index: ${step%%:*}"  # Display only the title part before ":"
+    ((index++))
+done
 
-# 3. Run tests
-if ! sh run_tests.sh; then
-    error_exit "❌ Tests failed"
+# Prompt user to select a step
+read -p "Select step to start from (default 0): " start_step_index
+
+# Default to starting from the first step if input is empty or invalid
+if [[ ! $start_step_index =~ ^[0-9]+$ ]]; then
+    start_step_index=0
 fi
 
-# 4. Build app
-if ! sh build_demo_app.sh; then
-    error_exit "❌ Build failed"
-fi
+# Execute steps from selected index onwards
+for (( i=start_step_index; i<${#steps[@]}; i++ )); do
+    step="${steps[$i]}"
+    title="${step%%:*}"  # Extract title part before ":"
+    script="${step#*:}"  # Extract script part after ":"
+    echo "Executing Step $i: $title"
+    if ! eval "$script"; then
+        error_exit "❌ Step $i ($title) failed"
+    fi
+done
 
-# 5. Distribute release
-if ! sh distribute_release.sh; then
-    error_exit "❌ Distribution failed"
-fi
+echo "All steps completed successfully."

@@ -162,7 +162,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		SkqnQLAd8LI0SErWfV4fq5O8auI=
+		3Qg3qflEXFN5wWJDL3K/X9SGLqY=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -170,7 +170,7 @@
 		</data>
 		<key>PlugIns/CourierService.appex/CourierService</key>
 		<data>
-		A6b94bMZo5ZAHlbFGObVofQuqZw=
+		Da7umTfRVGk1qaH+VMfHAgoVT1k=
 		</data>
 		<key>PlugIns/CourierService.appex/Courier_iOS_Courier_iOS.bundle/Assets.car</key>
 		<data>
@@ -182,11 +182,11 @@
 		</data>
 		<key>PlugIns/CourierService.appex/Info.plist</key>
 		<data>
-		O6BJEUTCWc8DnEMZxT+OfjnPEMg=
+		U361KWxoG+1tix1tD2Z1GFlJaNg=
 		</data>
 		<key>PlugIns/CourierService.appex/_CodeSignature/CodeResources</key>
 		<data>
-		iCj0R79LrjJdSGkSVYfkchcL3Ig=
+		P542KClm7SoFL3+mVo/VEEAYElU=
 		</data>
 		<key>PlugIns/CourierService.appex/embedded.mobileprovision</key>
 		<data>
@@ -492,7 +492,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			+y6zt43D4S58ZlZ2NgJ32ZilWnNwXzanrt5JLh7/UNc=
+			qP9/UzeaGDmm1mGH46XTev6wKT5GkeLk6QdLCIwO1Yc=
 			</data>
 		</dict>
 		<key>PlugIns/CourierService.appex/Courier_iOS_Courier_iOS.bundle/Assets.car</key>
@@ -513,14 +513,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			XpjSEgY4SdaF+mSk7GLsNmN8wbd7sfl0ZttjpRPvQtg=
+			4LvWYMmdshNUgZVRML/bxHjg6k7qlAthend9R52xyoU=
 			</data>
 		</dict>
 		<key>PlugIns/CourierService.appex/_CodeSignature/CodeResources</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			D3erQ5GtZBqwWnzwcD1cPnXJPhVPlk4mzg4i4j0xlug=
+			CEBLwBWTm2cVB/w6850orArhQxQjTNexsshGGH7EvYo=
 			</data>
 		</dict>
 		<key>PlugIns/CourierService.appex/embedded.mobileprovision</key>
