@@ -10,6 +10,6 @@ import Foundation
 // MARK: Internal Classes
 
 internal struct CourierGraphQLQuery: Codable {
-    var query: String
-    var variables: String
+    var query: String = "{}"
+    var variables: String = "{}"
 }

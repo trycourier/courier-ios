@@ -190,10 +190,13 @@ extension Dictionary {
 extension Data {
     
     func toPreview() -> String {
-        guard let object = try? JSONSerialization.jsonObject(with: self, options: []),
-              let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
-              let prettyPrintedString = String(data: data, encoding: .utf8) else { return "" }
-        return prettyPrintedString
+        if let json = try? JSONSerialization.jsonObject(with: self, options: .fragmentsAllowed),
+           let prettyJsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+           let prettyJsonString = String(data: prettyJsonData, encoding: .utf8) {
+            return prettyJsonString
+        } else {
+            return String(decoding: self, as: UTF8.self)
+        }
     }
     
     func toDictionary() throws -> [String : Any]? {

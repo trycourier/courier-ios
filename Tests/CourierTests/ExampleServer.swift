@@ -12,6 +12,27 @@ class ExampleServer {
     private struct Response: Codable {
         let token: String
     }
+    
+    static func generateJwt(authKey: String, userId: String) async throws -> String {
+        
+        let url = URL(string: "https://api.courier.com/auth/issue-token")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
+        
+        request.httpBody = try JSONEncoder().encode([
+            "scope": "user_id:\(userId) write:user-tokens inbox:read:messages inbox:write:events read:preferences write:preferences read:brands",
+            "expires_in": "2 days"
+        ])
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let res = try JSONDecoder().decode(Response.self, from: data)
+        
+        return res.token
+        
+    }
 
     internal func generateJwt(authKey: String, userId: String) async throws -> String {
 

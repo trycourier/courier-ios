@@ -20,6 +20,7 @@ public class InboxSocket: CourierSocket {
         case unread = "unread"
         case markAllRead = "mark-all-read"
         case opened = "opened"
+        case archived = "archived"
         case unknown
         
         init(from decoder: Decoder) throws {

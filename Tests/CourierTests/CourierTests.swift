@@ -37,13 +37,13 @@ final class CourierTests: XCTestCase {
         } else {
             
             await Courier.shared.signIn(
-                accessToken: Env.COURIER_ACCESS_TOKEN,
+                accessToken: Env.COURIER_AUTH_KEY,
                 clientKey: Env.COURIER_CLIENT_KEY,
                 userId: Env.COURIER_USER_ID
             )
             
             XCTAssertEqual(Courier.shared.userId, Env.COURIER_USER_ID)
-            XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_ACCESS_TOKEN)
+            XCTAssertEqual(Courier.shared.accessToken, Env.COURIER_AUTH_KEY)
             XCTAssertEqual(Courier.shared.clientKey, Env.COURIER_CLIENT_KEY)
             
         }
@@ -209,7 +209,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing Sending APNS Message")
         
         let _ = try await ExampleServer().sendTest(
-            authKey: Env.COURIER_ACCESS_TOKEN,
+            authKey: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID,
             key: "apn"
         )
@@ -221,7 +221,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing Sending FCM Message")
         
         let _ = try await ExampleServer().sendTest(
-            authKey: Env.COURIER_ACCESS_TOKEN,
+            authKey: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID,
             key: "firebase-fcm"
         )
@@ -237,7 +237,7 @@ final class CourierTests: XCTestCase {
         let message = [
             "trackingUrl": "https://af6303be-0e1e-40b5-bb80-e1d9299cccff.ct0.app/t/tzgspbr4jcmcy1qkhw96m0034bvy"
         ]
-        
+
         // Track delivery
         try await Courier.shared.trackNotification(
             message: message,
@@ -375,7 +375,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing Read Message")
         
         let messageId = try await ExampleServer().sendTest(
-            authKey: Env.COURIER_ACCESS_TOKEN,
+            authKey: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID,
             key: "inbox"
         )
@@ -416,7 +416,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing Unread Message")
         
         let messageId = try await ExampleServer().sendTest(
-            authKey: Env.COURIER_ACCESS_TOKEN,
+            authKey: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID,
             key: "inbox"
         )
@@ -434,7 +434,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing Read Message")
         
         let messageId = try await ExampleServer().sendTest(
-            authKey: Env.COURIER_ACCESS_TOKEN,
+            authKey: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID,
             key: "inbox"
         )
@@ -452,7 +452,7 @@ final class CourierTests: XCTestCase {
         print("\n🔬 Testing Open Message")
         
         let messageId = try await ExampleServer().sendTest(
-            authKey: Env.COURIER_ACCESS_TOKEN,
+            authKey: Env.COURIER_AUTH_KEY,
             userId: Env.COURIER_USER_ID,
             key: "inbox"
         )
