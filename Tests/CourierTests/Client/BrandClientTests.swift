@@ -18,7 +18,7 @@ class BrandClientTests: XCTestCase {
             brandId: Env.COURIER_BRAND_ID
         )
         
-        print(res)
+        XCTAssertNotNil(res.data.brand.settings, "Brand settings missing")
 
     }
     

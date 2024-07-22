@@ -14,13 +14,15 @@ class CourierApiClient {
     internal static let inboxGraphQL = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
     internal static let inboxWebSocket = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
     
-    internal func http(url: String) throws -> URLRequest {
+    internal func http(url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
         
         guard let url = URL(string: url) else {
             throw NSError(domain: "Invalid URL", code: -1, userInfo: nil)
         }
         
-        return URLRequest(url: url)
+        var request = URLRequest(url: url)
+        configuration(&request)
+        return request
         
     }
     
@@ -29,6 +31,10 @@ class CourierApiClient {
 extension CourierClient.Options {
     
     internal func log(request: URLRequest) {
+        
+        if (!showLogs) {
+            return
+        }
         
         // Request
         var message = """
@@ -39,13 +45,14 @@ extension CourierClient.Options {
         
         // Headers
         if let headers = request.allHTTPHeaderFields {
-            message += "\nHeaders: \(String(describing: headers))"
+            let preview = headers.toPreview()
+            message += "\nHeaders: \(preview)"
         }
         
         // Body
         if let body = request.httpBody {
-            let json = body.toPreview()
-            message += "\nBody: \(json)"
+            let preview = body.toPreview()
+            message += "\nBody: \(preview)"
         }
         
         log(message)
@@ -56,6 +63,10 @@ extension CourierClient.Options {
         
         guard let httpResponse = response.1 as? HTTPURLResponse else {
             throw NSError(domain: "Invalid response", code: -1, userInfo: nil)
+        }
+        
+        if (!showLogs) {
+            return
         }
 
         let code = httpResponse.statusCode

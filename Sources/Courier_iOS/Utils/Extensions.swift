@@ -187,6 +187,18 @@ extension Dictionary {
     
 }
 
+extension [String : String] {
+    
+    func toPreview() -> String {
+        if let jsonData = try? JSONSerialization.data(withJSONObject: self, options: [.prettyPrinted]), let jsonString = String(data: jsonData, encoding: .utf8) {
+            return jsonString
+        } else {
+            return String(describing: self)
+        }
+    }
+    
+}
+
 extension Data {
     
     func toPreview() -> String {

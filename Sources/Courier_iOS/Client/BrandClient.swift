@@ -35,19 +35,24 @@ class BrandClient: CourierApiClient {
             }
         }
         """
+        
+        let body = try query.toGraphQuery()
 
-        var request = try http(url: BrandClient.BASE_GRAPH_QL)
-        
-        request.addHeader(key: "x-courier-user-id", value: options.userId)
-        
-        if let jwt = options.jwt {
-            request.addHeader(key: "Authorization", value: "Bearer \(jwt)")
-        } else if let clientKey = options.clientKey {
-            request.addHeader(key: "x-courier-client-key", value: clientKey)
+        let request = try http(url: BrandClient.BASE_GRAPH_QL) {
+            
+            $0.httpMethod = "POST"
+            
+            $0.addHeader(key: "x-courier-user-id", value: options.userId)
+            
+            if let jwt = options.jwt {
+                $0.addHeader(key: "Authorization", value: "Bearer \(jwt)")
+            } else if let clientKey = options.clientKey {
+                $0.addHeader(key: "x-courier-client-key", value: clientKey)
+            }
+            
+            $0.httpBody = body
+            
         }
-        
-        request.httpMethod = "POST"
-        request.httpBody = try query.toGraphQuery()
         
         return try await request.dispatch(options)
         
