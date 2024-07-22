@@ -37,7 +37,7 @@ class CourierTask {
             }
             
             if let response = response as? HTTPURLResponse {
-                let code = response.statusCode
+                let code = response.code
                 Courier.log("Response Status: \(code)")
             }
             

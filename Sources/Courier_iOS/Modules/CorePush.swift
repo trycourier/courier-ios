@@ -201,7 +201,7 @@ internal actor CorePush {
     
     // MARK: Analytics
     
-    internal func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) async throws {
+    internal func trackNotification(message: [AnyHashable : Any], event: CourierTrackingEvent) async throws {
         
         guard let trackingUrl = message["trackingUrl"] as? String else {
             Courier.log("Unable to find tracking url")
@@ -347,11 +347,11 @@ extension Courier {
      * Use this function if you are manually handling notifications and not using `CourierDelegate`
      * `CourierDelegate` will automatically track the urls
      */
-    @objc public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent) async throws {
+    @objc public func trackNotification(message: [AnyHashable : Any], event: CourierTrackingEvent) async throws {
         try await corePush.trackNotification(message: message, event: event)
     }
     
-    @objc public func trackNotification(message: [AnyHashable : Any], event: CourierPushEvent, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    @objc public func trackNotification(message: [AnyHashable : Any], event: CourierTrackingEvent, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await corePush.trackNotification(message: message, event: event)

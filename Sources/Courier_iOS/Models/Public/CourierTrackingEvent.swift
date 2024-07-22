@@ -1,5 +1,5 @@
 //
-//  CourierPushEvent.swift
+//  CourierTrackingEvent.swift
 //  
 //
 //  Created by https://github.com/mikemilla on 8/4/22.
@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: Public Classes
 
-@objc public enum CourierPushEvent: Int, RawRepresentable {
+@objc public enum CourierTrackingEvent: Int, RawRepresentable {
     
     case clicked
     case delivered

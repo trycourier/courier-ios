@@ -9,7 +9,7 @@ import Foundation
 
 internal class TrackingRepository: Repository {
     
-    internal func postTrackingUrl(url: String, event: CourierPushEvent) async throws {
+    internal func postTrackingUrl(url: String, event: CourierTrackingEvent) async throws {
         
         let body = try JSONEncoder().encode([
             "event": event.rawValue

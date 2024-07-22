@@ -7,14 +7,14 @@
 
 import Foundation
 
-class CourierApiClient {
+internal class CourierApiClient {
     
-    internal static let BASE_REST = "https://api.courier.com"
-    internal static let BASE_GRAPH_QL = "https://api.courier.com/client/q"
-    internal static let inboxGraphQL = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
-    internal static let inboxWebSocket = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
+    static let BASE_REST = "https://api.courier.com"
+    static let BASE_GRAPH_QL = "https://api.courier.com/client/q"
+    static let inboxGraphQL = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
+    static let inboxWebSocket = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
     
-    internal func http(url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
+    func http(_ url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
         
         guard let url = URL(string: url) else {
             throw NSError(domain: "Invalid URL", code: -1, userInfo: nil)
@@ -28,9 +28,20 @@ class CourierApiClient {
     
 }
 
-extension CourierClient.Options {
+internal extension URLResponse {
     
-    internal func log(request: URLRequest) {
+    var code: Int {
+        guard let httpResponse = self as? HTTPURLResponse else {
+            return 420
+        }
+        return httpResponse.statusCode
+    }
+    
+}
+
+internal extension CourierClient.Options {
+    
+    func log(request: URLRequest) {
         
         if (!showLogs) {
             return
@@ -59,23 +70,21 @@ extension CourierClient.Options {
         
     }
     
-    internal func log(response: (Data, URLResponse)) throws {
-        
-        guard let httpResponse = response.1 as? HTTPURLResponse else {
-            throw NSError(domain: "Invalid response", code: -1, userInfo: nil)
-        }
+    func log(response: (Data, URLResponse)) throws {
         
         if (!showLogs) {
             return
         }
-
-        let code = httpResponse.statusCode
-        let responseBody = response.0.toPreview()
+        
+        let (data, res) = response
+        
+        let code = res.code
+        let body = data.toPreview()
         
         let message = """
         📡 New Courier API Response
         Status Code: \(code)
-        Response JSON: \(responseBody.isEmpty ? "Empty" : responseBody)
+        Response JSON: \(body.isEmpty ? "Empty" : body)
         """
         
         log(message)
@@ -84,28 +93,59 @@ extension CourierClient.Options {
     
 }
 
-extension URLRequest {
+internal extension URLRequest {
     
-    internal func dispatch<T: Decodable>(_ options: CourierClient.Options) async throws -> T {
+    @discardableResult
+    func dispatch(_ options: CourierClient.Options, validCodes: [Int] = [200]) async throws -> Data {
+        
         options.log(request: self)
+        
+        // Perform the request
         let res = try await URLSession.shared.data(for: self)
+        
         try options.log(response: res)
-        return try JSONDecoder().decode(T.self, from: res.0)
+        
+        let (data, response) = res
+        let code = response.code
+        
+        // Handle only valid codes
+        if !validCodes.contains(code) {
+            
+            let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            let message = json?["message"] as? String ?? "Missing"
+            let type = json?["type"] as? String
+            
+            throw CourierError(code: code, message: message, type: type)
+            
+        }
+        
+        return data
+        
     }
     
-    internal mutating func addHeader(key: String, value: String) {
+    func dispatch<T: Decodable>(_ options: CourierClient.Options, validCodes: [Int] = [200]) async throws -> T {
+        
+        // Perform request
+        let data = try await dispatch(options, validCodes: validCodes)
+        
+        // Decode the response
+        return try JSONDecoder().decode(T.self, from: data)
+        
+    }
+    
+    mutating func addHeader(key: String, value: String) {
         addValue(value, forHTTPHeaderField: key)
     }
     
 }
 
-extension String {
+internal extension String {
     
-    internal func toRequestBody() -> Data? {
+    func toRequestBody() -> Data? {
         return data(using: .utf8)
     }
     
-    internal func toGraphQuery() throws -> Data? {
+    func toGraphQuery() throws -> Data? {
         let query = CourierGraphQLQuery(query: self)
         return try JSONEncoder().encode(query)
     }

@@ -35,10 +35,8 @@ class BrandClient: CourierApiClient {
             }
         }
         """
-        
-        let body = try query.toGraphQuery()
 
-        let request = try http(url: BrandClient.BASE_GRAPH_QL) {
+        let request = try http(BrandClient.BASE_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -50,7 +48,7 @@ class BrandClient: CourierApiClient {
                 $0.addHeader(key: "x-courier-client-key", value: clientKey)
             }
             
-            $0.httpBody = body
+            $0.httpBody = try? query.toGraphQuery()
             
         }
         

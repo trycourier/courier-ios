@@ -23,10 +23,10 @@ class ClientBuilder {
         return CourierClient(
             jwt: jwt,
             clientKey: Env.COURIER_CLIENT_KEY,
-            userId: Env.COURIER_USER_ID
-//            connectionId = connectionId,
-//            tenantId = tenantId,
-//            showLogs = true,
+            userId: Env.COURIER_USER_ID,
+            connectionId: connectionId,
+            tenantId: tenantId,
+            showLogs: true
         )
         
     }

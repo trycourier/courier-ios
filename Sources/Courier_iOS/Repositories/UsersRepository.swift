@@ -13,7 +13,7 @@ internal class UsersRepository: Repository {
     
     internal func putUserToken(accessToken: String, userId: String, provider: String, token: String) async throws {
         
-        let body = try? JSONEncoder().encode(CourierToken(
+        let body = try? JSONEncoder().encode(TokenClient.CourierToken(
             provider_key: provider,
             device: CourierDevice()
         ))

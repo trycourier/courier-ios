@@ -19,13 +19,20 @@ internal struct CourierDevice: Codable {
     let manufacturer: String?
     let model: String?
     
-    init() {
-        self.app_id = ID.bundle
-        self.ad_id = ID.advertising
-        self.device_id = ID.device
-        self.platform = CourierPlatform.ios.rawValue
-        self.manufacturer = "apple"
-        self.model = UIDevice.current.localizedModel
+    init(
+        app_id: String? = ID.bundle,
+        ad_id: String? = ID.advertising,
+        device_id: String? = ID.device,
+        platform: String? = CourierPlatform.ios.rawValue,
+        manufacturer: String? = "apple",
+        model: String? = UIDevice.current.localizedModel
+    ) {
+        self.app_id = app_id
+        self.ad_id = ad_id
+        self.device_id = device_id
+        self.platform = platform
+        self.manufacturer = manufacturer
+        self.model = model
     }
     
 }
