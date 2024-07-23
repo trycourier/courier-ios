@@ -12,7 +12,7 @@ internal class CourierApiClient {
     static let BASE_REST = "https://api.courier.com"
     static let BASE_GRAPH_QL = "https://api.courier.com/client/q"
     static let INBOX_GRAPH_QL = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
-    static let inboxWebSocket = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
+    static let INBOX_WEBSOCKET = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
     
     func http(_ url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
         

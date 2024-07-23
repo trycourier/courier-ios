@@ -9,8 +9,8 @@ import Foundation
 
 public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     
-    internal var webSocketTask: URLSessionWebSocketTask!
-    internal var urlSession: URLSession!
+    internal var webSocketTask: URLSessionWebSocketTask?
+    internal var urlSession: URLSession?
     
     var onMessageReceived: ((String) -> Void)?
     
@@ -20,10 +20,8 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     
     private let url: String
     
-    init(url: String, onClose: @escaping (URLSessionWebSocketTask.CloseCode, Data?) -> Void, onError: @escaping (Error) -> Void) {
+    init(url: String) {
         self.url = url
-        self.onClose = onClose
-        self.onError = onError
         super.init()
         setup()
     }
@@ -36,9 +34,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     func connect() async throws {
         
         // Disconnect if already connected
-        if self.webSocketTask != nil {
-            disconnect()
-        }
+        disconnect()
         
         // Validate URL
         guard let url = URL(string: self.url) else {
@@ -52,8 +48,8 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
                 continuation.resume()
             }
             
-            self.webSocketTask = urlSession.webSocketTask(with: url)
-            self.webSocketTask.resume()
+            self.webSocketTask = urlSession?.webSocketTask(with: url)
+            self.webSocketTask?.resume()
             
             self.receiveData()
             
@@ -62,7 +58,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     }
     
     func disconnect() {
-        webSocketTask.cancel(with: .goingAway, reason: nil)
+        webSocketTask?.cancel(with: .normalClosure, reason: nil)
     }
     
     public func send(_ message: [String: Any]) async throws {
@@ -73,12 +69,12 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         let message = URLSessionWebSocketTask.Message.string(jsonString)
         
         // Send message to socket
-        return try await webSocketTask.send(message)
+        try await webSocketTask?.send(message)
         
     }
     
     func receiveData() {
-        webSocketTask.receive { result in
+        webSocketTask?.receive { result in
             switch result {
             case .success(let message):
                 switch message {

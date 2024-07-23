@@ -60,13 +60,7 @@ final class Development: XCTestCase {
         let clientSourceId = UUID().uuidString
         
         let socket = CourierSocket(
-            url: "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production/?clientKey=\(clientKey)",
-            onClose: { code, reason in
-                print(code, reason ?? "No reason")
-            },
-            onError: { error in
-                print(error)
-            }
+            url: "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production/?clientKey=\(clientKey)"
         )
         
         socket.onMessageReceived = { message in

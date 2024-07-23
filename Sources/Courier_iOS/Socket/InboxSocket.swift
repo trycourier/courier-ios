@@ -59,9 +59,7 @@ public class InboxSocket: CourierSocket {
         }
         
         super.init(
-            url: url,
-            onClose: onClose,
-            onError: onError
+            url: url
         )
         
         // Handle received messages

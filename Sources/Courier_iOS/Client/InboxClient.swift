@@ -9,6 +9,8 @@ import Foundation
 
 class InboxClient: CourierApiClient {
     
+    lazy var socket = { NewInboxSocket(options: self.options) }()
+    
     private let options: CourierClient.Options
         
     init(options: CourierClient.Options) {
@@ -16,7 +18,7 @@ class InboxClient: CourierApiClient {
         super.init()
     }
     
-    func getMessage(messageId: String) async throws -> InboxClient.CourierGetInboxMessageResponse {
+    func getMessage(messageId: String) async throws -> CourierGetInboxMessageResponse {
         
         options.warn("🚧 getMessage is under construction and may result in data you do not expect")
 
@@ -69,7 +71,7 @@ class InboxClient: CourierApiClient {
         
         do {
             let dictionary = try data.toDictionary()
-            return InboxClient.CourierGetInboxMessageResponse(dictionary)
+            return CourierGetInboxMessageResponse(dictionary)
         } catch {
             let e = CourierError(from: error)
             options.error(e.message)
@@ -474,34 +476,6 @@ class InboxClient: CourierApiClient {
         }
         
         try await request.dispatch(options)
-        
-    }
-    
-}
-
-// MARK: Response Payloads
-
-extension InboxClient {
-    
-    @objc class CourierGetInboxMessageResponse: NSObject {
-        
-        let data: GetInboxMessageData?
-        
-        init(_ dictionary: [String : Any]?) {
-            let data = dictionary?["data"] as? [String: Any]
-            self.data = GetInboxMessageData(data)
-        }
-        
-    }
-
-    @objc class GetInboxMessageData: NSObject {
-        
-        var message: InboxMessage?
-        
-        init(_ dictionary: [String : Any]?) {
-            let message = dictionary?["message"] as? [String : Any]
-            self.message = InboxMessage(message)
-        }
         
     }
     
