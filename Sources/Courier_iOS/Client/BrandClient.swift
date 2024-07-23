@@ -19,21 +19,21 @@ class BrandClient: CourierApiClient {
     func getBrand(brandId: String) async throws -> CourierBrandResponse {
         
         let query = """
-        query GetBrand {
-            brand(brandId: "\(brandId)") {
-                settings {
-                    colors {
-                        primary
-                        secondary
-                        tertiary
-                    }
-                    inapp {
-                        borderRadius
-                        disableCourierFooter
+            query GetBrand {
+                brand(brandId: "\(brandId)") {
+                    settings {
+                        colors {
+                            primary
+                            secondary
+                            tertiary
+                        }
+                        inapp {
+                            borderRadius
+                            disableCourierFooter
+                        }
                     }
                 }
             }
-        }
         """
 
         let request = try http(BrandClient.BASE_GRAPH_QL) {

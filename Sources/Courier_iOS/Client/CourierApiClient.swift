@@ -11,7 +11,7 @@ internal class CourierApiClient {
     
     static let BASE_REST = "https://api.courier.com"
     static let BASE_GRAPH_QL = "https://api.courier.com/client/q"
-    static let inboxGraphQL = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
+    static let INBOX_GRAPH_QL = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
     static let inboxWebSocket = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
     
     func http(_ url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
@@ -21,7 +21,12 @@ internal class CourierApiClient {
         }
         
         var request = URLRequest(url: url)
+        
         configuration(&request)
+        
+        // Always attach json content type
+        request.addHeader(key: "Content-Type", value: "application/json")
+        
         return request
         
     }
@@ -145,8 +150,8 @@ internal extension String {
         return data(using: .utf8)
     }
     
-    func toGraphQuery() throws -> Data? {
-        let query = CourierGraphQLQuery(query: self)
+    func toGraphQuery(_ variables: String = "{}") throws -> Data? {
+        let query = CourierGraphQLQuery(query: self, variables: variables)
         return try JSONEncoder().encode(query)
     }
     

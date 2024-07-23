@@ -22,7 +22,7 @@ public class CourierClient {
     
     lazy var tokens = { TokenClient(options: self.options) }()
     lazy var brands = { BrandClient(options: self.options) }()
-//    lazy var inbox: InboxClient = { InboxClient(options: self.options) }()
+    lazy var inbox = { InboxClient(options: self.options) }()
     lazy var preferences = { PreferenceClient(options: self.options) }()
     lazy var tracking = { TrackingClient(options: self.options) }()
     
