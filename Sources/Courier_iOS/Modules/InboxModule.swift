@@ -116,11 +116,15 @@ internal actor InboxModule {
     
     private func loadInbox(_ refresh: Bool) async throws -> Inbox {
         
-        let limit = getPaginationLimit(refresh: refresh)
+        if !Courier.shared.isUserSignedIn {
+            throw CourierError.userNotFound
+        }
         
         guard let client = self.client else {
             throw CourierError.inboxNotInitialized
         }
+        
+        let limit = getPaginationLimit(refresh: refresh)
         
         async let dataTask: (InboxResponse) = client.inbox.getMessages(
             paginationLimit: limit,
@@ -216,6 +220,10 @@ internal actor InboxModule {
     }
     
     func fetchNextPage() async throws -> [InboxMessage] {
+        
+        if !Courier.shared.isUserSignedIn {
+            throw CourierError.userNotFound
+        }
         
         if self.inbox == nil {
             return []

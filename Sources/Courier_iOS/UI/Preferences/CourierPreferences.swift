@@ -208,6 +208,10 @@ import UIKit
             
             do {
                 
+                if !Courier.shared.isUserSignedIn {
+                    throw CourierError.userNotFound
+                }
+                
                 // Fetch the brand if needed
                 if let brandId = self.theme.brandId {
                     let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
