@@ -29,17 +29,17 @@ import Foundation
 
 extension CourierInboxListener {
     
-    internal func callMessageChanged(messages: [InboxMessage]?, unreadCount: Int?, totalCount: Int?, hasNextPage: Bool?) {
+    internal func onInboxUpdated(_ inbox: Inbox?) {
         
         if (!isInitialized) {
             return
         }
         
         self.onMessagesChanged?(
-            messages ?? [],
-            unreadCount ?? 0,
-            totalCount ?? 0,
-            hasNextPage ?? false
+            inbox?.messages ?? [],
+            inbox?.unreadCount ?? 0,
+            inbox?.totalCount ?? 0,
+            inbox?.hasNextPage ?? false
         )
         
     }
@@ -50,7 +50,7 @@ extension CourierInboxListener {
     }
     
     @objc public func remove() {
-        Courier.shared.coreInbox.removeInboxListener(listener: self)
+        Courier.shared.removeInboxListener(self)
     }
     
 }

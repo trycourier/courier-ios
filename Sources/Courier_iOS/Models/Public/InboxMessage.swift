@@ -136,38 +136,38 @@ import Foundation
 
 extension InboxMessage {
     
-    @objc public func markAsRead() async throws {
-        try await Courier.shared.coreInbox.readMessage(messageId: messageId)
-    }
-    
-    @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-        Task {
-            do {
-                try await Courier.shared.coreInbox.readMessage(messageId: messageId)
-                onSuccess?()
-            } catch {
-                let e = CourierError(from: error)
-                Courier.log(e.message)
-                onFailure?(e)
-            }
-        }
-    }
-    
-    @objc public func markAsUnread() async throws {
-        try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
-    }
-    
-    @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-        Task {
-            do {
-                try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
-                onSuccess?()
-            } catch {
-                let e = CourierError(from: error)
-                Courier.log(e.message)
-                onFailure?(e)
-            }
-        }
-    }
+//    @objc public func markAsRead() async throws {
+//        try await Courier.shared.coreInbox.readMessage(messageId: messageId)
+//    }
+//    
+//    @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+//        Task {
+//            do {
+//                try await Courier.shared.coreInbox.readMessage(messageId: messageId)
+//                onSuccess?()
+//            } catch {
+//                let e = CourierError(from: error)
+//                Courier.shared.client?.log(e.message)
+//                onFailure?(e)
+//            }
+//        }
+//    }
+//    
+//    @objc public func markAsUnread() async throws {
+//        try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
+//    }
+//    
+//    @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+//        Task {
+//            do {
+//                try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
+//                onSuccess?()
+//            } catch {
+//                let e = CourierError(from: error)
+//                Courier.shared.client?.log(e.message)
+//                onFailure?(e)
+//            }
+//        }
+//    }
     
 }

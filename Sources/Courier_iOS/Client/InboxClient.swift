@@ -9,7 +9,7 @@ import Foundation
 
 class InboxClient: CourierApiClient {
     
-    lazy var socket = { NewInboxSocket(options: self.options) }()
+    lazy var socket = { InboxSocket(options: self.options) }()
     
     private let options: CourierClient.Options
         

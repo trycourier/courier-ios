@@ -36,7 +36,7 @@ import UIKit
     
     // MARK: Repository
     
-    private lazy var inboxRepo = InboxRepository()
+//    private lazy var inboxRepo = InboxRepository()
     
     // MARK: UI
     
@@ -274,7 +274,7 @@ import UIKit
             do {
                 try await refreshBrand()
             } catch {
-                Courier.log(error.localizedDescription)
+                Courier.shared.client?.log(error.localizedDescription)
             }
             
             self.inboxListener = Courier.shared.addInboxListener(
@@ -299,7 +299,7 @@ import UIKit
     
     private func refreshBrand() async throws {
         if let brandId = self.theme.brandId {
-            self.theme.brand = try await Courier.shared.getBrand(brandId: brandId)
+//            self.theme.brand = try await Courier.shared.getBrand(brandId: brandId)
             self.reloadViews()
         }
     }
@@ -343,7 +343,7 @@ import UIKit
                 try await Courier.shared.refreshInbox()
                 self.tableView.refreshControl?.endRefreshing()
             } catch {
-                Courier.log(error.localizedDescription)
+                Courier.shared.client?.log(error.localizedDescription)
                 self.state = .error(error)
             }
             
@@ -397,33 +397,33 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        let indexToPageAt = self.inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 3)
-        
-        // Only fetch if we are safe to
-        if (indexPath.row == indexToPageAt) {
-            Courier.shared.fetchNextPageOfMessages()
-        }
+//        let indexToPageAt = self.inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 3)
+//        
+//        // Only fetch if we are safe to
+//        if (indexPath.row == indexToPageAt) {
+//            Courier.shared.fetchNextPageOfMessages()
+//        }
         
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if (indexPath.section == 0) {
-            
-            // Click the cell
-            let index = indexPath.row
-            let message = self.inboxMessages[index]
-            
-            // Track the click
-            Courier.shared.clickMessage(messageId: message.messageId)
-            
-            // Hit callback
-            self.didClickInboxMessageAtIndex?(message, index)
-            
-            // Deselect the row
-            tableView.deselectRow(at: indexPath, animated: true)
-            
-        }
+//        if (indexPath.section == 0) {
+//            
+//            // Click the cell
+//            let index = indexPath.row
+//            let message = self.inboxMessages[index]
+//            
+//            // Track the click
+//            Courier.shared.clickMessage(messageId: message.messageId)
+//            
+//            // Hit callback
+//            self.didClickInboxMessageAtIndex?(message, index)
+//            
+//            // Deselect the row
+//            tableView.deselectRow(at: indexPath, animated: true)
+//            
+//        }
         
     }
     
@@ -455,16 +455,16 @@ import UIKit
 
                     do {
 
-                        try await self.inboxRepo.openMessage(
-                            clientKey: clientKey,
-                            userId: userId,
-                            messageId: message.messageId
-                        )
+//                        try await self.inboxRepo.openMessage(
+//                            clientKey: clientKey,
+//                            userId: userId,
+//                            messageId: message.messageId
+//                        )
 
                     } catch {
                         
                         let e = CourierError(from: error)
-                        Courier.log(e.message)
+                        Courier.shared.client?.log(e.message)
 
                     }
 

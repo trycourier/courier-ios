@@ -210,41 +210,41 @@ import UIKit
                 
                 // Fetch the brand if needed
                 if let brandId = self.theme.brandId {
-                    theme.brand = try await Courier.shared.getBrand(brandId: brandId)
+//                    theme.brand = try await Courier.shared.getBrand(brandId: brandId)
                 }
                 
-                let prefs = try await Courier.shared.getUserPreferences()
-                
-                var sections = [CourierPreferences.Section]()
-                
-                prefs.items.forEach { topic in
-                    
-                    let sectionId = topic.sectionId
-                    
-                    // Add the item to the proper section
-                    if let sectionIndex = sections.firstIndex(where: { $0.id == sectionId }) {
-                        
-                        sections[sectionIndex].topics.append(topic)
-                        
-                    } else {
-                        
-                        let newSection = CourierPreferences.Section(
-                            title: topic.sectionName,
-                            id: topic.sectionId,
-                            topics: [topic]
-                        )
-                        
-                        sections.append(newSection)
-                        
-                    }
-                    
-                }
-                
-                self.preferences = sections
-                
-                // Reload the state
-                reloadViews()
-                state = preferences.isEmpty ? .empty : .content
+//                let prefs = try await Courier.shared.getUserPreferences()
+//                
+//                var sections = [CourierPreferences.Section]()
+//                
+//                prefs.items.forEach { topic in
+//                    
+//                    let sectionId = topic.sectionId
+//                    
+//                    // Add the item to the proper section
+//                    if let sectionIndex = sections.firstIndex(where: { $0.id == sectionId }) {
+//                        
+//                        sections[sectionIndex].topics.append(topic)
+//                        
+//                    } else {
+//                        
+//                        let newSection = CourierPreferences.Section(
+//                            title: topic.sectionName,
+//                            id: topic.sectionId,
+//                            topics: [topic]
+//                        )
+//                        
+//                        sections.append(newSection)
+//                        
+//                    }
+//                    
+//                }
+//                
+//                self.preferences = sections
+//                
+//                // Reload the state
+//                reloadViews()
+//                state = preferences.isEmpty ? .empty : .content
                 
             } catch {
                 
@@ -572,20 +572,20 @@ import UIKit
             self.updateTopic(topicId: topic.topicId, newTopic: newTopic)
 
             // Update the Topic
-            Courier.shared.putUserPreferencesTopic(
-                topicId: topic.topicId,
-                status: newStatus,
-                hasCustomRouting: newTopic.hasCustomRouting,
-                customRouting: newTopic.customRouting,
-                onSuccess: {
-                    Courier.log("Topic updated: \(topic.topicId)")
-                },
-                onFailure: { error in
-                    Courier.log(error.localizedDescription)
-                    self.onError?(CourierError(from: error))
-                    self.updateTopic(topicId: topic.topicId, newTopic: topic)
-                }
-            )
+//            Courier.shared.putUserPreferencesTopic(
+//                topicId: topic.topicId,
+//                status: newStatus,
+//                hasCustomRouting: newTopic.hasCustomRouting,
+//                customRouting: newTopic.customRouting,
+//                onSuccess: {
+//                    Courier.log("Topic updated: \(topic.topicId)")
+//                },
+//                onFailure: { error in
+//                    Courier.log(error.localizedDescription)
+//                    self.onError?(CourierError(from: error))
+//                    self.updateTopic(topicId: topic.topicId, newTopic: topic)
+//                }
+//            )
             
         case .channels(_):
 
@@ -633,20 +633,20 @@ import UIKit
             self.updateTopic(topicId: topic.topicId, newTopic: newTopic)
 
             // Update the Topic
-            Courier.shared.putUserPreferencesTopic(
-                topicId: topic.topicId,
-                status: newStatus,
-                hasCustomRouting: hasCustomRouting,
-                customRouting: customRouting,
-                onSuccess: {
-                    Courier.log("Topic updated: \(topic.topicId)")
-                },
-                onFailure: { error in
-                    Courier.log(error.localizedDescription)
-                    self.onError?(CourierError(from: error))
-                    self.updateTopic(topicId: topic.topicId, newTopic: topic)
-                }
-            )
+//            Courier.shared.putUserPreferencesTopic(
+//                topicId: topic.topicId,
+//                status: newStatus,
+//                hasCustomRouting: hasCustomRouting,
+//                customRouting: customRouting,
+//                onSuccess: {
+//                    Courier.log("Topic updated: \(topic.topicId)")
+//                },
+//                onFailure: { error in
+//                    Courier.log(error.localizedDescription)
+//                    self.onError?(CourierError(from: error))
+//                    self.updateTopic(topicId: topic.topicId, newTopic: topic)
+//                }
+//            )
             
         }
         

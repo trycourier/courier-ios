@@ -38,28 +38,32 @@ import UIKit
      */
     @objc public static let shared = Courier()
     
-    /**
-     * The modules of the SDK
-     */
-    internal lazy var coreAuth = CoreAuth()
-    internal lazy var corePush = CorePush()
-    internal lazy var coreBrand = CoreBrand()
-    internal lazy var coreInbox = CoreInbox()
-    internal lazy var corePreferences = CorePreferences()
-    internal let coreLogging = CoreLogging()
+    // MARK: Client API
+    
+    public internal(set) var client: CourierClient? = nil
+    
+    // MARK: Authentication
+    
+    public internal(set) var authListeners: [CourierAuthenticationListener] = []
+    
+    // MARK: Modules
+    internal lazy var pushModule = { PushModule() }()
+    
+    // MARK: Inbox
+    internal var paginationLimit: Int = InboxModule.Pagination.default.rawValue
+    public internal(set) var inboxListeners: [CourierInboxListener] = []
+    internal weak var inboxDelegate: InboxModuleDelegate?
+    internal lazy var inboxModule = {
+        self.inboxDelegate = self
+        return InboxModule()
+    }()
     
     // MARK: Init
     
     private override init() {
-        
-#if DEBUG
-        coreLogging.isDebugging = true
-#endif
-        
         super.init()
         
         // Register Lifecycle Listeners
-        
         NotificationCenter.default.addObserver(self,
            selector: #selector(didEnterForeground),
            name: UIApplication.didBecomeActiveNotification,
@@ -91,11 +95,11 @@ import UIKit
     }
     
     @objc private func didEnterForeground() {
-        coreInbox.link()
+//        coreInbox.link()
     }
     
     @objc private func didEnterBackground() {
-        coreInbox.unlink()
+//        coreInbox.unlink()
     }
     
 }

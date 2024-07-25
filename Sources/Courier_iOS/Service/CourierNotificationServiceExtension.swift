@@ -22,9 +22,18 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
             return
         }
         
-        // Try and track the notification
-        // Async, does not wait for completion
-        Courier.shared.trackNotification(message: notification.userInfo, event: .delivered)
+        Task {
+            do {
+                if let trackingUrl = notification.userInfo["trackingUrl"] as? String {
+                    try await Courier.shared.client?.tracking.postTrackingUrl(
+                        url: trackingUrl,
+                        event: .delivered
+                    )
+                }
+            } catch {
+                Courier.shared.client?.options.error(error.localizedDescription)
+            }
+        }
         
         // Show the notification
         contentHandler(notification)

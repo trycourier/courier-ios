@@ -2,65 +2,47 @@
 //  InboxSocket.swift
 //
 //
-//  Created by Michael Miller on 6/10/24.
+//  Created by Michael Miller on 7/23/24.
 //
 
 import Foundation
 
-public class InboxSocket: CourierSocket {
+class InboxSocket: CourierSocket {
     
-    internal enum PayloadType: String, Codable {
-        case event
-        case message
+    private let options: CourierClient.Options
+    
+    enum PayloadType: String, Codable {
+        case event = "event"
+        case message = "message"
     }
     
-    internal enum EventType: String, Codable {
-        
+    enum EventType: String, Codable {
         case read = "read"
         case unread = "unread"
         case markAllRead = "mark-all-read"
         case opened = "opened"
-        case archived = "archived"
-        case unknown
-        
-        init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            let rawValue = try? container.decode(String.self)
-            self = EventType(rawValue: rawValue ?? "") ?? .unknown
-        }
-        
+        case archive = "archive"
     }
     
-    internal struct SocketPayload: Codable {
+    struct SocketPayload: Codable {
         let type: PayloadType
         let event: EventType?
     }
     
-    internal struct MessageEvent: Codable {
+    struct MessageEvent: Codable {
         let event: EventType
         let messageId: String?
         let type: String
     }
     
-    private let clientKey: String?
-    private let jwt: String?
+    var receivedMessage: ((InboxMessage) -> Void)?
+    var receivedMessageEvent: ((MessageEvent) -> Void)?
     
-    init(clientKey: String?, jwt: String?, onClose: @escaping (URLSessionWebSocketTask.CloseCode, Data?) -> Void, onError: @escaping (any Error) -> Void) {
+    init(options: CourierClient.Options) {
+        self.options = options
         
-        self.clientKey = clientKey
-        self.jwt = jwt
-        
-        // Create the url
-        var url = Repository.CourierUrl.inboxWebSocket
-        if let jwt = self.jwt {
-            url += "/?auth=\(jwt)"
-        } else if let clientKey = self.clientKey {
-            url += "/?clientKey=\(clientKey)"
-        }
-        
-        super.init(
-            url: url
-        )
+        let url = InboxSocket.buildUrl(clientKey: options.clientKey, jwt: options.jwt)
+        super.init(url: url)
         
         // Handle received messages
         self.onMessageReceived = { [weak self] data in
@@ -97,25 +79,24 @@ public class InboxSocket: CourierSocket {
         
     }
     
-    func sendSubscribe(userId: String, tenantId: String?, clientSourceId: String, version: Int = 5) async throws {
+    func sendSubscribe(version: Int = 5) async throws {
         
         var data: [String: Any] = [
             "action": "subscribe",
             "data": [
-                "channel": userId,
+                "channel": options.userId,
                 "event": "*",
-                "version": version,
-                "clientSourceId": clientSourceId
+                "version": version
             ]
         ]
         
         if var dict = data["data"] as? [String: Any] {
             
-            if let clientKey = self.clientKey {
+            if let clientKey = self.options.clientKey {
                 dict["clientKey"] = clientKey
             }
             
-            if let tenantId = tenantId {
+            if let tenantId = self.options.tenantId {
                 dict["accountId"] = tenantId
             }
             
@@ -123,12 +104,18 @@ public class InboxSocket: CourierSocket {
             
         }
         
-        return try await self.send(data)
+        try await send(data)
         
     }
     
-    var receivedMessage: ((InboxMessage) -> Void)?
-    
-    var receivedMessageEvent: ((MessageEvent) -> Void)?
+    private static func buildUrl(clientKey: String?, jwt: String?) -> String {
+        var url = CourierApiClient.INBOX_WEBSOCKET
+        if let jwt = jwt {
+            url += "/?auth=\(jwt)"
+        } else if let clientKey = clientKey {
+            url += "/?clientKey=\(clientKey)"
+        }
+        return url
+    }
     
 }

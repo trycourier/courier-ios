@@ -35,7 +35,7 @@ public struct CourierError: Error {
         return CourierError(code: 420, message: "An error occurred getting data from server", type: "parsing_error")
     }
     
-    internal static var missingUser: CourierError {
+    internal static var userNotFound: CourierError {
         return CourierError(code: 404, message: "No user found signed in", type: "authentication_error")
     }
     

@@ -180,7 +180,7 @@ extension Dictionary {
         do {
             return try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
         } catch {
-            Courier.log(error.localizedDescription)
+            Courier.shared.client?.log(error.localizedDescription)
             return nil
         }
     }
