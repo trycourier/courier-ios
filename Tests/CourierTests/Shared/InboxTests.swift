@@ -237,7 +237,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
 
-        try await Courier.shared.readAllMessages()
+        try await Courier.shared.readAllInboxMessages()
 
     }
     

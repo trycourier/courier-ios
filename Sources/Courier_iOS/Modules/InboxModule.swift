@@ -600,7 +600,7 @@ extension Courier {
 
     }
     
-    public func readAllMessages() async throws {
+    public func readAllInboxMessages() async throws {
         
         if !isUserSignedIn {
             throw CourierError.userNotFound
