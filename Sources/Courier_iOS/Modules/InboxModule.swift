@@ -38,27 +38,26 @@ internal actor InboxModule {
         }
     }
     
-    private func load(refresh: Bool) async {
+    func restart() async {
+        
+        // Tell listeners to restart
+        delegate?.onInboxRestarted()
         
         self.streamTask?.cancel()
         
-        return await withCheckedContinuation { continuation in
+        self.streamTask = Task {
             
-            self.streamTask = Task {
+            do {
                 
-                do {
-                    
-                    // Fetch the inbox and call the delegate
-                    let updatedInbox = try await loadInbox(refresh)
-                    self.inbox = updatedInbox
-                    delegate?.onInboxUpdated(inbox: updatedInbox)
-                    
-                } catch {
-                    
-                    // Complete and call delegate
-                    delegate?.onInboxError(with: error)
-                    
-                }
+                // Fetch the inbox and call the delegate
+                let updatedInbox = try await loadInbox(false)
+                self.inbox = updatedInbox
+                delegate?.onInboxUpdated(inbox: updatedInbox)
+                
+            } catch {
+                
+                // Complete and call delegate
+                delegate?.onInboxError(with: error)
                 
             }
             
@@ -66,16 +65,9 @@ internal actor InboxModule {
         
     }
     
-    func restart() async {
-        
-        // Tell listeners to restart
-        delegate?.onInboxRestarted()
-        
-        await load(refresh: false)
-        
-    }
-    
     func refresh() async {
+        
+        self.streamTask?.cancel()
         
         // Prevent refresh
         if (inbox == nil) {
@@ -83,7 +75,19 @@ internal actor InboxModule {
             return
         }
         
-        await load(refresh: true)
+        do {
+            
+            // Fetch the inbox and call the delegate
+            let updatedInbox = try await loadInbox(true)
+            self.inbox = updatedInbox
+            delegate?.onInboxUpdated(inbox: updatedInbox)
+            
+        } catch {
+            
+            // Complete and call delegate
+            delegate?.onInboxError(with: error)
+            
+        }
         
     }
     

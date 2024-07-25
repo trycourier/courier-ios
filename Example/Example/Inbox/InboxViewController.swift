@@ -106,7 +106,17 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
     }
     
     @objc private func readAllClick() {
-        Courier.shared.readAllInboxMessages()
+        
+        Task {
+            
+            do {
+                try await Courier.shared.readAllInboxMessages()
+            } catch {
+                Courier.shared.client?.log(error.localizedDescription)
+            }
+            
+        }
+        
     }
     
 }

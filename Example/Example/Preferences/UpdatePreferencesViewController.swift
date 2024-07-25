@@ -98,7 +98,7 @@ class UpdatePreferencesViewController: UIViewController {
             self.isLoading = true
             
             do {
-                self.topic = try await Courier.shared.getUserPreferencesTopic(topicId: self.topicId)
+                self.topic = try await Courier.shared.client?.preferences.getUserPreferenceTopic(topicId: self.topicId)
             } catch {
                 showMessageAlert(title: "Error", message: CourierError(from: error).message)
             }
@@ -147,7 +147,7 @@ class UpdatePreferencesViewController: UIViewController {
             
             do {
                 
-                try await Courier.shared.putUserPreferencesTopic(
+                try await Courier.shared.client?.preferences.putUserPreferenceTopic(
                     topicId: topicId,
                     status: segmentedControlValue ?? .optedIn,
                     hasCustomRouting: hasCustomRouting ?? false,
