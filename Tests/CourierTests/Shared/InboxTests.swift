@@ -10,7 +10,7 @@ import XCTest
 
 class InboxTests: XCTestCase {
     
-    private let delay: UInt64 = 5_000_000_000
+    private let delay: UInt64 = 10_000_000_000
     
     @discardableResult
     private func sendMessage(userId: String? = nil) async throws -> String {

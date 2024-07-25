@@ -9,13 +9,22 @@ import Foundation
 
 public class CourierClient {
     
-    struct Options {
+    struct Options: Equatable {
         let jwt: String?
         let clientKey: String?
         let userId: String
         let connectionId: String?
         let tenantId: String?
         let showLogs: Bool
+        
+        static func == (lhs: Options, rhs: Options) -> Bool {
+            return lhs.jwt == rhs.jwt &&
+                lhs.clientKey == rhs.clientKey &&
+                lhs.userId == rhs.userId &&
+                lhs.connectionId == rhs.connectionId &&
+                lhs.tenantId == rhs.tenantId &&
+                lhs.showLogs == rhs.showLogs
+        }
     }
     
     let options: Options
