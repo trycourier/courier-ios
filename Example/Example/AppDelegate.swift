@@ -47,7 +47,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         
         Task {
             do {
-                try await Courier.shared.setToken(provider: .firebaseFcm, token: token)
+                try await Courier.shared.setToken(for: .firebaseFcm, token: token)
             } catch {
                 print(String(describing: error))
             }

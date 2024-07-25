@@ -155,7 +155,17 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         if (indexPath.section == 1) {
-            Courier.shared.fetchNextPageOfMessages()
+            
+            Task {
+                
+                do {
+                    try await Courier.shared.fetchNextInboxPage()
+                } catch {
+                    Courier.shared.client?.options.log(error.localizedDescription)
+                }
+                
+            }
+            
         }
         
     }

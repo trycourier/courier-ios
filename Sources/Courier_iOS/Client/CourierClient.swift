@@ -27,7 +27,7 @@ public class CourierClient {
         }
     }
     
-    let options: Options
+    public let options: Options
     
     lazy var tokens = { TokenClient(options: self.options) }()
     lazy var brands = { BrandClient(options: self.options) }()
