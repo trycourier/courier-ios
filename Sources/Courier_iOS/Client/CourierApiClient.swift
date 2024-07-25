@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal class CourierApiClient {
+public class CourierApiClient {
     
     static let BASE_REST = "https://api.courier.com"
     static let BASE_GRAPH_QL = "https://api.courier.com/client/q"

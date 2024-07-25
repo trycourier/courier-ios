@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: Internal Classes
 
-internal struct CourierDevice: Codable {
+public struct CourierDevice: Codable {
     
     let app_id: String?
     let ad_id: String?
@@ -19,7 +19,7 @@ internal struct CourierDevice: Codable {
     let manufacturer: String?
     let model: String?
     
-    init(
+    public init(
         app_id: String? = ID.bundle,
         ad_id: String? = ID.advertising,
         device_id: String? = ID.device,

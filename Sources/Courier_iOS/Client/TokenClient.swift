@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TokenClient: CourierApiClient {
+public class TokenClient: CourierApiClient {
     
     private let options: CourierClient.Options
         
@@ -16,7 +16,7 @@ class TokenClient: CourierApiClient {
         super.init()
     }
     
-    func putUserToken(token: String, provider: String, device: CourierDevice = CourierDevice()) async throws {
+    public func putUserToken(token: String, provider: String, device: CourierDevice = CourierDevice()) async throws {
 
         let request = try http("\(TokenClient.BASE_REST)/users/\(options.userId)/tokens/\(token)") {
             
@@ -39,7 +39,7 @@ class TokenClient: CourierApiClient {
         
     }
     
-    func deleteUserToken(token: String) async throws {
+    public func deleteUserToken(token: String) async throws {
 
         let request = try http("\(TokenClient.BASE_REST)/users/\(options.userId)/tokens/\(token)") {
             

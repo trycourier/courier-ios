@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 import AdSupport
 
-internal struct ID {
+public struct ID {
     
-    // THIS MAY NOT BE ACCURATE
-    static var advertising: String? {
+    // NOTE: THIS MAY NOT BE ACCURATE
+    public static var advertising: String? {
         
         let manager = ASIdentifierManager.shared()
         
@@ -24,11 +24,11 @@ internal struct ID {
         
     }
     
-    static var bundle: String? {
+    public static var bundle: String? {
         return Bundle.main.bundleIdentifier
     }
     
-    static var device: String? {
+    public static var device: String? {
         return UIDevice.current.identifierForVendor?.uuidString
     }
     
