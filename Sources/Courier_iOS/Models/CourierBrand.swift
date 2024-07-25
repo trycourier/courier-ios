@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: Internal Classes
 
-internal struct CourierBrandResponse: Codable {
+public struct CourierBrandResponse: Codable {
     let data: CourierBrandData
 }
 
-internal struct CourierBrandData: Codable {
+public struct CourierBrandData: Codable {
     let brand: CourierBrand
 }
 

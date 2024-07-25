@@ -7,7 +7,7 @@
 
 import Foundation
 
-class InboxSocket: CourierSocket {
+public class InboxSocket: CourierSocket {
     
     private let options: CourierClient.Options
     
@@ -29,14 +29,14 @@ class InboxSocket: CourierSocket {
         let event: EventType?
     }
     
-    struct MessageEvent: Codable {
+    public struct MessageEvent: Codable {
         let event: EventType
         let messageId: String?
         let type: String
     }
     
-    var receivedMessage: ((InboxMessage) -> Void)?
-    var receivedMessageEvent: ((MessageEvent) -> Void)?
+    public var receivedMessage: ((InboxMessage) -> Void)?
+    public var receivedMessageEvent: ((MessageEvent) -> Void)?
     
     init(options: CourierClient.Options) {
         self.options = options
@@ -79,7 +79,7 @@ class InboxSocket: CourierSocket {
         
     }
     
-    func sendSubscribe(version: Int = 5) async throws {
+    public func sendSubscribe(version: Int = 5) async throws {
         
         var data: [String: Any] = [
             "action": "subscribe",

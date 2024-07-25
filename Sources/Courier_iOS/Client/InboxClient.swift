@@ -7,9 +7,9 @@
 
 import Foundation
 
-class InboxClient: CourierApiClient {
+public class InboxClient: CourierApiClient {
     
-    lazy var socket = { InboxSocket(options: self.options) }()
+    public lazy var socket = { InboxSocket(options: self.options) }()
     
     private let options: CourierClient.Options
         

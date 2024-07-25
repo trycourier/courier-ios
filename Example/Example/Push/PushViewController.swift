@@ -37,8 +37,8 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         Task {
             
-            tokens[0].1 = await Courier.shared.getToken(provider: .apn) ?? "Empty"
-            tokens[1].1 = await Courier.shared.getToken(provider: .firebaseFcm) ?? "Empty"
+            tokens[0].1 = await Courier.shared.getToken(for: .apn) ?? "Empty"
+            tokens[1].1 = await Courier.shared.getToken(for: .firebaseFcm) ?? "Empty"
             
             tableView.reloadData()
             

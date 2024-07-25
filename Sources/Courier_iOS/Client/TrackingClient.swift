@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TrackingClient: CourierApiClient {
+public class TrackingClient: CourierApiClient {
     
     private let options: CourierClient.Options
         
@@ -16,7 +16,7 @@ class TrackingClient: CourierApiClient {
         super.init()
     }
     
-    func postTrackingUrl(url: String, event: CourierTrackingEvent) async throws {
+    public func postTrackingUrl(url: String, event: CourierTrackingEvent) async throws {
 
         let request = try http(url) {
             

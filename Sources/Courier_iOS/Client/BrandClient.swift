@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BrandClient: CourierApiClient {
+public class BrandClient: CourierApiClient {
     
     private let options: CourierClient.Options
         
@@ -16,7 +16,7 @@ class BrandClient: CourierApiClient {
         super.init()
     }
     
-    func getBrand(brandId: String) async throws -> CourierBrandResponse {
+    public func getBrand(brandId: String) async throws -> CourierBrandResponse {
         
         let query = """
             query GetBrand {

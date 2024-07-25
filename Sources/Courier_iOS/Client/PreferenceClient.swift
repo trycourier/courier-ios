@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PreferenceClient: CourierApiClient {
+public class PreferenceClient: CourierApiClient {
     
     private let options: CourierClient.Options
         
@@ -16,7 +16,7 @@ class PreferenceClient: CourierApiClient {
         super.init()
     }
     
-    func getUserPreferences(paginationCursor: String? = nil) async throws -> CourierUserPreferences {
+    public func getUserPreferences(paginationCursor: String? = nil) async throws -> CourierUserPreferences {
         
         var url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences"
         
@@ -38,7 +38,7 @@ class PreferenceClient: CourierApiClient {
         
     }
     
-    func getUserPreferenceTopic(topicId: String) async throws -> CourierUserPreferencesTopic {
+    public func getUserPreferenceTopic(topicId: String) async throws -> CourierUserPreferencesTopic {
         
         let url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences/\(topicId)"
 
@@ -57,7 +57,7 @@ class PreferenceClient: CourierApiClient {
         
     }
     
-    func putUserPreferenceTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
+    public func putUserPreferenceTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
         
         let url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences/\(topicId)"
 
