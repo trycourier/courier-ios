@@ -2,7 +2,7 @@
 //  InboxClient.swift
 //
 //
-//  Created by Michael Miller on 7/22/24.
+//  Created by https://github.com/mikemilla on 7/22/24.
 //
 
 import Foundation
@@ -20,7 +20,7 @@ class InboxClient: CourierApiClient {
     
     func getMessage(messageId: String) async throws -> CourierGetInboxMessageResponse {
         
-        options.warn("🚧 getMessage is under construction and may result in data you do not expect")
+        Logger.warn("🚧 getMessage is under construction and may result in data you do not expect")
 
         // TODO: Support tenants
 //        let tenantParams = options.tenantId != nil ? "accountId: \"\(options.tenantId!)\"" : ""

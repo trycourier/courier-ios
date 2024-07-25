@@ -2,7 +2,7 @@
 //  NotificationService.swift
 //  CourierService
 //
-//  Created by Michael Miller on 4/3/23.
+//  Created by https://github.com/mikemilla on 4/3/23.
 //
 
 import Courier_iOS

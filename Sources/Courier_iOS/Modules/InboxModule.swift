@@ -38,23 +38,27 @@ internal actor InboxModule {
         }
     }
     
-    private func load(refresh: Bool) {
+    private func load(refresh: Bool) async {
         
         self.streamTask?.cancel()
         
-        self.streamTask = Task {
+        return await withCheckedContinuation { continuation in
             
-            do {
+            self.streamTask = Task {
                 
-                // Fetch the inbox and call the delegate
-                let updatedInbox = try await loadInbox(refresh)
-                self.inbox = updatedInbox
-                delegate?.onInboxUpdated(inbox: updatedInbox)
-                
-            } catch {
-                
-                // Complete and call delegate
-                delegate?.onInboxError(with: error)
+                do {
+                    
+                    // Fetch the inbox and call the delegate
+                    let updatedInbox = try await loadInbox(refresh)
+                    self.inbox = updatedInbox
+                    delegate?.onInboxUpdated(inbox: updatedInbox)
+                    
+                } catch {
+                    
+                    // Complete and call delegate
+                    delegate?.onInboxError(with: error)
+                    
+                }
                 
             }
             
@@ -62,12 +66,16 @@ internal actor InboxModule {
         
     }
     
-    func restart() {
+    func restart() async {
+        
+        // Tell listeners to restart
         delegate?.onInboxRestarted()
-        load(refresh: false)
+        
+        await load(refresh: false)
+        
     }
     
-    func refresh() {
+    func refresh() async {
         
         // Prevent refresh
         if (inbox == nil) {
@@ -75,7 +83,7 @@ internal actor InboxModule {
             return
         }
         
-        load(refresh: true)
+        await load(refresh: true)
         
     }
     
@@ -317,10 +325,28 @@ internal actor InboxModule {
     }
     
     func openMessage(messageId: String) async throws {
+        
+        let original = try inbox?.openMessage(messageId: messageId)
+        
+        // Do not force a refresh
+        // notifyInboxUpdated()
 
-        try await client?.inbox.open(
-            messageId: messageId
-        )
+        do {
+            
+            try await client?.inbox.open(
+                messageId: messageId
+            )
+
+        } catch {
+
+            if let og = original {
+                self.inbox?.resetUpdate(update: og)
+            }
+
+            notifyInboxUpdated()
+            delegate?.onInboxError(with: error)
+
+        }
         
     }
     
@@ -698,6 +724,36 @@ internal class Inbox {
         self.messages?[i] = message
         self.unreadCount += 1
         self.unreadCount = max(self.unreadCount, 0)
+
+        return UpdateOperation(
+            index: i,
+            unreadCount: originalUnreadCount,
+            message: originalMessage
+        )
+        
+    }
+    
+    @discardableResult func openMessage(messageId: String) throws -> UpdateOperation? {
+        
+        guard let messages = self.messages else {
+            return nil
+        }
+        
+        let index = messages.firstIndex { $0.messageId == messageId }
+        guard let i = index else {
+            return nil
+        }
+
+        // Save copy
+        let message = messages[i]
+        let originalMessage = message.copy() as! InboxMessage
+        let originalUnreadCount = self.unreadCount
+
+        // Update
+        message.setOpened()
+
+        // Change data
+        self.messages?[i] = message
 
         return UpdateOperation(
             index: i,

@@ -2,7 +2,7 @@
 //  PreferencesViewController.swift
 //  Example
 //
-//  Created by Michael Miller on 1/9/24.
+//  Created by https://github.com/mikemilla on 1/9/24.
 //
 
 import UIKit

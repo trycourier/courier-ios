@@ -34,10 +34,6 @@ import UIKit
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     
-    // MARK: Repository
-    
-//    private lazy var inboxRepo = InboxRepository()
-    
     // MARK: UI
     
     private lazy var tableView: UITableView = {
@@ -299,7 +295,8 @@ import UIKit
     
     private func refreshBrand() async throws {
         if let brandId = self.theme.brandId {
-//            self.theme.brand = try await Courier.shared.getBrand(brandId: brandId)
+            let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
+            self.theme.brand = res?.data.brand
             self.reloadViews()
         }
     }
@@ -340,7 +337,7 @@ import UIKit
             
             do {
                 try await refreshBrand()
-                try await Courier.shared.refreshInbox()
+                await Courier.shared.refreshInbox()
                 self.tableView.refreshControl?.endRefreshing()
             } catch {
                 Courier.shared.client?.log(error.localizedDescription)
@@ -397,33 +394,43 @@ import UIKit
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-//        let indexToPageAt = self.inboxMessages.count - Int(CoreInbox.defaultPaginationLimit / 3)
-//        
-//        // Only fetch if we are safe to
-//        if (indexPath.row == indexToPageAt) {
-//            Courier.shared.fetchNextPageOfMessages()
-//        }
+        let indexToPageAt = self.inboxMessages.count - Int(InboxModule.Pagination.default.rawValue / 3)
+        
+        // Only fetch if we are safe to
+        if (indexPath.row == indexToPageAt) {
+            
+            Task {
+                
+                do {
+                    try await Courier.shared.fetchNextInboxPage()
+                } catch {
+                    Courier.shared.client?.error(error.localizedDescription)
+                }
+                
+            }
+            
+        }
         
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        if (indexPath.section == 0) {
-//            
-//            // Click the cell
-//            let index = indexPath.row
-//            let message = self.inboxMessages[index]
-//            
-//            // Track the click
-//            Courier.shared.clickMessage(messageId: message.messageId)
-//            
-//            // Hit callback
-//            self.didClickInboxMessageAtIndex?(message, index)
-//            
-//            // Deselect the row
-//            tableView.deselectRow(at: indexPath, animated: true)
-//            
-//        }
+        if (indexPath.section == 0) {
+            
+            // Click the cell
+            let index = indexPath.row
+            let message = self.inboxMessages[index]
+            
+            // Track the click
+            message.markAsClicked()
+            
+            // Hit callback
+            self.didClickInboxMessageAtIndex?(message, index)
+            
+            // Deselect the row
+            tableView.deselectRow(at: indexPath, animated: true)
+            
+        }
         
     }
     
@@ -434,7 +441,7 @@ import UIKit
     
     private func openVisibleMessages() {
         
-        guard let clientKey = Courier.shared.clientKey, let userId = Courier.shared.userId else {
+        if !Courier.shared.isUserSignedIn {
             return
         }
             
@@ -451,22 +458,7 @@ import UIKit
 
                     // Mark the message as open
                     // This will prevent duplicates
-                    message.setOpened()
-
-                    do {
-
-//                        try await self.inboxRepo.openMessage(
-//                            clientKey: clientKey,
-//                            userId: userId,
-//                            messageId: message.messageId
-//                        )
-
-                    } catch {
-                        
-                        let e = CourierError(from: error)
-                        Courier.shared.client?.log(e.message)
-
-                    }
+                    message.markAsOpened()
 
                 }
 

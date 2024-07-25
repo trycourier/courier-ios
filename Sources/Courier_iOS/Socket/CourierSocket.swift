@@ -2,7 +2,7 @@
 //  CourierSocket.swift
 //
 //
-//  Created by Michael Miller on 6/10/24.
+//  Created by https://github.com/mikemilla on 6/10/24.
 //
 
 import Foundation

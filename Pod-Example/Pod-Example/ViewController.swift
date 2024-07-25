@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  Pod-Example
 //
-//  Created by Michael Miller on 3/24/23.
+//  Created by https://github.com/mikemilla on 3/24/23.
 //
 
 import UIKit

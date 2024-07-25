@@ -2,7 +2,7 @@
 //  PreferenceClientTests.swift
 //
 //
-//  Created by Michael Miller on 7/22/24.
+//  Created by https://github.com/mikemilla on 7/22/24.
 //
 
 import XCTest
