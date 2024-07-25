@@ -71,14 +71,14 @@ extension Courier {
     // MARK: Tokens
     
     /// Returns the current APNS token
-    var apnsToken: Data? {
+    public var apnsToken: Data? {
         get async {
             await tokenModule.apnsToken
         }
     }
     
     /// Returns all cached tokens
-    var tokens: [String: String] {
+    public var tokens: [String: String] {
         get async {
             await tokenModule.tokens
         }
@@ -144,7 +144,7 @@ extension Courier {
     
     // MARK: APNS
     
-    func setAPNSToken(_ rawToken: Data) async throws {
+    public func setAPNSToken(_ rawToken: Data) async throws {
         
         let provider = CourierPushProvider.apn.rawValue
         
@@ -177,14 +177,14 @@ extension Courier {
     
     // MARK: Any Token
     
-    func setToken(for provider: CourierPushProvider, token: String) async throws {
+    public func setToken(for provider: CourierPushProvider, token: String) async throws {
         try await setToken(
             for: provider.rawValue,
             token: token
         )
     }
     
-    func setToken(for provider: String, token: String) async throws {
+    public func setToken(for provider: String, token: String) async throws {
         
         if !isUserSignedIn {
             await tokenModule.cacheToken(key: provider, value: token)
@@ -212,11 +212,11 @@ extension Courier {
         
     }
     
-    func getToken(for provider: CourierPushProvider) async -> String? {
+    public func getToken(for provider: CourierPushProvider) async -> String? {
         return await getToken(for: provider.rawValue)
     }
     
-    func getToken(for provider: String) async -> String? {
+    public func getToken(for provider: String) async -> String? {
         return await tokenModule.tokens[provider]
     }
     
