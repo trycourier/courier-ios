@@ -152,7 +152,11 @@ extension Courier {
     // MARK: Notifications
 
     private func notifyListeners(_ userId: String?) {
-        authListeners.forEach { $0.onChange(userId) }
+        authListeners.forEach { listener in
+            DispatchQueue.main.async {
+                listener.onChange(userId)
+            }
+        }
     }
     
 }

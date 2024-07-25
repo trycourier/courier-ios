@@ -25,9 +25,9 @@ class AuthViewController: UIViewController {
         
         if let _ = Courier.shared.userId {
             
+            self.authButton.isEnabled = false
+            
             Task {
-                
-                self.authButton.isEnabled = false
             
                 await Courier.shared.signOut()
                 
@@ -37,9 +37,9 @@ class AuthViewController: UIViewController {
             
             showInputAlert(title: "Sign in", inputs: ["Enter Courier User Id", "Tenant Id"], action: "Sign In") { values in
                 
+                self.authButton.isEnabled = false
+                
                 Task {
-                    
-                    self.authButton.isEnabled = false
                     
                     let userId = values[0]
                     let tenantId = values[1]
