@@ -1,5 +1,5 @@
 //
-//  PushModule.swift
+//  TokenModule.swift
 //
 //
 //  Created by Michael Miller on 7/23/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal actor PushModule {
+internal actor TokenModule {
     
     /**
      * The token issued by Apple on this device
@@ -73,14 +73,14 @@ extension Courier {
     /// Returns the current APNS token
     var apnsToken: Data? {
         get async {
-            await pushModule.apnsToken
+            await tokenModule.apnsToken
         }
     }
     
     /// Returns all cached tokens
     var tokens: [String: String] {
         get async {
-            await pushModule.tokens
+            await tokenModule.tokens
         }
     }
     
@@ -114,7 +114,7 @@ extension Courier {
     
     internal func putPushTokens() async {
         
-        let tokens = await pushModule.tokens
+        let tokens = await tokenModule.tokens
         
         for (provider, token) in tokens {
             do {
@@ -129,7 +129,7 @@ extension Courier {
     
     internal func deletePushTokens() async {
         
-        let tokens = await pushModule.tokens
+        let tokens = await tokenModule.tokens
         
         for (_, token) in tokens {
             do {
@@ -149,13 +149,13 @@ extension Courier {
         let provider = CourierPushProvider.apn.rawValue
         
         if !isUserSignedIn {
-            await pushModule.setApnsToken(rawToken)
-            await pushModule.cacheToken(key: provider, value: rawToken.string)
+            await tokenModule.setApnsToken(rawToken)
+            await tokenModule.cacheToken(key: provider, value: rawToken.string)
             return
         }
         
         // Delete the existing token
-        if let currentToken = await pushModule.tokens[provider] {
+        if let currentToken = await tokenModule.tokens[provider] {
             do {
                 try await deleteToken(currentToken)
             } catch {
@@ -165,8 +165,8 @@ extension Courier {
         }
         
         // Save the local token
-        await pushModule.setApnsToken(rawToken)
-        await pushModule.cacheToken(key: provider, value: rawToken.string)
+        await tokenModule.setApnsToken(rawToken)
+        await tokenModule.cacheToken(key: provider, value: rawToken.string)
 
         return try await putToken(
             provider: provider,
@@ -177,15 +177,22 @@ extension Courier {
     
     // MARK: Any Token
     
-    func setToken(provider: String, token: String) async throws {
+    func setToken(for provider: CourierPushProvider, token: String) async throws {
+        try await setToken(
+            for: provider.rawValue,
+            token: token
+        )
+    }
+    
+    func setToken(for provider: String, token: String) async throws {
         
         if !isUserSignedIn {
-            await pushModule.cacheToken(key: provider, value: token)
+            await tokenModule.cacheToken(key: provider, value: token)
             return
         }
         
         // Delete the existing token
-        if let currentToken = await pushModule.tokens[provider] {
+        if let currentToken = await tokenModule.tokens[provider] {
             do {
                 try await deleteToken(currentToken)
             } catch {
@@ -195,7 +202,7 @@ extension Courier {
         }
         
         // Save the token locally
-        await pushModule.cacheToken(key: provider, value: token)
+        await tokenModule.cacheToken(key: provider, value: token)
         
         // Update the token
         return try await putToken(
@@ -203,6 +210,14 @@ extension Courier {
             token: token
         )
         
+    }
+    
+    func getToken(for provider: CourierPushProvider) async -> String? {
+        return await getToken(for: provider.rawValue)
+    }
+    
+    func getToken(for provider: String) async -> String? {
+        return await tokenModule.tokens[provider]
     }
     
 }

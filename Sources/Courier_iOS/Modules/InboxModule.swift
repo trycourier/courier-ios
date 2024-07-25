@@ -32,6 +32,12 @@ internal actor InboxModule {
         }
     }
     
+    private var client: CourierClient? {
+        get {
+            return Courier.shared.client
+        }
+    }
+    
     private func load(refresh: Bool) {
         
         self.streamTask?.cancel()
@@ -76,12 +82,12 @@ internal actor InboxModule {
     func cleanUp() {
         
         // Cancel the stream
-        self.streamTask?.cancel()
-        self.streamTask = nil
+        streamTask?.cancel()
+        streamTask = nil
         
         // Remove the socket
-        self.socket?.disconnect()
-        self.socket = nil
+        socket?.disconnect()
+        socket = nil
         
         // Tell delegate
         delegate?.onInboxError(
@@ -100,7 +106,7 @@ internal actor InboxModule {
         
         let limit = getPaginationLimit(refresh: refresh)
         
-        guard let client = Courier.shared.client else {
+        guard let client = self.client else {
             throw CourierError.inboxNotInitialized
         }
         
@@ -139,15 +145,8 @@ internal actor InboxModule {
         self.socket?.receivedMessage = { message in
             
             Task { [weak self] in
-                
-                // Add the new page of messages
                 await self?.inbox?.addNewMessage(message: message)
-                
-                // Call delegate
-                if let inbox = await self?.inbox {
-                    await self?.delegate?.onInboxUpdated(inbox: inbox)
-                }
-                
+                await self?.notifyInboxUpdated()
             }
             
         }
@@ -159,40 +158,21 @@ internal actor InboxModule {
                 switch (messageEvent.event) {
                 case .markAllRead:
                     
-                    // Add the new page of messages
                     await self?.inbox?.readAllMessages()
-                    
-                    // Call delegate
-                    if let inbox = await self?.inbox {
-                        await self?.delegate?.onInboxUpdated(inbox: inbox)
-                    }
+                    await self?.notifyInboxUpdated()
                     
                 case .read:
                     
                     if let messageId = messageEvent.messageId {
-                        
-                        // Read a message
                         try await self?.inbox?.readMessage(messageId: messageId)
-                        
-                        // Call delegate
-                        if let inbox = await self?.inbox {
-                            await self?.delegate?.onInboxUpdated(inbox: inbox)
-                        }
-                        
+                        await self?.notifyInboxUpdated()
                     }
                     
                 case .unread:
                     
                     if let messageId = messageEvent.messageId {
-                        
-                        // Unread a message
                         try await self?.inbox?.unreadMessage(messageId: messageId)
-                        
-                        // Call delegate
-                        if let inbox = await self?.inbox {
-                            await self?.delegate?.onInboxUpdated(inbox: inbox)
-                        }
-                        
+                        await self?.notifyInboxUpdated()
                     }
                     
                 case .archive:
@@ -217,6 +197,12 @@ internal actor InboxModule {
         
     }
     
+    private func notifyInboxUpdated() {
+        if let inbox = self.inbox {
+            delegate?.onInboxUpdated(inbox: inbox)
+        }
+    }
+    
     func fetchNextPage() async throws -> [InboxMessage] {
         
         if self.inbox == nil {
@@ -235,7 +221,7 @@ internal actor InboxModule {
             throw CourierError.inboxNotInitialized
         }
         
-        guard let client = Courier.shared.client else {
+        guard let client = self.client else {
             throw CourierError.inboxNotInitialized
         }
         
@@ -264,6 +250,110 @@ internal actor InboxModule {
         delegate?.onInboxUpdated(inbox: inbox)
         
         return inbox.messages ?? []
+        
+    }
+    
+    func clickMessage(messageId: String) async throws {
+        
+        if let message = inbox?.messages?.filter({ $0.messageId == messageId }).first, let channelId = message.trackingIds?.clickTrackingId {
+            
+            try await client?.inbox.click(
+                messageId: messageId,
+                trackingId: channelId
+            )
+            
+        }
+        
+    }
+    
+    func readMessage(messageId: String) async throws {
+
+        let original = try inbox?.readMessage(messageId: messageId)
+
+        notifyInboxUpdated()
+
+        do {
+            
+            try await client?.inbox.read(
+                messageId: messageId
+            )
+
+        } catch {
+
+            if let og = original {
+                self.inbox?.resetUpdate(update: og)
+            }
+
+            notifyInboxUpdated()
+            delegate?.onInboxError(with: error)
+
+        }
+        
+    }
+    
+    func unreadMessage(messageId: String) async throws {
+
+        let original = try inbox?.unreadMessage(messageId: messageId)
+
+        notifyInboxUpdated()
+
+        do {
+            
+            try await client?.inbox.unread(
+                messageId: messageId
+            )
+
+        } catch {
+
+            if let og = original {
+                self.inbox?.resetUpdate(update: og)
+            }
+
+            notifyInboxUpdated()
+            delegate?.onInboxError(with: error)
+
+        }
+        
+    }
+    
+    func openMessage(messageId: String) async throws {
+
+        try await client?.inbox.open(
+            messageId: messageId
+        )
+        
+    }
+    
+    func archiveMessage(messageId: String) async throws {
+        
+        // TODO: Handle data store update
+
+        try await client?.inbox.archive(
+            messageId: messageId
+        )
+        
+    }
+    
+    func readAllMessages() async throws {
+
+        let original = inbox?.readAllMessages()
+
+        notifyInboxUpdated()
+
+        do {
+            
+            try await client?.inbox.readAll()
+
+        } catch {
+
+            if let og = original {
+                self.inbox?.resetReadAll(update: og)
+            }
+
+            notifyInboxUpdated()
+            delegate?.onInboxError(with: error)
+
+        }
         
     }
     
@@ -299,9 +389,10 @@ extension Courier: InboxModuleDelegate {
 
 extension Courier {
     
-    internal enum FetchType {
-        case page
-        case refresh
+    public var inboxMessages: [InboxMessage] {
+        get async {
+            return await inboxModule.inbox?.messages ?? []
+        }
     }
     
     public var inboxPaginationLimit: Int {
@@ -320,56 +411,52 @@ extension Courier {
         get { NotificationCenter.default }
     }
     
-//    // Reconnects and refreshes the data
-//    // Called because the websocket may have disconnected or
-//    // new data may have been sent when the user closed their app
-//    internal func link() {
-//        
-//        Task {
-//            
-//            let listeners = await inboxModule.listeners
-//            
-//            if (!listeners.isEmpty) {
-//                
-//                // Connect the socket if needed
-//                try await inboxModule.socket?.connect()
-//                
-//                // Fetch all the latest data
-//                do {
-//                    try await loadInbox(refresh: true)
-//                } catch {
-//                    let e = CourierError(from: error)
-//                    notifyError(e)
-//                }
-//                
-//            }
-//            
-//        }
-//        
-//    }
+    // Reconnects and refreshes the data
+    // Called because the websocket may have disconnected or
+    // new data may have been sent when the user closed their app
+    internal func linkInbox() async {
+        
+        if (inboxListeners.isEmpty) {
+            return
+        }
+        
+        await inboxModule.refresh()
+        
+    }
 
-//    // Disconnects the websocket
-//    // Helps keep battery usage lower
-//    internal func unlink() {
-//        
-//        if (!inboxModule.listeners.isEmpty) {
-//            inboxModule.socket?.disconnect()
-//        }
-//        
-//    }
+    // Disconnects the websocket
+    // Helps keep battery usage lower
+    internal func unlinkInbox() async {
+        
+        if (inboxListeners.isEmpty) {
+            return
+        }
+        
+        await inboxModule.socket?.disconnect()
+        
+    }
     
-    func refreshInbox() async {
+    public func refreshInbox() async {
         await inboxModule.refresh()
     }
     
+    func restartInbox() async {
+        await inboxModule.restart()
+    }
+    
+    func closeInbox() async {
+        await inboxModule.cleanUp()
+    }
+    
     @discardableResult
-    func fetchNextInboxPage() async throws -> [InboxMessage] {
+    public func fetchNextInboxPage() async throws -> [InboxMessage] {
         return try await inboxModule.fetchNextPage()
     }
     
     // MARK: Listeners
     
-    func addInboxListener(
+    @discardableResult
+    public func addInboxListener(
         onInitialLoad: (() -> Void)? = nil,
         onError: ((Error) -> Void)? = nil,
         onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil
@@ -411,7 +498,7 @@ extension Courier {
         
     }
     
-    func removeInboxListener(_ listener: CourierInboxListener) {
+    public func removeInboxListener(_ listener: CourierInboxListener) {
         
         self.inboxListeners.removeAll(where: { return $0 == listener })
         
@@ -423,318 +510,79 @@ extension Courier {
         
     }
     
-    func removeAllInboxListeners() {
+    public func removeAllInboxListeners() {
         self.inboxListeners.removeAll()
     }
     
-//    
-//    internal func removeAllListeners() {
-//        listeners.removeAll()
-//        close()
-//        notifyError(CourierError.userNotFound)
-//    }
-//    
-//    internal func close() {
-//        self.inbox = nil
-//        self.socket?.disconnect()
-//    }
-    
-//    internal func stop() {
-//        self.close()
-//        notifyError(CourierError.userNotFound)
-//    }
-    
-//    internal func refresh() async throws {
-//        try await loadInbox(refresh: true)
-//    }
-//    
-//    internal func refresh(onComplete: @escaping () -> Void) {
-//        Task {
-//            do {
-//                try await refresh()
-//            } catch {
-//                self.notifyError(error)
-//            }
-//            Utils.runOnMainThread {
-//                onComplete()
-//            }
-//        }
-//    }
-    
-    internal func clickMessage(messageId: String) async throws {
+    public func clickMessage(_ messageId: String) async throws {
         
-//        guard let userId = Courier.shared.userId else {
-//            throw CourierError.userNotFound
-//        }
-//        
-//        let messages = await inbox?.messages
-//        
-//        if let message = messages?.filter({ $0.messageId == messageId }).first, let channelId = message.trackingIds?.clickTrackingId {
-//            
-////            try await inboxRepo.clickMessage(
-////                clientKey: Courier.shared.clientKey,
-////                jwt: Courier.shared.jwt,
-////                clientSourceId: connectionId,
-////                userId: userId,
-////                messageId: messageId,
-////                channelId: channelId
-////            )
-//            
-//        }
+        if !isUserSignedIn {
+            throw CourierError.userNotFound
+        }
+        
+        try await self.inboxModule.clickMessage(
+            messageId: messageId
+        )
         
     }
     
-    internal func readMessage(messageId: String) async throws {
-
-//        guard let userId = Courier.shared.userId else {
-//            throw CourierError.userNotFound
-//        }
-//
-//        // Mark the message as read instantly
-//        let original = try await self.inbox?.readMessage(messageId: messageId)
-//
-//        // Notify
-//        await notifyMessagesChanged()
-//
-//        // Perform datasource change in background
-//        do {
-//            
-////            try await inboxRepo.readMessage(
-////                clientKey: Courier.shared.clientKey,
-////                jwt: Courier.shared.jwt,
-////                clientSourceId: connectionId,
-////                userId: userId,
-////                messageId: messageId
-////            )
-//            
-//        } catch {
-//            
-//            if let og = original {
-//                await self.inbox?.resetUpdate(update: og)
-//            }
-//            
-//            await self.notifyMessagesChanged()
-//            self.notifyError(error)
-//            
-//        }
+    public func readMessage(_ messageId: String) async throws {
+        
+        if !isUserSignedIn {
+            throw CourierError.userNotFound
+        }
+        
+        try await inboxModule.readMessage(
+            messageId: messageId
+        )
 
     }
     
-    internal func unreadMessage(messageId: String) async throws {
-
-//        guard let userId = Courier.shared.userId else {
-//            throw CourierError.userNotFound
-//        }
-//
-//        // Mark the message as read instantly
-//        let original = try await self.inbox?.unreadMessage(messageId: messageId)
-//
-//        // Notify
-//        await notifyMessagesChanged()
-//
-//        // Perform datasource change in background
-//        do {
-//            
-////            try await inboxRepo.unreadMessage(
-////                clientKey: Courier.shared.clientKey,
-////                jwt: Courier.shared.jwt,
-////                clientSourceId: connectionId,
-////                userId: userId,
-////                messageId: messageId
-////            )
-//            
-//        } catch {
-//            
-//            if let og = original {
-//                await self.inbox?.resetUpdate(update: og)
-//            }
-//            
-//            await self.notifyMessagesChanged()
-//            self.notifyError(error)
-//            
-//        }
+    public func unreadMessage(_ messageId: String) async throws {
+        
+        if !isUserSignedIn {
+            throw CourierError.userNotFound
+        }
+        
+        try await inboxModule.unreadMessage(
+            messageId: messageId
+        )
 
     }
     
-    internal func readAllMessages() async throws {
-
-//        guard let userId = Courier.shared.userId else {
-//            throw CourierError.userNotFound
-//        }
-//
-//        // Read the messages
-//        let original = await self.inbox?.readAllMessages()
-//
-//        // Notify
-//        await self.notifyMessagesChanged()
-//
-//        // Perform datasource change in background
-//        do {
-////            try await inboxRepo.readAllMessages(
-////                clientKey: Courier.shared.clientKey,
-////                jwt: Courier.shared.jwt,
-////                clientSourceId: connectionId,
-////                userId: userId
-////            )
-//        } catch {
-//            
-//            if let og = original {
-//                await self.inbox?.resetReadAll(update: og)
-//            }
-//            
-//            await self.notifyMessagesChanged()
-//            self.notifyError(error)
-//            
-//        }
+    public func archiveMessage(_ messageId: String) async throws {
+        
+        if !isUserSignedIn {
+            throw CourierError.userNotFound
+        }
+        
+        try await inboxModule.archiveMessage(
+            messageId: messageId
+        )
 
     }
     
-}
+    public func openMessage(_ messageId: String) async throws {
+        
+        if !isUserSignedIn {
+            throw CourierError.userNotFound
+        }
+        
+        try await inboxModule.openMessage(
+            messageId: messageId
+        )
 
-extension Courier {
+    }
     
-//    @objc public func getInboxMessages() async -> [InboxMessage]? {
-//        return await coreInbox.inbox?.messages
-//    }
-//    
-//    @objc public var inboxPaginationLimit: Int {
-//        get {
-//            return coreInbox.paginationLimit
-//        }
-//        set {
-//            let min = min(CoreInbox.defaultMaxPaginationLimit, newValue)
-//            coreInbox.paginationLimit = max(CoreInbox.defaultMinPaginationLimit, min)
-//        }
-//    }
-//    
-//    /**
-//     Connects to the Courier Inbox service to handle new messages and other events that get sent to the device
-//     Only one websocket connection and data fetching operation will get setup when calling this.
-//     */
-//    @discardableResult @objc public func addInboxListener(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) -> CourierInboxListener {
-//        return coreInbox.addInboxListener(onInitialLoad: onInitialLoad, onError: onError, onMessagesChanged: onMessagesChanged)
-//    }
-//    
-//    @objc public func removeAllInboxListeners() {
-//        coreInbox.removeAllListeners()
-//    }
-//    
-//    /**
-//     Grabs the next page of message from the inbox service
-//     Will automatically prevent duplicate calls if a call is already performed
-//     */
-//    @discardableResult @objc public func fetchNextPageOfMessages() async throws -> [InboxMessage] {
-//        return try await coreInbox.fetchNextPage()
-//    }
-//    
-//    @objc public func fetchNextPageOfMessages(onSuccess: (([InboxMessage]) -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-//        Task {
-//            do {
-//                let newMessages = try await coreInbox.fetchNextPage()
-//                Utils.runOnMainThread {
-//                    onSuccess?(newMessages)
-//                }
-//            } catch {
-//                let e = CourierError(from: error)
-//                Courier.shared.client?.log(e.message)
-//                Utils.runOnMainThread {
-//                    onFailure?(e)
-//                }
-//            }
-//        }
-//    }
-    
-//    /**
-//     Reloads and rebuilds the inbox with new messages and a new socket
-//     Could be used for pull to refresh functionality
-//     */
-//    @objc public func refreshInbox() async throws {
-//        try await coreInbox.refresh()
-//    }
-//    
-//    @objc public func refreshInbox(onComplete: @escaping () -> Void) {
-//        coreInbox.refresh(onComplete: onComplete)
-//    }
-//    
-//    /**
-//     Sets the message as `read`
-//     */
-//    @objc public func readMessage(messageId: String) async throws {
-//        try await coreInbox.readMessage(messageId: messageId)
-//    }
-//    
-//    @objc public func readMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-//        Task {
-//            do {
-//                try await coreInbox.readMessage(messageId: messageId)
-//                onSuccess?()
-//            } catch {
-//                let e = CourierError(from: error)
-//                Courier.shared.client?.log(e.message)
-//                onFailure?(e)
-//            }
-//        }
-//    }
-//    
-//    /**
-//     Sets the message as `unread`
-//     */
-//    @objc public func unreadMessage(messageId: String) async throws {
-//        try await coreInbox.unreadMessage(messageId: messageId)
-//    }
-//    
-//    @objc public func unreadMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-//        Task {
-//            do {
-//                try await coreInbox.unreadMessage(messageId: messageId)
-//                onSuccess?()
-//            } catch {
-//                let e = CourierError(from: error)
-//                Courier.shared.client?.log(e.message)
-//                onFailure?(e)
-//            }
-//        }
-//    }
-//    
-//    /**
-//     Sets the message as `clicked`
-//     */
-//    @objc public func clickMessage(messageId: String) async throws {
-//        try await coreInbox.clickMessage(messageId: messageId)
-//    }
-//    
-//    @objc public func clickMessage(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-//        Task {
-//            do {
-//                try await coreInbox.clickMessage(messageId: messageId)
-//                onSuccess?()
-//            } catch {
-//                let e = CourierError(from: error)
-//                Courier.shared.client?.log(e.message)
-//                onFailure?(e)
-//            }
-//        }
-//    }
-//    
-//    /**
-//     Sets `read` on all messages
-//     */
-//    @objc public func readAllInboxMessages() async throws {
-//        try await coreInbox.readAllMessages()
-//    }
-//    
-//    @objc public func readAllInboxMessages(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-//        Task {
-//            do {
-//                try await coreInbox.readAllMessages()
-//                onSuccess?()
-//            } catch {
-//                let e = CourierError(from: error)
-//                Courier.shared.client?.log(e.message)
-//                onFailure?(e)
-//            }
-//        }
-//    }
+    public func readAllMessages() async throws {
+        
+        if !isUserSignedIn {
+            throw CourierError.userNotFound
+        }
+        
+        try await inboxModule.readAllMessages()
+
+    }
     
 }
 

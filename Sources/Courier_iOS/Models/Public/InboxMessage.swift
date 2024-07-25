@@ -136,38 +136,89 @@ import Foundation
 
 extension InboxMessage {
     
-//    @objc public func markAsRead() async throws {
-//        try await Courier.shared.coreInbox.readMessage(messageId: messageId)
-//    }
-//    
-//    @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-//        Task {
-//            do {
-//                try await Courier.shared.coreInbox.readMessage(messageId: messageId)
-//                onSuccess?()
-//            } catch {
-//                let e = CourierError(from: error)
-//                Courier.shared.client?.log(e.message)
-//                onFailure?(e)
-//            }
-//        }
-//    }
-//    
-//    @objc public func markAsUnread() async throws {
-//        try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
-//    }
-//    
-//    @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
-//        Task {
-//            do {
-//                try await Courier.shared.coreInbox.unreadMessage(messageId: messageId)
-//                onSuccess?()
-//            } catch {
-//                let e = CourierError(from: error)
-//                Courier.shared.client?.log(e.message)
-//                onFailure?(e)
-//            }
-//        }
-//    }
+    @objc public func markAsRead() async throws {
+        try await Courier.shared.readMessage(messageId)
+    }
+    
+    @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await markAsRead()
+                onSuccess?()
+            } catch {
+                let e = CourierError(from: error)
+                Courier.shared.client?.log(e.message)
+                onFailure?(e)
+            }
+        }
+    }
+    
+    @objc public func markAsUnread() async throws {
+        try await Courier.shared.unreadMessage(messageId)
+    }
+    
+    @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await markAsUnread()
+                onSuccess?()
+            } catch {
+                let e = CourierError(from: error)
+                Courier.shared.client?.log(e.message)
+                onFailure?(e)
+            }
+        }
+    }
+    
+    @objc public func markAsOpened() async throws {
+        try await Courier.shared.openMessage(messageId)
+    }
+    
+    @objc public func markAsOpened(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await markAsOpened()
+                onSuccess?()
+            } catch {
+                let e = CourierError(from: error)
+                Courier.shared.client?.log(e.message)
+                onFailure?(e)
+            }
+        }
+    }
+    
+    @objc public func markAsClicked() async throws {
+        try await Courier.shared.clickMessage(messageId)
+    }
+    
+    @objc public func markAsClicked(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await markAsClicked()
+                onSuccess?()
+            } catch {
+                let e = CourierError(from: error)
+                Courier.shared.client?.log(e.message)
+                onFailure?(e)
+            }
+        }
+    }
+    
+    @objc public func markAsArchived() async throws {
+        try await Courier.shared.archiveMessage(messageId)
+    }
+    
+    @objc public func markAsArchived(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await markAsArchived()
+                onSuccess?()
+            } catch {
+                let e = CourierError(from: error)
+                Courier.shared.client?.log(e.message)
+                onFailure?(e)
+            }
+        }
+    }
     
 }

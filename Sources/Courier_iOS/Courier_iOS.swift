@@ -46,10 +46,12 @@ import UIKit
     
     public internal(set) var authListeners: [CourierAuthenticationListener] = []
     
-    // MARK: Modules
-    internal lazy var pushModule = { PushModule() }()
+    // MARK: Tokens
+    
+    internal lazy var tokenModule = { TokenModule() }()
     
     // MARK: Inbox
+    
     internal var paginationLimit: Int = InboxModule.Pagination.default.rawValue
     public internal(set) var inboxListeners: [CourierInboxListener] = []
     internal weak var inboxDelegate: InboxModuleDelegate?
@@ -81,7 +83,6 @@ import UIKit
     deinit {
         
         // Remove listeners
-        
         NotificationCenter.default.removeObserver(self,
           name: UIApplication.didBecomeActiveNotification,
           object: nil
@@ -95,11 +96,11 @@ import UIKit
     }
     
     @objc private func didEnterForeground() {
-//        coreInbox.link()
+        Task { await linkInbox() }
     }
     
     @objc private func didEnterBackground() {
-//        coreInbox.unlink()
+        Task { await unlinkInbox() }
     }
     
 }

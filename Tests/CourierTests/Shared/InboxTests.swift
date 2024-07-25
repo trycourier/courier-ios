@@ -46,6 +46,25 @@ class InboxTests: XCTestCase {
 
     }
     
+    private func getVerifiedInboxMessage() async throws -> InboxMessage {
+
+        let listener = Courier.shared.addInboxListener()
+
+        let messageId = try await sendMessage()
+
+        try? await Task.sleep(nanoseconds: delay)
+
+        let message = await Courier.shared.inboxMessages.first
+
+        XCTAssertNotNil(message, "Message Exists")
+        XCTAssertTrue(message!.messageId == messageId)
+
+        listener.remove()
+
+        return message!
+
+    }
+    
     // Should fail first, the sign user in, then fetch all messages
     func testSingleListener() async throws {
         
@@ -134,10 +153,17 @@ class InboxTests: XCTestCase {
         
         let count = 5
         
-        let listener = Courier.shared.addInboxListener(onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
+        Courier.shared.addInboxListener(onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
             print("Messages Updated: \(messages.count)")
             hold = messages.count < count
         })
+        
+        // Register some random listeners
+        Courier.shared.addInboxListener()
+        Courier.shared.addInboxListener()
+        Courier.shared.addInboxListener()
+        Courier.shared.addInboxListener()
+        Courier.shared.addInboxListener()
         
         // Send some messages
         for _ in 1...count {
@@ -150,11 +176,120 @@ class InboxTests: XCTestCase {
             // Hold
         }
 
-        listener.remove()
+        Courier.shared.removeAllInboxListeners()
         
         Courier.shared.inboxPaginationLimit = 32
         XCTAssertTrue(Courier.shared.inboxPaginationLimit == 32)
 
+    }
+    
+    func testOpenMessage() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        let message = try await getVerifiedInboxMessage()
+
+        try await Courier.shared.openMessage(message.messageId)
+
+    }
+    
+    func testClickMessage() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        let message = try await getVerifiedInboxMessage()
+
+        try await Courier.shared.clickMessage(message.messageId)
+
+    }
+    
+    func testReadMessage() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        let message = try await getVerifiedInboxMessage()
+
+        try await Courier.shared.readMessage(message.messageId)
+
+    }
+    
+    func testUnreadMessage() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        let message = try await getVerifiedInboxMessage()
+
+        try await Courier.shared.unreadMessage(message.messageId)
+
+    }
+    
+    func testArchiveMessage() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        let message = try await getVerifiedInboxMessage()
+
+        try await Courier.shared.archiveMessage(message.messageId)
+
+    }
+    
+    func testReadAllMessages() async throws {
+        
+        try await UserBuilder.authenticate()
+
+        try await Courier.shared.readAllMessages()
+
+    }
+    
+    func testShortcuts() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        let message = try await getVerifiedInboxMessage()
+
+        try await message.markAsOpened()
+        try await message.markAsUnread()
+        try await message.markAsRead()
+        try await message.markAsClicked()
+        try await message.markAsArchived()
+
+    }
+    
+    func testSpamMessages() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        let count = 25
+        var hold = true
+        
+        let listener = Courier.shared.addInboxListener(onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
+            
+            hold = messages.count != count
+            
+            print("Message Counted updated: \(messages.count)")
+            
+        })
+        
+        try await withThrowingTaskGroup(of: String.self) { group in
+            
+            for _ in 1...25 {
+                group.addTask { [self] in
+                    try await sendMessage()
+                    return ""
+                }
+            }
+
+            try await group.waitForAll()
+            print("All tasks have completed")
+            
+        }
+        
+        while (hold) {
+            // Wait
+        }
+        
+        listener.remove()
+        
     }
     
 }

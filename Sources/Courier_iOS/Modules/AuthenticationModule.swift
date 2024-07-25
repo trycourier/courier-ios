@@ -108,7 +108,7 @@ extension Courier {
         
         // Refresh SDK
         await putPushTokens()
-        await refreshInbox()
+        await restartInbox()
         
         notifyListeners(userId)
         
@@ -127,8 +127,7 @@ extension Courier {
         self.client = nil
         
         await deletePushTokens()
-        
-//        inbox.stop()
+        await closeInbox()
         
         // Sign out will still work, but will keep
         // existing tokens in Courier if failure
