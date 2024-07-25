@@ -65,6 +65,38 @@ extension Courier {
         }
     }
     
+    @discardableResult @objc public static func requestNotificationPermission() async throws -> UNAuthorizationStatus {
+        try await userNotificationCenter.requestAuthorization(options: permissionAuthorizationOptions)
+        return try await Courier.getNotificationPermissionStatus()
+    }
+    
+    @objc public static func requestNotificationPermission(completion: @escaping (UNAuthorizationStatus) -> Void) {
+        userNotificationCenter.requestAuthorization(
+            options: permissionAuthorizationOptions,
+            completionHandler: { _, _ in
+                
+                // Get the full status of the permission
+                getNotificationPermissionStatus { permission in
+                    completion(permission)
+                }
+                
+            }
+        )
+    }
+    
+    @objc public static func getNotificationPermissionStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
+        userNotificationCenter.getNotificationSettings(completionHandler: { settings in
+            DispatchQueue.main.async {
+                completion(settings.authorizationStatus)
+            }
+        })
+    }
+    
+    @objc public static func getNotificationPermissionStatus() async throws -> UNAuthorizationStatus {
+        let settings = await userNotificationCenter.notificationSettings()
+        return settings.authorizationStatus
+    }
+    
 }
 
 extension Date {

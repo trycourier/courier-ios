@@ -50,9 +50,9 @@ class AuthViewController: UIViewController {
                     )
                     
                     await Courier.shared.signIn(
-                        accessToken: jwt,
-                        userId: userId,
-                        tenantId: tenantId.isEmpty ? nil : tenantId
+                        userId: userId, 
+                        tenantId: tenantId.isEmpty ? nil : tenantId, 
+                        accessToken: jwt
                     )
                     
                 }
@@ -93,9 +93,9 @@ class AuthViewController: UIViewController {
                 
                 // Sign in with JWT
                 await Courier.shared.signIn(
-                    accessToken: jwt,
-                    userId: userId,
-                    tenantId: Courier.shared.tenantId
+                    userId: userId, 
+                    tenantId: Courier.shared.tenantId,
+                    accessToken: jwt
                 )
                 
                 self.refresh(userId)

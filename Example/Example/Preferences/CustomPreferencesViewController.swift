@@ -84,7 +84,7 @@ class CustomPreferencesViewController: UIViewController, UITableViewDelegate, UI
         Task {
             do {
                 let prefs = try await Courier.shared.client?.preferences.getUserPreferences()
-                self.topics = prefs.items
+                self.topics = prefs?.items ?? []
             } catch {
                 self.showMessageAlert(title: "Error", message: CourierError(from: error).message)
             }

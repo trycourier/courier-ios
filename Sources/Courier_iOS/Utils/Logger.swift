@@ -8,7 +8,7 @@
 import Foundation
 import os.log
 
-class Logger {
+public class Logger {
     
     private static let log = OSLog(subsystem: "com.courier.ios", category: "CourierSDK")
     
@@ -29,7 +29,7 @@ class Logger {
 
 // MARK: Extensions
 
-extension CourierClient.Options {
+public extension CourierClient.Options {
     
     func log(_ data: String) {
         if showLogs {
@@ -51,7 +51,7 @@ extension CourierClient.Options {
     
 }
 
-extension CourierClient {
+public extension CourierClient {
     
     func log(_ data: String) {
         options.log(data)
