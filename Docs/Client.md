@@ -47,9 +47,9 @@ let device = CourierDevice(
     model:         "iPhone 123" // Optional
 )
 
-// Alternatively, you can use CourierDevice.current to get what
-// the Courier SDK can find about the current device being used
-// CourierDevice() is the default param
+// The function defaults to device = CourierDevice().
+// This object will try and get as much information prefilled from
+// the existing device as possible.
 
 try await client.tokens.putUserToken(
     token: "...",
