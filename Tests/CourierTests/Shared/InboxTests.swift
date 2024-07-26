@@ -48,19 +48,17 @@ class InboxTests: XCTestCase {
     
     private func getVerifiedInboxMessage() async throws -> InboxMessage {
 
-        let listener = Courier.shared.addInboxListener()
-
         let messageId = try await sendMessage()
 
         try? await Task.sleep(nanoseconds: delay)
+        
+        let res = try await Courier.shared.client?.inbox.getMessages()
 
-        let message = await Courier.shared.inboxMessages.first
+        let message = res?.data?.messages?.nodes?.first
 
         XCTAssertNotNil(message, "Message Exists")
         XCTAssertTrue(message!.messageId == messageId)
-
-        listener.remove()
-
+ 
         return message!
 
     }
