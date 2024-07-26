@@ -86,11 +86,11 @@ let archivedMessages = try await client.inbox.getArchivedMessages(
 let unreadCount = client.inbox.getUnreadMessageCount()
 
 // Tracking messages
-client.inbox.open(messageId = "...")
-client.inbox.read(messageId = "...")
-client.inbox.unread(messageId = "...")
-client.inbox.archive(messageId = "...")
-client.inbox.readAll()
+try await client.inbox.open(messageId = "...")
+try await client.inbox.read(messageId = "...")
+try await client.inbox.unread(messageId = "...")
+try await client.inbox.archive(messageId = "...")
+try await client.inbox.readAll()
 
 // Inbox Websocket
 let socket = client.inbox.socket
