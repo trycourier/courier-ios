@@ -256,10 +256,15 @@ var body: some View {
         }
     )
 }
-
 ```
 
-If you are interested in using a Courier "Brand", here is where you can adjust that: [`Courier Studio`](https://app.courier.com/designer/brands). 
+&emsp;
+
+### Courier Studio Branding (Optional)
+
+<img width="782" alt="setting" src="https://user-images.githubusercontent.com/6370613/228931428-04dc2130-789a-4ac3-bf3f-0bbb49d5519a.png">
+
+You can control your branding from the [`Courier Studio`](https://app.courier.com/designer/brands).
 
 <table>
     <thead>
