@@ -287,7 +287,7 @@ You can control your branding from the [`Courier Studio`](https://app.courier.co
 
 ---
 
-👋 Base level APIs for Branding can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#branding-apis"><code>here</code></a>
+👋 `Branding APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#branding-apis"><code>here</code></a>
 
 &emsp;
 
@@ -433,4 +433,4 @@ message.markAsArchived()
 
 ---
 
-👋 Base level APIs for Inbox can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#inbox-apis"><code>here</code></a>
+👋 `Inbox APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#inbox-apis"><code>here</code></a>
