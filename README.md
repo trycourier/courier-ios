@@ -132,7 +132,7 @@ These are all the available features of the SDK.
                 1
             </td>
             <td align="left">
-                <a href="https://github.com/trycourier/courier-android/blob/master/Docs/Authentication.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md">
                     <code>Authentication</code>
                 </a>
             </td>
