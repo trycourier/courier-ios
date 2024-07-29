@@ -79,7 +79,7 @@ The default `CourierInbox` styles.
 ```swift
 import Courier_iOS
 
-// MARK: - UIKit
+// UIKit
 
 // Create the view
 let courierInbox = CourierInbox(
@@ -107,7 +107,7 @@ NSLayoutConstraint.activate([
     courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 ])
 
-// MARK: - UIKit
+// SwiftUI
 
 var body: some View {
     CourierInboxView(
@@ -217,7 +217,7 @@ let inboxTheme = CourierInboxTheme(
     )
 )
 
-// MARK: - UIKit
+// UIKit
 
 // Pass the theme to the view
 let courierInbox = CourierInbox(
@@ -238,7 +238,7 @@ let courierInbox = CourierInbox(
 view.addSubview(courierInbox)
 ...
 
-// MARK: - UIKit
+// SwiftUI
 
 var body: some View {
     CourierInboxView(
