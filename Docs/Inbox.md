@@ -282,6 +282,10 @@ If you are interested in using a Courier "Brand", here is where you can adjust t
 
 &emsp;
 
+👋 Base level APIs for Branding can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#branding-apis"><code>here</code></a>
+
+&emsp;
+
 ## Custom Inbox Example
 
 The raw data you can use to build whatever UI you'd like.
