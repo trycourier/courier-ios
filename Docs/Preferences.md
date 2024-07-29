@@ -213,38 +213,12 @@ If you are interested in using a Courier "Brand", here is where you can adjust t
 
 &emsp;
 
-## Custom Preferences APIs
+👋 Base level APIs for Branding can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#branding-apis"><code>here</code></a>
 
-The raw data you can use to build whatever UI you'd like.
+&emsp;
 
-## Get All User Preferences
+## Custom Preferences
 
-Returns all the user's preferences. [`listAllUserPreferences`](https://www.courier.com/docs/reference/user-preferences/list-all-user-preferences/)
+The raw data you can use to build any UI you'd like.
 
-```swift
-// paginationCursor is optional
-let preferences = try await Courier.shared.getUserPreferences()
-```
-
-## Update Preference Topic
-
-Updates a specific user preference topic. [`updateUserSubscriptionTopic`](https://www.courier.com/docs/reference/user-preferences/update-subscription-topic-preferences/)
-
-```swift
-try await Courier.shared.putUserPreferencesTopic(
-    topicId: "9ADVWHD7Z1D4Q436SMECGDSDEWFA",
-    status: .optedOut,
-    hasCustomRouting: true,
-    customRouting: [.sms, .push]
-)
-```
-
-## Get Preference Topic
-
-Gets a specific preference topic. [`getUserSubscriptionTopic`](https://www.courier.com/docs/reference/user-preferences/get-subscription-topic-preferences/)
-
-```swift
-let topic = try await Courier.shared.getUserPreferencesTopic(
-    topicId: "9ADVWHD7Z1D4Q436SMECGDSDEWFA"
-)
-```
+👋 Base level APIs for Preferences can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#preferences-apis"><code>here</code></a>
