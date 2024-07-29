@@ -71,7 +71,7 @@ internal actor InboxModule {
         
         do {
             
-            // Fetch the inbox and call the delegate
+            // Load the inbox and call the delegate
             let updatedInbox = try await loadInbox(true)
             self.inbox = updatedInbox
             delegate?.onInboxUpdated(inbox: updatedInbox)
