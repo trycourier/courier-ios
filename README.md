@@ -123,7 +123,7 @@ These are all the available features of the SDK.
         <tr>
             <th width="25px"></th>
             <th width="250px" align="left">Feature</th>
-            <th width="750px" align="left">Description</th>
+            <th width="725px" align="left">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -132,7 +132,7 @@ These are all the available features of the SDK.
                 1
             </td>
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md">
+                <a href="https://github.com/trycourier/courier-android/blob/master/Docs/Authentication.md">
                     <code>Authentication</code>
                 </a>
             </td>
@@ -177,6 +177,19 @@ These are all the available features of the SDK.
             </td>
             <td align="left">
                 Allow users to update which types of notifications they would like to receive.
+            </td>
+        </tr>
+        <tr width="600px">
+            <td align="center">
+                5
+            </td>
+            <td align="left">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md">
+                    <code>CourierClient</code>
+                </a>
+            </td>
+            <td align="left">
+                The base level API wrapper around the Courier endpoints. Useful if you have a highly customized user experience or codebase requirements.
             </td>
         </tr>
     </tbody>
