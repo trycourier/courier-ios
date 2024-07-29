@@ -256,7 +256,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             // Raw APNS token
             try await Courier.shared.setAPNSToken(deviceToken)
-            let apnsToken = await Courier.shared.getAPNSToken()
+            let apnsToken = await Courier.shared.getToken(for: .apn)
             
         }
 
