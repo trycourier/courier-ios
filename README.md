@@ -221,26 +221,6 @@ Several common starter projects using the SDK.
             <td align="center"><code>Swift</code></td>
             <td align="center"><code>Swift</code></td>
         </tr>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/master/Pod-Example">
-                    <code>Example</code>
-                </a>
-            </td>
-            <td align="center"><code>UIKit</code></td>
-            <td align="center"><code>Cocoapods</code></td>
-            <td align="center"><code>Swift</code></td>
-        </tr>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/tree/master/SwiftUI-Example">
-                    <code>Example</code>
-                </a>
-            </td>
-            <td align="center"><code>SwiftUI</code></td>
-            <td align="center"><code>Swift</code></td>
-            <td align="center"><code>Swift</code></td>
-        </tr>
     </tbody>
 </table>
 
