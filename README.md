@@ -4,8 +4,6 @@
 
 # Requirements & Support
 
-&emsp;
-
 <table>
     <thead>
         <tr>
