@@ -172,4 +172,6 @@ try await client.tracking.postTrackingUrl(
 )
 ```
 
+---
+
 See the full suite of Courier APIs <a href="https://www.courier.com/docs/reference/"><code>here</code></a>
