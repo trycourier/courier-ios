@@ -386,13 +386,13 @@ Courier.shared.removeAllInboxListeners()
 // Will affect prebuilt UI
 Courier.shared.inboxPaginationLimit = 123
 
-// The available messages the inbox has
-let inboxMessages = Courier.shared.inboxMessages
-
 Task {
 
+    // The available messages the inbox has
+    let inboxMessages = await Courier.shared.inboxMessages
+
     // Fetches the next page of messages
-    try await Courier.shared.fetchNextPageOfMessages()
+    try await Courier.shared.fetchNextInboxPage()
 
     // Reloads the inbox
     // Commonly used with pull to refresh
@@ -414,8 +414,7 @@ Task {
 // Mark message as read/unread
 let message = InboxMessage(...)
 
-// Calls Courier.shared.un/readMessage(messageId...) under the hood
-// Has optional callbacks
+// Calls Courier.shared... under the hood
 message.markAsRead()
 message.markAsUnread()
 message.markAsOpened()
