@@ -269,13 +269,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
             // Sync with provider
             // Available providers: .apn, .firebaseFcm, .expo, .oneSignal, .pusherBeams
-            try await Courier.shared.setToken(provider: .firebaseFcm, token: token)
-            let token = await Courier.shared.getToken(provider: .firebaseFcm)
+            try await Courier.shared.setToken(for: .firebaseFcm, token: token)
+            let token = await Courier.shared.getToken(for: .firebaseFcm)
 
             // Sync with key
             // Any string as key is supported. Make sure you are using the proper key for your needs.
-            try await Courier.shared.setToken(providerKey: "firebase-fcm", token: token)
-            let token = await Courier.shared.getToken(providerKey: "firebase-fcm")
+            try await Courier.shared.setToken(for: "firebase-fcm", token: token)
+            let token = await Courier.shared.getToken(for: "firebase-fcm")
             
         }
 
@@ -334,8 +334,8 @@ Task {
     // This will take the tokens you are wanting to sync above, and save them to this user id
     // Put this where you normally manage your user's state
     try await Courier.shared.signIn(
-        accessToken: Env.COURIER_ACCESS_TOKEN,
-        userId: "example_user_id"
+        userId: "example_user_id",
+        accessToken: "...",
     )
 
     // Shows a popup where your user can allow or deny push notifications
