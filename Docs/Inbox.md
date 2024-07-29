@@ -398,13 +398,12 @@ Task {
     // Commonly used with pull to refresh
     try await Courier.shared.refreshInbox()
 
-    // Reads / Unreads a message
-    // Writes the update instantly and performs request in background
-    try await Courier.shared.readMessage(messageId: "1-321...")
-    try await Courier.shared.unreadMessage(messageId: "1-321...")
-
-    // Click a message
-    try await Courier.shared.clickMessage(messageId: "1-321...")
+    // Handle events
+    try await Courier.shared.readMessage("...")
+    try await Courier.shared.unreadMessage("...")
+    try await Courier.shared.openMessage("...")
+    try await Courier.shared.clickMessage("...")
+    try await Courier.shared.archiveMessage("...")
 
     // Reads all the messages
     // Writes the update instantly and performs request in background
@@ -419,5 +418,11 @@ let message = InboxMessage(...)
 // Has optional callbacks
 message.markAsRead()
 message.markAsUnread()
-
+message.markAsOpened()
+message.markAsClicked()
+message.markAsArchived()
 ```
+
+&emsp;
+
+👋 Base level APIs for Inbox can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#inbox-apis"><code>here</code></a>
