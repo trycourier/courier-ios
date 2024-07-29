@@ -79,6 +79,8 @@ The default `CourierInbox` styles.
 ```swift
 import Courier_iOS
 
+// MARK - UIKit
+
 // Create the view
 let courierInbox = CourierInbox(
     didClickInboxMessageAtIndex: { message, index in
@@ -104,6 +106,24 @@ NSLayoutConstraint.activate([
     courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
     courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 ])
+
+// MARK - SwiftUI
+
+var body: some View {
+    CourierInboxView(
+        didClickInboxMessageAtIndex: { message, index in
+            message.isRead ? message.markAsUnread() : message.markAsRead()
+            print(index, message)
+        },
+        didClickInboxActionForMessageAtIndex: { action, message, index in
+            print(action, message, index)
+        },
+        didScrollInbox: { scrollView in
+            print(scrollView.contentOffset.y)
+        }
+    )
+}
+
 ```
 
 &emsp;
@@ -197,6 +217,8 @@ let inboxTheme = CourierInboxTheme(
     )
 )
 
+// MARK - UIKit
+
 // Pass the theme to the view
 let courierInbox = CourierInbox(
     lightTheme: inboxTheme,
@@ -215,6 +237,26 @@ let courierInbox = CourierInbox(
 
 view.addSubview(courierInbox)
 ...
+
+// MARK - SwiftUI
+
+var body: some View {
+    CourierInboxView(
+        lightTheme: inboxTheme,
+        darkTheme: inboxTheme,
+        didClickInboxMessageAtIndex: { message, index in
+            message.isRead ? message.markAsUnread() : message.markAsRead()
+            print(index, message)
+        },
+        didClickInboxActionForMessageAtIndex: { action, message, index in
+            print(action, message, index)
+        },
+        didScrollInbox: { scrollView in
+            print(scrollView.contentOffset.y)
+        }
+    )
+}
+
 ```
 
 If you are interested in using a Courier "Brand", here is where you can adjust that: [`Courier Studio`](https://app.courier.com/designer/brands). 
