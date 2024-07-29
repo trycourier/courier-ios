@@ -356,69 +356,6 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
 
 &emsp;
 
-## Full Examples
-
-<table>
-    <thead>
-        <tr>
-            <th width="850px" align="left">Link</th>
-            <th width="200px" align="center">Style</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Example/Example/PrebuiltInboxViewController.swift">
-                    <code>Default Example</code>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#default-inbox-example">
-                    <code>Default</code>
-                </a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Example/Example/StyledInboxViewController.swift">
-                    <code>Styled Example</code>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#styled-inbox-example">
-                    <code>Styled</code>
-                </a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Example/Example/CustomInboxViewController.swift">
-                    <code>Custom Example</code>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#custom-inbox-example">
-                    <code>Custom</code>
-                </a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/SwiftUI-Example/SwiftUI-Example/ContentView.swift">
-                    <code>SwiftUI Example</code>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md#styled-inbox-example">
-                    <code>Styled</code>
-                </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-&emsp;
-
 ## Available Properties and Functions 
 
 ```swift
