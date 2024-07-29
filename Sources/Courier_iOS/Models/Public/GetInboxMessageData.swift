@@ -7,9 +7,9 @@
 
 import Foundation
 
-@objc class GetInboxMessageData: NSObject {
+@objc public class GetInboxMessageData: NSObject {
     
-    var message: InboxMessage?
+    public var message: InboxMessage?
     
     init(_ dictionary: [String : Any]?) {
         let message = dictionary?["message"] as? [String : Any]

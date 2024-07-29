@@ -7,11 +7,11 @@
 
 import Foundation
 
-@objc class CourierGetInboxMessageResponse: NSObject {
+@objc public class CourierGetInboxMessageResponse: NSObject {
     
-    let data: GetInboxMessageData?
+    public let data: GetInboxMessageData?
     
-    init(_ dictionary: [String : Any]?) {
+    public init(_ dictionary: [String : Any]?) {
         let data = dictionary?["data"] as? [String: Any]
         self.data = GetInboxMessageData(data)
     }

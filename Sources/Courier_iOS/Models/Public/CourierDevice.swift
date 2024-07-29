@@ -12,12 +12,12 @@ import UIKit
 
 public struct CourierDevice: Codable {
     
-    let app_id: String?
-    let ad_id: String?
-    let device_id: String?
-    let platform: String?
-    let manufacturer: String?
-    let model: String?
+    public let app_id: String?
+    public let ad_id: String?
+    public let device_id: String?
+    public let platform: String?
+    public let manufacturer: String?
+    public let model: String?
     
     public init(
         app_id: String? = ID.bundle,

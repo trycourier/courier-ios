@@ -10,11 +10,11 @@ import Foundation
 // MARK: Internal Classes
 
 public struct CourierBrandResponse: Codable {
-    let data: CourierBrandData
+    public let data: CourierBrandData
 }
 
 public struct CourierBrandData: Codable {
-    let brand: CourierBrand
+    public let brand: CourierBrand
 }
 
 // MARK: Public Classes

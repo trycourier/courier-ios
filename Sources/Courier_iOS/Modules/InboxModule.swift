@@ -69,12 +69,6 @@ internal actor InboxModule {
         
         self.streamTask?.cancel()
         
-        // Prevent refresh
-        if (inbox == nil) {
-            delegate?.onInboxError(with: CourierError.inboxNotInitialized)
-            return
-        }
-        
         do {
             
             // Fetch the inbox and call the delegate

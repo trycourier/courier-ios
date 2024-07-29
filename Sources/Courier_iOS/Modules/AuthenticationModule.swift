@@ -141,12 +141,16 @@ extension Courier {
     
     public func addAuthenticationListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
         let listener = CourierAuthenticationListener(onChange: onChange)
-        authListeners.append(listener)
+        self.authListeners.append(listener)
         return listener
     }
 
     public func removeAuthenticationListener(listener: CourierAuthenticationListener) {
-        authListeners.removeAll(where: { return $0 == listener })
+        self.authListeners.removeAll(where: { return $0 == listener })
+    }
+    
+    public func removeAllAuthenticationListeners() {
+        self.authListeners.removeAll()
     }
     
     // MARK: Notifications

@@ -21,6 +21,10 @@ class InboxTests: XCTestCase {
         )
     }
     
+    override class func setUp() {
+        Courier.shared.removeAllInboxListeners()
+    }
+    
     func testAuthError() async throws {
         
         var hold = true
