@@ -67,6 +67,8 @@ The default `CourierPreferences` styles.
 ```swift
 import Courier_iOS
 
+// UIKit
+
 // Create the view
 let courierPreferences = CourierPreferences(
     mode: .topic,
@@ -86,6 +88,18 @@ NSLayoutConstraint.activate([
     courierPreferences.leadingAnchor.constraint(equalTo: view.leadingAnchor),
     courierPreferences.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 ])
+
+// SwiftUI
+
+var body: some View {
+    CourierPreferencesView(
+        mode: .topic,
+        onError: { error in
+            print(error.localizedDescription)
+        }
+    )
+}
+
 ```
 
 &emsp;
@@ -147,6 +161,8 @@ let preferencesTheme = CourierPreferencesTheme(
     )
 )
 
+// UIKit
+
 // Pass the theme to the view
 let courierPreferences = CourierPreferences(
     mode: .channels([.push, .sms, .email]),
@@ -159,6 +175,19 @@ let courierPreferences = CourierPreferences(
 
 view.addSubview(courierPreferences)
 ...
+
+// SwiftUI
+
+var body: some View {
+    CourierPreferencesView(
+        mode: .topic,
+        lightTheme: preferencesTheme,
+        darkTheme: preferencesTheme,
+        onError: { error in
+            print(error.localizedDescription)
+        }
+    )
+}
 ```
 
 If you are interested in using a Courier "Brand", here is where you can adjust that: [`Courier Studio`](https://app.courier.com/designer/brands). 
