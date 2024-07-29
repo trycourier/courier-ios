@@ -211,14 +211,8 @@ If you are interested in using a Courier "Brand", here is where you can adjust t
     </tbody>
 </table>
 
-&emsp;
+---
 
-👋 Base level APIs for Branding can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#branding-apis"><code>here</code></a>
+👋 `Branding APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#branding-apis"><code>here</code></a>
 
-&emsp;
-
-## Custom Preferences
-
-The raw data you can use to build any UI you'd like.
-
-👋 Base level APIs for Preferences can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#preferences-apis"><code>here</code></a>
+👋 `Preference APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#preferences-apis"><code>here</code></a>
