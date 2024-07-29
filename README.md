@@ -29,8 +29,6 @@
     </tbody>
 </table>
 
-&emsp;
-
 <table>
     <thead>
         <tr>
@@ -50,12 +48,10 @@
     </tbody>
 </table>
 
-&emsp;
-
 <table>
     <thead>
         <tr>
-            <th width="940px" align="left">Package Manager</th>
+            <th width="940px" align="left">Package Managers</th>
             <th width="120px" align="center"></th>
         </tr>
     </thead>
