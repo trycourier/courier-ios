@@ -29,7 +29,7 @@ import UIKit
     /**
      * Versioning
      */
-    internal static let version = "3.5.5"
+    internal static let version = "4.0.0"
     public static var agent = CourierAgent.native_ios
     
     /**
