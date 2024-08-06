@@ -18,7 +18,7 @@ public class InboxClient: CourierApiClient {
         super.init()
     }
     
-    func getMessage(messageId: String) async throws -> CourierGetInboxMessageResponse {
+    public func getMessage(messageId: String) async throws -> CourierGetInboxMessageResponse {
         
         Logger.warn("🚧 getMessage is under construction and may result in data you do not expect")
 
@@ -80,7 +80,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func getMessages(paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxResponse {
+    public func getMessages(paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxResponse {
         
         let params: String
         if let tenantId = options.tenantId {
@@ -160,7 +160,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func getArchivedMessages(paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxResponse {
+    public func getArchivedMessages(paginationLimit: Int = 24, startCursor: String? = nil) async throws -> InboxResponse {
         
         let params: String
         if let tenantId = options.tenantId {
@@ -240,7 +240,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func getUnreadMessageCount() async throws -> Int {
+    public func getUnreadMessageCount() async throws -> Int {
         
         let params: String
         if let tenantId = options.tenantId {
@@ -287,7 +287,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func click(messageId: String, trackingId: String) async throws {
+    public func click(messageId: String, trackingId: String) async throws {
         
         let mutation = """
             mutation TrackEvent {
@@ -319,7 +319,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func read(messageId: String) async throws {
+    public func read(messageId: String) async throws {
         
         let mutation = """
             mutation TrackEvent {
@@ -351,7 +351,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func unread(messageId: String) async throws {
+    public func unread(messageId: String) async throws {
         
         let mutation = """
             mutation TrackEvent {
@@ -383,7 +383,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func open(messageId: String) async throws {
+    public func open(messageId: String) async throws {
         
         let mutation = """
             mutation TrackEvent {
@@ -415,7 +415,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func archive(messageId: String) async throws {
+    public func archive(messageId: String) async throws {
         
         let mutation = """
             mutation TrackEvent {
@@ -447,7 +447,7 @@ public class InboxClient: CourierApiClient {
         
     }
     
-    func readAll() async throws {
+    public func readAll() async throws {
         
         let mutation = """
             mutation TrackEvent {

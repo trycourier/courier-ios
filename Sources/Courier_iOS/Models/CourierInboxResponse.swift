@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: Internal Classes
 
-@objc internal class InboxResponse: NSObject {
+@objc public class InboxResponse: NSObject {
     
     let data: InboxData?
     
@@ -20,7 +20,7 @@ import Foundation
     
 }
 
-@objc internal class InboxData: NSObject {
+@objc public class InboxData: NSObject {
     
     var count: Int? = 0
     var messages: InboxNodes?
@@ -40,7 +40,7 @@ import Foundation
 }
 
 
-@objc internal class InboxNodes: NSObject {
+@objc public class InboxNodes: NSObject {
     
     let pageInfo: InboxPageInfo?
     let nodes: [InboxMessage]?
@@ -58,7 +58,7 @@ import Foundation
     
 }
 
-@objc internal class InboxPageInfo: NSObject {
+@objc public class InboxPageInfo: NSObject {
     
     let startCursor: String?
     let hasNextPage: Bool?

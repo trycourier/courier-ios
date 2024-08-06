@@ -230,9 +230,15 @@ class InboxClientTests: XCTestCase {
         var hold2 = true
 
         // Open the first socket connection
-        let client1 = CourierClient(clientKey: Env.COURIER_CLIENT_KEY, userId: userId1)
+        let client1 = try await ClientBuilder.build(userId: userId1)
         
         let socket1 = client1.inbox.socket
+        
+        socket1.onError = { error in
+            print(error.localizedDescription)
+            hold1 = false
+            hold2 = false
+        }
         
         socket1.receivedMessage = { message in
             print(message)
@@ -243,9 +249,15 @@ class InboxClientTests: XCTestCase {
         try await socket1.sendSubscribe()
 
         // Open the second socket connection
-        let client2 = CourierClient(clientKey: Env.COURIER_CLIENT_KEY, userId: userId2)
+        let client2 = try await ClientBuilder.build(userId: userId2)
         
         let socket2 = client2.inbox.socket
+        
+        socket2.onError = { error in
+            print(error.localizedDescription)
+            hold1 = false
+            hold2 = false
+        }
         
         socket2.receivedMessage = { message in
             print(message)
