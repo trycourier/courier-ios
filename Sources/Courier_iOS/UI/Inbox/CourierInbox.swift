@@ -11,7 +11,7 @@ import UIKit
  A super simple way to implement a basic notification center into your app
  */
 @available(iOSApplicationExtension, unavailable)
-@objc open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
+open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Theme
     
@@ -24,9 +24,9 @@ import UIKit
     
     // MARK: Interaction
     
-    @objc public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
-    @objc public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
-    @objc public var didScrollInbox: ((UIScrollView) -> Void)? = nil
+    public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
+    public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
+    public var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
     // MARK: Datasource
     
@@ -118,7 +118,7 @@ import UIKit
     
     // MARK: Init
     
-    @objc public init(
+    public init(
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,

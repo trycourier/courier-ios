@@ -67,16 +67,7 @@ public class InboxClient: CourierApiClient {
             
         }
         
-        let data = try await request.dispatch(options)
-        
-        do {
-            let dictionary = try data.toDictionary()
-            return CourierGetInboxMessageResponse(dictionary)
-        } catch {
-            let e = CourierError(from: error)
-            options.error(e.message)
-            throw e
-        }
+        return try await request.dispatch(options) as CourierGetInboxMessageResponse
         
     }
     
@@ -147,16 +138,7 @@ public class InboxClient: CourierApiClient {
             
         }
         
-        let data = try await request.dispatch(options)
-        
-        do {
-            let dictionary = try data.toDictionary()
-            return InboxResponse(dictionary)
-        } catch {
-            let e = CourierError(from: error)
-            options.error(e.message)
-            throw e
-        }
+        return try await request.dispatch(options) as InboxResponse
         
     }
     
@@ -227,16 +209,7 @@ public class InboxClient: CourierApiClient {
             
         }
         
-        let data = try await request.dispatch(options)
-        
-        do {
-            let dictionary = try data.toDictionary()
-            return InboxResponse(dictionary)
-        } catch {
-            let e = CourierError(from: error)
-            options.error(e.message)
-            throw e
-        }
+        return try await request.dispatch(options) as InboxResponse
         
     }
     
@@ -273,17 +246,10 @@ public class InboxClient: CourierApiClient {
             
         }
         
-        let data = try await request.dispatch(options)
+        let res = try await request.dispatch(options) as InboxResponse
         
-        do {
-            let dictionary = try data.toDictionary()
-            let res = InboxResponse(dictionary)
-            return res.data?.count ?? 0
-        } catch {
-            let e = CourierError(from: error)
-            options.error(e.message)
-            throw e
-        }
+        // Fallback to 0 if needed
+        return res.data?.count ?? 0
         
     }
     

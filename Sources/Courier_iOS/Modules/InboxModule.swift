@@ -168,7 +168,7 @@ internal actor InboxModule {
                 switch (messageEvent.event) {
                 case .markAllRead:
                     
-                    await self?.inbox?.readAllMessages()
+                    try await self?.inbox?.readAllMessages()
                     await self?.notifyInboxUpdated()
                     
                 case .read:
@@ -368,7 +368,7 @@ internal actor InboxModule {
     
     func readAllMessages() async throws {
 
-        let original = inbox?.readAllMessages()
+        let original = try inbox?.readAllMessages()
 
         notifyInboxUpdated()
 
@@ -646,7 +646,7 @@ internal class Inbox {
         self.hasNextPage = hasNextPage
     }
     
-    @discardableResult func readAllMessages() -> ReadAllOperation {
+    @discardableResult func readAllMessages() throws -> ReadAllOperation {
         
         guard let messages = self.messages else {
             return ReadAllOperation(
@@ -660,7 +660,7 @@ internal class Inbox {
         let originalUnreadCount = self.unreadCount
         
         // Read all messages
-        self.messages?.forEach { $0.setRead() }
+        self.messages = try self.messages?.map { try $0.setRead() }
         self.unreadCount = 0
 
         return ReadAllOperation(
@@ -687,12 +687,12 @@ internal class Inbox {
         }
 
         // Save copy
-        let message = messages[i]
-        let originalMessage = message.copy() as! InboxMessage
+        var message = messages[i]
+        let originalMessage = try message.copy()
         let originalUnreadCount = self.unreadCount
 
         // Update
-        message.setRead()
+        message = try message.setRead()
 
         // Change data
         self.messages?[i] = message
@@ -719,12 +719,12 @@ internal class Inbox {
         }
 
         // Save copy
-        let message = messages[i]
-        let originalMessage = message.copy() as! InboxMessage
+        var message = messages[i]
+        let originalMessage = try message.copy() 
         let originalUnreadCount = self.unreadCount
 
         // Update
-        message.setUnread()
+        message = try message.setUnread()
 
         // Change data
         self.messages?[i] = message
@@ -751,8 +751,8 @@ internal class Inbox {
         }
 
         // Save copy
-        let message = messages[i]
-        let originalMessage = message.copy() as! InboxMessage
+        var message = messages[i]
+        let originalMessage = try message.copy() 
         let originalUnreadCount = self.unreadCount
 
         // Update

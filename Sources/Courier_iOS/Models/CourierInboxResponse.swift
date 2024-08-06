@@ -9,28 +9,16 @@ import Foundation
 
 // MARK: Internal Classes
 
-@objc public class InboxResponse: NSObject {
-    
-    let data: InboxData?
-    
-    init(_ dictionary: [String : Any]?) {
-        let data = dictionary?["data"] as? [String: Any]
-        self.data = InboxData(data)
-    }
-    
+public struct InboxResponse: Codable {
+    public let data: InboxData?
 }
 
-@objc public class InboxData: NSObject {
+public struct InboxData: Codable {
     
-    var count: Int? = 0
-    var messages: InboxNodes?
+    public var count: Int? = 0
+    public var messages: InboxNodes?
     
-    init(_ dictionary: [String : Any]?) {
-        self.count = dictionary?["count"] as? Int
-        self.messages = InboxNodes(dictionary?["messages"] as? [String : Any])
-    }
-    
-    func incrementCount() {
+    public mutating func incrementCount() {
         if (count == nil) {
             count = 0
         }
@@ -40,32 +28,32 @@ import Foundation
 }
 
 
-@objc public class InboxNodes: NSObject {
+public struct InboxNodes: Codable {
     
     let pageInfo: InboxPageInfo?
     let nodes: [InboxMessage]?
     
-    init(_ dictionary: [String : Any]?) {
-        
-        self.pageInfo = InboxPageInfo(dictionary?["pageInfo"] as? [String : Any])
-        
-        let allNodes = dictionary?["nodes"] as? [[String: Any]]
-        self.nodes = allNodes?.map { messageDictionary in
-            return InboxMessage(messageDictionary)
-        }
-
-    }
+//    init(_ dictionary: [String : Any]?) {
+//        
+//        self.pageInfo = InboxPageInfo(dictionary?["pageInfo"] as? [String : Any])
+//        
+//        let allNodes = dictionary?["nodes"] as? [[String: Any]]
+//        self.nodes = allNodes?.map { messageDictionary in
+//            return InboxMessage(messageDictionary)
+//        }
+//
+//    }
     
 }
 
-@objc public class InboxPageInfo: NSObject {
+public struct InboxPageInfo: Codable {
     
     let startCursor: String?
     let hasNextPage: Bool?
     
-    init(_ dictionary: [String : Any]?) {
-        self.startCursor = dictionary?["startCursor"] as? String
-        self.hasNextPage = dictionary?["hasNextPage"] as? Bool
-    }
+//    init(_ dictionary: [String : Any]?) {
+//        self.startCursor = dictionary?["startCursor"] as? String
+//        self.hasNextPage = dictionary?["hasNextPage"] as? Bool
+//    }
     
 }

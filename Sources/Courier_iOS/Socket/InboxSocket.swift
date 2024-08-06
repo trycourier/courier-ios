@@ -67,8 +67,7 @@ public class InboxSocket: CourierSocket {
                 
             case .message:
                 
-                let dictionary = try json.toDictionary()
-                let message = InboxMessage(dictionary)
+                let message = try decoder.decode(InboxMessage.self, from: json)
                 receivedMessage?(message)
                 
             }
