@@ -31,7 +31,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         urlSession = URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
     }
     
-    func connect() async throws {
+    public func connect() async throws {
         
         // Disconnect if already connected
         disconnect()
@@ -57,7 +57,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         
     }
     
-    func disconnect() {
+    public func disconnect() {
         webSocketTask?.cancel(with: .normalClosure, reason: nil)
     }
     
