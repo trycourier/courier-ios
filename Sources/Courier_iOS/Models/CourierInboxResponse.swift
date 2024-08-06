@@ -11,9 +11,9 @@ import Foundation
 
 @objc public class InboxResponse: NSObject {
     
-    let data: InboxData?
+    public let data: InboxData?
     
-    init(_ dictionary: [String : Any]?) {
+    public init(_ dictionary: [String : Any]?) {
         let data = dictionary?["data"] as? [String: Any]
         self.data = InboxData(data)
     }
@@ -22,15 +22,15 @@ import Foundation
 
 @objc public class InboxData: NSObject {
     
-    var count: Int? = 0
-    var messages: InboxNodes?
+    public var count: Int? = 0
+    public var messages: InboxNodes?
     
-    init(_ dictionary: [String : Any]?) {
+    public init(_ dictionary: [String : Any]?) {
         self.count = dictionary?["count"] as? Int
         self.messages = InboxNodes(dictionary?["messages"] as? [String : Any])
     }
     
-    func incrementCount() {
+    public func incrementCount() {
         if (count == nil) {
             count = 0
         }
@@ -42,10 +42,10 @@ import Foundation
 
 @objc public class InboxNodes: NSObject {
     
-    let pageInfo: InboxPageInfo?
-    let nodes: [InboxMessage]?
+    public let pageInfo: InboxPageInfo?
+    public let nodes: [InboxMessage]?
     
-    init(_ dictionary: [String : Any]?) {
+    public init(_ dictionary: [String : Any]?) {
         
         self.pageInfo = InboxPageInfo(dictionary?["pageInfo"] as? [String : Any])
         
@@ -60,10 +60,10 @@ import Foundation
 
 @objc public class InboxPageInfo: NSObject {
     
-    let startCursor: String?
-    let hasNextPage: Bool?
+    public let startCursor: String?
+    public let hasNextPage: Bool?
     
-    init(_ dictionary: [String : Any]?) {
+    public init(_ dictionary: [String : Any]?) {
         self.startCursor = dictionary?["startCursor"] as? String
         self.hasNextPage = dictionary?["hasNextPage"] as? Bool
     }
