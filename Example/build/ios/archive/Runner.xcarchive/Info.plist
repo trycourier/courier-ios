@@ -15,7 +15,7 @@
 		<key>CFBundleShortVersionString</key>
 		<string>1.0</string>
 		<key>CFBundleVersion</key>
-		<string>39</string>
+		<string>40</string>
 		<key>SigningIdentity</key>
 		<string>Apple Development: Michael Miller (48UG6G44MG)</string>
 		<key>Team</key>
@@ -24,7 +24,7 @@
 	<key>ArchiveVersion</key>
 	<integer>2</integer>
 	<key>CreationDate</key>
-	<date>2024-08-08T17:37:43Z</date>
+	<date>2024-08-08T17:54:04Z</date>
 	<key>Name</key>
 	<string>Example</string>
 	<key>SchemeName</key>
