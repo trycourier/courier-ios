@@ -19,12 +19,12 @@ class CoreClientTests: XCTestCase {
         
         XCTAssertNotNil(client1)
         XCTAssertNotNil(client2)
-        XCTAssertEqual(client1?.options, client2?.options)
+        XCTAssertEqual(client1?.options.userId, client2?.options.userId)
         
-        let client3 = try await ClientBuilder.build()
+        let client3 = try await ClientBuilder.build(userId: "example_1")
         
-        XCTAssertNotEqual(client1?.options, client3.options)
-        XCTAssertNotEqual(client2?.options, client3.options)
+        XCTAssertNotEqual(client1?.options.userId, client3.options.userId)
+        XCTAssertNotEqual(client2?.options.userId, client3.options.userId)
         
         await Courier.shared.signOut()
         
