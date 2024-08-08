@@ -58,4 +58,10 @@ public class CourierClient {
         )
     }
     
+    public static var `default`: CourierClient {
+        get {
+            return CourierClient(userId: "default")
+        }
+    }
+    
 }

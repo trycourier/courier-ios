@@ -21,6 +21,16 @@ class TokenTests: XCTestCase {
         }
         return tokenData
     }
+    
+    func testDefaultDeviceToken() {
+        let device = CourierDevice()
+        XCTAssertTrue(device.appId == "com.apple.dt.xctest.tool")
+    }
+    
+    func testCustomDeviceToken() {
+        let device = CourierDevice(appId: "Example")
+        XCTAssertTrue(device.appId == "Example")
+    }
 
     func testAddExampleTokenForProvider() async throws {
 

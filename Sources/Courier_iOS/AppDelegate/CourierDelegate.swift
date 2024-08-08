@@ -51,7 +51,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         Task {
             do {
                 if let trackingUrl = message["trackingUrl"] as? String {
-                    try await Courier.shared.client?.tracking.postTrackingUrl(
+                    try await CourierClient.default.tracking.postTrackingUrl(
                         url: trackingUrl,
                         event: .delivered
                     )
@@ -74,7 +74,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         Task {
             do {
                 if let trackingUrl = message["trackingUrl"] as? String {
-                    try await Courier.shared.client?.tracking.postTrackingUrl(
+                    try await CourierClient.default.tracking.postTrackingUrl(
                         url: trackingUrl,
                         event: .clicked
                     )

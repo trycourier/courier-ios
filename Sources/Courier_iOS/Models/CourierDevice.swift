@@ -8,38 +8,38 @@
 import Foundation
 import UIKit
 
-// MARK: Internal Classes
-
 public struct CourierDevice: Codable {
-    
-    public let app_id: String?
-    public let ad_id: String?
-    public let device_id: String?
+
+    public let appId: String?
+    public let adId: String?
+    public let deviceId: String?
     public let platform: String?
     public let manufacturer: String?
     public let model: String?
-    
+
     public init(
-        app_id: String? = ID.bundle,
-        ad_id: String? = ID.advertising,
-        device_id: String? = ID.device,
-        platform: String? = CourierPlatform.ios.rawValue,
+        appId: String? = ID.bundle,
+        adId: String? = ID.advertising,
+        deviceId: String? = ID.device,
+        platform: String? = "ios",
         manufacturer: String? = "apple",
         model: String? = UIDevice.current.localizedModel
     ) {
-        self.app_id = app_id
-        self.ad_id = ad_id
-        self.device_id = device_id
+        self.appId = appId
+        self.adId = adId
+        self.deviceId = deviceId
         self.platform = platform
         self.manufacturer = manufacturer
         self.model = model
     }
+
+    enum CodingKeys: String, CodingKey {
+        case appId = "app_id"
+        case adId = "ad_id"
+        case deviceId = "device_id"
+        case platform
+        case manufacturer
+        case model
+    }
     
-}
-
-// MARK: Public Classes
-
-public enum CourierPlatform: String {
-    case ios = "ios"
-    case android = "android"
 }

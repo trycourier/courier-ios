@@ -25,7 +25,7 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
         Task {
             do {
                 if let trackingUrl = notification.userInfo["trackingUrl"] as? String {
-                    try await Courier.shared.client?.tracking.postTrackingUrl(
+                    try await CourierClient.default.tracking.postTrackingUrl(
                         url: trackingUrl,
                         event: .delivered
                     )

@@ -24,6 +24,10 @@ public class CourierApiClient {
         
         configuration(&request)
         
+        // Attach agent
+        let userAgent = "\(Courier.agent.rawValue)/\(Courier.version)"
+        request.addHeader(key: "User-Agent", value: userAgent)
+        
         // Always attach json content type
         request.addHeader(key: "Content-Type", value: "application/json")
         
