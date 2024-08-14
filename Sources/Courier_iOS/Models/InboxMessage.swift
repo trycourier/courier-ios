@@ -18,12 +18,12 @@ import Foundation
     @objc public let title: String?
     @objc public let body: String?
     @objc public let preview: String?
-    @objc public let created: String?
     @objc public let actions: [InboxAction]?
     @objc public let data: [String : Any]?
     @objc public let trackingIds: CourierTrackingIds?
     
-    public var archived: Bool?
+    @objc public let created: String?
+    public var archived: String?
     public var read: String?
     public var opened: String?
     
@@ -43,7 +43,7 @@ import Foundation
         self.body = dictionary?["body"] as? String
         self.preview = dictionary?["preview"] as? String
         self.created = dictionary?["created"] as? String
-        self.archived = dictionary?["archived"] as? Bool
+        self.archived = dictionary?["archived"] as? String
         self.read = dictionary?["read"] as? String
         self.messageId = dictionary?["messageId"] as! String
         self.actions = buttons
@@ -63,7 +63,7 @@ import Foundation
         
     }
     
-    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: Bool?, read: String?, actions: [InboxAction]?, data: [String : Any]?, trackingIds: CourierTrackingIds?) {
+    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: String?, read: String?, actions: [InboxAction]?, data: [String : Any]?, trackingIds: CourierTrackingIds?) {
         self.title = title
         self.body = body
         self.preview = preview

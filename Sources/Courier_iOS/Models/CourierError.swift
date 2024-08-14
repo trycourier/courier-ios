@@ -36,7 +36,7 @@ public struct CourierError: Error {
     }
     
     internal static var userNotFound: CourierError {
-        return CourierError(code: 404, message: "No user found signed in", type: "authentication_error")
+        return CourierError(code: 404, message: "No user signed in", type: "authentication_error")
     }
     
     internal static var inboxNotInitialized: CourierError {

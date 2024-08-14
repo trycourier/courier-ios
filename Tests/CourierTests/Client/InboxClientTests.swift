@@ -62,6 +62,14 @@ class InboxClientTests: XCTestCase {
     
     func testGetAllArchivedMessages() async throws {
         
+        let messageId = try await sendMessage(userId: client.options.userId)
+        
+        try? await Task.sleep(nanoseconds: delay)
+        
+        try await client.inbox.archive(messageId: messageId)
+        
+        try? await Task.sleep(nanoseconds: delay)
+        
         let limit = 24
         
         let res = try await client.inbox.getArchivedMessages(
@@ -69,7 +77,9 @@ class InboxClientTests: XCTestCase {
             startCursor: nil
         )
         
-        XCTAssertTrue(res.data!.messages!.nodes!.count <= limit)
+        let message = res.data!.messages!.nodes?.first
+        
+        XCTAssertTrue(message?.isArchived == true)
 
     }
     

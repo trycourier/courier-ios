@@ -44,48 +44,41 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     // MARK: Messaging
     
     open func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
-        let message = notification.request.content.userInfo
-        
-        // Track the message in Courier
+
         Task {
-            do {
-                if let trackingUrl = message["trackingUrl"] as? String {
-                    try await CourierClient.default.tracking.postTrackingUrl(
-                        url: trackingUrl,
-                        event: .delivered
-                    )
-                }
-            } catch {
-                Courier.shared.client?.options.error(error.localizedDescription)
-            }
+            let message = notification.request.content.userInfo
+            await handleMessage(message: message, event: .delivered)
+            let presentationOptions = pushNotificationDeliveredInForeground(message: message)
+            completionHandler(presentationOptions)
         }
-        
-        let presentationOptions = pushNotificationDeliveredInForeground(message: message)
-        completionHandler(presentationOptions)
         
     }
     
     open func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-        let message = response.notification.request.content.userInfo
-        
-        // Track the message in Courier
         Task {
-            do {
-                if let trackingUrl = message["trackingUrl"] as? String {
-                    try await CourierClient.default.tracking.postTrackingUrl(
-                        url: trackingUrl,
-                        event: .clicked
-                    )
-                }
-            } catch {
-                Courier.shared.client?.options.error(error.localizedDescription)
-            }
+            let message = response.notification.request.content.userInfo
+            await handleMessage(message: message, event: .clicked)
+            pushNotificationClicked(message: message)
+            completionHandler()
         }
         
-        pushNotificationClicked(message: message)
-        completionHandler()
+    }
+    
+    private func handleMessage(message: [AnyHashable : Any], event: CourierTrackingEvent) async {
+        
+        let client = CourierClient.default
+        
+        do {
+            if let trackingUrl = message["trackingUrl"] as? String {
+                try await client.tracking.postTrackingUrl(
+                    url: trackingUrl,
+                    event: event
+                )
+            }
+        } catch {
+            client.error(error.localizedDescription)
+        }
         
     }
     
