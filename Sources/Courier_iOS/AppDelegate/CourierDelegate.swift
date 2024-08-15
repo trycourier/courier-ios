@@ -47,7 +47,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
 
         Task {
             let message = notification.request.content.userInfo
-            await handleMessage(message: message, event: .delivered)
+            await message.trackMessage(event: .delivered)
             let presentationOptions = pushNotificationDeliveredInForeground(message: message)
             completionHandler(presentationOptions)
         }
@@ -58,26 +58,9 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
         Task {
             let message = response.notification.request.content.userInfo
-            await handleMessage(message: message, event: .clicked)
+            await message.trackMessage(event: .clicked)
             pushNotificationClicked(message: message)
             completionHandler()
-        }
-        
-    }
-    
-    private func handleMessage(message: [AnyHashable : Any], event: CourierTrackingEvent) async {
-        
-        let client = CourierClient.default
-        
-        do {
-            if let trackingUrl = message["trackingUrl"] as? String {
-                try await client.tracking.postTrackingUrl(
-                    url: trackingUrl,
-                    event: event
-                )
-            }
-        } catch {
-            client.error(error.localizedDescription)
         }
         
     }

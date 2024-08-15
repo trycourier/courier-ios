@@ -7,10 +7,6 @@
 
 import UIKit
 
-internal var isDebuggerAttached: Bool {
-    return getppid() != 1
-}
-
 extension Data {
     
     // Converts the object to a string
@@ -18,6 +14,10 @@ extension Data {
        return map { String(format: "%02.2hhx", $0) }.joined()
     }
     
+}
+
+internal var isDebuggerAttached: Bool {
+    return getppid() != 1
 }
 
 extension Courier {
@@ -99,9 +99,9 @@ extension Courier {
     
 }
 
-extension Date {
+internal extension Date {
     
-    internal func timeSince() -> String {
+    func timeSince() -> String {
         
         var formattedString = String()
         let now = Date()
@@ -153,9 +153,9 @@ extension Date {
     
 }
 
-extension UIColor {
+internal extension UIColor {
   
-    internal convenience init?(_ hex: String, alpha: CGFloat = 1.0) {
+    convenience init?(_ hex: String, alpha: CGFloat = 1.0) {
       
         var cString = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
     
@@ -179,7 +179,7 @@ extension UIColor {
       
     }
 
-    internal func luminance() -> CGFloat {
+    func luminance() -> CGFloat {
 
         let ciColor = CIColor(color: self)
 
@@ -193,9 +193,9 @@ extension UIColor {
 
 }
 
-extension Bundle {
+internal extension Bundle {
     
-    internal static func current(for className: AnyClass) -> Bundle {
+    static func current(for className: AnyClass) -> Bundle {
         #if SWIFT_PACKAGE
         return Bundle.module
         #else
@@ -260,6 +260,29 @@ extension UIView {
             parentResponder = responder.next
         }
         return nil
+    }
+    
+}
+
+extension [AnyHashable : Any] {
+    
+    func trackMessage(event: CourierTrackingEvent) async {
+        
+        guard let trackingUrl = ["trackingUrl"] as? String else {
+            return
+        }
+        
+        let client = CourierClient.default
+        
+        do {
+            try await client.tracking.postTrackingUrl(
+                url: trackingUrl,
+                event: event
+            )
+        } catch {
+            client.options.error(error.localizedDescription)
+        }
+        
     }
     
 }
