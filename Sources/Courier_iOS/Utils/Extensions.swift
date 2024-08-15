@@ -139,7 +139,7 @@ internal extension Date {
         
     }
     
-    internal var timestamp: String {
+    var timestamp: String {
         get {
             if #available(iOS 15.0, *) {
                 return ISO8601Format()

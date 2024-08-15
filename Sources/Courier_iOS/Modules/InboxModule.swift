@@ -13,6 +13,10 @@ internal protocol InboxModuleDelegate: AnyObject {
     func onInboxError(with error: Error)
 }
 
+internal enum InboxMessageEvent {
+    case read, unread, open, unopen, archive, unarchive, click, unclick
+}
+
 internal actor InboxModule {
     
     enum Pagination: Int {
@@ -187,11 +191,17 @@ internal actor InboxModule {
                     
                 case .archive:
                     
-                    client.log("Message Archived")
+                    if let messageId = messageEvent.messageId {
+                        try await self?.inbox?.openMessage(messageId: messageId)
+                        await self?.notifyInboxUpdated()
+                    }
                     
                 case .opened:
                     
-                    client.log("Message Opened")
+                    if let messageId = messageEvent.messageId {
+                        try await self?.inbox?.openMessage(messageId: messageId)
+                        await self?.notifyInboxUpdated()
+                    }
                     
                 }
                 
@@ -267,103 +277,63 @@ internal actor InboxModule {
         
     }
     
-    func clickMessage(messageId: String) async throws {
+    func updateMessage(messageId: String, event: InboxMessageEvent) async throws {
         
-        if let message = inbox?.messages?.filter({ $0.messageId == messageId }).first, let channelId = message.trackingIds?.clickTrackingId {
-            
-            try await client?.inbox.click(
-                messageId: messageId,
-                trackingId: channelId
-            )
-            
+        var original: UpdateOperation?
+        
+        // Handle the click action separately
+        if event == .click {
+            if let message = inbox?.messages?.first(where: { $0.messageId == messageId }),
+               let channelId = message.trackingIds?.clickTrackingId {
+                try await client?.inbox.click(messageId: messageId, trackingId: channelId)
+            }
+            return
         }
         
-    }
-    
-    func readMessage(messageId: String) async throws {
-
-        let original = try inbox?.readMessage(messageId: messageId)
-
+        // Perform other actions
+        switch event {
+        case .read:
+            original = try inbox?.readMessage(messageId: messageId)
+        case .unread:
+            original = try inbox?.unreadMessage(messageId: messageId)
+        case .open:
+            original = try inbox?.openMessage(messageId: messageId)
+        case .unopen:
+            original = try inbox?.unopenMessage(messageId: messageId)
+        case .archive:
+            original = try inbox?.archiveMessage(messageId: messageId)
+        case .unarchive:
+            original = try inbox?.unarchiveMessage(messageId: messageId)
+        default:
+            return
+        }
+        
+        // Notify inbox updated
         notifyInboxUpdated()
-
+        
         do {
-            
-            try await client?.inbox.read(
-                messageId: messageId
-            )
-
-        } catch {
-
-            if let og = original {
-                self.inbox?.resetUpdate(update: og)
+            switch event {
+            case .read:
+                try await client?.inbox.read(messageId: messageId)
+            case .unread:
+                try await client?.inbox.unread(messageId: messageId)
+            case .open:
+                try await client?.inbox.open(messageId: messageId)
+            case .archive:
+                try await client?.inbox.archive(messageId: messageId)
+            default:
+                break
             }
-
+        } catch {
+            
+            if let og = original {
+                inbox?.resetUpdate(update: og)
+            }
+            
             notifyInboxUpdated()
             delegate?.onInboxError(with: error)
-
-        }
-        
-    }
-    
-    func unreadMessage(messageId: String) async throws {
-
-        let original = try inbox?.unreadMessage(messageId: messageId)
-
-        notifyInboxUpdated()
-
-        do {
             
-            try await client?.inbox.unread(
-                messageId: messageId
-            )
-
-        } catch {
-
-            if let og = original {
-                self.inbox?.resetUpdate(update: og)
-            }
-
-            notifyInboxUpdated()
-            delegate?.onInboxError(with: error)
-
         }
-        
-    }
-    
-    func openMessage(messageId: String) async throws {
-        
-        let original = try inbox?.openMessage(messageId: messageId)
-        
-        // Do not force a refresh
-        // notifyInboxUpdated()
-
-        do {
-            
-            try await client?.inbox.open(
-                messageId: messageId
-            )
-
-        } catch {
-
-            if let og = original {
-                self.inbox?.resetUpdate(update: og)
-            }
-
-            notifyInboxUpdated()
-            delegate?.onInboxError(with: error)
-
-        }
-        
-    }
-    
-    func archiveMessage(messageId: String) async throws {
-        
-        // TODO: Handle data store update
-
-        try await client?.inbox.archive(
-            messageId: messageId
-        )
-        
     }
     
     func readAllMessages() async throws {
@@ -552,8 +522,9 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await self.inboxModule.clickMessage(
-            messageId: messageId
+        try await self.inboxModule.updateMessage(
+            messageId: messageId,
+            event: .click
         )
         
     }
@@ -564,8 +535,9 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.readMessage(
-            messageId: messageId
+        try await inboxModule.updateMessage(
+            messageId: messageId,
+            event: .read
         )
 
     }
@@ -576,8 +548,9 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.unreadMessage(
-            messageId: messageId
+        try await inboxModule.updateMessage(
+            messageId: messageId,
+            event: .unread
         )
 
     }
@@ -588,8 +561,9 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.archiveMessage(
-            messageId: messageId
+        try await inboxModule.updateMessage(
+            messageId: messageId,
+            event: .archive
         )
 
     }
@@ -600,8 +574,9 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.openMessage(
-            messageId: messageId
+        try await inboxModule.updateMessage(
+            messageId: messageId,
+            event: .open
         )
 
     }
@@ -675,7 +650,7 @@ internal class Inbox {
         self.unreadCount = update.unreadCount
     }
     
-    @discardableResult func readMessage(messageId: String) throws -> UpdateOperation? {
+    @discardableResult private func updateMessage(messageId: String, action: InboxMessageEvent) throws -> UpdateOperation? {
         
         guard let messages = self.messages else {
             return nil
@@ -691,73 +666,31 @@ internal class Inbox {
         let originalMessage = message.copy() as! InboxMessage
         let originalUnreadCount = self.unreadCount
 
-        // Update
-        message.setRead()
+        // Update based on action
+        switch action {
+        case .read:
+            message.setRead()
+            self.unreadCount -= 1
+        case .unread:
+            message.setUnread()
+            self.unreadCount += 1
+        case .open:
+            message.setOpened()
+        case .unopen:
+            message.setUnopened()
+        case .archive:
+            message.setArchived()
+        case .unarchive:
+            message.setUnarchived()
+        case .click: 
+            break
+        case .unclick:
+            break
+        }
 
-        // Change data
-        self.messages?[i] = message
-        self.unreadCount -= 1
+        // Ensure unreadCount doesn't go below zero
         self.unreadCount = max(self.unreadCount, 0)
-
-        return UpdateOperation(
-            index: i,
-            unreadCount: originalUnreadCount,
-            message: originalMessage
-        )
         
-    }
-    
-    @discardableResult func unreadMessage(messageId: String) throws -> UpdateOperation? {
-        
-        guard let messages = self.messages else {
-            return nil
-        }
-        
-        let index = messages.firstIndex { $0.messageId == messageId }
-        guard let i = index else {
-            return nil
-        }
-
-        // Save copy
-        let message = messages[i]
-        let originalMessage = message.copy() as! InboxMessage
-        let originalUnreadCount = self.unreadCount
-
-        // Update
-        message.setUnread()
-
-        // Change data
-        self.messages?[i] = message
-        self.unreadCount += 1
-        self.unreadCount = max(self.unreadCount, 0)
-
-        return UpdateOperation(
-            index: i,
-            unreadCount: originalUnreadCount,
-            message: originalMessage
-        )
-        
-    }
-    
-    @discardableResult func openMessage(messageId: String) throws -> UpdateOperation? {
-        
-        guard let messages = self.messages else {
-            return nil
-        }
-        
-        let index = messages.firstIndex { $0.messageId == messageId }
-        guard let i = index else {
-            return nil
-        }
-
-        // Save copy
-        let message = messages[i]
-        let originalMessage = message.copy() as! InboxMessage
-        let originalUnreadCount = self.unreadCount
-
-        // Update
-        message.setOpened()
-
         // Change data
         self.messages?[i] = message
 
@@ -766,12 +699,35 @@ internal class Inbox {
             unreadCount: originalUnreadCount,
             message: originalMessage
         )
-        
     }
     
     func resetUpdate(update: UpdateOperation) {
         self.messages?[update.index] = update.message
         self.unreadCount = update.unreadCount
+    }
+    
+    @discardableResult func readMessage(messageId: String) throws -> UpdateOperation? {
+        return try updateMessage(messageId: messageId, action: .read)
+    }
+    
+    @discardableResult func unreadMessage(messageId: String) throws -> UpdateOperation? {
+        return try updateMessage(messageId: messageId, action: .unread)
+    }
+    
+    @discardableResult func openMessage(messageId: String) throws -> UpdateOperation? {
+        return try updateMessage(messageId: messageId, action: .open)
+    }
+    
+    @discardableResult func unopenMessage(messageId: String) throws -> UpdateOperation? {
+        return try updateMessage(messageId: messageId, action: .unopen)
+    }
+    
+    @discardableResult func archiveMessage(messageId: String) throws -> UpdateOperation? {
+        return try updateMessage(messageId: messageId, action: .archive)
+    }
+    
+    @discardableResult func unarchiveMessage(messageId: String) throws -> UpdateOperation? {
+        return try updateMessage(messageId: messageId, action: .unarchive)
     }
     
 }

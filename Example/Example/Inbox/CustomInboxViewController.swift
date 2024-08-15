@@ -83,7 +83,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
     
     @objc private func onPullRefresh() {
         Task {
-            try await Courier.shared.refreshInbox()
+            await Courier.shared.refreshInbox()
             self.tableView.refreshControl?.endRefreshing()
         }
     }

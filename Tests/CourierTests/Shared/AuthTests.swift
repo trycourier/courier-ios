@@ -15,7 +15,7 @@ class AuthTests: XCTestCase {
         var hold = true
 
         let listener = Courier.shared.addAuthenticationListener { userId in
-            print(userId)
+            print(userId ?? "No user found")
             if (userId != nil) {
                 hold = false
             }
@@ -45,7 +45,7 @@ class AuthTests: XCTestCase {
         var hold = true
 
         let listener = Courier.shared.addAuthenticationListener { userId in
-            print(userId)
+            print(userId ?? "No user found")
             if (userId == nil) {
                 hold = false
             }

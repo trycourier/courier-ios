@@ -105,6 +105,14 @@ import Foundation
         }
     }
     
+    internal func setArchived() {
+        archived = Date().timestamp
+    }
+    
+    internal func setUnarchived() {
+        archived = nil
+    }
+    
     internal func setRead() {
         read = Date().timestamp
     }
@@ -115,6 +123,10 @@ import Foundation
     
     internal func setOpened() {
         opened = Date().timestamp
+    }
+    
+    internal func setUnopened() {
+        opened = nil
     }
     
     @objc public var time: String {
