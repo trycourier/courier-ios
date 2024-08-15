@@ -15,28 +15,23 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
 
     open override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         
-        originalHandler = contentHandler
-        originalContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-        
-        guard let notification = originalContent else {
-            return
-        }
-        
         Task {
-            do {
-                if let trackingUrl = notification.userInfo["trackingUrl"] as? String {
-                    try await CourierClient.default.tracking.postTrackingUrl(
-                        url: trackingUrl,
-                        event: .delivered
-                    )
-                }
-            } catch {
-                Courier.shared.client?.options.error(error.localizedDescription)
+            
+            // Copy the original message
+            originalHandler = contentHandler
+            originalContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+            
+            guard let notification = originalContent else {
+                return
             }
+            
+            // Track the message in Courier
+            await notification.userInfo.trackMessage(event: .delivered)
+            
+            // Show the notification
+            contentHandler(notification)
+            
         }
-        
-        // Show the notification
-        contentHandler(notification)
         
     }
     
