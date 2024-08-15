@@ -319,10 +319,15 @@ internal actor InboxModule {
             return
         }
         
-        // Notify inbox updated
+        // Ensure there is an original message
+        guard let og = original else {
+            return
+        }
+        
         notifyInboxUpdated()
         
         do {
+            
             switch event {
             case .read:
                 try await client?.inbox.read(messageId: messageId)
@@ -335,12 +340,11 @@ internal actor InboxModule {
             default:
                 break
             }
+            
         } catch {
             
-            if let og = original {
-                inbox?.resetUpdate(update: og)
-            }
-            
+            // Reset the change
+            inbox?.resetUpdate(update: og)
             notifyInboxUpdated()
             delegate?.onInboxError(with: error)
             
@@ -680,25 +684,67 @@ internal class Inbox {
         // Update based on action
         switch event {
         case .read:
+            
+            if message.isRead {
+                return nil
+            }
+            
             message.setRead()
             self.unreadCount -= 1
+            
         case .unread:
+            
+            if !message.isRead {
+                return nil
+            }
+            
             message.setUnread()
             self.unreadCount += 1
+            
         case .opened:
+            
+            if message.isOpened {
+                return nil
+            }
+            
             message.setOpened()
+            
         case .unopened:
+            
+            if !message.isOpened {
+                return nil
+            }
+            
             message.setUnopened()
+            
         case .archive:
+            
+            if message.isArchived {
+                return nil
+            }
+            
             message.setArchived()
+            
         case .unarchive:
+            
+            if !message.isArchived {
+                return nil
+            }
+            
             message.setUnarchived()
-        case .click: 
+            
+        case .click:
+            
             break
+            
         case .unclick:
+            
             break
+            
         case .markAllRead:
+            
             break
+            
         }
 
         // Ensure unreadCount doesn't go below zero
