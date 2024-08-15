@@ -13,8 +13,16 @@ internal protocol InboxModuleDelegate: AnyObject {
     func onInboxError(with error: Error)
 }
 
-internal enum InboxMessageEvent {
-    case read, unread, open, unopen, archive, unarchive, click, unclick
+internal enum InboxEventType: String, Codable {
+    case markAllRead = "mark-all-read"
+    case read = "read"
+    case unread = "unread"
+    case opened = "opened"
+    case unopened = "unopened"
+    case archive = "archive"
+    case unarchive = "unarchive"
+    case click = "click"
+    case unclick = "unclick"
 }
 
 internal actor InboxModule {
@@ -203,6 +211,9 @@ internal actor InboxModule {
                         await self?.notifyInboxUpdated()
                     }
                     
+                default:
+                    break
+                    
                 }
                 
             }
@@ -277,7 +288,7 @@ internal actor InboxModule {
         
     }
     
-    func updateMessage(messageId: String, event: InboxMessageEvent) async throws {
+    func updateMessage(messageId: String, event: InboxEventType) async throws {
         
         var original: UpdateOperation?
         
@@ -296,9 +307,9 @@ internal actor InboxModule {
             original = try inbox?.readMessage(messageId: messageId)
         case .unread:
             original = try inbox?.unreadMessage(messageId: messageId)
-        case .open:
+        case .opened:
             original = try inbox?.openMessage(messageId: messageId)
-        case .unopen:
+        case .unopened:
             original = try inbox?.unopenMessage(messageId: messageId)
         case .archive:
             original = try inbox?.archiveMessage(messageId: messageId)
@@ -317,7 +328,7 @@ internal actor InboxModule {
                 try await client?.inbox.read(messageId: messageId)
             case .unread:
                 try await client?.inbox.unread(messageId: messageId)
-            case .open:
+            case .opened:
                 try await client?.inbox.open(messageId: messageId)
             case .archive:
                 try await client?.inbox.archive(messageId: messageId)
@@ -576,7 +587,7 @@ extension Courier {
         
         try await inboxModule.updateMessage(
             messageId: messageId,
-            event: .open
+            event: .opened
         )
 
     }
@@ -650,7 +661,7 @@ internal class Inbox {
         self.unreadCount = update.unreadCount
     }
     
-    @discardableResult private func updateMessage(messageId: String, action: InboxMessageEvent) throws -> UpdateOperation? {
+    @discardableResult private func updateMessage(messageId: String, event: InboxEventType) throws -> UpdateOperation? {
         
         guard let messages = self.messages else {
             return nil
@@ -667,16 +678,16 @@ internal class Inbox {
         let originalUnreadCount = self.unreadCount
 
         // Update based on action
-        switch action {
+        switch event {
         case .read:
             message.setRead()
             self.unreadCount -= 1
         case .unread:
             message.setUnread()
             self.unreadCount += 1
-        case .open:
+        case .opened:
             message.setOpened()
-        case .unopen:
+        case .unopened:
             message.setUnopened()
         case .archive:
             message.setArchived()
@@ -685,6 +696,8 @@ internal class Inbox {
         case .click: 
             break
         case .unclick:
+            break
+        case .markAllRead:
             break
         }
 
@@ -707,27 +720,27 @@ internal class Inbox {
     }
     
     @discardableResult func readMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, action: .read)
+        return try updateMessage(messageId: messageId, event: .read)
     }
     
     @discardableResult func unreadMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, action: .unread)
+        return try updateMessage(messageId: messageId, event: .unread)
     }
     
     @discardableResult func openMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, action: .open)
+        return try updateMessage(messageId: messageId, event: .opened)
     }
     
     @discardableResult func unopenMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, action: .unopen)
+        return try updateMessage(messageId: messageId, event: .unopened)
     }
     
     @discardableResult func archiveMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, action: .archive)
+        return try updateMessage(messageId: messageId, event: .archive)
     }
     
     @discardableResult func unarchiveMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, action: .unarchive)
+        return try updateMessage(messageId: messageId, event: .unarchive)
     }
     
 }

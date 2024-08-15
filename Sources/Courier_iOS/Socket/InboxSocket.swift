@@ -16,21 +16,13 @@ public class InboxSocket: CourierSocket {
         case message = "message"
     }
     
-    enum EventType: String, Codable {
-        case read = "read"
-        case unread = "unread"
-        case markAllRead = "mark-all-read"
-        case opened = "opened"
-        case archive = "archive"
-    }
-    
     struct SocketPayload: Codable {
         let type: PayloadType
-        let event: EventType?
+        let event: InboxEventType?
     }
     
     public struct MessageEvent: Codable {
-        let event: EventType
+        let event: InboxEventType
         let messageId: String?
         let type: String
     }
