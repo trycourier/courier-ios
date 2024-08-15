@@ -96,6 +96,10 @@ public class InboxSocket: CourierSocket {
                 dict["clientKey"] = clientKey
             }
             
+            if let connectionId = self.options.connectionId {
+                dict["clientSourceId"] = connectionId
+            }
+            
             if let tenantId = self.options.tenantId {
                 dict["accountId"] = tenantId
             }
