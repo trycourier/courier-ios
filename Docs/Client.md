@@ -39,9 +39,9 @@ try await client.tokens.putUserToken(
 
 // To customize the device of the token being saved
 let device = CourierDevice(
-    app_id:        "APP_ID",    // Optional
-    ad_id:         "AD_ID",     // Optional
-    device_id:     "DEVICE_ID", // Optional
+    appId:         "APP_ID",    // Optional
+    adId:          "AD_ID",     // Optional
+    deviceId:      "DEVICE_ID", // Optional
     platform:      "ios",       // Optional
     manufacturer:  "Apple",     // Optional
     model:         "iPhone 123" // Optional
