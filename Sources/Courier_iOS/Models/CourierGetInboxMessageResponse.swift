@@ -7,13 +7,6 @@
 
 import Foundation
 
-@objc public class CourierGetInboxMessageResponse: NSObject {
-    
+public struct CourierGetInboxMessageResponse: Codable {
     public let data: GetInboxMessageData?
-    
-    public init(_ dictionary: [String : Any]?) {
-        let data = dictionary?["data"] as? [String: Any]
-        self.data = GetInboxMessageData(data)
-    }
-    
 }

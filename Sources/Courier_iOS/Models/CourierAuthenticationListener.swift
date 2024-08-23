@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: Public Classes
 
-@objc public class CourierAuthenticationListener: NSObject {
+public class CourierAuthenticationListener: NSObject {
     
     let onChange: (String?) -> Void
     
@@ -23,7 +23,7 @@ import Foundation
 
 extension CourierAuthenticationListener {
     
-    @objc public func remove() {
+    public func remove() {
         Courier.shared.removeAuthenticationListener(listener: self)
     }
     

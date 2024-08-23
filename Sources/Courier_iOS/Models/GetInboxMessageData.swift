@@ -7,13 +7,6 @@
 
 import Foundation
 
-@objc public class GetInboxMessageData: NSObject {
-    
+public struct GetInboxMessageData: Codable {
     public var message: InboxMessage?
-    
-    init(_ dictionary: [String : Any]?) {
-        let message = dictionary?["message"] as? [String : Any]
-        self.message = InboxMessage(message)
-    }
-    
 }

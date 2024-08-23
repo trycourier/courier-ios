@@ -54,19 +54,22 @@ public class InboxSocket: CourierSocket {
             switch (payload.type) {
             case .event:
                 
-                let messageEvent = try decoder.decode(MessageEvent.self, from: json)
-                receivedMessageEvent?(messageEvent)
+                let event = try decoder.decode(MessageEvent.self, from: json)
+                receivedMessageEvent?(event)
                 
             case .message:
                 
-                let dictionary = try json.toDictionary()
-                let message = InboxMessage(dictionary)
+                let message = try decoder.decode(InboxMessage.self, from: json)
                 receivedMessage?(message)
                 
             }
             
         } catch {
+            
+            options.error(error.localizedDescription)
+            
             self.onError?(error)
+            
         }
         
     }

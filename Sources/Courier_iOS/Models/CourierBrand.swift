@@ -19,7 +19,7 @@ public struct CourierBrandData: Codable {
 
 // MARK: Public Classes
 
-@objc public class CourierBrand: NSObject, Codable {
+public class CourierBrand: NSObject, Codable {
     
     public let settings: CourierBrandSettings?
     
@@ -31,7 +31,7 @@ public struct CourierBrandData: Codable {
     
 }
 
-@objc public class CourierBrandSettings: NSObject, Codable {
+public class CourierBrandSettings: NSObject, Codable {
     
     public let colors: CourierBrandColors?
     public let inapp: CourierBrandInApp?
@@ -46,7 +46,7 @@ public struct CourierBrandData: Codable {
     
 }
 
-@objc public class CourierBrandColors: NSObject, Codable {
+public class CourierBrandColors: NSObject, Codable {
     
     public let primary: String?
     
@@ -58,7 +58,7 @@ public struct CourierBrandData: Codable {
     
 }
 
-@objc public class CourierBrandInApp: NSObject, Codable {
+public class CourierBrandInApp: NSObject, Codable {
     
     private let disableCourierFooter: Bool?
     
@@ -68,7 +68,7 @@ public struct CourierBrandData: Codable {
         self.disableCourierFooter = disableCourierFooter
     }
     
-    @objc public var showCourierFooter: Bool {
+    public var showCourierFooter: Bool {
         get {
             
             if let disabled = disableCourierFooter {

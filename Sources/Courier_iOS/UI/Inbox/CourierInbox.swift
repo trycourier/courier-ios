@@ -11,7 +11,7 @@ import UIKit
  A super simple way to implement a basic notification center into your app
  */
 @available(iOSApplicationExtension, unavailable)
-@objc open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
+open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Theme
     
@@ -24,9 +24,9 @@ import UIKit
     
     // MARK: Interaction
     
-    @objc public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
-    @objc public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
-    @objc public var didScrollInbox: ((UIScrollView) -> Void)? = nil
+    public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
+    public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
+    public var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
     // MARK: Datasource
     
@@ -85,7 +85,6 @@ import UIKit
     
     private var state: State = .loading {
         didSet {
-            
             // Update UI
             switch (state) {
             case .loading:
@@ -112,20 +111,18 @@ import UIKit
             if ("\(oldValue)" != "\(state)") {
                 self.scrollToTop(animated: false)
             }
-            
         }
     }
     
     // MARK: Init
     
-    @objc public init(
+    public init(
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
-        
         // Theme
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
@@ -140,7 +137,6 @@ import UIKit
         
         // Styles and more
         setup()
-        
     }
 
     override init(frame: CGRect) {
@@ -158,7 +154,6 @@ import UIKit
     }
     
     private func setup() {
-        
         // Called when the auth state changes
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
             if (userId != nil) {
@@ -182,13 +177,10 @@ import UIKit
         
         // Init the listener
         makeListener()
-        
     }
     
     private func refreshCourierBarIfNeeded() {
-        
         if (!courierBar.isHidden) {
-         
             // Set the courier bar background color
             courierBar.setColors(with: superview?.backgroundColor)
             
@@ -203,9 +195,7 @@ import UIKit
             // Update infoView position
             infoViewY?.constant = -(Theme.Bar.barHeight / 2)
             infoView.layoutIfNeeded()
-            
         }
-        
     }
     
     open override func layoutSubviews() {
@@ -214,7 +204,6 @@ import UIKit
     }
     
     private func addCourierBar() {
-        
         addSubview(courierBar)
         
         NSLayoutConstraint.activate([
@@ -222,11 +211,9 @@ import UIKit
             courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
-        
     }
     
     private func addTableView() {
-        
         addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -235,22 +222,18 @@ import UIKit
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
-        
     }
     
     private func addLoadingIndicator() {
-        
         addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([
             loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-        
     }
     
     private func addInfoView() {
-        
         addSubview(infoView)
         
         infoViewY = infoView.centerYAnchor.constraint(equalTo: centerYAnchor)
@@ -260,13 +243,10 @@ import UIKit
             infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: (Theme.margin / 2)),
             infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(Theme.margin / 2)),
         ])
-        
     }
     
     private func makeListener() {
-        
         Task {
-            
             do {
                 try await refreshBrand()
             } catch {
@@ -286,9 +266,7 @@ import UIKit
                     self?.reloadMessages(newMessages)
                 }
             )
-            
         }
-        
     }
     
     // MARK: Reloading
@@ -306,11 +284,9 @@ import UIKit
      Otherwise will reload all the messages with the new datasource
      */
     private func reloadMessages(_ newMessages: [InboxMessage]) {
-        
         // Check if we need to insert
         let didInsert = newMessages.count - self.inboxMessages.count == 1
         if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
-            
             // Add the new item
             self.inboxMessages = newMessages
             let indexPath = IndexPath(row: 0, section: 0)
@@ -328,13 +304,10 @@ import UIKit
         
         // Open shown messages
         self.openVisibleMessages()
-        
     }
     
     @objc private func onRefresh() {
-        
         Task {
-            
             do {
                 try await refreshBrand()
                 await Courier.shared.refreshInbox()
@@ -343,9 +316,7 @@ import UIKit
                 Courier.shared.client?.log(error.localizedDescription)
                 self.state = .error(error)
             }
-            
         }
-        
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
@@ -357,12 +328,9 @@ import UIKit
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         if (indexPath.section == 0) {
-            
             // Normal cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
-                
                 let index = indexPath.row
                 let message = inboxMessages[index]
                 
@@ -375,48 +343,35 @@ import UIKit
                 }
                 
                 return cell
-                
             }
-            
         } else {
-            
             // Pagination cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell {
                 cell.setTheme(theme)
                 return cell
             }
-            
         }
         
         return UITableViewCell()
-        
     }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
         let indexToPageAt = self.inboxMessages.count - Int(InboxModule.Pagination.default.rawValue / 3)
         
         // Only fetch if we are safe to
         if (indexPath.row == indexToPageAt) {
-            
             Task {
-                
                 do {
                     try await Courier.shared.fetchNextInboxPage()
                 } catch {
                     Courier.shared.client?.error(error.localizedDescription)
                 }
-                
             }
-            
         }
-        
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         if (indexPath.section == 0) {
-            
             // Click the cell
             let index = indexPath.row
             let message = self.inboxMessages[index]
@@ -429,9 +384,7 @@ import UIKit
             
             // Deselect the row
             tableView.deselectRow(at: indexPath, animated: true)
-            
         }
-        
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -440,36 +393,27 @@ import UIKit
     }
     
     private func openVisibleMessages() {
-        
         if !Courier.shared.isUserSignedIn {
             return
         }
             
         self.tableView.indexPathsForVisibleRows?.forEach { indexPath in
-            
             Task {
-
                 // Get the current message
                 let index = indexPath.row
                 let message = inboxMessages[index]
 
                 // If the message is not opened, open it
                 if (!message.isOpened) {
-
                     // Mark the message as open
                     // This will prevent duplicates
                     message.markAsOpened()
-
                 }
-
             }
-            
         }
-        
     }
     
-    @objc public func scrollToTop(animated: Bool) {
-        
+    public func scrollToTop(animated: Bool) {
         if (self.inboxMessages.isEmpty) {
             return
         }
@@ -479,7 +423,6 @@ import UIKit
             at: .top,
             animated: animated
         )
-        
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -489,7 +432,6 @@ import UIKit
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             setTheme(isDarkMode: traitCollection.userInterfaceStyle == .dark)
         }
-        
     }
     
     private func setTheme(isDarkMode: Bool) {
@@ -498,7 +440,6 @@ import UIKit
     }
     
     private func reloadViews() {
-        
         tableView.separatorStyle = theme.cellStyle.separatorStyle
         tableView.separatorInset = theme.cellStyle.separatorInsets
         tableView.separatorColor = theme.cellStyle.separatorColor
@@ -510,7 +451,6 @@ import UIKit
         courierBar.setTheme(theme)
         
         reloadCells()
-        
     }
     
     private func reloadCells() {
@@ -526,5 +466,4 @@ import UIKit
         self.authListener?.remove()
         self.inboxListener?.remove()
     }
-
 }

@@ -10,60 +10,22 @@ import Foundation
 /**
  The model used to structure CourierInbox messages
  */
-@objc public class InboxMessage: NSObject, NSCopying {
+public class InboxMessage: Codable {
     
-    // MARK: Properties
+    public let messageId: String
+    public let title: String?
+    public let body: String?
+    public let preview: String?
+    public let actions: [InboxAction]?
+    public private(set) var data: [String: Any]?
+    public let trackingIds: CourierTrackingIds?
     
-    @objc public let messageId: String
-    @objc public let title: String?
-    @objc public let body: String?
-    @objc public let preview: String?
-    @objc public let actions: [InboxAction]?
-    @objc public let data: [String : Any]?
-    @objc public let trackingIds: CourierTrackingIds?
-    
-    @objc public let created: String?
+    public let created: String?
     public var archived: String?
     public var read: String?
     public var opened: String?
     
-    internal init(_ dictionary: [String : Any]?) {
-        
-        let actions = dictionary?["actions"] as? [[String: Any]]
-
-        let buttons = actions?.map { action in
-            return InboxAction(
-                content: action["content"] as? String,
-                href: action["href"] as? String,
-                data: action["data"] as? [String : Any]
-            )
-        }
-        
-        self.title = dictionary?["title"] as? String
-        self.body = dictionary?["body"] as? String
-        self.preview = dictionary?["preview"] as? String
-        self.created = dictionary?["created"] as? String
-        self.archived = dictionary?["archived"] as? String
-        self.read = dictionary?["read"] as? String
-        self.messageId = dictionary?["messageId"] as! String
-        self.actions = buttons
-        
-        self.data = dictionary?["data"] as? [String : Any]
-        
-        let trackingIds = data?["trackingIds"] as? [String : Any] ?? dictionary?["trackingIds"] as? [String : Any]
-        
-        self.trackingIds = CourierTrackingIds(
-            archiveTrackingId: trackingIds?["archiveTrackingId"] as? String,
-            openTrackingId: trackingIds?["openTrackingId"] as? String,
-            clickTrackingId: trackingIds?["clickTrackingId"] as? String,
-            deliverTrackingId: trackingIds?["deliverTrackingId"] as? String,
-            unreadTrackingId: trackingIds?["unreadTrackingId"] as? String,
-            readTrackingId: trackingIds?["readTrackingId"] as? String
-        )
-        
-    }
-    
-    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: String?, read: String?, actions: [InboxAction]?, data: [String : Any]?, trackingIds: CourierTrackingIds?) {
+    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: String?, read: String?, actions: [InboxAction]?, data: [String: Any]?, trackingIds: CourierTrackingIds?) {
         self.title = title
         self.body = body
         self.preview = preview
@@ -76,33 +38,24 @@ import Foundation
         self.trackingIds = trackingIds
     }
     
-    public func copy(with zone: NSZone? = nil) -> Any {
-        let copy = InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data, trackingIds: trackingIds)
-        return copy
+    public func copy() -> InboxMessage {
+        return InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data, trackingIds: trackingIds)
     }
     
-    @objc public var subtitle: String? {
-        get {
-            return body ?? preview
-        }
+    public var subtitle: String? {
+        return body ?? preview
     }
     
-    @objc public var isRead: Bool {
-        get {
-            return read != nil
-        }
+    public var isRead: Bool {
+        return read != nil
     }
     
-    @objc public var isOpened: Bool {
-        get {
-            return opened != nil
-        }
+    public var isOpened: Bool {
+        return opened != nil
     }
     
-    @objc public var isArchived: Bool {
-        get {
-            return archived != nil
-        }
+    public var isArchived: Bool {
+        return archived != nil
     }
     
     internal func setArchived() {
@@ -129,30 +82,85 @@ import Foundation
         opened = nil
     }
     
-    @objc public var time: String {
-        get {
-         
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
-            
-            guard let createdAt = created, let date = dateFormatter.date(from: createdAt) else {
-                return "now"
-            }
-            
-            return date.timeSince()
-            
+    public var time: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        
+        guard let createdAt = created, let date = dateFormatter.date(from: createdAt) else {
+            return "now"
         }
+        
+        return date.timeSince()
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case messageId
+        case title
+        case body
+        case preview
+        case actions
+        case data
+        case trackingIds
+        case created
+        case archived
+        case read
+        case opened
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.messageId = try container.decode(String.self, forKey: .messageId)
+        self.title = try container.decodeIfPresent(String.self, forKey: .title)
+        self.body = try container.decodeIfPresent(String.self, forKey: .body)
+        self.preview = try container.decodeIfPresent(String.self, forKey: .preview)
+        self.actions = try container.decodeIfPresent([InboxAction].self, forKey: .actions)
+        self.trackingIds = try container.decodeIfPresent(CourierTrackingIds.self, forKey: .trackingIds)
+        self.created = try container.decodeIfPresent(String.self, forKey: .created)
+        self.archived = try container.decodeIfPresent(String.self, forKey: .archived)
+        self.read = try container.decodeIfPresent(String.self, forKey: .read)
+        self.opened = try container.decodeIfPresent(String.self, forKey: .opened)
+        
+        // Custom decoding logic for data dictionary
+        if let dataDict = try? container.decodeIfPresent([String: AnyCodable].self, forKey: .data) {
+            self.data = dataDict.mapValues { $0.value }
+        } else {
+            self.data = nil
+        }
+        
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(messageId, forKey: .messageId)
+        try container.encodeIfPresent(title, forKey: .title)
+        try container.encodeIfPresent(body, forKey: .body)
+        try container.encodeIfPresent(preview, forKey: .preview)
+        try container.encodeIfPresent(actions, forKey: .actions)
+        try container.encodeIfPresent(trackingIds, forKey: .trackingIds)
+        try container.encodeIfPresent(created, forKey: .created)
+        try container.encodeIfPresent(archived, forKey: .archived)
+        try container.encodeIfPresent(read, forKey: .read)
+        try container.encodeIfPresent(opened, forKey: .opened)
+        
+        // Custom encoding logic for data dictionary
+        if let dataDict = data {
+            let encodableDict = dataDict.mapValues { AnyCodable($0) }
+            try container.encode(encodableDict, forKey: .data)
+        } else {
+            try container.encodeNil(forKey: .data)
+        }
+        
     }
     
 }
 
 extension InboxMessage {
     
-    @objc public func markAsRead() async throws {
+    public func markAsRead() async throws {
         try await Courier.shared.readMessage(messageId)
     }
     
-    @objc public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsRead()
@@ -165,11 +173,11 @@ extension InboxMessage {
         }
     }
     
-    @objc public func markAsUnread() async throws {
+    public func markAsUnread() async throws {
         try await Courier.shared.unreadMessage(messageId)
     }
     
-    @objc public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsUnread()
@@ -182,11 +190,11 @@ extension InboxMessage {
         }
     }
     
-    @objc public func markAsOpened() async throws {
+    public func markAsOpened() async throws {
         try await Courier.shared.openMessage(messageId)
     }
     
-    @objc public func markAsOpened(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsOpened(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsOpened()
@@ -199,11 +207,11 @@ extension InboxMessage {
         }
     }
     
-    @objc public func markAsClicked() async throws {
+    public func markAsClicked() async throws {
         try await Courier.shared.clickMessage(messageId)
     }
     
-    @objc public func markAsClicked(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsClicked(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsClicked()
@@ -216,11 +224,11 @@ extension InboxMessage {
         }
     }
     
-    @objc public func markAsArchived() async throws {
+    public func markAsArchived() async throws {
         try await Courier.shared.archiveMessage(messageId)
     }
     
-    @objc public func markAsArchived(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsArchived(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsArchived()
@@ -232,5 +240,4 @@ extension InboxMessage {
             }
         }
     }
-    
 }

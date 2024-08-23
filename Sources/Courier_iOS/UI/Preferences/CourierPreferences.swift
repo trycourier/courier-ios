@@ -9,7 +9,7 @@ import UIKit
 
 @available(iOS 15.0, *)
 @available(iOSApplicationExtension, unavailable)
-@objc open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource, UISheetPresentationControllerDelegate {
+open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource, UISheetPresentationControllerDelegate {
     
     // MARK: Theme
     
@@ -37,7 +37,7 @@ import UIKit
     
     // MARK: Interaction
     
-    @objc public var didScrollPreferences: ((UIScrollView) -> Void)? = nil
+    public var didScrollPreferences: ((UIScrollView) -> Void)? = nil
     
     // MARK: Authentication
     
@@ -200,7 +200,7 @@ import UIKit
         
     }
     
-    @objc func refresh() {
+    func refresh() {
         
         Task {
             
@@ -264,7 +264,7 @@ import UIKit
         
     }
     
-    @objc public func scrollToTop(animated: Bool) {
+    public func scrollToTop(animated: Bool) {
         
         if (self.preferences.isEmpty) {
             return
