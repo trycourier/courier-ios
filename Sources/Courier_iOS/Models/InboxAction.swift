@@ -7,18 +7,51 @@
 
 import Foundation
 
-@objc public class InboxAction: NSObject {
+public struct InboxAction: Codable {
     
-    // MARK: Properties
+    public let content: String?
+    public let href: String?
+    public private(set) var data: [String: Any]?
     
-    @objc public let content: String?
-    @objc public let href: String?
-    @objc public let data: [String: Any]?
+    enum CodingKeys: String, CodingKey {
+        case content
+        case href
+        case data
+    }
     
     public init(content: String?, href: String?, data: [String: Any]?) {
         self.content = content
         self.href = href
         self.data = data
+    }
+    
+    // Custom encoding for CodableValue
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(content, forKey: .content)
+        try container.encode(href, forKey: .href)
+        
+        // Encode the data dictionary
+        if let dataDict = data {
+            let encodableDict = dataDict.mapValues { AnyCodable($0) }
+            try container.encode(encodableDict, forKey: .data)
+        } else {
+            try container.encodeNil(forKey: .data)
+        }
+    }
+    
+    // Custom decoding for CodableValue
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.content = try container.decodeIfPresent(String.self, forKey: .content)
+        self.href = try container.decodeIfPresent(String.self, forKey: .href)
+        
+        // Decode the data dictionary
+        if let dataDict = try? container.decodeIfPresent([String: AnyCodable].self, forKey: .data) {
+            self.data = dataDict.mapValues { $0.value }
+        } else {
+            self.data = nil
+        }
     }
     
 }

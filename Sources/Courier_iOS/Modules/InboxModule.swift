@@ -678,7 +678,7 @@ internal class Inbox {
 
         // Save copy
         let message = messages[i]
-        let originalMessage = message.copy() as! InboxMessage
+        let originalMessage = message.copy()
         let originalUnreadCount = self.unreadCount
 
         // Update based on action
