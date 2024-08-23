@@ -264,7 +264,7 @@ extension UIView {
     
 }
 
-extension [AnyHashable : Any] {
+public extension [AnyHashable : Any] {
     
     func trackMessage(event: CourierTrackingEvent) async {
         
