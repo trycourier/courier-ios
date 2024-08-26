@@ -289,7 +289,7 @@ public extension [AnyHashable : Any] {
 
 public extension NSDictionary {
     
-    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping (Error?) -> Void) async {
+    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping (Error?) -> Void) {
         
         guard let trackingUrl = ["trackingUrl"] as? String else {
             completion(nil)
