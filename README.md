@@ -32,25 +32,6 @@
 <table>
     <thead>
         <tr>
-            <th width="840px" align="left">Languages</th>
-            <th width="220px" align="center"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr width="600px">
-            <td align="left">Swift</td>
-            <td align="center">✅</td>
-        </tr>
-        <tr width="600px">
-            <td align="left">Objective-C</td>
-            <td align="center">Limited ⚠️</td>
-        </tr>
-    </tbody>
-</table>
-
-<table>
-    <thead>
-        <tr>
             <th width="940px" align="left">Package Managers</th>
             <th width="120px" align="center"></th>
         </tr>
