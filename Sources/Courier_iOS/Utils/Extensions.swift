@@ -286,3 +286,33 @@ public extension [AnyHashable : Any] {
     }
     
 }
+
+public extension NSDictionary {
+    
+    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping (Error?) -> Void) async {
+        
+        guard let trackingUrl = ["trackingUrl"] as? String else {
+            completion(nil)
+            return
+        }
+        
+        let client = CourierClient.default
+        
+        Task {
+         
+            do {
+                try await client.tracking.postTrackingUrl(
+                    url: trackingUrl,
+                    event: event
+                )
+                completion(nil)
+            } catch {
+                client.options.error(error.localizedDescription)
+                completion(error)
+            }
+            
+        }
+        
+    }
+    
+}
