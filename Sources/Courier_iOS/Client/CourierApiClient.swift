@@ -9,7 +9,7 @@ import Foundation
 
 public class CourierApiClient {
     
-    static let BASE_REST = "https://api.courier.com"
+    static let BASE_REST = "https://blh3iffj8h.execute-api.us-east-1.amazonaws.com/dev"
     static let BASE_GRAPH_QL = "https://api.courier.com/client/q"
     static let INBOX_GRAPH_QL = "https://fxw3r7gdm9.execute-api.us-east-1.amazonaws.com/production/q"
     static let INBOX_WEBSOCKET = "wss://1x60p1o3h8.execute-api.us-east-1.amazonaws.com/production"
