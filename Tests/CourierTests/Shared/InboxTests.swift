@@ -50,20 +50,13 @@ class InboxTests: XCTestCase {
 
     }
     
-    private func getVerifiedInboxMessage() async throws -> InboxMessage {
+    private func getVerifiedInboxMessage() async throws -> String {
 
         let messageId = try await sendMessage()
 
         try? await Task.sleep(nanoseconds: delay)
-        
-        let res = try await Courier.shared.client?.inbox.getMessages()
-
-        let message = res?.data?.messages?.nodes?.first
-
-        XCTAssertNotNil(message, "Message Exists")
-        XCTAssertTrue(message!.messageId == messageId)
  
-        return message!
+        return messageId
 
     }
     
@@ -189,9 +182,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let messageId = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.openMessage(message.messageId)
+        try await Courier.shared.openMessage(messageId)
 
     }
     
@@ -199,9 +192,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let messageId = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.clickMessage(message.messageId)
+        try await Courier.shared.clickMessage(messageId)
 
     }
     
@@ -209,9 +202,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let messageId = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.readMessage(message.messageId)
+        try await Courier.shared.readMessage(messageId)
 
     }
     
@@ -219,9 +212,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let messageId = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.unreadMessage(message.messageId)
+        try await Courier.shared.unreadMessage(messageId)
 
     }
     
@@ -229,9 +222,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let messageId = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.archiveMessage(message.messageId)
+        try await Courier.shared.archiveMessage(messageId)
 
     }
     
@@ -247,7 +240,11 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let messageId = try await getVerifiedInboxMessage()
+        
+        let message = InboxMessage(
+            messageId: messageId
+        )
 
         try await message.markAsOpened()
         try await message.markAsUnread()

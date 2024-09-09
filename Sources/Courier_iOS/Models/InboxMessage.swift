@@ -25,7 +25,18 @@ public class InboxMessage: Codable {
     public var read: String?
     public var opened: String?
     
-    internal init(messageId: String, title: String?, body: String?, preview: String?, created: String?, archived: String?, read: String?, actions: [InboxAction]?, data: [String: Any]?, trackingIds: CourierTrackingIds?) {
+    internal init(
+        messageId: String,
+        title: String? = nil,
+        body: String? = nil,
+        preview: String? = nil,
+        created: String? = nil,
+        archived: String? = nil,
+        read: String? = nil,
+        actions: [InboxAction]? = nil,
+        data: [String: Any]? = nil,
+        trackingIds: CourierTrackingIds? = nil
+    ) {
         self.title = title
         self.body = body
         self.preview = preview
