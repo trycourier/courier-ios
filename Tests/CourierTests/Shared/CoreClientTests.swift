@@ -33,4 +33,17 @@ class CoreClientTests: XCTestCase {
 
     }
     
+    func testUserAgent() throws {
+        
+        Courier.agent = CourierAgent.nativeIOS("1.2.3")
+        XCTAssertEqual(Courier.agent.value, "courier-ios/1.2.3")
+        
+        Courier.agent = CourierAgent.flutterIOS("1.2.3")
+        XCTAssertEqual(Courier.agent.value, "courier-flutter-ios/1.2.3")
+        
+        Courier.agent = CourierAgent.reactNativeIOS("1.2.3")
+        XCTAssertEqual(Courier.agent.value, "courier-react-native-ios/1.2.3")
+        
+    }
+    
 }

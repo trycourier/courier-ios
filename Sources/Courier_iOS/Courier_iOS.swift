@@ -30,7 +30,7 @@ import UIKit
      * Versioning
      */
     internal static let version = "4.3.2"
-    public static var agent = CourierAgent.native_ios
+    public static var agent = CourierAgent.nativeIOS(version)
     
     /**
      * Singleton reference to the SDK
