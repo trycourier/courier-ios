@@ -41,19 +41,27 @@ class AuthViewController: UIViewController {
                 
                 Task {
                     
-                    let userId = values[0]
-                    let tenantId = values[1]
-                    
-                    let jwt = try await ExampleServer().generateJwt(
-                        authKey: Env.COURIER_AUTH_KEY,
-                        userId: userId
-                    )
-                    
-                    await Courier.shared.signIn(
-                        userId: userId, 
-                        tenantId: tenantId.isEmpty ? nil : tenantId, 
-                        accessToken: jwt
-                    )
+                    do {
+                        
+                        let userId = values[0]
+                        let tenantId = values[1]
+                        
+                        let jwt = try await ExampleServer().generateJwt(
+                            authKey: Env.COURIER_AUTH_KEY,
+                            userId: userId
+                        )
+                        
+                        await Courier.shared.signIn(
+                            userId: userId,
+                            tenantId: tenantId.isEmpty ? nil : tenantId,
+                            accessToken: jwt
+                        )
+                        
+                    } catch {
+                        
+                        await Courier.shared.signOut()
+                        
+                    }
                     
                 }
                 
@@ -79,26 +87,36 @@ class AuthViewController: UIViewController {
             
             if let userId = Courier.shared.userId {
                 
-                self.authButton.isEnabled = false
-                self.authLabel.text = "Refreshing JWT..."
-                
-                // Remove the existing user
-                await Courier.shared.signOut()
-                
-                // Get the JWT
-                let jwt = try await ExampleServer().generateJwt(
-                    authKey: Env.COURIER_AUTH_KEY,
-                    userId: userId
-                )
-                
-                // Sign in with JWT
-                await Courier.shared.signIn(
-                    userId: userId, 
-                    tenantId: Courier.shared.tenantId,
-                    accessToken: jwt
-                )
-                
-                self.refresh(userId)
+                do {
+                    
+                    self.authButton.isEnabled = false
+                    self.authLabel.text = "Refreshing JWT..."
+                    
+                    // Remove the existing user
+                    await Courier.shared.signOut()
+                    
+                    // Get the JWT
+                    let jwt = try await ExampleServer().generateJwt(
+                        authKey: Env.COURIER_AUTH_KEY,
+                        userId: userId
+                    )
+                    
+                    // Sign in with JWT
+                    await Courier.shared.signIn(
+                        userId: userId,
+                        tenantId: Courier.shared.tenantId,
+                        accessToken: jwt
+                    )
+                    
+                    self.refresh(userId)
+                    
+                } catch {
+                    
+                    print(error.localizedDescription)
+                    
+                    self.refresh(nil)
+                    
+                }
                 
             }
             

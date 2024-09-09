@@ -161,7 +161,9 @@ internal actor InboxModule {
         self.socket?.disconnect()
         
         // Create the socket
-        self.socket = InboxSocket(options: client.options)
+        self.socket = InboxSocketManager.getSocketInstance(
+            options: client.options
+        )
         
         // Listen to the events
         self.socket?.receivedMessage = { message in
