@@ -7,6 +7,28 @@
 
 import Foundation
 
+// MARK: Inbox Socket Singleton
+
+internal class InboxSocketManager {
+
+    private static var socketInstance: InboxSocket?
+
+    static func getSocketInstance(options: CourierClient.Options) -> InboxSocket {
+        if socketInstance == nil {
+            socketInstance = InboxSocket(options: options)
+        }
+        return socketInstance!
+    }
+
+    static func closeSocket() {
+        socketInstance?.disconnect()
+        socketInstance = nil
+    }
+    
+}
+
+// MARK: Inbox Socket
+
 public class InboxSocket: CourierSocket {
     
     private let options: CourierClient.Options
