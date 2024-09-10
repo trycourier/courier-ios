@@ -5,21 +5,32 @@
 //  Created by https://github.com/mikemilla on 8/31/22.
 //
 
-public enum CourierAgent {
+import Foundation
+
+@objc public class CourierAgent: NSObject {
     
-    case nativeIOS(_ version: String)
-    case reactNativeIOS(_ version: String)
-    case flutterIOS(_ version: String)
+    private var agentType: String
+    private var version: String
     
-    var value: String {
-        switch self {
-        case .nativeIOS(let version):
-            return "courier-ios/\(version)"
-        case .reactNativeIOS(let version):
-            return "courier-react-native-ios/\(version)"
-        case .flutterIOS(let version):
-            return "courier-flutter-ios/\(version)"
-        }
+    private init(agentType: String, version: String) {
+        self.agentType = agentType
+        self.version = version
+    }
+    
+    @objc public static func nativeIOS(_ version: String) -> CourierAgent {
+        return CourierAgent(agentType: "courier-ios", version: version)
+    }
+    
+    @objc public static func reactNativeIOS(_ version: String) -> CourierAgent {
+        return CourierAgent(agentType: "courier-react-native-ios", version: version)
+    }
+    
+    @objc public static func flutterIOS(_ version: String) -> CourierAgent {
+        return CourierAgent(agentType: "courier-flutter-ios", version: version)
+    }
+    
+    public var value: String {
+        return "\(agentType)/\(version)"
     }
     
 }
