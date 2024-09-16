@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by https://github.com/mikemilla on 7/8/22.
 //
@@ -268,7 +268,7 @@ public extension [AnyHashable : Any] {
     
     func trackMessage(event: CourierTrackingEvent) async {
         
-        guard let trackingUrl = ["trackingUrl"] as? String else {
+        guard let trackingUrl = self["trackingUrl"] as? String else {
             return
         }
         
@@ -291,7 +291,7 @@ public extension NSDictionary {
     
     @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping (Error?) -> Void) {
         
-        guard let trackingUrl = ["trackingUrl"] as? String else {
+        guard let map = self as? [AnyHashable: String], let trackingUrl = map["trackingUrl"] else {
             completion(nil)
             return
         }

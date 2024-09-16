@@ -45,4 +45,37 @@ class TrackingClientTests: XCTestCase {
 
     }
     
+    func testTrackMessage() async throws {
+        
+        let message: [AnyHashable: Any] = [
+            "trackingUrl": trackingUrl
+        ]
+        
+        await message.trackMessage(
+            event: .delivered
+        )
+
+    }
+    
+    func testTrackMessageWithDictionary() async throws {
+        
+        var hold = true
+        
+        let message: NSDictionary = [
+            "trackingUrl": trackingUrl
+        ]
+        
+        message.trackMessage(event: .delivered) { error in
+            if let error = error {
+                print("Failed to track the message: \(error.localizedDescription)")
+            }
+            hold = false
+        }
+        
+        while hold {
+            // Empty
+        }
+
+    }
+    
 }
