@@ -14,3 +14,4 @@ Example/Example/GoogleService-Info.plist
 Env.swift
 /Pod-Example/Pods
 /.swiftpm
+Example/build/
