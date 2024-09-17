@@ -333,7 +333,7 @@ Task {
     // Make sure your user is signed into Courier
     // This will take the tokens you are wanting to sync above, and save them to this user id
     // Put this where you normally manage your user's state
-    try await Courier.shared.signIn(
+    await Courier.shared.signIn(
         userId: "example_user_id",
         accessToken: "...",
     )
