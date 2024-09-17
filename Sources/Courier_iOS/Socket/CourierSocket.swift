@@ -33,27 +33,26 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     
     public func connect() async throws {
         
-        // Disconnect if already connected
+        // Ensure any previous connection is terminated
         disconnect()
         
-        // Validate URL
         guard let url = URL(string: self.url) else {
             throw URLError(.badURL)
         }
         
-        // Connect
-        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<Void, Error>) in
+        return try await withCheckedThrowingContinuation { continuation in
             
-            self.onOpen = {
-                continuation.resume()
-            }
-            
+            // Initialize and start the WebSocket task
             self.webSocketTask = urlSession?.webSocketTask(with: url)
             self.webSocketTask?.resume()
             
+            // Register receiver
             self.receiveData()
             
-        })
+            // Continue
+            continuation.resume()
+            
+        }
         
     }
     
