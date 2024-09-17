@@ -291,7 +291,7 @@ public extension NSDictionary {
     
     @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping (Error?) -> Void) {
         
-        guard let map = self as? [AnyHashable: String], let trackingUrl = map["trackingUrl"] else {
+        guard let trackingUrl = self["trackingUrl"] as? String else {
             completion(nil)
             return
         }
