@@ -173,6 +173,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     private func setup() {
+        
         // Called when the auth state changes
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
             if (userId != nil) {
@@ -202,6 +203,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         
         // Init the listener
         makeListener()
+        
     }
     
     private func refreshCourierBarIfNeeded() {
@@ -229,6 +231,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     private func addContentStack(content: [UIView], footer: UIView) {
+        
         addSubview(contentStack)
         
         NSLayoutConstraint.activate([
@@ -238,20 +241,29 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             contentStack.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .green
+        contentStack.addArrangedSubview(container)
+        
         for view in content {
-            contentStack.addArrangedSubview(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            container.addSubview(view)
+            NSLayoutConstraint.activate([
+                view.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
+                view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
+                view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
+                view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
+            ])
         }
         
         // Add the footer to the stack view
-       contentStack.addArrangedSubview(footer)
+        contentStack.addArrangedSubview(footer)
         
         // Make sure the footer does not stretch
         footer.translatesAutoresizingMaskIntoConstraints = false
         footer.setContentHuggingPriority(.defaultHigh, for: .vertical)
         footer.setContentCompressionResistancePriority(.required, for: .vertical)
-        
-        // TODO: Add the content array, stacked on top of each other, into a single UIView that will fill the height
-        // Then with the footer, make that aligned to the bottom of the stack, but do not resize it's height to fill. That should be the height of the footer itself
         
     }
     
@@ -265,16 +277,16 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         ])
     }
     
-    private func addScrollView() {
-        addSubview(scrollView)
-        
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
+//    private func addScrollView() {
+//        addSubview(scrollView)
+//        
+//        NSLayoutConstraint.activate([
+//            scrollView.topAnchor.constraint(equalTo: topAnchor),
+//            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+//        ])
+//    }
     
 //    private func addTableView() {
 //        addSubview(tableView)
