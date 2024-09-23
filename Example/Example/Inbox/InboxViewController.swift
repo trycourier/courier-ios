@@ -48,7 +48,6 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        
     }
     
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
@@ -65,7 +64,6 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.isScrollingFromSegmentedControl = false
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -84,6 +82,18 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.bounds.size
+    }
+    
+    // Disable user-initiated scroll
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if !isScrollingFromSegmentedControl {
+            scrollView.isScrollEnabled = false
+        }
+    }
+    
+    // Reset scroll enabled after user tries to scroll
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollView.isScrollEnabled = true
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -118,5 +128,4 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
         }
         
     }
-    
 }

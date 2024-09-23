@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
 internal class InboxListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Theme
@@ -335,6 +334,27 @@ internal class InboxListView: UIView, UITableViewDelegate, UITableViewDataSource
             // Deselect the row
             tableView.deselectRow(at: indexPath, animated: true)
         }
+    }
+    
+    // This method enables swipe actions for table view cells
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Define the action
+        let action = UIContextualAction(style: .normal, title: "Swipe") { (action, view, completionHandler) in
+            // Handle the swipe action
+            print("Swiped on message at index: \(indexPath.row)")
+            completionHandler(true)  // Mark the action as complete
+        }
+        
+        // Customize the action appearance (optional)
+        action.backgroundColor = .systemBlue
+        
+        // Create a configuration object with the action
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: [action])
+        
+        // Disable full swipe (so the action doesn't delete the cell)
+        swipeConfiguration.performsFirstActionWithFullSwipe = false
+        
+        return swipeConfiguration
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
