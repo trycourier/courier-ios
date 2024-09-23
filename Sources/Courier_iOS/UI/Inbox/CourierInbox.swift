@@ -519,6 +519,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         courierBar.setTheme(theme)
         
         reloadCells()
+        refreshCourierBarIfNeeded()
     }
     
     private func reloadCells() {
