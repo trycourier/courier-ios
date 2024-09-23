@@ -232,18 +232,20 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private func addContentStack(content: [UIView], footer: UIView) {
         
-        // Create a container view to hold the content
-        let container = UIView()
-        container.translatesAutoresizingMaskIntoConstraints = false
-        container.backgroundColor = .green // For visibility
-        addSubview(container)
-        
         // Create a footer container view to hold the footer (this allows you to hide the footer easily)
         let footerContainer = UIView()
         footerContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(footerContainer)
         
+        // Layout constraints for the footer container (at the bottom of the view)
+        NSLayoutConstraint.activate([
+            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
         // Add the footer inside the footer container
+        footer.translatesAutoresizingMaskIntoConstraints = false
         footerContainer.addSubview(footer)
         
         // Constraints for the footer (it will resize based on its intrinsic content size)
@@ -254,33 +256,57 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             footer.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor)
         ])
         
-        // Layout constraints for the footer container (at the bottom of the view)
-        NSLayoutConstraint.activate([
-            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        // Create a container view to hold the content
+        let contentContainer = UIView()
+        contentContainer.translatesAutoresizingMaskIntoConstraints = false
+        contentContainer.backgroundColor = .green // For visibility
+        addSubview(contentContainer)
         
         // Layout constraints for the container (fills the view, leaving space for the footer)
         NSLayoutConstraint.activate([
-            container.topAnchor.constraint(equalTo: topAnchor),
-            container.leadingAnchor.constraint(equalTo: leadingAnchor),
-            container.trailingAnchor.constraint(equalTo: trailingAnchor),
-            container.bottomAnchor.constraint(equalTo: footerContainer.topAnchor)
+            contentContainer.topAnchor.constraint(equalTo: topAnchor),
+            contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentContainer.bottomAnchor.constraint(equalTo: footerContainer.topAnchor)
         ])
         
-        // Add content views to the container with padding
-        for view in content {
-            view.translatesAutoresizingMaskIntoConstraints = false
-            container.addSubview(view)
-            
-            NSLayoutConstraint.activate([
-                view.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
-                view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
-                view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
-                view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
-            ])
-        }
+//        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
+//        let footerContainer = UIView()
+//        footerContainer.translatesAutoresizingMaskIntoConstraints = false
+//        container.addSubview(footerContainer)
+//        
+//        // Layout constraints for the footer container (at the bottom of the view)
+//        NSLayoutConstraint.activate([
+//            footerContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+//            footerContainer.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+//            footerContainer.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+//        ])
+        
+//        let test = UIView()
+//        test.translatesAutoresizingMaskIntoConstraints = false
+//        test.backgroundColor = .purple
+//        
+//        container.addSubview(test)
+//        
+//        NSLayoutConstraint.activate([
+//            test.topAnchor.constraint(equalTo: footerContainer.topAnchor),
+//            test.leadingAnchor.constraint(equalTo: footerContainer.leadingAnchor),
+//            test.trailingAnchor.constraint(equalTo: footerContainer.trailingAnchor),
+//            test.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor)
+//        ])
+        
+//        // Add content views to the container with padding
+//        for view in content {
+//            view.translatesAutoresizingMaskIntoConstraints = false
+//            container.addSubview(view)
+//            
+//            NSLayoutConstraint.activate([
+//                view.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
+//                view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
+//                view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
+//                view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
+//            ])
+//        }
         
         // You can hide or show the footerContainer like this:
         // footerContainer.isHidden = true
