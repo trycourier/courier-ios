@@ -50,6 +50,15 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.isPagingEnabled = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.backgroundColor = .red
+        return scrollView
+    }()
+    
     private lazy var courierBar: CourierBar = {
         let bar = CourierBar()
         bar.translatesAutoresizingMaskIntoConstraints = false
@@ -167,7 +176,8 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         state = .loading
 
         // Add the views
-        addTableView()
+//        addTableView()
+        addScrollView()
         addLoadingIndicator()
         addInfoView()
         addCourierBar()
@@ -210,6 +220,17 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
             courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+    
+    private func addScrollView() {
+        addSubview(scrollView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
     
