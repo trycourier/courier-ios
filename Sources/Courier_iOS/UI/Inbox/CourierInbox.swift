@@ -173,7 +173,7 @@ open class CourierInbox: UIView {
         page1.translatesAutoresizingMaskIntoConstraints = false
 
         let page2 = UIView()
-        page2.backgroundColor = .green // Example color for page 2
+        page2.backgroundColor = .orange // Example color for page 2
         page2.translatesAutoresizingMaskIntoConstraints = false
 
         scrollView.addSubview(page1)
