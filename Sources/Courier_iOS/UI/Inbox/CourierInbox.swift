@@ -254,16 +254,9 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             footer.topAnchor.constraint(equalTo: footerContainer.topAnchor),
             footer.leadingAnchor.constraint(equalTo: footerContainer.leadingAnchor),
             footer.trailingAnchor.constraint(equalTo: footerContainer.trailingAnchor),
-            footer.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor)
+            footer.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor),
+            footer.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight)
         ])
-        
-        // Explicit height for the footer if it doesn't have an intrinsic height
-        // If your footer doesn't have an intrinsic height (like a plain UIView), set a height constraint
-        if footer.intrinsicContentSize.height == UIView.noIntrinsicMetric {
-            NSLayoutConstraint.activate([
-                footer.heightAnchor.constraint(equalToConstant: 60) // Example height, adjust as needed
-            ])
-        }
         
         // Create a container view to hold the content
         let contentContainer = UIView()
