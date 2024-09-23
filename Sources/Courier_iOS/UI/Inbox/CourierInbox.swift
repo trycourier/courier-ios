@@ -186,6 +186,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         state = .loading
 
         // Add the views
+        addCourierBar()
 //        addTableView()
 //        addScrollView()
         addContentStack(
@@ -194,7 +195,6 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         
         addLoadingIndicator()
         addInfoView()
-        addCourierBar()
         
         // Refreshes theme
         traitCollectionDidChange(nil)
