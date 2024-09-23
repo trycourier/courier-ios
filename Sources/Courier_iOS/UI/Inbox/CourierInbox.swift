@@ -232,29 +232,29 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private func addContentStack(content: [UIView], footer: UIView) {
         
-        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
-        let footerContainer = UIView()
-        footerContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(footerContainer)
-        
-        // Layout constraints for the footer container (at the bottom of the view)
-        NSLayoutConstraint.activate([
-            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-        
-        // Add the footer inside the footer container
-        footer.translatesAutoresizingMaskIntoConstraints = false
-        footerContainer.addSubview(footer)
-        
-        // Constraints for the footer (it will resize based on its intrinsic content size)
-        NSLayoutConstraint.activate([
-            footer.topAnchor.constraint(equalTo: footerContainer.topAnchor),
-            footer.leadingAnchor.constraint(equalTo: footerContainer.leadingAnchor),
-            footer.trailingAnchor.constraint(equalTo: footerContainer.trailingAnchor),
-            footer.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor)
-        ])
+//        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
+//        let footerContainer = UIView()
+//        footerContainer.translatesAutoresizingMaskIntoConstraints = false
+//        addSubview(footerContainer)
+//        
+//        // Layout constraints for the footer container (at the bottom of the view)
+//        NSLayoutConstraint.activate([
+//            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+//            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+//        ])
+//        
+//        // Add the footer inside the footer container
+//        footer.translatesAutoresizingMaskIntoConstraints = false
+//        footerContainer.addSubview(footer)
+//        
+//        // Constraints for the footer (it will resize based on its intrinsic content size)
+//        NSLayoutConstraint.activate([
+//            footer.topAnchor.constraint(equalTo: footerContainer.topAnchor),
+//            footer.leadingAnchor.constraint(equalTo: footerContainer.leadingAnchor),
+//            footer.trailingAnchor.constraint(equalTo: footerContainer.trailingAnchor),
+//            footer.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor)
+//        ])
         
         // Create a container view to hold the content
         let contentContainer = UIView()
@@ -267,7 +267,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             contentContainer.topAnchor.constraint(equalTo: topAnchor),
             contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentContainer.bottomAnchor.constraint(equalTo: footerContainer.topAnchor)
+            contentContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
     }
