@@ -50,7 +50,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
-    private lazy var containerView: UIView = {
+    private lazy var contentView: UIView = {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
         container.backgroundColor = .blue
@@ -92,7 +92,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Constraints
     
-    private var infoViewY: NSLayoutConstraint? = nil
+//    private var infoViewY: NSLayoutConstraint? = nil
     private var contentViewBottom: NSLayoutConstraint? = nil
     
     // MARK: Authentication
@@ -187,14 +187,15 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
 
         // Add the views
         addCourierBar()
-//        addTableView()
-//        addScrollView()
-        addContentStack(
-            content: scrollView
+        
+        addContent(
+            content: scrollView,
+            loading: loadingIndicator,
+            info: infoView
         )
         
-        addLoadingIndicator()
-        addInfoView()
+//        addLoadingIndicator()
+//        addInfoView()
         
         // Refreshes theme
         traitCollectionDidChange(nil)
@@ -204,65 +205,88 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         
     }
     
-    private func refreshCourierBarIfNeeded() {
+    private func updateViewForCourierBar() {
+        
         if (!courierBar.isHidden) {
+            
             // Set the courier bar background color
             courierBar.setColors(with: superview?.backgroundColor)
             
-            // Add content inset
-//            tableView.verticalScrollIndicatorInsets.bottom = Theme.Bar.barHeight
-//            tableView.contentInset.bottom = Theme.Bar.barHeight
-            
-            // Update position
-//            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - Theme.Bar.barHeight)
-//            courierBar.layoutIfNeeded()
-            
             // Update infoView position
-            infoViewY?.constant = -(Theme.Bar.barHeight / 2)
-            infoView.layoutIfNeeded()
+//            infoViewY?.constant = -(Theme.Bar.barHeight / 2)
+//            infoView.layoutIfNeeded()
             
             contentViewBottom?.constant = -Theme.Bar.barHeight
-            containerView.layoutIfNeeded()
+            contentView.layoutIfNeeded()
             
         } else {
             
-            infoViewY?.constant = 0
-            infoView.layoutIfNeeded()
+//            infoViewY?.constant = 0
+//            infoView.layoutIfNeeded()
             
             contentViewBottom?.constant = 0
-            containerView.layoutIfNeeded()
+            contentView.layoutIfNeeded()
             
         }
+        
     }
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        refreshCourierBarIfNeeded()
+        updateViewForCourierBar()
     }
     
-    private func addContentStack(content: UIView) {
+    private func addContent(content: UIView, loading: UIView, info: UIView) {
         
-        // Create a container view to hold the content
-        addSubview(containerView)
+        // Add the container
+        addSubview(contentView)
         
-        contentViewBottom = containerView.bottomAnchor.constraint(
+        contentViewBottom = contentView.bottomAnchor.constraint(
             equalTo: bottomAnchor,
             constant: -Theme.Bar.barHeight
         )
         
-        // Layout constraints for the container (fills the view, leaving space for the footer)
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
             contentViewBottom!
+        ])
+        
+        // Loading
+        loading.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(loading)
+        
+        NSLayoutConstraint.activate([
+            loading.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            loading.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+        ])
+        
+        // Info
+        info.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(info)
+        
+        NSLayoutConstraint.activate([
+            info.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            info.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: (Theme.margin / 2)),
+            info.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -(Theme.margin / 2)),
+        ])
+        
+        // Content
+        content.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(content)
+        
+        NSLayoutConstraint.activate([
+            content.topAnchor.constraint(equalTo: contentView.topAnchor),
+            content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            content.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
         
     }
     
     private func addCourierBar() {
         addSubview(courierBar)
-        
         NSLayoutConstraint.activate([
             courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
             courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -292,26 +316,26 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
 //        ])
 //    }
     
-    private func addLoadingIndicator() {
-        addSubview(loadingIndicator)
-        
-        NSLayoutConstraint.activate([
-            loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-    }
-    
-    private func addInfoView() {
-        addSubview(infoView)
-        
-        infoViewY = infoView.centerYAnchor.constraint(equalTo: centerYAnchor)
-        
-        NSLayoutConstraint.activate([
-            infoViewY!,
-            infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: (Theme.margin / 2)),
-            infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(Theme.margin / 2)),
-        ])
-    }
+//    private func addLoadingIndicator() {
+//        addSubview(loadingIndicator)
+//        
+//        NSLayoutConstraint.activate([
+//            loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+//            loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
+//        ])
+//    }
+//    
+//    private func addInfoView() {
+//        addSubview(infoView)
+//        
+//        infoViewY = infoView.centerYAnchor.constraint(equalTo: centerYAnchor)
+//        
+//        NSLayoutConstraint.activate([
+//            infoViewY!,
+//            infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: (Theme.margin / 2)),
+//            infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(Theme.margin / 2)),
+//        ])
+//    }
     
     private func makeListener() {
         Task {
@@ -519,7 +543,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         courierBar.setTheme(theme)
         
         reloadCells()
-        refreshCourierBarIfNeeded()
+        updateViewForCourierBar()
     }
     
     private func reloadCells() {
