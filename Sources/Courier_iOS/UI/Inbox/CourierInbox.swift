@@ -194,7 +194,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         
         addLoadingIndicator()
         addInfoView()
-//        addCourierBar()
+        addCourierBar()
         
         // Refreshes theme
         traitCollectionDidChange(nil)
@@ -260,15 +260,15 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         
     }
     
-//    private func addCourierBar() {
-//        addSubview(courierBar)
-//        
-//        NSLayoutConstraint.activate([
-//            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
-//        ])
-//    }
+    private func addCourierBar() {
+        addSubview(courierBar)
+        
+        NSLayoutConstraint.activate([
+            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
+            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
+            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
     
 //    private func addScrollView() {
 //        addSubview(scrollView)
