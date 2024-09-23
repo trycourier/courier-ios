@@ -50,13 +50,11 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
-    private lazy var contentStack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 10
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.backgroundColor = .blue
-        return stack
+    private lazy var containerView: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .blue
+        return container
     }()
     
     private lazy var scrollView: UIScrollView = {
@@ -221,14 +219,18 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             
             // Update infoView position
             infoViewY?.constant = -(Theme.Bar.barHeight / 2)
-            contentViewBottom?.constant = Theme.Bar.barHeight
             infoView.layoutIfNeeded()
+            
+            contentViewBottom?.constant = -Theme.Bar.barHeight
+            containerView.layoutIfNeeded()
             
         } else {
             
             infoViewY?.constant = 0
-            contentViewBottom?.constant = 0
             infoView.layoutIfNeeded()
+            
+            contentViewBottom?.constant = 0
+            containerView.layoutIfNeeded()
             
         }
     }
@@ -241,21 +243,18 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     private func addContentStack(content: UIView) {
         
         // Create a container view to hold the content
-        let contentContainer = UIView()
-        contentContainer.translatesAutoresizingMaskIntoConstraints = false
-        contentContainer.backgroundColor = .green // For visibility
-        addSubview(contentContainer)
+        addSubview(containerView)
         
-        contentViewBottom = contentContainer.bottomAnchor.constraint(
+        contentViewBottom = containerView.bottomAnchor.constraint(
             equalTo: bottomAnchor,
-            constant: Theme.Bar.barHeight
+            constant: -Theme.Bar.barHeight
         )
         
         // Layout constraints for the container (fills the view, leaving space for the footer)
         NSLayoutConstraint.activate([
-            contentContainer.topAnchor.constraint(equalTo: topAnchor),
-            contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerView.topAnchor.constraint(equalTo: topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             contentViewBottom!
         ])
         
