@@ -50,6 +50,7 @@ open class CourierInbox: UIView {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
         scrollView.backgroundColor = .red
+        scrollView.isScrollEnabled = false // TODO
         return scrollView
     }()
     

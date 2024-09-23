@@ -336,6 +336,26 @@ internal class InboxListView: UIView, UITableViewDelegate, UITableViewDataSource
         }
     }
     
+    public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Define the action
+        let action = UIContextualAction(style: .normal, title: "Swipe") { (action, view, completionHandler) in
+            // Handle the swipe action
+            print("Swiped on message at index: \(indexPath.row)")
+            completionHandler(true)  // Mark the action as complete
+        }
+        
+        // Customize the action appearance (optional)
+        action.backgroundColor = .systemGreen
+        
+        // Create a configuration object with the action
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: [action])
+        
+        // Disable full swipe (so the action doesn't delete the cell)
+        swipeConfiguration.performsFirstActionWithFullSwipe = false
+        
+        return swipeConfiguration
+    }
+    
     // This method enables swipe actions for table view cells
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // Define the action
