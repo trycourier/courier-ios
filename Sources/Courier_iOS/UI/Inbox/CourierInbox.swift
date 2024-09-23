@@ -11,7 +11,7 @@ import UIKit
  A super simple way to implement a basic notification center into your app
  */
 @available(iOSApplicationExtension, unavailable)
-open class CourierInbox: UIView {
+open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     
     // MARK: Theme
     
@@ -49,8 +49,8 @@ open class CourierInbox: UIView {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
+        scrollView.delegate = self // Add this line
         scrollView.backgroundColor = .red
-        scrollView.isScrollEnabled = false // TODO
         return scrollView
     }()
     
@@ -243,6 +243,18 @@ open class CourierInbox: UIView {
     private func setTheme(isDarkMode: Bool) {
         theme = isDarkMode ? darkTheme : lightTheme
         updateViewForCourierBar()
+    }
+    
+    // MARK: ScrollView Delegates
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let otherView = otherGestureRecognizer.view, otherView.isKind(of: UITableView.self) {
+            if let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
+                let velocity = panGestureRecognizer.velocity(in: self)
+                return abs(velocity.x) > abs(velocity.y)
+            }
+        }
+        return false
     }
     
     /**
