@@ -232,44 +232,58 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private func addContentStack(content: [UIView], footer: UIView) {
         
-        addSubview(contentStack)
-        
-        NSLayoutConstraint.activate([
-            contentStack.topAnchor.constraint(equalTo: topAnchor),
-            contentStack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            contentStack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentStack.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-        
+        // Create a container view to hold the content
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
-        container.backgroundColor = .green
-        contentStack.addArrangedSubview(container)
+        container.backgroundColor = .green // For visibility
+        addSubview(container)
         
-        // Adjust the container's priority to ensure it expands as needed
-        container.setContentHuggingPriority(.defaultLow, for: .vertical)
-        container.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
+        let footerContainer = UIView()
+        footerContainer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(footerContainer)
         
+        // Add the footer inside the footer container
+        footerContainer.addSubview(footer)
+        
+        // Constraints for the footer (it will resize based on its intrinsic content size)
+        NSLayoutConstraint.activate([
+            footer.topAnchor.constraint(equalTo: footerContainer.topAnchor),
+            footer.leadingAnchor.constraint(equalTo: footerContainer.leadingAnchor),
+            footer.trailingAnchor.constraint(equalTo: footerContainer.trailingAnchor),
+            footer.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor)
+        ])
+        
+        // Layout constraints for the footer container (at the bottom of the view)
+        NSLayoutConstraint.activate([
+            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        // Layout constraints for the container (fills the view, leaving space for the footer)
+        NSLayoutConstraint.activate([
+            container.topAnchor.constraint(equalTo: topAnchor),
+            container.leadingAnchor.constraint(equalTo: leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: trailingAnchor),
+            container.bottomAnchor.constraint(equalTo: footerContainer.topAnchor)
+        ])
+        
+        // Add content views to the container with padding
         for view in content {
             view.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview(view)
             
             NSLayoutConstraint.activate([
                 view.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
-                view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
                 view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
                 view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
+                view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
             ])
         }
         
-        // Add the footer to the stack view
-        contentStack.addArrangedSubview(footer)
-        
-        // Make sure the footer does not stretch
-        footer.translatesAutoresizingMaskIntoConstraints = false
-        footer.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        footer.setContentCompressionResistancePriority(.required, for: .vertical)
-        
+        // You can hide or show the footerContainer like this:
+        // footerContainer.isHidden = true
     }
     
 //    private func addCourierBar() {
