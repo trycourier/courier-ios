@@ -190,7 +190,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
 //        addTableView()
 //        addScrollView()
         addContentStack(
-            content: [scrollView],
+            content: scrollView,
             footer: courierBar
         )
         
@@ -230,19 +230,20 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         refreshCourierBarIfNeeded()
     }
     
-    private func addContentStack(content: [UIView], footer: UIView) {
+    private func addContentStack(content: UIView, footer: UIView) {
         
-//        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
-//        let footerContainer = UIView()
-//        footerContainer.translatesAutoresizingMaskIntoConstraints = false
-//        addSubview(footerContainer)
-//        
-//        // Layout constraints for the footer container (at the bottom of the view)
-//        NSLayoutConstraint.activate([
-//            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
-//        ])
+        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
+        let footerContainer = UIView()
+        footerContainer.translatesAutoresizingMaskIntoConstraints = false
+        footerContainer.backgroundColor = .purple
+        addSubview(footerContainer)
+        
+        // Layout constraints for the footer container (at the bottom of the view)
+        NSLayoutConstraint.activate([
+            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
 //        
 //        // Add the footer inside the footer container
 //        footer.translatesAutoresizingMaskIntoConstraints = false
@@ -267,7 +268,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             contentContainer.topAnchor.constraint(equalTo: topAnchor),
             contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            contentContainer.bottomAnchor.constraint(equalTo: footerContainer.topAnchor)
         ])
         
     }
