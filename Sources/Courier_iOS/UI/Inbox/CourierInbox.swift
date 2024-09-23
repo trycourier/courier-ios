@@ -270,46 +270,6 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             contentContainer.bottomAnchor.constraint(equalTo: footerContainer.topAnchor)
         ])
         
-//        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
-//        let footerContainer = UIView()
-//        footerContainer.translatesAutoresizingMaskIntoConstraints = false
-//        container.addSubview(footerContainer)
-//        
-//        // Layout constraints for the footer container (at the bottom of the view)
-//        NSLayoutConstraint.activate([
-//            footerContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-//            footerContainer.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-//            footerContainer.bottomAnchor.constraint(equalTo: container.bottomAnchor)
-//        ])
-        
-//        let test = UIView()
-//        test.translatesAutoresizingMaskIntoConstraints = false
-//        test.backgroundColor = .purple
-//        
-//        container.addSubview(test)
-//        
-//        NSLayoutConstraint.activate([
-//            test.topAnchor.constraint(equalTo: footerContainer.topAnchor),
-//            test.leadingAnchor.constraint(equalTo: footerContainer.leadingAnchor),
-//            test.trailingAnchor.constraint(equalTo: footerContainer.trailingAnchor),
-//            test.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor)
-//        ])
-        
-//        // Add content views to the container with padding
-//        for view in content {
-//            view.translatesAutoresizingMaskIntoConstraints = false
-//            container.addSubview(view)
-//            
-//            NSLayoutConstraint.activate([
-//                view.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
-//                view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
-//                view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
-//                view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
-//            ])
-//        }
-        
-        // You can hide or show the footerContainer like this:
-        // footerContainer.isHidden = true
     }
     
 //    private func addCourierBar() {
