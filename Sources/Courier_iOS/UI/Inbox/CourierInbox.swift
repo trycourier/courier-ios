@@ -254,6 +254,8 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             contentViewBottom!
         ])
         
+        contentView.layoutIfNeeded()
+        
         // Content
         content.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(content)
@@ -265,6 +267,8 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             content.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
         
+        contentView.layoutIfNeeded()
+        
         // Info
         info.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(info)
@@ -275,6 +279,8 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             info.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -(Theme.margin / 2)),
         ])
         
+        contentView.layoutIfNeeded()
+        
         // Loading
         loading.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(loading)
@@ -283,6 +289,8 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             loading.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             loading.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
+        
+        contentView.layoutIfNeeded()
         
     }
     
