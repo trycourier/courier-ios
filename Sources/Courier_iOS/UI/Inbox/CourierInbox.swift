@@ -95,6 +95,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     // MARK: Constraints
     
     private var infoViewY: NSLayoutConstraint? = nil
+    private var contentViewBottom: NSLayoutConstraint? = nil
     
     // MARK: Authentication
     
@@ -190,8 +191,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
 //        addTableView()
 //        addScrollView()
         addContentStack(
-            content: scrollView,
-            footer: courierBar
+            content: scrollView
         )
         
         addLoadingIndicator()
@@ -212,16 +212,24 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             courierBar.setColors(with: superview?.backgroundColor)
             
             // Add content inset
-            tableView.verticalScrollIndicatorInsets.bottom = Theme.Bar.barHeight
-            tableView.contentInset.bottom = Theme.Bar.barHeight
+//            tableView.verticalScrollIndicatorInsets.bottom = Theme.Bar.barHeight
+//            tableView.contentInset.bottom = Theme.Bar.barHeight
             
             // Update position
-            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - Theme.Bar.barHeight)
-            courierBar.layoutIfNeeded()
+//            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - Theme.Bar.barHeight)
+//            courierBar.layoutIfNeeded()
             
             // Update infoView position
             infoViewY?.constant = -(Theme.Bar.barHeight / 2)
+            contentViewBottom?.constant = Theme.Bar.barHeight
             infoView.layoutIfNeeded()
+            
+        } else {
+            
+            infoViewY?.constant = 0
+            contentViewBottom?.constant = 0
+            infoView.layoutIfNeeded()
+            
         }
     }
     
@@ -230,33 +238,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         refreshCourierBarIfNeeded()
     }
     
-    private func addContentStack(content: UIView, footer: UIView) {
-        
-        // Create a footer container view to hold the footer (this allows you to hide the footer easily)
-        let footerContainer = UIView()
-        footerContainer.translatesAutoresizingMaskIntoConstraints = false
-        footerContainer.backgroundColor = .purple
-        addSubview(footerContainer)
-        
-        // Layout constraints for the footer container (at the bottom of the view)
-        NSLayoutConstraint.activate([
-            footerContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            footerContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            footerContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
-        
-        // Add the footer inside the footer container
-        footer.translatesAutoresizingMaskIntoConstraints = false
-        footerContainer.addSubview(footer)
-        
-        // Constraints for the footer (it will resize based on its intrinsic content size)
-        NSLayoutConstraint.activate([
-            footer.topAnchor.constraint(equalTo: footerContainer.topAnchor),
-            footer.leadingAnchor.constraint(equalTo: footerContainer.leadingAnchor),
-            footer.trailingAnchor.constraint(equalTo: footerContainer.trailingAnchor),
-            footer.bottomAnchor.constraint(equalTo: footerContainer.bottomAnchor),
-            footer.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight)
-        ])
+    private func addContentStack(content: UIView) {
         
         // Create a container view to hold the content
         let contentContainer = UIView()
@@ -264,12 +246,17 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         contentContainer.backgroundColor = .green // For visibility
         addSubview(contentContainer)
         
+        contentViewBottom = contentContainer.bottomAnchor.constraint(
+            equalTo: bottomAnchor,
+            constant: Theme.Bar.barHeight
+        )
+        
         // Layout constraints for the container (fills the view, leaving space for the footer)
         NSLayoutConstraint.activate([
             contentContainer.topAnchor.constraint(equalTo: topAnchor),
             contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentContainer.bottomAnchor.constraint(equalTo: footerContainer.topAnchor)
+            contentViewBottom!
         ])
         
     }
