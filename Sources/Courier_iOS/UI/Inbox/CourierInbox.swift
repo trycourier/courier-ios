@@ -50,11 +50,14 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
-//    private lazy var contentStack: UIStackView = {
-//        let stack = UIStackView()
-//        bar.translatesAutoresizingMaskIntoConstraints = false
-//        return stack
-//    }()
+    private lazy var contentStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.backgroundColor = .blue
+        return stack
+    }()
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -184,7 +187,12 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
 
         // Add the views
 //        addTableView()
-        addScrollView()
+//        addScrollView()
+        addContentStack(
+            content: [scrollView],
+            footer: courierBar
+        )
+        
         addLoadingIndicator()
         addInfoView()
         addCourierBar()
@@ -218,6 +226,33 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     open override func layoutSubviews() {
         super.layoutSubviews()
         refreshCourierBarIfNeeded()
+    }
+    
+    private func addContentStack(content: [UIView], footer: UIView) {
+        addSubview(contentStack)
+        
+        NSLayoutConstraint.activate([
+            contentStack.topAnchor.constraint(equalTo: topAnchor),
+            contentStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contentStack.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentStack.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
+        for view in content {
+            contentStack.addArrangedSubview(view)
+        }
+        
+        // Add the footer to the stack view
+       contentStack.addArrangedSubview(footer)
+        
+        // Make sure the footer does not stretch
+        footer.translatesAutoresizingMaskIntoConstraints = false
+        footer.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        footer.setContentCompressionResistancePriority(.required, for: .vertical)
+        
+        // TODO: Add the content array, stacked on top of each other, into a single UIView that will fill the height
+        // Then with the footer, make that aligned to the bottom of the stack, but do not resize it's height to fill. That should be the height of the footer itself
+        
     }
     
     private func addCourierBar() {
