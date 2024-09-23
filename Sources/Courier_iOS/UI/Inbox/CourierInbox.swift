@@ -50,11 +50,18 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
+//    private lazy var contentStack: UIStackView = {
+//        let stack = UIStackView()
+//        bar.translatesAutoresizingMaskIntoConstraints = false
+//        return stack
+//    }()
+    
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.backgroundColor = .red
         return scrollView
     }()
@@ -234,16 +241,16 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         ])
     }
     
-    private func addTableView() {
-        addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
+//    private func addTableView() {
+//        addSubview(tableView)
+//        
+//        NSLayoutConstraint.activate([
+//            tableView.topAnchor.constraint(equalTo: topAnchor),
+//            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+//        ])
+//    }
     
     private func addLoadingIndicator() {
         addSubview(loadingIndicator)
