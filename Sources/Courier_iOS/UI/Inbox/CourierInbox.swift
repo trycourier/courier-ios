@@ -167,20 +167,22 @@ open class CourierInbox: UIView {
         
     }
     
+    private func makeInboxList() -> InboxListView {
+        let list = InboxListView()
+        list.translatesAutoresizingMaskIntoConstraints = false
+        return list
+    }
+    
     private func addPagesToScrollView() {
-        let page1 = UIView()
-        page1.backgroundColor = .blue // Example color for page 1
-        page1.translatesAutoresizingMaskIntoConstraints = false
-
-        let page2 = UIView()
-        page2.backgroundColor = .orange // Example color for page 2
-        page2.translatesAutoresizingMaskIntoConstraints = false
+        
+        let page1 = makeInboxList()
+        let page2 = makeInboxList()
 
         scrollView.addSubview(page1)
         scrollView.addSubview(page2)
 
         NSLayoutConstraint.activate([
-            // Page 1 constraints
+            
             page1.topAnchor.constraint(equalTo: scrollView.topAnchor),
             page1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             page1.widthAnchor.constraint(equalTo: widthAnchor),
