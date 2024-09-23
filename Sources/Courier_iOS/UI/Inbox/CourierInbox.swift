@@ -152,7 +152,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     private func addScrollView() {
         
         // Add the container
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
         
         scrollViewBottom = scrollView.bottomAnchor.constraint(
@@ -247,11 +246,28 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     
     // MARK: ScrollView Delegates
     
+    private func getCurrentPageIndex() -> Int {
+        let pageWidth = scrollView.frame.size.width
+        let fractionalPageIndex = scrollView.contentOffset.x / pageWidth
+        let pageIndex = Int(fractionalPageIndex.rounded())
+        return pageIndex
+    }
+    
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let otherView = otherGestureRecognizer.view, otherView.isKind(of: UITableView.self) {
             if let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
                 let velocity = panGestureRecognizer.velocity(in: self)
-                return abs(velocity.x) > abs(velocity.y)
+                
+                // Check which page is currently visible by inspecting the scrollView content offset
+                let currentPage = getCurrentPageIndex()
+
+                // If page1 is visible, prioritize left-to-right swipe (positive velocity.x)
+                if currentPage == 0 {
+                    return velocity.x > 0 && abs(velocity.x) > abs(velocity.y)
+                } else if currentPage == 1 {
+                    return velocity.x < 0 && abs(velocity.x) > abs(velocity.y)
+                }
+                
             }
         }
         return false
