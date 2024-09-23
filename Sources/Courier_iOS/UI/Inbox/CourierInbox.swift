@@ -239,6 +239,7 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
     private func addContent(content: UIView, loading: UIView, info: UIView) {
         
         // Add the container
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentView)
         
         contentViewBottom = contentView.bottomAnchor.constraint(
@@ -253,13 +254,15 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             contentViewBottom!
         ])
         
-        // Loading
-        loading.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(loading)
+        // Content
+        content.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(content)
         
         NSLayoutConstraint.activate([
-            loading.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            loading.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            content.topAnchor.constraint(equalTo: contentView.topAnchor),
+            content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            content.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
         
         // Info
@@ -272,15 +275,13 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
             info.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -(Theme.margin / 2)),
         ])
         
-        // Content
-        content.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(content)
+        // Loading
+        loading.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(loading)
         
         NSLayoutConstraint.activate([
-            content.topAnchor.constraint(equalTo: contentView.topAnchor),
-            content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            content.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            content.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            loading.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            loading.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
         
     }
