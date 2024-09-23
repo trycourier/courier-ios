@@ -256,16 +256,16 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let otherView = otherGestureRecognizer.view, otherView.isKind(of: UITableView.self) {
             if let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
+                
                 let velocity = panGestureRecognizer.velocity(in: self)
                 
-                // Check which page is currently visible by inspecting the scrollView content offset
                 let currentPage = getCurrentPageIndex()
+                let minimumVelocity: CGFloat = 100.0
 
-                // If page1 is visible, prioritize left-to-right swipe (positive velocity.x)
                 if currentPage == 0 {
-                    return velocity.x > 0 && abs(velocity.x) > abs(velocity.y)
+                    return velocity.x > minimumVelocity && velocity.x > (0.5 * abs(velocity.y))
                 } else if currentPage == 1 {
-                    return velocity.x < 0 && abs(velocity.x) > abs(velocity.y)
+                    return velocity.x < -minimumVelocity && abs(velocity.x) > (0.5 * abs(velocity.y))
                 }
                 
             }
