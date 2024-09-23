@@ -42,13 +42,6 @@ open class CourierInbox: UIView {
         return courierBar
     }()
     
-    private lazy var contentView: UIView = {
-        let container = UIView()
-        container.translatesAutoresizingMaskIntoConstraints = false
-        container.backgroundColor = .blue
-        return container
-    }()
-    
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isPagingEnabled = true
@@ -61,7 +54,7 @@ open class CourierInbox: UIView {
     
     // MARK: Constraints
     
-    private var contentViewBottom: NSLayoutConstraint? = nil
+    private var scrollViewBottom: NSLayoutConstraint? = nil
     
     // MARK: Authentication
     
@@ -119,9 +112,8 @@ open class CourierInbox: UIView {
 
         // Add the views
         addCourierBar()
-        addContent(
-            content: scrollView
-        )
+        addScrollView()
+        addPagesToScrollView()
         
         // Refreshes theme
         traitCollectionDidChange(nil)
@@ -138,13 +130,13 @@ open class CourierInbox: UIView {
             // Set the courier bar background color
             courierBar.setColors(with: superview?.backgroundColor)
             
-            contentViewBottom?.constant = -Theme.Bar.barHeight
-            contentView.layoutIfNeeded()
+            scrollViewBottom?.constant = -Theme.Bar.barHeight
+            scrollView.layoutIfNeeded()
             
         } else {
             
-            contentViewBottom?.constant = 0
-            contentView.layoutIfNeeded()
+            scrollViewBottom?.constant = 0
+            scrollView.layoutIfNeeded()
             
         }
         
@@ -155,24 +147,54 @@ open class CourierInbox: UIView {
         updateViewForCourierBar()
     }
     
-    private func addContent(content: UIView) {
+    private func addScrollView() {
         
         // Add the container
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(contentView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(scrollView)
         
-        contentViewBottom = contentView.bottomAnchor.constraint(
+        scrollViewBottom = scrollView.bottomAnchor.constraint(
             equalTo: bottomAnchor,
             constant: -Theme.Bar.barHeight
         )
         
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentViewBottom!
+            scrollView.topAnchor.constraint(equalTo: topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scrollViewBottom!
         ])
         
+    }
+    
+    private func addPagesToScrollView() {
+        let page1 = UIView()
+        page1.backgroundColor = .blue // Example color for page 1
+        page1.translatesAutoresizingMaskIntoConstraints = false
+
+        let page2 = UIView()
+        page2.backgroundColor = .green // Example color for page 2
+        page2.translatesAutoresizingMaskIntoConstraints = false
+
+        scrollView.addSubview(page1)
+        scrollView.addSubview(page2)
+
+        NSLayoutConstraint.activate([
+            // Page 1 constraints
+            page1.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            page1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            page1.widthAnchor.constraint(equalTo: widthAnchor),
+            page1.heightAnchor.constraint(equalTo: heightAnchor),
+
+            // Page 2 constraints
+            page2.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            page2.leadingAnchor.constraint(equalTo: page1.trailingAnchor),
+            page2.widthAnchor.constraint(equalTo: widthAnchor),
+            page2.heightAnchor.constraint(equalTo: heightAnchor),
+            
+            // ScrollView content size to fit both pages
+            page2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+        ])
     }
     
     private func addCourierBar() {
