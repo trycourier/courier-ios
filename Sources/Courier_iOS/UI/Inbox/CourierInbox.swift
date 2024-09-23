@@ -246,9 +246,14 @@ open class CourierInbox: UIView, UITableViewDelegate, UITableViewDataSource {
         container.backgroundColor = .green
         contentStack.addArrangedSubview(container)
         
+        // Adjust the container's priority to ensure it expands as needed
+        container.setContentHuggingPriority(.defaultLow, for: .vertical)
+        container.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        
         for view in content {
             view.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview(view)
+            
             NSLayoutConstraint.activate([
                 view.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
                 view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
