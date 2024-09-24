@@ -345,7 +345,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         Task {
             do {
-                try await Courier.shared.client?.inbox.read(messageId: message.messageId)
+                if (shouldRead) {
+                    try await Courier.shared.client?.inbox.read(messageId: message.messageId)
+                } else {
+                    try await Courier.shared.client?.inbox.unread(messageId: message.messageId)
+                }
             } catch {
                 Courier.shared.client?.log(error.localizedDescription)
                 shouldRead ? message.setUnread() : message.setRead()
@@ -365,12 +369,28 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionIcon = message.isRead ? "envelope.fill" : "envelope.open.fill" // Closed envelope for unread, open for read
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
-        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
+        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { (action, view, completionHandler) in
             
-            self?.toggleRead(
-                shouldRead: !message.isRead,
-                at: indexPath.row
-            )
+            if message.isRead {
+                print("Marked message at index \(indexPath.row) as unread")
+                message.markAsUnread()
+            } else {
+                print("Marked message at index \(indexPath.row) as read")
+                
+                message.setRead()
+                tableView.reloadRows(at: [indexPath], with: .none)
+                
+                Task {
+                    do {
+                        try await Courier.shared.client?.inbox.read(messageId: message.messageId)
+                    } catch {
+                        Courier.shared.client?.log("Error")
+                        message.setUnread()
+                        tableView.reloadRows(at: [indexPath], with: .none)
+                    }
+                }
+                
+            }
             
             completionHandler(true)
             
