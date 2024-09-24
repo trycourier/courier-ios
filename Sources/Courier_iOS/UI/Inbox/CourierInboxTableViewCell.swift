@@ -179,17 +179,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         setupButtons(theme, onActionClick)
         setTheme(theme, isRead: message.isRead)
         
-        switch (theme.unreadIndicatorStyle.indicator) {
-        case .line:
-            indicatorView.isHidden = message.isRead
-            dotView.isHidden = true
-            break
-        case .dot:
-            indicatorView.isHidden = true
-            dotView.isHidden = message.isRead
-            break
-        }
-        
         titleLabel.text = message.title
         timeLabel.text = message.time
         bodyLabel.text = message.subtitle
@@ -210,9 +199,13 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         switch (theme.unreadIndicatorStyle.indicator) {
         case .line:
             containerLeading?.constant = horizontal
+            indicatorView.isHidden = isRead
+            dotView.isHidden = true
             break
         case .dot:
             containerLeading?.constant = Theme.Inbox.indicatorDotSize * 2
+            indicatorView.isHidden = true
+            dotView.isHidden = isRead
             break
         }
 
