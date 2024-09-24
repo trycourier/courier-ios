@@ -60,8 +60,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
-//        scrollView.isScrollEnabled = false // TODO
-        scrollView.delegate = self // Add this line
+        scrollView.isScrollEnabled = false // TODO
+//        scrollView.delegate = self // Add this line
         scrollView.backgroundColor = .red
         return scrollView
     }()
