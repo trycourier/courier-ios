@@ -190,6 +190,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         guard let theme = self.theme, let onActionClick = self.onActionClick else {
             return
         }
+        reset()
         setupButtons(theme, onActionClick)
         setTheme(theme, isRead: isRead)
     }
