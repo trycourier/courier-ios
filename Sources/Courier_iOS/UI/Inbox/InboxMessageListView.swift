@@ -336,26 +336,26 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
     }
     
-    private func toggleRead(shouldRead: Bool, at index: Int) {
+    private func toggleRead(isRead: Bool, at index: Int) {
         
         // Toggle the new item instantly
         let message = inboxMessages[index]
-        shouldRead ? message.setRead() : message.setUnread()
-        
-//        let indexPath = IndexPath(row: index, section: 0)
-//        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+        isRead ? message.setUnread() : message.setRead()
+        let indexPath = IndexPath(row: index, section: 0)
+        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+        cell?.reloadCell(isRead: !isRead)
         
         Task {
             do {
-                if (shouldRead) {
-                    try await Courier.shared.client?.inbox.read(messageId: message.messageId)
-                } else {
+                if (isRead) {
                     try await Courier.shared.client?.inbox.unread(messageId: message.messageId)
+                } else {
+                    try await Courier.shared.client?.inbox.read(messageId: message.messageId)
                 }
             } catch {
                 Courier.shared.client?.log(error.localizedDescription)
-                shouldRead ? message.setUnread() : message.setRead()
-                tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                isRead ? message.setRead() : message.setUnread()
+                cell?.reloadCell(isRead: isRead)
             }
         }
         
@@ -372,7 +372,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
         let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
-            self?.toggleRead(shouldRead: !message.isRead, at: indexPath.row)
+            self?.toggleRead(isRead: message.isRead, at: indexPath.row)
             completionHandler(true)
         }
         

@@ -102,6 +102,8 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         return view
     }()
     
+    private var theme: CourierInboxTheme?
+    
     private var inboxMessage: InboxMessage?
     
     private var containerLeading: NSLayoutConstraint?
@@ -194,7 +196,15 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
+    func reloadCell(isRead: Bool) {
+        if let theme = self.theme {
+            setTheme(theme, isRead: isRead)
+        }
+    }
+    
     private func setTheme(_ theme: CourierInboxTheme, isRead: Bool) {
+        
+        self.theme = theme
         
         // Adjust the margin leading
         switch (theme.unreadIndicatorStyle.indicator) {
