@@ -341,7 +341,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         // Toggle the new item instantly
         let message = inboxMessages[index]
         shouldRead ? message.setRead() : message.setUnread()
-        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+        
+//        let indexPath = IndexPath(row: index, section: 0)
+//        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
         
         Task {
             do {
@@ -369,31 +371,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionIcon = message.isRead ? "envelope.fill" : "envelope.open.fill" // Closed envelope for unread, open for read
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
-        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { (action, view, completionHandler) in
-            
-            if message.isRead {
-                print("Marked message at index \(indexPath.row) as unread")
-                message.markAsUnread()
-            } else {
-                print("Marked message at index \(indexPath.row) as read")
-                
-                message.setRead()
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-                
-                Task {
-                    do {
-                        try await Courier.shared.client?.inbox.read(messageId: message.messageId)
-                    } catch {
-                        Courier.shared.client?.log("Error")
-                        message.setUnread()
-                        tableView.reloadRows(at: [indexPath], with: .automatic)
-                    }
-                }
-                
-            }
-            
+        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
+            self?.toggleRead(shouldRead: !message.isRead, at: indexPath.row)
             completionHandler(true)
-            
         }
         
         // Customize the appearance of the action
