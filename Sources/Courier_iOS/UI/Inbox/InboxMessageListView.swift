@@ -336,6 +336,28 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
     }
     
+    private func toggleRead(shouldRead: Bool, at index: Int) {
+        
+        Task {
+            
+            // Toggle the new item instantly
+            let message = inboxMessages[index]
+            shouldRead ? message.setRead() : message.setUnread()
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+            
+            // Perform call and update if it fails
+            do {
+                try await Courier.shared.client?.inbox.read(messageId: message.messageId)
+            } catch {
+                Courier.shared.client?.log(error.localizedDescription)
+                shouldRead ? message.setUnread() : message.setRead()
+                tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+            }
+            
+        }
+        
+    }
+    
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // Check the read status of the message at the current indexPath
@@ -346,31 +368,12 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionIcon = message.isRead ? "envelope.fill" : "envelope.open.fill" // Closed envelope for unread, open for read
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
-        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { (action, view, completionHandler) in
+        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
             
-            if message.isRead {
-                print("Marked message at index \(indexPath.row) as unread")
-                message.markAsUnread()
-            } else {
-                print("Marked message at index \(indexPath.row) as read")
-                
-                message.setRead()
-                tableView.reloadRows(at: [indexPath], with: .none)
-                
-                Task {
-                    do {
-                        try await Courier.shared.client?.inbox.read(messageId: message.messageId)
-                    } catch {
-                        Courier.shared.client?.log("Error")
-                        message.setUnread()
-                        tableView.reloadRows(at: [indexPath], with: .none)
-                    }
-                }
-                
-            }
-            
-            // Update the table view to reflect the new state
-            tableView.reloadRows(at: [indexPath], with: .none)
+            self?.toggleRead(
+                shouldRead: !message.isRead,
+                at: indexPath.row
+            )
             
             completionHandler(true)
             
