@@ -337,26 +337,44 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        // Check the read status of the message at the current indexPath
+        let message = inboxMessages[indexPath.row]
         
-        // Define the action
-        let action = UIContextualAction(style: .normal, title: "Swipe") { (action, view, completionHandler) in
-            // Handle the swipe action
-            print("Swiped on message at index: \(indexPath.row)")
-            completionHandler(true)  // Mark the action as complete
+        // Define the action dynamically based on whether the message is read or unread
+        let actionTitle = message.isRead ? "Unread" : "Read"
+        let actionIcon = message.isRead ? "envelope.fill" : "envelope.open.fill" // Closed envelope for unread, open for read
+        let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
+
+        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { (action, view, completionHandler) in
+            
+            if message.isRead {
+                print("Marked message at index \(indexPath.row) as unread")
+                self.inboxMessages[indexPath.row].markAsUnread()
+            } else {
+                print("Marked message at index \(indexPath.row) as read")
+                self.inboxMessages[indexPath.row].markAsRead()
+            }
+            
+            // Update the table view to reflect the new state
+//            tableView.reloadRows(at: [indexPath], with: .none)
+            
+            completionHandler(true)
+            
         }
         
-        // Customize the action appearance
-        action.backgroundColor = .systemGreen
+        // Customize the appearance of the action
+        toggleReadAction.backgroundColor = actionColor
         
-        // Set the icon image for the action
-        if let icon = UIImage(systemName: "star.fill") {
-            action.image = icon
+        // Set the icon image dynamically
+        if let icon = UIImage(systemName: actionIcon) {
+            toggleReadAction.image = icon
         }
         
         // Create a configuration object with the action
-        let swipeConfiguration = UISwipeActionsConfiguration(actions: [action])
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: [toggleReadAction])
         
-        // Disable full swipe (so the action doesn't delete the cell)
+        // Disable full swipe (so the action doesn't fully delete the cell)
         swipeConfiguration.performsFirstActionWithFullSwipe = false
         
         return swipeConfiguration
