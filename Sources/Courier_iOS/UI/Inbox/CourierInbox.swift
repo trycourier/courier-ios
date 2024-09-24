@@ -137,6 +137,13 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
             middle: scrollView,
             bottom: courierBar
         )
+        
+        // Add the pages
+        addPagesToScrollView([
+            makeInboxList(),
+            makeInboxList()
+        ])
+        
 //        addCourierBar()
 //        addScrollView()
 //        addPagesToScrollView()
@@ -166,22 +173,48 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         
     }
     
-    private func addScrollView() {
-        stackView.addArrangedSubview(scrollView)
+    private func makeInboxList() -> InboxListView {
+        let list = InboxListView()
+        list.translatesAutoresizingMaskIntoConstraints = false
+        return list
     }
     
-    private func addTabs() {
-        stackView.addArrangedSubview(tabs)
-    }
-    
-    private func addCourierBar() {
-        stackView.addArrangedSubview(courierBar)
+    private func addPagesToScrollView(_ pages: [UIView]) {
         
-//        NSLayoutConstraint.activate([
-//            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
-//            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
-//        ])
+        // Iterate over each page and add it to the scrollView
+        var previousPage: UIView? = nil
+
+        for (index, page) in pages.enumerated() {
+            scrollView.addSubview(page)
+            page.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                page.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                page.widthAnchor.constraint(equalTo: widthAnchor),
+                page.heightAnchor.constraint(equalTo: heightAnchor)
+            ])
+
+            if let previousPage = previousPage {
+                NSLayoutConstraint.activate([
+                    page.leadingAnchor.constraint(equalTo: previousPage.trailingAnchor)
+                ])
+            } else {
+                NSLayoutConstraint.activate([
+                    page.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
+                ])
+            }
+            
+            // If this is the last page, set the trailing anchor to the scrollView's trailing anchor
+            if index == pages.count - 1 {
+                NSLayoutConstraint.activate([
+                    page.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+                ])
+            }
+
+            // Keep a reference to the current page as the previous page for the next iteration
+            previousPage = page
+        }
+        
     }
     
     private func toggleCourierBar(brand: CourierBrand?) {
@@ -210,38 +243,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     open override func layoutSubviews() {
         super.layoutSubviews()
         toggleCourierBar(brand: theme.brand)
-    }
-    
-    private func makeInboxList() -> InboxListView {
-        let list = InboxListView()
-        list.translatesAutoresizingMaskIntoConstraints = false
-        return list
-    }
-    
-    private func addPagesToScrollView() {
-        
-        let page1 = makeInboxList()
-        let page2 = makeInboxList()
-
-        scrollView.addSubview(page1)
-        scrollView.addSubview(page2)
-
-        NSLayoutConstraint.activate([
-            
-            page1.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            page1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            page1.widthAnchor.constraint(equalTo: widthAnchor),
-            page1.heightAnchor.constraint(equalTo: heightAnchor),
-
-            // Page 2 constraints
-            page2.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            page2.leadingAnchor.constraint(equalTo: page1.trailingAnchor),
-            page2.widthAnchor.constraint(equalTo: widthAnchor),
-            page2.heightAnchor.constraint(equalTo: heightAnchor),
-            
-            // ScrollView content size to fit both pages
-            page2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
-        ])
     }
     
     private func makeListener() {
