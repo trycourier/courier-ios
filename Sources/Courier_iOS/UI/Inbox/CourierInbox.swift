@@ -36,10 +36,21 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     
     // MARK: UI
     
-    private let courierBar: CourierBar = {
-        let courierBar = CourierBar()
-        courierBar.translatesAutoresizingMaskIntoConstraints = false
-        return courierBar
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.backgroundColor = .purple
+        return stackView
+    }()
+    
+    private let tabs: UIView = {
+        let tabs = UIView()
+        tabs.translatesAutoresizingMaskIntoConstraints = false
+        tabs.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight).isActive = true
+        tabs.backgroundColor = .green
+        return tabs
     }()
     
     private lazy var scrollView: UIScrollView = {
@@ -53,6 +64,13 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
 //        scrollView.delegate = self // Add this line
         scrollView.backgroundColor = .red
         return scrollView
+    }()
+    
+    private let courierBar: CourierBar = {
+        let courierBar = CourierBar()
+        courierBar.translatesAutoresizingMaskIntoConstraints = false
+        courierBar.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight).isActive = true
+        return courierBar
     }()
     
     // MARK: Constraints
@@ -114,9 +132,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         }
 
         // Add the views
-        addCourierBar()
-        addScrollView()
-        addPagesToScrollView()
+        addStack(
+            top: tabs,
+            middle: scrollView,
+            bottom: courierBar
+        )
+//        addCourierBar()
+//        addScrollView()
+//        addPagesToScrollView()
         
         // Refreshes theme
         traitCollectionDidChange(nil)
@@ -124,6 +147,41 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         // Init the listener
         makeListener()
         
+    }
+    
+    private func addStack(top: UIView, middle: UIView, bottom: UIView) {
+        
+        addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        stackView.addArrangedSubview(top)
+        stackView.addArrangedSubview(middle)
+        stackView.addArrangedSubview(bottom)
+        
+    }
+    
+    private func addScrollView() {
+        stackView.addArrangedSubview(scrollView)
+    }
+    
+    private func addTabs() {
+        stackView.addArrangedSubview(tabs)
+    }
+    
+    private func addCourierBar() {
+        stackView.addArrangedSubview(courierBar)
+        
+//        NSLayoutConstraint.activate([
+//            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+//        ])
     }
     
     private func toggleCourierBar(brand: CourierBrand?) {
@@ -152,25 +210,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     open override func layoutSubviews() {
         super.layoutSubviews()
         toggleCourierBar(brand: theme.brand)
-    }
-    
-    private func addScrollView() {
-        
-        // Add the container
-        addSubview(scrollView)
-        
-        scrollViewBottom = scrollView.bottomAnchor.constraint(
-            equalTo: bottomAnchor,
-            constant: -Theme.Bar.barHeight
-        )
-        
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scrollViewBottom!
-        ])
-        
     }
     
     private func makeInboxList() -> InboxListView {
@@ -202,16 +241,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
             
             // ScrollView content size to fit both pages
             page2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
-        ])
-    }
-    
-    private func addCourierBar() {
-        addSubview(courierBar)
-        
-        NSLayoutConstraint.activate([
-            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
-            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
-            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
     
