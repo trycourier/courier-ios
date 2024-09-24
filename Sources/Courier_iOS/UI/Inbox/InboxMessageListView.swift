@@ -378,7 +378,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 print("Marked message at index \(indexPath.row) as read")
                 
                 message.setRead()
-                tableView.reloadRows(at: [indexPath], with: .none)
+                tableView.reloadRows(at: [indexPath], with: .automatic)
                 
                 Task {
                     do {
@@ -386,7 +386,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                     } catch {
                         Courier.shared.client?.log("Error")
                         message.setUnread()
-                        tableView.reloadRows(at: [indexPath], with: .none)
+                        tableView.reloadRows(at: [indexPath], with: .automatic)
                     }
                 }
                 
