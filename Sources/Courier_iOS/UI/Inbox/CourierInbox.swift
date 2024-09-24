@@ -60,8 +60,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
-        scrollView.isScrollEnabled = false // TODO
-//        scrollView.delegate = self // Add this line
+//        scrollView.isScrollEnabled = false // TODO
+        scrollView.delegate = self // Add this line
         scrollView.backgroundColor = .red
         return scrollView
     }()
@@ -143,10 +143,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
             makeInboxList(),
             makeInboxList()
         ])
-        
-//        addCourierBar()
-//        addScrollView()
-//        addPagesToScrollView()
         
         // Refreshes theme
         traitCollectionDidChange(nil)
@@ -288,25 +284,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         return pageIndex
     }
     
-//    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if let otherView = otherGestureRecognizer.view, otherView.isKind(of: UITableView.self) {
-//            if let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
-//                
-//                let velocity = panGestureRecognizer.velocity(in: self)
-//                
-//                let currentPage = getCurrentPageIndex()
-//                let minimumVelocity: CGFloat = 100.0
-//
-//                if currentPage == 0 {
-//                    return velocity.x > minimumVelocity && velocity.x > (0.5 * abs(velocity.y))
-//                } else if currentPage == 1 {
-//                    return velocity.x < -minimumVelocity && abs(velocity.x) > (0.5 * abs(velocity.y))
-//                }
-//                
-//            }
-//        }
-//        return false
-//    }
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let otherView = otherGestureRecognizer.view, otherView.isKind(of: UITableView.self) {
+            return true
+        }
+        return false
+    }
     
     /**
      Clear the listeners
