@@ -396,23 +396,30 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     // This method enables swipe actions for table view cells
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        // Define the action
-        let action = UIContextualAction(style: .normal, title: "Swipe") { (action, view, completionHandler) in
-            // Handle the swipe action
-            print("Swiped on message at index: \(indexPath.row)")
+        
+        // Define the action for archiving
+        let archiveAction = UIContextualAction(style: .normal, title: "Archive") { (action, view, completionHandler) in
+            // Handle the archive action (e.g., mark the message as archived, move to another folder, etc.)
+            print("Archived message at index: \(indexPath.row)")
+            
+            // Here you would archive the message in your data model
+            // Example: inboxMessages[indexPath.row].archive()
+            
             completionHandler(true)  // Mark the action as complete
         }
         
-        // Customize the action appearance (optional)
-        action.backgroundColor = .systemBlue
+        // Customize the action appearance
+        archiveAction.backgroundColor = .systemRed  // A neutral color for archive
+        archiveAction.image = UIImage(systemName: "archivebox.fill") // Use SF Symbol for archive box
         
         // Create a configuration object with the action
-        let swipeConfiguration = UISwipeActionsConfiguration(actions: [action])
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: [archiveAction])
         
-        // Disable full swipe (so the action doesn't delete the cell)
-        swipeConfiguration.performsFirstActionWithFullSwipe = false
+        // Enable full swipe to perform the archive action
+        swipeConfiguration.performsFirstActionWithFullSwipe = true
         
         return swipeConfiguration
+        
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
