@@ -285,10 +285,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let otherView = otherGestureRecognizer.view, otherView.isKind(of: UITableView.self) {
-            return true
-        }
-        return false
+        return true
     }
     
     /**
