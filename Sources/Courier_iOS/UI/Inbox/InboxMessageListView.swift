@@ -350,14 +350,27 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             
             if message.isRead {
                 print("Marked message at index \(indexPath.row) as unread")
-                self.inboxMessages[indexPath.row].markAsUnread()
+                message.markAsUnread()
             } else {
                 print("Marked message at index \(indexPath.row) as read")
-                self.inboxMessages[indexPath.row].markAsRead()
+                
+                message.setRead()
+                tableView.reloadRows(at: [indexPath], with: .none)
+                
+                Task {
+                    do {
+                        try await Courier.shared.client?.inbox.read(messageId: message.messageId)
+                    } catch {
+                        Courier.shared.client?.log("Error")
+                        message.setUnread()
+                        tableView.reloadRows(at: [indexPath], with: .none)
+                    }
+                }
+                
             }
             
             // Update the table view to reflect the new state
-//            tableView.reloadRows(at: [indexPath], with: .none)
+            tableView.reloadRows(at: [indexPath], with: .none)
             
             completionHandler(true)
             
@@ -375,7 +388,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [toggleReadAction])
         
         // Disable full swipe (so the action doesn't fully delete the cell)
-        swipeConfiguration.performsFirstActionWithFullSwipe = false
+        swipeConfiguration.performsFirstActionWithFullSwipe = true
         
         return swipeConfiguration
         
