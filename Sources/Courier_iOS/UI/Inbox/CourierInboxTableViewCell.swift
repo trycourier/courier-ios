@@ -187,12 +187,14 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     func reloadCell(isRead: Bool) {
-        guard let theme = self.theme, let onActionClick = self.onActionClick else {
+        
+        guard let message = self.inboxMessage, let theme = self.theme, let onActionClick = self.onActionClick else {
             return
         }
-        reset()
-        setupButtons(theme, onActionClick)
+        
+        setupButtons(message, theme, onActionClick)
         setTheme(theme, isRead: isRead)
+        
     }
     
     private func setTheme(_ theme: CourierInboxTheme, isRead: Bool) {
@@ -229,15 +231,21 @@ internal class CourierInboxTableViewCell: UITableViewCell {
 
     }
     
-    private func setupButtons(_ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {
+    private func setupButtons(_ message: InboxMessage, _ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {
         
-        let actions = self.inboxMessage?.actions ?? []
+        // Remove existing buttons
+        actionsStack.arrangedSubviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        
+        // Add new actions
+        let actions = message.actions ?? []
         
         // Create and add a button for each action
         actions.forEach { action in
             
             let actionButton = CourierActionButton(
-                isRead: self.inboxMessage?.isRead ?? true,
+                isRead: message.isRead,
                 inboxAction: action,
                 theme: theme,
                 actionClick: onActionClick
@@ -265,6 +273,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func reset() {
         indicatorView.isHidden = true
+        dotView.isHidden = true
         titleLabel.text = nil
         timeLabel.text = nil
         bodyLabel.text = nil
