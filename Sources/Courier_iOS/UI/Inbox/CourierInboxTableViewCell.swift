@@ -102,9 +102,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         return view
     }()
     
-    private var theme: CourierInboxTheme?
-    
     private var inboxMessage: InboxMessage?
+    private var onActionClick: ((InboxAction) -> Void)?
+    private var theme: CourierInboxTheme?
     
     private var containerLeading: NSLayoutConstraint?
     
@@ -174,10 +174,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal func setMessage(_ message: InboxMessage, _ theme: CourierInboxTheme, onActionClick: @escaping (InboxAction) -> Void) {
         
+        self.theme = theme
         self.inboxMessage = message
+        self.onActionClick = onActionClick
         
-        setupButtons(theme, onActionClick)
-        setTheme(theme, isRead: message.isRead)
+        reloadCell(isRead: message.isRead)
         
         titleLabel.text = message.title
         timeLabel.text = message.time
@@ -186,14 +187,14 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     func reloadCell(isRead: Bool) {
-        if let theme = self.theme {
-            setTheme(theme, isRead: isRead)
+        guard let theme = self.theme, let onActionClick = self.onActionClick else {
+            return
         }
+        setupButtons(theme, onActionClick)
+        setTheme(theme, isRead: isRead)
     }
     
     private func setTheme(_ theme: CourierInboxTheme, isRead: Bool) {
-        
-        self.theme = theme
         
         // Adjust the margin leading
         switch (theme.unreadIndicatorStyle.indicator) {
