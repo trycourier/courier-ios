@@ -338,14 +338,12 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     private func toggleRead(shouldRead: Bool, at index: Int) {
         
+        // Toggle the new item instantly
+        let message = inboxMessages[index]
+        shouldRead ? message.setRead() : message.setUnread()
+        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+        
         Task {
-            
-            // Toggle the new item instantly
-            let message = inboxMessages[index]
-            shouldRead ? message.setRead() : message.setUnread()
-            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
-            
-            // Perform call and update if it fails
             do {
                 try await Courier.shared.client?.inbox.read(messageId: message.messageId)
             } catch {
@@ -353,7 +351,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 shouldRead ? message.setUnread() : message.setRead()
                 tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
             }
-            
         }
         
     }
