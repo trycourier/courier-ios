@@ -173,8 +173,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         
     }
     
-    private func makeInboxList() -> InboxListView {
-        let list = InboxListView()
+    private func makeInboxList() -> InboxMessageListView {
+        let list = InboxMessageListView()
         list.translatesAutoresizingMaskIntoConstraints = false
         return list
     }
@@ -190,8 +190,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
 
             NSLayoutConstraint.activate([
                 page.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                page.widthAnchor.constraint(equalTo: widthAnchor),
-                page.heightAnchor.constraint(equalTo: heightAnchor)
+                page.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+                page.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
             ])
 
             if let previousPage = previousPage {

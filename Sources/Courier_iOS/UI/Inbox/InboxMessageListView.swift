@@ -1,5 +1,5 @@
 //
-//  InboxListView.swift
+//  InboxMessageListView.swift
 //  Courier_iOS
 //
 //  Created by Michael Miller on 9/23/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal class InboxListView: UIView, UITableViewDelegate, UITableViewDataSource {
+internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: Theme
     
