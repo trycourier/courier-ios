@@ -337,6 +337,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
         // Define the action
         let action = UIContextualAction(style: .normal, title: "Swipe") { (action, view, completionHandler) in
             // Handle the swipe action
@@ -344,8 +345,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             completionHandler(true)  // Mark the action as complete
         }
         
-        // Customize the action appearance (optional)
+        // Customize the action appearance
         action.backgroundColor = .systemGreen
+        
+        // Set the icon image for the action
+        if let icon = UIImage(systemName: "star.fill") {
+            action.image = icon
+        }
         
         // Create a configuration object with the action
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [action])
@@ -354,6 +360,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         swipeConfiguration.performsFirstActionWithFullSwipe = false
         
         return swipeConfiguration
+        
     }
     
     // This method enables swipe actions for table view cells
