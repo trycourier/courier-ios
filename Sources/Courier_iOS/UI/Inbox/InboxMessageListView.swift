@@ -336,9 +336,27 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
     }
     
-    private func toggleRead(isRead: Bool, at index: Int) {
+    private func archiveCell(at index: Int) {
         
-        // Toggle the new item instantly
+        let message = inboxMessages[index]
+        message.setArchived()
+        let indexPath = IndexPath(row: index, section: 0)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+        
+        Task {
+            do {
+                try await Courier.shared.client?.inbox.archive(messageId: message.messageId)
+            } catch {
+                Courier.shared.client?.log(error.localizedDescription)
+                message.setUnarchived()
+                tableView.reloadData() // TODO
+            }
+        }
+        
+    }
+    
+    private func readCell(isRead: Bool, at index: Int) {
+        
         let message = inboxMessages[index]
         isRead ? message.setUnread() : message.setRead()
         let indexPath = IndexPath(row: index, section: 0)
@@ -372,7 +390,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
         let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
-            self?.toggleRead(isRead: message.isRead, at: indexPath.row)
+            self?.readCell(isRead: message.isRead, at: indexPath.row)
             completionHandler(true)
         }
         
@@ -397,15 +415,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // This method enables swipe actions for table view cells
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        // Define the action for archiving
-        let archiveAction = UIContextualAction(style: .normal, title: "Archive") { (action, view, completionHandler) in
-            // Handle the archive action (e.g., mark the message as archived, move to another folder, etc.)
-            print("Archived message at index: \(indexPath.row)")
-            
-            // Here you would archive the message in your data model
-            // Example: inboxMessages[indexPath.row].archive()
-            
-            completionHandler(true)  // Mark the action as complete
+        let archiveAction = UIContextualAction(style: .normal, title: "Archive") { [weak self] (action, view, completionHandler) in
+            self?.archiveCell(at: indexPath.row)
+            completionHandler(true)
         }
         
         // Customize the action appearance
