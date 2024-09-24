@@ -126,8 +126,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         
     }
     
-    private func updateViewForCourierBar() {
+    private func toggleCourierBar(brand: CourierBrand?) {
         
+        // Show or hide the bar
+        courierBar.isHidden = !(brand?.settings?.inapp?.showCourierFooter ?? true)
+        
+        // Handle the updates
         if (!courierBar.isHidden) {
             
             // Set the courier bar background color
@@ -147,7 +151,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        updateViewForCourierBar()
+        toggleCourierBar(brand: theme.brand)
     }
     
     private func addScrollView() {
@@ -227,7 +231,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         if let brandId = self.theme.brandId {
             let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
             self.theme.brand = res?.data.brand
-            self.updateViewForCourierBar()
+            self.toggleCourierBar(brand: self.theme.brand)
         }
     }
     
@@ -242,7 +246,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     
     private func setTheme(isDarkMode: Bool) {
         theme = isDarkMode ? darkTheme : lightTheme
-        updateViewForCourierBar()
+        toggleCourierBar(brand: theme.brand)
     }
     
     // MARK: ScrollView Delegates
