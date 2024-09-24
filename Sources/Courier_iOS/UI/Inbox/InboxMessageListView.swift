@@ -338,20 +338,20 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     private func archiveCell(at index: Int) {
         
-        let message = inboxMessages[index]
-        message.setArchived()
-        let indexPath = IndexPath(row: index, section: 0)
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        
-        Task {
-            do {
-                try await Courier.shared.client?.inbox.archive(messageId: message.messageId)
-            } catch {
-                Courier.shared.client?.log(error.localizedDescription)
-                message.setUnarchived()
-                tableView.reloadData() // TODO
-            }
-        }
+//        let message = inboxMessages[index]
+//        message.setArchived()
+//        let indexPath = IndexPath(row: index, section: 0)
+//        tableView.deleteRows(at: [indexPath], with: .fade)
+//        
+//        Task {
+//            do {
+//                try await Courier.shared.client?.inbox.archive(messageId: message.messageId)
+//            } catch {
+//                Courier.shared.client?.log(error.localizedDescription)
+//                message.setUnarchived()
+//                tableView.reloadData() // TODO
+//            }
+//        }
         
     }
     
