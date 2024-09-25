@@ -396,16 +396,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
     }
     
-    private func readTest(isRead: Bool, at index: Int) async {
+    private func readTest(isRead: Bool, at index: Int) {
         
         let message = inboxMessages[index]
         isRead ? message.setUnread() : message.setRead()
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
         cell?.reloadCell(isRead: !isRead)
-        
-        let delayDuration: UInt64 = 500_000_000_000
-        try? await Task.sleep(nanoseconds: delayDuration)
         
     }
     
@@ -423,7 +420,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 //            self?.readCell(isRead: message.isRead, at: indexPath.row)
             
             Task {
-                await self?.readTest(isRead: message.isRead, at: indexPath.row)
+                self?.readTest(isRead: message.isRead, at: indexPath.row)
                 completionHandler(true)
             }
             
