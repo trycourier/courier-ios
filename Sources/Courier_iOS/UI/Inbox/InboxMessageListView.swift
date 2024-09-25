@@ -396,6 +396,19 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
     }
     
+    private func readTest(isRead: Bool, at index: Int) async {
+        
+        let message = inboxMessages[index]
+        isRead ? message.setUnread() : message.setRead()
+        let indexPath = IndexPath(row: index, section: 0)
+        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+        cell?.reloadCell(isRead: !isRead)
+        
+        let delayDuration: UInt64 = 500_000_000
+        try? await Task.sleep(nanoseconds: delayDuration)
+        
+    }
+    
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // Check the read status of the message at the current indexPath
@@ -407,8 +420,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
         let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
-            self?.readCell(isRead: message.isRead, at: indexPath.row)
-            completionHandler(true)
+//            self?.readCell(isRead: message.isRead, at: indexPath.row)
+            
+            Task {
+                await self?.readTest(isRead: message.isRead, at: indexPath.row)
+                completionHandler(true)
+            }
+            
         }
         
         // Customize the appearance of the action
