@@ -368,6 +368,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
         
+        // Deselect it
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         // Reload with the new message copy
         cell?.refreshMessage(newMessage)
         
