@@ -726,12 +726,20 @@ internal class Inbox {
                 return nil
             }
             
+            if !message.isRead {
+                self.unreadCount -= 1
+            }
+            
             message.setArchived()
             
         case .unarchive:
             
             if !message.isArchived {
                 return nil
+            }
+            
+            if !message.isRead {
+                self.unreadCount += 1
             }
             
             message.setUnarchived()
