@@ -357,23 +357,40 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     private func readCell(isRead: Bool, at index: Int) {
         
+        // Get the message and the cell
         let message = inboxMessages[index]
-        isRead ? message.setUnread() : message.setRead()
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        cell?.reloadCell(isRead: !isRead)
         
         Task {
             do {
+                
+                // Make the change to the shared inbox
+                try await Courier.shared.inboxModule.updateMessage(
+                    messageId: message.messageId,
+                    event: isRead ? .unread : .read
+                )
+                
+                // Reload the cell
+                cell?.reloadCell(isRead: !isRead)
+                
+                // Perform the API request
                 if (isRead) {
-                    try await Courier.shared.client?.inbox.unread(messageId: message.messageId)
+                    try await Courier.shared.client?.inbox.unread(
+                        messageId: message.messageId
+                    )
                 } else {
-                    try await Courier.shared.client?.inbox.read(messageId: message.messageId)
+                    try await Courier.shared.client?.inbox.read(
+                        messageId: message.messageId
+                    )
                 }
+                
             } catch {
+                
                 Courier.shared.client?.log(error.localizedDescription)
                 isRead ? message.setRead() : message.setUnread()
                 cell?.reloadCell(isRead: isRead)
+                
             }
         }
         

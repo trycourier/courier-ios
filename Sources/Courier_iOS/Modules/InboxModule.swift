@@ -230,7 +230,7 @@ internal actor InboxModule {
         
     }
     
-    private func notifyInboxUpdated() {
+    internal func notifyInboxUpdated() {
         if let inbox = self.inbox {
             delegate?.onInboxUpdated(inbox: inbox)
         }
@@ -667,7 +667,7 @@ internal class Inbox {
         self.unreadCount = update.unreadCount
     }
     
-    @discardableResult private func updateMessage(messageId: String, event: InboxEventType) throws -> UpdateOperation? {
+    @discardableResult private func updateMessageWithResetObject(messageId: String, event: InboxEventType) throws -> UpdateOperation? {
         
         guard let messages = self.messages else {
             return nil
@@ -768,27 +768,27 @@ internal class Inbox {
     }
     
     @discardableResult func readMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, event: .read)
+        return try updateMessageWithResetObject(messageId: messageId, event: .read)
     }
     
     @discardableResult func unreadMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, event: .unread)
+        return try updateMessageWithResetObject(messageId: messageId, event: .unread)
     }
     
     @discardableResult func openMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, event: .opened)
+        return try updateMessageWithResetObject(messageId: messageId, event: .opened)
     }
     
     @discardableResult func unopenMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, event: .unopened)
+        return try updateMessageWithResetObject(messageId: messageId, event: .unopened)
     }
     
     @discardableResult func archiveMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, event: .archive)
+        return try updateMessageWithResetObject(messageId: messageId, event: .archive)
     }
     
     @discardableResult func unarchiveMessage(messageId: String) throws -> UpdateOperation? {
-        return try updateMessage(messageId: messageId, event: .unarchive)
+        return try updateMessageWithResetObject(messageId: messageId, event: .unarchive)
     }
     
 }
