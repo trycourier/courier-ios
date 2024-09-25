@@ -377,8 +377,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
         
         // Remove the message
-        self.inboxMessages.remove(at: index)
+        self.tableView.beginUpdates()
         self.tableView.deleteRows(at: [indexPath], with: .left)
+        self.inboxMessages.remove(at: index)
+        self.tableView.endUpdates()
         
         // Ensure we have a listener
         guard let listener = self.inboxListener else {
@@ -400,8 +402,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 Courier.shared.client?.log(error.localizedDescription)
                 
                 // Add the original message back
+                self.tableView.beginUpdates()
                 self.inboxMessages.insert(originalMessage, at: index)
                 self.tableView.insertRows(at: [indexPath], with: .automatic)
+                self.tableView.endUpdates()
                 
             }
         }
