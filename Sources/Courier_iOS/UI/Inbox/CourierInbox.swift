@@ -140,8 +140,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         
         // Add the pages
         addPagesToScrollView([
-            makeInboxList(),
-            makeInboxList()
+            makeInboxList(supportedMessageStates: [.read, .unread]),
+            makeInboxList(supportedMessageStates: [.archived])
         ])
         
         // Refreshes theme
@@ -169,8 +169,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         
     }
     
-    private func makeInboxList() -> InboxMessageListView {
-        let list = InboxMessageListView()
+    private func makeInboxList(supportedMessageStates: [InboxMessageListView.MessageState]) -> InboxMessageListView {
+        let list = InboxMessageListView(supportedMessageStates: supportedMessageStates)
         list.translatesAutoresizingMaskIntoConstraints = false
         return list
     }

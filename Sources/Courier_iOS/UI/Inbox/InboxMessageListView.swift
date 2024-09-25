@@ -9,6 +9,16 @@ import UIKit
 
 internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
+    // MARK: Message Types
+    
+    enum MessageState {
+        case read
+        case unread
+        case archived
+    }
+    
+    private let supportedMessageStates: [MessageState]
+    
     // MARK: Theme
     
     private let lightTheme: CourierInboxTheme
@@ -103,12 +113,16 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // MARK: Init
     
     public init(
+        supportedMessageStates: [MessageState],
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
+        
+        self.supportedMessageStates = supportedMessageStates
+        
         // Theme
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
@@ -126,6 +140,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
 
     override init(frame: CGRect) {
+        self.supportedMessageStates = []
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
         super.init(frame: frame)
@@ -133,6 +148,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public required init?(coder: NSCoder) {
+        self.supportedMessageStates = []
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
         super.init(coder: coder)
@@ -140,6 +156,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     private func setup() {
+        
         // Called when the auth state changes
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
             if (userId != nil) {
@@ -162,6 +179,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Init the listener
         makeListener()
+        
     }
     
     private func addTableView() {
@@ -210,9 +228,19 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                     self?.state = .error(error)
                 },
                 onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
-                    self?.state = newMessages.isEmpty ? .empty : .content
+                    
+                    // Filter all message that should be shown
+                    let messages = newMessages.filter { message in
+                        guard let supportedStates = self?.supportedMessageStates else { return false }
+                        return (message.isArchived && supportedStates.contains(.archived)) || // Archived
+                               (message.isRead && supportedStates.contains(.read)) || // Read
+                               (!message.isRead && supportedStates.contains(.unread)) // Unread
+                    }
+                    
+                    self?.state = messages.isEmpty ? .empty : .content
                     self?.canPaginate = canPaginate
-                    self?.reloadMessages(newMessages)
+                    self?.reloadMessages(messages)
+                    
                 }
             )
         }
