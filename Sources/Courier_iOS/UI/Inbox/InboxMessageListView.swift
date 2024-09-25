@@ -404,7 +404,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
         cell?.reloadCell(isRead: !isRead)
         
-        let delayDuration: UInt64 = 500_000_000
+        let delayDuration: UInt64 = 500_000_000_000
         try? await Task.sleep(nanoseconds: delayDuration)
         
     }
