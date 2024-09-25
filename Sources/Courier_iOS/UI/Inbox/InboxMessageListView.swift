@@ -366,20 +366,45 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     private func archiveCell(at index: Int) {
         
-//        let message = inboxMessages[index]
-//        message.setArchived()
-//        let indexPath = IndexPath(row: index, section: 0)
-//        tableView.deleteRows(at: [indexPath], with: .fade)
-//        
-//        Task {
-//            do {
-//                try await Courier.shared.client?.inbox.archive(messageId: message.messageId)
-//            } catch {
-//                Courier.shared.client?.log(error.localizedDescription)
-//                message.setUnarchived()
-//                tableView.reloadData() // TODO
-//            }
-//        }
+        let originalMessage = inboxMessages[index].copy()
+        
+        // Update the new message
+        let newMessage = originalMessage.copy()
+        newMessage.setArchived()
+        
+        // Get the cell
+        let indexPath = IndexPath(row: index, section: 0)
+        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+        
+        // Remove the message
+        self.inboxMessages.remove(at: index)
+        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        
+        // Ensure we have a listener
+        guard let listener = self.inboxListener else {
+            return
+        }
+        
+        Task {
+            do {
+                
+                // Update the datastore
+                try await Courier.shared.inboxModule.updateMessage(
+                    messageId: originalMessage.messageId,
+                    event: .archive,
+                    ignoredListeners: [listener]
+                )
+                
+            } catch {
+                
+                Courier.shared.client?.log(error.localizedDescription)
+                
+                // Add the original message back
+                self.inboxMessages.insert(originalMessage, at: index)
+                self.tableView.reloadData()
+                
+            }
+        }
         
     }
     
@@ -436,8 +461,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
         let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
-            self?.readCell(isRead: message.isRead, at: indexPath.row)
             tableView.deselectRow(at: indexPath, animated: true)
+            self?.readCell(isRead: message.isRead, at: indexPath.row)
             completionHandler(true)
         }
         
@@ -463,6 +488,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let archiveAction = UIContextualAction(style: .normal, title: "Archive") { [weak self] (action, view, completionHandler) in
+            tableView.deselectRow(at: indexPath, animated: true)
             self?.archiveCell(at: indexPath.row)
             completionHandler(true)
         }
