@@ -359,10 +359,17 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Instantly read the cell
         let message = inboxMessages[index]
-        isRead ? message.setUnread() : message.setRead()
+        
+        // Update the new message
+        let newMessage = message.copy()
+        isRead ? newMessage.setUnread() : newMessage.setRead()
+        
+        // Get the cell
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        cell?.refreshMessage(message)
+        
+        // Reload with the new message copy
+        cell?.refreshMessage(newMessage)
         
         // Ensure we have a listener
         guard let listener = self.inboxListener else {
