@@ -9,7 +9,7 @@ import UIKit
 
 internal protocol InboxModuleDelegate: AnyObject {
     func onInboxRestarted()
-    func onInboxUpdated(inbox: Inbox)
+    func onInboxUpdated(inbox: Inbox, ignoredListeners: [CourierInboxListener])
     func onInboxError(with error: Error)
 }
 
@@ -64,7 +64,7 @@ internal actor InboxModule {
                 // Fetch the inbox and call the delegate
                 let updatedInbox = try await loadInbox(false)
                 self.inbox = updatedInbox
-                delegate?.onInboxUpdated(inbox: updatedInbox)
+                delegate?.onInboxUpdated(inbox: updatedInbox, ignoredListeners: [])
                 
             } catch {
                 
@@ -86,7 +86,7 @@ internal actor InboxModule {
             // Load the inbox and call the delegate
             let updatedInbox = try await loadInbox(true)
             self.inbox = updatedInbox
-            delegate?.onInboxUpdated(inbox: updatedInbox)
+            delegate?.onInboxUpdated(inbox: updatedInbox, ignoredListeners: [])
             
         } catch {
             
@@ -230,9 +230,9 @@ internal actor InboxModule {
         
     }
     
-    internal func notifyInboxUpdated() {
+    internal func notifyInboxUpdated(ignoredListeners: [CourierInboxListener] = []) {
         if let inbox = self.inbox {
-            delegate?.onInboxUpdated(inbox: inbox)
+            delegate?.onInboxUpdated(inbox: inbox, ignoredListeners: ignoredListeners)
         }
     }
     
@@ -284,13 +284,13 @@ internal actor InboxModule {
         self.inbox = inbox
         self.isPaging = false
         
-        delegate?.onInboxUpdated(inbox: inbox)
+        delegate?.onInboxUpdated(inbox: inbox, ignoredListeners: [])
         
         return inbox.messages ?? []
         
     }
     
-    func updateMessage(messageId: String, event: InboxEventType) async throws {
+    func updateMessage(messageId: String, event: InboxEventType, ignoredListeners: [CourierInboxListener] = []) async throws {
         
         var original: UpdateOperation?
         
@@ -326,7 +326,7 @@ internal actor InboxModule {
             return
         }
         
-        notifyInboxUpdated()
+        notifyInboxUpdated(ignoredListeners: ignoredListeners)
         
         do {
             
@@ -388,10 +388,12 @@ extension Courier: InboxModuleDelegate {
         }
     }
     
-    func onInboxUpdated(inbox: Inbox) {
+    func onInboxUpdated(inbox: Inbox, ignoredListeners: [CourierInboxListener]) {
         Task { @MainActor [weak self] in
             self?.inboxListeners.forEach({ listener in
-                listener.onInboxUpdated(inbox)
+                if (!ignoredListeners.contains(listener)) {
+                    listener.onInboxUpdated(inbox)
+                }
             })
         }
     }

@@ -357,31 +357,22 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     private func readCell(isRead: Bool, at index: Int) {
         
-        // Get the message and the cell
+        // Instantly read the cell
         let message = inboxMessages[index]
+        isRead ? message.setUnread() : message.setRead()
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+        cell?.reloadCell(isRead: !isRead)
         
         Task {
             do {
                 
-                // Make the change to the shared inbox
-                try await Courier.shared.inboxModule.updateMessage(
-                    messageId: message.messageId,
-                    event: isRead ? .unread : .read
-                )
-                
-                // Reload the cell
-                cell?.reloadCell(isRead: !isRead)
-                
-                // Perform the API request
-                if (isRead) {
-                    try await Courier.shared.client?.inbox.unread(
-                        messageId: message.messageId
-                    )
-                } else {
-                    try await Courier.shared.client?.inbox.read(
-                        messageId: message.messageId
+                // Update the datastore
+                if let inboxListener = self.inboxListener {
+                    try await Courier.shared.inboxModule.updateMessage(
+                        messageId: message.messageId,
+                        event: isRead ? .unread : .read,
+                        ignoredListeners: [inboxListener]
                     )
                 }
                 
@@ -396,16 +387,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
     }
     
-    private func readTest(isRead: Bool, at index: Int) {
-        
-        let message = inboxMessages[index]
-        isRead ? message.setUnread() : message.setRead()
-        let indexPath = IndexPath(row: index, section: 0)
-        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        cell?.reloadCell(isRead: !isRead)
-        
-    }
-    
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // Check the read status of the message at the current indexPath
@@ -417,13 +398,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
         let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
-//            self?.readCell(isRead: message.isRead, at: indexPath.row)
-            
-            Task {
-                self?.readTest(isRead: message.isRead, at: indexPath.row)
-                completionHandler(true)
-            }
-            
+            self?.readCell(isRead: message.isRead, at: indexPath.row)
+            completionHandler(true)
         }
         
         // Customize the appearance of the action
