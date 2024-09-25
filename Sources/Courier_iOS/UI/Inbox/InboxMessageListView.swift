@@ -487,24 +487,33 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     private func openVisibleMessages() {
+        
         if !Courier.shared.isUserSignedIn {
             return
         }
             
         self.tableView.indexPathsForVisibleRows?.forEach { indexPath in
             Task {
+                
                 // Get the current message
                 let index = indexPath.row
+                
+                // Check if the index is within bounds
+                guard index >= 0 && index < inboxMessages.count else {
+                    print("Index out of bounds: \(index)")
+                    return
+                }
+                
                 let message = inboxMessages[index]
 
                 // If the message is not opened, open it
                 if (!message.isOpened) {
-                    // Mark the message as open
-                    // This will prevent duplicates
                     message.markAsOpened()
                 }
+                
             }
         }
+        
     }
     
     public func scrollToTop(animated: Bool) {
