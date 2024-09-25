@@ -378,7 +378,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Remove the message
         self.inboxMessages.remove(at: index)
-        self.tableView.deleteRows(at: [indexPath], with: .left)
+        self.tableView.deleteRows(at: [indexPath], with: .middle)
         
         // Ensure we have a listener
         guard let listener = self.inboxListener else {
@@ -526,7 +526,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 
                 // Check if the index is within bounds
                 guard index >= 0 && index < inboxMessages.count else {
-                    print("Index out of bounds: \(index)")
                     return
                 }
                 
