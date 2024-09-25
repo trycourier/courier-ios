@@ -364,17 +364,20 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
         cell?.reloadCell(isRead: !isRead)
         
+        // Ensure we have a listener
+        guard let listener = self.inboxListener else {
+            return
+        }
+        
         Task {
             do {
                 
                 // Update the datastore
-                if let inboxListener = self.inboxListener {
-                    try await Courier.shared.inboxModule.updateMessage(
-                        messageId: message.messageId,
-                        event: isRead ? .unread : .read,
-                        ignoredListeners: [inboxListener]
-                    )
-                }
+                try await Courier.shared.inboxModule.updateMessage(
+                    messageId: message.messageId,
+                    event: isRead ? .unread : .read,
+                    ignoredListeners: [listener]
+                )
                 
             } catch {
                 

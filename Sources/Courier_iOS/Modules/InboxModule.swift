@@ -390,11 +390,10 @@ extension Courier: InboxModuleDelegate {
     
     func onInboxUpdated(inbox: Inbox, ignoredListeners: [CourierInboxListener]) {
         Task { @MainActor [weak self] in
-            self?.inboxListeners.forEach({ listener in
-                if (!ignoredListeners.contains(listener)) {
-                    listener.onInboxUpdated(inbox)
-                }
-            })
+            let filteredListeners = self?.inboxListeners.filter { !ignoredListeners.contains($0) }
+            filteredListeners?.forEach { listener in
+                listener.onInboxUpdated(inbox)
+            }
         }
     }
     
