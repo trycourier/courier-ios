@@ -378,7 +378,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Remove the message
         self.inboxMessages.remove(at: index)
-        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        self.tableView.deleteRows(at: [indexPath], with: .left)
         
         // Ensure we have a listener
         guard let listener = self.inboxListener else {
@@ -401,7 +401,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 
                 // Add the original message back
                 self.inboxMessages.insert(originalMessage, at: index)
-                self.tableView.reloadData()
+                self.tableView.insertRows(at: [indexPath], with: .automatic)
                 
             }
         }
