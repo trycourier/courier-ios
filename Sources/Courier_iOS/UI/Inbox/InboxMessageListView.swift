@@ -378,7 +378,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Remove the message
         self.inboxMessages.remove(at: index)
-        self.tableView.deleteRows(at: [indexPath], with: .top)
+        self.tableView.deleteRows(at: [indexPath], with: .left)
         
         // Ensure we have a listener
         guard let listener = self.inboxListener else {
