@@ -178,11 +178,11 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         self.inboxMessage = message
         self.onActionClick = onActionClick
         
-        reloadCell(message: message)
+        refreshMessage(message)
         
     }
     
-    func reloadCell(message: InboxMessage) {
+    func refreshMessage(_ message: InboxMessage) {
         
         guard let theme = self.theme, let onActionClick = self.onActionClick else {
             return

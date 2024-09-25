@@ -362,7 +362,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         isRead ? message.setUnread() : message.setRead()
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        cell?.reloadCell(isRead: !isRead)
+        cell?.refreshMessage(message)
         
         // Ensure we have a listener
         guard let listener = self.inboxListener else {
@@ -383,7 +383,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 
                 Courier.shared.client?.log(error.localizedDescription)
                 isRead ? message.setRead() : message.setUnread()
-                cell?.reloadCell(isRead: isRead)
+                cell?.refreshMessage(message)
                 
             }
         }
