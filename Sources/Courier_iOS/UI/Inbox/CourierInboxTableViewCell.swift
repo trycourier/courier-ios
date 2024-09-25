@@ -178,22 +178,24 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         self.inboxMessage = message
         self.onActionClick = onActionClick
         
-        reloadCell(isRead: message.isRead)
+        reloadCell(message: message)
+        
+    }
+    
+    func reloadCell(message: InboxMessage) {
+        
+        guard let theme = self.theme, let onActionClick = self.onActionClick else {
+            return
+        }
+        
+        self.inboxMessage = message
         
         titleLabel.text = message.title
         timeLabel.text = message.time
         bodyLabel.text = message.subtitle
         
-    }
-    
-    func reloadCell(isRead: Bool) {
-        
-        guard let message = self.inboxMessage, let theme = self.theme, let onActionClick = self.onActionClick else {
-            return
-        }
-        
         setupButtons(message, theme, onActionClick)
-        setTheme(theme, isRead: isRead)
+        setTheme(theme, isRead: message.isRead)
         
     }
     
