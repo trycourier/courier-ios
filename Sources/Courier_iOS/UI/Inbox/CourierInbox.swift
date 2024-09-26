@@ -57,9 +57,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         page2.translatesAutoresizingMaskIntoConstraints = false
         page2.backgroundColor = .orange
         
+        let page3 = UIView()
+        page3.translatesAutoresizingMaskIntoConstraints = false
+        page3.backgroundColor = .systemBackground
+        
         let pages = [
             Page(title: "Notifications", page: page1),
-            Page(title: "Archived", page: page2)
+            Page(title: "Archived", page: page2),
+            Page(title: "Test", page: page3)
         ]
         
         let tabs = TabView(pages: pages, scrollView: scrollView, onTabSelected: { [weak self] index in

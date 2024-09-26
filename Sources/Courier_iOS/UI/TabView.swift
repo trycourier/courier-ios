@@ -130,7 +130,9 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         let fullDistance = scrollView.contentSize.width - scrollView.frame.width
         let adjustedOffset = scrollView.contentOffset.x / fullDistance
-        let x = bounds.width * adjustedOffset
+        let singleItemWidth = bounds.width / CGFloat(pages.count)
+        let fullAdjustableDistance = bounds.width - singleItemWidth
+        let x = fullAdjustableDistance * adjustedOffset
         
         print("\(fullDistance) :: \(adjustedOffset) :: \(x)")
         
