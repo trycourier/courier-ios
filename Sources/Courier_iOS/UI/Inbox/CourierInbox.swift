@@ -11,7 +11,7 @@ import UIKit
  A super simple way to implement a basic notification center into your app
  */
 @available(iOSApplicationExtension, unavailable)
-open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+open class CourierInbox: UIView, UIScrollViewDelegate {
     
     // MARK: Theme
     
@@ -267,7 +267,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     
     open override func layoutSubviews() {
         super.layoutSubviews()
+        
         toggleCourierBar(brand: theme.brand)
+        
+        scrollView.subviews.forEach { page in
+            page.frame.size.height = scrollView.frame.height
+            page.frame.size.width = scrollView.frame.width
+        }
+        
     }
     
     private func makeListener() {
@@ -311,10 +318,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         let fractionalPageIndex = scrollView.contentOffset.x / pageWidth
         let pageIndex = Int(fractionalPageIndex.rounded())
         return pageIndex
-    }
-    
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
     
     /**
