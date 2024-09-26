@@ -139,7 +139,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             bottom: courierBar
         )
         
-        addPagesToScrollView(tabs)
+//        addPagesToScrollView(tabs)
         
         traitCollectionDidChange(nil)
         
