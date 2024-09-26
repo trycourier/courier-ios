@@ -139,7 +139,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             bottom: courierBar
         )
         
-//        addPagesToScrollView(tabs)
+        addPagesToScrollView(tabs)
         
         traitCollectionDidChange(nil)
         
@@ -171,39 +171,35 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         let pages = tabView.pages.map { $0.page }
 
         for (index, page) in pages.enumerated() {
-            addPageToScrollView(page, at: index, totalPages: pages.count)
-        }
-    }
-    
-    private func addPageToScrollView(_ page: UIView, at index: Int, totalPages: Int) {
-        scrollView.addSubview(page)
-        page.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Set constraints for the page
-        NSLayoutConstraint.activate([
-            page.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            page.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            page.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            page.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
-        ])
+            scrollView.addSubview(page)
+            page.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Set constraints for the page
+            NSLayoutConstraint.activate([
+                page.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                page.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                page.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+                page.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+            ])
 
-        // Set leading anchor for the page
-        if index == 0 {
-            NSLayoutConstraint.activate([
-                page.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
-            ])
-        } else {
-            let previousPage = scrollView.subviews[index - 1]
-            NSLayoutConstraint.activate([
-                page.leadingAnchor.constraint(equalTo: previousPage.trailingAnchor)
-            ])
-        }
+            // Set leading anchor for the page
+            if index == 0 {
+                NSLayoutConstraint.activate([
+                    page.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
+                ])
+            } else {
+                let previousPage = scrollView.subviews[index - 1]
+                NSLayoutConstraint.activate([
+                    page.leadingAnchor.constraint(equalTo: previousPage.trailingAnchor)
+                ])
+            }
 
-        // Set trailing anchor for the last page
-        if index == totalPages - 1 {
-            NSLayoutConstraint.activate([
-                page.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
-            ])
+            // Set trailing anchor for the last page
+            if index == pages.count - 1 {
+                NSLayoutConstraint.activate([
+                    page.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+                ])
+            }
         }
     }
     

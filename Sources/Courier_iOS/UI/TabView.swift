@@ -92,7 +92,6 @@ internal class TabView: UIView {
         
         // Initially select the first tab
         updateTabsAppearance()
-        showPage(at: selectedIndex)
     }
     
     private func updateTabsAppearance() {
@@ -101,25 +100,6 @@ internal class TabView: UIView {
         }
     }
     
-    private func showPage(at index: Int) {
-        guard index < pages.count else { return }
-        
-        // Remove all subviews from page container
-        pageContainer.subviews.forEach { $0.removeFromSuperview() }
-        
-        // Add the new selected page
-        let pageView = pages[index].page
-        pageContainer.addSubview(pageView)
-        
-        // Set constraints for pageView
-        pageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            pageView.topAnchor.constraint(equalTo: pageContainer.topAnchor),
-            pageView.leadingAnchor.constraint(equalTo: pageContainer.leadingAnchor),
-            pageView.trailingAnchor.constraint(equalTo: pageContainer.trailingAnchor),
-            pageView.bottomAnchor.constraint(equalTo: pageContainer.bottomAnchor)
-        ])
-    }
 }
 
 internal class Tab: UIView {
