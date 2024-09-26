@@ -210,7 +210,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             NSLayoutConstraint.activate([
                 page.topAnchor.constraint(equalTo: scrollView.topAnchor),
                 page.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                page.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+                page.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+                page.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
             ])
 
             if let previousPage = previousPage {
