@@ -191,6 +191,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private func addPagesToScrollView(_ tabView: TabView) {
         let pages = tabView.pages.map { $0.page }
 
+        var previousPage: UIView? = nil
+
         for (index, page) in pages.enumerated() {
             scrollView.addSubview(page)
             page.translatesAutoresizingMaskIntoConstraints = false
@@ -202,16 +204,16 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 page.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
                 page.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
             ])
-
+            
             // Set leading anchor for the page
-            if index == 0 {
-                NSLayoutConstraint.activate([
-                    page.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
-                ])
-            } else {
-                let previousPage = scrollView.subviews[index - 1]
+            if let previousPage = previousPage {
                 NSLayoutConstraint.activate([
                     page.leadingAnchor.constraint(equalTo: previousPage.trailingAnchor)
+                ])
+            } else {
+                // If it's the first page, anchor it to the scroll view's leading edge
+                NSLayoutConstraint.activate([
+                    page.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
                 ])
             }
 
@@ -221,6 +223,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                     page.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
                 ])
             }
+            
+            // Update the reference to the previous page
+            previousPage = page
         }
     }
     

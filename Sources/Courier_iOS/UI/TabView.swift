@@ -33,13 +33,6 @@ internal class TabView: UIView, UIScrollViewDelegate {
         return view
     }()
     
-    var selectedIndex = 0 {
-        didSet {
-            updateTabsAppearance()
-//            updateIndicatorPosition()
-        }
-    }
-    
     private var tabViews: [Tab] = []
     
     public init(pages: [Page], scrollView: UIScrollView, onTabSelected: @escaping (Int) -> Void) {
@@ -99,24 +92,6 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
     }
     
-    private func updateTabsAppearance() {
-        for (index, tab) in tabViews.enumerated() {
-            tab.isSelected = index == selectedIndex
-        }
-    }
-    
-//    private func updateIndicatorPosition() {
-//        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
-//        let newLeadingPosition = tabWidth * CGFloat(selectedIndex)
-//        
-//        // Update the leading constraint of the indicator
-//        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
-//        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
-//        
-//        // Update the layout immediately
-//        self.layoutIfNeeded()
-//    }
-    
     // MARK: ScrollView Delegates
     
     private func getCurrentPageIndex() -> Int {
@@ -125,8 +100,13 @@ internal class TabView: UIView, UIScrollViewDelegate {
         return Int(fractionalPageIndex.rounded())
     }
     
+    private func updateTabsAppearance() {
+        for (index, tab) in tabViews.enumerated() {
+            tab.isSelected = index == getCurrentPageIndex()
+        }
+    }
+    
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.x)
         
         let fullDistance = scrollView.contentSize.width - scrollView.frame.width
         let adjustedOffset = scrollView.contentOffset.x / fullDistance
@@ -134,9 +114,9 @@ internal class TabView: UIView, UIScrollViewDelegate {
         let fullAdjustableDistance = bounds.width - singleItemWidth
         let x = fullAdjustableDistance * adjustedOffset
         
-        print("\(fullDistance) :: \(adjustedOffset) :: \(x)")
-        
+        // Update the UI
         indicatorView.frame.origin.x = x
+        updateTabsAppearance()
         
     }
     
