@@ -49,22 +49,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }()
     
     private lazy var tabs: TabView = {
-        let page1 = UIView()
-        page1.translatesAutoresizingMaskIntoConstraints = false
-        page1.backgroundColor = .blue
-        
-        let page2 = UIView()
-        page2.translatesAutoresizingMaskIntoConstraints = false
-        page2.backgroundColor = .orange
-        
-        let page3 = UIView()
-        page3.translatesAutoresizingMaskIntoConstraints = false
-        page3.backgroundColor = .systemBlue
         
         let pages = [
-            Page(title: "Notifications", page: page1),
-            Page(title: "Archived", page: page2),
-            Page(title: "Test", page: page3)
+            Page(title: "Notifications", page: self.makeInboxList(supportedMessageStates: [.read, .unread])),
+            Page(title: "Archived", page: self.makeInboxList(supportedMessageStates: [.archived])),
         ]
         
         let tabs = TabView(pages: pages, scrollView: scrollView, onTabSelected: { [weak self] index in
