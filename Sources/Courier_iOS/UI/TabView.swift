@@ -128,7 +128,9 @@ internal class TabView: UIView, UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentOffset.x)
         
-        indicatorView.frame.origin.x = scrollView.contentOffset.x
+        let adjustedOffset = scrollView.contentOffset.x / scrollView.bounds.width
+        
+        indicatorView.frame.origin.x = adjustedOffset * bounds.width
         
     }
     
