@@ -374,8 +374,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Get the cell
         let indexPath = IndexPath(row: index, section: 0)
-        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        
+    
         // Remove the message
         self.inboxMessages.remove(at: index)
         self.tableView.performBatchUpdates({

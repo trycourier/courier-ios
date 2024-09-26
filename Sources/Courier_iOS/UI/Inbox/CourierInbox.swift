@@ -45,12 +45,22 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         return stackView
     }()
     
-    private let tabs: UIView = {
-        let tabs = UIView()
+    private lazy var tabs: TabView = {
+        
+        let pages = [
+            Page(title: "Notifications", page: makeInboxList(supportedMessageStates: [.read, .unread])),
+            Page(title: "Archived", page: makeInboxList(supportedMessageStates: [.archived]))
+        ]
+        
+        let tabs = TabView(pages: pages, onTabSelected: { [weak self] index in
+            self?.updateScrollViewToPage(index)
+        })
+        
         tabs.translatesAutoresizingMaskIntoConstraints = false
         tabs.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight).isActive = true
-        tabs.backgroundColor = .green
+        
         return tabs
+        
     }()
     
     private lazy var scrollView: UIScrollView = {
@@ -60,9 +70,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
-        scrollView.isScrollEnabled = false // TODO
-//        scrollView.delegate = self // Add this line
-        scrollView.backgroundColor = .red
+        scrollView.isScrollEnabled = false
         return scrollView
     }()
     
@@ -90,6 +98,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
+        
         // Theme
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
@@ -104,6 +113,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         
         // Styles and more
         setup()
+        
     }
 
     override init(frame: CGRect) {
@@ -139,10 +149,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         )
         
         // Add the pages
-        addPagesToScrollView([
-            makeInboxList(supportedMessageStates: [.read, .unread]),
-            makeInboxList(supportedMessageStates: [.archived])
-        ])
+        addPagesToScrollView(tabs)
         
         // Refreshes theme
         traitCollectionDidChange(nil)
@@ -175,10 +182,13 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
         return list
     }
     
-    private func addPagesToScrollView(_ pages: [UIView]) {
+    private func addPagesToScrollView(_ tabView: TabView) {
         
         // Iterate over each page and add it to the scrollView
         var previousPage: UIView? = nil
+        
+        // Get the pages from the tabview
+        let pages = tabView.pages.map { $0.page }
 
         for (index, page) in pages.enumerated() {
             scrollView.addSubview(page)
@@ -211,6 +221,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
             previousPage = page
         }
         
+    }
+    
+    private func updateScrollViewToPage(_ index: Int) {
+        let pageWidth = scrollView.frame.size.width
+        let offset = CGPoint(x: pageWidth * CGFloat(index), y: 0)
+        scrollView.setContentOffset(offset, animated: true)
     }
     
     private func toggleCourierBar(brand: CourierBrand?) {
