@@ -205,17 +205,17 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         }
     }
     
-    private func updateScrollViewToPage(_ index: Int) {
+    private func updateScrollViewToPage(_ index: Int, duration: TimeInterval = 0.1) {
         let pageWidth = scrollView.frame.size.width
         let offset = CGPoint(x: pageWidth * CGFloat(index), y: 0)
-
-        // Customize the duration for faster scrolling
-        let animationDuration: TimeInterval = 0.15
-
-        // Use UIView.animate for custom control over the scrolling animation
-        UIView.animate(withDuration: animationDuration, animations: {
-            self.scrollView.setContentOffset(offset, animated: false)
-        })
+        UIView.animate(
+            withDuration: duration,
+            delay: 0,
+            options: [.curveEaseOut],
+            animations: {
+               self.scrollView.setContentOffset(offset, animated: false)
+            }, completion: nil
+        )
     }
     
     private func toggleCourierBar(brand: CourierBrand?) {
