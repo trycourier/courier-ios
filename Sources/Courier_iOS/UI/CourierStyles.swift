@@ -12,6 +12,18 @@ public enum CourierStyles {
     // MARK: Inbox
     
     public enum Inbox {
+        
+        public class TabStyle: NSObject {
+            
+            public let selected: CourierStyles.Font
+            public let unselected: CourierStyles.Font
+            
+            public init(selected: CourierStyles.Font, unselected: CourierStyles.Font) {
+                self.selected = selected
+                self.unselected = unselected
+            }
+            
+        }
      
         public class TextStyle: NSObject {
             

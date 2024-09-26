@@ -13,6 +13,7 @@ import UIKit
     
     public let brandId: String?
     public let tabIndicatorColor: UIColor?
+    public let tabStyle: CourierStyles.Inbox.TabStyle
     public let messageAnimationStyle: UITableView.RowAnimation
     public let loadingIndicatorColor: UIColor?
     public let unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle
@@ -30,6 +31,16 @@ import UIKit
     public init(
         brandId: String? = nil,
         tabIndicatorColor: UIColor? = nil,
+        tabStyle: CourierStyles.Inbox.TabStyle = CourierStyles.Inbox.TabStyle(
+            selected: CourierStyles.Font(
+                font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                color: .label
+            ),
+            unselected: CourierStyles.Font(
+                font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                color: .secondaryLabel
+            )
+        ),
         messageAnimationStyle: UITableView.RowAnimation = .left,
         loadingIndicatorColor: UIColor? = nil,
         unreadIndicatorStyle:  CourierStyles.Inbox.UnreadIndicatorStyle =  CourierStyles.Inbox.UnreadIndicatorStyle(),
@@ -77,6 +88,7 @@ import UIKit
     ) {
         self.brandId = brandId
         self.tabIndicatorColor = tabIndicatorColor
+        self.tabStyle = tabStyle
         self.messageAnimationStyle = messageAnimationStyle
         self.unreadIndicatorStyle = unreadIndicatorStyle
         self.loadingIndicatorColor = loadingIndicatorColor
@@ -116,7 +128,7 @@ import UIKit
             } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
                 return brandColor
             } else {
-                return nil
+                return .systemBlue
             }
         }
     }

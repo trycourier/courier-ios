@@ -61,6 +61,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
     private func setup() {
         
+        self.backgroundColor = .systemBackground
         self.scrollView.delegate = self
         
         addSubview(tabsStackView)
@@ -87,13 +88,18 @@ internal class TabView: UIView, UIScrollViewDelegate {
             indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
         ])
         
-        updateTabsAppearance()
+        setSelectedTab()
         
     }
     
     func setTheme(theme: CourierInboxTheme) {
         self.theme = theme
         self.indicatorView.backgroundColor = theme.indicatorColor
+        self.tabsStackView.subviews.forEach { view in
+            if let view = view as? Tab {
+                view.setTheme(theme: theme)
+            }
+        }
     }
     
     // MARK: ScrollView Delegates
@@ -110,7 +116,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         return Int(fractionalPageIndex.rounded())
     }
     
-    private func updateTabsAppearance() {
+    private func setSelectedTab() {
         for (index, tab) in tabViews.enumerated() {
             tab.isSelected = index == getCurrentPageIndex()
         }
@@ -126,7 +132,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         // Update the UI
         indicatorView.frame.origin.x = x
-        updateTabsAppearance()
+        setSelectedTab()
         
     }
     
@@ -136,12 +142,22 @@ internal class Tab: UIView {
     
     let title: String
     let onTapped: () -> Void
+    private var theme: CourierInboxTheme? = nil
     
     var isSelected = false {
         didSet {
-            backgroundColor = isSelected ? .systemBlue : .clear
-            titleLabel.textColor = isSelected ? .white : .black
+            refresh()
         }
+    }
+    
+    private func refresh() {
+        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
+        titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+    }
+    
+    func setTheme(theme: CourierInboxTheme) {
+        self.theme = theme
+        refresh()
     }
     
     private let titleLabel: UILabel = {
@@ -173,6 +189,9 @@ internal class Tab: UIView {
     }
     
     private func setup() {
+        
+        backgroundColor = .clear
+        
         addSubview(titleLabel)
         titleLabel.text = title
         

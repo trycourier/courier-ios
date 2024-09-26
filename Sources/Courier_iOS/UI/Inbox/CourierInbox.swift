@@ -7,9 +7,6 @@
 
 import UIKit
 
-/**
- A super simple way to implement a basic notification center into your app
- */
 @available(iOSApplicationExtension, unavailable)
 open class CourierInbox: UIView, UIScrollViewDelegate {
     
@@ -182,7 +179,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         var previousPage: UIView? = nil
 
         for (index, page) in pages.enumerated() {
+            
             scrollView.addSubview(page)
+            
             page.translatesAutoresizingMaskIntoConstraints = false
             
             // Set constraints for the page
@@ -214,6 +213,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             
             // Update the reference to the previous page
             previousPage = page
+            
         }
         
     }
@@ -277,6 +277,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private func refreshTheme() {
         toggleCourierBar(brand: self.theme.brand)
         tabs.setTheme(theme: self.theme)
+        
     }
     
     deinit {
