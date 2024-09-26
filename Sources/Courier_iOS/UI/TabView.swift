@@ -33,9 +33,8 @@ internal class TabView: UIView {
     
     var selectedIndex = 0 {
         didSet {
-            onTabSelected(selectedIndex)
             updateTabsAppearance()
-            showPage(at: selectedIndex)
+            onTabSelected(selectedIndex)
         }
     }
     
