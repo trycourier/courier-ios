@@ -59,7 +59,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         let page3 = UIView()
         page3.translatesAutoresizingMaskIntoConstraints = false
-        page3.backgroundColor = .systemBackground
+        page3.backgroundColor = .systemBlue
         
         let pages = [
             Page(title: "Notifications", page: page1),
@@ -227,6 +227,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             // Update the reference to the previous page
             previousPage = page
         }
+        
     }
     
     private func updateScrollViewToPage(_ index: Int) {
