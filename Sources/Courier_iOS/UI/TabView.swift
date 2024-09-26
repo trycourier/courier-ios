@@ -17,6 +17,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     let pages: [Page]
     let scrollView: UIScrollView
     let onTabSelected: (Int) -> Void
+    private var theme: CourierInboxTheme? = nil
     
     private let tabsStackView: UIStackView = {
         let stackView = UIStackView()
@@ -29,7 +30,6 @@ internal class TabView: UIView, UIScrollViewDelegate {
     private let indicatorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .systemYellow
         return view
     }()
     
@@ -89,6 +89,11 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         updateTabsAppearance()
         
+    }
+    
+    func setTheme(theme: CourierInboxTheme) {
+        self.theme = theme
+        self.indicatorView.backgroundColor = theme.indicatorColor
     }
     
     // MARK: ScrollView Delegates

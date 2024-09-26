@@ -257,7 +257,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         if let brandId = self.theme.brandId {
             let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
             self.theme.brand = res?.data.brand
-            self.toggleCourierBar(brand: self.theme.brand)
+            self.refreshTheme()
         }
     }
     
@@ -271,7 +271,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func setTheme(isDarkMode: Bool) {
         theme = isDarkMode ? darkTheme : lightTheme
-        toggleCourierBar(brand: theme.brand)
+        refreshTheme()
+    }
+    
+    private func refreshTheme() {
+        toggleCourierBar(brand: self.theme.brand)
+        tabs.setTheme(theme: self.theme)
     }
     
     deinit {

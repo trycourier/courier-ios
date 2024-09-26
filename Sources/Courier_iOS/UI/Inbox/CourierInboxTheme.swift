@@ -12,6 +12,7 @@ import UIKit
     // MARK: Styling
     
     public let brandId: String?
+    public let tabIndicatorColor: UIColor?
     public let messageAnimationStyle: UITableView.RowAnimation
     public let loadingIndicatorColor: UIColor?
     public let unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle
@@ -28,6 +29,7 @@ import UIKit
     
     public init(
         brandId: String? = nil,
+        tabIndicatorColor: UIColor? = nil,
         messageAnimationStyle: UITableView.RowAnimation = .left,
         loadingIndicatorColor: UIColor? = nil,
         unreadIndicatorStyle:  CourierStyles.Inbox.UnreadIndicatorStyle =  CourierStyles.Inbox.UnreadIndicatorStyle(),
@@ -74,6 +76,7 @@ import UIKit
         )
     ) {
         self.brandId = brandId
+        self.tabIndicatorColor = tabIndicatorColor
         self.messageAnimationStyle = messageAnimationStyle
         self.unreadIndicatorStyle = unreadIndicatorStyle
         self.loadingIndicatorColor = loadingIndicatorColor
@@ -102,6 +105,18 @@ import UIKit
                 return brandColor
             } else {
                 return .systemBlue
+            }
+        }
+    }
+    
+    internal var indicatorColor: UIColor? {
+        get {
+            if let customColor = tabIndicatorColor {
+                return customColor
+            } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+                return brandColor
+            } else {
+                return nil
             }
         }
     }
