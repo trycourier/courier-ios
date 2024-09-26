@@ -127,6 +127,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     private func setup() {
+        
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
             if (userId != nil) {
                 self?.traitCollectionDidChange(nil)
@@ -144,6 +145,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         traitCollectionDidChange(nil)
         
         makeListener()
+        
     }
     
     private func addStack(top: UIView, middle: UIView, bottom: UIView) {
@@ -206,7 +208,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private func updateScrollViewToPage(_ index: Int) {
         let pageWidth = scrollView.frame.size.width
         let offset = CGPoint(x: pageWidth * CGFloat(index), y: 0)
-        scrollView.setContentOffset(offset, animated: true)
+
+        // Customize the duration for faster scrolling
+        let animationDuration: TimeInterval = 0.15
+
+        // Use UIView.animate for custom control over the scrolling animation
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.scrollView.setContentOffset(offset, animated: false)
+        })
     }
     
     private func toggleCourierBar(brand: CourierBrand?) {
@@ -264,4 +273,5 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.authListener?.remove()
         self.inboxListener?.remove()
     }
+    
 }
