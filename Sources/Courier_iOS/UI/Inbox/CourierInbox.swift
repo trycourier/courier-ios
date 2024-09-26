@@ -209,8 +209,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
 
             NSLayoutConstraint.activate([
                 page.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                page.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-                page.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+                page.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                page.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
             ])
 
             if let previousPage = previousPage {
@@ -267,14 +267,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
         toggleCourierBar(brand: theme.brand)
-        
-        scrollView.subviews.forEach { page in
-            page.frame.size.height = scrollView.frame.height
-            page.frame.size.width = scrollView.frame.width
-        }
-        
     }
     
     private func makeListener() {
