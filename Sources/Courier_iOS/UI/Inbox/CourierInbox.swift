@@ -235,7 +235,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         UIView.animate(
             withDuration: self.pagingDuration,
             delay: 0,
-            options: [.curveEaseOut],
+            options: [.curveEaseOut, .allowUserInteraction],
             animations: {
                self.scrollView.setContentOffset(offset, animated: false)
             }, completion: nil
