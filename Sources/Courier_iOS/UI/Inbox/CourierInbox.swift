@@ -74,6 +74,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
+        scrollView.backgroundColor = .red
         return scrollView
     }()
     
