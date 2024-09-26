@@ -13,6 +13,11 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 open class CourierInbox: UIView, UIScrollViewDelegate {
     
+    // MARK: Interaction
+    
+    private let canSwipePages: Bool
+    private let pagingDuration: TimeInterval
+    
     // MARK: Theme
     
     private let lightTheme: CourierInboxTheme
@@ -76,6 +81,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         scrollView.bounces = false
         scrollView.isScrollEnabled = false
         scrollView.backgroundColor = .red
+        scrollView.delegate = self
         return scrollView
     }()
     
@@ -93,12 +99,17 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     // MARK: Init
     
     public init(
+        canSwipePages: Bool = false,
+        pagingDuration: TimeInterval = 0.1,
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
+        
+        self.canSwipePages = canSwipePages
+        self.pagingDuration = pagingDuration
         
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
@@ -113,6 +124,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
 
     override init(frame: CGRect) {
+        self.canSwipePages = false
+        self.pagingDuration = 0.1
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
         super.init(frame: frame)
@@ -120,6 +133,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     public required init?(coder: NSCoder) {
+        self.canSwipePages = false
+        self.pagingDuration = 0.1
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
         super.init(coder: coder)
@@ -205,11 +220,11 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         }
     }
     
-    private func updateScrollViewToPage(_ index: Int, duration: TimeInterval = 0.1) {
+    private func updateScrollViewToPage(_ index: Int) {
         let pageWidth = scrollView.frame.size.width
         let offset = CGPoint(x: pageWidth * CGFloat(index), y: 0)
         UIView.animate(
-            withDuration: duration,
+            withDuration: self.pagingDuration,
             delay: 0,
             options: [.curveEaseOut],
             animations: {
@@ -267,6 +282,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         let pageWidth = scrollView.frame.size.width
         let fractionalPageIndex = scrollView.contentOffset.x / pageWidth
         return Int(fractionalPageIndex.rounded())
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.tabs.selectedIndex = getCurrentPageIndex()
     }
     
     deinit {

@@ -25,16 +25,17 @@ internal class TabView: UIView {
         return stackView
     }()
     
-    private let pageContainer: UIView = {
+    private let indicatorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemYellow
         return view
     }()
     
     var selectedIndex = 0 {
         didSet {
             updateTabsAppearance()
-            onTabSelected(selectedIndex)
+//            updateIndicatorPosition()
         }
     }
     
@@ -62,6 +63,7 @@ internal class TabView: UIView {
     }
     
     private func setup() {
+        
         // Add stack view for tabs
         addSubview(tabsStackView)
         NSLayoutConstraint.activate([
@@ -71,32 +73,73 @@ internal class TabView: UIView {
             tabsStackView.heightAnchor.constraint(equalToConstant: 44) // Fixed height for tabs
         ])
         
-        // Add page container
-        addSubview(pageContainer)
+        addSubview(indicatorView)
         NSLayoutConstraint.activate([
-            pageContainer.topAnchor.constraint(equalTo: tabsStackView.bottomAnchor),
-            pageContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
-            pageContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            pageContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+            indicatorView.heightAnchor.constraint(equalToConstant: 2),
+            indicatorView.bottomAnchor.constraint(equalTo: tabsStackView.bottomAnchor),
+            indicatorView.leadingAnchor.constraint(equalTo: tabsStackView.leadingAnchor),
+            indicatorView.widthAnchor.constraint(equalTo: tabsStackView.widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
         ])
         
         // Initialize tabs and add them to the stack view
         for (index, page) in pages.enumerated() {
             let tab = Tab(title: page.title) { [weak self] in
-                self?.selectedIndex = index
+                self?.onTabSelected(index)
             }
             tabsStackView.addArrangedSubview(tab)
             tabViews.append(tab)
         }
         
-        // Initially select the first tab
         updateTabsAppearance()
+        
     }
     
     private func updateTabsAppearance() {
         for (index, tab) in tabViews.enumerated() {
             tab.isSelected = index == selectedIndex
         }
+    }
+    
+    private func updateIndicatorPosition() {
+        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
+        let newLeadingPosition = tabWidth * CGFloat(selectedIndex)
+        
+        // Update the leading constraint of the indicator
+        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
+        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
+        
+        // Update the layout immediately
+        self.layoutIfNeeded()
+    }
+    
+    func sync(with scrollView: UIScrollView) {
+        
+        // Get the current content offset
+        let currentOffsetX = scrollView.contentOffset.x
+
+        // Calculate the total scrollable width
+        let totalScrollableWidth = scrollView.contentSize.width - scrollView.frame.size.width
+        
+        // Calculate the percentage offset
+        let percentageOffset: CGFloat
+        if totalScrollableWidth > 0 {
+            percentageOffset = currentOffsetX / totalScrollableWidth
+        } else {
+            percentageOffset = 0
+        }
+
+        // Calculate the new leading position for the indicator
+        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
+        let newLeadingPosition = tabWidth * percentageOffset * CGFloat(tabViews.count)
+
+        // Update the leading constraint of the indicator
+        indicatorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
+        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
+
+        // Update the layout immediately
+        self.layoutIfNeeded()
+        
     }
     
 }
