@@ -63,20 +63,12 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         self.scrollView.delegate = self
         
-        // Add stack view for tabs
         addSubview(tabsStackView)
         NSLayoutConstraint.activate([
             tabsStackView.topAnchor.constraint(equalTo: topAnchor),
             tabsStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tabsStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tabsStackView.heightAnchor.constraint(equalToConstant: 44) // Fixed height for tabs
-        ])
-        
-        addSubview(indicatorView)
-        NSLayoutConstraint.activate([
-            indicatorView.heightAnchor.constraint(equalToConstant: 2),
-            indicatorView.bottomAnchor.constraint(equalTo: tabsStackView.bottomAnchor),
-            indicatorView.widthAnchor.constraint(equalTo: tabsStackView.widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
+            tabsStackView.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight)
         ])
         
         // Initialize tabs and add them to the stack view
@@ -87,6 +79,13 @@ internal class TabView: UIView, UIScrollViewDelegate {
             tabsStackView.addArrangedSubview(tab)
             tabViews.append(tab)
         }
+        
+        addSubview(indicatorView)
+        NSLayoutConstraint.activate([
+            indicatorView.heightAnchor.constraint(equalToConstant: 3),
+            indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
+        ])
         
         updateTabsAppearance()
         
@@ -125,36 +124,6 @@ internal class TabView: UIView, UIScrollViewDelegate {
         updateTabsAppearance()
         
     }
-    
-//    func sync(with scrollView: UIScrollView) {
-//        
-//        // Get the current content offset
-//        let currentOffsetX = scrollView.contentOffset.x
-//
-//        // Calculate the total scrollable width
-//        let totalScrollableWidth = scrollView.contentSize.width - scrollView.frame.size.width
-//        
-//        // Calculate the percentage offset
-//        let percentageOffset: CGFloat
-//        if totalScrollableWidth > 0 {
-//            percentageOffset = currentOffsetX / totalScrollableWidth
-//        } else {
-//            percentageOffset = 0
-//        }
-//
-//        // Calculate the new leading position for the indicator
-//        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
-//        let newLeadingPosition = tabWidth * percentageOffset * CGFloat(tabViews.count)
-//
-//        // Update the leading constraint of the indicator
-//        indicatorView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
-//        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
-//
-//        // Update the layout immediately
-//        self.layoutIfNeeded()
-//        
-//    }
     
 }
 
