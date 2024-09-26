@@ -47,9 +47,22 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     
     private lazy var tabs: TabView = {
         
+//        let pages = [
+//            Page(title: "Notifications", page: makeInboxList(supportedMessageStates: [.read, .unread])),
+//            Page(title: "Archived", page: makeInboxList(supportedMessageStates: [.archived]))
+//        ]
+        
+        let page1 = UIView()
+        page1.translatesAutoresizingMaskIntoConstraints = false
+        page1.backgroundColor = .blue
+        
+        let page2 = UIView()
+        page2.translatesAutoresizingMaskIntoConstraints = false
+        page2.backgroundColor = .orange
+        
         let pages = [
-            Page(title: "Notifications", page: makeInboxList(supportedMessageStates: [.read, .unread])),
-            Page(title: "Archived", page: makeInboxList(supportedMessageStates: [.archived]))
+            Page(title: "Notifications", page: page1),
+            Page(title: "Archived", page: page2)
         ]
         
         let tabs = TabView(pages: pages, onTabSelected: { [weak self] index in
@@ -224,17 +237,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate, UIGestureRecognizerDelega
     }
     
     private func updateScrollViewToPage(_ index: Int) {
-        // Disable scrolling while the page change is happening
-        scrollView.isScrollEnabled = false
-        
         let pageWidth = scrollView.frame.size.width
         let offset = CGPoint(x: pageWidth * CGFloat(index), y: 0)
         scrollView.setContentOffset(offset, animated: true)
-        
-        // Re-enable scrolling after the animation is complete
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // Adjust delay as needed
-            self.scrollView.isScrollEnabled = true
-        }
     }
     
     private func toggleCourierBar(brand: CourierBrand?) {
