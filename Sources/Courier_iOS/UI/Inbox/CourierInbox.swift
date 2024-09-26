@@ -285,7 +285,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.tabs.selectedIndex = getCurrentPageIndex()
+        self.tabs.sync(with: scrollView)
     }
     
     deinit {
