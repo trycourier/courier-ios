@@ -62,7 +62,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             Page(title: "Archived", page: page2)
         ]
         
-        let tabs = TabView(pages: pages, onTabSelected: { [weak self] index in
+        let tabs = TabView(pages: pages, scrollView: scrollView, onTabSelected: { [weak self] index in
             self?.updateScrollViewToPage(index)
         })
         
@@ -81,7 +81,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         scrollView.bounces = self.canSwipePages
         scrollView.isScrollEnabled = self.canSwipePages
         scrollView.backgroundColor = .red
-        scrollView.delegate = self
         return scrollView
     }()
     
@@ -274,18 +273,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private func setTheme(isDarkMode: Bool) {
         theme = isDarkMode ? darkTheme : lightTheme
         toggleCourierBar(brand: theme.brand)
-    }
-    
-    // MARK: ScrollView Delegates
-    
-    private func getCurrentPageIndex() -> Int {
-        let pageWidth = scrollView.frame.size.width
-        let fractionalPageIndex = scrollView.contentOffset.x / pageWidth
-        return Int(fractionalPageIndex.rounded())
-    }
-    
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.tabs.sync(with: scrollView)
     }
     
     deinit {

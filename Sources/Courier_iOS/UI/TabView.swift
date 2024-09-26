@@ -12,9 +12,10 @@ internal struct Page {
     let page: UIView
 }
 
-internal class TabView: UIView {
+internal class TabView: UIView, UIScrollViewDelegate {
     
     let pages: [Page]
+    let scrollView: UIScrollView
     let onTabSelected: (Int) -> Void
     
     private let tabsStackView: UIStackView = {
@@ -41,8 +42,9 @@ internal class TabView: UIView {
     
     private var tabViews: [Tab] = []
     
-    public init(pages: [Page], onTabSelected: @escaping (Int) -> Void) {
+    public init(pages: [Page], scrollView: UIScrollView, onTabSelected: @escaping (Int) -> Void) {
         self.pages = pages
+        self.scrollView = scrollView
         self.onTabSelected = onTabSelected
         super.init(frame: .zero)
         setup()
@@ -50,6 +52,7 @@ internal class TabView: UIView {
     
     override init(frame: CGRect) {
         self.pages = []
+        self.scrollView = UIScrollView()
         self.onTabSelected = { _ in }
         super.init(frame: frame)
         setup()
@@ -57,12 +60,15 @@ internal class TabView: UIView {
     
     public required init?(coder: NSCoder) {
         self.pages = []
+        self.scrollView = UIScrollView()
         self.onTabSelected = { _ in }
         super.init(coder: coder)
         setup()
     }
     
     private func setup() {
+        
+        self.scrollView.delegate = self
         
         // Add stack view for tabs
         addSubview(tabsStackView)
@@ -77,7 +83,6 @@ internal class TabView: UIView {
         NSLayoutConstraint.activate([
             indicatorView.heightAnchor.constraint(equalToConstant: 2),
             indicatorView.bottomAnchor.constraint(equalTo: tabsStackView.bottomAnchor),
-            indicatorView.leadingAnchor.constraint(equalTo: tabsStackView.leadingAnchor),
             indicatorView.widthAnchor.constraint(equalTo: tabsStackView.widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
         ])
         
@@ -100,47 +105,62 @@ internal class TabView: UIView {
         }
     }
     
-    private func updateIndicatorPosition() {
-        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
-        let newLeadingPosition = tabWidth * CGFloat(selectedIndex)
-        
-        // Update the leading constraint of the indicator
-        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
-        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
-        
-        // Update the layout immediately
-        self.layoutIfNeeded()
+//    private func updateIndicatorPosition() {
+//        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
+//        let newLeadingPosition = tabWidth * CGFloat(selectedIndex)
+//        
+//        // Update the leading constraint of the indicator
+//        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
+//        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
+//        
+//        // Update the layout immediately
+//        self.layoutIfNeeded()
+//    }
+    
+    // MARK: ScrollView Delegates
+    
+    private func getCurrentPageIndex() -> Int {
+        let pageWidth = scrollView.frame.size.width
+        let fractionalPageIndex = scrollView.contentOffset.x / pageWidth
+        return Int(fractionalPageIndex.rounded())
     }
     
-    func sync(with scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.x)
         
-        // Get the current content offset
-        let currentOffsetX = scrollView.contentOffset.x
-
-        // Calculate the total scrollable width
-        let totalScrollableWidth = scrollView.contentSize.width - scrollView.frame.size.width
-        
-        // Calculate the percentage offset
-        let percentageOffset: CGFloat
-        if totalScrollableWidth > 0 {
-            percentageOffset = currentOffsetX / totalScrollableWidth
-        } else {
-            percentageOffset = 0
-        }
-
-        // Calculate the new leading position for the indicator
-        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
-        let newLeadingPosition = tabWidth * percentageOffset * CGFloat(tabViews.count)
-
-        // Update the leading constraint of the indicator
-        indicatorView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
-        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
-
-        // Update the layout immediately
-        self.layoutIfNeeded()
+        indicatorView.frame.origin.x = scrollView.contentOffset.x
         
     }
+    
+//    func sync(with scrollView: UIScrollView) {
+//        
+//        // Get the current content offset
+//        let currentOffsetX = scrollView.contentOffset.x
+//
+//        // Calculate the total scrollable width
+//        let totalScrollableWidth = scrollView.contentSize.width - scrollView.frame.size.width
+//        
+//        // Calculate the percentage offset
+//        let percentageOffset: CGFloat
+//        if totalScrollableWidth > 0 {
+//            percentageOffset = currentOffsetX / totalScrollableWidth
+//        } else {
+//            percentageOffset = 0
+//        }
+//
+//        // Calculate the new leading position for the indicator
+//        let tabWidth = self.bounds.width / CGFloat(tabViews.count)
+//        let newLeadingPosition = tabWidth * percentageOffset * CGFloat(tabViews.count)
+//
+//        // Update the leading constraint of the indicator
+//        indicatorView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.deactivate(indicatorView.constraints) // Deactivate previous constraints
+//        indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: newLeadingPosition).isActive = true
+//
+//        // Update the layout immediately
+//        self.layoutIfNeeded()
+//        
+//    }
     
 }
 
