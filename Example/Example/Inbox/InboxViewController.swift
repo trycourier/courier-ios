@@ -26,6 +26,7 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
         collectionView.register(ContentCollectionViewCell.self, forCellWithReuseIdentifier: ContentCollectionViewCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.isScrollEnabled = false
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         view.addSubview(collectionView)
@@ -57,7 +58,7 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
         let selectedSegmentIndex = sender.selectedSegmentIndex
         if selectedSegmentIndex < pages.map({ $0.1 }).count {
             let indexPath = IndexPath(item: selectedSegmentIndex, section: 0)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
         }
         
         // Reset flag after changing the segment

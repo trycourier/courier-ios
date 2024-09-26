@@ -96,6 +96,12 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
     private func getCurrentPageIndex() -> Int {
         let pageWidth = scrollView.frame.size.width
+            
+        // Check to avoid division by zero
+        guard pageWidth > 0 else {
+            return 0
+        }
+        
         let fractionalPageIndex = scrollView.contentOffset.x / pageWidth
         return Int(fractionalPageIndex.rounded())
     }
