@@ -32,7 +32,16 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     
-    // MARK: UI Elements
+    // MARK: UI
+    
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.backgroundColor = .purple
+        return stackView
+    }()
     
     private lazy var tabs: TabView = {
         let page1 = UIView()
@@ -65,6 +74,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
+        scrollView.isScrollEnabled = false
+        scrollView.backgroundColor = .red
         return scrollView
     }()
     
@@ -74,10 +85,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         courierBar.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight).isActive = true
         return courierBar
     }()
-    
-    // MARK: Constraints
-    
-    private var scrollViewBottom: NSLayoutConstraint? = nil
     
     // MARK: Authentication
     
@@ -92,6 +99,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
+        
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
         
@@ -120,50 +128,43 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func setup() {
         authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
-            if userId != nil {
+            if (userId != nil) {
                 self?.traitCollectionDidChange(nil)
             }
         }
 
-        // Add views
-        addSubview(tabs)
-        addSubview(scrollView)
-        addSubview(courierBar)
+        addStack(
+            top: tabs,
+            middle: scrollView,
+            bottom: courierBar
+        )
         
-        // Set constraints
-        setupConstraints()
-        
-        // Add pages to the scroll view
         addPagesToScrollView(tabs)
         
-        // Refresh the theme
         traitCollectionDidChange(nil)
         
         makeListener()
     }
     
-    private func setupConstraints() {
-        // Tabs constraints
+    private func addStack(top: UIView, middle: UIView, bottom: UIView) {
+        addSubview(stackView)
+        
         NSLayoutConstraint.activate([
-            tabs.topAnchor.constraint(equalTo: topAnchor),
-            tabs.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tabs.trailingAnchor.constraint(equalTo: trailingAnchor)
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
-        // ScrollView constraints
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: tabs.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: courierBar.topAnchor)
-        ])
-        
-        // CourierBar constraints
-        NSLayoutConstraint.activate([
-            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
-            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
-            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+        stackView.addArrangedSubview(top)
+        stackView.addArrangedSubview(middle)
+        stackView.addArrangedSubview(bottom)
+    }
+    
+    private func makeInboxList(supportedMessageStates: [InboxMessageListView.MessageState]) -> InboxMessageListView {
+        let list = InboxMessageListView(supportedMessageStates: supportedMessageStates)
+        list.translatesAutoresizingMaskIntoConstraints = false
+        return list
     }
     
     private func addPagesToScrollView(_ tabView: TabView) {
@@ -214,7 +215,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func toggleCourierBar(brand: CourierBrand?) {
         courierBar.isHidden = !(brand?.settings?.inapp?.showCourierFooter ?? true)
-        
         if !courierBar.isHidden {
             courierBar.setColors(with: superview?.backgroundColor)
         }
@@ -222,17 +222,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
-        // Update bar
         toggleCourierBar(brand: theme.brand)
-        
-        // Ensure scrollView is sized correctly
-        scrollView.frame.size.height = self.frame.height - Theme.Bar.barHeight
-        
-        // Set each page to the correct height
-        for page in scrollView.subviews {
-            page.frame.size.height = scrollView.frame.size.height
-        }
     }
     
     private func makeListener() {
@@ -249,6 +239,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         if let brandId = self.theme.brandId {
             let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
             self.theme.brand = res?.data.brand
+            self.toggleCourierBar(brand: self.theme.brand)
         }
     }
     
@@ -262,6 +253,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func setTheme(isDarkMode: Bool) {
         theme = isDarkMode ? darkTheme : lightTheme
+        toggleCourierBar(brand: theme.brand)
     }
     
     // MARK: ScrollView Delegates
