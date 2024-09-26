@@ -74,6 +74,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = false
+        scrollView.isScrollEnabled = false
         scrollView.backgroundColor = .red
         return scrollView
     }()
@@ -231,13 +232,19 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
+        
+        // Update bar
         toggleCourierBar(brand: theme.brand)
+        
+        // Update scroll view's frame to ensure it's sized correctly
+        scrollView.frame.size.height = self.frame.size.height - Theme.Bar.barHeight - (stackView.spacing * CGFloat(stackView.arrangedSubviews.count - 1))
         
         // Set each page to the correct height and width
         for page in scrollView.subviews {
             page.frame.size.height = scrollView.frame.size.height
             page.frame.size.width = scrollView.frame.size.width
         }
+        
     }
     
     private func makeListener() {
