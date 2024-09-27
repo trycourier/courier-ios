@@ -176,7 +176,7 @@ internal class Tab: UIView {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = 4
+        stackView.spacing = 6
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -311,6 +311,8 @@ internal class Tab: UIView {
 
 internal class TabBadge: UIView {
     
+    private let minWidth: CGFloat = 24
+    
     func refresh(theme: CourierInboxTheme, badge: String?, isSelected: Bool) {
         isHidden = badge == nil
         titleLabel.text = badge
@@ -356,6 +358,10 @@ internal class TabBadge: UIView {
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6)
+        ])
+        
+        NSLayoutConstraint.activate([
+            widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
         ])
         
     }
