@@ -231,16 +231,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         )
     }
     
-    private func toggleCourierBar(brand: CourierBrand?) {
-        courierBar.isHidden = !(brand?.settings?.inapp?.showCourierFooter ?? true)
-        if !courierBar.isHidden {
-            courierBar.setColors(with: superview?.backgroundColor)
-        }
-    }
-    
     open override func layoutSubviews() {
         super.layoutSubviews()
-        toggleCourierBar(brand: theme.brand)
+        refreshTheme()
     }
     
     private func makeListener() {
@@ -284,9 +277,16 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     private func refreshTheme() {
-        toggleCourierBar(brand: self.theme.brand)
-        tabView.setTheme(theme: self.theme)
-        
+        refreshCourierBar(self.theme)
+        tabView.setTheme(self.theme)
+    }
+    
+    private func refreshCourierBar(_ theme: CourierInboxTheme) {
+        courierBar.isHidden = !(theme.brand?.settings?.inapp?.showCourierFooter ?? true)
+        if !courierBar.isHidden {
+            courierBar.setColors(with: superview?.backgroundColor)
+            courierBar.setTheme(theme)
+        }
     }
     
     deinit {

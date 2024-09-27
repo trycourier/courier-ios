@@ -92,7 +92,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
     }
     
-    func setTheme(theme: CourierInboxTheme) {
+    func setTheme(_ theme: CourierInboxTheme) {
         self.theme = theme
         self.indicatorView.backgroundColor = theme.indicatorColor
         self.tabsStackView.subviews.forEach { view in
