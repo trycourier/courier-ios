@@ -251,7 +251,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                     onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
                         if let tabs = self?.tabView.tabs {
                             if (!tabs.isEmpty) {
-                                tabs[0].badge = "\(unreadMessageCount)+"
+                                tabs[0].badge = unreadMessageCount
                             }
                         }
                     }
