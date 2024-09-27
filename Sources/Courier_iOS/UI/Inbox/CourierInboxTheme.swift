@@ -48,7 +48,7 @@ import UIKit
             unselected: CourierStyles.Inbox.TabItemStyle(
                 font: CourierStyles.Font(
                     font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
-                    color: .label
+                    color: .secondaryLabel
                 ),
                 indicator: CourierStyles.Inbox.TabIndicatorStyle(
                     font: CourierStyles.Font(
