@@ -161,6 +161,7 @@ internal class Tab: UIView {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 4
+        stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -194,6 +195,8 @@ internal class Tab: UIView {
         } else {
             badgeLabel.isHidden = true
         }
+        
+        titleLabel.text = title
         
         setNeedsLayout()
         layoutIfNeeded()
