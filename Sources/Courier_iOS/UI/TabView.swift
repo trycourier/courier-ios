@@ -255,26 +255,8 @@ internal class Tab: UIView {
     }
     
     private func addGestureRecognizers() {
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tabTapped))
         addGestureRecognizer(tapGesture)
-        
-        let touchDownGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleTouch(_:)))
-        touchDownGesture.minimumPressDuration = 0
-        touchDownGesture.cancelsTouchesInView = false
-        addGestureRecognizer(touchDownGesture)
-        
-    }
-    
-    @objc private func handleTouch(_ gesture: UILongPressGestureRecognizer) {
-        switch gesture.state {
-        case .began:
-            animateOpacity(to: 0.5) // Fade to 0.5 opacity on touch down
-        case .ended, .cancelled:
-            animateOpacity(to: 1.0) // Fade back to full opacity on touch up
-        default:
-            break
-        }
     }
     
     private func animateOpacity(to alpha: CGFloat) {
@@ -283,9 +265,30 @@ internal class Tab: UIView {
         }
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        animateOpacity(to: 0.5)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        animateOpacity(to: 1)
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        animateOpacity(to: 1)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        animateOpacity(to: 1)
+    }
+    
     @objc private func tabTapped() {
         onTapped()
     }
+    
 }
 
 internal class TabBadge: UIView {
