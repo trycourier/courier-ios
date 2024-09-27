@@ -322,6 +322,7 @@ internal class TabBadge: UIView {
     private func refresh() {
         titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
         titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+        backgroundColor = .red
     }
     
     func setTheme(theme: CourierInboxTheme) {
@@ -356,19 +357,14 @@ internal class TabBadge: UIView {
     
     private func setup() {
         
-        // Create the label with padding
         let titleLabel = PaddedLabel()
         titleLabel.text = title
-        titleLabel.backgroundColor = .red
-        titleLabel.textAlignment = .center // Optional: Center the text
+        titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.layer.cornerRadius = 10 // Set the corner radius
-        titleLabel.layer.masksToBounds = true // Clip the corners
+        titleLabel.layer.masksToBounds = true
 
-        // Add the label as a subview
         addSubview(titleLabel)
 
-        // Set constraints for titleLabel
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),

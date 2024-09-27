@@ -86,7 +86,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = self.canSwipePages
         scrollView.isScrollEnabled = self.canSwipePages
-        scrollView.backgroundColor = .red
         return scrollView
     }()
     
