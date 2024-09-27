@@ -150,7 +150,7 @@ internal class Tab: UIView {
         }
     }
     
-    var badge: String? = nil {
+    var badge: Int? = nil {
         didSet {
             refresh()
         }
@@ -183,8 +183,9 @@ internal class Tab: UIView {
         
         titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
         titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+        badgeLabel.backgroundColor = isSelected ? theme?.unreadColor : theme?.unreadColor // TODO
         
-        if let value = badge, !value.isEmpty {
+        if let value = getBadgeValue(value: self.badge ?? 0) {
             badgeLabel.text = value
             badgeLabel.isHidden = false
             badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
@@ -192,6 +193,16 @@ internal class Tab: UIView {
             badgeLabel.isHidden = true
         }
         
+    }
+    
+    private func getBadgeValue(value: Int) -> String? {
+        if (value <= 0) {
+            return nil
+        } else if (value >= 99) {
+            return "99+"
+        } else {
+            return "\(value)"
+        }
     }
     
     func setTheme(theme: CourierInboxTheme) {
