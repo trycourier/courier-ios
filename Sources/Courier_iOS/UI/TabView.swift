@@ -14,6 +14,12 @@ internal struct Page {
 
 internal class TabView: UIView, UIScrollViewDelegate {
     
+    private let border: UIView = {
+        let border = UIView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        return border
+    }()
+    
     let pages: [Page]
     let scrollView: UIScrollView
     let onTabSelected: (Int) -> Void
@@ -88,12 +94,22 @@ internal class TabView: UIView, UIScrollViewDelegate {
             indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
         ])
         
+        addSubview(border)
+        
+        NSLayoutConstraint.activate([
+            border.heightAnchor.constraint(equalToConstant: 0.5),
+            border.topAnchor.constraint(equalTo: topAnchor),
+            border.leadingAnchor.constraint(equalTo: leadingAnchor),
+            border.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+        
         setSelectedTab()
         
     }
     
     func setTheme(_ theme: CourierInboxTheme) {
         self.theme = theme
+        self.border.backgroundColor = theme.cellStyle.separatorColor ?? .separator
         self.indicatorView.backgroundColor = theme.indicatorColor
         self.tabsStackView.subviews.forEach { view in
             if let view = view as? Tab {

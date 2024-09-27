@@ -277,16 +277,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     private func refreshTheme() {
-        refreshCourierBar(self.theme)
+        courierBar.setColors(with: superview?.backgroundColor)
+        courierBar.setTheme(self.theme)
         tabView.setTheme(self.theme)
-    }
-    
-    private func refreshCourierBar(_ theme: CourierInboxTheme) {
-        courierBar.isHidden = !(theme.brand?.settings?.inapp?.showCourierFooter ?? true)
-        if !courierBar.isHidden {
-            courierBar.setColors(with: superview?.backgroundColor)
-            courierBar.setTheme(theme)
-        }
     }
     
     deinit {
