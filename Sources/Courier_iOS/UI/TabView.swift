@@ -189,27 +189,31 @@ internal class Tab: UIView {
         return label
     }()
     
-    private let badgeLabel: PaddedLabel = {
-        let label = PaddedLabel()
+    private let badgeLabel: TabBadge = {
+        let label = TabBadge()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.isHidden = true
         return label
     }()
 
     private func refresh() {
+        
+        titleLabel.text = title
         titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
         titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
         
-        if let value = getBadgeValue(value: self.badge ?? 0) {
-            badgeLabel.text = value
-            badgeLabel.isHidden = false
-        } else {
-            badgeLabel.isHidden = true
+        if let theme = self.theme {
+            let badge = getBadgeValue(value: self.badge ?? 0)
+            badgeLabel.refresh(
+                theme: theme,
+                badge: badge,
+                isSelected: isSelected
+            )
         }
         
-        titleLabel.text = title
         setNeedsLayout()
         layoutIfNeeded()
+        
     }
     
     private func getBadgeValue(value: Int) -> String? {
@@ -310,24 +314,12 @@ internal class Tab: UIView {
 
 internal class TabBadge: UIView {
     
-    let title: String
-    private var theme: CourierInboxTheme? = nil
-    
-    var isSelected = false {
-        didSet {
-            refresh()
-        }
-    }
-    
-    private func refresh() {
-        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
-        titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+    func refresh(theme: CourierInboxTheme, badge: String?, isSelected: Bool) {
+        isHidden = badge == nil
+        titleLabel.text = badge
+        titleLabel.textColor = isSelected ? theme.tabStyle.selected.color : theme.tabStyle.unselected.color
+        titleLabel.font = isSelected ? theme.tabStyle.selected.font : theme.tabStyle.unselected.font
         backgroundColor = .red
-    }
-    
-    func setTheme(theme: CourierInboxTheme) {
-        self.theme = theme
-        refresh()
     }
     
     private let titleLabel: UILabel = {
@@ -337,20 +329,17 @@ internal class TabBadge: UIView {
         return label
     }()
     
-    public init(title: String) {
-        self.title = title
+    public init() {
         super.init(frame: .zero)
         setup()
     }
 
     override init(frame: CGRect) {
-        self.title = ""
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
-        self.title = ""
         super.init(coder: coder)
         setup()
     }
@@ -358,7 +347,6 @@ internal class TabBadge: UIView {
     private func setup() {
         
         let titleLabel = PaddedLabel()
-        titleLabel.text = title
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.layer.masksToBounds = true
