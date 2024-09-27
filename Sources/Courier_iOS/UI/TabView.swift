@@ -199,8 +199,10 @@ internal class Tab: UIView {
     private func refresh() {
         
         titleLabel.text = title
-        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.font.color : theme?.tabStyle.unselected.font.color
-        titleLabel.font = isSelected ? theme?.tabStyle.selected.font.font : theme?.tabStyle.unselected.font.font
+        
+        let style = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+        titleLabel.textColor = style?.color
+        titleLabel.font = style?.font
         
         if let theme = self.theme {
             let badge = getBadgeValue(value: self.badge ?? 0)
@@ -319,10 +321,11 @@ internal class TabBadge: UIView {
         
         titleLabel.text = badge
         
-        titleLabel.textColor = isSelected ? theme.tabStyle.selected.indicator.font.color : theme.tabStyle.unselected.indicator.font.color
-        titleLabel.font = isSelected ? theme.tabStyle.selected.indicator.font.font : theme.tabStyle.unselected.font.font
+        let style = isSelected ? theme.tabStyle.selected.indicator : theme.tabStyle.unselected.indicator
         
-        backgroundColor = isSelected ? theme.tabStyle.selected.indicator.color : theme.tabStyle.unselected.indicator.color
+        titleLabel.textColor = style.font.color
+        titleLabel.font = style.font.font
+        backgroundColor = style.color
 
         layoutIfNeeded()
         
