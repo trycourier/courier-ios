@@ -344,39 +344,16 @@ internal class TabBadge: UIView {
     }
     
     private func setup() {
-        
-        let titleLabel = PaddedLabel()
-        titleLabel.textAlignment = .center
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.layer.masksToBounds = true
 
         addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 6),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4)
         ])
         
-    }
-    
-}
-
-class PaddedLabel: UILabel {
-    
-    var padding: UIEdgeInsets = .init(top: 4, left: 6, bottom: 4, right: 6)
-
-    override func drawText(in rect: CGRect) {
-        let paddedRect = rect.inset(by: padding)
-        super.drawText(in: paddedRect)
-    }
-
-    override var intrinsicContentSize: CGSize {
-        let intrinsicSize = super.intrinsicContentSize
-        let paddedWidth = intrinsicSize.width + padding.left + padding.right
-        let paddedHeight = intrinsicSize.height + padding.top + padding.bottom
-        return CGSize(width: paddedWidth, height: paddedHeight)
     }
     
 }
