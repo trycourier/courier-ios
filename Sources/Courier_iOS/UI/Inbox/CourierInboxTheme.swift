@@ -63,12 +63,12 @@ import UIKit
         ),
         readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle = CourierStyles.Inbox.ReadingSwipeActionStyle(
             read: CourierStyles.Inbox.SwipeActionStyle(
-                icon: UIImage(systemName: "envelope.open.fill"),
-                color: .systemBlue
-            ),
-            unread: CourierStyles.Inbox.SwipeActionStyle(
                 icon: UIImage(systemName: "envelope.fill"),
                 color: .systemGray
+            ),
+            unread: CourierStyles.Inbox.SwipeActionStyle(
+                icon: UIImage(systemName: "envelope.open.fill"),
+                color: .systemBlue
             )
         ),
         archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle = CourierStyles.Inbox.ArchivingSwipeActionStyle(

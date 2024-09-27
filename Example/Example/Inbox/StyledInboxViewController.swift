@@ -18,7 +18,7 @@ class StyledInboxViewController: UIViewController {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
                 brandId: Env.COURIER_BRAND_ID,
-                tabIndicatorColor: secondaryColor,
+                tabIndicatorColor: primaryColor,
                 tabStyle: CourierStyles.Inbox.TabStyle(
                     selected: CourierStyles.Inbox.TabItemStyle(
                         font: CourierStyles.Font(
@@ -30,7 +30,7 @@ class StyledInboxViewController: UIViewController {
                                 font: UIFont(name: "Avenir Black", size: 14)!,
                                 color: .white
                             ),
-                            color: secondaryColor
+                            color: primaryColor
                         )
                     ),
                     unselected: CourierStyles.Inbox.TabItemStyle(
@@ -43,14 +43,30 @@ class StyledInboxViewController: UIViewController {
                                 font: UIFont(name: "Avenir Medium", size: 14)!,
                                 color: .white
                             ),
-                            color: secondaryColor
+                            color: primaryColor
                         )
+                    )
+                ),
+                readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle(
+                    read: CourierStyles.Inbox.SwipeActionStyle(
+                        icon: UIImage(systemName: "envelope.open.fill"),
+                        color: primaryColor
+                    ),
+                    unread: CourierStyles.Inbox.SwipeActionStyle(
+                        icon: UIImage(systemName: "envelope.fill"),
+                        color: .systemGray
+                    )
+                ),
+                archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle(
+                    archive: CourierStyles.Inbox.SwipeActionStyle(
+                        icon: UIImage(systemName: "archivebox.fill"),
+                        color: secondaryColor
                     )
                 ),
                 messageAnimationStyle: .fade,
                 unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
                     indicator: .dot,
-                    color: secondaryColor
+                    color: primaryColor
                 ),
                 titleStyle: CourierStyles.Inbox.TextStyle(
                     unread: CourierStyles.Font(
