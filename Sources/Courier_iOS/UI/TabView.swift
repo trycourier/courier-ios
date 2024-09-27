@@ -89,7 +89,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         addSubview(indicatorView)
         NSLayoutConstraint.activate([
-            indicatorView.heightAnchor.constraint(equalToConstant: 3),
+            indicatorView.heightAnchor.constraint(equalToConstant: 2),
             indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
             indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
         ])
@@ -199,8 +199,8 @@ internal class Tab: UIView {
     private func refresh() {
         
         titleLabel.text = title
-        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
-        titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.font.color : theme?.tabStyle.unselected.font.color
+        titleLabel.font = isSelected ? theme?.tabStyle.selected.font.font : theme?.tabStyle.unselected.font.font
         
         if let theme = self.theme {
             let badge = getBadgeValue(value: self.badge ?? 0)
@@ -314,10 +314,9 @@ internal class TabBadge: UIView {
     func refresh(theme: CourierInboxTheme, badge: String?, isSelected: Bool) {
         isHidden = badge == nil
         titleLabel.text = badge
-        titleLabel.textColor = isSelected ? theme.tabStyle.selected.color : theme.tabStyle.unselected.color
-        titleLabel.font = isSelected ? theme.tabStyle.selected.font : theme.tabStyle.unselected.font
-        backgroundColor = .red
-        setNeedsLayout()
+        titleLabel.textColor = isSelected ? theme.tabStyle.selected.indicator.font.color : theme.tabStyle.unselected.indicator.font.color
+        titleLabel.font = isSelected ? theme.tabStyle.selected.indicator.font.font : theme.tabStyle.unselected.font.font
+        backgroundColor = isSelected ? theme.tabStyle.selected.indicator.color : theme.tabStyle.unselected.indicator.color
         layoutIfNeeded()
     }
     

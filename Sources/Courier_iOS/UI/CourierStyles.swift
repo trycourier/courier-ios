@@ -15,12 +15,36 @@ public enum CourierStyles {
         
         public class TabStyle: NSObject {
             
-            public let selected: CourierStyles.Font
-            public let unselected: CourierStyles.Font
+            public let selected: TabItemStyle
+            public let unselected: TabItemStyle
             
-            public init(selected: CourierStyles.Font, unselected: CourierStyles.Font) {
+            public init(selected: TabItemStyle, unselected: TabItemStyle) {
                 self.selected = selected
                 self.unselected = unselected
+            }
+            
+        }
+        
+        public class TabItemStyle: NSObject {
+            
+            public let font: CourierStyles.Font
+            public let indicator: TabIndicatorStyle
+            
+            public init(font: CourierStyles.Font, indicator: TabIndicatorStyle) {
+                self.font = font
+                self.indicator = indicator
+            }
+            
+        }
+        
+        public class TabIndicatorStyle: NSObject {
+            
+            public let font: CourierStyles.Font
+            public let color: UIColor
+            
+            public init(font: CourierStyles.Font, color: UIColor) {
+                self.font = font
+                self.color = color
             }
             
         }

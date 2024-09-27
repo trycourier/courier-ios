@@ -32,13 +32,31 @@ import UIKit
         brandId: String? = nil,
         tabIndicatorColor: UIColor? = nil,
         tabStyle: CourierStyles.Inbox.TabStyle = CourierStyles.Inbox.TabStyle(
-            selected: CourierStyles.Font(
-                font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
-                color: .label
+            selected: CourierStyles.Inbox.TabItemStyle(
+                font: CourierStyles.Font(
+                    font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                    color: .label
+                ),
+                indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                    font: CourierStyles.Font(
+                        font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                        color: .white
+                    ),
+                    color: .systemBlue
+                )
             ),
-            unselected: CourierStyles.Font(
-                font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
-                color: .secondaryLabel
+            unselected: CourierStyles.Inbox.TabItemStyle(
+                font: CourierStyles.Font(
+                    font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                    color: .label
+                ),
+                indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                    font: CourierStyles.Font(
+                        font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                        color: .label
+                    ),
+                    color: .secondaryLabel
+                )
             )
         ),
         messageAnimationStyle: UITableView.RowAnimation = .left,
