@@ -314,10 +314,14 @@ internal class TabBadge: UIView {
     private let minWidth: CGFloat = 32
     
     func refresh(theme: CourierInboxTheme, badge: String?, isSelected: Bool) {
+        
         isHidden = badge == nil
+        
         titleLabel.text = badge
+        
         titleLabel.textColor = isSelected ? theme.tabStyle.selected.indicator.font.color : theme.tabStyle.unselected.indicator.font.color
         titleLabel.font = isSelected ? theme.tabStyle.selected.indicator.font.font : theme.tabStyle.unselected.font.font
+        
         backgroundColor = isSelected ? theme.tabStyle.selected.indicator.color : theme.tabStyle.unselected.indicator.color
 
         layoutIfNeeded()
