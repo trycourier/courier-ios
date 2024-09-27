@@ -48,6 +48,40 @@ public enum CourierStyles {
             }
             
         }
+        
+        public class ReadingSwipeActionStyle: NSObject {
+            
+            public let read: SwipeActionStyle
+            public let unread: SwipeActionStyle
+            
+            public init(read: SwipeActionStyle, unread: SwipeActionStyle) {
+                self.read = read
+                self.unread = unread
+            }
+            
+        }
+        
+        public class ArchivingSwipeActionStyle: NSObject {
+            
+            public let archive: SwipeActionStyle
+            
+            public init(archive: SwipeActionStyle) {
+                self.archive = archive
+            }
+            
+        }
+        
+        public class SwipeActionStyle: NSObject {
+            
+            public let icon: UIImage?
+            public let color: UIColor
+            
+            public init(icon: UIImage?, color: UIColor) {
+                self.icon = icon
+                self.color = color
+            }
+            
+        }
      
         public class TextStyle: NSObject {
             

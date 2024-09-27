@@ -423,6 +423,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
     }
     
+    // Reading handler
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         if (self.canSwipePages) {
@@ -432,10 +433,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         // Check the read status of the message at the current indexPath
         let message = inboxMessages[indexPath.row]
         
-        // Define the action dynamically based on whether the message is read or unread
+        let style = message.isRead ? self.theme.readingSwipeActionStyle.read : self.theme.readingSwipeActionStyle.unread
         let actionTitle = message.isRead ? "Unread" : "Read"
-        let actionIcon = message.isRead ? "envelope.fill" : "envelope.open.fill" // Closed envelope for unread, open for read
-        let actionColor = message.isRead ? UIColor.systemGray : UIColor.systemBlue // Orange for unread, blue for read
 
         let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
             tableView.deselectRow(at: indexPath, animated: true)
@@ -444,44 +443,37 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
         
         // Customize the appearance of the action
-        toggleReadAction.backgroundColor = actionColor
-        
-        // Set the icon image dynamically
-        if let icon = UIImage(systemName: actionIcon) {
-            toggleReadAction.image = icon
-        }
+        toggleReadAction.backgroundColor = style.color
+        toggleReadAction.image = style.icon
         
         // Create a configuration object with the action
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [toggleReadAction])
-        
-        // Disable full swipe (so the action doesn't fully delete the cell)
         swipeConfiguration.performsFirstActionWithFullSwipe = true
         
         return swipeConfiguration
         
     }
     
-    // This method enables swipe actions for table view cells
+    // Archiving handler
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         if (self.canSwipePages) {
             return nil
         }
         
-        let archiveAction = UIContextualAction(style: .normal, title: "Archive") { [weak self] (action, view, completionHandler) in
+        let archiveAction = UIContextualAction(style: .destructive, title: "Archive") { [weak self] (action, view, completionHandler) in
             tableView.deselectRow(at: indexPath, animated: true)
             self?.archiveCell(at: indexPath.row)
             completionHandler(true)
         }
         
         // Customize the action appearance
-        archiveAction.backgroundColor = .systemRed  // A neutral color for archive
-        archiveAction.image = UIImage(systemName: "archivebox.fill") // Use SF Symbol for archive box
+        let style = self.theme.archivingSwipeActionStyle.archive
+        archiveAction.backgroundColor = style.color
+        archiveAction.image = style.icon
         
         // Create a configuration object with the action
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [archiveAction])
-        
-        // Enable full swipe to perform the archive action
         swipeConfiguration.performsFirstActionWithFullSwipe = true
         
         return swipeConfiguration

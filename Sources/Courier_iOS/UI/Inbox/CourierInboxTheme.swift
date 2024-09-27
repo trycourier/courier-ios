@@ -14,6 +14,8 @@ import UIKit
     public let brandId: String?
     public let tabIndicatorColor: UIColor?
     public let tabStyle: CourierStyles.Inbox.TabStyle
+    public let readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle // Added field
+    public let archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle // Added field
     public let messageAnimationStyle: UITableView.RowAnimation
     public let loadingIndicatorColor: UIColor?
     public let unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle
@@ -23,11 +25,11 @@ import UIKit
     public let buttonStyle: CourierStyles.Inbox.ButtonStyle
     public let cellStyle: CourierStyles.Cell
     public let infoViewStyle: CourierStyles.InfoViewStyle
-    
+
     // MARK: Init
-    
+
     // brandId will be overridden if other colors are provided
-    
+
     public init(
         brandId: String? = nil,
         tabIndicatorColor: UIColor? = nil,
@@ -59,9 +61,25 @@ import UIKit
                 )
             )
         ),
+        readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle = CourierStyles.Inbox.ReadingSwipeActionStyle(
+            read: CourierStyles.Inbox.SwipeActionStyle(
+                icon: UIImage(systemName: "envelope.open.fill"),
+                color: .systemBlue
+            ),
+            unread: CourierStyles.Inbox.SwipeActionStyle(
+                icon: UIImage(systemName: "envelope.fill"),
+                color: .systemGray
+            )
+        ),
+        archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle = CourierStyles.Inbox.ArchivingSwipeActionStyle(
+            archive: CourierStyles.Inbox.SwipeActionStyle(
+                icon: UIImage(systemName: "archivebox.fill"),
+                color: .systemRed
+            )
+        ),
         messageAnimationStyle: UITableView.RowAnimation = .left,
         loadingIndicatorColor: UIColor? = nil,
-        unreadIndicatorStyle:  CourierStyles.Inbox.UnreadIndicatorStyle =  CourierStyles.Inbox.UnreadIndicatorStyle(),
+        unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle = CourierStyles.Inbox.UnreadIndicatorStyle(),
         titleStyle: CourierStyles.Inbox.TextStyle = CourierStyles.Inbox.TextStyle(
             unread: CourierStyles.Font(
                 font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
@@ -93,7 +111,7 @@ import UIKit
             )
         ),
         buttonStyle: CourierStyles.Inbox.ButtonStyle = CourierStyles.Inbox.ButtonStyle(),
-        cellStyle:  CourierStyles.Cell = CourierStyles.Cell(),
+        cellStyle: CourierStyles.Cell = CourierStyles.Cell(),
         infoViewStyle: CourierStyles.InfoViewStyle = CourierStyles.InfoViewStyle(
             font: CourierStyles.Font(
                 font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
@@ -107,6 +125,8 @@ import UIKit
         self.brandId = brandId
         self.tabIndicatorColor = tabIndicatorColor
         self.tabStyle = tabStyle
+        self.readingSwipeActionStyle = readingSwipeActionStyle
+        self.archivingSwipeActionStyle = archivingSwipeActionStyle
         self.messageAnimationStyle = messageAnimationStyle
         self.unreadIndicatorStyle = unreadIndicatorStyle
         self.loadingIndicatorColor = loadingIndicatorColor

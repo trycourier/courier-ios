@@ -41,7 +41,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fill
-        stackView.backgroundColor = .purple
         return stackView
     }()
     

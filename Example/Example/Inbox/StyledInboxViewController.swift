@@ -18,6 +18,35 @@ class StyledInboxViewController: UIViewController {
         return CourierInbox(
             lightTheme: CourierInboxTheme(
                 brandId: Env.COURIER_BRAND_ID,
+                tabIndicatorColor: secondaryColor,
+                tabStyle: CourierStyles.Inbox.TabStyle(
+                    selected: CourierStyles.Inbox.TabItemStyle(
+                        font: CourierStyles.Font(
+                            font: UIFont(name: "Avenir Black", size: 18)!,
+                            color: textColor
+                        ),
+                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                            font: CourierStyles.Font(
+                                font: UIFont(name: "Avenir Black", size: 14)!,
+                                color: .white
+                            ),
+                            color: secondaryColor
+                        )
+                    ),
+                    unselected: CourierStyles.Inbox.TabItemStyle(
+                        font: CourierStyles.Font(
+                            font: UIFont(name: "Avenir Medium", size: 18)!,
+                            color: textColor
+                        ),
+                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                            font: CourierStyles.Font(
+                                font: UIFont(name: "Avenir Medium", size: 14)!,
+                                color: .white
+                            ),
+                            color: secondaryColor
+                        )
+                    )
+                ),
                 messageAnimationStyle: .fade,
                 unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
                     indicator: .dot,
@@ -25,11 +54,11 @@ class StyledInboxViewController: UIViewController {
                 ),
                 titleStyle: CourierStyles.Inbox.TextStyle(
                     unread: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Black", size: 20)!,
+                        font: UIFont(name: "Avenir Black", size: 18)!,
                         color: textColor
                     ),
                     read: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Black", size: 20)!,
+                        font: UIFont(name: "Avenir Black", size: 18)!,
                         color: textColor
                     )
                 ),
