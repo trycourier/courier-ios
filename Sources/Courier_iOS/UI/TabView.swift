@@ -272,6 +272,7 @@ internal class Tab: UIView {
     
     private func addGestureRecognizers() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tabTapped))
+        tapGesture.cancelsTouchesInView = true
         addGestureRecognizer(tapGesture)
     }
     
