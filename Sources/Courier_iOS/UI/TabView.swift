@@ -311,7 +311,7 @@ internal class Tab: UIView {
 
 internal class TabBadge: UIView {
     
-    private let minWidth: CGFloat = 24
+    private let minWidth: CGFloat = 32
     
     func refresh(theme: CourierInboxTheme, badge: String?, isSelected: Bool) {
         isHidden = badge == nil
