@@ -98,7 +98,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         NSLayoutConstraint.activate([
             border.heightAnchor.constraint(equalToConstant: 0.5),
-            border.topAnchor.constraint(equalTo: topAnchor),
+            border.bottomAnchor.constraint(equalTo: bottomAnchor),
             border.leadingAnchor.constraint(equalTo: leadingAnchor),
             border.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
