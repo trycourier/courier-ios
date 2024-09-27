@@ -276,6 +276,11 @@ internal class Tab: UIView {
         addGestureRecognizer(tapGesture)
     }
     
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        return view == self ? self : nil
+    }
+    
     private func animateOpacity(to alpha: CGFloat) {
         UIView.animate(withDuration: 0.1) {
             self.alpha = alpha
