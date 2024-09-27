@@ -191,12 +191,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private func addPagesToScrollView(_ tabView: TabView) {
         let pages = tabView.pages.map { $0.page }
 
-        var previousPage: UIView? = nil
+        var previousPage: InboxMessageListView? = nil
 
         for (index, page) in pages.enumerated() {
             
             scrollView.addSubview(page)
-            
+            page.canSwipePages = self.canSwipePages
             page.translatesAutoresizingMaskIntoConstraints = false
             
             // Set constraints for the page

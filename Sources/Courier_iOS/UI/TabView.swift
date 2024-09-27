@@ -9,7 +9,7 @@ import UIKit
 
 internal struct Page {
     let title: String
-    let page: UIView
+    let page: InboxMessageListView
 }
 
 internal class TabView: UIView, UIScrollViewDelegate {
