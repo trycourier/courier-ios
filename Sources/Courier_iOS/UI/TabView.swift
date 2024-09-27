@@ -211,9 +211,6 @@ internal class Tab: UIView {
             )
         }
         
-        setNeedsLayout()
-        layoutIfNeeded()
-        
     }
     
     private func getBadgeValue(value: Int) -> String? {
@@ -320,6 +317,8 @@ internal class TabBadge: UIView {
         titleLabel.textColor = isSelected ? theme.tabStyle.selected.color : theme.tabStyle.unselected.color
         titleLabel.font = isSelected ? theme.tabStyle.selected.font : theme.tabStyle.unselected.font
         backgroundColor = .red
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
     private let titleLabel: UILabel = {
