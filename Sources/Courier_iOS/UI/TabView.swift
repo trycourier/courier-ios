@@ -167,6 +167,7 @@ internal class Tab: UIView {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
+        label.backgroundColor = .red
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
