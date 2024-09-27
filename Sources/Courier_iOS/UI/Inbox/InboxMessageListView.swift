@@ -20,12 +20,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private let supportedMessageStates: [MessageState]
     
     // MARK: Theme
-    
-    private let lightTheme: CourierInboxTheme
-    private let darkTheme: CourierInboxTheme
-    
-    // Sets the theme and propagates the change
-    // Defaults to light mode, but will change when the theme is set
+
     private var theme: CourierInboxTheme = .defaultLight
     
     // MARK: Interaction
@@ -115,18 +110,12 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public init(
         supportedMessageStates: [MessageState],
-        lightTheme: CourierInboxTheme = .defaultLight,
-        darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
         
         self.supportedMessageStates = supportedMessageStates
-        
-        // Theme
-        self.lightTheme = lightTheme
-        self.darkTheme = darkTheme
         
         // Init
         super.init(frame: .zero)
@@ -142,16 +131,12 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
     override init(frame: CGRect) {
         self.supportedMessageStates = []
-        self.lightTheme = .defaultLight
-        self.darkTheme = .defaultDark
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
         self.supportedMessageStates = []
-        self.lightTheme = .defaultLight
-        self.darkTheme = .defaultDark
         super.init(coder: coder)
         setup()
     }
@@ -181,6 +166,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         // Init the listener
         makeListener()
         
+    }
+    
+    func setTheme(_ theme: CourierInboxTheme) {
+        self.theme = theme
+        reloadViews()
     }
     
     private func addTableView() {
@@ -215,11 +205,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     private func makeListener() {
         Task {
-            do {
-                try await refreshBrand()
-            } catch {
-                Courier.shared.client?.log(error.localizedDescription)
-            }
             
             self.inboxListener = Courier.shared.addInboxListener(
                 onInitialLoad: { [weak self] in
@@ -244,16 +229,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                     
                 }
             )
-        }
-    }
-    
-    // MARK: Reloading
-    
-    private func refreshBrand() async throws {
-        if let brandId = self.theme.brandId {
-            let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
-            self.theme.brand = res?.data.brand
-            self.reloadViews()
         }
     }
     
@@ -286,14 +261,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     @objc private func onRefresh() {
         Task {
-            do {
-                try await refreshBrand()
-                await Courier.shared.refreshInbox()
-                self.tableView.refreshControl?.endRefreshing()
-            } catch {
-                Courier.shared.client?.log(error.localizedDescription)
-                self.state = .error(error)
-            }
+            await Courier.shared.refreshInbox()
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
     
@@ -563,20 +532,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             at: .top,
             animated: animated
         )
-    }
-    
-    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        // Handles setting the theme of the Inbox
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            setTheme(isDarkMode: traitCollection.userInterfaceStyle == .dark)
-        }
-    }
-    
-    private func setTheme(isDarkMode: Bool) {
-        theme = isDarkMode ? darkTheme : lightTheme
-        reloadViews()
     }
     
     private func reloadViews() {

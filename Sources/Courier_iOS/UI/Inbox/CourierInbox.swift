@@ -295,6 +295,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         courierBar.setColors(with: superview?.backgroundColor)
         courierBar.setTheme(self.theme)
         tabView.setTheme(self.theme)
+        getPages().forEach { page in
+            let inbox = page.page
+            inbox.setTheme(self.theme)
+        }
     }
     
     deinit {
