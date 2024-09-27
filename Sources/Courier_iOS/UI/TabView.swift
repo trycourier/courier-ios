@@ -317,7 +317,12 @@ internal class TabBadge: UIView {
         titleLabel.textColor = isSelected ? theme.tabStyle.selected.indicator.font.color : theme.tabStyle.unselected.indicator.font.color
         titleLabel.font = isSelected ? theme.tabStyle.selected.indicator.font.font : theme.tabStyle.unselected.font.font
         backgroundColor = isSelected ? theme.tabStyle.selected.indicator.color : theme.tabStyle.unselected.indicator.color
+
         layoutIfNeeded()
+        
+        // Dynamically set corner radius based on the height of the badge
+        layer.cornerRadius = bounds.height / 2 // Half the height for a fully rounded effect
+        layer.masksToBounds = true // Ensure the corners are clipped
     }
     
     private let titleLabel: UILabel = {
@@ -347,10 +352,10 @@ internal class TabBadge: UIView {
         addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 6),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4)
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6)
         ])
         
     }
