@@ -39,6 +39,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
+    var canSwipePages = false
     
     // MARK: UI
     
@@ -454,6 +455,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        if (self.canSwipePages) {
+            return nil
+        }
 
         // Check the read status of the message at the current indexPath
         let message = inboxMessages[indexPath.row]
@@ -489,6 +494,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     // This method enables swipe actions for table view cells
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        if (self.canSwipePages) {
+            return nil
+        }
         
         let archiveAction = UIContextualAction(style: .normal, title: "Archive") { [weak self] (action, view, completionHandler) in
             tableView.deselectRow(at: indexPath, animated: true)

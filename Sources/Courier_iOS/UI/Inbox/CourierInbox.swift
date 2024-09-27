@@ -45,14 +45,30 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         return stackView
     }()
     
+    private lazy var messagesPage = {
+        return Page(
+            title: "Notifications",
+            page: makeInboxList(supportedMessageStates: [.read, .unread])
+        )
+    }()
+    
+    private lazy var archivedPage = {
+        return Page(
+            title: "Archived",
+            page: makeInboxList(supportedMessageStates: [.archived])
+        )
+    }()
+    
+    private func getPages() -> [Page] {
+        return [
+            messagesPage,
+            archivedPage,
+        ]
+    }
+    
     private lazy var tabView: TabView = {
         
-        let pages = [
-            Page(title: "Notifications", page: self.makeInboxList(supportedMessageStates: [.read, .unread])),
-            Page(title: "Archived", page: self.makeInboxList(supportedMessageStates: [.archived])),
-        ]
-        
-        let tabs = TabView(pages: pages, scrollView: scrollView, onTabSelected: { [weak self] index in
+        let tabs = TabView(pages: getPages(), scrollView: scrollView, onTabSelected: { [weak self] index in
             self?.updateScrollViewToPage(index)
         })
         
