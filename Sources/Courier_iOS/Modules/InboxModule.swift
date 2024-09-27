@@ -297,7 +297,7 @@ internal actor InboxModule {
         // Handle the click action separately
         if event == .click {
             if let message = inbox?.messages?.first(where: { $0.messageId == messageId }),
-               let channelId = message.trackingIds?.clickTrackingId {
+            let channelId = message.trackingIds?.clickTrackingId {
                 try await client?.inbox.click(messageId: messageId, trackingId: channelId)
             }
             return

@@ -45,7 +45,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         return stackView
     }()
     
-    private lazy var tabs: TabView = {
+    private lazy var tabView: TabView = {
         
         let pages = [
             Page(title: "Notifications", page: self.makeInboxList(supportedMessageStates: [.read, .unread])),
@@ -139,12 +139,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         }
 
         addStack(
-            top: tabs,
+            top: tabView,
             middle: scrollView,
             bottom: courierBar
         )
         
-        addPagesToScrollView(tabs)
+        addPagesToScrollView(tabView)
         
         traitCollectionDidChange(nil)
         
@@ -247,6 +247,15 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         Task {
             do {
                 try await refreshBrand()
+                Courier.shared.addInboxListener(
+                    onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
+                        if let tabs = self?.tabView.tabs {
+                            if (!tabs.isEmpty) {
+                                tabs[0].badge = "\(unreadMessageCount)+"
+                            }
+                        }
+                    }
+                )
             } catch {
                 Courier.shared.client?.log(error.localizedDescription)
             }
@@ -276,7 +285,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func refreshTheme() {
         toggleCourierBar(brand: self.theme.brand)
-        tabs.setTheme(theme: self.theme)
+        tabView.setTheme(theme: self.theme)
         
     }
     

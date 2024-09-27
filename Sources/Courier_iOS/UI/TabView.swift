@@ -33,7 +33,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         return view
     }()
     
-    private var tabViews: [Tab] = []
+    private(set) var tabs: [Tab] = []
     
     public init(pages: [Page], scrollView: UIScrollView, onTabSelected: @escaping (Int) -> Void) {
         self.pages = pages
@@ -78,7 +78,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
                 self?.onTabSelected(index)
             }
             tabsStackView.addArrangedSubview(tab)
-            tabViews.append(tab)
+            tabs.append(tab)
         }
         
         addSubview(indicatorView)
@@ -117,7 +117,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     }
     
     private func setSelectedTab() {
-        for (index, tab) in tabViews.enumerated() {
+        for (index, tab) in tabs.enumerated() {
             tab.isSelected = index == getCurrentPageIndex()
         }
     }
@@ -150,15 +150,20 @@ internal class Tab: UIView {
         }
     }
     
-    private func refresh() {
-        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
-        titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+    var badge: String? = nil {
+        didSet {
+            refresh()
+        }
     }
     
-    func setTheme(theme: CourierInboxTheme) {
-        self.theme = theme
-        refresh()
-    }
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 4
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -166,6 +171,33 @@ internal class Tab: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private let badgeLabel: PaddedLabel = {
+        let label = PaddedLabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
+        return label
+    }()
+
+    private func refresh() {
+        
+        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
+        titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+        
+        if let value = badge, !value.isEmpty {
+            badgeLabel.text = value
+            badgeLabel.isHidden = false
+            badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        } else {
+            badgeLabel.isHidden = true
+        }
+        
+    }
+    
+    func setTheme(theme: CourierInboxTheme) {
+        self.theme = theme
+        refresh()
+    }
     
     public init(title: String, onTapped: @escaping () -> Void) {
         self.title = title
@@ -189,19 +221,22 @@ internal class Tab: UIView {
     }
     
     private func setup() {
-        
         backgroundColor = .clear
         
-        addSubview(titleLabel)
-        titleLabel.text = title
-        
-        // Set constraints for titleLabel
+        // Add stackView, titleLabel, and badgeLabel
+        addSubview(stackView)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(badgeLabel)
+
+        // Set constraints for stackView
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
+        
+        titleLabel.text = title
         
         // Add tap gesture to handle tab selection
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tabTapped))
@@ -211,4 +246,95 @@ internal class Tab: UIView {
     @objc private func tabTapped() {
         onTapped()
     }
+    
+}
+
+internal class TabBadge: UIView {
+    
+    let title: String
+    private var theme: CourierInboxTheme? = nil
+    
+    var isSelected = false {
+        didSet {
+            refresh()
+        }
+    }
+    
+    private func refresh() {
+        titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
+        titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+    }
+    
+    func setTheme(theme: CourierInboxTheme) {
+        self.theme = theme
+        refresh()
+    }
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    public init(title: String) {
+        self.title = title
+        super.init(frame: .zero)
+        setup()
+    }
+
+    override init(frame: CGRect) {
+        self.title = ""
+        super.init(frame: frame)
+        setup()
+    }
+    
+    public required init?(coder: NSCoder) {
+        self.title = ""
+        super.init(coder: coder)
+        setup()
+    }
+    
+    private func setup() {
+        
+        // Create the label with padding
+        let titleLabel = PaddedLabel()
+        titleLabel.text = title
+        titleLabel.backgroundColor = .red
+        titleLabel.textAlignment = .center // Optional: Center the text
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.layer.cornerRadius = 10 // Set the corner radius
+        titleLabel.layer.masksToBounds = true // Clip the corners
+
+        // Add the label as a subview
+        addSubview(titleLabel)
+
+        // Set constraints for titleLabel
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+        
+    }
+    
+}
+
+class PaddedLabel: UILabel {
+    
+    var padding: UIEdgeInsets = .init(top: 4, left: 6, bottom: 4, right: 6)
+
+    override func drawText(in rect: CGRect) {
+        let paddedRect = rect.inset(by: padding)
+        super.drawText(in: paddedRect)
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let intrinsicSize = super.intrinsicContentSize
+        let paddedWidth = intrinsicSize.width + padding.left + padding.right
+        let paddedHeight = intrinsicSize.height + padding.top + padding.bottom
+        return CGSize(width: paddedWidth, height: paddedHeight)
+    }
+    
 }
