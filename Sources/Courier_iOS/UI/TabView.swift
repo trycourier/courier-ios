@@ -233,7 +233,7 @@ internal class Tab: UIView {
     }
     
     private func setup() {
-        backgroundColor = .clear
+        backgroundColor = .systemBackground
         
         // Add stackView, titleLabel, and badgeLabel
         addSubview(stackView)
@@ -250,9 +250,37 @@ internal class Tab: UIView {
         
         titleLabel.text = title
         
-        // Add tap gesture to handle tab selection
+        addGestureRecognizers()
+        
+    }
+    
+    private func addGestureRecognizers() {
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tabTapped))
         addGestureRecognizer(tapGesture)
+        
+        let touchDownGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleTouch(_:)))
+        touchDownGesture.minimumPressDuration = 0
+        touchDownGesture.cancelsTouchesInView = false
+        addGestureRecognizer(touchDownGesture)
+        
+    }
+    
+    @objc private func handleTouch(_ gesture: UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            animateOpacity(to: 0.5) // Fade to 0.5 opacity on touch down
+        case .ended, .cancelled:
+            animateOpacity(to: 1.0) // Fade back to full opacity on touch up
+        default:
+            break
+        }
+    }
+    
+    private func animateOpacity(to alpha: CGFloat) {
+        UIView.animate(withDuration: 0.1) {
+            self.alpha = alpha
+        }
     }
     
     @objc private func tabTapped() {
