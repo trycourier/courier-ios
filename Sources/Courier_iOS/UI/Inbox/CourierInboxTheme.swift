@@ -39,7 +39,7 @@ import UIKit
                 ),
                 indicator: CourierStyles.Inbox.TabIndicatorStyle(
                     font: CourierStyles.Font(
-                        font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                        font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
                         color: .white
                     ),
                     color: .systemBlue
@@ -52,10 +52,10 @@ import UIKit
                 ),
                 indicator: CourierStyles.Inbox.TabIndicatorStyle(
                     font: CourierStyles.Font(
-                        font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize),
+                        font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
                         color: .label
                     ),
-                    color: .secondaryLabel
+                    color: .systemGray
                 )
             )
         ),
