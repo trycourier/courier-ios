@@ -168,6 +168,7 @@ internal class Tab: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -192,6 +193,9 @@ internal class Tab: UIView {
         } else {
             badgeLabel.isHidden = true
         }
+        
+        setNeedsLayout()
+        layoutIfNeeded()
         
     }
     
