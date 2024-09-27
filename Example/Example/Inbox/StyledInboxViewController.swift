@@ -50,11 +50,11 @@ class StyledInboxViewController: UIViewController {
                 readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle(
                     read: CourierStyles.Inbox.SwipeActionStyle(
                         icon: UIImage(systemName: "envelope.open.fill"),
-                        color: primaryColor
+                        color: .systemGray
                     ),
                     unread: CourierStyles.Inbox.SwipeActionStyle(
                         icon: UIImage(systemName: "envelope.fill"),
-                        color: .systemGray
+                        color: primaryColor
                     )
                 ),
                 archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle(
