@@ -161,14 +161,12 @@ internal class Tab: UIView {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 4
-        stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .red
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -183,24 +181,19 @@ internal class Tab: UIView {
     }()
 
     private func refresh() {
-        
         titleLabel.textColor = isSelected ? theme?.tabStyle.selected.color : theme?.tabStyle.unselected.color
         titleLabel.font = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
-        badgeLabel.backgroundColor = isSelected ? theme?.unreadColor : theme?.unreadColor // TODO
         
         if let value = getBadgeValue(value: self.badge ?? 0) {
             badgeLabel.text = value
             badgeLabel.isHidden = false
-            badgeLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         } else {
             badgeLabel.isHidden = true
         }
         
         titleLabel.text = title
-        
         setNeedsLayout()
         layoutIfNeeded()
-        
     }
     
     private func getBadgeValue(value: Int) -> String? {
@@ -247,12 +240,12 @@ internal class Tab: UIView {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(badgeLabel)
 
-        // Set constraints for stackView
+        // Set constraints for stackView to be centered in the parent view
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor)
         ])
         
         titleLabel.text = title
@@ -265,7 +258,6 @@ internal class Tab: UIView {
     @objc private func tabTapped() {
         onTapped()
     }
-    
 }
 
 internal class TabBadge: UIView {
