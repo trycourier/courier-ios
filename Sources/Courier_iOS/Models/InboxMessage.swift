@@ -93,13 +93,17 @@ public class InboxMessage: Codable {
         opened = nil
     }
     
-    public var createdAt: Date? {
+    public var createdAt: Date {
         guard let created = created else {
-            return nil
+            return Date()
         }
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return isoFormatter.date(from: created)
+        if let date = isoFormatter.date(from: created) {
+            return date
+        } else {
+            return Date()
+        }
     }
     
     public var time: String {
