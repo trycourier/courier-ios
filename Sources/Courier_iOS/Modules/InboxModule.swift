@@ -9,7 +9,7 @@ import UIKit
 
 internal protocol InboxModuleDelegate: AnyObject {
     func onInboxRestarted()
-    func onInboxUpdated(inbox: Inbox, ignoredListeners: [CourierInboxListener])
+    func onInboxUpdated(inbox: CourierInboxData, ignoredListeners: [CourierInboxListener])
     func onInboxError(with error: Error)
 }
 
@@ -35,7 +35,7 @@ internal actor InboxModule {
     
     private(set) var isPaging = false
     private(set) var socket: InboxSocket? = nil
-    private(set) var inbox: Inbox? = nil
+    private(set) var inboxData: CourierInboxData? = nil
     private(set) var streamTask: Task<Void, Never>? = nil
     
     private var delegate: InboxModuleDelegate? {
@@ -63,7 +63,7 @@ internal actor InboxModule {
                 
                 // Fetch the inbox and call the delegate
                 let updatedInbox = try await loadInbox(false)
-                self.inbox = updatedInbox
+                self.inboxData = updatedInbox
                 delegate?.onInboxUpdated(inbox: updatedInbox, ignoredListeners: [])
                 
             } catch {
@@ -85,7 +85,7 @@ internal actor InboxModule {
             
             // Load the inbox and call the delegate
             let updatedInbox = try await loadInbox(true)
-            self.inbox = updatedInbox
+            self.inboxData = updatedInbox
             delegate?.onInboxUpdated(inbox: updatedInbox, ignoredListeners: [])
             
         } catch {
@@ -115,12 +115,12 @@ internal actor InboxModule {
     }
     
     private func getPaginationLimit(refresh: Bool = false) -> Int {
-        let messageCount = inbox?.messages?.count ?? Courier.shared.paginationLimit
+        let messageCount = Courier.shared.paginationLimit
         let maxRefreshLimit = min(messageCount, InboxModule.Pagination.max.rawValue)
         return refresh ? maxRefreshLimit : Courier.shared.paginationLimit
     }
     
-    private func loadInbox(_ refresh: Bool) async throws -> Inbox {
+    private func loadInbox(_ refresh: Bool) async throws -> CourierInboxData {
         
         if !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
@@ -132,26 +132,21 @@ internal actor InboxModule {
         
         let limit = getPaginationLimit(refresh: refresh)
         
-        async let dataTask: (InboxResponse) = client.inbox.getMessages(
-            paginationLimit: limit,
-            startCursor: nil
-        )
+        // Functions for getting data
+        async let notificationsTask = client.inbox.getMessages(paginationLimit: limit, startCursor: nil)
+        async let archivedTask = client.inbox.getArchivedMessages(paginationLimit: limit, startCursor: nil)
+        async let unreadCountTask = client.inbox.getUnreadMessageCount()
         
-        async let unreadCountTask: (Int) = client.inbox.getUnreadMessageCount()
-        
-        let (inboxResponse, unreadCount) = await (try dataTask, try unreadCountTask)
+        // Await all results at the same time
+        let (notificationsResponse, archivedResponse, unreadCount) = await (try notificationsTask, try archivedTask, try unreadCountTask)
         
         // Connect the inbox socket
         try await connectWebSocket(client: client)
         
-        let inboxData = inboxResponse.data
-        
-        return Inbox(
-            messages: inboxData?.messages?.nodes,
-            totalCount: inboxData?.count ?? 0,
-            unreadCount: unreadCount,
-            hasNextPage: inboxData?.messages?.pageInfo?.hasNextPage,
-            startCursor: inboxData?.messages?.pageInfo?.startCursor
+        return CourierInboxData(
+            messages: notificationsResponse.toInboxMessageSet(),
+            archived: archivedResponse.toInboxMessageSet(),
+            unreadCount: unreadCount
         )
         
     }
@@ -168,8 +163,10 @@ internal actor InboxModule {
         // Listen to the events
         self.socket?.receivedMessage = { message in
             
+            let inboxFeed: InboxMessageFeed = message.isArchived ? .archived : .feed
+            
             Task { [weak self] in
-                await self?.inbox?.addNewMessage(message: message)
+                await self?.inboxData?.addNewMessage(inboxFeed, message: message)
                 await self?.notifyInboxUpdated()
             }
             
@@ -182,34 +179,34 @@ internal actor InboxModule {
                 switch (messageEvent.event) {
                 case .markAllRead:
                     
-                    await self?.inbox?.readAllMessages()
+                    await self?.inboxData?.readAllMessages(.feed)
                     await self?.notifyInboxUpdated()
                     
                 case .read:
                     
                     if let messageId = messageEvent.messageId {
-                        try await self?.inbox?.readMessage(messageId: messageId)
+                        try await self?.inboxData?.readMessage(.feed, messageId: messageId)
                         await self?.notifyInboxUpdated()
                     }
                     
                 case .unread:
                     
                     if let messageId = messageEvent.messageId {
-                        try await self?.inbox?.unreadMessage(messageId: messageId)
+                        try await self?.inboxData?.unreadMessage(.feed, messageId: messageId)
                         await self?.notifyInboxUpdated()
                     }
                     
                 case .archive:
                     
                     if let messageId = messageEvent.messageId {
-                        try await self?.inbox?.openMessage(messageId: messageId)
+                        try await self?.inboxData?.archiveMessage(.feed, messageId: messageId)
                         await self?.notifyInboxUpdated()
                     }
                     
                 case .opened:
                     
                     if let messageId = messageEvent.messageId {
-                        try await self?.inbox?.openMessage(messageId: messageId)
+                        try await self?.inboxData?.openMessage(.feed, messageId: messageId)
                         await self?.notifyInboxUpdated()
                     }
                     
@@ -231,22 +228,23 @@ internal actor InboxModule {
     }
     
     internal func notifyInboxUpdated(ignoredListeners: [CourierInboxListener] = []) {
-        if let inbox = self.inbox {
+        if let inbox = self.inboxData {
             delegate?.onInboxUpdated(inbox: inbox, ignoredListeners: ignoredListeners)
         }
     }
     
-    func fetchNextPage() async throws -> [InboxMessage] {
+    func fetchNextPage(_ inboxFeed: InboxMessageFeed) async throws -> [InboxMessage] {
         
         if !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
         }
         
-        if self.inbox == nil {
+        if self.inboxData == nil {
             return []
         }
 
-        let nextPage = inbox?.hasNextPage
+        let set = inboxFeed == .feed ? self.inboxData?.feed : self.inboxData?.archived
+        let nextPage = set?.canPaginate
 
         if (isPaging || nextPage == false) {
             return []
@@ -254,7 +252,7 @@ internal actor InboxModule {
 
         self.isPaging = true
         
-        guard let inbox = self.inbox else {
+        guard let inbox = self.inboxData else {
             throw CourierError.inboxNotInitialized
         }
         
@@ -264,10 +262,7 @@ internal actor InboxModule {
         
         self.isPaging = true
         
-        let res = try await client.inbox.getMessages(
-            paginationLimit: Courier.shared.paginationLimit,
-            startCursor: inbox.startCursor
-        )
+        let res = inboxFeed == .feed ? try await client.inbox.getMessages(paginationLimit: Courier.shared.paginationLimit, startCursor: set?.paginationCursor) : try await client.inbox.getArchivedMessages(paginationLimit: Courier.shared.paginationLimit, startCursor: set?.paginationCursor)
         
         let inboxData = res.data
         let newMessages = inboxData?.messages?.nodes ?? []
@@ -275,18 +270,19 @@ internal actor InboxModule {
         let startCursor = inboxData?.messages?.pageInfo?.startCursor
 
         inbox.addPage(
+            inboxFeed,
             newMessages: newMessages,
             startCursor: startCursor,
             hasNextPage: hasNextPage
         )
         
         // Update the local inbox
-        self.inbox = inbox
+        self.inboxData = inbox
         self.isPaging = false
         
         delegate?.onInboxUpdated(inbox: inbox, ignoredListeners: [])
         
-        return inbox.messages ?? []
+        return inboxFeed == .feed ? inbox.feed.messages : inbox.archived.messages
         
     }
     
@@ -294,9 +290,12 @@ internal actor InboxModule {
         
         var original: UpdateOperation?
         
+        let feed: InboxMessageFeed = inboxData?.archived.messages.contains { $0.messageId == messageId } ?? false ? .archived : .feed
+        let set = feed == .archived ? inboxData?.archived : inboxData?.feed
+        
         // Handle the click action separately
         if event == .click {
-            if let message = inbox?.messages?.first(where: { $0.messageId == messageId }),
+            if let message = set?.messages.first(where: { $0.messageId == messageId }),
             let channelId = message.trackingIds?.clickTrackingId {
                 try await client?.inbox.click(messageId: messageId, trackingId: channelId)
             }
@@ -306,17 +305,17 @@ internal actor InboxModule {
         // Perform other actions
         switch event {
         case .read:
-            original = try inbox?.readMessage(messageId: messageId)
+            original = try inboxData?.readMessage(feed, messageId: messageId)
         case .unread:
-            original = try inbox?.unreadMessage(messageId: messageId)
+            original = try inboxData?.unreadMessage(feed, messageId: messageId)
         case .opened:
-            original = try inbox?.openMessage(messageId: messageId)
+            original = try inboxData?.openMessage(feed, messageId: messageId)
         case .unopened:
-            original = try inbox?.unopenMessage(messageId: messageId)
+            original = try inboxData?.unopenMessage(feed, messageId: messageId)
         case .archive:
-            original = try inbox?.archiveMessage(messageId: messageId)
+            original = try inboxData?.archiveMessage(feed, messageId: messageId)
         case .unarchive:
-            original = try inbox?.unarchiveMessage(messageId: messageId)
+            original = try inboxData?.unarchiveMessage(feed, messageId: messageId)
         default:
             return
         }
@@ -346,7 +345,7 @@ internal actor InboxModule {
         } catch {
             
             // Reset the change
-            inbox?.resetUpdate(update: og)
+            inboxData?.resetUpdate(feed, update: og)
             notifyInboxUpdated()
             delegate?.onInboxError(with: error)
             
@@ -355,7 +354,7 @@ internal actor InboxModule {
     
     func readAllMessages() async throws {
 
-        let original = inbox?.readAllMessages()
+        let original = inboxData?.readAllMessages(.feed)
 
         notifyInboxUpdated()
 
@@ -366,7 +365,7 @@ internal actor InboxModule {
         } catch {
 
             if let og = original {
-                self.inbox?.resetReadAll(update: og)
+                self.inboxData?.resetReadAll(.feed, update: og)
             }
 
             notifyInboxUpdated()
@@ -388,7 +387,7 @@ extension Courier: InboxModuleDelegate {
         }
     }
     
-    func onInboxUpdated(inbox: Inbox, ignoredListeners: [CourierInboxListener]) {
+    func onInboxUpdated(inbox: CourierInboxData, ignoredListeners: [CourierInboxListener]) {
         Task { @MainActor [weak self] in
             let filteredListeners = self?.inboxListeners.filter { !ignoredListeners.contains($0) }
             filteredListeners?.forEach { listener in
@@ -411,7 +410,13 @@ extension Courier {
     
     public var inboxMessages: [InboxMessage] {
         get async {
-            return await inboxModule.inbox?.messages ?? []
+            return await inboxModule.inboxData?.feed.messages ?? []
+        }
+    }
+    
+    public var archivedMessages: [InboxMessage] {
+        get async {
+            return await inboxModule.inboxData?.archived.messages ?? []
         }
     }
     
@@ -469,8 +474,8 @@ extension Courier {
     }
     
     @discardableResult
-    public func fetchNextInboxPage() async throws -> [InboxMessage] {
-        return try await inboxModule.fetchNextPage()
+    public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> [InboxMessage] {
+        return try await inboxModule.fetchNextPage(feed)
     }
     
     // MARK: Listeners
@@ -479,13 +484,13 @@ extension Courier {
     public func addInboxListener(
         onInitialLoad: (() -> Void)? = nil,
         onError: ((Error) -> Void)? = nil,
-        onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil
+        onInboxChanged: ((_ inbox: CourierInboxData) -> Void)? = nil
     ) -> CourierInboxListener {
         
         let newListener = CourierInboxListener(
             onInitialLoad: onInitialLoad,
             onError: onError,
-            onMessagesChanged: onMessagesChanged
+            onInboxChanged: onInboxChanged
         )
         
         Task { @MainActor in
@@ -502,7 +507,7 @@ extension Courier {
             }
             
             // Notify that data exists if needed
-            if let inbox = await self.inboxModule.inbox {
+            if let inbox = await self.inboxModule.inboxData {
                 newListener.onInboxUpdated(inbox)
                 return
             }
@@ -609,206 +614,4 @@ extension Courier {
 
     }
     
-}
-
-internal class Inbox {
-    
-    var messages: [InboxMessage]?
-    var totalCount: Int
-    var unreadCount: Int
-    var hasNextPage: Bool?
-    var startCursor: String?
-    
-    init(messages: [InboxMessage]?, totalCount: Int, unreadCount: Int, hasNextPage: Bool?, startCursor: String?) {
-        self.messages = messages
-        self.totalCount = totalCount
-        self.unreadCount = unreadCount
-        self.hasNextPage = hasNextPage
-        self.startCursor = startCursor
-    }
-    
-    func addNewMessage(message: InboxMessage) {
-        self.messages?.insert(message, at: 0)
-        self.totalCount += 1
-        self.unreadCount += 1
-    }
-    
-    func addPage(newMessages: [InboxMessage], startCursor: String?, hasNextPage: Bool?) {
-        self.messages?.append(contentsOf: newMessages)
-        self.startCursor = startCursor
-        self.hasNextPage = hasNextPage
-    }
-    
-    @discardableResult func readAllMessages() -> ReadAllOperation {
-        
-        guard let messages = self.messages else {
-            return ReadAllOperation(
-                messages: [],
-                unreadCount: 0
-            )
-        }
-        
-        // Copy previous values
-        let originalMessages = Array(messages)
-        let originalUnreadCount = self.unreadCount
-        
-        // Read all messages
-        self.messages?.forEach { $0.setRead() }
-        self.unreadCount = 0
-
-        return ReadAllOperation(
-            messages: originalMessages,
-            unreadCount: originalUnreadCount
-        )
-        
-    }
-    
-    internal func resetReadAll(update: ReadAllOperation) {
-        self.messages = update.messages
-        self.unreadCount = update.unreadCount
-    }
-    
-    @discardableResult internal func performDatastoreUpdateOperation(messageId: String, event: InboxEventType) throws -> UpdateOperation? {
-        
-        guard let messages = self.messages else {
-            return nil
-        }
-        
-        let index = messages.firstIndex { $0.messageId == messageId }
-        guard let i = index else {
-            return nil
-        }
-
-        // Save copy
-        let message = messages[i]
-        let originalMessage = message.copy()
-        let originalUnreadCount = self.unreadCount
-
-        // Update based on action
-        switch event {
-        case .read:
-            
-            if message.isRead {
-                return nil
-            }
-            
-            message.setRead()
-            self.unreadCount -= 1
-            
-        case .unread:
-            
-            if !message.isRead {
-                return nil
-            }
-            
-            message.setUnread()
-            self.unreadCount += 1
-            
-        case .opened:
-            
-            if message.isOpened {
-                return nil
-            }
-            
-            message.setOpened()
-            
-        case .unopened:
-            
-            if !message.isOpened {
-                return nil
-            }
-            
-            message.setUnopened()
-            
-        case .archive:
-            
-            if message.isArchived {
-                return nil
-            }
-            
-            if !message.isRead {
-                self.unreadCount -= 1
-            }
-            
-            message.setArchived()
-            
-        case .unarchive:
-            
-            if !message.isArchived {
-                return nil
-            }
-            
-            if !message.isRead {
-                self.unreadCount += 1
-            }
-            
-            message.setUnarchived()
-            
-        case .click:
-            
-            break
-            
-        case .unclick:
-            
-            break
-            
-        case .markAllRead:
-            
-            break
-            
-        }
-
-        // Ensure unreadCount doesn't go below zero
-        self.unreadCount = max(self.unreadCount, 0)
-        
-        // Change data
-        self.messages?[i] = message
-
-        return UpdateOperation(
-            index: i,
-            unreadCount: originalUnreadCount,
-            message: originalMessage
-        )
-    }
-    
-    func resetUpdate(update: UpdateOperation) {
-        self.messages?[update.index] = update.message
-        self.unreadCount = update.unreadCount
-    }
-    
-    @discardableResult func readMessage(messageId: String) throws -> UpdateOperation? {
-        return try performDatastoreUpdateOperation(messageId: messageId, event: .read)
-    }
-    
-    @discardableResult func unreadMessage(messageId: String) throws -> UpdateOperation? {
-        return try performDatastoreUpdateOperation(messageId: messageId, event: .unread)
-    }
-    
-    @discardableResult func openMessage(messageId: String) throws -> UpdateOperation? {
-        return try performDatastoreUpdateOperation(messageId: messageId, event: .opened)
-    }
-    
-    @discardableResult func unopenMessage(messageId: String) throws -> UpdateOperation? {
-        return try performDatastoreUpdateOperation(messageId: messageId, event: .unopened)
-    }
-    
-    @discardableResult func archiveMessage(messageId: String) throws -> UpdateOperation? {
-        return try performDatastoreUpdateOperation(messageId: messageId, event: .archive)
-    }
-    
-    @discardableResult func unarchiveMessage(messageId: String) throws -> UpdateOperation? {
-        return try performDatastoreUpdateOperation(messageId: messageId, event: .unarchive)
-    }
-    
-}
-
-internal struct ReadAllOperation {
-    let messages: [InboxMessage]?
-    let unreadCount: Int
-}
-
-internal struct UpdateOperation {
-    let index: Int
-    let unreadCount: Int
-    let message: InboxMessage
 }

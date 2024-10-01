@@ -13,6 +13,19 @@ public struct InboxResponse: Codable {
     public let data: InboxData?
 }
 
+internal extension InboxResponse {
+    
+    func toInboxMessageSet() -> InboxMessageSet {
+        return InboxMessageSet(
+            messages: data?.messages?.nodes ?? [],
+            totalCount: data?.count ?? 0,
+            canPaginate: data?.messages?.pageInfo?.hasNextPage ?? false,
+            paginationCursor: data?.messages?.pageInfo?.startCursor
+        )
+    }
+    
+}
+
 public struct InboxData: Codable {
     
     public var count: Int? = 0

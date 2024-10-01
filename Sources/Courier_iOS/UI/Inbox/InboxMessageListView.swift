@@ -9,15 +9,7 @@ import UIKit
 
 internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: Message Types
-    
-    enum MessageState {
-        case read
-        case unread
-        case archived
-    }
-    
-    private let supportedMessageStates: [MessageState]
+    private let feed: InboxMessageFeed
     
     // MARK: Theme
 
@@ -109,13 +101,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // MARK: Init
     
     public init(
-        supportedMessageStates: [MessageState],
+        feed: InboxMessageFeed,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
         
-        self.supportedMessageStates = supportedMessageStates
+        self.feed = feed
         
         // Init
         super.init(frame: .zero)
@@ -130,13 +122,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
 
     override init(frame: CGRect) {
-        self.supportedMessageStates = []
+        self.feed = .feed
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
-        self.supportedMessageStates = []
+        self.feed = .feed
         super.init(coder: coder)
         setup()
     }
@@ -213,20 +205,12 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 onError: { [weak self] error in
                     self?.state = .error(error)
                 },
-                onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
-                    
-                    // Filter all message that should be shown
-                    let messages = newMessages.filter { message in
-                        guard let supportedStates = self?.supportedMessageStates else { return false }
-                        return (message.isArchived && supportedStates.contains(.archived)) || // Archived
-                               (message.isRead && supportedStates.contains(.read)) || // Read
-                               (!message.isRead && supportedStates.contains(.unread)) // Unread
-                    }
-                    
+                onInboxChanged: { [weak self] inbox in
+                    let set = self?.feed == .archived ? inbox.archived : inbox.feed
+                    let messages = set.messages
                     self?.state = messages.isEmpty ? .empty : .content
-                    self?.canPaginate = canPaginate
+                    self?.canPaginate = set.canPaginate
                     self?.reloadMessages(messages)
-                    
                 }
             )
         }
@@ -309,7 +293,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         if (indexPath.row == indexToPageAt) {
             Task {
                 do {
-                    try await Courier.shared.fetchNextInboxPage()
+                    try await Courier.shared.fetchNextInboxPage(self.feed)
                 } catch {
                     Courier.shared.client?.error(error.localizedDescription)
                 }

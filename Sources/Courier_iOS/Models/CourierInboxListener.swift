@@ -13,14 +13,14 @@ import Foundation
     
     let onInitialLoad: (() -> Void)?
     let onError: ((Error) -> Void)?
-    let onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)?
+    let onInboxChanged: ((_ inbox: CourierInboxData) -> Void)?
     
     private var isInitialized = false
     
-    public init(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onMessagesChanged: ((_ messages: [InboxMessage], _ unreadMessageCount: Int, _ totalMessageCount: Int, _ canPaginate: Bool) -> Void)? = nil) {
+    public init(onInitialLoad: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil, onInboxChanged: ((_ inbox: CourierInboxData) -> Void)? = nil) {
         self.onInitialLoad = onInitialLoad
         self.onError = onError
-        self.onMessagesChanged = onMessagesChanged
+        self.onInboxChanged = onInboxChanged
     }
     
 }
@@ -29,18 +29,13 @@ import Foundation
 
 extension CourierInboxListener {
     
-    internal func onInboxUpdated(_ inbox: Inbox?) {
+    internal func onInboxUpdated(_ inbox: CourierInboxData) {
         
         if (!isInitialized) {
             return
         }
         
-        self.onMessagesChanged?(
-            inbox?.messages ?? [],
-            inbox?.unreadCount ?? 0,
-            inbox?.totalCount ?? 0,
-            inbox?.hasNextPage ?? false
-        )
+        self.onInboxChanged?(inbox)
         
     }
     

@@ -76,7 +76,7 @@ class InboxTests: XCTestCase {
                     try await UserBuilder.authenticate()
                 }
             },
-            onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
+            onInboxChanged: { inbox in
                 hold = false
             }
         )
@@ -107,19 +107,19 @@ class InboxTests: XCTestCase {
                     try await UserBuilder.authenticate()
                 }
             },
-            onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
+            onInboxChanged: { inbox in
                 hold1 = false
             }
         )
         
         let listener2 = Courier.shared.addInboxListener(
-            onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
+            onInboxChanged: { inbox in
                 hold2 = false
             }
         )
         
         let listener3 = Courier.shared.addInboxListener(
-            onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
+            onInboxChanged: { inbox in
                 hold3 = false
             }
         )
@@ -148,9 +148,9 @@ class InboxTests: XCTestCase {
         
         let count = 5
         
-        Courier.shared.addInboxListener(onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
-            print("Messages Updated: \(messages.count)")
-            hold = messages.count < count
+        Courier.shared.addInboxListener(onInboxChanged: { inbox in
+            print("Messages Updated: \(inbox.feed.messages.count)")
+            hold = inbox.feed.messages.count < count
         })
         
         // Register some random listeners
@@ -261,11 +261,11 @@ class InboxTests: XCTestCase {
         let count = 25
         var hold = true
         
-        let listener = Courier.shared.addInboxListener(onMessagesChanged: { messages, unreadCount, totalCount, canPaginate in
+        let listener = Courier.shared.addInboxListener(onInboxChanged: { inbox in
             
-            hold = messages.count != count
+            hold = inbox.feed.messages.count != count
             
-            print("Message Counted updated: \(messages.count)")
+            print("Message Counted updated: \(inbox.feed.messages.count)")
             
         })
         

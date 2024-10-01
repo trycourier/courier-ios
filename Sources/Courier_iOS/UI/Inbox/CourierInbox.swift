@@ -28,12 +28,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
     public var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
-    // MARK: Datasource
-    
-    private var inboxListener: CourierInboxListener? = nil
-    private var inboxMessages: [InboxMessage] = []
-    private var canPaginate = false
-    
     // MARK: UI
     
     private let stackView: UIStackView = {
@@ -47,14 +41,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private lazy var messagesPage = {
         return Page(
             title: "Notifications",
-            page: makeInboxList(supportedMessageStates: [.read, .unread])
+            page: makeInboxList(.feed)
         )
     }()
     
     private lazy var archivedPage = {
         return Page(
             title: "Archived",
-            page: makeInboxList(supportedMessageStates: [.archived])
+            page: makeInboxList(.archived)
         )
     }()
     
@@ -95,9 +89,15 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         return courierBar
     }()
     
-    // MARK: Authentication
+    // MARK: Listeners
     
     private var authListener: CourierAuthenticationListener? = nil
+    private var inboxListener: CourierInboxListener? = nil
+    
+    // MARK: Datasource
+    
+    private var inboxMessages: [InboxMessage] = []
+    private var canPaginate = false
     
     // MARK: Init
     
@@ -146,12 +146,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func setup() {
         
-        authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
-            if (userId != nil) {
-                self?.traitCollectionDidChange(nil)
-            }
-        }
-
         addStack(
             top: tabView,
             middle: scrollView,
@@ -160,11 +154,35 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         addPagesToScrollView(tabView)
         
+        authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
+            if (userId != nil) {
+                self?.traitCollectionDidChange(nil)
+            }
+        }
+        
+        inboxListener = Courier.shared.addInboxListener(
+            onInboxChanged: { [weak self] inbox in
+                if let tabs = self?.tabView.tabs {
+                    if (!tabs.isEmpty) {
+                        tabs[0].badge = inbox.unreadCount
+                    }
+                }
+            }
+        )
+        
         traitCollectionDidChange(nil)
         
-        makeListener()
-        
     }
+    
+//    private func makeListener() {
+//        Task {
+//            do {
+//                try await refreshBrand()
+//            } catch {
+//                Courier.shared.client?.log(error.localizedDescription)
+//            }
+//        }
+//    }
     
     private func addStack(top: UIView, middle: UIView, bottom: UIView) {
         addSubview(stackView)
@@ -181,8 +199,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         stackView.addArrangedSubview(bottom)
     }
     
-    private func makeInboxList(supportedMessageStates: [InboxMessageListView.MessageState]) -> InboxMessageListView {
-        let list = InboxMessageListView(supportedMessageStates: supportedMessageStates)
+    private func makeInboxList(_ feed: InboxMessageFeed) -> InboxMessageListView {
+        let list = InboxMessageListView(feed: feed)
         list.translatesAutoresizingMaskIntoConstraints = false
         return list
     }
@@ -250,25 +268,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         refreshTheme()
     }
     
-    private func makeListener() {
-        Task {
-            do {
-                try await refreshBrand()
-                Courier.shared.addInboxListener(
-                    onMessagesChanged: { [weak self] newMessages, unreadMessageCount, totalMessageCount, canPaginate in
-                        if let tabs = self?.tabView.tabs {
-                            if (!tabs.isEmpty) {
-                                tabs[0].badge = unreadMessageCount
-                            }
-                        }
-                    }
-                )
-            } catch {
-                Courier.shared.client?.log(error.localizedDescription)
-            }
-        }
-    }
-    
     private func refreshBrand() async throws {
         if let brandId = self.theme.brandId {
             let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
@@ -305,4 +304,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.inboxListener?.remove()
     }
     
+}
+
+public enum InboxMessageFeed {
+    case feed
+    case archived
 }
