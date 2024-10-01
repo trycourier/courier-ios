@@ -291,13 +291,19 @@ internal actor InboxModule {
         var original: UpdateOperation?
         
         let feed: InboxMessageFeed = inboxData?.archived.messages.contains { $0.messageId == messageId } ?? false ? .archived : .feed
-        let set = feed == .archived ? inboxData?.archived : inboxData?.feed
         
         // Handle the click action separately
         if event == .click {
-            if let message = set?.messages.first(where: { $0.messageId == messageId }),
-            let channelId = message.trackingIds?.clickTrackingId {
-                try await client?.inbox.click(messageId: messageId, trackingId: channelId)
+            if feed == .archived {
+                if let message = inboxData?.archived.messages.first(where: { $0.messageId == messageId }),
+                let channelId = message.trackingIds?.clickTrackingId {
+                    try await client?.inbox.click(messageId: messageId, trackingId: channelId)
+                }
+            } else {
+                if let message = inboxData?.feed.messages.first(where: { $0.messageId == messageId }),
+                let channelId = message.trackingIds?.clickTrackingId {
+                    try await client?.inbox.click(messageId: messageId, trackingId: channelId)
+                }
             }
             return
         }

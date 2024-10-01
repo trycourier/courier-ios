@@ -12,7 +12,6 @@ class PrebuiltInboxViewController: UIViewController {
     
     private lazy var courierInbox = {
         return CourierInbox(
-            canSwipePages: true, // TODO
             didClickInboxMessageAtIndex: { message, index in
                 message.isRead ? message.markAsUnread() : message.markAsRead()
                 print(message.toJson() ?? "")

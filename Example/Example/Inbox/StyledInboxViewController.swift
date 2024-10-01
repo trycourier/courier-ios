@@ -16,6 +16,7 @@ class StyledInboxViewController: UIViewController {
     
     private lazy var courierInbox = {
         return CourierInbox(
+            canSwipePages: true,
             lightTheme: CourierInboxTheme(
                 brandId: Env.COURIER_BRAND_ID,
                 tabIndicatorColor: primaryColor,

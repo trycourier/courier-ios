@@ -78,16 +78,14 @@ public class CourierInboxData {
         event: InboxEventType
     ) throws -> UpdateOperation? {
         
-        // Reference the correct message set based on inboxFeed
-        let set = inboxFeed == .archived ? archived : feed
-        
         // Find the index of the message
-        guard let index = set.messages.firstIndex(where: { $0.messageId == messageId }) else {
+        let messages = inboxFeed == .archived ? archived.messages : feed.messages
+        guard let index = messages.firstIndex(where: { $0.messageId == messageId }) else {
             return nil
         }
 
-        // Save copy of the original message and unread count
-        let message = set.messages[index]
+        // Make a mutable copy of the message
+        var message = messages[index].copy()
         let originalMessage = message.copy()
         let originalUnreadCount = unreadCount
 
