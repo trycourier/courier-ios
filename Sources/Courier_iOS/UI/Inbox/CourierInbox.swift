@@ -91,7 +91,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     // MARK: Listeners
     
-    private var authListener: CourierAuthenticationListener? = nil
     private var inboxListener: CourierInboxListener? = nil
     
     // MARK: Datasource
@@ -154,35 +153,33 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         addPagesToScrollView(tabView)
         
-        authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
-            if (userId != nil) {
-                self?.traitCollectionDidChange(nil)
-            }
-        }
-        
         inboxListener = Courier.shared.addInboxListener(
+            onInitialLoad: { [weak self] in
+                self?.getPages()[0].page.setLoading()
+                self?.getPages()[1].page.setLoading()
+            },
+            onError: { [weak self] error in
+                self?.getPages()[0].page.setError(error)
+                self?.getPages()[1].page.setError(error)
+            },
             onInboxChanged: { [weak self] inbox in
+                
+                // Update tabs
                 if let tabs = self?.tabView.tabs {
                     if (!tabs.isEmpty) {
                         tabs[0].badge = inbox.unreadCount
                     }
                 }
+                
+                // Update list datasets
+                self?.getPages()[0].page.setInbox(dataSet: inbox.feed)
+                self?.getPages()[1].page.setInbox(dataSet: inbox.archived)
             }
         )
         
         traitCollectionDidChange(nil)
         
     }
-    
-//    private func makeListener() {
-//        Task {
-//            do {
-//                try await refreshBrand()
-//            } catch {
-//                Courier.shared.client?.log(error.localizedDescription)
-//            }
-//        }
-//    }
     
     private func addStack(top: UIView, middle: UIView, bottom: UIView) {
         addSubview(stackView)
@@ -210,41 +207,42 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
 
         var previousPage: InboxMessageListView? = nil
 
-        for (index, page) in pages.enumerated() {
+        for (index, list) in pages.enumerated() {
             
-            scrollView.addSubview(page)
-            page.canSwipePages = self.canSwipePages
-            page.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.addSubview(list)
+            list.translatesAutoresizingMaskIntoConstraints = false
+            list.canSwipePages = self.canSwipePages
+            list.rootInbox = self
             
             // Set constraints for the page
             NSLayoutConstraint.activate([
-                page.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                page.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                page.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-                page.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
+                list.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                list.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                list.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+                list.heightAnchor.constraint(equalTo: scrollView.heightAnchor)
             ])
             
             // Set leading anchor for the page
             if let previousPage = previousPage {
                 NSLayoutConstraint.activate([
-                    page.leadingAnchor.constraint(equalTo: previousPage.trailingAnchor)
+                    list.leadingAnchor.constraint(equalTo: previousPage.trailingAnchor)
                 ])
             } else {
                 // If it's the first page, anchor it to the scroll view's leading edge
                 NSLayoutConstraint.activate([
-                    page.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
+                    list.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
                 ])
             }
 
             // Set trailing anchor for the last page
             if index == pages.count - 1 {
                 NSLayoutConstraint.activate([
-                    page.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
+                    list.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor)
                 ])
             }
             
             // Update the reference to the previous page
-            previousPage = page
+            previousPage = list
             
         }
         
@@ -268,11 +266,15 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         refreshTheme()
     }
     
-    private func refreshBrand() async throws {
-        if let brandId = self.theme.brandId {
-            let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
-            self.theme.brand = res?.data.brand
-            self.refreshTheme()
+    internal func refreshBrand() async {
+        do {
+            if let brandId = self.theme.brandId {
+                let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
+                self.theme.brand = res?.data.brand
+                self.refreshTheme()
+            }
+        } catch {
+            Courier.shared.client?.log(error.localizedDescription)
         }
     }
     
@@ -300,7 +302,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     deinit {
-        self.authListener?.remove()
         self.inboxListener?.remove()
     }
     

@@ -213,6 +213,9 @@ internal class Tab: UIView {
             )
         }
         
+        stackView.setNeedsLayout()
+        stackView.layoutIfNeeded()
+        
     }
     
     private func getBadgeValue(value: Int) -> String? {

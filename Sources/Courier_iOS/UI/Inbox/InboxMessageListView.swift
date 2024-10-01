@@ -28,6 +28,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private var canPaginate = false
     var canSwipePages = false
     
+    // MARK: Parent
+    
+    internal var rootInbox: CourierInbox? = nil
+    
     // MARK: UI
     
     private lazy var tableView: UITableView = {
@@ -155,14 +159,25 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         // Refreshes theme
         traitCollectionDidChange(nil)
         
-        // Init the listener
-        makeListener()
-        
     }
     
-    func setTheme(_ theme: CourierInboxTheme) {
+    internal func setTheme(_ theme: CourierInboxTheme) {
         self.theme = theme
         reloadViews()
+    }
+    
+    internal func setLoading() {
+        self.state = .loading
+    }
+    
+    internal func setError(_ error: Error) {
+        self.state = .error(error)
+    }
+    
+    internal func setInbox(dataSet: InboxMessageSet) {
+        self.state = dataSet.messages.isEmpty ? .empty : .content
+        self.canPaginate = dataSet.canPaginate
+        self.reloadMessages(dataSet.messages)
     }
     
     private func addTableView() {
@@ -195,27 +210,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         ])
     }
     
-    private func makeListener() {
-        Task {
-            
-            self.inboxListener = Courier.shared.addInboxListener(
-                onInitialLoad: { [weak self] in
-                    self?.state = .loading
-                },
-                onError: { [weak self] error in
-                    self?.state = .error(error)
-                },
-                onInboxChanged: { [weak self] inbox in
-                    let set = self?.feed == .archived ? inbox.archived : inbox.feed
-                    let messages = set.messages
-                    self?.state = messages.isEmpty ? .empty : .content
-                    self?.canPaginate = set.canPaginate
-                    self?.reloadMessages(messages)
-                }
-            )
-        }
-    }
-    
     /**
      Adds the new message at top if needed
      Otherwise will reload all the messages with the new datasource
@@ -245,6 +239,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     @objc private func onRefresh() {
         Task {
+            await rootInbox?.refreshBrand()
             await Courier.shared.refreshInbox()
             self.tableView.refreshControl?.endRefreshing()
         }
