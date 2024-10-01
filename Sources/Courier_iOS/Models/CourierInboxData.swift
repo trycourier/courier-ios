@@ -199,8 +199,8 @@ internal struct UpdateOperation {
 }
 
 public struct InboxMessageSet {
-    var messages: [InboxMessage]
-    var totalCount: Int
-    var canPaginate: Bool
-    var paginationCursor: String?
+    public var messages: [InboxMessage]
+    public var totalCount: Int
+    public var canPaginate: Bool
+    public var paginationCursor: String?
 }

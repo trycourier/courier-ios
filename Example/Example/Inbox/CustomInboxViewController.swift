@@ -64,10 +64,10 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
             onError: { error in
                 self.setState(.error, error: String(describing: error))
             },
-            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
-                self.setState(messages.isEmpty ? .empty : .content)
-                self.canPaginate = canPaginate
-                self.inboxMessages = messages
+            onInboxChanged: { inbox in
+                self.setState(inbox.feed.messages.isEmpty ? .empty : .content)
+                self.canPaginate = inbox.feed.canPaginate
+                self.inboxMessages = inbox.feed.messages
                 self.tableView.reloadData()
             }
         )
