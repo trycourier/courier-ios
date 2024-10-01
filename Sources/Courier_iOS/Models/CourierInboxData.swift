@@ -18,15 +18,14 @@ public class CourierInboxData {
     }
     
     internal func addNewMessage(_ inboxFeed: InboxMessageFeed, message: InboxMessage) {
-        
-        var set = inboxFeed == .archived ? archived : feed
-        set.messages.insert(message, at: 0)
-        set.totalCount += 1
-        
-        if (inboxFeed != .archived) {
+        if inboxFeed == .archived {
+            archived.messages.insert(message, at: 0)
+            archived.totalCount += 1
+        } else {
+            feed.messages.insert(message, at: 0)
+            feed.totalCount += 1
             unreadCount += 1
         }
-        
     }
     
     internal func addPage(_ inboxFeed: InboxMessageFeed, newMessages: [InboxMessage], startCursor: String?, hasNextPage: Bool?) {
@@ -65,7 +64,7 @@ public class CourierInboxData {
     internal func resetReadAll(_ inboxFeed: InboxMessageFeed, update: ReadAllOperation) {
         if inboxFeed == .archived {
             archived.messages = update.messages
-        } else if inboxFeed == .feed {
+        } else {
             feed.messages = update.messages
         }
         unreadCount = update.unreadCount
@@ -87,13 +86,18 @@ public class CourierInboxData {
         }
 
         // Process the message and return the update operation
-        return try updateMessage(&messages[index], event: event, originalUnreadCount: &unreadCount, index: index)
+        return try updateMessage(
+            message: &messages[index],
+            event: event,
+            unreadCount: &unreadCount,
+            index: index
+        )
     }
 
     private func updateMessage(
-        _ message: inout InboxMessage,
+        message: inout InboxMessage,
         event: InboxEventType,
-        originalUnreadCount: inout Int,
+        unreadCount: inout Int,
         index: Int
     ) throws -> UpdateOperation? {
         
@@ -104,12 +108,12 @@ public class CourierInboxData {
         case .read:
             guard !message.isRead else { return nil }
             message.setRead()
-            originalUnreadCount = max(originalUnreadCount - 1, 0)
+            unreadCount = max(unreadCount - 1, 0)
 
         case .unread:
             guard message.isRead else { return nil }
             message.setUnread()
-            originalUnreadCount += 1
+            unreadCount += 1
 
         case .opened:
             guard !message.isOpened else { return nil }
@@ -122,14 +126,14 @@ public class CourierInboxData {
         case .archive:
             guard !message.isArchived else { return nil }
             if !message.isRead {
-                originalUnreadCount = max(originalUnreadCount - 1, 0)
+                unreadCount = max(unreadCount - 1, 0)
             }
             message.setArchived()
 
         case .unarchive:
             guard message.isArchived else { return nil }
             if !message.isRead {
-                originalUnreadCount += 1
+                unreadCount += 1
             }
             message.setUnarchived()
 
@@ -149,7 +153,7 @@ public class CourierInboxData {
         // Return the update operation with the index
         return UpdateOperation(
             index: index,
-            unreadCount: originalUnreadCount,
+            unreadCount: unreadCount,
             message: originalMessage
         )
     }
