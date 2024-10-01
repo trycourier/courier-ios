@@ -93,6 +93,10 @@ public class InboxMessage: Codable {
         opened = nil
     }
     
+    public var createdAt: Date? {
+        return created?.toDate()
+    }
+    
     public var time: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"

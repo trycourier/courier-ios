@@ -26,36 +26,89 @@ var alert: UIAlertController? = nil
 
 extension AppDelegate {
     
-    func showMessageAlert(title: String, message: String) {
-        
+    func showCodeAlert(title: String, code: String) {
         alert?.dismiss(animated: true)
         
         if let window = UIApplication.shared.currentWindow {
-            alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert!.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
-                // Empty
-            }))
+            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+            
+            // Create a scrollable text view for the code
+            let messageTextView = UITextView()
+            messageTextView.backgroundColor = .clear
+            messageTextView.text = code
+            messageTextView.isEditable = false
+            messageTextView.isScrollEnabled = true
+            messageTextView.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Set monospaced font for the text view
+            messageTextView.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular) // Adjust font size as needed
+            
+            // Set text view height (adjust as needed)
+            let textViewHeight: CGFloat = 300
+            
+            // Add the text view to the alert
+            alert!.view.addSubview(messageTextView)
+            
+            // Define constraints for the text view
+            NSLayoutConstraint.activate([
+                messageTextView.topAnchor.constraint(equalTo: alert!.view.topAnchor, constant: 60), // Adjust constant as needed
+                messageTextView.bottomAnchor.constraint(equalTo: alert!.view.bottomAnchor, constant: -45), // Adjust constant as needed
+                messageTextView.leadingAnchor.constraint(equalTo: alert!.view.leadingAnchor, constant: 8),
+                messageTextView.trailingAnchor.constraint(equalTo: alert!.view.trailingAnchor, constant: -8),
+                messageTextView.heightAnchor.constraint(equalToConstant: textViewHeight)
+            ])
+            
+            // Add the "OK" button
+            alert!.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            // Present the alert
             window.rootViewController?.present(alert!, animated: true, completion: nil)
         }
-        
     }
+
     
 }
 
 extension UIViewController {
     
-    func showMessageAlert(title: String, message: String) {
-        
+    func showCodeAlert(title: String, code: String) {
         alert?.dismiss(animated: true)
         
         if let window = UIApplication.shared.currentWindow {
-            alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert!.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: { action in
-                // Empty
-            }))
+            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+            
+            // Create a scrollable text view for the code
+            let messageTextView = UITextView()
+            messageTextView.backgroundColor = .clear
+            messageTextView.text = code
+            messageTextView.isEditable = false
+            messageTextView.isScrollEnabled = true
+            messageTextView.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Set monospaced font for the text view
+            messageTextView.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular) // Adjust font size as needed
+            
+            // Set text view height (adjust as needed)
+            let textViewHeight: CGFloat = 300
+            
+            // Add the text view to the alert
+            alert!.view.addSubview(messageTextView)
+            
+            // Define constraints for the text view
+            NSLayoutConstraint.activate([
+                messageTextView.topAnchor.constraint(equalTo: alert!.view.topAnchor, constant: 60), // Adjust constant as needed
+                messageTextView.bottomAnchor.constraint(equalTo: alert!.view.bottomAnchor, constant: -45), // Adjust constant as needed
+                messageTextView.leadingAnchor.constraint(equalTo: alert!.view.leadingAnchor, constant: 8),
+                messageTextView.trailingAnchor.constraint(equalTo: alert!.view.trailingAnchor, constant: -8),
+                messageTextView.heightAnchor.constraint(equalToConstant: textViewHeight)
+            ])
+            
+            // Add the "OK" button
+            alert!.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            
+            // Present the alert
             window.rootViewController?.present(alert!, animated: true, completion: nil)
         }
-        
     }
     
     func showInputAlert(title: String, inputs: [String], action: String, onComplete: @escaping ([String]) -> Void) {

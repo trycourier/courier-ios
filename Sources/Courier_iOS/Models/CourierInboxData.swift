@@ -93,6 +93,17 @@ public class CourierInboxData {
             index: index
         )
     }
+    
+    private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
+        for (index, message) in messages.enumerated() {
+            if let new = newMessage.createdAt, let old = message.createdAt {
+                if new >= old {
+                    return index
+                }
+            }
+        }
+        return messages.count
+    }
 
     private func updateMessage(
         message: inout InboxMessage,
@@ -111,42 +122,55 @@ public class CourierInboxData {
             unreadCount = max(unreadCount - 1, 0)
 
         case .unread:
+            
             guard message.isRead else { return nil }
             message.setUnread()
+            
             unreadCount += 1
 
         case .opened:
+            
             guard !message.isOpened else { return nil }
             message.setOpened()
 
         case .unopened:
+            
             guard message.isOpened else { return nil }
             message.setUnopened()
 
         case .archive:
+            
             guard !message.isArchived else { return nil }
+            
             if !message.isRead {
                 unreadCount = max(unreadCount - 1, 0)
             }
+            
             message.setArchived()
+            
+            // Add the message at index
+            let insertIndex = findInsertIndex(for: message, in: archived.messages)
+            archived.messages.insert(message, at: insertIndex)
 
         case .unarchive:
+            
             guard message.isArchived else { return nil }
+            
             if !message.isRead {
                 unreadCount += 1
             }
+            
             message.setUnarchived()
+            
+            // Add the message at index
+            let insertIndex = findInsertIndex(for: message, in: feed.messages)
+            feed.messages.insert(message, at: insertIndex)
 
         case .click:
-            // Implement any necessary logic for click event
             break
-            
         case .unclick:
-            // Implement any necessary logic for unclick event
             break
-
         case .markAllRead:
-            // Implement any necessary logic for mark all read
             break
         }
         

@@ -80,7 +80,7 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let token = tokens[indexPath.row]
         UIPasteboard.general.string = token.1
-        showMessageAlert(title: "\(token.0) Copied", message: token.1)
+        showCodeAlert(title: "\(token.0) Copied", code: token.1)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
