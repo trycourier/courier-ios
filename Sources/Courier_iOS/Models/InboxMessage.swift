@@ -98,6 +98,7 @@ public class InboxMessage: Codable {
             return nil
         }
         let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return isoFormatter.date(from: created)
     }
     
