@@ -341,8 +341,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 // Update the datastore
                 try await Courier.shared.inboxModule.updateMessage(
                     messageId: originalMessage.messageId,
-                    event: .archive,
-                    ignoredListeners: [listener]
+                    event: .archive
                 )
                 
             } catch {
@@ -387,8 +386,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 // Update the datastore
                 try await Courier.shared.inboxModule.updateMessage(
                     messageId: message.messageId,
-                    event: isRead ? .unread : .read,
-                    ignoredListeners: [listener]
+                    event: isRead ? .unread : .read
                 )
                 
             } catch {

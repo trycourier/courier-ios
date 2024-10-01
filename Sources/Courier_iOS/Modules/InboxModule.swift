@@ -286,7 +286,7 @@ internal actor InboxModule {
         
     }
     
-    func updateMessage(messageId: String, event: InboxEventType, ignoredListeners: [CourierInboxListener] = []) async throws {
+    func updateMessage(messageId: String, event: InboxEventType) async throws {
         
         var original: UpdateOperation?
         
