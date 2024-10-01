@@ -159,7 +159,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
             Task {
                 
                 do {
-                    try await Courier.shared.fetchNextInboxPage()
+                    try await Courier.shared.fetchNextInboxPage(.feed)
                 } catch {
                     Courier.shared.client?.options.log(error.localizedDescription)
                 }

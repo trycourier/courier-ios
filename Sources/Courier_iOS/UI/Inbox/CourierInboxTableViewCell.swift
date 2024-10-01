@@ -195,7 +195,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         bodyLabel.text = message.subtitle
         
         setupButtons(message, theme, onActionClick)
-        setTheme(theme, isRead: message.isRead)
+        setTheme(theme, isRead: message.isRead && !message.isArchived)
         
     }
     
