@@ -78,28 +78,38 @@ public class CourierInboxData {
         event: InboxEventType
     ) throws -> UpdateOperation? {
         
+        // Determine the message set based on inboxFeed
+        var messages = inboxFeed == .archived ? archived.messages : feed.messages
+        
         // Find the index of the message
-        let messages = inboxFeed == .archived ? archived.messages : feed.messages
         guard let index = messages.firstIndex(where: { $0.messageId == messageId }) else {
             return nil
         }
 
-        // Make a mutable copy of the message
-        var message = messages[index].copy()
-        let originalMessage = message.copy()
-        let originalUnreadCount = unreadCount
+        // Process the message and return the update operation
+        return try updateMessage(&messages[index], event: event, originalUnreadCount: &unreadCount, index: index)
+    }
 
+    private func updateMessage(
+        _ message: inout InboxMessage,
+        event: InboxEventType,
+        originalUnreadCount: inout Int,
+        index: Int
+    ) throws -> UpdateOperation? {
+        
+        let originalMessage = message.copy()
+        
         // Update based on action
         switch event {
         case .read:
             guard !message.isRead else { return nil }
             message.setRead()
-            self.unreadCount = max(unreadCount - 1, 0)
+            originalUnreadCount = max(originalUnreadCount - 1, 0)
 
         case .unread:
             guard message.isRead else { return nil }
             message.setUnread()
-            self.unreadCount += 1
+            originalUnreadCount += 1
 
         case .opened:
             guard !message.isOpened else { return nil }
@@ -112,14 +122,14 @@ public class CourierInboxData {
         case .archive:
             guard !message.isArchived else { return nil }
             if !message.isRead {
-                self.unreadCount = max(unreadCount - 1, 0)
+                originalUnreadCount = max(originalUnreadCount - 1, 0)
             }
             message.setArchived()
 
         case .unarchive:
             guard message.isArchived else { return nil }
             if !message.isRead {
-                self.unreadCount += 1
+                originalUnreadCount += 1
             }
             message.setUnarchived()
 
@@ -135,14 +145,8 @@ public class CourierInboxData {
             // Implement any necessary logic for mark all read
             break
         }
-
-        // Change the message data in the original set
-        if inboxFeed == .archived {
-            archived.messages[index] = message
-        } else {
-            feed.messages[index] = message
-        }
-
+        
+        // Return the update operation with the index
         return UpdateOperation(
             index: index,
             unreadCount: originalUnreadCount,
