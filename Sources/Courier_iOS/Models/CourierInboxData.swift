@@ -95,15 +95,9 @@ public class CourierInboxData {
     }
     
     private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
-        guard let newCreatedAt = newMessage.createdAt else {
-            return messages.count
-        }
-
         for (index, message) in messages.enumerated() {
-            if let oldCreatedAt = message.createdAt {
-                if newCreatedAt >= oldCreatedAt {
-                    return index
-                }
+            if newMessage.createdAt >= message.createdAt {
+                return index
             }
         }
         return messages.count
