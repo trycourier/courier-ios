@@ -410,12 +410,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // Reading handler
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        if (self.canSwipePages) {
+        let message = inboxMessages[indexPath.row]
+        
+        if (self.canSwipePages || message.isArchived) {
             return nil
         }
-
-        // Check the read status of the message at the current indexPath
-        let message = inboxMessages[indexPath.row]
         
         let style = message.isRead ? self.theme.readingSwipeActionStyle.read : self.theme.readingSwipeActionStyle.unread
         let actionTitle = message.isRead ? "Unread" : "Read"
@@ -441,7 +440,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // Archiving handler
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        if (self.canSwipePages) {
+        let message = inboxMessages[indexPath.row]
+        
+        if (self.canSwipePages || message.isArchived) {
             return nil
         }
         
