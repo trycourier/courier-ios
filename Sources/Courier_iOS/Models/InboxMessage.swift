@@ -94,7 +94,11 @@ public class InboxMessage: Codable {
     }
     
     public var createdAt: Date? {
-        return created?.toDate()
+        guard let created = created else {
+            return nil
+        }
+        let isoFormatter = ISO8601DateFormatter()
+        return isoFormatter.date(from: created)
     }
     
     public var time: String {

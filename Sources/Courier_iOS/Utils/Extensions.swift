@@ -153,15 +153,6 @@ internal extension Date {
     
 }
 
-internal extension String {
-    
-    func toDate() -> Date? {
-        let isoFormatter = ISO8601DateFormatter()
-        return isoFormatter.date(from: self)
-    }
-    
-}
-
 internal extension UIColor {
   
     convenience init?(_ hex: String, alpha: CGFloat = 1.0) {
