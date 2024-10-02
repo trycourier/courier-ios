@@ -23,7 +23,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     // MARK: Datasource
     
-    private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     var canSwipePages = false
@@ -328,11 +327,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.inboxMessages.remove(at: index)
         self.tableView.performBatchUpdates({
             self.tableView.deleteRows(at: [indexPath], with: .left)
-        })
-        
-        // Ensure we have a listener
-        guard let listener = self.inboxListener else {
-            return
         }
         
         Task {
@@ -374,11 +368,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Reload with the new message copy
         cell?.refreshMessage(newMessage)
-        
-        // Ensure we have a listener
-        guard let listener = self.inboxListener else {
-            return
-        }
         
         Task {
             do {
