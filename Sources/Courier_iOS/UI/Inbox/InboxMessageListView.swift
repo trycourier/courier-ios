@@ -327,7 +327,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.inboxMessages.remove(at: index)
         self.tableView.performBatchUpdates({
             self.tableView.deleteRows(at: [indexPath], with: .left)
-        }
+        })
         
         Task {
             do {
@@ -517,6 +517,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
      */
     deinit {
         self.authListener?.remove()
-        self.inboxListener?.remove()
     }
+    
 }
