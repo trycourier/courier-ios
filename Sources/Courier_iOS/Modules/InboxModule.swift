@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal protocol InboxSharedDataMutations {
+internal protocol InboxMutationHandler {
     func onInboxReload(isRefresh: Bool) async
     func onInboxKilled() async
     func onInboxUpdated(inbox: CourierInboxData) async
@@ -34,7 +34,7 @@ internal actor InboxModule {
     lazy var repo = InboxRepository()
 }
 
-extension Courier: InboxSharedDataMutations {
+extension Courier: InboxMutationHandler {
     
     func onInboxReload(isRefresh: Bool) async {
         
@@ -42,18 +42,18 @@ extension Courier: InboxSharedDataMutations {
             return
         }
         
-        Courier.shared.inboxListeners.forEach({ listener in
+        inboxListeners.forEach({ listener in
             listener.onInitialLoad?()
         })
         
     }
     
     func onInboxKilled() async {
-        Courier.shared.client?.options.log("Courier Shared Inbox Killed")
+        client?.options.log("Courier Shared Inbox Killed")
     }
     
     func onInboxUpdated(inbox: CourierInboxData) async {
-        Courier.shared.inboxListeners.forEach { listener in
+        inboxListeners.forEach { listener in
             listener.onInboxUpdated(inbox)
         }
     }
@@ -81,7 +81,7 @@ extension Courier: InboxSharedDataMutations {
     }
     
     func onInboxError(with error: any Error) async {
-        Courier.shared.inboxListeners.forEach({ listener in
+        inboxListeners.forEach({ listener in
             listener.onError?(error)
         })
     }
@@ -358,7 +358,7 @@ extension Courier {
             return
         }
         
-        await inboxModule.repo.get(isRefresh: true)
+        await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: true)
         
     }
 
@@ -370,20 +370,22 @@ extension Courier {
             return
         }
         
-        await inboxModule.repo.stop()
+        await onInboxKilled()
+        await inboxModule.repo.stop(with: inboxMutationHandler)
         
     }
     
     public func refreshInbox() async {
-        await inboxModule.repo.get(isRefresh: true)
+        await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: true)
     }
     
     func restartInbox() async {
-        await inboxModule.repo.get(isRefresh: false)
+        await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: false)
     }
     
     func closeInbox() async {
-        await inboxModule.repo.stop()
+        await onInboxKilled()
+        await inboxModule.repo.stop(with: inboxMutationHandler)
         await onInboxError(with: CourierError.userNotFound)
     }
     
@@ -398,7 +400,7 @@ extension Courier {
             return []
         }
         
-        await inboxMutationHandler?.onInboxPageFetched(feed: feed, messageSet: messageSet)
+        await inboxMutationHandler.onInboxPageFetched(feed: feed, messageSet: messageSet)
         
         return messageSet.messages
         
@@ -418,6 +420,8 @@ extension Courier {
             onError: onError,
             onInboxChanged: onInboxChanged
         )
+        
+        listener.initialize()
         
         Task { @MainActor in
             
@@ -440,7 +444,7 @@ extension Courier {
             // Get the inbox data
             // If an existing call is going out, it will cancel that call.
             // This will return data for the last inbox listener that is registered
-            await inboxModule.repo.get(isRefresh: true)
+            await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: true)
             
         }
         

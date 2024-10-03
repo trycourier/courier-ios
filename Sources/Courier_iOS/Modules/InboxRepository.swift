@@ -32,11 +32,7 @@ internal class InboxRepository {
         }
     }
     
-    private func getDelegate() -> InboxSharedDataMutations? {
-        return Courier.shared.inboxMutationHandler
-    }
-    
-    func stop() async {
+    func stop(with handler: InboxMutationHandler) async {
         
         inboxDataFetchTask?.cancel()
         inboxDataFetchTask = nil
@@ -47,25 +43,25 @@ internal class InboxRepository {
         socket?.receivedMessage = nil
         socket?.receivedMessageEvent = nil
         
-        await getDelegate()?.onInboxKilled()
+        await handler.onInboxKilled()
         
     }
     
-    @discardableResult func get(isRefresh: Bool) async -> CourierInboxData? {
+    @discardableResult func get(with handler: InboxMutationHandler, isRefresh: Bool) async -> CourierInboxData? {
         
-        await stop()
+        await stop(with: handler)
         
-        await getDelegate()?.onInboxReload(isRefresh: isRefresh)
+        await handler.onInboxReload(isRefresh: isRefresh)
         
         inboxDataFetchTask = Task {
             do {
                 
                 let inboxData = try await getInbox(
-                    onReceivedMessage: { [weak self] message in
-                        Task { await self?.getDelegate()?.onInboxMessageReceived(message: message) }
+                    onReceivedMessage: { message in
+                        Task { await handler.onInboxMessageReceived(message: message) }
                     },
-                    onReceivedMessageEvent: { [weak self] event in
-                        Task { await self?.getDelegate()?.onInboxEventReceived(event: event) }
+                    onReceivedMessageEvent: { event in
+                        Task { await handler.onInboxEventReceived(event: event) }
                     }
                 )
                 
@@ -73,7 +69,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                await getDelegate()?.onInboxUpdated(inbox: data)
+                await handler.onInboxUpdated(inbox: data)
                 
                 return data
                 
@@ -83,7 +79,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                await getDelegate()?.onInboxError(with: error)
+                await handler.onInboxError(with: error)
                 
                 return nil
                 

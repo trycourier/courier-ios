@@ -53,16 +53,13 @@ import UIKit
     // MARK: Inbox
     internal var inboxListeners: [CourierInboxListener] = []
     internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue
-    internal var inboxMutationHandler: InboxSharedDataMutations?
+    internal lazy var inboxMutationHandler: InboxMutationHandler = { self }()
     internal lazy var inboxModule = { InboxModule() }()
     
     // MARK: Init
     
     private override init() {
         super.init()
-        
-        // Register the inbox mutation listeners
-        self.inboxMutationHandler = self
         
         // Register Lifecycle Listeners
         NotificationCenter.default.addObserver(self,
