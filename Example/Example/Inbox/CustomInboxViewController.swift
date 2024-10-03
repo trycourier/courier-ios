@@ -58,16 +58,16 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
         ])
 
         inboxListener = Courier.shared.addInboxListener(
-            onInitialLoad: {
+            onLoading: {
                 self.setState(.loading)
             },
             onError: { error in
                 self.setState(.error, error: String(describing: error))
             },
-            onInboxChanged: { inbox in
-                self.setState(inbox.feed.messages.isEmpty ? .empty : .content)
-                self.canPaginate = inbox.feed.canPaginate
-                self.inboxMessages = inbox.feed.messages
+            onFeedChanged: { inbox in
+                self.setState(inbox.messages.isEmpty ? .empty : .content)
+                self.canPaginate = inbox.canPaginate
+                self.inboxMessages = inbox.messages
                 self.tableView.reloadData()
             }
         )

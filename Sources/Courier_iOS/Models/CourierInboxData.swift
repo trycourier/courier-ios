@@ -134,21 +134,28 @@ public class CourierInboxData {
         feed.messages.forEach { $0.setRead() }
         archived.messages.forEach { $0.setRead() }
         await handler.onInboxUpdated(inbox: self)
+        await handler.onUnreadCountChange(count: 0)
     }
     
     private func read(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
         if !message.isRead {
+            
             message.setRead()
-            unreadCount = max(unreadCount - 1, 0)
             await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
+            
+            unreadCount = max(unreadCount - 1, 0)
+            await handler.onUnreadCountChange(count: unreadCount)
         }
     }
     
     private func unread(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
         if message.isRead {
+            
             message.setUnread()
-            unreadCount += 1
             await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
+            
+            unreadCount += 1
+            await handler.onUnreadCountChange(count: unreadCount)
         }
     }
     

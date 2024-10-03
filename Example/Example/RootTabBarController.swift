@@ -16,16 +16,11 @@ class RootTabBarController: UITabBarController {
         super.viewDidLoad()
 
         self.inboxListener = Courier.shared.addInboxListener(
-            onInitialLoad: {
-                self.setBadge(0)
-            },
             onError: { _ in
                 self.setBadge(0)
             },
-            onInboxChanged: { inbox in
-                Task {
-                    await self.setBadge(inbox.unreadCount)
-                }
+            onUnreadCountChanged: { count in
+                self.setBadge(count)
             }
         )
         
