@@ -42,9 +42,11 @@ extension Courier: InboxMutationHandler {
             return
         }
         
-        inboxListeners.forEach({ listener in
-            listener.onInitialLoad?()
-        })
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach({ listener in
+                listener.onInitialLoad?()
+            })
+        }
         
     }
     
@@ -53,8 +55,10 @@ extension Courier: InboxMutationHandler {
     }
     
     func onInboxUpdated(inbox: CourierInboxData) async {
-        inboxListeners.forEach { listener in
-            listener.onInboxUpdated(inbox)
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach { listener in
+                listener.onInboxUpdated(inbox)
+            }
         }
     }
     
@@ -81,9 +85,11 @@ extension Courier: InboxMutationHandler {
     }
     
     func onInboxError(with error: any Error) async {
-        inboxListeners.forEach({ listener in
-            listener.onError?(error)
-        })
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach({ listener in
+                listener.onError?(error)
+            })
+        }
     }
     
 }
