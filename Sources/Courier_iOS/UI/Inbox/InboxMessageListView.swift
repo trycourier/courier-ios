@@ -371,19 +371,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         Task {
             do {
-                
-                // Update the datastore
-//                try await Courier.shared.inboxModule.updateMessage(
-//                    messageId: message.messageId,
-//                    event: isRead ? .unread : .read
-//                )
-                
+                if isRead {
+                    try await Courier.shared.unreadMessage(message.messageId)
+                } else {
+                    try await Courier.shared.readMessage(message.messageId)
+                }
             } catch {
-                
                 Courier.shared.client?.log(error.localizedDescription)
-                isRead ? message.setRead() : message.setUnread()
-                cell?.refreshMessage(message)
-                
             }
         }
         
