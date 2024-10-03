@@ -47,7 +47,7 @@ internal class InboxRepository {
         socket?.receivedMessage = nil
         socket?.receivedMessageEvent = nil
         
-        getDelegate()?.onInboxKilled()
+        await getDelegate()?.onInboxKilled()
         
     }
     
@@ -55,17 +55,17 @@ internal class InboxRepository {
         
         await stop()
         
-        getDelegate()?.onInboxReload(isRefresh: isRefresh)
+        await getDelegate()?.onInboxReload(isRefresh: isRefresh)
         
         inboxDataFetchTask = Task {
             do {
                 
                 let inboxData = try await getInbox(
                     onReceivedMessage: { [weak self] message in
-                        self?.getDelegate()?.onInboxMessageReceived(message: message)
+                        Task { await self?.getDelegate()?.onInboxMessageReceived(message: message) }
                     },
                     onReceivedMessageEvent: { [weak self] event in
-                        self?.getDelegate()?.onInboxEventReceived(event: event)
+                        Task { await self?.getDelegate()?.onInboxEventReceived(event: event) }
                     }
                 )
                 
@@ -73,7 +73,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                getDelegate()?.onInboxUpdated(inbox: data)
+                await getDelegate()?.onInboxUpdated(inbox: data)
                 
                 return data
                 
@@ -83,7 +83,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                getDelegate()?.onInboxError(with: error)
+                await getDelegate()?.onInboxError(with: error)
                 
                 return nil
                 
@@ -166,7 +166,7 @@ internal class InboxRepository {
         
         if feed == .feed {
             
-            if await !inboxData.feed.canPaginate || isPagingFeed {
+            if !inboxData.feed.canPaginate || isPagingFeed {
                 return nil
             }
             
@@ -183,7 +183,7 @@ internal class InboxRepository {
             
         } else {
             
-            if await !inboxData.archived.canPaginate || isPagingArchived {
+            if !inboxData.archived.canPaginate || isPagingArchived {
                 return nil
             }
             

@@ -8,15 +8,13 @@
 import UIKit
 
 internal protocol InboxSharedDataMutations {
-    func onInboxReload(isRefresh: Bool)
-    func onInboxKilled()
-    func onInboxUpdated(inbox: CourierInboxData)
-    func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet)
-    func onInboxMessageReceived(message: InboxMessage)
-    func onInboxEventReceived(event: InboxSocket.MessageEvent)
-    func onInboxError(with error: Error)
-    func onCleanUp() async
-    func onFetchNextInboxPage(_ inboxFeed: InboxMessageFeed) async throws -> [InboxMessage]
+    func onInboxReload(isRefresh: Bool) async
+    func onInboxKilled() async
+    func onInboxUpdated(inbox: CourierInboxData) async
+    func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async
+    func onInboxMessageReceived(message: InboxMessage) async
+    func onInboxEventReceived(event: InboxSocket.MessageEvent) async
+    func onInboxError(with error: Error) async
 }
 
 internal enum InboxEventType: String, Codable {
@@ -31,30 +29,14 @@ internal enum InboxEventType: String, Codable {
     case unclick = "unclick"
 }
 
+internal actor InboxModule {
+    var data: CourierInboxData? = nil
+    lazy var repo = InboxRepository()
+}
+
 extension Courier: InboxSharedDataMutations {
     
-    func onCleanUp() async {
-        await inboxRepo.stop()
-        onInboxError(with: CourierError.userNotFound)
-    }
-    
-    func onFetchNextInboxPage(_ inboxFeed: InboxMessageFeed) async throws -> [InboxMessage] {
-        
-        guard let inboxData = inboxData else {
-            return []
-        }
-        
-        guard let messageSet = try await inboxRepo.getNextPage(inboxFeed, inboxData: inboxData) else {
-            return []
-        }
-        
-        onInboxPageFetched(feed: inboxFeed, messageSet: messageSet)
-        
-        return messageSet.messages
-
-    }
-    
-    func onInboxReload(isRefresh: Bool) {
+    func onInboxReload(isRefresh: Bool) async {
         
         if isRefresh {
             return
@@ -66,43 +48,39 @@ extension Courier: InboxSharedDataMutations {
         
     }
     
-    func onInboxKilled() {
+    func onInboxKilled() async {
         Courier.shared.client?.options.log("Courier Shared Inbox Killed")
     }
     
-    func onInboxUpdated(inbox: CourierInboxData) {
+    func onInboxUpdated(inbox: CourierInboxData) async {
         Courier.shared.inboxListeners.forEach { listener in
             listener.onInboxUpdated(inbox)
         }
     }
     
-    func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) {
+    func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
         
-        Task { @MainActor in
-            
-            // Add the page
-            await inboxData?.addPage(feed, messageSet: messageSet)
-            
-            // Call the listeners
-            if let inbox = inboxData {
-                onInboxUpdated(inbox: inbox)
-            }
-            
+        // Add the page
+        await inboxModule.data?.addPage(feed, messageSet: messageSet)
+        
+        // Call the listeners
+        if let inbox = await inboxModule.data {
+            await onInboxUpdated(inbox: inbox)
         }
         
     }
     
-    func onInboxMessageReceived(message: InboxMessage) {
+    func onInboxMessageReceived(message: InboxMessage) async {
         
         let inboxFeed: InboxMessageFeed = message.isArchived ? .archived : .feed
         
     }
     
-    func onInboxEventReceived(event: InboxSocket.MessageEvent) {
+    func onInboxEventReceived(event: InboxSocket.MessageEvent) async {
         print("onInboxEventReceived")
     }
     
-    func onInboxError(with error: any Error) {
+    func onInboxError(with error: any Error) async {
         Courier.shared.inboxListeners.forEach({ listener in
             listener.onError?(error)
         })
@@ -345,13 +323,13 @@ extension Courier {
     
     public var inboxMessages: [InboxMessage] {
         get async {
-            return await inboxData?.feed.messages ?? []
+            return await inboxModule.data?.feed.messages ?? []
         }
     }
     
     public var archivedMessages: [InboxMessage] {
         get async {
-            return await inboxData?.archived.messages ?? []
+            return await inboxModule.data?.archived.messages ?? []
         }
     }
     
@@ -380,7 +358,7 @@ extension Courier {
             return
         }
         
-        await inboxRepo.get(isRefresh: true)
+        await inboxModule.repo.get(isRefresh: true)
         
     }
 
@@ -392,25 +370,38 @@ extension Courier {
             return
         }
         
-        await inboxRepo.stop()
+        await inboxModule.repo.stop()
         
     }
     
     public func refreshInbox() async {
-        await inboxRepo.get(isRefresh: true)
+        await inboxModule.repo.get(isRefresh: true)
     }
     
     func restartInbox() async {
-        await inboxRepo.get(isRefresh: false)
+        await inboxModule.repo.get(isRefresh: false)
     }
     
     func closeInbox() async {
-        await onCleanUp()
+        await inboxModule.repo.stop()
+        await onInboxError(with: CourierError.userNotFound)
     }
     
     @discardableResult
     public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> [InboxMessage] {
-        return try await Courier.shared.onFetchNextInboxPage(feed)
+        
+        guard let inboxData = await inboxModule.data else {
+            return []
+        }
+        
+        guard let messageSet = try await inboxModule.repo.getNextPage(feed, inboxData: inboxData) else {
+            return []
+        }
+        
+        await inboxMutationHandler?.onInboxPageFetched(feed: feed, messageSet: messageSet)
+        
+        return messageSet.messages
+        
     }
     
     // MARK: Listeners
@@ -441,7 +432,7 @@ extension Courier {
             }
             
             // Notify that data exists if needed
-            if let inbox = inboxData {
+            if let inbox = await inboxModule.data {
                 listener.onInboxUpdated(inbox)
                 return
             }
@@ -449,7 +440,7 @@ extension Courier {
             // Get the inbox data
             // If an existing call is going out, it will cancel that call.
             // This will return data for the last inbox listener that is registered
-            await inboxRepo.get(isRefresh: true)
+            await inboxModule.repo.get(isRefresh: true)
             
         }
         
@@ -463,7 +454,7 @@ extension Courier {
         
         if (inboxListeners.isEmpty) {
             Task {
-                await onCleanUp()
+                await closeInbox()
             }
         }
         

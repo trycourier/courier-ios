@@ -5,7 +5,7 @@
 //  Created by Michael Miller on 9/30/24.
 //
 
-public actor CourierInboxData {
+public class CourierInboxData {
     
     private(set) public var feed: InboxMessageSet
     private(set) public var archived: InboxMessageSet

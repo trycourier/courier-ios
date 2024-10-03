@@ -23,7 +23,9 @@ class RootTabBarController: UITabBarController {
                 self.setBadge(0)
             },
             onInboxChanged: { inbox in
-                self.setBadge(inbox.unreadCount)
+                Task {
+                    await self.setBadge(inbox.unreadCount)
+                }
             }
         )
         
