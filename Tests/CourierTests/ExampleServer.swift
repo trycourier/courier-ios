@@ -86,7 +86,7 @@ class ExampleServer {
             
             request.httpBody = try? JSONEncoder().encode([
                 "scope": "user_id:\(userId) write:user-tokens inbox:read:messages inbox:write:events read:preferences write:preferences read:brands",
-                "expires_in": "2 days"
+                "expires_in": "365 days"
             ])
 
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in

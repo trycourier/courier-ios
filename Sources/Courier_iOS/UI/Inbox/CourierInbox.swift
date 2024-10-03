@@ -153,6 +153,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         addPagesToScrollView(tabView)
         
+        traitCollectionDidChange(nil)
+        
         inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: { [weak self] in
                 self?.getPages()[0].page.setLoading()
@@ -176,8 +178,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 self?.getPages()[1].page.setInbox(dataSet: inbox.archived)
             }
         )
-        
-        traitCollectionDidChange(nil)
         
     }
     

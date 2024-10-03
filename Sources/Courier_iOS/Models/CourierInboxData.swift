@@ -11,8 +11,8 @@ public class CourierInboxData {
     private(set) public var archived: InboxMessageSet
     private(set) public var unreadCount: Int
     
-    internal init(messages: InboxMessageSet, archived: InboxMessageSet, unreadCount: Int) {
-        self.feed = messages
+    internal init(feed: InboxMessageSet, archived: InboxMessageSet, unreadCount: Int) {
+        self.feed = feed
         self.archived = archived
         self.unreadCount = unreadCount
     }

@@ -34,7 +34,8 @@ class UserBuilder {
             userId: userId, 
             tenantId: tenantId, 
             accessToken: accessToken,
-            clientKey: Env.COURIER_CLIENT_KEY
+            clientKey: Env.COURIER_CLIENT_KEY,
+            showLogs: true
         )
         
         // Remove the listener

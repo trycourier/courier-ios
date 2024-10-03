@@ -51,14 +51,9 @@ import UIKit
     internal lazy var tokenModule = { TokenModule() }()
     
     // MARK: Inbox
-    
-    internal var paginationLimit: Int = InboxModule.Pagination.default.rawValue
-    public internal(set) var inboxListeners: [CourierInboxListener] = []
-    internal weak var inboxDelegate: InboxModuleDelegate?
-    internal lazy var inboxModule = {
-        self.inboxDelegate = self
-        return InboxModule()
-    }()
+    internal var inboxListeners: [CourierInboxListener] = []
+    internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue
+    internal lazy var inboxModule = { InboxModule() }()
     
     // MARK: Init
     

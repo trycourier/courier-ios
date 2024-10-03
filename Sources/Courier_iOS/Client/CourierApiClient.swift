@@ -121,7 +121,7 @@ internal extension URLRequest {
         if !validCodes.contains(code) {
             
             let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            let message = json?["message"] as? String ?? "Missing"
+            let message = json?["message"] as? String ?? "Unknown Error"
             let type = json?["type"] as? String
             
             throw CourierError(code: code, message: message, type: type)
