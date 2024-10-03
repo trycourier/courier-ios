@@ -41,20 +41,86 @@ internal actor InboxModule {
         self.data = data
     }
     
+    func updateMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
+        if feed == .feed {
+            data?.feed.messages[index] = message
+        } else {
+            data?.archived.messages[index] = message
+        }
+    }
+    
+    func addMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
+        if feed == .feed {
+            data?.feed.messages.insert(message, at: index)
+        } else {
+            data?.archived.messages.insert(message, at: index)
+        }
+    }
+    
+    func removeMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
+        if feed == .feed {
+            data?.feed.messages.remove(at: index)
+        } else {
+            data?.archived.messages.remove(at: index)
+        }
+    }
+    
+    func addPage(in feed: InboxMessageFeed, with set: InboxMessageSet) {
+        if feed == .feed {
+            data?.feed.messages.append(contentsOf: set.messages)
+            data?.feed.paginationCursor = set.paginationCursor
+            data?.feed.canPaginate = set.canPaginate
+        } else {
+            data?.archived.messages.append(contentsOf: set.messages)
+            data?.archived.paginationCursor = set.paginationCursor
+            data?.archived.canPaginate = set.canPaginate
+        }
+    }
+    
 }
 
 extension Courier: InboxMutationHandler {
     
     func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
-        print("onInboxItemAdded")
+        
+        await inboxModule.addMessage(at: index, in: feed, with: message)
+        
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onInboxUpdated(data)
+                }
+            }
+        }
+        
     }
     
     func onInboxItemRemove(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
-        print("onInboxItemRemove")
+        
+        await inboxModule.removeMessage(at: index, in: feed, with: message)
+        
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onInboxUpdated(data)
+                }
+            }
+        }
+        
     }
     
     func onInboxItemUpdated(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
-        print("onInboxItemUpdated")
+        
+        await inboxModule.updateMessage(at: index, in: feed, with: message)
+        
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onInboxUpdated(data)
+                }
+            }
+        }
+        
     }
     
     func onInboxReload(isRefresh: Bool) async {
@@ -92,23 +158,65 @@ extension Courier: InboxMutationHandler {
     func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
         
         // Add the page
-        await inboxModule.data?.addPage(feed, messageSet: messageSet)
+        await inboxModule.addPage(in: feed, with: messageSet)
         
         // Call the listeners
         if let inbox = await inboxModule.data {
-            await onInboxUpdated(inbox: inbox)
+            await onInboxUpdated(inbox: inbox) // TODO
         }
         
     }
     
     func onInboxMessageReceived(message: InboxMessage) async {
         
-        let inboxFeed: InboxMessageFeed = message.isArchived ? .archived : .feed
+        let feed: InboxMessageFeed = message.isArchived ? .archived : .feed
+        await inboxModule.addMessage(at: 0, in: feed, with: message)
+        
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onInboxUpdated(data)
+                }
+            }
+        }
         
     }
     
     func onInboxEventReceived(event: InboxSocket.MessageEvent) async {
-        print("onInboxEventReceived")
+        do {
+            switch event.event {
+            case .markAllRead:
+                try await Courier.shared.readAllInboxMessages()
+            case .read:
+                if let messageId = event.messageId {
+                    try await Courier.shared.readMessage(messageId)
+                }
+            case .unread:
+                if let messageId = event.messageId {
+                    try await Courier.shared.unreadMessage(messageId)
+                }
+            case .opened:
+                if let messageId = event.messageId {
+                    try await Courier.shared.openMessage(messageId)
+                }
+            case .unopened:
+                break
+            case .archive:
+                if let messageId = event.messageId {
+                    try await Courier.shared.archiveMessage(messageId)
+                }
+            case .unarchive:
+                break
+            case .click:
+                if let messageId = event.messageId {
+                    try await Courier.shared.clickMessage(messageId)
+                }
+            case .unclick:
+                break
+            }
+        } catch {
+            Courier.shared.client?.log(error.localizedDescription)
+        }
     }
     
     func onInboxError(with error: any Error) async {
@@ -120,237 +228,6 @@ extension Courier: InboxMutationHandler {
     }
     
 }
-
-//internal actor InboxModule {
-//    
-//    
-//    internal let inboxRepo = InboxRepository()
-//    
-//    private(set) var data: CourierInboxData? = nil
-//    
-////    private var delegate: InboxModuleDelegate? {
-////        get {
-////            return Courier.shared.inboxDelegate
-////        }
-////    }
-//    
-////    func restart() async {
-////        
-////        // Tell listeners to restart
-////        delegate?.onInboxRestarted()
-////        
-////        self.streamTask?.cancel()
-////        
-////        self.streamTask = Task {
-////            
-////            do {
-////                
-////                // Fetch the inbox and call the delegate
-////                let updatedInbox = try await getInbox(false)
-////                self.inboxData = updatedInbox
-////                delegate?.onInboxUpdated(inbox: updatedInbox)
-////                
-////            } catch {
-////                
-////                // Complete and call delegate
-////                delegate?.onInboxError(with: error)
-////                
-////            }
-////            
-////        }
-////        
-////    }
-//    
-////    func refresh() async {
-////        
-////        self.streamTask?.cancel()
-////        
-////        do {
-////            
-////            // Load the inbox and call the delegate
-////            let updatedInbox = try await getInbox(true)
-////            self.inboxData = updatedInbox
-////            delegate?.onInboxUpdated(inbox: updatedInbox)
-////            
-////        } catch {
-////            
-////            // Complete and call delegate
-////            delegate?.onInboxError(with: error)
-////            
-////        }
-////        
-////    }
-//    
-//    func cleanUp() {
-//    
-//        inboxRepo.stop()
-//        
-//        // Tell delegate
-////        delegate?.onInboxError(
-////            with: CourierError.userNotFound
-////        )
-//        
-//    }
-//    
-//    internal func notifyInboxUpdated() {
-////        if let inbox = self.data {
-////            delegate?.onInboxUpdated(inbox: inbox)
-////        }
-//    }
-//    
-//    func getNextInboxPage(_ inboxFeed: InboxMessageFeed) async throws -> [InboxMessage] {
-//        
-////        if !Courier.shared.isUserSignedIn {
-////            throw CourierError.userNotFound
-////        }
-////        
-////        if self.inboxData == nil {
-////            return []
-////        }
-////
-////        let set = inboxFeed == .feed ? self.inboxData?.feed : self.inboxData?.archived
-////        let nextPage = set?.canPaginate
-////
-////        if (isPaging || nextPage == false) {
-////            return []
-////        }
-////
-////        self.isPaging = true
-////        
-////        guard let inbox = self.inboxData else {
-////            throw CourierError.inboxNotInitialized
-////        }
-////        
-////        guard let client = self.client else {
-////            throw CourierError.inboxNotInitialized
-////        }
-////        
-////        self.isPaging = true
-////        
-////        let limit = getPaginationLimit()
-////        
-////        let res = inboxFeed == .feed ? try await client.inbox.getMessages(paginationLimit: limit, startCursor: set?.paginationCursor) : try await client.inbox.getArchivedMessages(paginationLimit: limit, startCursor: set?.paginationCursor)
-////        
-////        let messages = res.data?.messages
-////        let newMessages = messages?.nodes ?? []
-////        let hasNextPage = messages?.pageInfo?.hasNextPage
-////        let startCursor = messages?.pageInfo?.startCursor
-////
-////        inbox.addPage(
-////            inboxFeed,
-////            newMessages: newMessages,
-////            startCursor: startCursor,
-////            hasNextPage: hasNextPage
-////        )
-////        
-////        // Update the local inbox
-////        self.inboxData = inbox
-////        self.isPaging = false
-////        
-////        delegate?.onInboxUpdated(inbox: inbox)
-////        
-////        return inboxFeed == .feed ? inbox.feed.messages : inbox.archived.messages
-//        
-//        return []
-//        
-//    }
-//    
-//    func updateMessage(messageId: String, event: InboxEventType) async throws {
-//        
-////        var original: UpdateOperation?
-////        
-////        let feed: InboxMessageFeed = inboxData?.archived.messages.contains { $0.messageId == messageId } ?? false ? .archived : .feed
-////        
-////        // Handle the click action separately
-////        if event == .click {
-////            if feed == .archived {
-////                if let message = inboxData?.archived.messages.first(where: { $0.messageId == messageId }),
-////                let channelId = message.trackingIds?.clickTrackingId {
-////                    try await client?.inbox.click(messageId: messageId, trackingId: channelId)
-////                }
-////            } else {
-////                if let message = inboxData?.feed.messages.first(where: { $0.messageId == messageId }),
-////                let channelId = message.trackingIds?.clickTrackingId {
-////                    try await client?.inbox.click(messageId: messageId, trackingId: channelId)
-////                }
-////            }
-////            return
-////        }
-////        
-////        // Perform other actions
-////        switch event {
-////        case .read:
-////            original = try inboxData?.readMessage(feed, messageId: messageId)
-////        case .unread:
-////            original = try inboxData?.unreadMessage(feed, messageId: messageId)
-////        case .opened:
-////            original = try inboxData?.openMessage(feed, messageId: messageId)
-////        case .unopened:
-////            original = try inboxData?.unopenMessage(feed, messageId: messageId)
-////        case .archive:
-////            original = try inboxData?.archiveMessage(feed, messageId: messageId)
-////        case .unarchive:
-////            original = try inboxData?.unarchiveMessage(feed, messageId: messageId)
-////        default:
-////            return
-////        }
-////        
-////        // Ensure there is an original message
-////        guard let og = original else {
-////            return
-////        }
-////        
-////        notifyInboxUpdated()
-////        
-////        do {
-////            
-////            switch event {
-////            case .read:
-////                try await client?.inbox.read(messageId: messageId)
-////            case .unread:
-////                try await client?.inbox.unread(messageId: messageId)
-////            case .opened:
-////                try await client?.inbox.open(messageId: messageId)
-////            case .archive:
-////                try await client?.inbox.archive(messageId: messageId)
-////            default:
-////                break
-////            }
-////            
-////        } catch {
-////            
-////            // Reset the change
-////            inboxData?.resetUpdate(feed, update: og)
-////            notifyInboxUpdated()
-////            delegate?.onInboxError(with: error)
-////            
-////        }
-//    }
-//    
-//    func readAllMessages() async throws {
-//
-////        let original = inboxData?.readAllMessages(.feed)
-////
-////        notifyInboxUpdated()
-////
-////        do {
-////            
-////            try await client?.inbox.readAll()
-////
-////        } catch {
-////
-////            if let og = original {
-////                self.inboxData?.resetReadAll(.feed, update: og)
-////            }
-////
-////            notifyInboxUpdated()
-////            delegate?.onInboxError(with: error)
-////
-////        }
-//        
-//    }
-//    
-//}
 
 extension Courier {
     
@@ -581,7 +458,10 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-//        try await inboxModule.readAllMessages()
+        try await inboxModule.data?.readAllMessages(
+            client: client,
+            handler: inboxMutationHandler
+        )
 
     }
     

@@ -7,9 +7,9 @@
 
 public class CourierInboxData {
     
-    private(set) public var feed: InboxMessageSet
-    private(set) public var archived: InboxMessageSet
-    private(set) public var unreadCount: Int
+    internal(set) public var feed: InboxMessageSet
+    internal(set) public var archived: InboxMessageSet
+    internal(set) public var unreadCount: Int
     
     internal init(feed: InboxMessageSet, archived: InboxMessageSet, unreadCount: Int) {
         self.feed = feed
@@ -25,29 +25,6 @@ public class CourierInboxData {
         )
     }
     
-    internal func addNewMessage(_ inboxFeed: InboxMessageFeed, message: InboxMessage) {
-        if inboxFeed == .archived {
-            archived.messages.insert(message, at: 0)
-            archived.totalCount += 1
-        } else {
-            feed.messages.insert(message, at: 0)
-            feed.totalCount += 1
-            unreadCount += 1
-        }
-    }
-    
-    internal func addPage(_ inboxFeed: InboxMessageFeed, messageSet: InboxMessageSet) {
-        if inboxFeed == .archived {
-            archived.messages.append(contentsOf: messageSet.messages)
-            archived.paginationCursor = messageSet.paginationCursor
-            archived.canPaginate = messageSet.canPaginate
-        } else {
-            feed.messages.append(contentsOf: messageSet.messages)
-            feed.paginationCursor = messageSet.paginationCursor
-            feed.canPaginate = messageSet.canPaginate
-        }
-    }
-    
     private func getMessages(for messageId: String) -> (InboxMessageFeed, [InboxMessage])? {
         if let _ = feed.messages.first(where: { $0.messageId == messageId }) {
             return (.feed, feed.messages)
@@ -56,6 +33,26 @@ public class CourierInboxData {
         } else {
             return nil
         }
+    }
+    
+    internal func readAllMessages(client: CourierClient?, handler: InboxMutationHandler) async throws {
+        
+        guard let client = client else {
+            throw CourierError.inboxNotInitialized
+        }
+        
+        // Copy the original state of the data
+        let original = copy()
+        
+        await readAll(handler)
+        
+        do {
+            try await client.inbox.readAll()
+        } catch {
+            client.options.log(error.localizedDescription)
+            await handler.onInboxUpdated(inbox: original)
+        }
+        
     }
     
     internal func updateMessage(messageId: String, event: InboxEventType, client: CourierClient?, handler: InboxMutationHandler) async throws {
@@ -133,6 +130,12 @@ public class CourierInboxData {
         }
     }
     
+    private func readAll(_ handler: InboxMutationHandler) async {
+        feed.messages.forEach { $0.setRead() }
+        archived.messages.forEach { $0.setRead() }
+        await handler.onInboxUpdated(inbox: self)
+    }
+    
     private func read(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
         if !message.isRead {
             message.setRead()
@@ -189,36 +192,6 @@ public class CourierInboxData {
         }
     }
     
-    @discardableResult internal func readAllMessages(_ inboxFeed: InboxMessageFeed) -> ReadAllOperation? {
-        
-        if (inboxFeed == .archived) {
-            return nil
-        }
-        
-        // Copy previous values
-        let originalMessages = Array(feed.messages)
-        let originalUnreadCount = unreadCount
-        
-        // Read all messages
-        feed.messages.forEach { $0.setRead() }
-        unreadCount = 0
-
-        return ReadAllOperation(
-            messages: originalMessages,
-            unreadCount: originalUnreadCount
-        )
-        
-    }
-    
-    internal func resetReadAll(_ inboxFeed: InboxMessageFeed, update: ReadAllOperation) {
-        if inboxFeed == .archived {
-            archived.messages = update.messages
-        } else {
-            feed.messages = update.messages
-        }
-        unreadCount = update.unreadCount
-    }
-    
     private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int? {
         for (index, message) in messages.enumerated() {
             if newMessage.createdAt >= message.createdAt {
@@ -237,167 +210,6 @@ public class CourierInboxData {
         return nil
     }
     
-    
-//    @discardableResult
-//    internal func performDatastoreUpdateOperation(
-//        _ inboxFeed: InboxMessageFeed,
-//        messageId: String,
-//        event: InboxEventType
-//    ) throws -> UpdateOperation? {
-//        
-//        // Determine the message set based on inboxFeed
-//        var messages = inboxFeed == .archived ? archived.messages : feed.messages
-//        
-//        // Find the index of the message
-//        guard let index = messages.firstIndex(where: { $0.messageId == messageId }) else {
-//            return nil
-//        }
-//
-//        // Process the message and return the update operation
-//        return try updateMessage(
-//            message: &messages[index],
-//            event: event,
-//            unreadCount: &unreadCount,
-//            index: index
-//        )
-//    }
-//    
-//    private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
-//        for (index, message) in messages.enumerated() {
-//            if newMessage.createdAt >= message.createdAt {
-//                return index
-//            }
-//        }
-//        return messages.count
-//    }
-//
-//    private func updateMessage(
-//        message: inout InboxMessage,
-//        event: InboxEventType,
-//        unreadCount: inout Int,
-//        index: Int
-//    ) throws -> UpdateOperation? {
-//        
-//        let originalMessage = message.copy()
-//        
-//        // Update based on action
-//        switch event {
-//        case .read:
-//            guard !message.isRead else { return nil }
-//            message.setRead()
-//            unreadCount = max(unreadCount - 1, 0)
-//
-//        case .unread:
-//            
-//            guard message.isRead else { return nil }
-//            message.setUnread()
-//            
-//            unreadCount += 1
-//
-//        case .opened:
-//            
-//            guard !message.isOpened else { return nil }
-//            message.setOpened()
-//
-//        case .unopened:
-//            
-//            guard message.isOpened else { return nil }
-//            message.setUnopened()
-//
-//        case .archive:
-//            
-//            guard !message.isArchived else { return nil }
-//            
-//            if !message.isRead {
-//                unreadCount = max(unreadCount - 1, 0)
-//            }
-//            
-//            message.setArchived()
-//            
-//            // Add the message at index
-//            let insertIndex = findInsertIndex(for: message, in: archived.messages)
-//            archived.messages.insert(message, at: insertIndex)
-//
-//        case .unarchive:
-//            
-//            guard message.isArchived else { return nil }
-//            
-//            if !message.isRead {
-//                unreadCount += 1
-//            }
-//            
-//            message.setUnarchived()
-//            
-//            // Add the message at index
-//            let insertIndex = findInsertIndex(for: message, in: feed.messages)
-//            feed.messages.insert(message, at: insertIndex)
-//
-//        case .click:
-//            break
-//        case .unclick:
-//            break
-//        case .markAllRead:
-//            break
-//        }
-//        
-//        // Return the update operation with the index
-//        return UpdateOperation(
-//            index: index,
-//            unreadCount: unreadCount,
-//            message: originalMessage
-//        )
-//    }
-    
-    internal func resetUpdate(_ inboxFeed: InboxMessageFeed, update: UpdateOperation) {
-        if inboxFeed == .archived {
-            archived.messages[update.index] = update.message
-        } else {
-            feed.messages[update.index] = update.message
-        }
-        unreadCount = update.unreadCount
-    }
-    
-//    @discardableResult internal func readMessage(_ inboxFeed: InboxMessageFeed, messageId: String) throws -> UpdateOperation? {
-//        return try performDatastoreUpdateOperation(inboxFeed, messageId: messageId, event: .read)
-//    }
-//    
-//    @discardableResult internal func unreadMessage(_ inboxFeed: InboxMessageFeed, messageId: String) throws -> UpdateOperation? {
-//        return try performDatastoreUpdateOperation(inboxFeed, messageId: messageId, event: .unread)
-//    }
-//    
-//    @discardableResult internal func openMessage(_ inboxFeed: InboxMessageFeed, messageId: String) throws -> UpdateOperation? {
-//        return try performDatastoreUpdateOperation(inboxFeed, messageId: messageId, event: .opened)
-//    }
-//    
-//    @discardableResult internal func unopenMessage(_ inboxFeed: InboxMessageFeed, messageId: String) throws -> UpdateOperation? {
-//        return try performDatastoreUpdateOperation(inboxFeed, messageId: messageId, event: .unopened)
-//    }
-//    
-//    @discardableResult internal func archiveMessage(_ inboxFeed: InboxMessageFeed, messageId: String) throws -> UpdateOperation? {
-//        return try performDatastoreUpdateOperation(inboxFeed, messageId: messageId, event: .archive)
-//    }
-//    
-//    @discardableResult internal func unarchiveMessage(_ inboxFeed: InboxMessageFeed, messageId: String) throws -> UpdateOperation? {
-//        return try performDatastoreUpdateOperation(inboxFeed, messageId: messageId, event: .unarchive)
-//    }
-    
-}
-
-
-
-internal struct ReadAllOperation {
-    let messages: [InboxMessage]
-    let unreadCount: Int
-}
-
-internal struct UpdateOperation {
-    let index: Int
-    let unreadCount: Int
-    let message: InboxMessage
-}
-
-internal struct MutationOperation {
-    let original: CourierInboxData
 }
 
 public struct InboxMessageSet {
