@@ -50,7 +50,7 @@ public class CourierInboxData {
             try await client.inbox.readAll()
         } catch {
             client.options.log(error.localizedDescription)
-            await handler.onInboxUpdated(inbox: original)
+            await handler.onInboxReset(inbox: original, error: error)
         }
         
     }
@@ -86,7 +86,7 @@ public class CourierInboxData {
             try await mutateServerData(using: client, for: messages![index], event: event)
         } catch {
             client.options.log(error.localizedDescription)
-            await handler.onInboxUpdated(inbox: original)
+            await handler.onInboxReset(inbox: original, error: error)
         }
         
     }

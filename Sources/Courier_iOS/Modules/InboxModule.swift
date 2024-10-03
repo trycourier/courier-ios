@@ -10,6 +10,7 @@ import UIKit
 internal protocol InboxMutationHandler {
     func onInboxReload(isRefresh: Bool) async
     func onInboxKilled() async
+    func onInboxReset(inbox: CourierInboxData, error: Error) async
     func onInboxUpdated(inbox: CourierInboxData) async
     func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
     func onInboxItemRemove(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
@@ -18,6 +19,7 @@ internal protocol InboxMutationHandler {
     func onInboxMessageReceived(message: InboxMessage) async
     func onInboxEventReceived(event: InboxSocket.MessageEvent) async
     func onInboxError(with error: Error) async
+    func onUnreadCountChange(count: Int) async
 }
 
 internal enum InboxEventType: String, Codable {
@@ -39,6 +41,10 @@ internal actor InboxModule {
     
     func updateData(data: CourierInboxData?) {
         self.data = data
+    }
+    
+    func updateUnreadCount(count: Int) {
+        self.data?.unreadCount = count
     }
     
     func updateMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
@@ -81,15 +87,41 @@ internal actor InboxModule {
 
 extension Courier: InboxMutationHandler {
     
-    func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
+    func onUnreadCountChange(count: Int) async {
         
-        await inboxModule.addMessage(at: index, in: feed, with: message)
+        await inboxModule.updateUnreadCount(count: count)
+        
+        if let unreadCount = await inboxModule.data?.unreadCount {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onUnreadCountChanged?(unreadCount)
+                }
+            }
+        }
+        
+    }
+    
+    func onInboxReset(inbox: CourierInboxData, error: any Error) async {
+        
+        await inboxModule.updateData(data: inbox)
         
         if let data = await inboxModule.data {
             DispatchQueue.main.async {
                 self.inboxListeners.forEach { listener in
-                    listener.onInboxUpdated(data)
+                    listener.onLoad(data: data)
                 }
+            }
+        }
+        
+    }
+    
+    func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
+        
+        await inboxModule.addMessage(at: index, in: feed, with: message)
+        
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach { listener in
+                listener.onMessageAdded?(feed, index, message)
             }
         }
         
@@ -99,11 +131,9 @@ extension Courier: InboxMutationHandler {
         
         await inboxModule.removeMessage(at: index, in: feed, with: message)
         
-        if let data = await inboxModule.data {
-            DispatchQueue.main.async {
-                self.inboxListeners.forEach { listener in
-                    listener.onInboxUpdated(data)
-                }
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach { listener in
+                listener.onMessageRemoved?(feed, index, message)
             }
         }
         
@@ -113,11 +143,9 @@ extension Courier: InboxMutationHandler {
         
         await inboxModule.updateMessage(at: index, in: feed, with: message)
         
-        if let data = await inboxModule.data {
-            DispatchQueue.main.async {
-                self.inboxListeners.forEach { listener in
-                    listener.onInboxUpdated(data)
-                }
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach { listener in
+                listener.onMessageChanged?(feed, index, message)
             }
         }
         
@@ -131,7 +159,7 @@ extension Courier: InboxMutationHandler {
         
         DispatchQueue.main.async {
             self.inboxListeners.forEach({ listener in
-                listener.onInitialLoad?()
+                listener.onLoading?()
             })
         }
         
@@ -141,6 +169,14 @@ extension Courier: InboxMutationHandler {
         client?.options.log("Courier Shared Inbox Killed")
     }
     
+    func onInboxError(with error: any Error) async {
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach({ listener in
+                listener.onError?(error)
+            })
+        }
+    }
+    
     func onInboxUpdated(inbox: CourierInboxData) async {
         
         await inboxModule.updateData(data: inbox)
@@ -148,7 +184,7 @@ extension Courier: InboxMutationHandler {
         if let data = await inboxModule.data {
             DispatchQueue.main.async {
                 self.inboxListeners.forEach { listener in
-                    listener.onInboxUpdated(data)
+                    listener.onLoad(data: data)
                 }
             }
         }
@@ -161,22 +197,23 @@ extension Courier: InboxMutationHandler {
         await inboxModule.addPage(in: feed, with: messageSet)
         
         // Call the listeners
-        if let inbox = await inboxModule.data {
-            await onInboxUpdated(inbox: inbox) // TODO
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach { listener in
+                listener.onPageAdded?(feed, messageSet)
+            }
         }
         
     }
     
     func onInboxMessageReceived(message: InboxMessage) async {
         
+        let index = 0
         let feed: InboxMessageFeed = message.isArchived ? .archived : .feed
-        await inboxModule.addMessage(at: 0, in: feed, with: message)
+        await inboxModule.addMessage(at: index, in: feed, with: message)
         
-        if let data = await inboxModule.data {
-            DispatchQueue.main.async {
-                self.inboxListeners.forEach { listener in
-                    listener.onInboxUpdated(data)
-                }
+        DispatchQueue.main.async {
+            self.inboxListeners.forEach { listener in
+                listener.onMessageAdded?(feed, index, message)
             }
         }
         
@@ -216,14 +253,6 @@ extension Courier: InboxMutationHandler {
             }
         } catch {
             Courier.shared.client?.log(error.localizedDescription)
-        }
-    }
-    
-    func onInboxError(with error: any Error) async {
-        DispatchQueue.main.async {
-            self.inboxListeners.forEach({ listener in
-                listener.onError?(error)
-            })
         }
     }
     
@@ -320,15 +349,27 @@ extension Courier {
     
     @discardableResult
     public func addInboxListener(
-        onInitialLoad: (() -> Void)? = nil,
+        onLoading: (() -> Void)? = nil,
         onError: ((Error) -> Void)? = nil,
-        onInboxChanged: ((_ inbox: CourierInboxData) -> Void)? = nil
+        onUnreadCountChanged: ((_ count: Int) -> Void)? = nil,
+        onFeedChanged: ((_ messageSet: InboxMessageSet) -> Void)? = nil,
+        onArchiveChanged: ((_ messageSet: InboxMessageSet) -> Void)? = nil,
+        onPageAdded: ((_ feed: InboxMessageFeed, _ messageSet: InboxMessageSet) -> Void)? = nil,
+        onMessageChanged: ((_ feed: InboxMessageFeed, _ index: Int, _ message: InboxMessage) -> Void)? = nil,
+        onMessageAdded: ((_ feed: InboxMessageFeed, _ index: Int, _ message: InboxMessage) -> Void)? = nil,
+        onMessageRemoved: ((_ feed: InboxMessageFeed, _ index: Int, _ message: InboxMessage) -> Void)? = nil
     ) -> CourierInboxListener {
         
         let listener = CourierInboxListener(
-            onInitialLoad: onInitialLoad,
+            onLoading: onLoading,
             onError: onError,
-            onInboxChanged: onInboxChanged
+            onUnreadCountChanged: onUnreadCountChanged,
+            onFeedChanged: onFeedChanged,
+            onArchiveChanged: onArchiveChanged,
+            onPageAdded: onPageAdded,
+            onMessageChanged: onMessageChanged,
+            onMessageAdded: onMessageAdded,
+            onMessageRemoved: onMessageRemoved
         )
         
         listener.initialize()
@@ -346,8 +387,8 @@ extension Courier {
             }
             
             // Notify that data exists if needed
-            if let inbox = await inboxModule.data {
-                listener.onInboxUpdated(inbox)
+            if let data = await inboxModule.data {
+                listener.onLoad(data: data)
                 return
             }
             

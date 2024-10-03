@@ -156,7 +156,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         traitCollectionDidChange(nil)
         
         inboxListener = Courier.shared.addInboxListener(
-            onInitialLoad: { [weak self] in
+            onLoading: { [weak self] in
                 self?.getPages().forEach { page in
                     page.page.setLoading()
                 }
@@ -166,19 +166,30 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                     page.page.setError(error)
                 }
             },
-            onInboxChanged: { [weak self] inbox in
-                
-                // Update tabs
+            onUnreadCountChanged: { [weak self] count in
                 if let tabs = self?.tabView.tabs {
                     if (!tabs.isEmpty) {
-                        tabs[0].badge = inbox.unreadCount
+                        tabs[0].badge = count
                     }
                 }
-                
-                // Update list datasets
-                self?.getPages()[0].page.setInbox(dataSet: inbox.feed)
-                self?.getPages()[1].page.setInbox(dataSet: inbox.archived)
-                
+            },
+            onFeedChanged: { [weak self] set in
+                self?.getPages().first?.page.setInbox(dataSet: set)
+            },
+            onArchiveChanged: { [weak self] set in
+                self?.getPages().last?.page.setInbox(dataSet: set)
+            },
+            onPageAdded: { [weak self] feed, set in
+                print("TODO")
+            },
+            onMessageChanged: { [weak self] feed, index, message in
+                print("TODO")
+            },
+            onMessageAdded: { [weak self] feed, index, message in
+                print("TODO")
+            },
+            onMessageRemoved: { [weak self] feed, index, message in
+                print("TODO")
             }
         )
         

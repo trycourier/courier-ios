@@ -68,7 +68,7 @@ class InboxTests: XCTestCase {
         await Courier.shared.signOut()
 
         let listener = Courier.shared.addInboxListener(
-            onInitialLoad: {
+            onLoading: {
                 print("Loading")
             },
             onError: { error in
@@ -76,7 +76,7 @@ class InboxTests: XCTestCase {
                     try await UserBuilder.authenticate()
                 }
             },
-            onInboxChanged: { inbox in
+            onFeedChanged: { set in
                 hold = false
             }
         )
@@ -99,7 +99,7 @@ class InboxTests: XCTestCase {
         await Courier.shared.signOut()
 
         let listener1 = Courier.shared.addInboxListener(
-            onInitialLoad: {
+            onLoading: {
                 print("Loading")
             },
             onError: { error in
@@ -107,19 +107,19 @@ class InboxTests: XCTestCase {
                     try await UserBuilder.authenticate()
                 }
             },
-            onInboxChanged: { inbox in
+            onFeedChanged: { inbox in
                 hold1 = false
             }
         )
         
         let listener2 = Courier.shared.addInboxListener(
-            onInboxChanged: { inbox in
+            onFeedChanged: { inbox in
                 hold2 = false
             }
         )
         
         let listener3 = Courier.shared.addInboxListener(
-            onInboxChanged: { inbox in
+            onFeedChanged: { inbox in
                 hold3 = false
             }
         )
@@ -148,9 +148,9 @@ class InboxTests: XCTestCase {
         
         let count = 5
         
-        Courier.shared.addInboxListener(onInboxChanged: { inbox in
-            print("Messages Updated: \(inbox.feed.messages.count)")
-            hold = inbox.feed.messages.count < count
+        Courier.shared.addInboxListener(onFeedChanged: { feed in
+            print("Messages Updated: \(feed.messages.count)")
+            hold = feed.messages.count < count
         })
         
         // Register some random listeners
@@ -261,11 +261,11 @@ class InboxTests: XCTestCase {
         let count = 25
         var hold = true
         
-        let listener = Courier.shared.addInboxListener(onInboxChanged: { inbox in
+        let listener = Courier.shared.addInboxListener(onFeedChanged: { feed in
             
-            hold = inbox.feed.messages.count != count
+            hold = feed.messages.count != count
             
-            print("Message Counted updated: \(inbox.feed.messages.count)")
+            print("Message Counted updated: \(feed.messages.count)")
             
         })
         
