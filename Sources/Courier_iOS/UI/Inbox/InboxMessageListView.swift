@@ -331,23 +331,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         Task {
             do {
-                
-                // Update the datastore
-//                try await Courier.shared.inboxModule.updateMessage(
-//                    messageId: originalMessage.messageId,
-//                    event: .archive
-//                )
-                
+                try await Courier.shared.archiveMessage(originalMessage.messageId)
             } catch {
-                
                 Courier.shared.client?.log(error.localizedDescription)
-                
-                // Add the original message back
-                self.inboxMessages.insert(originalMessage, at: index)
-                self.tableView.performBatchUpdates({
-                    self.tableView.insertRows(at: [indexPath], with: .automatic)
-                })
-                
             }
         }
         
