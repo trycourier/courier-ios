@@ -53,7 +53,9 @@ import UIKit
     // MARK: Inbox
     internal var inboxListeners: [CourierInboxListener] = []
     internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue
-    internal lazy var inboxModule = { InboxModule() }()
+    private(set) var inboxData: CourierInboxData? = nil
+    internal lazy var inboxRepo = InboxRepository()
+    internal var inboxMutationHandler: InboxSharedDataMutations?
     
     // MARK: Init
     
@@ -72,6 +74,9 @@ import UIKit
            name: UIApplication.didEnterBackgroundNotification,
            object: nil
         )
+        
+        // Register the inbox mutation listeners
+        self.inboxMutationHandler = self
         
     }
     

@@ -32,8 +32,8 @@ internal class InboxRepository {
         }
     }
     
-    private func getDelegate() async -> InboxSharedDataMutations? {
-        return await Courier.shared.inboxModule.mutationHandler
+    private func getDelegate() -> InboxSharedDataMutations? {
+        return Courier.shared.inboxMutationHandler
     }
     
     func stop() async {
@@ -47,7 +47,7 @@ internal class InboxRepository {
         socket?.receivedMessage = nil
         socket?.receivedMessageEvent = nil
         
-        await getDelegate()?.onInboxKilled()
+        getDelegate()?.onInboxKilled()
         
     }
     
@@ -55,17 +55,17 @@ internal class InboxRepository {
         
         await stop()
         
-        await getDelegate()?.onInboxReload(isRefresh: isRefresh)
+        getDelegate()?.onInboxReload(isRefresh: isRefresh)
         
         inboxDataFetchTask = Task {
             do {
                 
                 let inboxData = try await getInbox(
                     onReceivedMessage: { [weak self] message in
-                        Task { await self?.getDelegate()?.onInboxMessageReceived(message: message) }
+                        self?.getDelegate()?.onInboxMessageReceived(message: message)
                     },
                     onReceivedMessageEvent: { [weak self] event in
-                        Task { await self?.getDelegate()?.onInboxEventReceived(event: event) }
+                        self?.getDelegate()?.onInboxEventReceived(event: event)
                     }
                 )
                 
@@ -73,7 +73,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                await getDelegate()?.onInboxUpdated(inbox: data)
+                getDelegate()?.onInboxUpdated(inbox: data)
                 
                 return data
                 
@@ -83,7 +83,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                await getDelegate()?.onInboxError(with: error)
+                getDelegate()?.onInboxError(with: error)
                 
                 return nil
                 
@@ -166,7 +166,7 @@ internal class InboxRepository {
         
         if feed == .feed {
             
-            if !inboxData.feed.canPaginate || isPagingFeed {
+            if await !inboxData.feed.canPaginate || isPagingFeed {
                 return nil
             }
             
@@ -183,7 +183,7 @@ internal class InboxRepository {
             
         } else {
             
-            if !inboxData.archived.canPaginate || isPagingArchived {
+            if await !inboxData.archived.canPaginate || isPagingArchived {
                 return nil
             }
             
