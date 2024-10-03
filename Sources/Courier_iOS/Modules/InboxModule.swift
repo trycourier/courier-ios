@@ -63,14 +63,6 @@ internal actor InboxModule {
         }
     }
     
-    func removeMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
-        if feed == .feed {
-            data?.feed.messages.remove(at: index)
-        } else {
-            data?.archived.messages.remove(at: index)
-        }
-    }
-    
     func addPage(in feed: InboxMessageFeed, with set: InboxMessageSet) {
         if feed == .feed {
             data?.feed.messages.append(contentsOf: set.messages)
@@ -128,8 +120,6 @@ extension Courier: InboxMutationHandler {
     }
     
     func onInboxItemRemove(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
-        
-        await inboxModule.removeMessage(at: index, in: feed, with: message)
         
         DispatchQueue.main.async {
             self.inboxListeners.forEach { listener in
