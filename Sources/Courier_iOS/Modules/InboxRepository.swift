@@ -20,6 +20,11 @@ internal class InboxRepository {
     private(set) var isPagingFeed = false
     private(set) var isPagingArchived = false
     
+    func endPaging() {
+        isPagingFeed = false
+        isPagingArchived = false
+    }
+    
     private var client: CourierClient? {
         get {
             return Courier.shared.client
@@ -33,6 +38,8 @@ internal class InboxRepository {
     }
     
     func stop(with handler: InboxMutationHandler) async {
+        
+        endPaging()
         
         inboxDataFetchTask?.cancel()
         inboxDataFetchTask = nil

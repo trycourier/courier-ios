@@ -11,6 +11,9 @@ internal protocol InboxMutationHandler {
     func onInboxReload(isRefresh: Bool) async
     func onInboxKilled() async
     func onInboxUpdated(inbox: CourierInboxData) async
+    func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
+    func onInboxItemRemove(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
+    func onInboxItemUpdated(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
     func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async
     func onInboxMessageReceived(message: InboxMessage) async
     func onInboxEventReceived(event: InboxSocket.MessageEvent) async
@@ -35,6 +38,18 @@ internal actor InboxModule {
 }
 
 extension Courier: InboxMutationHandler {
+    
+    func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
+        print("onInboxItemAdded")
+    }
+    
+    func onInboxItemRemove(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
+        print("onInboxItemRemove")
+    }
+    
+    func onInboxItemUpdated(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
+        print("onInboxItemUpdated")
+    }
     
     func onInboxReload(isRefresh: Bool) async {
         
@@ -480,10 +495,12 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-//        try await self.inboxModule.updateMessage(
-//            messageId: messageId,
-//            event: .click
-//        )
+        try await inboxModule.data?.updateMessage(
+            messageId: messageId,
+            event: .click,
+            client: client,
+            handler: inboxMutationHandler
+        )
         
     }
     
@@ -493,10 +510,12 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-//        try await inboxModule.updateMessage(
-//            messageId: messageId,
-//            event: .read
-//        )
+        try await inboxModule.data?.updateMessage(
+            messageId: messageId,
+            event: .read,
+            client: client,
+            handler: inboxMutationHandler
+        )
 
     }
     
@@ -505,11 +524,12 @@ extension Courier {
         if !isUserSignedIn {
             throw CourierError.userNotFound
         }
-        
-//        try await inboxModule.updateMessage(
-//            messageId: messageId,
-//            event: .unread
-//        )
+        try await inboxModule.data?.updateMessage(
+            messageId: messageId,
+            event: .unread,
+            client: client,
+            handler: inboxMutationHandler
+        )
 
     }
     
@@ -519,10 +539,12 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-//        try await inboxModule.updateMessage(
-//            messageId: messageId,
-//            event: .archive
-//        )
+        try await inboxModule.data?.updateMessage(
+            messageId: messageId,
+            event: .archive,
+            client: client,
+            handler: inboxMutationHandler
+        )
 
     }
     
@@ -532,10 +554,12 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-//        try await inboxModule.updateMessage(
-//            messageId: messageId,
-//            event: .opened
-//        )
+        try await inboxModule.data?.updateMessage(
+            messageId: messageId,
+            event: .opened,
+            client: client,
+            handler: inboxMutationHandler
+        )
 
     }
     

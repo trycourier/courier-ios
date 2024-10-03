@@ -157,12 +157,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         inboxListener = Courier.shared.addInboxListener(
             onInitialLoad: { [weak self] in
-                self?.getPages()[0].page.setLoading()
-                self?.getPages()[1].page.setLoading()
+                self?.getPages().forEach { page in
+                    page.page.setLoading()
+                }
             },
             onError: { [weak self] error in
-                self?.getPages()[0].page.setError(error)
-                self?.getPages()[1].page.setError(error)
+                self?.getPages().forEach { page in
+                    page.page.setError(error)
+                }
             },
             onInboxChanged: { [weak self] inbox in
                 
@@ -176,6 +178,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 // Update list datasets
                 self?.getPages()[0].page.setInbox(dataSet: inbox.feed)
                 self?.getPages()[1].page.setInbox(dataSet: inbox.archived)
+                
             }
         )
         
