@@ -33,8 +33,14 @@ internal enum InboxEventType: String, Codable {
 }
 
 internal actor InboxModule {
+    
     var data: CourierInboxData? = nil
     lazy var repo = InboxRepository()
+    
+    func updateData(data: CourierInboxData?) {
+        self.data = data
+    }
+    
 }
 
 extension Courier: InboxMutationHandler {
@@ -70,11 +76,17 @@ extension Courier: InboxMutationHandler {
     }
     
     func onInboxUpdated(inbox: CourierInboxData) async {
-        DispatchQueue.main.async {
-            self.inboxListeners.forEach { listener in
-                listener.onInboxUpdated(inbox)
+        
+        await inboxModule.updateData(data: inbox)
+        
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onInboxUpdated(data)
+                }
             }
         }
+        
     }
     
     func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
