@@ -333,10 +333,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             do {
                 
                 // Update the datastore
-                try await Courier.shared.inboxModule.updateMessage(
-                    messageId: originalMessage.messageId,
-                    event: .archive
-                )
+//                try await Courier.shared.inboxModule.updateMessage(
+//                    messageId: originalMessage.messageId,
+//                    event: .archive
+//                )
                 
             } catch {
                 
@@ -373,10 +373,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             do {
                 
                 // Update the datastore
-                try await Courier.shared.inboxModule.updateMessage(
-                    messageId: message.messageId,
-                    event: isRead ? .unread : .read
-                )
+//                try await Courier.shared.inboxModule.updateMessage(
+//                    messageId: message.messageId,
+//                    event: isRead ? .unread : .read
+//                )
                 
             } catch {
                 

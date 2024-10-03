@@ -28,15 +28,15 @@ public class CourierInboxData {
         }
     }
     
-    internal func addPage(_ inboxFeed: InboxMessageFeed, newMessages: [InboxMessage], startCursor: String?, hasNextPage: Bool?) {
+    internal func addPage(_ inboxFeed: InboxMessageFeed, messageSet: InboxMessageSet) {
         if inboxFeed == .archived {
-            archived.messages.append(contentsOf: newMessages)
-            archived.paginationCursor = startCursor
-            archived.canPaginate = hasNextPage ?? false
+            archived.messages.append(contentsOf: messageSet.messages)
+            archived.paginationCursor = messageSet.paginationCursor
+            archived.canPaginate = messageSet.canPaginate
         } else {
-            feed.messages.append(contentsOf: newMessages)
-            feed.paginationCursor = startCursor
-            feed.canPaginate = hasNextPage ?? false
+            feed.messages.append(contentsOf: messageSet.messages)
+            feed.paginationCursor = messageSet.paginationCursor
+            feed.canPaginate = messageSet.canPaginate
         }
     }
     

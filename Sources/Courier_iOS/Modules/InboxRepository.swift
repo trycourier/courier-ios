@@ -17,7 +17,8 @@ internal class InboxRepository {
         case min = 1
     }
     
-    private(set) var isPaging = false
+    private(set) var isPagingFeed = false
+    private(set) var isPagingArchived = false
     
     private var client: CourierClient? {
         get {
@@ -31,13 +32,11 @@ internal class InboxRepository {
         }
     }
     
-    private var delegate: InboxDelegate? {
-        get {
-            return Courier.shared.inboxDelegate
-        }
+    private func getDelegate() async -> InboxSharedDataMutations? {
+        return await Courier.shared.inboxModule.mutationHandler
     }
     
-    func stop() {
+    func stop() async {
         
         inboxDataFetchTask?.cancel()
         inboxDataFetchTask = nil
@@ -48,25 +47,25 @@ internal class InboxRepository {
         socket?.receivedMessage = nil
         socket?.receivedMessageEvent = nil
         
-        delegate?.onInboxKilled()
+        await getDelegate()?.onInboxKilled()
         
     }
     
     @discardableResult func get(isRefresh: Bool) async -> CourierInboxData? {
         
-        stop()
+        await stop()
         
-        delegate?.onInboxReload(isRefresh: isRefresh)
+        await getDelegate()?.onInboxReload(isRefresh: isRefresh)
         
         inboxDataFetchTask = Task {
             do {
                 
                 let inboxData = try await getInbox(
                     onReceivedMessage: { [weak self] message in
-                        self?.delegate?.onInboxMessageReceived(message: message)
+                        Task { await self?.getDelegate()?.onInboxMessageReceived(message: message) }
                     },
                     onReceivedMessageEvent: { [weak self] event in
-                        self?.handleEvent(event)
+                        Task { await self?.getDelegate()?.onInboxEventReceived(event: event) }
                     }
                 )
                 
@@ -74,7 +73,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                delegate?.onInboxUpdated(inbox: data)
+                await getDelegate()?.onInboxUpdated(inbox: data)
                 
                 return data
                 
@@ -84,7 +83,7 @@ internal class InboxRepository {
                     return nil
                 }
                 
-                delegate?.onInboxError(with: error)
+                await getDelegate()?.onInboxError(with: error)
                 
                 return nil
                 
@@ -155,77 +154,51 @@ internal class InboxRepository {
         
     }
     
-    private func handleMessage(_ message: InboxMessage) {
+    func getNextPage(_ feed: InboxMessageFeed, inboxData: CourierInboxData) async throws -> InboxMessageSet? {
         
-        Task {
-            
-            let inboxFeed: InboxMessageFeed = message.isArchived ? .archived : .feed
-            
+        if !Courier.shared.isUserSignedIn {
+            throw CourierError.userNotFound
         }
         
-//        await self?.inboxData?.addNewMessage(inboxFeed, message: message)
-//        
-//        await self?.notifyInboxUpdated()
+        guard let client = client else {
+            throw CourierError.inboxNotInitialized
+        }
         
-    }
-    
-    private func handleEvent(_ event: InboxSocket.MessageEvent) {
-        
-        Task {
-         
-            switch (event.event) {
-            case .markAllRead:
-                
-                print("markAllRead")
-                
-                //                    await self?.inboxData?.readAllMessages(.feed)
-                //                    await self?.notifyInboxUpdated()
-                
-            case .read:
-                
-                print("read")
-                
-                //                    if let messageId = messageEvent.messageId {
-                //                        try await self?.inboxData?.readMessage(.feed, messageId: messageId)
-                //                        await self?.notifyInboxUpdated()
-                //                    }
-                
-            case .unread:
-                
-                print("unread")
-                
-                //                    if let messageId = messageEvent.messageId {
-                //                        try await self?.inboxData?.unreadMessage(.feed, messageId: messageId)
-                //                        await self?.notifyInboxUpdated()
-                //                    }
-                
-            case .archive:
-                
-                print("archive")
-                
-                //                    if let messageId = messageEvent.messageId {
-                //                        try await self?.inboxData?.archiveMessage(.feed, messageId: messageId)
-                //                        await self?.notifyInboxUpdated()
-                //                    }
-                
-            case .opened:
-                
-                print("opened")
-                
-                //                    if let messageId = messageEvent.messageId {
-                //                        try await self?.inboxData?.openMessage(.feed, messageId: messageId)
-                //                        await self?.notifyInboxUpdated()
-                //                    }
-                
-            default:
-                break
+        if feed == .feed {
+            
+            if !inboxData.feed.canPaginate || isPagingFeed {
+                return nil
             }
             
+            self.isPagingFeed = true
+            
+            let res = try await client.inbox.getMessages(
+                paginationLimit: limit,
+                startCursor: inboxData.feed.paginationCursor
+            )
+            
+            self.isPagingFeed = false
+            
+            return res.toInboxMessageSet()
+            
+        } else {
+            
+            if !inboxData.archived.canPaginate || isPagingArchived {
+                return nil
+            }
+            
+            self.isPagingArchived = true
+            
+            let res = try await client.inbox.getArchivedMessages(
+                paginationLimit: limit,
+                startCursor: inboxData.archived.paginationCursor
+            )
+            
+            self.isPagingArchived = false
+            
+            return res.toInboxMessageSet()
+            
         }
-        
-//        await self?.inboxData?.addNewMessage(inboxFeed, message: message)
-//
-//        await self?.notifyInboxUpdated()
         
     }
     

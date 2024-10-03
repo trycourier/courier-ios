@@ -7,10 +7,11 @@
 
 import UIKit
 
-internal protocol InboxDelegate: AnyObject {
+internal protocol InboxSharedDataMutations: AnyObject {
     func onInboxReload(isRefresh: Bool) async
     func onInboxKilled() async
     func onInboxUpdated(inbox: CourierInboxData) async
+    func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async
     func onInboxMessageReceived(message: InboxMessage) async
     func onInboxEventReceived(event: InboxSocket.MessageEvent) async
     func onInboxError(with error: Error) async
@@ -29,12 +30,35 @@ internal enum InboxEventType: String, Codable {
 }
 
 internal actor InboxModule {
+    
     private(set) var data: CourierInboxData? = nil
     internal lazy var repo = InboxRepository()
-    internal weak var delegate: InboxDelegate?
+    internal weak var mutationHandler: InboxSharedDataMutations?
+    
+    func cleanUp() async {
+        await repo.stop()
+        await mutationHandler?.onInboxError(with: CourierError.userNotFound)
+    }
+    
+    func getNextInboxPage(_ inboxFeed: InboxMessageFeed) async throws -> [InboxMessage] {
+        
+        guard let inboxData = data else {
+            return []
+        }
+        
+        guard let messageSet = try await repo.getNextPage(inboxFeed, inboxData: inboxData) else {
+            return []
+        }
+        
+        await mutationHandler?.onInboxPageFetched(feed: inboxFeed, messageSet: messageSet)
+        
+        return messageSet.messages
+
+    }
+    
 }
 
-extension InboxModule: InboxDelegate {
+extension InboxModule: InboxSharedDataMutations {
     
     func onInboxReload(isRefresh: Bool) async {
         
@@ -56,6 +80,18 @@ extension InboxModule: InboxDelegate {
         Courier.shared.inboxListeners.forEach { listener in
             listener.onInboxUpdated(inbox)
         }
+    }
+    
+    func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
+        
+        // Add the page
+        data?.addPage(feed, messageSet: messageSet)
+        
+        // Call the listeners
+        if let inbox = data {
+            await onInboxUpdated(inbox: inbox)
+        }
+        
     }
     
     func onInboxMessageReceived(message: InboxMessage) async {
@@ -445,10 +481,10 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await self.inboxModule.updateMessage(
-            messageId: messageId,
-            event: .click
-        )
+//        try await self.inboxModule.updateMessage(
+//            messageId: messageId,
+//            event: .click
+//        )
         
     }
     
@@ -458,10 +494,10 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.updateMessage(
-            messageId: messageId,
-            event: .read
-        )
+//        try await inboxModule.updateMessage(
+//            messageId: messageId,
+//            event: .read
+//        )
 
     }
     
@@ -471,10 +507,10 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.updateMessage(
-            messageId: messageId,
-            event: .unread
-        )
+//        try await inboxModule.updateMessage(
+//            messageId: messageId,
+//            event: .unread
+//        )
 
     }
     
@@ -484,10 +520,10 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.updateMessage(
-            messageId: messageId,
-            event: .archive
-        )
+//        try await inboxModule.updateMessage(
+//            messageId: messageId,
+//            event: .archive
+//        )
 
     }
     
@@ -497,10 +533,10 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.updateMessage(
-            messageId: messageId,
-            event: .opened
-        )
+//        try await inboxModule.updateMessage(
+//            messageId: messageId,
+//            event: .opened
+//        )
 
     }
     
@@ -510,7 +546,7 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
-        try await inboxModule.readAllMessages()
+//        try await inboxModule.readAllMessages()
 
     }
     
