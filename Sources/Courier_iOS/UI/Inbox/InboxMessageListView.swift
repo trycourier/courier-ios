@@ -537,19 +537,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         tableView.separatorStyle = theme.cellStyle.separatorStyle
         tableView.separatorInset = theme.cellStyle.separatorInsets
         tableView.separatorColor = theme.cellStyle.separatorColor
-        
         tableView.refreshControl?.tintColor = theme.loadingColor
         loadingIndicator.color = theme.loadingColor
-        
         infoView.setTheme(theme)
-        
-        reloadCells()
-    }
-    
-    private func reloadCells() {
-        if let paths = tableView.indexPathsForVisibleRows {
-            tableView.reloadRows(at: paths, with: .none)
-        }
+        self.tableView.reloadData()
     }
     
     /**
