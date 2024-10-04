@@ -135,7 +135,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
     private func setSelectedTab() {
         for (index, tab) in tabs.enumerated() {
-            tab.isSelected = index == getCurrentPageIndex()
+            tab.isTabSelected = index == getCurrentPageIndex()
         }
     }
     
@@ -161,7 +161,7 @@ internal class Tab: UIButton {
     let onTapped: () -> Void
     private var theme: CourierInboxTheme? = nil
     
-    var isActive = false {
+    var isTabSelected = false {
         didSet {
             refresh()
         }
@@ -202,7 +202,7 @@ internal class Tab: UIButton {
         
         tabNameLabel.text = title
         
-        let style = isActive ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+        let style = isTabSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
         tabNameLabel.textColor = style?.color
         tabNameLabel.font = style?.font
         
