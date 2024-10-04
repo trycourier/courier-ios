@@ -202,7 +202,18 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
         
-        if inboxMessages.isEmpty {
+        // Check if the inbox messages array is empty
+        guard !inboxMessages.isEmpty else {
+            return
+        }
+        
+        // Ensure the index is valid
+        guard index >= 0 && index < inboxMessages.count else {
+            return
+        }
+        
+        // Check if the message ID matches the one at the specified index
+        guard inboxMessages[index].messageId == message.messageId else {
             return
         }
         
@@ -214,6 +225,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.tableView.performBatchUpdates({
             self.tableView.deleteRows(at: [indexPath], with: .left)
         })
+        
     }
     
     private func addTableView() {
@@ -325,7 +337,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private func archiveCell(at index: Int) {
         
         let message = inboxMessages[index]
-//        removeMessage(at: index, message: message)
+        removeMessage(at: index, message: message)
         
         Task {
             do {
