@@ -169,6 +169,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     internal func setInbox(dataSet: InboxMessageSet) {
+        self.manuallyArchivedMessageId = nil
         self.inboxMessages = dataSet.messages
         self.canPaginate = dataSet.canPaginate
         self.tableView.reloadData()
@@ -177,6 +178,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     internal func addMessage(at index: Int, message: InboxMessage) {
+        self.manuallyArchivedMessageId = nil
         self.inboxMessages.insert(message, at: index)
         self.state = inboxMessages.isEmpty ? .empty : .content
         let indexPath = IndexPath(row: index, section: 0)
@@ -186,7 +188,19 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     internal func updateMessage(at index: Int, message: InboxMessage) {
         
+        if manuallyArchivedMessageId == message.messageId {
+            return
+        }
+        
         if inboxMessages.isEmpty {
+            return
+        }
+        
+        if index > inboxMessages.count - 1 {
+            return
+        }
+        
+        if inboxMessages[index].messageId != message.messageId {
             return
         }
         
@@ -203,7 +217,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     internal func removeMessage(at index: Int, message: InboxMessage) {
         
         if manuallyArchivedMessageId == message.messageId {
-            manuallyArchivedMessageId = nil
             return
         }
         
