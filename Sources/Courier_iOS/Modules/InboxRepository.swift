@@ -31,12 +31,6 @@ internal class InboxRepository {
         }
     }
     
-    private var limit: Int {
-        get {
-            return Courier.shared.inboxPaginationLimit
-        }
-    }
-    
     func stop(with handler: InboxMutationHandler) async {
         
         endPaging()
@@ -54,7 +48,7 @@ internal class InboxRepository {
         
     }
     
-    @discardableResult func get(with handler: InboxMutationHandler, isRefresh: Bool) async -> CourierInboxData? {
+    @discardableResult func get(with handler: InboxMutationHandler, inboxData: CourierInboxData?, isRefresh: Bool) async -> CourierInboxData? {
         
         await stop(with: handler)
         
@@ -64,6 +58,8 @@ internal class InboxRepository {
             do {
                 
                 let inboxData = try await getInbox(
+                    inboxData: inboxData,
+                    isRefresh: isRefresh,
                     onReceivedMessage: { message in
                         Task { await handler.onInboxMessageReceived(message: message) }
                     },
@@ -101,7 +97,18 @@ internal class InboxRepository {
         
     }
     
-    private func getInbox(onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws -> CourierInboxData? {
+    private func getInitialLimit(for set: InboxMessageSet?, isRefresh: Bool) -> Int {
+        
+        if isRefresh {
+            let existingCount = set?.messages.count ?? Courier.shared.paginationLimit
+            return min(existingCount, Courier.shared.paginationLimit)
+        }
+        
+        return Courier.shared.paginationLimit
+        
+    }
+    
+    private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool, onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws -> CourierInboxData? {
         
         try Task.checkCancellation()
          
@@ -113,9 +120,14 @@ internal class InboxRepository {
             throw CourierError.inboxNotInitialized
         }
         
+        // Get either the same number of items shown, or the pagination limit
+        // This handles the case or refreshes or fresh data pulls
+        let feedLimit = getInitialLimit(for: inboxData?.feed, isRefresh: isRefresh)
+        let archivedLimit = getInitialLimit(for: inboxData?.archived, isRefresh: isRefresh)
+        
         // Functions for getting data
-        async let feedTask = client.inbox.getMessages(paginationLimit: limit, startCursor: nil)
-        async let archivedTask = client.inbox.getArchivedMessages(paginationLimit: limit, startCursor: nil)
+        async let feedTask = client.inbox.getMessages(paginationLimit: feedLimit, startCursor: nil)
+        async let archivedTask = client.inbox.getArchivedMessages(paginationLimit: archivedLimit, startCursor: nil)
         async let unreadCountTask = client.inbox.getUnreadMessageCount()
         
         let (feedRes, archivedRes, unreadCount) = try await (
@@ -166,6 +178,8 @@ internal class InboxRepository {
         guard let client = client else {
             throw CourierError.inboxNotInitialized
         }
+        
+        let limit = Courier.shared.paginationLimit
         
         if feed == .feed {
             

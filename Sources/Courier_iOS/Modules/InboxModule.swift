@@ -258,7 +258,11 @@ extension Courier {
             return
         }
         
-        await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: true)
+        await inboxModule.repo.get(
+            with: inboxMutationHandler,
+            inboxData: inboxModule.data,
+            isRefresh: true
+        )
         
     }
 
@@ -276,11 +280,19 @@ extension Courier {
     }
     
     public func refreshInbox() async {
-        await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: true)
+        await inboxModule.repo.get(
+            with: inboxMutationHandler,
+            inboxData: inboxModule.data,
+            isRefresh: true
+        )
     }
     
     func restartInbox() async {
-        await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: false)
+        await inboxModule.repo.get(
+            with: inboxMutationHandler,
+            inboxData: inboxModule.data,
+            isRefresh: false
+        )
     }
     
     func closeInbox() async {
@@ -356,7 +368,11 @@ extension Courier {
             // Get the inbox data
             // If an existing call is going out, it will cancel that call.
             // This will return data for the last inbox listener that is registered
-            await inboxModule.repo.get(with: inboxMutationHandler, isRefresh: true)
+            await inboxModule.repo.get(
+                with: inboxMutationHandler,
+                inboxData: inboxModule.data,
+                isRefresh: false
+            )
             
         }
         
