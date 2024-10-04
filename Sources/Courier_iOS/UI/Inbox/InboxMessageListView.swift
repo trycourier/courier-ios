@@ -176,9 +176,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     internal func setInbox(dataSet: InboxMessageSet) {
         self.inboxMessages = dataSet.messages
         self.canPaginate = dataSet.canPaginate
-        self.state = inboxMessages.isEmpty ? .empty : .content
-        self.canPaginate = dataSet.canPaginate
         self.tableView.reloadData()
+        self.state = inboxMessages.isEmpty ? .empty : .content
         self.openVisibleMessages()
     }
     
@@ -462,15 +461,23 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func scrollToTop(animated: Bool) {
+        
         if (self.inboxMessages.isEmpty) {
             return
         }
         
+        let indexPath = IndexPath(row: 0, section: 0)
+
+        guard indexPath.row < self.inboxMessages.count else {
+            return
+        }
+        
         self.tableView.scrollToRow(
-            at: IndexPath(row: 0, section: 0),
+            at: indexPath,
             at: .top,
             animated: animated
         )
+        
     }
     
     private func reloadViews() {
