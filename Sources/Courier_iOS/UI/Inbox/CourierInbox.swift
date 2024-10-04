@@ -32,6 +32,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
+        stackView.backgroundColor = .systemBackground
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fill
@@ -79,6 +80,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.bounces = self.canSwipePages
         scrollView.isScrollEnabled = self.canSwipePages
+        scrollView.backgroundColor = .systemBackground
         return scrollView
     }()
     

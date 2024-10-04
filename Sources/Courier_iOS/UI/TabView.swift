@@ -27,6 +27,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
     private let tabsStackView: UIStackView = {
         let stackView = UIStackView()
+        stackView.backgroundColor = .systemBackground
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -174,6 +175,7 @@ internal class Tab: UIView {
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
+        stackView.backgroundColor = .systemBackground
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 6
