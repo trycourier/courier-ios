@@ -192,9 +192,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     internal func updateMessage(at index: Int, message: InboxMessage) {
         self.inboxMessages[index] = message
         self.state = inboxMessages.isEmpty ? .empty : .content
+
+        // Refresh the cell
         let indexPath = IndexPath(row: index, section: 0)
-        self.tableView.reloadRows(at: [indexPath], with: .none)
-        self.openVisibleMessages()
+        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+        cell?.refreshMessage(message)
     }
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
@@ -339,20 +341,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     private func readCell(isRead: Bool, at index: Int) {
-        
-        // Instantly read the cell
+
         let message = inboxMessages[index]
-        
-//        // Update the new message
-//        let newMessage = message.copy()
-//        isRead ? newMessage.setUnread() : newMessage.setRead()
-//        
-//        // Get the cell
-//        let indexPath = IndexPath(row: index, section: 0)
-//        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-//        
-//        // Reload with the new message copy
-//        cell?.refreshMessage(newMessage)
         
         Task {
             do {
