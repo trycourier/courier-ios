@@ -175,6 +175,7 @@ internal class Tab: UIButton {
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
+        stackView.isUserInteractionEnabled = false
         stackView.backgroundColor = .systemBackground
         stackView.axis = .horizontal
         stackView.alignment = .center
