@@ -175,7 +175,7 @@ internal class Tab: UIView {
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.backgroundColor = .red
+        stackView.backgroundColor = .systemBackground
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.spacing = 6
@@ -279,7 +279,7 @@ internal class Tab: UIView {
     }
     
     private func addGestureRecognizers() {
-        let tapGesture = UITapGestureRecognizer(target: stackView, action: #selector(tabTapped))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tabTapped))
         tapGesture.cancelsTouchesInView = true
         addGestureRecognizer(tapGesture)
     }

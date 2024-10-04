@@ -324,8 +324,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.section == 0) {
-            // Normal cell
+            
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
+                
+                cell.selectionStyle = .none
+                
                 let index = indexPath.row
                 let message = inboxMessages[index]
                 
