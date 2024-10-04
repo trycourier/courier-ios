@@ -47,34 +47,6 @@ internal actor InboxModule {
 
 extension Courier: InboxMutationHandler {
     
-    func onUnreadCountChange(count: Int) async {
-        
-        await inboxModule.data?.updateUnreadCount(count: count)
-        
-        if let unreadCount = await inboxModule.data?.unreadCount {
-            DispatchQueue.main.async {
-                self.inboxListeners.forEach { listener in
-                    listener.onUnreadCountChanged?(unreadCount)
-                }
-            }
-        }
-        
-    }
-    
-    func onInboxReset(inbox: CourierInboxData, error: any Error) async {
-        
-        await inboxModule.updateData(data: inbox)
-        
-        if let data = await inboxModule.data {
-            DispatchQueue.main.async {
-                self.inboxListeners.forEach { listener in
-                    listener.onLoad(data: data)
-                }
-            }
-        }
-        
-    }
-    
     func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
         
         await inboxModule.data?.addMessage(at: index, in: feed, with: message)
@@ -109,6 +81,48 @@ extension Courier: InboxMutationHandler {
         
     }
     
+    func onInboxUpdated(inbox: CourierInboxData) async {
+        
+        await inboxModule.updateData(data: inbox)
+        
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onLoad(data: data)
+                }
+            }
+        }
+        
+    }
+    
+    func onUnreadCountChange(count: Int) async {
+        
+        await inboxModule.data?.updateUnreadCount(count: count)
+        
+        if let unreadCount = await inboxModule.data?.unreadCount {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onUnreadCountChanged?(unreadCount)
+                }
+            }
+        }
+        
+    }
+    
+    func onInboxReset(inbox: CourierInboxData, error: any Error) async {
+        
+        await inboxModule.updateData(data: inbox)
+        
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onLoad(data: data)
+                }
+            }
+        }
+        
+    }
+    
     func onInboxReload(isRefresh: Bool) async {
         
         if isRefresh {
@@ -133,20 +147,6 @@ extension Courier: InboxMutationHandler {
                 listener.onError?(error)
             })
         }
-    }
-    
-    func onInboxUpdated(inbox: CourierInboxData) async {
-        
-        await inboxModule.updateData(data: inbox)
-        
-        if let data = await inboxModule.data {
-            DispatchQueue.main.async {
-                self.inboxListeners.forEach { listener in
-                    listener.onLoad(data: data)
-                }
-            }
-        }
-        
     }
     
     func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
