@@ -202,6 +202,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
         
+        if manuallyArchivedMessageId == message.messageId {
+            manuallyArchivedMessageId = nil
+            return
+        }
+        
         if inboxMessages.isEmpty {
             return
         }
@@ -331,10 +336,15 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
     }
     
+    private var manuallyArchivedMessageId: String? = nil
+    
     private func archiveCell(at index: Int) {
         
         let message = inboxMessages[index]
         removeMessage(at: index, message: message)
+        
+        // Hold the message id
+        self.manuallyArchivedMessageId = message.messageId
         
         Task {
             do {
