@@ -168,10 +168,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.state = .error(error)
     }
     
-    internal func setInbox(dataSet: InboxMessageSet) {
+    internal func setInbox(set: InboxMessageSet) {
         self.manuallyArchivedMessageId = nil
-        self.inboxMessages = dataSet.messages
-        self.canPaginate = dataSet.canPaginate
+        self.inboxMessages = set.messages
+        self.canPaginate = set.canPaginate
         self.tableView.reloadData()
         self.state = inboxMessages.isEmpty ? .empty : .content
         self.openVisibleMessages()
@@ -182,10 +182,12 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.manuallyArchivedMessageId = nil
         
         if set.messages.isEmpty {
+            self.canPaginate = false
             return
         }
         
         let insertionIndex = inboxMessages.count
+        self.canPaginate = set.canPaginate
         self.inboxMessages.insert(contentsOf: set.messages, at: insertionIndex)
         self.state = inboxMessages.isEmpty ? .empty : .content
         
@@ -198,6 +200,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }, completion: nil)
         
         self.openVisibleMessages()
+        
     }
     
     internal func addMessage(at index: Int, message: InboxMessage) {
