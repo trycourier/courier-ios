@@ -212,8 +212,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             return
         }
         
-        // Check if the message ID matches the one at the specified index
-        guard inboxMessages[index].messageId == message.messageId else {
+        // Ensure ID matched
+        guard inboxMessages[index].messageId != message.messageId else {
             return
         }
         
