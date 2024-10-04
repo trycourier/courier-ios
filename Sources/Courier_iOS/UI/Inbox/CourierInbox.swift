@@ -174,28 +174,29 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 }
             },
             onFeedChanged: { [weak self] set in
-                self?.getPages().first?.page.setInbox(dataSet: set)
+                self?.getPage(for: .feed).page.setInbox(dataSet: set)
             },
             onArchiveChanged: { [weak self] set in
-                self?.getPages().last?.page.setInbox(dataSet: set)
+                self?.getPage(for: .archived).page.setInbox(dataSet: set)
             },
             onPageAdded: { [weak self] feed, set in
                 print("TODO")
             },
             onMessageChanged: { [weak self] feed, index, message in
-                let page = self?.getPages()[feed == .feed ? 0 : 1].page
-                page?.updateMessage(at: index, message: message)
+                self?.getPage(for: feed).page.updateMessage(at: index, message: message)
             },
             onMessageAdded: { [weak self] feed, index, message in
-                let page = self?.getPages()[feed == .feed ? 0 : 1].page
-                page?.addMessage(at: index, message: message)
+                self?.getPage(for: feed).page.addMessage(at: index, message: message)
             },
             onMessageRemoved: { [weak self] feed, index, message in
-                let page = self?.getPages()[feed == .feed ? 0 : 1].page
-                page?.removeMessage(at: index, message: message)
+                self?.getPage(for: feed).page.removeMessage(at: index, message: message)
             }
         )
         
+    }
+    
+    private func getPage(for feed: InboxMessageFeed) -> Page {
+        return self.getPages()[feed == .feed ? 0 : 1]
     }
     
     private func addStack(top: UIView, middle: UIView, bottom: UIView) {
