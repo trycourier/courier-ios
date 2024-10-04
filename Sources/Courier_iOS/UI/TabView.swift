@@ -212,7 +212,7 @@ internal class Tab: UIButton {
             badgeLabel.refresh(
                 theme: theme,
                 badge: badge,
-                isSelected: isSelected
+                isSelected: isTabSelected
             )
         }
         
