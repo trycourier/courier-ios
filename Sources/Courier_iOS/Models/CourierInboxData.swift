@@ -25,6 +25,38 @@ public class CourierInboxData {
         )
     }
     
+    internal func updateUnreadCount(count: Int) {
+        self.unreadCount = count
+    }
+    
+    internal func updateMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
+        if feed == .feed {
+            self.feed.messages[index] = message
+        } else {
+            self.archived.messages[index] = message
+        }
+    }
+    
+    internal func addMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
+        if feed == .feed {
+            self.feed.messages.insert(message, at: index)
+        } else {
+            self.archived.messages.insert(message, at: index)
+        }
+    }
+    
+    internal func addPage(in feed: InboxMessageFeed, with set: InboxMessageSet) {
+        if feed == .feed {
+            self.feed.messages.append(contentsOf: set.messages)
+            self.feed.paginationCursor = set.paginationCursor
+            self.feed.canPaginate = set.canPaginate
+        } else {
+            self.archived.messages.append(contentsOf: set.messages)
+            self.archived.paginationCursor = set.paginationCursor
+            self.archived.canPaginate = set.canPaginate
+        }
+    }
+    
     private func getMessages(for messageId: String) -> (InboxMessageFeed, [InboxMessage])? {
         if let _ = feed.messages.first(where: { $0.messageId == messageId }) {
             return (.feed, feed.messages)

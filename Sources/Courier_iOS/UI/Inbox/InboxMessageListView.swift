@@ -174,9 +174,36 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     internal func setInbox(dataSet: InboxMessageSet) {
-        self.state = dataSet.messages.isEmpty ? .empty : .content
+        self.inboxMessages = dataSet.messages
         self.canPaginate = dataSet.canPaginate
-        self.reloadMessages(dataSet.messages)
+        self.state = inboxMessages.isEmpty ? .empty : .content
+        self.canPaginate = dataSet.canPaginate
+        self.tableView.reloadData()
+        self.openVisibleMessages()
+    }
+    
+    internal func addMessage(at index: Int, message: InboxMessage) {
+        self.inboxMessages.insert(message, at: index)
+        self.state = inboxMessages.isEmpty ? .empty : .content
+        let indexPath = IndexPath(row: index, section: 0)
+        self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle)
+        self.openVisibleMessages()
+    }
+    
+    internal func updateMessage(at index: Int, message: InboxMessage) {
+        self.inboxMessages[index] = message
+        self.state = inboxMessages.isEmpty ? .empty : .content
+        let indexPath = IndexPath(row: index, section: 0)
+        self.tableView.reloadRows(at: [indexPath], with: theme.messageAnimationStyle)
+        self.openVisibleMessages()
+    }
+    
+    internal func removeMessage(at index: Int, message: InboxMessage) {
+        self.inboxMessages.remove(at: index)
+        self.state = inboxMessages.isEmpty ? .empty : .content
+        let indexPath = IndexPath(row: index, section: 0)
+        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        self.openVisibleMessages()
     }
     
     private func addTableView() {
@@ -207,33 +234,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             infoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: (Theme.margin / 2)),
             infoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(Theme.margin / 2)),
         ])
-    }
-    
-    /**
-     Adds the new message at top if needed
-     Otherwise will reload all the messages with the new datasource
-     */
-    private func reloadMessages(_ newMessages: [InboxMessage]) {
-        // Check if we need to insert
-        let didInsert = newMessages.count - self.inboxMessages.count == 1
-        if (newMessages.first?.messageId != self.inboxMessages.first?.messageId && didInsert) {
-            // Add the new item
-            self.inboxMessages = newMessages
-            let indexPath = IndexPath(row: 0, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle)
-            
-            // Open shown messages
-            self.openVisibleMessages()
-            
-            return
-        }
-        
-        // Set the messages
-        self.inboxMessages = newMessages
-        self.tableView.reloadData()
-        
-        // Open shown messages
-        self.openVisibleMessages()
     }
     
     @objc private func onRefresh() {
@@ -316,18 +316,18 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         let originalMessage = inboxMessages[index].copy()
         
-        // Update the new message
-        let newMessage = originalMessage.copy()
-        newMessage.setArchived()
+//        // Update the new message
+//        let newMessage = originalMessage.copy()
+//        newMessage.setArchived()
         
-        // Get the cell
-        let indexPath = IndexPath(row: index, section: 0)
-    
-        // Remove the message
-        self.inboxMessages.remove(at: index)
-        self.tableView.performBatchUpdates({
-            self.tableView.deleteRows(at: [indexPath], with: .left)
-        })
+//        // Get the cell
+//        let indexPath = IndexPath(row: index, section: 0)
+//    
+//        // Remove the message
+//        self.inboxMessages.remove(at: index)
+//        self.tableView.performBatchUpdates({
+//            self.tableView.deleteRows(at: [indexPath], with: .left)
+//        })
         
         Task {
             do {
@@ -344,16 +344,16 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         // Instantly read the cell
         let message = inboxMessages[index]
         
-        // Update the new message
-        let newMessage = message.copy()
-        isRead ? newMessage.setUnread() : newMessage.setRead()
-        
-        // Get the cell
-        let indexPath = IndexPath(row: index, section: 0)
-        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        
-        // Reload with the new message copy
-        cell?.refreshMessage(newMessage)
+//        // Update the new message
+//        let newMessage = message.copy()
+//        isRead ? newMessage.setUnread() : newMessage.setRead()
+//        
+//        // Get the cell
+//        let indexPath = IndexPath(row: index, section: 0)
+//        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+//        
+//        // Reload with the new message copy
+//        cell?.refreshMessage(newMessage)
         
         Task {
             do {

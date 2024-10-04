@@ -43,45 +43,13 @@ internal actor InboxModule {
         self.data = data
     }
     
-    func updateUnreadCount(count: Int) {
-        self.data?.unreadCount = count
-    }
-    
-    func updateMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
-        if feed == .feed {
-            data?.feed.messages[index] = message
-        } else {
-            data?.archived.messages[index] = message
-        }
-    }
-    
-    func addMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
-        if feed == .feed {
-            data?.feed.messages.insert(message, at: index)
-        } else {
-            data?.archived.messages.insert(message, at: index)
-        }
-    }
-    
-    func addPage(in feed: InboxMessageFeed, with set: InboxMessageSet) {
-        if feed == .feed {
-            data?.feed.messages.append(contentsOf: set.messages)
-            data?.feed.paginationCursor = set.paginationCursor
-            data?.feed.canPaginate = set.canPaginate
-        } else {
-            data?.archived.messages.append(contentsOf: set.messages)
-            data?.archived.paginationCursor = set.paginationCursor
-            data?.archived.canPaginate = set.canPaginate
-        }
-    }
-    
 }
 
 extension Courier: InboxMutationHandler {
     
     func onUnreadCountChange(count: Int) async {
         
-        await inboxModule.updateUnreadCount(count: count)
+        await inboxModule.data?.updateUnreadCount(count: count)
         
         if let unreadCount = await inboxModule.data?.unreadCount {
             DispatchQueue.main.async {
@@ -109,7 +77,7 @@ extension Courier: InboxMutationHandler {
     
     func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
         
-        await inboxModule.addMessage(at: index, in: feed, with: message)
+        await inboxModule.data?.addMessage(at: index, in: feed, with: message)
         
         DispatchQueue.main.async {
             self.inboxListeners.forEach { listener in
@@ -131,7 +99,7 @@ extension Courier: InboxMutationHandler {
     
     func onInboxItemUpdated(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
         
-        await inboxModule.updateMessage(at: index, in: feed, with: message)
+        await inboxModule.data?.updateMessage(at: index, in: feed, with: message)
         
         DispatchQueue.main.async {
             self.inboxListeners.forEach { listener in
@@ -184,7 +152,7 @@ extension Courier: InboxMutationHandler {
     func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
         
         // Add the page
-        await inboxModule.addPage(in: feed, with: messageSet)
+        await inboxModule.data?.addPage(in: feed, with: messageSet)
         
         // Call the listeners
         DispatchQueue.main.async {
@@ -199,7 +167,7 @@ extension Courier: InboxMutationHandler {
         
         let index = 0
         let feed: InboxMessageFeed = message.isArchived ? .archived : .feed
-        await inboxModule.addMessage(at: index, in: feed, with: message)
+        await inboxModule.data?.addMessage(at: index, in: feed, with: message)
         
         DispatchQueue.main.async {
             self.inboxListeners.forEach { listener in
