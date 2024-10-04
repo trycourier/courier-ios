@@ -101,7 +101,7 @@ internal class InboxRepository {
         
         if isRefresh {
             let existingCount = set?.messages.count ?? Courier.shared.paginationLimit
-            return min(existingCount, Courier.shared.paginationLimit)
+            return max(existingCount, Courier.shared.paginationLimit)
         }
         
         return Courier.shared.paginationLimit
