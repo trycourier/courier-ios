@@ -16,3 +16,4 @@ Env.swift
 /.swiftpm
 Example/build/
 /build
+Tests/CourierTests/Env.swift
