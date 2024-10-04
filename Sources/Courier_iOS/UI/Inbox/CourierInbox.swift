@@ -28,14 +28,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
     public var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
-    // MARK: Brand
-    
-    private lazy var refreshBrandTask = {
-        return Task<CourierBrand?, Error> { [weak self] in
-            return await self?.refreshBrand()
-        }
-    }()
-    
     // MARK: UI
     
     private let stackView: UIStackView = {
@@ -173,57 +165,56 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         traitCollectionDidChange(nil)
         
-        inboxListener = Courier.shared.addInboxListener(
-            onLoading: { [weak self] in
-                self?.getPages().forEach { page in
-                    page.page.setLoading()
-                }
-            },
-            onError: { [weak self] error in
-                self?.getPages().forEach { page in
-                    page.page.setError(error)
-                }
-            },
-            onUnreadCountChanged: { [weak self] count in
-                if let tabs = self?.tabView.tabs {
-                    if (!tabs.isEmpty) {
-                        tabs[0].badge = count
+        self.getPages().forEach { page in
+            page.page.setLoading()
+        }
+        
+        // Perform an async function here
+        Task { [weak self] in
+            
+            guard let self = self else { return }
+            
+            await self.refreshBrand()
+            
+            self.inboxListener = Courier.shared.addInboxListener(
+                onLoading: { [weak self] in
+                    self?.getPages().forEach { page in
+                        page.page.setLoading()
                     }
+                },
+                onError: { [weak self] error in
+                    self?.getPages().forEach { page in
+                        page.page.setError(error)
+                    }
+                },
+                onUnreadCountChanged: { [weak self] count in
+                    if let tabs = self?.tabView.tabs {
+                        if (!tabs.isEmpty) {
+                            tabs[0].badge = count
+                        }
+                    }
+                },
+                onFeedChanged: { [weak self] set in
+                    self?.getPage(for: .feed).page.setInbox(set: set)
+                },
+                onArchiveChanged: { [weak self] set in
+                    self?.getPage(for: .archived).page.setInbox(set: set)
+                },
+                onPageAdded: { [weak self] feed, set in
+                    self?.getPage(for: feed).page.addPage(set: set)
+                },
+                onMessageChanged: { [weak self] feed, index, message in
+                    self?.getPage(for: feed).page.updateMessage(at: index, message: message)
+                },
+                onMessageAdded: { [weak self] feed, index, message in
+                    self?.getPage(for: feed).page.addMessage(at: index, message: message)
+                },
+                onMessageRemoved: { [weak self] feed, index, message in
+                    self?.getPage(for: feed).page.removeMessage(at: index, message: message)
                 }
-            },
-            onFeedChanged: { [weak self] set in
-                Task {
-                    self?.refreshBrandTask.cancel()
-                    let brand = try? await self?.refreshBrandTask.value
-                    self?.getPage(for: .feed).page.setInbox(
-                        set: set,
-                        brand: brand
-                    )
-                }
-            },
-            onArchiveChanged: { [weak self] set in
-                Task {
-                    self?.refreshBrandTask.cancel() // TODO
-                    let brand = try? await self?.refreshBrandTask.value
-                    self?.getPage(for: .archived).page.setInbox(
-                        set: set,
-                        brand: brand
-                    )
-                }
-            },
-            onPageAdded: { [weak self] feed, set in
-                self?.getPage(for: feed).page.addPage(set: set)
-            },
-            onMessageChanged: { [weak self] feed, index, message in
-                self?.getPage(for: feed).page.updateMessage(at: index, message: message)
-            },
-            onMessageAdded: { [weak self] feed, index, message in
-                self?.getPage(for: feed).page.addMessage(at: index, message: message)
-            },
-            onMessageRemoved: { [weak self] feed, index, message in
-                self?.getPage(for: feed).page.removeMessage(at: index, message: message)
-            }
-        )
+            )
+            
+        }
         
     }
     
@@ -316,7 +307,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         refreshTheme()
     }
     
-    private func refreshBrand() async -> CourierBrand? {
+    @discardableResult internal func refreshBrand() async -> CourierBrand? {
         do {
             if let brandId = self.theme.brandId {
                 let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
@@ -347,10 +338,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         courierBar.setColors(with: superview?.backgroundColor)
         courierBar.setTheme(self.theme)
         tabView.setTheme(self.theme)
-        getPages().forEach { page in
-            let inbox = page.page
-            inbox.setTheme(self.theme)
-        }
     }
     
     deinit {
