@@ -87,9 +87,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = false
                 self.infoView.isHidden = true
-                if ("\(oldValue)" != "\(state)") {
-                    self.scrollToTop(animated: false)
-                }
             case .empty:
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
