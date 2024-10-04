@@ -174,10 +174,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 }
             },
             onFeedChanged: { [weak self] set in
-                self?.getPage(for: .feed).page.setInbox(dataSet: set)
+                self?.getPage(for: .feed).page.setInbox(set: set)
             },
             onArchiveChanged: { [weak self] set in
-                self?.getPage(for: .archived).page.setInbox(dataSet: set)
+                self?.getPage(for: .archived).page.setInbox(set: set)
             },
             onPageAdded: { [weak self] feed, set in
                 self?.getPage(for: feed).page.addPage(set: set)
