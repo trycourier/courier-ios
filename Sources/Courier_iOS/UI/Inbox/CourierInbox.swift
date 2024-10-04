@@ -203,9 +203,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             },
             onArchiveChanged: { [weak self] set in
                 Task {
-                    self?.refreshBrandTask.cancel()
+                    self?.refreshBrandTask.cancel() // TODO
                     let brand = try? await self?.refreshBrandTask.value
-                    self?.getPage(for: .feed).page.setInbox(
+                    self?.getPage(for: .archived).page.setInbox(
                         set: set,
                         brand: brand
                     )
