@@ -195,8 +195,17 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             IndexPath(row: $0, section: 0)
         }
         
+        // Insert new rows in section 0 for the content
         self.tableView.insertRows(at: indexPaths, with: .automatic)
+        
+        // Check if pagination state has changed, and reload section 1 if necessary
+        let wasPaginating = self.canPaginate
         self.canPaginate = set.canPaginate
+        if wasPaginating != self.canPaginate {
+            // Reload section 1 to update the pagination cell
+            self.tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+        }
+        
         self.openVisibleMessages()
         
     }
