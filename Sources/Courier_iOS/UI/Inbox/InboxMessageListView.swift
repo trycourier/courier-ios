@@ -193,7 +193,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.inboxMessages[index] = message
         self.state = inboxMessages.isEmpty ? .empty : .content
         let indexPath = IndexPath(row: index, section: 0)
-        self.tableView.reloadRows(at: [indexPath], with: .automatic)
+        self.tableView.reloadRows(at: [indexPath], with: .none)
         self.openVisibleMessages()
     }
     
