@@ -85,16 +85,19 @@ internal class TabView: UIView, UIScrollViewDelegate {
         ])
         
         // Initialize tabs and add them to the stack view
-        for (index, page) in pages.enumerated() {
+        for (pageIndex, page) in pages.enumerated() {
             let tab = Tab(title: page.title, onTapped: { [weak self] in
                 guard let self = self else { return }
-                if self.selectedIndex == index {
-                    self.onTabReselected(index)
-                } else {
-                    self.selectedIndex = index
-                    self.onTabSelected(index)
+                
+                if self.selectedIndex == pageIndex {
+                    self.onTabReselected(self.selectedIndex)
+                    return
                 }
-                self.setSelectedTab()
+                
+                // Select the tab
+                self.selectedIndex = pageIndex
+                self.onTabSelected(pageIndex)
+                
             })
             tabsStackView.addArrangedSubview(tab)
             tabs.append(tab)
@@ -148,6 +151,9 @@ internal class TabView: UIView, UIScrollViewDelegate {
     private func setSelectedTab() {
         for (index, tab) in tabs.enumerated() {
             tab.isTabSelected = index == getCurrentPageIndex()
+            if tab.isTabSelected {
+                self.selectedIndex = index
+            }
         }
     }
     
