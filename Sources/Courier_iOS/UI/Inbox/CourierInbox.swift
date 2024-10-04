@@ -28,6 +28,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
     public var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
+    // MARK: Brand
+    
+    private lazy var refreshBrandTask = {
+        return Task<CourierBrand?, Error> { [weak self] in
+            return await self?.refreshBrand()
+        }
+    }()
+    
     // MARK: UI
     
     private let stackView: UIStackView = {
@@ -184,10 +192,24 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 }
             },
             onFeedChanged: { [weak self] set in
-                self?.getPage(for: .feed).page.setInbox(set: set)
+                Task {
+                    self?.refreshBrandTask.cancel()
+                    let brand = try? await self?.refreshBrandTask.value
+                    self?.getPage(for: .feed).page.setInbox(
+                        set: set,
+                        brand: brand
+                    )
+                }
             },
             onArchiveChanged: { [weak self] set in
-                self?.getPage(for: .archived).page.setInbox(set: set)
+                Task {
+                    self?.refreshBrandTask.cancel()
+                    let brand = try? await self?.refreshBrandTask.value
+                    self?.getPage(for: .feed).page.setInbox(
+                        set: set,
+                        brand: brand
+                    )
+                }
             },
             onPageAdded: { [weak self] feed, set in
                 self?.getPage(for: feed).page.addPage(set: set)
@@ -294,16 +316,18 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         refreshTheme()
     }
     
-    internal func refreshBrand() async {
+    private func refreshBrand() async -> CourierBrand? {
         do {
             if let brandId = self.theme.brandId {
                 let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
                 self.theme.brand = res?.data.brand
                 self.refreshTheme()
+                return res?.data.brand
             }
         } catch {
             Courier.shared.client?.log(error.localizedDescription)
         }
+        return nil
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -169,7 +169,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.state = .error(error)
     }
     
-    internal func setInbox(set: InboxMessageSet) {
+    internal func setInbox(set: InboxMessageSet, brand: CourierBrand?) {
         self.manuallyArchivedMessageId = nil
         self.inboxMessages = set.messages
         self.canPaginate = set.canPaginate
@@ -309,7 +309,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     @objc private func onRefresh() {
         Task {
-            await rootInbox?.refreshBrand()
             await Courier.shared.refreshInbox()
         }
     }
