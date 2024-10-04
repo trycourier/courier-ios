@@ -174,6 +174,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.inboxMessages = set.messages
         self.canPaginate = set.canPaginate
         self.tableView.reloadData()
+        self.tableView.refreshControl?.endRefreshing()
         self.state = inboxMessages.isEmpty ? .empty : .content
         self.openVisibleMessages()
     }
@@ -310,7 +311,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         Task {
             await rootInbox?.refreshBrand()
             await Courier.shared.refreshInbox()
-            self.tableView.refreshControl?.endRefreshing()
         }
     }
     
