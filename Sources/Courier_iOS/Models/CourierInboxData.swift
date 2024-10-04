@@ -226,7 +226,7 @@ public class CourierInboxData {
             // Add the item to the archive
             if let insertIndex = findInsertIndex(for: newMessage, in: archived.messages) {
                 archived.messages.insert(newMessage, at: insertIndex)
-                await handler.onInboxItemRemove(at: insertIndex, in: .archived, with: message)
+                await handler.onInboxItemAdded(at: insertIndex, in: .archived, with: message)
             }
             
         }
