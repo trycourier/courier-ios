@@ -188,6 +188,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     internal func updateMessage(at index: Int, message: InboxMessage) {
+        
+        if inboxMessages.isEmpty {
+            return
+        }
+        
         self.inboxMessages[index] = message
         self.state = inboxMessages.isEmpty ? .empty : .content
 
@@ -195,9 +200,15 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let indexPath = IndexPath(row: index, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
         cell?.refreshMessage(message)
+        
     }
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
+        
+        if inboxMessages.isEmpty {
+            return
+        }
+        
         let indexPath = IndexPath(row: index, section: 0)
 
         // Remove the message
