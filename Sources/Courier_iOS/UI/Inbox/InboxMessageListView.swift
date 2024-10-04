@@ -206,7 +206,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             return
         }
         
-        if index < inboxMessages.count - 1 {
+        if index > inboxMessages.count - 1 {
             return
         }
         
