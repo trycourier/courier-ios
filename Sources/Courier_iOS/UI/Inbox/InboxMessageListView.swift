@@ -200,11 +200,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
+        let indexPath = IndexPath(row: index, section: 0)
+
+        // Remove the message
         self.inboxMessages.remove(at: index)
         self.state = inboxMessages.isEmpty ? .empty : .content
-        let indexPath = IndexPath(row: index, section: 0)
-        self.tableView.deleteRows(at: [indexPath], with: .automatic)
-        self.openVisibleMessages()
+        self.tableView.performBatchUpdates({
+            self.tableView.deleteRows(at: [indexPath], with: .left)
+        })
     }
     
     private func addTableView() {
@@ -315,24 +318,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     private func archiveCell(at index: Int) {
         
-        let originalMessage = inboxMessages[index].copy()
-        
-//        // Update the new message
-//        let newMessage = originalMessage.copy()
-//        newMessage.setArchived()
-        
-//        // Get the cell
-//        let indexPath = IndexPath(row: index, section: 0)
-//    
-//        // Remove the message
-//        self.inboxMessages.remove(at: index)
-//        self.tableView.performBatchUpdates({
-//            self.tableView.deleteRows(at: [indexPath], with: .left)
-//        })
+        let message = inboxMessages[index]
         
         Task {
             do {
-                try await Courier.shared.archiveMessage(originalMessage.messageId)
+                try await Courier.shared.archiveMessage(message.messageId)
             } catch {
                 Courier.shared.client?.log(error.localizedDescription)
             }
