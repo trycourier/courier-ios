@@ -317,6 +317,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private func archiveCell(at index: Int) {
         
         let message = inboxMessages[index]
+        message.setArchived()
+        removeMessage(at: index, message: message)
         
         Task {
             do {
