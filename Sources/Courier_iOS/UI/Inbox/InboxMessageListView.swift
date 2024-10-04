@@ -87,16 +87,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = false
                 self.infoView.isHidden = true
+                if ("\(oldValue)" != "\(state)") {
+                    self.scrollToTop(animated: false)
+                }
             case .empty:
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = true
                 self.infoView.isHidden = false
                 self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
-            }
-            
-            // Scroll to top if needed
-            if ("\(oldValue)" != "\(state)") {
-                self.scrollToTop(animated: false)
             }
         }
     }
