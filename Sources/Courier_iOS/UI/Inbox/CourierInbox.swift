@@ -62,9 +62,16 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private lazy var tabView: TabView = {
         
-        let tabs = TabView(pages: getPages(), scrollView: scrollView, onTabSelected: { [weak self] index in
-            self?.updateScrollViewToPage(index)
-        })
+        let tabs = TabView(
+            pages: getPages(),
+            scrollView: scrollView,
+            onTabSelected: { [weak self] index in
+                self?.updateScrollViewToPage(index)
+            },
+            onTabReselected: { [weak self] index in
+                self?.getPages()[index].page.scrollToTop(animated: true)
+            }
+        )
         
         tabs.translatesAutoresizingMaskIntoConstraints = false
         tabs.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight).isActive = true

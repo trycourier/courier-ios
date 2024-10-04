@@ -23,7 +23,9 @@ internal class TabView: UIView, UIScrollViewDelegate {
     let pages: [Page]
     let scrollView: UIScrollView
     let onTabSelected: (Int) -> Void
+    let onTabReselected: (Int) -> Void
     private var theme: CourierInboxTheme? = nil
+    private(set) var selectedIndex: Int = 0
     
     private let tabsStackView: UIStackView = {
         let stackView = UIStackView()
@@ -42,10 +44,11 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
     private(set) var tabs: [Tab] = []
     
-    public init(pages: [Page], scrollView: UIScrollView, onTabSelected: @escaping (Int) -> Void) {
+    public init(pages: [Page], scrollView: UIScrollView, onTabSelected: @escaping (Int) -> Void, onTabReselected: @escaping (Int) -> Void) {
         self.pages = pages
         self.scrollView = scrollView
         self.onTabSelected = onTabSelected
+        self.onTabReselected = onTabReselected
         super.init(frame: .zero)
         setup()
     }
@@ -54,6 +57,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         self.pages = []
         self.scrollView = UIScrollView()
         self.onTabSelected = { _ in }
+        self.onTabReselected = { _ in }
         super.init(frame: frame)
         setup()
     }
@@ -62,6 +66,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         self.pages = []
         self.scrollView = UIScrollView()
         self.onTabSelected = { _ in }
+        self.onTabReselected = { _ in }
         super.init(coder: coder)
         setup()
     }
@@ -81,9 +86,16 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         // Initialize tabs and add them to the stack view
         for (index, page) in pages.enumerated() {
-            let tab = Tab(title: page.title) { [weak self] in
-                self?.onTabSelected(index)
-            }
+            let tab = Tab(title: page.title, onTapped: { [weak self] in
+                guard let self = self else { return }
+                if self.selectedIndex == index {
+                    self.onTabReselected(index)
+                } else {
+                    self.selectedIndex = index
+                    self.onTabSelected(index)
+                }
+                self.setSelectedTab()
+            })
             tabsStackView.addArrangedSubview(tab)
             tabs.append(tab)
         }
