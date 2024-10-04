@@ -40,6 +40,7 @@ public class CourierInboxData {
     internal func addMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
         if feed == .feed {
             self.feed.messages.insert(message, at: index)
+            self.unreadCount += 1
         } else {
             self.archived.messages.insert(message, at: index)
         }

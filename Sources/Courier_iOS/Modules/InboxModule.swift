@@ -169,9 +169,12 @@ extension Courier: InboxMutationHandler {
         let feed: InboxMessageFeed = message.isArchived ? .archived : .feed
         await inboxModule.data?.addMessage(at: index, in: feed, with: message)
         
-        DispatchQueue.main.async {
-            self.inboxListeners.forEach { listener in
-                listener.onMessageAdded?(feed, index, message)
+        if let data = await inboxModule.data {
+            DispatchQueue.main.async {
+                self.inboxListeners.forEach { listener in
+                    listener.onMessageAdded?(feed, index, message)
+                    listener.onUnreadCountChanged?(data.unreadCount)
+                }
             }
         }
         
