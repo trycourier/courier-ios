@@ -202,17 +202,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
         
-        // Check if the inbox messages array is empty
-        guard !inboxMessages.isEmpty else {
+        guard inboxMessages.isEmpty else {
             return
         }
         
-        // Ensure the index is valid
-        guard index >= 0 && index < inboxMessages.count else {
+        guard index < inboxMessages.count - 1 else {
             return
         }
         
-        // Ensure ID matched
         guard inboxMessages[index].messageId != message.messageId else {
             return
         }
