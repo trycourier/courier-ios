@@ -183,11 +183,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         if set.messages.isEmpty {
             self.canPaginate = false
+            self.tableView.reloadData()
             return
         }
         
         let insertionIndex = inboxMessages.count
-        self.canPaginate = set.canPaginate
         self.inboxMessages.insert(contentsOf: set.messages, at: insertionIndex)
         self.state = inboxMessages.isEmpty ? .empty : .content
         
@@ -195,10 +195,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             IndexPath(row: $0, section: 0)
         }
         
-        self.tableView.performBatchUpdates({
-            self.tableView.insertRows(at: indexPaths, with: .automatic)
-        }, completion: nil)
-        
+        self.tableView.insertRows(at: indexPaths, with: .automatic)
+        self.canPaginate = set.canPaginate
         self.openVisibleMessages()
         
     }
