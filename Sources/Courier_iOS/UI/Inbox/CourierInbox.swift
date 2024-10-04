@@ -191,8 +191,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 page?.addMessage(at: index, message: message)
             },
             onMessageRemoved: { [weak self] feed, index, message in
-//                let page = self?.getPages()[feed == .feed ? 0 : 1].page
-//                page?.removeMessage(at: index, message: message)
+                let page = self?.getPages()[feed == .feed ? 0 : 1].page
+                page?.removeMessage(at: index, message: message)
             }
         )
         
