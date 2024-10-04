@@ -322,10 +322,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         return section == 0 ? self.inboxMessages.count : 1
     }
     
-    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.section == 0) {
             

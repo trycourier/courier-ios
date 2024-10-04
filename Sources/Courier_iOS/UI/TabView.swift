@@ -155,13 +155,13 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
 }
 
-internal class Tab: UIView {
+internal class Tab: UIButton {
     
     let title: String
     let onTapped: () -> Void
     private var theme: CourierInboxTheme? = nil
     
-    var isSelected = false {
+    var isActive = false {
         didSet {
             refresh()
         }
@@ -183,7 +183,7 @@ internal class Tab: UIView {
         return stackView
     }()
     
-    private let titleLabel: UILabel = {
+    private let tabNameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 1
@@ -200,11 +200,11 @@ internal class Tab: UIView {
 
     private func refresh() {
         
-        titleLabel.text = title
+        tabNameLabel.text = title
         
-        let style = isSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
-        titleLabel.textColor = style?.color
-        titleLabel.font = style?.font
+        let style = isActive ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+        tabNameLabel.textColor = style?.color
+        tabNameLabel.font = style?.font
         
         if let theme = self.theme {
             let badge = getBadgeValue(value: self.badge ?? 0)
@@ -261,7 +261,7 @@ internal class Tab: UIView {
         
         // Add stackView, titleLabel, and badgeLabel
         addSubview(stackView)
-        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(tabNameLabel)
         stackView.addArrangedSubview(badgeLabel)
 
         // Set constraints for stackView to be centered in the parent view
@@ -272,16 +272,10 @@ internal class Tab: UIView {
             stackView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor)
         ])
         
-        titleLabel.text = title
+        tabNameLabel.text = title
         
-        addGestureRecognizers()
+        addTarget(self, action: #selector(tabTapped), for: .touchUpInside)
         
-    }
-    
-    private func addGestureRecognizers() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tabTapped))
-        tapGesture.cancelsTouchesInView = true
-        addGestureRecognizer(tapGesture)
     }
     
     private func animateOpacity(to alpha: CGFloat) {
