@@ -180,7 +180,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 self?.getPage(for: .archived).page.setInbox(dataSet: set)
             },
             onPageAdded: { [weak self] feed, set in
-                print("TODO")
+                self?.getPage(for: feed).page.addPage(set: set)
             },
             onMessageChanged: { [weak self] feed, index, message in
                 self?.getPage(for: feed).page.updateMessage(at: index, message: message)
