@@ -4,7 +4,7 @@
 cd "$(dirname "$0")/.."
 
 # Default simulator
-DEFAULT_SIMULATOR="iPhone 15 Pro,OS=17.4"
+DEFAULT_SIMULATOR="iPhone 16 Pro,OS=18.0"
 
 # Prompt the user for the simulator, with a default value
 read -p "Which simulator should start? (press Enter for default: '$DEFAULT_SIMULATOR'): " user_simulator
