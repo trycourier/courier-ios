@@ -69,6 +69,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 self?.updateScrollViewToPage(index)
             },
             onTabReselected: { [weak self] index in
+                self?.updateScrollViewToPage(index)
                 self?.getPages()[index].page.scrollToTop(animated: true)
             }
         )

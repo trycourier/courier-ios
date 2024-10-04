@@ -16,9 +16,6 @@ class RootTabBarController: UITabBarController {
         super.viewDidLoad()
 
         self.inboxListener = Courier.shared.addInboxListener(
-            onError: { _ in
-                self.setBadge(0)
-            },
             onUnreadCountChanged: { count in
                 self.setBadge(count)
             }

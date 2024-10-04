@@ -142,11 +142,15 @@ extension Courier: InboxMutationHandler {
     }
     
     func onInboxError(with error: any Error) async {
+        
+        await onUnreadCountChange(count: 0)
+        
         DispatchQueue.main.async {
             self.inboxListeners.forEach({ listener in
                 listener.onError?(error)
             })
         }
+        
     }
     
     func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
