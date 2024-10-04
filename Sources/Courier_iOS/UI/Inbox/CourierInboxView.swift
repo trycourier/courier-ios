@@ -13,6 +13,8 @@ public struct CourierInboxView: UIViewRepresentable {
     private let inbox: CourierInbox
     
     public init(
+        canSwipePages: Bool = false,
+        pagingDuration: TimeInterval = 0.1,
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
@@ -20,7 +22,8 @@ public struct CourierInboxView: UIViewRepresentable {
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
         self.inbox = CourierInbox(
-            lightTheme: lightTheme,
+            canSwipePages: canSwipePages,
+            pagingDuration: pagingDuration,
             darkTheme: darkTheme,
             didClickInboxMessageAtIndex: didClickInboxMessageAtIndex,
             didClickInboxActionForMessageAtIndex: didClickInboxActionForMessageAtIndex,
