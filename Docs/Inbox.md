@@ -304,6 +304,7 @@ import Courier_iOS
 class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
+    private var messages: [InboxMessage] = []
     private var inboxListener: CourierInboxListener? = nil
     
     ...
@@ -315,14 +316,8 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
         
         // Allows you to listen to all inbox changes and build whatever you'd like
         self.inboxListener = Courier.shared.addInboxListener(
-            onInitialLoad: {
-                ...
-            },
-            onError: { error in
-                ...
-            },
-            onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
-                ...
+            onFeedChanged: { [weak self] set in
+                self.messages = set.messages
                 self.tableView.reloadData()
             }
         )
@@ -373,14 +368,32 @@ import Courier_iOS
 // Listen to all inbox events
 // Only one "pipe" of data is created behind the scenes for network / performance reasons
 let inboxListener = Courier.shared.addInboxListener(
-    onInitialLoad: {
-        // Called when the inbox starts up
+    onLoading: { [weak self] in
+        // Called when loading happened, usually at launch
     },
-    onError: { error in
-        // Called if an error occurs
+    onError: { [weak self] error in
+        // Called when an error is received
     },
-    onMessagesChanged: { messages, unreadMessageCount, totalMessageCount, canPaginate in
-        // Called when messages update
+    onUnreadCountChanged: { [weak self] count in
+        // Called when the total unread count changes
+    },
+    onFeedChanged: { [weak self] set in
+        // Called when the inbox of feed messages changes
+    },
+    onArchiveChanged: { [weak self] set in
+        // Called when the inbox of archived messages changes
+    },
+    onPageAdded: { [weak self] feed, set in
+        // Called when a list of messages is fetched (i.e. pagination)
+    },
+    onMessageChanged: { [weak self] feed, index, message in
+        // Called when a message is updated (i.e. a new message is read or unread)
+    },
+    onMessageAdded: { [weak self] feed, index, message in
+        // Called when a message is added (i.e. a new message is received)
+    },
+    onMessageRemoved: { [weak self] feed, index, message in
+        // Called when a message is removed (i.e. a message is archived)
     }
 )
 
@@ -399,9 +412,10 @@ Task {
 
     // The available messages the inbox has
     let inboxMessages = await Courier.shared.inboxMessages
+    let archivedMessages = await Courier.shared.archivedMessages
 
     // Fetches the next page of messages
-    try await Courier.shared.fetchNextInboxPage()
+    try await Courier.shared.fetchNextInboxPage(.feed || .archived)
 
     // Reloads the inbox
     // Commonly used with pull to refresh
