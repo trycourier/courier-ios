@@ -397,7 +397,15 @@ extension Courier {
     }
     
     public func removeAllInboxListeners() {
+        
         self.inboxListeners.removeAll()
+        
+        if (inboxListeners.isEmpty) {
+            Task {
+                await closeInbox()
+            }
+        }
+        
     }
     
     public func clickMessage(_ messageId: String) async throws {
@@ -435,6 +443,7 @@ extension Courier {
         if !isUserSignedIn {
             throw CourierError.userNotFound
         }
+        
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .unread,
