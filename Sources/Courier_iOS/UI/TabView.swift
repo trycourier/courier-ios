@@ -132,6 +132,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
                 view.setTheme(theme: theme)
             }
         }
+        self.setSelectedTab()
     }
     
     // MARK: ScrollView Delegates
