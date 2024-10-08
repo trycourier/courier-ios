@@ -17,9 +17,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     // MARK: Interaction
     
-    public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
-    public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
-    public var didScrollInbox: ((UIScrollView) -> Void)? = nil
+    private let didClickInboxMessageAtIndex: (InboxMessage, Int) -> Void
+    private let didClickInboxActionForMessageAtIndex: (InboxAction, InboxMessage, Int) -> Void
+    private let didScrollInbox: (UIScrollView) -> Void
     
     // MARK: Datasource
     
@@ -101,33 +101,32 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public init(
         feed: InboxMessageFeed,
-        didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
-        didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
-        didScrollInbox: ((UIScrollView) -> Void)? = nil
+        didClickInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
+        didClickInboxActionForMessageAtIndex: @escaping (InboxAction, InboxMessage, Int) -> Void,
+        didScrollInbox: @escaping (UIScrollView) -> Void
     ) {
-        
         self.feed = feed
-        
-        // Init
-        super.init(frame: .zero)
-        
-        // Callbacks
         self.didClickInboxMessageAtIndex = didClickInboxMessageAtIndex
         self.didClickInboxActionForMessageAtIndex = didClickInboxActionForMessageAtIndex
         self.didScrollInbox = didScrollInbox
-        
-        // Styles and more
+        super.init(frame: .zero)
         setup()
     }
 
     override init(frame: CGRect) {
         self.feed = .feed
+        self.didClickInboxMessageAtIndex = { _, _ in }
+        self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
+        self.didScrollInbox = { _ in }
         super.init(frame: frame)
         setup()
     }
     
     public required init?(coder: NSCoder) {
         self.feed = .feed
+        self.didClickInboxMessageAtIndex = { _, _ in }
+        self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
+        self.didScrollInbox = { _ in }
         super.init(coder: coder)
         setup()
     }
@@ -331,7 +330,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 let message = inboxMessages[index]
                 
                 cell.setMessage(message, theme) { [weak self] inboxAction in
-                    self?.didClickInboxActionForMessageAtIndex?(
+                    self?.didClickInboxActionForMessageAtIndex(
                         inboxAction,
                         message,
                         index
@@ -376,7 +375,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             message.markAsClicked()
             
             // Hit callback
-            self.didClickInboxMessageAtIndex?(message, index)
+            self.didClickInboxMessageAtIndex(message, index)
             
             // Deselect the row
             tableView.deselectRow(at: indexPath, animated: true)
@@ -480,7 +479,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.didScrollInbox?(scrollView)
+        self.didScrollInbox(scrollView)
         self.openVisibleMessages()
     }
     

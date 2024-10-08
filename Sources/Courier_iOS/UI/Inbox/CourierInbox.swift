@@ -238,7 +238,18 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     private func makeInboxList(_ feed: InboxMessageFeed) -> InboxMessageListView {
-        let list = InboxMessageListView(feed: feed)
+        let list = InboxMessageListView(
+            feed: feed,
+            didClickInboxMessageAtIndex: { [weak self] message, index in
+                self?.didClickInboxMessageAtIndex?(message, index)
+            },
+            didClickInboxActionForMessageAtIndex: { [weak self] action, message, index in
+                self?.didClickInboxActionForMessageAtIndex?(action, message, index)
+            },
+            didScrollInbox: { [weak self] scrollView in
+                self?.didScrollInbox?(scrollView)
+            }
+        )
         list.translatesAutoresizingMaskIntoConstraints = false
         return list
     }
@@ -347,9 +358,4 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.inboxListener?.remove()
     }
     
-}
-
-public enum InboxMessageFeed {
-    case feed
-    case archived
 }
