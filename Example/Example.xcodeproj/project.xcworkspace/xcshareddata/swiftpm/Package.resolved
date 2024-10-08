@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "feature/inbox-polish",
-        "revision" : "09d731ec15f84186fda0851039fc25f2b4889154"
+        "branch" : "master",
+        "revision" : "32123a5a0ff9462fba6e17377b20f684bb66c185"
       }
     },
     {
