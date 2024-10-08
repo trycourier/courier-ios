@@ -659,7 +659,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "feature/archive-ui";
+				branch = "feature/inbox-polish";
 				kind = branch;
 			};
 		};
