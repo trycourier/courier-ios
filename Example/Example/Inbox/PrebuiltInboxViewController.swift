@@ -13,11 +13,17 @@ class PrebuiltInboxViewController: UIViewController {
     private lazy var courierInbox = {
         return CourierInbox(
             didClickInboxMessageAtIndex: { message, index in
-                message.isRead ? message.markAsUnread() : message.markAsRead()
-                print(message.toJson() ?? "")
+                Task {
+                    do {
+                        message.isRead ? try await message.markAsUnread() : try await message.markAsRead()
+                        self.showCodeAlert(title: "Inbox Message Click", code: message.toJson() ?? "")
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
-                print(action.toJson() ?? "")
+                self.showCodeAlert(title: "Inbox Action Click", code: action.toJson() ?? "")
             }
         )
     }()
