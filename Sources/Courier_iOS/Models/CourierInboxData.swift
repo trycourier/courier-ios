@@ -253,15 +253,6 @@ public class CourierInboxData {
         return nil
     }
     
-    private func findCurrentIndex(for message: InboxMessage, in messages: [InboxMessage]) -> Int? {
-        for (index, message) in messages.enumerated() {
-            if message.messageId == message.messageId {
-                return index
-            }
-        }
-        return nil
-    }
-    
 }
 
 public struct InboxMessageSet {

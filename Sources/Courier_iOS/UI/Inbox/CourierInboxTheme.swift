@@ -14,8 +14,8 @@ import UIKit
     public let brandId: String?
     public let tabIndicatorColor: UIColor?
     public let tabStyle: CourierStyles.Inbox.TabStyle
-    public let readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle // Added field
-    public let archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle // Added field
+    public let readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle
+    public let archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle
     public let messageAnimationStyle: UITableView.RowAnimation
     public let loadingIndicatorColor: UIColor?
     public let unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle
