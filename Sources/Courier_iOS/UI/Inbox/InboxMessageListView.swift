@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private let feed: InboxMessageFeed
