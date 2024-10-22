@@ -7,11 +7,13 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 internal struct Page {
     let title: String
     let page: InboxMessageListView
 }
 
+@available(iOSApplicationExtension, unavailable)
 internal class TabView: UIView, UIScrollViewDelegate {
     
     private let border: UIView = {
