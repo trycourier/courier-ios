@@ -238,17 +238,26 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
         
+        // Check if index is within bounds and if the message matches
+        guard index >= 0 && index < inboxMessages.count, inboxMessages[index].messageId == message.messageId else {
+            print("Invalid index or message ID mismatch. Cannot remove message.")
+            return
+        }
+        
+        // Proceed if canUpdateMessages allows it
         if !canUpdateMessages(index: index, messageId: message.messageId) {
             return
         }
 
-        // Remove the message
+        // Remove the message from the data source first
+        inboxMessages.remove(at: index)
+        
+        // Then, update the UI with the deletion
         let indexPath = IndexPath(row: index, section: 0)
-        self.tableView.performBatchUpdates({
-            self.tableView.deleteRows(at: [indexPath], with: .left)
+        tableView.performBatchUpdates({
+            tableView.deleteRows(at: [indexPath], with: .left)
         }, completion: { finished in
             if finished {
-                self.inboxMessages.remove(at: index)
                 self.state = self.inboxMessages.isEmpty ? .empty : .content
             }
         })
