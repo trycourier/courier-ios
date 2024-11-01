@@ -252,16 +252,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         // Remove the message from the data source first
         inboxMessages.remove(at: index)
         
-        // React Native crash... don't get it. Weird build crap.
-        if (Courier.agent.isReactNative() && self.tableView.numberOfRows(inSection: 0) == 0) {
-            self.state = self.inboxMessages.isEmpty ? .empty : .content
-            return
-        }
-        
         // Then, update the UI with the deletion
         let indexPath = IndexPath(row: index, section: 0)
         tableView.performBatchUpdates({
-            self.tableView.deleteRows(at: [indexPath], with: .left)
+            if (Courier.agent.isReactNative() && self.tableView.numberOfRows(inSection: 0) == 0) {
+                self.tableView.reloadData()
+            } else {
+                self.tableView.deleteRows(at: [indexPath], with: .left)
+            }
         }, completion: { finished in
             if finished {
                 self.state = self.inboxMessages.isEmpty ? .empty : .content
