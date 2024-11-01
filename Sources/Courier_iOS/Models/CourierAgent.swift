@@ -33,4 +33,8 @@ import Foundation
         return "\(agentType)/\(version)"
     }
     
+    @objc public func isReactNative() -> Bool {
+        return agentType == "courier-react-native-ios"
+    }
+    
 }
