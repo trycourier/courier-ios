@@ -253,7 +253,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         inboxMessages.remove(at: index)
         
         // React Native crash... don't get it. Weird build crap.
-        if (Courier.agent.isReactNative() && self.inboxMessages.isEmpty) {
+        if (Courier.agent.isReactNative() && self.tableView.numberOfRows(inSection: 0) == 0) {
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
         }
