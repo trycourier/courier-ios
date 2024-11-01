@@ -278,7 +278,6 @@ extension Courier {
             return
         }
         
-        await onInboxKilled()
         await inboxModule.repo.stop(with: inboxMutationHandler)
         
     }
@@ -300,7 +299,6 @@ extension Courier {
     }
     
     func closeInbox() async {
-        await onInboxKilled()
         await inboxModule.repo.stop(with: inboxMutationHandler)
         await onInboxError(with: CourierError.userNotFound)
     }
