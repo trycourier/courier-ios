@@ -251,9 +251,15 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
         // Remove the message from the data source first
         inboxMessages.remove(at: index)
+        let indexPath = IndexPath(row: index, section: 0)
+        
+        // Ensure we can make the change
+        guard let cell = tableView.cellForRow(at: indexPath) else {
+            self.state = self.inboxMessages.isEmpty ? .empty : .content
+            return
+        }
         
         // Then, update the UI with the deletion
-        let indexPath = IndexPath(row: index, section: 0)
         tableView.performBatchUpdates({
             tableView.deleteRows(at: [indexPath], with: .left)
         }, completion: { finished in
