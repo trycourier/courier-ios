@@ -77,14 +77,14 @@ curl --request POST \
   }'
 ```
 
-## 2. Get a JWT
+## 2. Get a JWT in your app
 
 ```swift
 let userId = "your_user_id"
 let jwt = await YourBackend.generateCourierJWT(for: userId)
 ```
 
-## 3. Sign user in
+## 3. Sign your user in
 
 Signed in users will stay signed in between app sessions.
 
@@ -95,7 +95,7 @@ await Courier.shared.signIn(accessToken: jwt, userId: userId)
 
 If the token is expired, you can generate a new one from your endpoint and call `Courier.shared.signIn(...)` again. You will need to check the token manually for expiration or generate a new one when the user views a specific screen in your app. It is up to you to handle token expiration and refresh based on your security needs.
 
-## 4. Sign user out
+## 4. Sign your user out
 
 This will remove any credentials that are stored between app sessions.
 
