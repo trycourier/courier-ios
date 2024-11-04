@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name = 'Courier_iOS'
-    s.version = '5.1.10'
+    s.version = '5.1.11'
     s.summary = 'Courier makes it easy to add notifications to your app'
 
     s.homepage = 'https://github.com/trycourier/courier-ios'
