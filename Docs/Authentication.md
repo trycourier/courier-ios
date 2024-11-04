@@ -53,6 +53,8 @@ Manages user credentials between app sessions.
 
 Put this code where you normally manage your user's state. The user's access to [`Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md), [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) and [`Preferences`](https://github.com/trycourier/courier-ios/blob/master/Docs/Preferences.md) will automatically be managed by the SDK and stored in persistent storage. This means that if your user fully closes your app and starts it back up, they will still be "signed in".
 
+&emsp;
+
 ## 1. Generate a JWT
 
 To generate a JWT, you will need to:
