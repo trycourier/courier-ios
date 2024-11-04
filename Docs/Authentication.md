@@ -62,7 +62,7 @@ To generate a JWT, you will need to:
 2. Call this function inside that endpoint: [`Generate Auth Tokens`](https://www.courier.com/docs/reference/auth/issue-token/)
 3. Return the JWT
 
-Here is a curl example with all the scopes needed that the SDK uses. Change the scopes to the scopes your need for your use case.
+Here is a curl example with all the scopes needed that the SDK uses. Change the scopes to the scopes you need for your use case.
 
 ```curl
 curl --request POST \
