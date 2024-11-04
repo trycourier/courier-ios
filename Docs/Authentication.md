@@ -103,7 +103,7 @@ This will remove any credentials that are stored between app sessions.
 await Courier.shared.signOut()
 ```
 
-## All Available Authentication Functions
+## All Available Authentication Values
 
 ```swift
 let userId = Courier.shared.userId
