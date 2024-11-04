@@ -49,119 +49,18 @@ Manages user credentials between app sessions.
 
 &emsp;
 
-# Usage
+# Getting Started
 
 Put this code where you normally manage your user's state. The user's access to [`Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md), [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) and [`Preferences`](https://github.com/trycourier/courier-ios/blob/master/Docs/Preferences.md) will automatically be managed by the SDK and stored in persistent storage. This means that if your user fully closes your app and starts it back up, they will still be "signed in".
 
-```swift
-import Courier_iOS
+## 1. Generate a JWT
 
-Task {
+To generate a JWT, you will need to:
+1. Create an endpoint on your backend
+2. Call this function inside that endpoint: [`Generate Auth Tokens`](https://www.courier.com/docs/reference/auth/issue-token/)
+3. Return the JWT
 
-    // 1. To authenticate your app with Courier. You will need production safe JWT.
-    // Here is how to generate this key: https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md#going-to-production
-
-    let userId = "example_user"
-    
-    let jwt = try await YourBackend().getCourierAccessToken(for: userId)
-
-    // 2. Sign your user in
-
-    await Courier.shared.signIn(
-        accessToken: jwt,
-        userId: userId
-    )
-
-    // 3. (Optional) If you want to support a specific tenant, useful for Inbox only at the moment
-
-    let tenantId = "your_tenant"
-
-    await Courier.shared.signIn(
-        accessToken: jwt,
-        userId: userId,
-        tenantId: tenantId
-    )
-
-    // 4. Sign your user out. Needed when you no longer want to sync push tokens, view inbox messages, or use preferences
-
-    await Courier.shared.signOut()
-
-    // NOTE: You can use auth keys and client keys to test, but it is not recommended for production use
-    
-    await Courier.shared.signIn(
-        accessToken: "pk_prod_V1...SF2",
-        clientKey: "NmE1M....hMGY1",
-        userId: userId
-    )
-
-}
-
-// Other available properties and functions
-
-let userId = Courier.shared.userId
-let isUserSignedIn = Courier.shared.isUserSignedIn
-
-let listener = Courier.shared.addAuthenticationListener { userId in
-    print(userId ?? "No userId found")
-}
-
-listener.remove()
-
-```
-
-&emsp;
-
-<table>
-    <thead>
-        <tr>
-            <th width="150px" align="left">Properties</th>
-            <th width="450px" align="left">Details</th>
-            <th width="450px" align="left">Where is this?</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr width="600px">
-            <td align="left">
-                <code>accessToken</code>
-            </td>
-            <td align="left">
-                The key or token needed to authenticate requests to the Courier API.
-            </td>
-            <td align="left">
-                For development only: <a href="https://app.courier.com/settings/api-keys"><code>authKey</code></a><br>
-                For development or production: <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md#going-to-production"><code>accessToken</code></a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">
-                <code>clientKey</code>
-            </td>
-            <td align="left">
-                The key required to get <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md"><code>Courier Inbox</code></a> messages for the current user. Can be <code>nil</code> if you do not need Courier Inbox.
-            </td>
-            <td align="left">
-                <a href="https://app.courier.com/channels/courier"><code>Courier Inbox clientKey</code></a>
-            </td>
-        </tr>
-        <tr width="600px">
-            <td align="left">
-                <code>userId</code>
-            </td>
-            <td align="left">
-                The id of the user you want to read and write to. This likely will be the same as the <code>userId</code> you are already using in your authentication system, but it can be different if you'd like.
-            </td>
-            <td align="left">
-                You are responsible for this
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-&emsp;
-
-# Going to Production
-
-To create a production ready `accessToken` (aka jwt), call this:
+Here is a curl example with all the scopes needed that the SDK uses. Change the scopes to the scopes your need for your use case.
 
 ```curl
 curl --request POST \
@@ -176,6 +75,41 @@ curl --request POST \
   }'
 ```
 
-More Info: [`Courier Issue Token Docs`](https://www.courier.com/docs/reference/auth/issue-token/)
+## 2. Get a JWT
 
-This request should exist in a separate endpoint served by your backend.
+```swift
+let userId = "your_user_id"
+let jwt = await YourBackend.generateCourierJWT(for: userId)
+```
+
+## 3. Sign user in
+
+Signed in users will stay signed in between app sessions.
+
+```swift
+let userId = "your_user_id"
+await Courier.shared.signIn(accessToken: jwt, userId: userId)
+```
+
+If the token is expired, you get a new one from your endpoint and call `Courier.shared.signIn(...)` again.
+
+## 4. Sign user out
+
+This will remove any credentials that are stored between app sessions.
+
+```swift
+await Courier.shared.signOut()
+```
+
+## All Available Authentication Functions
+
+```swift
+let userId = Courier.shared.userId
+let isUserSignedIn = Courier.shared.isUserSignedIn
+
+let listener = Courier.shared.addAuthenticationListener { userId in
+    print(userId ?? "No userId found")
+}
+
+listener.remove()
+```
