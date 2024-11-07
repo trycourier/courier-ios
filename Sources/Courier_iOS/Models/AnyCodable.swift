@@ -7,7 +7,6 @@
 
 import Foundation
 
-// Helper class to encode/decode arbitrary types
 struct AnyCodable: Codable {
     let value: Any
     
@@ -17,6 +16,7 @@ struct AnyCodable: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
+        
         if let stringValue = try? container.decode(String.self) {
             value = stringValue
         } else if let intValue = try? container.decode(Int.self) {
@@ -27,6 +27,8 @@ struct AnyCodable: Codable {
             value = boolValue
         } else if let nestedDict = try? container.decode([String: AnyCodable].self) {
             value = nestedDict.mapValues { $0.value }
+        } else if let arrayValue = try? container.decode([AnyCodable].self) {
+            value = arrayValue.map { $0.value }
         } else {
             throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported type")
         }
@@ -34,6 +36,7 @@ struct AnyCodable: Codable {
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
+        
         switch value {
         case let stringValue as String:
             try container.encode(stringValue)
@@ -46,6 +49,9 @@ struct AnyCodable: Codable {
         case let dictValue as [String: Any]:
             let encodableDict = dictValue.mapValues { AnyCodable($0) }
             try container.encode(encodableDict)
+        case let arrayValue as [Any]:
+            let encodableArray = arrayValue.map { AnyCodable($0) }
+            try container.encode(encodableArray)
         default:
             throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unsupported type"))
         }

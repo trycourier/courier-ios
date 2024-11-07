@@ -148,9 +148,10 @@ class InboxTests: XCTestCase {
         
         let count = 5
         
-        Courier.shared.addInboxListener(onFeedChanged: { feed in
-            print("Messages Updated: \(feed.messages.count)")
-            hold = feed.messages.count < count
+        var messageCount = 0
+        Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
+            messageCount += 1
+            hold = messageCount < count
         })
         
         // Register some random listeners
@@ -261,12 +262,11 @@ class InboxTests: XCTestCase {
         let count = 25
         var hold = true
         
-        let listener = Courier.shared.addInboxListener(onFeedChanged: { feed in
-            
-            hold = feed.messages.count != count
-            
-            print("Message Counted updated: \(feed.messages.count)")
-            
+        var messageCount = 0
+        let listener = Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
+            messageCount += 1
+            hold = messageCount != count
+            print("Message Counted updated: \(messageCount)")
         })
         
         try await withThrowingTaskGroup(of: String.self) { group in

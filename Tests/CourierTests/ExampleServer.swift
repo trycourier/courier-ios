@@ -57,6 +57,14 @@ class ExampleServer {
                     "routing": [
                         "method": "all",
                         "channels": [channel]
+                    ],
+                    "data": [
+                        "real_name": "Anakin Skywalker",
+                        "nickname": "Darth Vader",
+                        "category": "villain",
+                        "children": [
+                            "luke", "leia"
+                        ]
                     ]
                 ]
             ].toJson()
