@@ -8,21 +8,25 @@
 import Foundation
 
 struct AnyCodable: Codable {
-    let value: Any
+    let value: Any?
     
-    init(_ value: Any) {
+    init(_ value: Any?) {
         self.value = value
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         
-        if let stringValue = try? container.decode(String.self) {
+        if container.decodeNil() {
+            value = nil
+        } else if let stringValue = try? container.decode(String.self) {
             value = stringValue
         } else if let intValue = try? container.decode(Int.self) {
             value = intValue
         } else if let doubleValue = try? container.decode(Double.self) {
             value = doubleValue
+        } else if let floatValue = try? container.decode(Float.self) {
+            value = floatValue
         } else if let boolValue = try? container.decode(Bool.self) {
             value = boolValue
         } else if let nestedDict = try? container.decode([String: AnyCodable].self) {
@@ -38,12 +42,16 @@ struct AnyCodable: Codable {
         var container = encoder.singleValueContainer()
         
         switch value {
+        case nil:
+            try container.encodeNil()
         case let stringValue as String:
             try container.encode(stringValue)
         case let intValue as Int:
             try container.encode(intValue)
         case let doubleValue as Double:
             try container.encode(doubleValue)
+        case let floatValue as Float:
+            try container.encode(floatValue)
         case let boolValue as Bool:
             try container.encode(boolValue)
         case let dictValue as [String: Any]:
@@ -53,7 +61,7 @@ struct AnyCodable: Codable {
             let encodableArray = arrayValue.map { AnyCodable($0) }
             try container.encode(encodableArray)
         default:
-            throw EncodingError.invalidValue(value, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unsupported type"))
+            throw EncodingError.invalidValue(value as Any, EncodingError.Context(codingPath: encoder.codingPath, debugDescription: "Unsupported type"))
         }
     }
 }

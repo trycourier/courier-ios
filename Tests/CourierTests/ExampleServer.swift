@@ -63,7 +63,30 @@ class ExampleServer {
                         "nickname": "Darth Vader",
                         "category": "villain",
                         "children": [
-                            "luke", "leia"
+                            [
+                                "id": "asdf",
+                                "name": "Dave",
+                                "children": [
+                                    [
+                                        "id": "asdf",
+                                        "name": "Tina"
+                                    ],
+                                    [
+                                        "id": "asdf",
+                                        "name": "Tiffany"
+                                    ]
+                                ]
+                            ],
+                            [
+                                "id": "asdf",
+                                "name": "Leia",
+                                "optional": false,
+                            ],
+                            [
+                                "id": 1,
+                                "name": "Chuck",
+                                "optional": false,
+                            ],
                         ]
                     ]
                 ]

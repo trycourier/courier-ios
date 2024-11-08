@@ -291,4 +291,58 @@ class InboxTests: XCTestCase {
         
     }
     
+    struct Child: Codable {
+        let id: String?
+        let name: String?
+        let optional: Bool?
+        let children: [Child]?
+        
+        init?(dictionary: [String: Any]) {
+
+            id = dictionary["id"] as? String
+            name = dictionary["name"] as? String
+            optional = dictionary["optional"] as? Bool
+            
+            if let childrenArray = dictionary["children"] as? [[String: Any]] {
+                children = childrenArray.compactMap { Child(dictionary: $0) }
+            } else {
+                children = nil
+            }
+            
+        }
+    }
+    
+    func testSingleMessage() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        var hold = true
+        
+        let listener = Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
+            
+            if let childrenData = message.data?["children"] as? [[String: Any]] {
+                let children = childrenData.compactMap { Child(dictionary: $0) }
+                children.forEach { child in
+                    print(child.id ?? "No id found")
+                    print(child.name ?? "No name found")
+                    print(child.optional ?? "No optional found")
+                    print(child.children?.count ?? "No subchildren found")
+                    print("=======")
+                }
+            }
+            
+            hold = false
+            
+        })
+        
+        try await sendMessage()
+        
+        while (hold) {
+            // Wait
+        }
+        
+        listener.remove()
+        
+    }
+    
 }
