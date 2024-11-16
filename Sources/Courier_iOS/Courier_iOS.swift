@@ -29,7 +29,7 @@ import UIKit
     /**
      * Versioning
      */
-    internal static let version = "5.2.3"
+    internal static let version = "5.2.4"
     @objc public static var agent = CourierAgent.nativeIOS(version)
     
     /**
@@ -51,7 +51,6 @@ import UIKit
     internal lazy var tokenModule = { TokenModule() }()
     
     // MARK: Inbox
-    internal var inboxListeners: [CourierInboxListener] = []
     internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue
     internal lazy var inboxMutationHandler: InboxMutationHandler = { self }()
     internal lazy var inboxModule = { InboxModule() }()

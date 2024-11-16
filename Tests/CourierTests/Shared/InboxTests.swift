@@ -345,4 +345,79 @@ class InboxTests: XCTestCase {
         
     }
     
+    func testAttemptToBreakListenerAndFetches() async throws {
+        
+        await Courier.shared.signOut()
+        
+        let jwt = try await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "example")
+        
+        async let task1: () = testRaces(jwt)
+        async let task2: () = testRaces(jwt)
+        async let task3: () = testRaces(jwt)
+        async let task4: () = testRaces(jwt)
+        async let task5: () = testRaces(jwt)
+        
+        // Await all tasks to finish
+        let _ = try await (task1, task2, task3, task4, task5)
+        print("All tests completed.")
+        
+    }
+    
+    private func testRaces(_ jwt: String) async throws {
+        
+        var hold1 = true
+        
+        let listener1 = Courier.shared.addInboxListener(
+            onLoading: {
+                Task {
+                    await Courier.shared.signOut()
+                    hold1 = false
+                }
+            }
+        )
+        
+        await Courier.shared.signIn(userId: "example", accessToken: jwt)
+        
+        while (hold1) {}
+        
+        listener1.remove()
+        
+        // Remove user on feed changed
+        
+        var hold2 = true
+        
+        let listener2 = Courier.shared.addInboxListener(
+            onFeedChanged: { messageSet in
+                Task {
+                    await Courier.shared.signOut()
+                    hold2 = false
+                }
+            }
+        )
+        
+        await Courier.shared.signIn(userId: "example", accessToken: jwt)
+        
+        while (hold2) {}
+        
+        listener2.remove()
+        
+        // Remove user on feed changed
+        
+        var hold3 = true
+        
+        let listener3 = Courier.shared.addInboxListener(
+            onError: { error in
+                hold3 = false
+            }
+        )
+        
+        await Courier.shared.signIn(userId: "example", accessToken: jwt)
+        await Courier.shared.signOut()
+        
+        while (hold3) {}
+        
+        listener3.remove()
+        
+    }
+    
 }

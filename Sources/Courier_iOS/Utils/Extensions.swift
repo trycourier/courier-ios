@@ -234,12 +234,25 @@ extension [String : String] {
 extension Data {
     
     func toPreview() -> String {
-        if let json = try? JSONSerialization.jsonObject(with: self, options: .fragmentsAllowed),
-           let prettyJsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
-           let prettyJsonString = String(data: prettyJsonData, encoding: .utf8) {
-            return prettyJsonString
-        } else {
+        do {
+            // Attempt to deserialize JSON
+            let json = try JSONSerialization.jsonObject(with: self, options: .fragmentsAllowed)
+            
+            // Attempt to pretty-print JSON
+            let prettyJsonData = try JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+            
+            // Convert the data to a string and return
+            if let prettyJsonString = String(data: prettyJsonData, encoding: .utf8) {
+                return prettyJsonString
+            }
+            
+            // Fallback to plain UTF-8 string if conversion fails
             return String(decoding: self, as: UTF8.self)
+        } catch {
+            // Log the error and fallback to plain UTF-8 string
+            let string = String(decoding: self, as: UTF8.self)
+            Courier.shared.client?.log("JSON Parsing Error: \(error.localizedDescription)\n\(string)")
+            return string
         }
     }
     
