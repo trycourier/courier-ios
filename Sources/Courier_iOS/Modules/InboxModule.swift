@@ -266,7 +266,7 @@ extension Courier: InboxMutationHandler {
 
 extension Courier {
     
-    public var inboxMessages: [InboxMessage] {
+    public var feedMessages: [InboxMessage] {
         get async {
             return await inboxModule.data?.feed.messages ?? []
         }
