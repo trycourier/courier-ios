@@ -111,7 +111,11 @@ public class CourierInboxData {
         let original = copy()
         
         // Change the local data
-        await mutateLocalData(with: &messages![index], event: event, inboxFeed: inboxFeed!, index: index, handler: handler)
+        let canUpdateServerData = await mutateLocalData(with: &messages![index], event: event, inboxFeed: inboxFeed!, index: index, handler: handler)
+        
+        if !canUpdateServerData {
+            return
+        }
         
         // Perform server update
         // If fails, reset the change to the original copy
@@ -124,17 +128,17 @@ public class CourierInboxData {
         
     }
     
-    private func mutateLocalData(with message: inout InboxMessage, event: InboxEventType, inboxFeed: InboxMessageFeed, index: Int, handler: InboxMutationHandler) async {
+    private func mutateLocalData(with message: inout InboxMessage, event: InboxEventType, inboxFeed: InboxMessageFeed, index: Int, handler: InboxMutationHandler) async -> Bool {
         switch event {
-        case .read:        await read(&message, index, inboxFeed, handler)
-        case .unread:      await unread(&message, index, inboxFeed, handler)
-        case .opened:      await open(&message, index, inboxFeed, handler)
-        case .unopened:    await unopen(&message, index, inboxFeed, handler)
-        case .archive:     await archive(&message, index, inboxFeed, handler)
-        case .unarchive:   break
-        case .click:       break
-        case .unclick:     break
-        case .markAllRead: break
+        case .read:        return await read(&message, index, inboxFeed, handler)
+        case .unread:      return await unread(&message, index, inboxFeed, handler)
+        case .opened:      return await open(&message, index, inboxFeed, handler)
+        case .unopened:    return await unopen(&message, index, inboxFeed, handler)
+        case .archive:     return await archive(&message, index, inboxFeed, handler)
+        case .unarchive:   return false
+        case .click:       return false
+        case .unclick:     return false
+        case .markAllRead: return false
         }
     }
     
@@ -170,10 +174,10 @@ public class CourierInboxData {
         await handler.onUnreadCountChange(count: 0)
     }
     
-    private func read(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
+    private func read(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
         
         if message.isArchived {
-            return
+            return false
         }
         
         if !message.isRead {
@@ -183,14 +187,19 @@ public class CourierInboxData {
             
             unreadCount = max(unreadCount - 1, 0)
             await handler.onUnreadCountChange(count: unreadCount)
+            
+            return true
+            
         }
+        
+        return false
         
     }
     
-    private func unread(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
+    private func unread(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
         
         if message.isArchived {
-            return
+            return false
         }
         
         if message.isRead {
@@ -200,29 +209,38 @@ public class CourierInboxData {
             
             unreadCount += 1
             await handler.onUnreadCountChange(count: unreadCount)
+            
+            return true
+            
         }
+        
+        return false
         
     }
     
-    private func open(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
+    private func open(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
         if !message.isOpened {
             message.setOpened()
             await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
+            return true
         }
+        return false
     }
     
-    private func unopen(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
+    private func unopen(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
         if message.isOpened {
             message.setUnopened()
             await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
+            return true
         }
+        return false
     }
     
-    private func archive(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async {
+    private func archive(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
         if !message.isArchived {
             
             // Read the message
-            await read(&message, index, inboxFeed, handler)
+            let _ = await read(&message, index, inboxFeed, handler)
             
             // Change archived status
             message.setArchived()
@@ -241,7 +259,10 @@ public class CourierInboxData {
                 await handler.onInboxItemAdded(at: insertIndex, in: .archived, with: message)
             }
             
+            return true
+            
         }
+        return false
     }
     
     private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int? {
