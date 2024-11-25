@@ -270,7 +270,7 @@ public class CourierInboxData {
         var index = 0
         while index < messages.count {
             let message = messages[index]
-            if newMessage.createdAt > message.createdAt {
+            if newMessage.createdAt < message.createdAt {
                 return index
             }
             index += 1
