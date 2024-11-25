@@ -14,6 +14,7 @@ internal class InboxSocketManager {
     public static var shared: InboxSocket?
 
     @discardableResult static func updateInstance(options: CourierClient.Options) -> InboxSocket {
+        shared?.disconnect()
         shared = InboxSocket(options: options)
         return shared!
     }

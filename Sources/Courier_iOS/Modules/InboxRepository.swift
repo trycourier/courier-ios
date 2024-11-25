@@ -204,20 +204,18 @@ internal class InboxRepository {
             throw CourierError.inboxNotInitialized
         }
         
-        InboxSocketManager.shared?.disconnect()
-        
         // Create the socket if needed
-        InboxSocketManager.getSocketInstance(
+        let socket = InboxSocketManager.updateInstance(
             options: client.options
         )
         
         // Listen to events
-        InboxSocketManager.shared?.receivedMessage = onReceivedMessage
-        InboxSocketManager.shared?.receivedMessageEvent = onReceivedMessageEvent
+        socket.receivedMessage = onReceivedMessage
+        socket.receivedMessageEvent = onReceivedMessageEvent
         
         // Connect the socket subscription
-        try await InboxSocketManager.shared?.connect()
-        try await InboxSocketManager.shared?.sendSubscribe()
+        try await socket.connect()
+        try await socket.sendSubscribe()
         
     }
     
