@@ -13,10 +13,8 @@ internal class InboxSocketManager {
 
     public static var shared: InboxSocket?
 
-    @discardableResult static func getSocketInstance(options: CourierClient.Options) -> InboxSocket {
-        if shared == nil {
-            shared = InboxSocket(options: options)
-        }
+    @discardableResult static func updateInstance(options: CourierClient.Options) -> InboxSocket {
+        shared = InboxSocket(options: options)
         return shared!
     }
 
