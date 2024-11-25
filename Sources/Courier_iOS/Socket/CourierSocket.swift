@@ -57,7 +57,15 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     }
     
     public func disconnect() {
-        webSocketTask?.cancel(with: .normalClosure, reason: nil)
+        if webSocketTask?.progress.isCancelled == true {
+            print("Cancelled")
+        }
+        if webSocketTask?.progress.isCancellable == true {
+            print("isCancellable")
+        }
+        if webSocketTask?.progress.isCancellable == true {
+            webSocketTask?.cancel(with: .normalClosure, reason: nil)
+        }
     }
     
     public func send(_ message: [String: Any]) async throws {
