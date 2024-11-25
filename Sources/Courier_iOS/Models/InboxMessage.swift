@@ -106,6 +106,10 @@ public class InboxMessage: Codable {
         }
     }
     
+    public var timestamp: Int {
+        return Int(createdAt.timeIntervalSince1970 * 1000)
+    }
+    
     public var time: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
