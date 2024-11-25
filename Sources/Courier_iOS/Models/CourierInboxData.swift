@@ -276,8 +276,9 @@ public class CourierInboxData {
             index += 1
         }
         
-        // Put at end in the fallback case
-        return messages.count
+        // Put at start in the fallback case
+        return 0
+        
     }
     
 }
