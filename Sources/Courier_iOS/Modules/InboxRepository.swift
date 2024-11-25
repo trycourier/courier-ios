@@ -77,13 +77,9 @@ internal class InboxRepository {
                 }
             )
             
-            guard let data = inboxData else {
-                return nil
-            }
-            
-            await handler.onInboxUpdated(inbox: data)
+            await handler.onInboxUpdated(inbox: inboxData)
 //            isFetchingInbox = false
-            return data
+            return inboxData
             
 //            if (isFetchingInbox) {
 //                await handler.onInboxUpdated(inbox: data)
@@ -100,6 +96,8 @@ internal class InboxRepository {
 //            if Task.isCancelled {
 //                return nil
 //            }
+            
+            print(error.localizedDescription)
             
             await handler.onInboxError(with: error)
             
@@ -166,7 +164,7 @@ internal class InboxRepository {
         
     }
     
-    private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool) async throws -> CourierInboxData? {
+    private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool) async throws -> CourierInboxData {
         
 //        try Task.checkCancellation()
          
