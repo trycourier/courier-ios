@@ -276,7 +276,7 @@ public class CourierInboxData {
 
         // Find the index of the newly inserted message
         if let index = allMessages.firstIndex(where: { $0.messageId == newMessage.messageId }) {
-            return index
+            return max(index - 1, 0)
         }
 
         // Fallback
