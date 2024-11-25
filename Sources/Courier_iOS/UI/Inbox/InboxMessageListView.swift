@@ -212,12 +212,31 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     internal func addMessage(at index: Int, message: InboxMessage) {
+        
+        // Ensure the index is within bounds for insertion
+        guard index >= 0 && index <= inboxMessages.count else {
+            print("Error: Index \(index) is out of bounds for inboxMessages.")
+            return
+        }
+
         self.manuallyArchivedMessageId = nil
-        self.inboxMessages.insert(message, at: index)
+        self.inboxMessages.insert(message, at: index) // Safe insertion
+
+        // Update the state based on inboxMessages' contents
         self.state = inboxMessages.isEmpty ? .empty : .content
+
+        // Ensure the indexPath is valid for the tableView
+        guard index >= 0 && index <= tableView.numberOfRows(inSection: 0) else {
+            Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
+            self.tableView.reloadData()
+            self.state = self.inboxMessages.isEmpty ? .empty : .content
+            return
+        }
+
         let indexPath = IndexPath(row: index, section: 0)
-        self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle)
-        self.openVisibleMessages()
+        self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle) // Safe table view update
+        self.openVisibleMessages() // Additional logic
+        
     }
     
     internal func updateMessage(at index: Int, message: InboxMessage) {
