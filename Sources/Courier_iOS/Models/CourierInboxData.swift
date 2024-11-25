@@ -275,7 +275,7 @@ public class CourierInboxData {
         allMessages.sort { $0.createdAt > $1.createdAt }
 
         // Find the index of the newly inserted message
-        if let index = messages.firstIndex(where: { $0.createdAt == newMessage.createdAt }) {
+        if let index = messages.firstIndex(where: { $0.messageId == newMessage.messageId }) {
             return index
         }
 
