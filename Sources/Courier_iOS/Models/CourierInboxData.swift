@@ -254,10 +254,9 @@ public class CourierInboxData {
             await handler.onInboxItemRemove(at: index, in: .feed, with: message)
             
             // Add the item to the archive
-            if let insertIndex = findInsertIndex(for: newMessage, in: archived.messages) {
-                archived.messages.insert(newMessage, at: insertIndex)
-                await handler.onInboxItemAdded(at: insertIndex, in: .archived, with: message)
-            }
+            let insertIndex = findInsertIndex(for: newMessage, in: archived.messages)
+            archived.messages.insert(newMessage, at: insertIndex)
+            await handler.onInboxItemAdded(at: insertIndex, in: .archived, with: message)
             
             return true
             
@@ -265,13 +264,15 @@ public class CourierInboxData {
         return false
     }
     
-    private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int? {
+    private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
         for (index, message) in messages.enumerated() {
+            let test1 = newMessage.createdAt
+            let test2 = message.createdAt
             if newMessage.createdAt >= message.createdAt {
                 return index
             }
         }
-        return nil
+        return 0
     }
     
 }
