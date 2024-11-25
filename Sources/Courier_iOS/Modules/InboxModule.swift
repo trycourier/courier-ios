@@ -303,6 +303,10 @@ extension Courier {
             return
         }
         
+        if !self.isUserSignedIn {
+            return
+        }
+        
         await inboxModule.repo.get(
             with: inboxMutationHandler,
             inboxData: inboxModule.data,
@@ -316,6 +320,10 @@ extension Courier {
     internal func unlinkInbox() async {
         
         if await self.inboxModule.inboxListeners.isEmpty {
+            return
+        }
+        
+        if !self.isUserSignedIn {
             return
         }
         

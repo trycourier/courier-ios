@@ -255,6 +255,25 @@ class InboxTests: XCTestCase {
 
     }
     
+    func testAddMessage() async throws {
+        
+        try await UserBuilder.authenticate()
+        
+        var hold = true
+        let listener = Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
+            hold = false
+        })
+        
+        try await sendMessage()
+        
+        while (hold) {
+            // Wait
+        }
+        
+        listener.remove()
+        
+    }
+    
     func testSpamMessages() async throws {
         
         try await UserBuilder.authenticate()

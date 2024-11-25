@@ -59,13 +59,7 @@ internal class InboxRepository {
                 
                 let inboxData = try await getInbox(
                     inboxData: inboxData,
-                    isRefresh: isRefresh,
-                    onReceivedMessage: { message in
-                        Task { await handler.onInboxMessageReceived(message: message) }
-                    },
-                    onReceivedMessageEvent: { event in
-                        Task { await handler.onInboxEventReceived(event: event) }
-                    }
+                    isRefresh: isRefresh
                 )
                 
                 guard let data = inboxData else {
@@ -90,7 +84,18 @@ internal class InboxRepository {
         }
         
         do {
+            
+            try await connectWebSocket(
+                onReceivedMessage: { message in
+                    Task { await handler.onInboxMessageReceived(message: message) }
+                },
+                onReceivedMessageEvent: { event in
+                    Task { await handler.onInboxEventReceived(event: event) }
+                }
+            )
+            
             return try await inboxDataFetchTask?.value
+            
         } catch {
             return nil
         }
@@ -108,7 +113,7 @@ internal class InboxRepository {
         
     }
     
-    private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool, onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws -> CourierInboxData? {
+    private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool) async throws -> CourierInboxData? {
         
         try Task.checkCancellation()
          
@@ -136,8 +141,6 @@ internal class InboxRepository {
             unreadCountTask
         )
         
-        try await connectWebSocket(onReceivedMessage, onReceivedMessageEvent)
-        
         return CourierInboxData(
             feed: feedRes.toInboxMessageSet(),
             archived: archivedRes.toInboxMessageSet(),
@@ -146,7 +149,7 @@ internal class InboxRepository {
         
     }
     
-    private func connectWebSocket(_ onReceivedMessage: @escaping (InboxMessage) -> Void, _ onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws {
+    private func connectWebSocket(onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws {
         
         guard let client = client else {
             throw CourierError.inboxNotInitialized
