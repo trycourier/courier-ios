@@ -10,7 +10,7 @@ internal class InboxRepository {
     var socket: InboxSocket? = nil
     
 //    private var inboxDataFetchTask: Task<CourierInboxData?, Error>?
-    private var isFetchingInbox = false
+//    private var isFetchingInbox = false
     
     enum Pagination: Int {
         case `default` = 32
@@ -34,7 +34,7 @@ internal class InboxRepository {
     
     func stop(with handler: InboxMutationHandler) async {
         
-        isFetchingInbox = false
+//        isFetchingInbox = false
         
         endPaging()
         
@@ -61,7 +61,7 @@ internal class InboxRepository {
             
 //            try Task.checkCancellation()
             
-            isFetchingInbox = true
+//            isFetchingInbox = true
             
             let inboxData = try await getInbox(
                 inboxData: inboxData,
@@ -81,17 +81,21 @@ internal class InboxRepository {
                 return nil
             }
             
-            if (isFetchingInbox) {
-                await handler.onInboxUpdated(inbox: data)
-                isFetchingInbox = false
-                return data
-            }
+            await handler.onInboxUpdated(inbox: data)
+//            isFetchingInbox = false
+            return data
             
-            return nil
+//            if (isFetchingInbox) {
+//                await handler.onInboxUpdated(inbox: data)
+//                isFetchingInbox = false
+//                return data
+//            }
+//            
+//            return nil
             
         } catch {
             
-            isFetchingInbox = false
+//            isFetchingInbox = false
             
 //            if Task.isCancelled {
 //                return nil
