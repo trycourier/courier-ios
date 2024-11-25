@@ -239,7 +239,7 @@ internal class Tab: UIButton {
         
         tabNameLabel.layoutIfNeeded()
         badgeLabel.layoutIfNeeded()
-        stackView.layoutIfNeeded()
+        stackView.layoutSubviews()
         
     }
     
