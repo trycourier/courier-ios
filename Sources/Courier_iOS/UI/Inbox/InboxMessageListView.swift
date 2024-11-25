@@ -72,6 +72,15 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     // MARK: State
     
+    private var isEmptyState: Bool {
+        get {
+            switch (state) {
+            case .empty: return true
+            default: return false
+            }
+        }
+    }
+    
     private var state: State = .loading {
         didSet {
             // Update UI
@@ -91,7 +100,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 self.infoView.isHidden = true
             case .empty:
                 self.loadingIndicator.stopAnimating()
-                self.tableView.isHidden = true
+                self.tableView.isHidden = false
                 self.infoView.isHidden = false
                 self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
             }
@@ -354,7 +363,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? self.inboxMessages.count : 1
+        return isEmptyState ? 0 : section == 0 ? self.inboxMessages.count : 1
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
