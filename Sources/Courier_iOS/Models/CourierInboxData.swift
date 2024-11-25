@@ -266,17 +266,20 @@ public class CourierInboxData {
     
     private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
         
-        // Find the safe insert index
-        var index = 0
-        while index < messages.count {
-            let message = messages[index]
-            if newMessage.createdAt < message.createdAt {
-                return index
-            }
-            index += 1
-        }
+        var allMessages = messages
         
-        // Put at start in the fallback case
+        // Add the new message to the array
+        allMessages.append(newMessage)
+
+        // Sort the messages by createdAt (descending order)
+        allMessages.sort { $0.createdAt > $1.createdAt }
+
+        // Find the index of the newly inserted message
+        if let index = messages.firstIndex(where: { $0.createdAt == newMessage.createdAt }) {
+            return index
+        }
+
+        // Fallback
         return 0
         
     }
