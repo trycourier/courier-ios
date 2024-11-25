@@ -7,8 +7,6 @@
 
 internal class InboxRepository {
     
-    var socket: InboxSocket? = nil
-    
 //    private var inboxDataFetchTask: Task<CourierInboxData?, Error>?
 //    private var isFetchingInbox = false
     
@@ -41,11 +39,11 @@ internal class InboxRepository {
 //        inboxDataFetchTask?.cancel()
 //        inboxDataFetchTask = nil
         
-        socket?.disconnect()
-        socket = nil
+        InboxSocketManager.shared?.disconnect()
+//        socket = nil
         
-        socket?.receivedMessage = nil
-        socket?.receivedMessageEvent = nil
+        InboxSocketManager.shared?.receivedMessage = nil
+        InboxSocketManager.shared?.receivedMessageEvent = nil
         
         await handler.onInboxKilled()
         
@@ -206,20 +204,20 @@ internal class InboxRepository {
             throw CourierError.inboxNotInitialized
         }
         
-        self.socket?.disconnect()
+        InboxSocketManager.shared?.disconnect()
         
-        // Create the socket
-        self.socket = InboxSocketManager.getSocketInstance(
+        // Create the socket if needed
+        InboxSocketManager.getSocketInstance(
             options: client.options
         )
         
         // Listen to events
-        self.socket?.receivedMessage = onReceivedMessage
-        self.socket?.receivedMessageEvent = onReceivedMessageEvent
+        InboxSocketManager.shared?.receivedMessage = onReceivedMessage
+        InboxSocketManager.shared?.receivedMessageEvent = onReceivedMessageEvent
         
         // Connect the socket subscription
-        try await self.socket?.connect()
-        try await self.socket?.sendSubscribe()
+        try await InboxSocketManager.shared?.connect()
+        try await InboxSocketManager.shared?.sendSubscribe()
         
     }
     

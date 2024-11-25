@@ -11,18 +11,18 @@ import Foundation
 
 internal class InboxSocketManager {
 
-    private static var socketInstance: InboxSocket?
+    public static var shared: InboxSocket?
 
-    static func getSocketInstance(options: CourierClient.Options) -> InboxSocket {
-        if socketInstance == nil {
-            socketInstance = InboxSocket(options: options)
+    @discardableResult static func getSocketInstance(options: CourierClient.Options) -> InboxSocket {
+        if shared == nil {
+            shared = InboxSocket(options: options)
         }
-        return socketInstance!
+        return shared!
     }
 
     static func closeSocket() {
-        socketInstance?.disconnect()
-        socketInstance = nil
+        shared?.disconnect()
+        shared = nil
     }
     
 }
