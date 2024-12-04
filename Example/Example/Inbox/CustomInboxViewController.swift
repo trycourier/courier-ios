@@ -65,10 +65,17 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
                 self.setState(.error, error: String(describing: error))
             },
             onFeedChanged: { inbox in
-                self.setState(inbox.messages.isEmpty ? .empty : .content)
                 self.canPaginate = inbox.canPaginate
-                self.inboxMessages = inbox.messages
-                self.tableView.reloadData()
+                self.refreshMessages()
+            },
+            onMessageChanged: { feed, message, index in
+                self.refreshMessages()
+            },
+            onMessageAdded: { feed, message, index in
+                self.refreshMessages()
+            },
+            onMessageRemoved: { feed, message, index in
+                self.refreshMessages()
             }
         )
 
@@ -79,6 +86,14 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
             stateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
+    }
+    
+    private func refreshMessages() {
+        Task {
+            self.inboxMessages = await Courier.shared.feedMessages
+            self.setState(self.inboxMessages.isEmpty ? .empty : .content)
+            self.tableView.reloadData()
+        }
     }
     
     @objc private func onPullRefresh() {

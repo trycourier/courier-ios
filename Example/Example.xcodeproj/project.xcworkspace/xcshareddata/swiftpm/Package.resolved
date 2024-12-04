@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "master",
-        "revision" : "442351d1ccb6eb4d0504fdf8fa4a58cca40e872a"
+        "branch" : "bug/template-socket-fallback",
+        "revision" : "8df8621dbf6c39a1abe65a7cf2b3b30089b0376b"
       }
     },
     {
