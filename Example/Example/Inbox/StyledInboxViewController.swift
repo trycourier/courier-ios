@@ -214,6 +214,9 @@ class StyledInboxViewController: UIViewController {
                     }
                 }
             },
+            didLongPressInboxMessageAtIndex: { message, index in
+               
+            },
             didClickInboxActionForMessageAtIndex: { action, message, index in
                 self.showCodeAlert(title: "Inbox Action Click", code: action.toJson() ?? "")
             },

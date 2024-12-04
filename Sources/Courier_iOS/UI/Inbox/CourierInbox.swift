@@ -117,6 +117,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
+        didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
@@ -130,6 +131,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         super.init(frame: .zero)
         
         self.didClickInboxMessageAtIndex = didClickInboxMessageAtIndex
+        self.didLongPressInboxMessageAtIndex = didLongPressInboxMessageAtIndex
         self.didClickInboxActionForMessageAtIndex = didClickInboxActionForMessageAtIndex
         self.didScrollInbox = didScrollInbox
         
