@@ -379,18 +379,20 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 let index = indexPath.row
                 let message = inboxMessages[index]
                 
-                cell.setMessage(message, theme) { [weak self] inboxAction in
-                    self?.didClickInboxActionForMessageAtIndex(
-                        inboxAction,
-                        message,
-                        index
-                    )
-                }
-                
-                // Add a long press gesture to the cell
-                let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
-                cell.addGestureRecognizer(longPressGesture)
-                longPressGesture.view?.tag = index
+                cell.setMessage(message, theme,
+                    onActionClick: { [weak self] inboxAction in
+                        self?.didClickInboxActionForMessageAtIndex(
+                            inboxAction,
+                            message,
+                            index
+                        )
+                    },
+                    onLongPress: { [weak self] inboxMessage in
+                        Task {
+                            await self?.handleLongPress(for: inboxMessage)
+                        }
+                    }
+                )
                 
                 return cell
             }
@@ -406,6 +408,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         return UITableViewCell()
     }
     
+    private func handleLongPress(for message: InboxMessage) async {
+        let messages = self.feed == .feed ? await Courier.shared.feedMessages : await Courier.shared.archivedMessages
+        if let index = messages.firstIndex(where: { $0.messageId == message.messageId }) {
+            self.didLongPressInboxMessageAtIndex(message, index)
+        }
+    }
+    
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let indexToPageAt = self.inboxMessages.count - Int(InboxRepository.Pagination.default.rawValue / 3)
         
@@ -419,18 +428,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 }
             }
         }
-    }
-    
-    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
-        
-        if gestureRecognizer.state == .began {
-            if let cell = gestureRecognizer.view as? CourierInboxTableViewCell {
-                let index = cell.tag
-                let message = inboxMessages[index]
-                self.didLongPressInboxMessageAtIndex(message, index)
-            }
-        }
-        
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

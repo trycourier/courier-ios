@@ -12,6 +12,10 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal static let id = "CourierInboxTableViewCell"
     
+    private lazy var longPressGesture: UILongPressGestureRecognizer = {
+        return UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+    }()
+    
     private let margin = Theme.margin / 2
     
     private var horizontal: CGFloat {
@@ -104,6 +108,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private var inboxMessage: InboxMessage?
     private var onActionClick: ((InboxAction) -> Void)?
+    private var onLongPress: ((InboxMessage) -> Void)?
     private var theme: CourierInboxTheme?
     
     private var containerLeading: NSLayoutConstraint?
@@ -172,14 +177,27 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
     }
     
-    internal func setMessage(_ message: InboxMessage, _ theme: CourierInboxTheme, onActionClick: @escaping (InboxAction) -> Void) {
+    internal func setMessage(_ message: InboxMessage, _ theme: CourierInboxTheme, onActionClick: @escaping (InboxAction) -> Void, onLongPress: @escaping (InboxMessage) -> Void) {
         
         self.theme = theme
         self.inboxMessage = message
         self.onActionClick = onActionClick
+        self.onLongPress = onLongPress
         
         refreshMessage(message)
         
+        // Add a long press gesture to the cell
+        contentView.removeGestureRecognizer(longPressGesture)
+        contentView.addGestureRecognizer(longPressGesture)
+        
+    }
+    
+    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        if let message = self.inboxMessage {
+            if gestureRecognizer.state == .began {
+                self.onLongPress?(message)
+            }
+        }
     }
     
     func refreshMessage(_ message: InboxMessage) {

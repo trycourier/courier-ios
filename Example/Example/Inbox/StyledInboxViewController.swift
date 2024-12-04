@@ -215,7 +215,7 @@ class StyledInboxViewController: UIViewController {
                 }
             },
             didLongPressInboxMessageAtIndex: { message, index in
-               
+                self.showActionSheet(message: message)
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
                 self.showCodeAlert(title: "Inbox Action Click", code: action.toJson() ?? "")
@@ -225,6 +225,42 @@ class StyledInboxViewController: UIViewController {
             }
         )
     }()
+    
+    private func showActionSheet(message: InboxMessage) {
+        
+        // Create the action sheet
+        let actionSheet = UIAlertController(title: message.messageId, message: nil, preferredStyle: .actionSheet)
+        
+        // Add the first action
+        let action1 = UIAlertAction(title: message.isRead ? "Unread Message" : "Read Message", style: .default) { _ in
+            Task {
+                message.isRead ? try await Courier.shared.unreadMessage(message.messageId) : try await Courier.shared.readMessage(message.messageId)
+            }
+        }
+        
+        // Add the second action
+        let action2 = UIAlertAction(title: "Archive Message", style: .default) { _ in
+            Task {
+                try await Courier.shared.archiveMessage(message.messageId)
+            }
+        }
+        
+        // Add the cancel action
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            
+        }
+        
+        // Add actions to the action sheet
+        actionSheet.addAction(action1)
+        actionSheet.addAction(action2)
+        actionSheet.addAction(cancelAction)
+        
+        // Present the action sheet
+        if let topController = UIApplication.shared.keyWindow?.rootViewController {
+            topController.present(actionSheet, animated: true)
+        }
+        
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
