@@ -69,9 +69,6 @@ public class InboxSocket: CourierSocket {
             
             let decoder = JSONDecoder()
             let json = data.data(using: .utf8) ?? Data()
-            
-            // Gets the message payload type
-            // Will default to message because template messages cause issues
             let payload = try decoder.decode(SocketPayload.self, from: json)
             
             switch (payload.type) {

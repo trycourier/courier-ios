@@ -659,7 +659,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "bug/template-socket-fallback";
+				branch = master;
 				kind = branch;
 			};
 		};
