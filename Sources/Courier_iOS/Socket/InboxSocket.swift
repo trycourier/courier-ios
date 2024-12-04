@@ -39,7 +39,6 @@ public class InboxSocket: CourierSocket {
     
     struct SocketPayload: Codable {
         let type: PayloadType
-        let event: InboxEventType?
     }
     
     public struct MessageEvent: Codable {
@@ -73,9 +72,9 @@ public class InboxSocket: CourierSocket {
             
             // Gets the message payload type
             // Will default to message because template messages cause issues
-            let payloadType = getSocketPayloadType(decoder: decoder, json: json)
+            let payload = try decoder.decode(SocketPayload.self, from: json)
             
-            switch (payloadType) {
+            switch (payload.type) {
             case .event:
                 let event = try decoder.decode(MessageEvent.self, from: json)
                 receivedMessageEvent?(event)
@@ -91,15 +90,6 @@ public class InboxSocket: CourierSocket {
             
         }
         
-    }
-    
-    private func getSocketPayloadType(decoder: JSONDecoder, json: Data) -> PayloadType {
-        do {
-            let payload = try decoder.decode(SocketPayload.self, from: json)
-            return payload.type
-        } catch {
-            return .message
-        }
     }
     
     public func sendSubscribe(version: Int = 5) async throws {
