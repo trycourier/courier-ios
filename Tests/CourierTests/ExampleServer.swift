@@ -103,6 +103,69 @@ class ExampleServer {
         })
         
     }
+    
+    static func sendTemplateTest(authKey: String, userId: String, templateId: String) async throws -> String {
+        
+        return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
+            
+            let url = URL(string: "https://api.courier.com/send")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
+            
+            request.httpBody = [
+                "message": [
+                    "to": [
+                        "user_id": userId
+                    ],
+                    "template": templateId,
+                    "data": [
+                        "real_name": "Anakin Skywalker",
+                        "nickname": "Darth Vader",
+                        "category": "villain",
+                        "children": [
+                            [
+                                "id": "asdf",
+                                "name": "Dave",
+                                "children": [
+                                    [
+                                        "id": "asdf",
+                                        "name": "Tina"
+                                    ],
+                                    [
+                                        "id": "asdf",
+                                        "name": "Tiffany"
+                                    ]
+                                ]
+                            ],
+                            [
+                                "id": "asdf",
+                                "name": "Leia",
+                                "optional": false,
+                            ],
+                            [
+                                "id": 1,
+                                "name": "Chuck",
+                                "optional": false,
+                            ],
+                        ]
+                    ]
+                ]
+            ].toJson()
+            
+            let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                let json = try? JSONSerialization.jsonObject(with: data ?? Data(), options: []) as? [String: Any]
+                let requestId = json?["requestId"] as? String ?? "Error"
+                continuation.resume(returning: requestId)
+            }
+            
+            task.resume()
+            
+        })
+        
+    }
 
     internal func generateJwt(authKey: String, userId: String) async throws -> String {
 

@@ -33,6 +33,15 @@ class InboxClientTests: XCTestCase {
         )
     }
     
+    @discardableResult
+    private func sendMessageTemplate(userId: String? = nil) async throws -> String {
+        return try await ExampleServer.sendTemplateTest(
+            authKey: Env.COURIER_AUTH_KEY,
+            userId: userId ?? client.options.userId,
+            templateId: Env.COURIER_MESSAGE_TEMPLATE_ID
+        )
+    }
+    
     func testGetInboxMessage() async throws {
 
         let messageId = try await sendMessage()
@@ -151,6 +160,86 @@ class InboxClientTests: XCTestCase {
         
         try await client.inbox.readAll()
 
+    }
+    
+    func testContentMessage() async throws {
+        
+        let userId = UUID().uuidString
+        var caughtError: Error?
+        var hold = true
+        
+        let client = try await ClientBuilder.build(userId: userId)
+        
+        let socket = client.inbox.socket
+
+        socket.onError = { error in
+            hold = false
+            caughtError = error
+        }
+
+        socket.receivedMessageEvent = { event in
+            print(event)
+        }
+
+        socket.receivedMessage = { message in
+            print("socket.receivedMessage")
+            print(message)
+            hold = false
+        }
+        
+        try await socket.connect()
+        try await socket.sendSubscribe()
+        
+        try await sendMessage(userId: userId)
+        
+        while hold {}
+        
+        socket.disconnect()
+        
+        if let error = caughtError {
+            throw error
+        }
+        
+    }
+    
+    func testTemplateMessage() async throws {
+        
+        let userId = UUID().uuidString
+        var caughtError: Error?
+        var hold = true
+        
+        let client = try await ClientBuilder.build(userId: userId)
+        
+        let socket = client.inbox.socket
+
+        socket.onError = { error in
+            hold = false
+            caughtError = error
+        }
+
+        socket.receivedMessageEvent = { event in
+            print(event)
+        }
+
+        socket.receivedMessage = { message in
+            print("socket.receivedMessage")
+            print(message)
+            hold = false
+        }
+        
+        try await socket.connect()
+        try await socket.sendSubscribe()
+        
+        try await sendMessageTemplate(userId: userId)
+        
+        while hold {}
+        
+        socket.disconnect()
+        
+        if let error = caughtError {
+            throw error
+        }
+        
     }
     
     func testMultipleSocketsOnSingleUser() async throws {

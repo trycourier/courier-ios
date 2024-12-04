@@ -70,29 +70,36 @@ public class InboxSocket: CourierSocket {
             
             let decoder = JSONDecoder()
             let json = data.data(using: .utf8) ?? Data()
-            let payload = try decoder.decode(SocketPayload.self, from: json)
             
-            switch (payload.type) {
+            // Gets the message payload type
+            // Will default to message because template messages cause issues
+            let payloadType = getSocketPayloadType(decoder: decoder, json: json)
+            
+            switch (payloadType) {
             case .event:
-                
                 let event = try decoder.decode(MessageEvent.self, from: json)
                 receivedMessageEvent?(event)
-                
             case .message:
-                
                 let message = try decoder.decode(InboxMessage.self, from: json)
                 receivedMessage?(message)
-                
             }
             
         } catch {
             
             options.error(error.localizedDescription)
-            
             self.onError?(error)
             
         }
         
+    }
+    
+    private func getSocketPayloadType(decoder: JSONDecoder, json: Data) -> PayloadType {
+        do {
+            let payload = try decoder.decode(SocketPayload.self, from: json)
+            return payload.type
+        } catch {
+            return .message
+        }
     }
     
     public func sendSubscribe(version: Int = 5) async throws {
