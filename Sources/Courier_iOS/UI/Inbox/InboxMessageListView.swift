@@ -19,6 +19,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // MARK: Interaction
     
     private let didClickInboxMessageAtIndex: (InboxMessage, Int) -> Void
+    private let didLongPressInboxMessageAtIndex: (InboxMessage, Int) -> Void
     private let didClickInboxActionForMessageAtIndex: (InboxAction, InboxMessage, Int) -> Void
     private let didScrollInbox: (UIScrollView) -> Void
     
@@ -112,11 +113,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     public init(
         feed: InboxMessageFeed,
         didClickInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
-        didClickInboxActionForMessageAtIndex: @escaping (InboxAction, InboxMessage, Int) -> Void,
+        didLongPressInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
+        didClickInboxActionForMessageAtIndex: @escaping (_ action: InboxAction, _ message: InboxMessage, _ index: Int) -> Void,
         didScrollInbox: @escaping (UIScrollView) -> Void
     ) {
         self.feed = feed
         self.didClickInboxMessageAtIndex = didClickInboxMessageAtIndex
+        self.didLongPressInboxMessageAtIndex = didLongPressInboxMessageAtIndex
         self.didClickInboxActionForMessageAtIndex = didClickInboxActionForMessageAtIndex
         self.didScrollInbox = didScrollInbox
         super.init(frame: .zero)
@@ -126,6 +129,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     override init(frame: CGRect) {
         self.feed = .feed
         self.didClickInboxMessageAtIndex = { _, _ in }
+        self.didLongPressInboxMessageAtIndex = { _, _ in }
         self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
         self.didScrollInbox = { _ in }
         super.init(frame: frame)
@@ -135,6 +139,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     public required init?(coder: NSCoder) {
         self.feed = .feed
         self.didClickInboxMessageAtIndex = { _, _ in }
+        self.didLongPressInboxMessageAtIndex = { _, _ in }
         self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
         self.didScrollInbox = { _ in }
         super.init(coder: coder)
@@ -382,8 +387,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                     )
                 }
                 
+                // Add a long press gesture to the cell
+                let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+                cell.addGestureRecognizer(longPressGesture)
+                longPressGesture.view?.tag = index
+                
                 return cell
             }
+            
         } else {
             // Pagination cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell {
@@ -410,8 +421,21 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
     }
     
+    @objc private func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        
+        if gestureRecognizer.state == .began {
+            if let cell = gestureRecognizer.view as? CourierInboxTableViewCell {
+                let index = cell.tag
+                let message = inboxMessages[index]
+                self.didLongPressInboxMessageAtIndex(message, index)
+            }
+        }
+        
+    }
+    
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.section == 0) {
+            
             // Click the cell
             let index = indexPath.row
             let message = self.inboxMessages[index]
@@ -424,6 +448,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             
             // Deselect the row
             tableView.deselectRow(at: indexPath, animated: true)
+            
         }
     }
     

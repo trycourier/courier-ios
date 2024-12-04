@@ -25,6 +25,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     // MARK: Interaction
     
     public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
+    public var didLongPressInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
     public var didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil
     public var didScrollInbox: ((UIScrollView) -> Void)? = nil
     
@@ -242,6 +243,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             feed: feed,
             didClickInboxMessageAtIndex: { [weak self] message, index in
                 self?.didClickInboxMessageAtIndex?(message, index)
+            },
+            didLongPressInboxMessageAtIndex: { [weak self] message, index in
+                self?.didLongPressInboxMessageAtIndex?(message, index)
             },
             didClickInboxActionForMessageAtIndex: { [weak self] action, message, index in
                 self?.didClickInboxActionForMessageAtIndex?(action, message, index)
