@@ -5,10 +5,9 @@
 //  Created by Michael Miller on 10/2/24.
 //
 
-internal class InboxRepository {
+internal actor InboxRepository {
     
-//    private var inboxDataFetchTask: Task<CourierInboxData?, Error>?
-//    private var isFetchingInbox = false
+    private let inboxSocketManager = InboxSocketManager()
     
     enum Pagination: Int {
         case `default` = 32
@@ -31,22 +30,9 @@ internal class InboxRepository {
     }
     
     func stop(with handler: InboxMutationHandler) async {
-        
-//        isFetchingInbox = false
-        
         endPaging()
-        
-//        inboxDataFetchTask?.cancel()
-//        inboxDataFetchTask = nil
-        
-        InboxSocketManager.shared?.disconnect()
-//        socket = nil
-        
-        InboxSocketManager.shared?.receivedMessage = nil
-        InboxSocketManager.shared?.receivedMessageEvent = nil
-        
+        await inboxSocketManager.closeSocket()
         await handler.onInboxKilled()
-        
     }
     
     @discardableResult func get(with handler: InboxMutationHandler, inboxData: CourierInboxData?, isRefresh: Bool) async -> CourierInboxData? {
@@ -56,10 +42,6 @@ internal class InboxRepository {
         await handler.onInboxReload(isRefresh: isRefresh)
         
         do {
-            
-//            try Task.checkCancellation()
-            
-//            isFetchingInbox = true
             
             let inboxData = try await getInbox(
                 inboxData: inboxData,
@@ -76,78 +58,16 @@ internal class InboxRepository {
             )
             
             await handler.onInboxUpdated(inbox: inboxData)
-//            isFetchingInbox = false
+
             return inboxData
             
-//            if (isFetchingInbox) {
-//                await handler.onInboxUpdated(inbox: data)
-//                isFetchingInbox = false
-//                return data
-//            }
-//            
-//            return nil
-            
         } catch {
-            
-//            isFetchingInbox = false
-            
-//            if Task.isCancelled {
-//                return nil
-//            }
-            
-            print(error.localizedDescription)
             
             await handler.onInboxError(with: error)
             
             return nil
             
         }
-        
-//        inboxDataFetchTask = Task {
-//            do {
-//                
-//                let inboxData = try await getInbox(
-//                    inboxData: inboxData,
-//                    isRefresh: isRefresh
-//                )
-//                
-//                guard let data = inboxData else {
-//                    return nil
-//                }
-//                
-//                await handler.onInboxUpdated(inbox: data)
-//                
-//                return data
-//                
-//            } catch {
-//                
-//                if Task.isCancelled {
-//                    return nil
-//                }
-//                
-//                await handler.onInboxError(with: error)
-//                
-//                return nil
-//                
-//            }
-//        }
-        
-//        do {
-//            
-//            try await connectWebSocket(
-//                onReceivedMessage: { message in
-//                    Task { await handler.onInboxMessageReceived(message: message) }
-//                },
-//                onReceivedMessageEvent: { event in
-//                    Task { await handler.onInboxEventReceived(event: event) }
-//                }
-//            )
-//            
-//            return try await inboxDataFetchTask?.value
-//            
-//        } catch {
-//            return nil
-//        }
         
     }
     
@@ -163,8 +83,6 @@ internal class InboxRepository {
     }
     
     private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool) async throws -> CourierInboxData {
-        
-//        try Task.checkCancellation()
          
         if !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
@@ -205,7 +123,7 @@ internal class InboxRepository {
         }
         
         // Create the socket if needed
-        let socket = InboxSocketManager.updateInstance(
+        let socket = await inboxSocketManager.updateInstance(
             options: client.options
         )
         

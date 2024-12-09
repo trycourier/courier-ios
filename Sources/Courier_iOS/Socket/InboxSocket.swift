@@ -9,19 +9,25 @@ import Foundation
 
 // MARK: Inbox Socket Singleton
 
-internal class InboxSocketManager {
+internal actor InboxSocketManager {
 
-    public static var shared: InboxSocket?
+    private var shared: InboxSocket?
 
-    @discardableResult static func updateInstance(options: CourierClient.Options) -> InboxSocket {
-        shared?.disconnect()
+    @discardableResult func updateInstance(options: CourierClient.Options) -> InboxSocket {
+        closeSocket()
         shared = InboxSocket(options: options)
         return shared!
     }
 
-    static func closeSocket() {
+    func closeSocket() {
         shared?.disconnect()
+        shared?.receivedMessage = nil
+        shared?.receivedMessageEvent = nil
         shared = nil
+    }
+    
+    func getSharedInstance() -> InboxSocket? {
+        return shared
     }
     
 }

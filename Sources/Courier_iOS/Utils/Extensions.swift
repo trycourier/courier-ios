@@ -285,11 +285,31 @@ public extension [AnyHashable : Any] {
             return
         }
         
+        await trackingUrl.track(with: event)
+        
+    }
+    
+    var trackingUrl: String? {
+        
+        guard let trackingUrl = self["trackingUrl"] as? String else {
+            return nil
+        }
+        
+        return trackingUrl
+        
+    }
+    
+}
+
+public extension String {
+    
+    func track(with event: CourierTrackingEvent) async {
+        
         let client = CourierClient.default
         
         do {
             try await client.tracking.postTrackingUrl(
-                url: trackingUrl,
+                url: self,
                 event: event
             )
         } catch {

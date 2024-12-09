@@ -47,7 +47,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
 
         Task {
             let message = notification.request.content.userInfo
-            await message.trackMessage(event: .delivered)
+            await message.trackingUrl?.track(with: .delivered)
             let presentationOptions = pushNotificationDeliveredInForeground(message: message)
             completionHandler(presentationOptions)
         }
@@ -58,7 +58,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
         
         Task {
             let message = response.notification.request.content.userInfo
-            await message.trackMessage(event: .clicked)
+            await message.trackingUrl?.track(with: .clicked)
             pushNotificationClicked(message: message)
             completionHandler()
         }

@@ -150,7 +150,7 @@ public class InboxMessage: Codable {
         
         // Custom decoding logic for data dictionary
         if let dataDict = try? container.decodeIfPresent([String: AnyCodable].self, forKey: .data) {
-            self.data = dataDict.mapValues { $0.value }
+            self.data = dataDict.compactMapValues { $0.value }
         } else {
             self.data = nil
         }
