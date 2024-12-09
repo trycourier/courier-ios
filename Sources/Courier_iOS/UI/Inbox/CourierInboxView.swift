@@ -18,6 +18,7 @@ public struct CourierInboxView: UIViewRepresentable {
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
+        didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil
     ) {
@@ -26,6 +27,7 @@ public struct CourierInboxView: UIViewRepresentable {
             pagingDuration: pagingDuration,
             darkTheme: darkTheme,
             didClickInboxMessageAtIndex: didClickInboxMessageAtIndex,
+            didLongPressInboxMessageAtIndex: didLongPressInboxMessageAtIndex,
             didClickInboxActionForMessageAtIndex: didClickInboxActionForMessageAtIndex,
             didScrollInbox: didScrollInbox
         )
