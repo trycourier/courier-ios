@@ -25,6 +25,7 @@ public struct CourierInboxView: UIViewRepresentable {
         self.inbox = CourierInbox(
             canSwipePages: canSwipePages,
             pagingDuration: pagingDuration,
+            lightTheme: lightTheme,
             darkTheme: darkTheme,
             didClickInboxMessageAtIndex: didClickInboxMessageAtIndex,
             didLongPressInboxMessageAtIndex: didLongPressInboxMessageAtIndex,
