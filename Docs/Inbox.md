@@ -43,7 +43,7 @@ An in-app notification center list you can use to notify your users. Allows you 
 
 If you are using JWT authentication, be sure to enable JWT support on the Courier Inbox Provider [`here`](https://app.courier.com/integrations/catalog/courier).
 
-<img width="385" alt="Screenshot 2024-12-09 at 11 19 31 AM" src="https://github.com/user-attachments/assets/71c945f3-9fa0-4736-ae0d-a4760cb49220">
+<img width="385" alt="Screenshot 2024-12-09 at 11 19 31 AM" src="https://github.com/user-attachments/assets/71c945f3-9fa0-4736-ae0d-a4760cb49220.png">
                                      
 ## Usage
 
@@ -78,7 +78,7 @@ If you are using JWT authentication, be sure to enable JWT support on the Courie
 
 The default `CourierInbox` styles.
 
-<img width="390" alt="default-inbox-styles" src="\https://github.com/user-attachments/assets/6c774886-6273-41a4-81b5-978295d1b8ca">
+<img width="390" alt="default-inbox-styles" src="\https://github.com/user-attachments/assets/6c774886-6273-41a4-81b5-978295d1b8ca.png">
 
 &emsp;
 
