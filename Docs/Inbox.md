@@ -39,17 +39,13 @@ An in-app notification center list you can use to notify your users. Allows you 
     </tbody>
 </table>
 
-&emsp;
-
-# JWT Authentication
+## JWT Authentication
 
 If you are using JWT authentication, be sure to enable JWT support on the Courier Inbox Provider [`here`](https://app.courier.com/integrations/catalog/courier).
 
 <img width="385" alt="Screenshot 2024-12-09 at 11 19 31 AM" src="https://github.com/user-attachments/assets/71c945f3-9fa0-4736-ae0d-a4760cb49220">
-
-&emsp;
                                      
-# Usage
+## Usage
 
 `CourierInbox` works with all native iOS UI frameworks.
 
@@ -82,17 +78,21 @@ If you are using JWT authentication, be sure to enable JWT support on the Courie
 
 The default `CourierInbox` styles.
 
-<img width="810" alt="default-inbox-styles" src="https://user-images.githubusercontent.com/6370613/228881237-97534448-e8af-46e4-91de-d3423e95dc14.png">
+<img width="390" alt="default-inbox-styles" src="\https://github.com/user-attachments/assets/6c774886-6273-41a4-81b5-978295d1b8ca">
+
+&emsp;
+
+### SwiftUI
 
 ```swift
 import Courier_iOS
-
-// UIKit
-
-// Create the view
-let courierInbox = CourierInbox(
+CourierInboxView(
     didClickInboxMessageAtIndex: { message, index in
         message.isRead ? message.markAsUnread() : message.markAsRead()
+        print(index, message)
+    },
+    didLongPressInboxMessageAtIndex: { message, index in
+        message.markAsArchived()
         print(index, message)
     },
     didClickInboxActionForMessageAtIndex: { action, message, index in
@@ -102,36 +102,27 @@ let courierInbox = CourierInbox(
         print(scrollView.contentOffset.y)
     }
 )
+```
 
-// Add the view to your UI
-courierInbox.translatesAutoresizingMaskIntoConstraints = false
-view.addSubview(courierInbox)
+### UIKit
 
-// Constrain the view how you'd like
-NSLayoutConstraint.activate([
-    courierInbox.topAnchor.constraint(equalTo: view.topAnchor),
-    courierInbox.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-    courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-    courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-])
-
-// SwiftUI
-
-var body: some View {
-    CourierInboxView(
-        didClickInboxMessageAtIndex: { message, index in
-            message.isRead ? message.markAsUnread() : message.markAsRead()
-            print(index, message)
-        },
-        didClickInboxActionForMessageAtIndex: { action, message, index in
-            print(action, message, index)
-        },
-        didScrollInbox: { scrollView in
-            print(scrollView.contentOffset.y)
-        }
-    )
-}
-
+```swift
+let courierInbox = CourierInbox(
+    didClickInboxMessageAtIndex: { message, index in
+        message.isRead ? message.markAsUnread() : message.markAsRead()
+        print(index, message)
+    },
+    didLongPressInboxMessageAtIndex: { message, index in
+        message.markAsArchived()
+        print(index, message)
+    },
+    didClickInboxActionForMessageAtIndex: { action, message, index in
+        print(action, message, index)
+    },
+    didScrollInbox: { scrollView in
+        print(scrollView.contentOffset.y)
+    }
+)
 ```
 
 &emsp;
@@ -140,130 +131,159 @@ var body: some View {
 
 The styles you can use to quickly customize the `CourierInbox`.
 
-<img width="431" alt="styled-inbox-styles" src="https://github.com/trycourier/courier-ios/assets/6370613/8170115f-7384-45d1-891c-dc7501db3827">
+<img width="390" alt="styled-inbox-styles" src="https://github.com/user-attachments/assets/27cd25e1-c290-4671-b486-69502b683a30">
+
+&emsp;
+
+```swift
+func getTheme() -> CourierInboxTheme {
+    let whiteColor = UIColor.white
+    let blackColor = UIColor.black
+    let blackLightColor = UIColor.black.withAlphaComponent(0.5)
+    let primaryColor = UIColor(red: 102/255, green: 80/255, blue: 164/255, alpha: 1)
+    let primaryLightColor = UIColor(red: 98/255, green: 91/255, blue: 113/255, alpha: 1)
+    let font = UIFont(name: "Avenir-Medium", size: 18)
+
+    return CourierInboxTheme(
+        tabIndicatorColor: primaryColor,
+        tabStyle: CourierStyles.Inbox.TabStyle(
+            selected: CourierStyles.Inbox.TabItemStyle(
+                font: CourierStyles.Font(
+                    font: font!,
+                    color: primaryColor
+                ),
+                indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                    font: CourierStyles.Font(
+                        font: font!,
+                        color: whiteColor
+                    ),
+                    color: primaryColor
+                )
+            ),
+            unselected: CourierStyles.Inbox.TabItemStyle(
+                font: CourierStyles.Font(
+                    font: font!,
+                    color: blackLightColor
+                ),
+                indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                    font: CourierStyles.Font(
+                        font: font!,
+                        color: whiteColor
+                    ),
+                    color: blackLightColor
+                )
+            )
+        ),
+        readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle(
+            read: CourierStyles.Inbox.SwipeActionStyle(
+                icon: UIImage(systemName: "envelope.open.fill"),
+                color: primaryColor
+            ),
+            unread: CourierStyles.Inbox.SwipeActionStyle(
+                icon: UIImage(systemName: "envelope.fill"),
+                color: primaryLightColor
+            )
+        ),
+        archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle(
+            archive: CourierStyles.Inbox.SwipeActionStyle(
+                icon: UIImage(systemName: "archivebox.fill"),
+                color: primaryColor
+            )
+        ),
+        unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
+            indicator: .dot,
+            color: primaryColor
+        ),
+        titleStyle: CourierStyles.Inbox.TextStyle(
+            unread: CourierStyles.Font(
+                font: font!,
+                color: blackColor
+            ),
+            read: CourierStyles.Font(
+                font: font!,
+                color: blackColor
+            )
+        ),
+        timeStyle: CourierStyles.Inbox.TextStyle(
+            unread: CourierStyles.Font(
+                font: font!,
+                color: blackColor
+            ),
+            read: CourierStyles.Font(
+                font: font!,
+                color: blackColor
+            )
+        ),
+        bodyStyle: CourierStyles.Inbox.TextStyle(
+            unread: CourierStyles.Font(
+                font: font!,
+                color: blackLightColor
+            ),
+            read: CourierStyles.Font(
+                font: font!,
+                color: blackLightColor
+            )
+        ),
+        buttonStyle: CourierStyles.Inbox.ButtonStyle(
+            unread: CourierStyles.Button(
+                font: CourierStyles.Font(
+                    font: font!,
+                    color: whiteColor
+                ),
+                backgroundColor: primaryColor,
+                cornerRadius: 100
+            ),
+            read: CourierStyles.Button(
+                font: CourierStyles.Font(
+                    font: font!,
+                    color: whiteColor
+                ),
+                backgroundColor: primaryColor,
+                cornerRadius: 100
+            )
+        ),
+        cellStyle: CourierStyles.Cell(
+            separatorStyle: .singleLine,
+            separatorInsets: .zero
+        ),
+        infoViewStyle: CourierStyles.InfoViewStyle(
+            font: CourierStyles.Font(
+                font: font!,
+                color: blackColor
+            ),
+            button: CourierStyles.Button(
+                font: CourierStyles.Font(
+                    font: font!,
+                    color: whiteColor
+                ),
+                backgroundColor: primaryColor,
+                cornerRadius: 100
+            )
+        )
+    )
+}
+```
+
+### SwiftUI
 
 ```swift
 import Courier_iOS
-
-let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
-let primaryColor = UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
-let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
-
-// Theme object containing all the styles you want to apply 
-let inboxTheme = CourierInboxTheme(
-    brandId: "7S9R...3Q1M", // Optional. Theme colors will override this brand.
-    messageAnimationStyle: .fade,
-    unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
-        indicator: .dot,
-        color: secondaryColor
-    ),
-    titleStyle: CourierStyles.Inbox.TextStyle(
-        unread: CourierStyles.Font(
-            font: UIFont(name: "Avenir Black", size: 20)!,
-            color: textColor
-        ),
-        read: CourierStyles.Font(
-            font: UIFont(name: "Avenir Black", size: 20)!,
-            color: textColor
-        )
-    ),
-    timeStyle: CourierStyles.Inbox.TextStyle(
-        unread: CourierStyles.Font(
-            font: UIFont(name: "Avenir Medium", size: 18)!,
-            color: textColor
-        ),
-        read: CourierStyles.Font(
-            font: UIFont(name: "Avenir Medium", size: 18)!,
-            color: textColor
-        )
-    ),
-    bodyStyle: CourierStyles.Inbox.TextStyle(
-        unread: CourierStyles.Font(
-            font: UIFont(name: "Avenir Medium", size: 18)!,
-            color: textColor
-        ),
-        read: CourierStyles.Font(
-            font: UIFont(name: "Avenir Medium", size: 18)!,
-            color: textColor
-        )
-    ),
-    buttonStyle: CourierStyles.Inbox.ButtonStyle(
-        unread: CourierStyles.Button(
-            font: CourierStyles.Font(
-                font: UIFont(name: "Avenir Black", size: 16)!,
-                color: .white
-            ),
-            backgroundColor: primaryColor,
-            cornerRadius: 100
-        ),
-        read: CourierStyles.Button(
-            font: CourierStyles.Font(
-                font: UIFont(name: "Avenir Black", size: 16)!,
-                color: .white
-            ),
-            backgroundColor: primaryColor,
-            cornerRadius: 100
-        )
-    ),
-    cellStyle: CourierStyles.Cell(
-        separatorStyle: .singleLine,
-        separatorInsets: .zero
-    ),
-    infoViewStyle: CourierStyles.Inbox.InfoViewStyle(
-        font: CourierStyles.Font(
-            font: UIFont(name: "Avenir Medium", size: 20)!,
-            color: textColor
-        ),
-        button: CourierStyles.Button(
-            font: CourierStyles.Font(
-                font: UIFont(name: "Avenir Black", size: 16)!,
-                color: .white
-            ),
-            backgroundColor: primaryColor,
-            cornerRadius: 100
-        )
-    )
+CourierInboxView(
+    canSwipePages: true,
+    lightTheme: getTheme(),
+    darkTheme: getTheme(),
+    ..
 )
+```
 
-// UIKit
-
-// Pass the theme to the view
+```swift
+import Courier_iOS
 let courierInbox = CourierInbox(
+    canSwipePages: true,
     lightTheme: inboxTheme,
     darkTheme: inboxTheme,
-    didClickInboxMessageAtIndex: { message, index in
-        message.isRead ? message.markAsUnread() : message.markAsRead()
-        print(index, message)
-    },
-    didClickInboxActionForMessageAtIndex: { action, message, index in
-        print(action, message, index)
-    },
-    didScrollInbox: { scrollView in
-        print(scrollView.contentOffset.y)
-    }
+    ..
 )
-
-view.addSubview(courierInbox)
-...
-
-// SwiftUI
-
-var body: some View {
-    CourierInboxView(
-        lightTheme: inboxTheme,
-        darkTheme: inboxTheme,
-        didClickInboxMessageAtIndex: { message, index in
-            message.isRead ? message.markAsUnread() : message.markAsRead()
-            print(index, message)
-        },
-        didClickInboxActionForMessageAtIndex: { action, message, index in
-            print(action, message, index)
-        },
-        didScrollInbox: { scrollView in
-            print(scrollView.contentOffset.y)
-        }
-    )
-}
 ```
 
 &emsp;
@@ -312,49 +332,45 @@ import Courier_iOS
 class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
-    private var messages: [InboxMessage] = []
     private var inboxListener: CourierInboxListener? = nil
     
-    ...
+    ..
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ...
+        ..
         
         // Allows you to listen to all inbox changes and build whatever you'd like
         self.inboxListener = Courier.shared.addInboxListener(
+            onLoading: { [weak self] in
+                // Called when listener is registered, refreshing or restarting
+            },
+            onError: { [weak self] error in
+                // Called on error or sign out
+            },
+            onUnreadCountChanged: { [weak self] count in
+                // Will return 0 when a user is signed out
+            },
             onFeedChanged: { [weak self] set in
-                self.messages = set.messages
-                self.tableView.reloadData()
+                // Called when the feed initially loads or is restarted from scratch
+            },
+            onArchiveChanged: { [weak self] set in
+                // Called when the archive initially loads or is restarted from scratch
+            },
+            onPageAdded: { [weak self] feed, set in
+                // Called when pagination happens
+            },
+            onMessageChanged: { [weak self] feed, index, message in
+                // Called when a message is change (i.e. read / unread)
+            },
+            onMessageAdded: { [weak self] feed, index, message in
+                // Called when a message is added (i.e. new message received in realtime)
+            },
+            onMessageRemoved: { [weak self] feed, index, message in
+                // Called when a message is removed (i.e. message is archived)
             }
         )
-        
-    }
-    
-    ...
-
-    private var messages: [InboxMessage] {
-        get {
-            return Courier.shared.inboxMessages ?? []
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let message = messages[indexPath.row]
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: YourCustomTableViewCell.id, for: indexPath) as! YourCustomTableViewCell
-        cell.message = message
-        return cell
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        let message = messages[indexPath.row]
-        
-        message.isRead ? message.markAsUnread() : message.markAsRead()
         
     }
     
@@ -363,7 +379,6 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
     }
 
 }
-...
 ```
 
 &emsp;
@@ -377,31 +392,31 @@ import Courier_iOS
 // Only one "pipe" of data is created behind the scenes for network / performance reasons
 let inboxListener = Courier.shared.addInboxListener(
     onLoading: { [weak self] in
-        // Called when loading happened, usually at launch
+        // Called when listener is registered, refreshing or restarting
     },
     onError: { [weak self] error in
-        // Called when an error is received
+        // Called on error or sign out
     },
     onUnreadCountChanged: { [weak self] count in
-        // Called when the total unread count changes
+        // Will return 0 when a user is signed out
     },
     onFeedChanged: { [weak self] set in
-        // Called when the inbox of feed messages changes
+        // Called when the feed initially loads or is restarted from scratch
     },
     onArchiveChanged: { [weak self] set in
-        // Called when the inbox of archived messages changes
+        // Called when the archive initially loads or is restarted from scratch
     },
     onPageAdded: { [weak self] feed, set in
-        // Called when a list of messages is fetched (i.e. pagination)
+        // Called when pagination happens
     },
     onMessageChanged: { [weak self] feed, index, message in
-        // Called when a message is updated (i.e. a new message is read or unread)
+        // Called when a message is change (i.e. read / unread)
     },
     onMessageAdded: { [weak self] feed, index, message in
-        // Called when a message is added (i.e. a new message is received)
+        // Called when a message is added (i.e. new message received in realtime)
     },
     onMessageRemoved: { [weak self] feed, index, message in
-        // Called when a message is removed (i.e. a message is archived)
+        // Called when a message is removed (i.e. message is archived)
     }
 )
 
