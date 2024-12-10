@@ -323,8 +323,6 @@ You can control your branding from the [`Courier Studio`](https://app.courier.co
 
 The raw data you can use to build whatever UI you'd like.
 
-<img width="415" alt="custom-inbox" src="https://github.com/trycourier/courier-ios/assets/6370613/1a818973-8ada-4e30-84b6-7f5da75fc800">
-
 ```swift
 import UIKit
 import Courier_iOS
