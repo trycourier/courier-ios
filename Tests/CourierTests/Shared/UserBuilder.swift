@@ -11,9 +11,9 @@ class UserBuilder {
     
     static func authenticate(useJWT: Bool = true, userId: String = Env.COURIER_USER_ID, connectionId: String? = nil, tenantId: String? = nil) async throws {
         
-        Courier.shared.removeAllAuthenticationListeners()
+        await Courier.shared.removeAllAuthenticationListeners()
         
-        let listener = Courier.shared.addAuthenticationListener { uid in
+        let listener = await Courier.shared.addAuthenticationListener { uid in
             print(uid ?? "No userId found")
         }
         
@@ -39,7 +39,7 @@ class UserBuilder {
         )
         
         // Remove the listener
-        listener.remove()
+        await listener.remove()
         
     }
     

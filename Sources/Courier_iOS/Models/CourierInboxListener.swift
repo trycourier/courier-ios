@@ -64,7 +64,7 @@ extension CourierInboxListener {
         isInitialized = true
     }
     
-    @objc public func remove() {
-        Courier.shared.removeInboxListener(self)
+    @objc public func remove() async {
+        await Courier.shared.removeInboxListener(self)
     }
 }

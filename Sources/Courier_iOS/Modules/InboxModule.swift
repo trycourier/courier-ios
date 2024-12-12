@@ -258,7 +258,7 @@ extension Courier: InboxMutationHandler {
                 break
             }
         } catch {
-            Courier.shared.client?.log(error.localizedDescription)
+            await Courier.shared.client?.log(error.localizedDescription)
         }
     }
     
@@ -404,7 +404,7 @@ extension Courier {
             await inboxModule.addListener(listener)
             
             // Ensure the user is signed in
-            if !isUserSignedIn {
+            if await !isUserSignedIn {
                 Logger.warn("User is not signed in. Please call Courier.shared.signIn(...) to setup the inbox listener.")
                 listener.onError?(CourierError.userNotFound)
                 return
@@ -431,18 +431,12 @@ extension Courier {
         
     }
     
-    public func removeInboxListener(_ listener: CourierInboxListener) {
+    public func removeInboxListener(_ listener: CourierInboxListener) async {
         
-        Task {
-            
-            await inboxModule.removeListener(listener)
-            
-            if await inboxModule.inboxListeners.isEmpty {
-                Task {
-                    await closeInbox()
-                }
-            }
-            
+        await inboxModule.removeListener(listener)
+        
+        if await inboxModule.inboxListeners.isEmpty {
+            await closeInbox()
         }
         
     }

@@ -23,8 +23,8 @@ public class CourierAuthenticationListener: NSObject {
 
 extension CourierAuthenticationListener {
     
-    public func remove() {
-        Courier.shared.removeAuthenticationListener(listener: self)
+    public func remove() async {
+        await Courier.shared.removeAuthenticationListener(listener: self)
     }
     
 }

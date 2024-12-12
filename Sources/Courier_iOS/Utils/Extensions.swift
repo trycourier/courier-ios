@@ -58,7 +58,7 @@ extension Courier {
     }
     
     // Shortcut to open the settings app for the current app
-    @available(iOSApplicationExtension, unavailable)
+    @MainActor @available(iOSApplicationExtension, unavailable)
     @objc public static func openSettingsForApp() {
         if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {
             UIApplication.shared.open(appSettings)
@@ -212,7 +212,6 @@ extension Dictionary {
         do {
             return try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
         } catch {
-            Courier.shared.client?.log(error.localizedDescription)
             return nil
         }
     }
@@ -251,7 +250,7 @@ extension Data {
         } catch {
             // Log the error and fallback to plain UTF-8 string
             let string = String(decoding: self, as: UTF8.self)
-            Courier.shared.client?.log("JSON Parsing Error: \(error.localizedDescription)\n\(string)")
+            print("JSON Parsing Error: \(error.localizedDescription)\n\(string)")
             return string
         }
     }

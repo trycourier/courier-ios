@@ -195,7 +195,7 @@ extension InboxMessage {
                 onSuccess?()
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 onFailure?(e)
             }
         }
@@ -212,7 +212,7 @@ extension InboxMessage {
                 onSuccess?()
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 onFailure?(e)
             }
         }
@@ -229,7 +229,7 @@ extension InboxMessage {
                 onSuccess?()
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 onFailure?(e)
             }
         }
@@ -246,7 +246,7 @@ extension InboxMessage {
                 onSuccess?()
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 onFailure?(e)
             }
         }
@@ -263,7 +263,7 @@ extension InboxMessage {
                 onSuccess?()
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 onFailure?(e)
             }
         }

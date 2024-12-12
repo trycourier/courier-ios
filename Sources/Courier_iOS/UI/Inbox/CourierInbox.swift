@@ -179,7 +179,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             
             await self.refreshBrand()
             
-            self.inboxListener = Courier.shared.addInboxListener(
+            self.inboxListener = await Courier.shared.addInboxListener(
                 onLoading: { [weak self] in
                     self?.getPages().forEach { page in
                         page.page.setLoading()
@@ -198,22 +198,34 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                     }
                 },
                 onFeedChanged: { [weak self] set in
-                    self?.getPage(for: .feed).page.setInbox(set: set)
+                    Task { [weak self] in
+                        await self?.getPage(for: .feed).page.setInbox(set: set)
+                    }
                 },
-                onArchiveChanged: { [weak self] set in
-                    self?.getPage(for: .archived).page.setInbox(set: set)
+                onArchiveChanged: { set in
+                    Task { [weak self] in
+                        await self?.getPage(for: .archived).page.setInbox(set: set)
+                    }
                 },
-                onPageAdded: { [weak self] feed, set in
-                    self?.getPage(for: feed).page.addPage(set: set)
+                onPageAdded: { feed, set in
+                    Task { [weak self] in
+                        await self?.getPage(for: feed).page.addPage(set: set)
+                    }
                 },
-                onMessageChanged: { [weak self] feed, index, message in
-                    self?.getPage(for: feed).page.updateMessage(at: index, message: message)
+                onMessageChanged: { feed, index, message in
+                    Task { [weak self] in
+                        self?.getPage(for: feed).page.updateMessage(at: index, message: message)
+                    }
                 },
-                onMessageAdded: { [weak self] feed, index, message in
-                    self?.getPage(for: feed).page.addMessage(at: index, message: message)
+                onMessageAdded: { feed, index, message in
+                    Task { [weak self] in
+                        await self?.getPage(for: feed).page.addMessage(at: index, message: message)
+                    }
                 },
-                onMessageRemoved: { [weak self] feed, index, message in
-                    self?.getPage(for: feed).page.removeMessage(at: index, message: message)
+                onMessageRemoved: { feed, index, message in
+                    Task { [weak self] in
+                        self?.getPage(for: feed).page.removeMessage(at: index, message: message)
+                    }
                 }
             )
             
@@ -333,7 +345,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 return res?.data.brand
             }
         } catch {
-            Courier.shared.client?.log(error.localizedDescription)
+            await Courier.shared.client?.log(error.localizedDescription)
         }
         return nil
     }
@@ -361,7 +373,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     deinit {
-        self.inboxListener?.remove()
+        Task { [weak self] in
+            await self?.inboxListener?.remove()
+        }
     }
     
 }
