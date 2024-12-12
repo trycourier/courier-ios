@@ -78,7 +78,7 @@ If you are using JWT authentication, be sure to enable JWT support on the Courie
 
 The default `CourierInbox` styles.
 
-<img width="390" alt="default-inbox-styles" src="https://github.com/user-attachments/assets/23830e36-9bef-4dda-9f2c-d2eddb866055">
+<img width="390" alt="default-inbox-styles" src="https://github.com/user-attachments/assets/8dd38f1a-0d93-48ad-9847-3faecdc6f7c2">
 
 &emsp;
 
@@ -131,7 +131,7 @@ let courierInbox = CourierInbox(
 
 The styles you can use to quickly customize the `CourierInbox`.
 
-<img width="390" alt="styled-inbox-styles" src="https://github.com/user-attachments/assets/27cd25e1-c290-4671-b486-69502b683a30">
+<img width="390" alt="styled-inbox-styles" src="https://github.com/user-attachments/assets/01b8bd0f-2ea8-48c0-aae6-2ce523039d0d">
 
 &emsp;
 
