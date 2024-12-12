@@ -277,6 +277,8 @@ CourierInboxView(
 )
 ```
 
+### UIKit
+
 ```swift
 import Courier_iOS
 let courierInbox = CourierInbox(
