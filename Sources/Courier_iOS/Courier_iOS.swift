@@ -55,47 +55,60 @@ import UIKit
     internal lazy var inboxMutationHandler: InboxMutationHandler = { self }()
     internal lazy var inboxModule = { InboxModule() }()
     
+    // MARK: Proxy
+    private var notificationProxy: CourierNotificationProxy?
+    
     // MARK: Init
     
     private override init() {
         super.init()
         
-        // Register Lifecycle Listeners
-        NotificationCenter.default.addObserver(self,
-           selector: #selector(didEnterForeground),
-           name: UIApplication.didBecomeActiveNotification,
-           object: nil
+        // Set up notification proxy
+        self.notificationProxy = CourierNotificationProxy(courier: self)
+        
+        NotificationCenter.default.addObserver(
+            self.notificationProxy!,
+            selector: #selector(CourierNotificationProxy.didEnterForeground),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
         )
         
-        NotificationCenter.default.addObserver(self,
-           selector: #selector(didEnterBackground),
-           name: UIApplication.didEnterBackgroundNotification,
-           object: nil
+        NotificationCenter.default.addObserver(
+            self.notificationProxy!,
+            selector: #selector(CourierNotificationProxy.didEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
         )
         
     }
     
     deinit {
-        
-        // Remove listeners
-        NotificationCenter.default.removeObserver(self,
-          name: UIApplication.didBecomeActiveNotification,
-          object: nil
-        )
-        
-        NotificationCenter.default.removeObserver(self,
-          name: UIApplication.didEnterBackgroundNotification,
-          object: nil
-        )
-        
+        if let proxy = notificationProxy {
+            NotificationCenter.default.removeObserver(proxy)
+        }
     }
     
-    @objc private func didEnterForeground() async {
-        await linkInbox()
+}
+
+internal class CourierNotificationProxy: NSObject {
+    
+    weak var courier: Courier?
+    
+    init(courier: Courier) {
+        self.courier = courier
+        super.init()
     }
     
-    @objc private func didEnterBackground() async {
-        await unlinkInbox()
+    @objc func didEnterForeground() {
+        Task { [weak self] in
+            await self?.courier?.linkInbox()
+        }
+    }
+    
+    @objc func didEnterBackground() {
+        Task { [weak self] in
+            await self?.courier?.unlinkInbox()
+        }
     }
     
 }
