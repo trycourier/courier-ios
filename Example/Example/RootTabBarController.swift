@@ -15,11 +15,15 @@ class RootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.inboxListener = Courier.shared.addInboxListener(
-            onUnreadCountChanged: { count in
-                self.setBadge(count)
-            }
-        )
+        Task {
+            
+            self.inboxListener = await Courier.shared.addInboxListener(
+                onUnreadCountChanged: { count in
+                    self.setBadge(count)
+                }
+            )
+            
+        }
         
     }
     
@@ -34,7 +38,9 @@ class RootTabBarController: UITabBarController {
     }
     
     deinit {
-        self.inboxListener?.remove()
+        Task { [weak self] in
+            await self?.inboxListener?.remove()
+        }
     }
 
 }

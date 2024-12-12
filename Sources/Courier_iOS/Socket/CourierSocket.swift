@@ -94,7 +94,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
                 
                 // Handle closing socket
                 if e.domain == NSPOSIXErrorDomain && e.code == 57 {
-                    Courier.shared.client?.log("WebSocket closed")
+//                    Courier.shared.client?.log("WebSocket closed")
                     return
                 }
                 

@@ -242,7 +242,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
         // Ensure the indexPath is valid for the tableView
         guard index >= 0 && index <= tableView.numberOfRows(inSection: 0) else {
-            Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
+//            Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
             self.tableView.reloadData()
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
@@ -425,7 +425,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 do {
                     try await Courier.shared.fetchNextInboxPage(self.feed)
                 } catch {
-                    Courier.shared.client?.error(error.localizedDescription)
+//                    Courier.shared.client?.error(error.localizedDescription)
                 }
             }
         }
