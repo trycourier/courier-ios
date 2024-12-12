@@ -44,7 +44,7 @@ An in-app notification center list you can use to notify your users. Allows you 
 If you are using JWT authentication, be sure to enable JWT support on the Courier Inbox Provider [`here`](https://app.courier.com/integrations/catalog/courier).
 
 <img width="385" alt="Screenshot 2024-12-09 at 11 19 31 AM" src="https://github.com/user-attachments/assets/71c945f3-9fa0-4736-ae0d-a4760cb49220">
-                
+
 ## Usage
 
 `CourierInbox` works with all native iOS UI frameworks.
@@ -78,7 +78,7 @@ If you are using JWT authentication, be sure to enable JWT support on the Courie
 
 The default `CourierInbox` styles.
 
-<img width="390" alt="default-inbox-styles" src="https://github.com/user-attachments/assets/8dd38f1a-0d93-48ad-9847-3faecdc6f7c2">
+<img width="390" alt="default-inbox-styles" src="https://github.com/user-attachments/assets/eff6b00b-8825-4db9-bd3d-cdf2fac34d0b">
 
 &emsp;
 
@@ -131,9 +131,10 @@ let courierInbox = CourierInbox(
 
 The styles you can use to quickly customize the `CourierInbox`.
 
-<img width="390" alt="styled-inbox-styles" src="https://github.com/user-attachments/assets/01b8bd0f-2ea8-48c0-aae6-2ce523039d0d">
+<img width="390" alt="styled-inbox-styles" src="https://github.com/user-attachments/assets/b2f7aa98-6506-466e-86b9-8ba4f15b5f5d">
 
 &emsp;
+
 
 ```swift
 func getTheme() -> CourierInboxTheme {
