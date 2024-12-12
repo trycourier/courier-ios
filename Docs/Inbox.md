@@ -283,8 +283,8 @@ CourierInboxView(
 import Courier_iOS
 let courierInbox = CourierInbox(
     canSwipePages: true,
-    lightTheme: inboxTheme,
-    darkTheme: inboxTheme,
+    lightTheme: getTheme(),
+    darkTheme: getTheme(),
     ..
 )
 ```
