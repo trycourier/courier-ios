@@ -57,27 +57,29 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
-        inboxListener = Courier.shared.addInboxListener(
-            onLoading: {
-                self.setState(.loading)
-            },
-            onError: { error in
-                self.setState(.error, error: String(describing: error))
-            },
-            onFeedChanged: { inbox in
-                self.canPaginate = inbox.canPaginate
-                self.refreshMessages()
-            },
-            onMessageChanged: { feed, message, index in
-                self.refreshMessages()
-            },
-            onMessageAdded: { feed, message, index in
-                self.refreshMessages()
-            },
-            onMessageRemoved: { feed, message, index in
-                self.refreshMessages()
-            }
-        )
+        Task {
+            inboxListener = await Courier.shared.addInboxListener(
+                onLoading: {
+                    self.setState(.loading)
+                },
+                onError: { error in
+                    self.setState(.error, error: String(describing: error))
+                },
+                onFeedChanged: { inbox in
+                    self.canPaginate = inbox.canPaginate
+                    self.refreshMessages()
+                },
+                onMessageChanged: { feed, message, index in
+                    self.refreshMessages()
+                },
+                onMessageAdded: { feed, message, index in
+                    self.refreshMessages()
+                },
+                onMessageRemoved: { feed, message, index in
+                    self.refreshMessages()
+                }
+            )
+        }
 
         view.addSubview(stateLabel)
         
@@ -176,7 +178,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
                 do {
                     try await Courier.shared.fetchNextInboxPage(.feed)
                 } catch {
-                    Courier.shared.client?.options.log(error.localizedDescription)
+//                    Courier.shared.client?.options.log(error.localizedDescription)
                 }
                 
             }
@@ -186,7 +188,9 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     deinit {
-        self.inboxListener?.remove()
+        Task { [weak self] in
+            await self?.inboxListener?.remove()
+        }
     }
 
 }

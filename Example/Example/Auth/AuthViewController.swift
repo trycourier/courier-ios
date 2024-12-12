@@ -23,43 +23,47 @@ class AuthViewController: UIViewController {
     
     @IBAction func authButtonAction(_ sender: Any) {
         
-        if let _ = Courier.shared.userId {
+        Task {
             
-            self.authButton.isEnabled = false
-            
-            Task {
-            
-                await Courier.shared.signOut()
-                
-            }
-            
-        } else {
-            
-            showInputAlert(title: "Sign in", inputs: ["Enter Courier User Id", "Tenant Id"], action: "Sign In") { values in
+            if let _ = await Courier.shared.userId {
                 
                 self.authButton.isEnabled = false
                 
                 Task {
+                
+                    await Courier.shared.signOut()
                     
-                    do {
+                }
+                
+            } else {
+                
+                showInputAlert(title: "Sign in", inputs: ["Enter Courier User Id", "Tenant Id"], action: "Sign In") { values in
+                    
+                    self.authButton.isEnabled = false
+                    
+                    Task {
                         
-                        let userId = values[0]
-                        let tenantId = values[1]
-                        
-                        let jwt = try await ExampleServer().generateJwt(
-                            authKey: Env.COURIER_AUTH_KEY,
-                            userId: userId
-                        )
-                        
-                        await Courier.shared.signIn(
-                            userId: userId,
-                            tenantId: tenantId.isEmpty ? nil : tenantId,
-                            accessToken: jwt
-                        )
-                        
-                    } catch {
-                        
-                        await Courier.shared.signOut()
+                        do {
+                            
+                            let userId = values[0]
+                            let tenantId = values[1]
+                            
+                            let jwt = try await ExampleServer().generateJwt(
+                                authKey: Env.COURIER_AUTH_KEY,
+                                userId: userId
+                            )
+                            
+                            await Courier.shared.signIn(
+                                userId: userId,
+                                tenantId: tenantId.isEmpty ? nil : tenantId,
+                                accessToken: jwt
+                            )
+                            
+                        } catch {
+                            
+                            await Courier.shared.signOut()
+                            
+                        }
                         
                     }
                     
@@ -85,7 +89,7 @@ class AuthViewController: UIViewController {
 
         Task {
             
-            if let userId = Courier.shared.userId {
+            if let userId = await Courier.shared.userId {
                 
                 do {
                     
@@ -120,7 +124,7 @@ class AuthViewController: UIViewController {
                 
             }
             
-            authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
+            authListener = await Courier.shared.addAuthenticationListener { [weak self] userId in
                 self?.refresh(userId)
             }
             
@@ -132,7 +136,8 @@ class AuthViewController: UIViewController {
         
         if let userId = userId {
             authButton.setTitle("Sign Out", for: .normal)
-            authLabel.text = "Courier User Id: \(userId)\n\nTenant Id: \(Courier.shared.tenantId ?? "None")"
+//            authLabel.text = "Courier User Id: \(userId)\n\nTenant Id: \(Courier.shared.tenantId ?? "None")"
+            authLabel.text = "Courier User Id: \(userId)\n"
         } else {
             authButton.setTitle("Sign In", for: .normal)
             authLabel.text = "No Courier User Id Found"
@@ -143,7 +148,9 @@ class AuthViewController: UIViewController {
     }
     
     deinit {
-        authListener?.remove()
+        Task { [weak self] in
+            await self?.authListener?.remove()
+        }
     }
 
 }
