@@ -171,15 +171,19 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     
     private func setup() {
         
-        // Called when the auth state changes
-        authListener = Courier.shared.addAuthenticationListener { [weak self] userId in
+        Task {
             
-            if (userId != nil) {
-                self?.traitCollectionDidChange(nil)
-                self?.state = .loading
+            // Called when the auth state changes
+            authListener = await Courier.shared.addAuthenticationListener { [weak self] userId in
+                
+                if (userId != nil) {
+                    self?.traitCollectionDidChange(nil)
+                    self?.state = .loading
+                }
+                
+                self?.onRefresh()
+                
             }
-            
-            self?.onRefresh()
             
         }
         
@@ -208,7 +212,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
             
             do {
                 
-                if !Courier.shared.isUserSignedIn {
+                if await !Courier.shared.isUserSignedIn {
                     throw CourierError.userNotFound
                 }
                 
@@ -679,7 +683,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
      Clear the listeners
      */
     deinit {
-        self.authListener?.remove()
+        Task { [weak self] in
+            await self?.authListener?.remove()
+        }
     }
     
 }

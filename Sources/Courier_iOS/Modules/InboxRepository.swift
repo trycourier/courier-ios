@@ -24,8 +24,8 @@ internal actor InboxRepository {
     }
     
     private var client: CourierClient? {
-        get {
-            return Courier.shared.client
+        get async {
+            return await Courier.shared.client
         }
     }
     
@@ -71,31 +71,33 @@ internal actor InboxRepository {
         
     }
     
-    private func getInitialLimit(for set: InboxMessageSet?, isRefresh: Bool) -> Int {
+    private func getInitialLimit(for set: InboxMessageSet?, isRefresh: Bool) async -> Int {
+        
+        let defaultPaginationLimit = await Courier.shared.paginationLimit
         
         if isRefresh {
-            let existingCount = set?.messages.count ?? Courier.shared.paginationLimit
-            return max(existingCount, Courier.shared.paginationLimit)
+            let existingCount = set?.messages.count ?? defaultPaginationLimit
+            return max(existingCount, defaultPaginationLimit)
         }
         
-        return Courier.shared.paginationLimit
+        return defaultPaginationLimit
         
     }
     
     private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool) async throws -> CourierInboxData {
          
-        if !Courier.shared.isUserSignedIn {
+        if await !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
         }
         
-        guard let client = client else {
+        guard let client = await client else {
             throw CourierError.inboxNotInitialized
         }
         
         // Get either the same number of items shown, or the pagination limit
         // This handles the case or refreshes or fresh data pulls
-        let feedLimit = getInitialLimit(for: inboxData?.feed, isRefresh: isRefresh)
-        let archivedLimit = getInitialLimit(for: inboxData?.archived, isRefresh: isRefresh)
+        let feedLimit = await getInitialLimit(for: inboxData?.feed, isRefresh: isRefresh)
+        let archivedLimit = await getInitialLimit(for: inboxData?.archived, isRefresh: isRefresh)
         
         // Functions for getting data
         async let feedTask = client.inbox.getMessages(paginationLimit: feedLimit, startCursor: nil)
@@ -118,7 +120,7 @@ internal actor InboxRepository {
     
     private func connectWebSocket(onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws {
         
-        guard let client = client else {
+        guard let client = await client else {
             throw CourierError.inboxNotInitialized
         }
         
@@ -139,15 +141,15 @@ internal actor InboxRepository {
     
     func getNextPage(_ feed: InboxMessageFeed, inboxData: CourierInboxData) async throws -> InboxMessageSet? {
         
-        if !Courier.shared.isUserSignedIn {
+        if await !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
         }
         
-        guard let client = client else {
+        guard let client = await client else {
             throw CourierError.inboxNotInitialized
         }
         
-        let limit = Courier.shared.paginationLimit
+        let limit = await Courier.shared.paginationLimit
         
         if feed == .feed {
             

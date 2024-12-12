@@ -24,7 +24,7 @@ import Foundation
 import UIKit
 
 @available(iOS 13.0.0, *)
-@objc open class Courier: NSObject {
+@objc public actor Courier: NSObject {
     
     /**
      * Versioning
@@ -90,12 +90,12 @@ import UIKit
         
     }
     
-    @objc private func didEnterForeground() {
-        Task { await linkInbox() }
+    @objc private func didEnterForeground() async {
+        await linkInbox()
     }
     
-    @objc private func didEnterBackground() {
-        Task { await unlinkInbox() }
+    @objc private func didEnterBackground() async {
+        await unlinkInbox()
     }
     
 }
