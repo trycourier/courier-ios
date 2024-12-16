@@ -46,15 +46,18 @@ internal actor InboxModule {
     }
     
     internal func addListener(_ listener: CourierInboxListener) {
-        inboxListeners.append(listener)
+        self.inboxListeners.append(listener)
+        print("Courier Inbox Listener Registered. Total Listeners: \(self.inboxListeners.count)")
     }
     
     internal func removeListener(_ listener: CourierInboxListener) {
-        inboxListeners.removeAll(where: { return $0 == listener })
+        self.inboxListeners.removeAll(where: { return $0 == listener })
+        print("Courier Inbox Listener Unregistered. Total Listeners: \(self.inboxListeners.count)")
     }
     
     internal func removeAllListeners() {
-        inboxListeners.removeAll()
+        self.inboxListeners.removeAll()
+        print("Courier Inbox Listeners Removed. Total Listeners: \(self.inboxListeners.count)")
     }
     
 }
@@ -282,10 +285,11 @@ extension Courier {
         get {
             return self.paginationLimit
         }
-        set {
-            let min = min(InboxRepository.Pagination.max.rawValue, newValue)
-            self.paginationLimit = max(InboxRepository.Pagination.min.rawValue, min)
-        }
+    }
+    
+    @objc public func setPaginationLimit(_ limit: Int) async {
+        let min = min(InboxRepository.Pagination.max.rawValue, limit)
+        self.paginationLimit = max(InboxRepository.Pagination.min.rawValue, min)
     }
     
     // MARK: Getters
@@ -382,7 +386,7 @@ extension Courier {
         onMessageChanged: ((_ feed: InboxMessageFeed, _ index: Int, _ message: InboxMessage) -> Void)? = nil,
         onMessageAdded: ((_ feed: InboxMessageFeed, _ index: Int, _ message: InboxMessage) -> Void)? = nil,
         onMessageRemoved: ((_ feed: InboxMessageFeed, _ index: Int, _ message: InboxMessage) -> Void)? = nil
-    ) -> CourierInboxListener {
+    ) async -> CourierInboxListener {
         
         let listener = CourierInboxListener(
             onLoading: onLoading,
@@ -398,34 +402,30 @@ extension Courier {
         
         listener.initialize()
         
-        Task { @MainActor in
-            
-            // Register listener
-            await inboxModule.addListener(listener)
-            
-            // Ensure the user is signed in
-            if await !isUserSignedIn {
-                Logger.warn("User is not signed in. Please call Courier.shared.signIn(...) to setup the inbox listener.")
-                listener.onError?(CourierError.userNotFound)
-                return
-            }
-            
-            // Notify that data exists if needed
-            if let data = await inboxModule.data {
-                listener.onLoad(data: data)
-                return
-            }
-            
-            // Get the inbox data
-            // If an existing call is going out, it will cancel that call.
-            // This will return data for the last inbox listener that is registered
-            await inboxModule.repo.get(
-                with: inboxMutationHandler,
-                inboxData: inboxModule.data,
-                isRefresh: false
-            )
-            
+        // Register listener
+        await inboxModule.addListener(listener)
+        
+        // Ensure the user is signed in
+        if !isUserSignedIn {
+            Logger.warn("User is not signed in. Please call Courier.shared.signIn(...) to setup the inbox listener.")
+            listener.onError?(CourierError.userNotFound)
+            return listener
         }
+        
+        // Notify that data exists if needed
+        if let data = await inboxModule.data {
+            listener.onLoad(data: data)
+            return listener
+        }
+        
+        // Get the inbox data
+        // If an existing call is going out, it will cancel that call.
+        // This will return data for the last inbox listener that is registered
+        await inboxModule.repo.get(
+            with: inboxMutationHandler,
+            inboxData: inboxModule.data,
+            isRefresh: false
+        )
         
         return listener
         

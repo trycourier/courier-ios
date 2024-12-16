@@ -38,9 +38,7 @@ class RootTabBarController: UITabBarController {
     }
     
     deinit {
-        Task { [weak self] in
-            await self?.inboxListener?.remove()
-        }
+        inboxListener?.remove()
     }
 
 }

@@ -64,7 +64,11 @@ extension CourierInboxListener {
         isInitialized = true
     }
     
-    @objc public func remove() async {
-        await Courier.shared.removeInboxListener(self)
+    // Unregisters a listener on a background task
+    @objc public func remove() {
+        Task {
+            await Courier.shared.removeInboxListener(self)
+        }
     }
+    
 }

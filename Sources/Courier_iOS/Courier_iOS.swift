@@ -20,10 +20,8 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
  
 */
 
-import Foundation
 import UIKit
 
-@available(iOS 13.0.0, *)
 @objc public actor Courier: NSObject {
     
     /**
@@ -85,29 +83,6 @@ import UIKit
     deinit {
         if let proxy = notificationProxy {
             NotificationCenter.default.removeObserver(proxy)
-        }
-    }
-    
-}
-
-internal class CourierNotificationProxy: NSObject {
-    
-    weak var courier: Courier?
-    
-    init(courier: Courier) {
-        self.courier = courier
-        super.init()
-    }
-    
-    @objc func didEnterForeground() {
-        Task { [weak self] in
-            await self?.courier?.linkInbox()
-        }
-    }
-    
-    @objc func didEnterBackground() {
-        Task { [weak self] in
-            await self?.courier?.unlinkInbox()
         }
     }
     

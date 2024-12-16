@@ -28,7 +28,8 @@ class CoreClientTests: XCTestCase {
         
         await Courier.shared.signOut()
         
-//        XCTAssertNil(Courier.shared.client, "Shared client is nil")
+        let courierClient = await Courier.shared.client
+        XCTAssertNil(courierClient, "Shared client is nil")
         XCTAssertNotNil(client3)
 
     }

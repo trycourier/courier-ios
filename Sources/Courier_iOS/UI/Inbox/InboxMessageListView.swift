@@ -612,9 +612,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
      Clear the listeners
      */
     deinit {
-        Task { [weak self] in
-            await self?.authListener?.remove()
-        }
+        authListener?.remove()
     }
     
 }

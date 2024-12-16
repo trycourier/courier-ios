@@ -188,9 +188,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     deinit {
-        Task { [weak self] in
-            await self?.inboxListener?.remove()
-        }
+        inboxListener?.remove()
     }
 
 }
