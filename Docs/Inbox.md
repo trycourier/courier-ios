@@ -334,15 +334,12 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
 
     @IBOutlet weak var tableView: UITableView!
     private var inboxListener: CourierInboxListener? = nil
-    
-    ..
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ..
-        
         Task {
+           
             // Allows you to listen to all inbox changes and build whatever you'd like
             self.inboxListener = await Courier.shared.addInboxListener(
                 onLoading: { [weak self] in
