@@ -590,9 +590,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                         hasCustomRouting: newTopic.hasCustomRouting,
                         customRouting: newTopic.customRouting
                     )
-//                    Courier.shared.client?.log("Topic updated: \(topic.topicId)")
+                    await Courier.shared.client?.log("Topic updated: \(topic.topicId)")
                 } catch {
-//                    Courier.shared.client?.log(error.localizedDescription)
+                    await Courier.shared.client?.log(error.localizedDescription)
                     self.onError?(CourierError(from: error))
                     self.updateTopic(topicId: topic.topicId, newTopic: topic)
                 }
@@ -654,9 +654,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                         hasCustomRouting: hasCustomRouting,
                         customRouting: customRouting
                     )
-//                    Courier.shared.client?.log("Topic updated: \(topic.topicId)")
+                    await Courier.shared.client?.log("Topic updated: \(topic.topicId)")
                 } catch {
-//                    Courier.shared.client?.log(error.localizedDescription)
+                    await Courier.shared.client?.log(error.localizedDescription)
                     self.onError?(CourierError(from: error))
                     self.updateTopic(topicId: topic.topicId, newTopic: topic)
                 }

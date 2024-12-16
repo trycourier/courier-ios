@@ -123,7 +123,7 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
             do {
                 try await Courier.shared.readAllInboxMessages()
             } catch {
-//                Courier.shared.client?.log(error.localizedDescription)
+                await Courier.shared.client?.log(error.localizedDescription)
             }
             
         }
