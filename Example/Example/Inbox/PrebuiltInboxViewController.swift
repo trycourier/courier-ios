@@ -16,11 +16,13 @@ class PrebuiltInboxViewController: UIViewController {
                 Task {
                     do {
                         message.isRead ? try await message.markAsUnread() : try await message.markAsRead()
-                        self.showCodeAlert(title: "Inbox Message Click", code: message.toJson() ?? "")
                     } catch {
                         print(error.localizedDescription)
                     }
                 }
+            },
+            didLongPressInboxMessageAtIndex: { message, index in
+                self.showActionSheet(message: message)
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
                 self.showCodeAlert(title: "Inbox Action Click", code: action.toJson() ?? "")
