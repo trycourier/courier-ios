@@ -112,12 +112,14 @@ Task {
 ## All Available Authentication Values
 
 ```swift
-let userId = Courier.shared.userId
-let isUserSignedIn = Courier.shared.isUserSignedIn
-
-let listener = Courier.shared.addAuthenticationListener { userId in
-    print(userId ?? "No userId found")
+Task {
+    let userId = await Courier.shared.userId
+    let isUserSignedIn = await Courier.shared.isUserSignedIn
+    
+    let listener = await Courier.shared.addAuthenticationListener { userId in
+        print(userId ?? "No userId found")
+    }
+    
+    listener.remove()
 }
-
-listener.remove()
 ```
