@@ -134,15 +134,20 @@ class AuthViewController: UIViewController {
     
     private func refresh(_ userId: String?) {
         
-        if let userId = userId {
-            authButton.setTitle("Sign Out", for: .normal)
-            authLabel.text = "Courier User Id: \(userId)\n\nTenant Id: \(Courier.shared.tenantId ?? "None")"
-        } else {
-            authButton.setTitle("Sign In", for: .normal)
-            authLabel.text = "No Courier User Id Found"
+        Task {
+            
+            if let userId = userId {
+                let tenantId = await Courier.shared.tenantId
+                authButton.setTitle("Sign Out", for: .normal)
+                authLabel.text = "Courier User Id: \(userId)\n\nTenant Id: \(tenantId ?? "None")"
+            } else {
+                authButton.setTitle("Sign In", for: .normal)
+                authLabel.text = "No Courier User Id Found"
+            }
+            
+            authButton.isEnabled = true
+            
         }
-        
-        authButton.isEnabled = true
         
     }
     
