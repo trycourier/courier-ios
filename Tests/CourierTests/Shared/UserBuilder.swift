@@ -39,7 +39,7 @@ class UserBuilder {
         )
         
         // Remove the listener
-        await listener.remove()
+        await Courier.shared.removeAuthenticationListener(listener)
         
     }
     

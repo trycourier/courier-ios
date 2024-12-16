@@ -49,7 +49,7 @@ class InboxTests: XCTestCase {
             // Hold
         }
 
-        await listener.remove()
+        await Courier.shared.removeInboxListener(listener)
 
     }
     
@@ -63,122 +63,177 @@ class InboxTests: XCTestCase {
 
     }
     
-    // Should fail first, the sign user in, then fetch all messages
     func testSingleListener() async throws {
+        var steps = [String]()
+        let stepsLock = DispatchQueue(label: "steps.lock")
         
-        var hold = true
-        
+        // Sign out the user
         await Courier.shared.signOut()
 
+        // Add a listener
         let listener = await Courier.shared.addInboxListener(
             onLoading: {
-                print("Loading")
+                stepsLock.sync {
+                    steps.append("loading")
+                }
             },
             onError: { error in
                 Task {
-                    try await UserBuilder.authenticate()
+                    stepsLock.sync {
+                        steps.append("error")
+                    }
                 }
             },
             onFeedChanged: { set in
-                hold = false
+                stepsLock.sync {
+                    steps.append("complete")
+                }
             }
         )
         
+        try await UserBuilder.authenticate()
+
+        // Wait until all expected steps are recorded
+        while true {
+            let currentSteps = stepsLock.sync { steps }
+            if currentSteps == ["loading", "error", "loading", "complete"] {
+                break
+            }
+            await Task.yield() // Yield to allow other tasks to progress
+        }
+
+        // Remove the listener
+        await Courier.shared.removeInboxListener(listener)
+
+        // Verify steps match expected sequence
+        XCTAssertTrue(stepsLock.sync { steps } == ["loading", "error", "loading", "complete"])
+    }
+    
+    func testMultipleListeners() async throws {
+        var steps = [String]()
+        let stepsLock = DispatchQueue(label: "steps.lock") // To synchronize access
+
+        // Sign out the user
+        await Courier.shared.signOut()
+
+        // Add listeners
+        let listener1 = await Courier.shared.addInboxListener(
+            onLoading: {
+                stepsLock.sync {
+                    steps.append("loading 1")
+                }
+            },
+            onError: { error in
+                stepsLock.sync {
+                    steps.append("error 1")
+                }
+            },
+            onFeedChanged: { inbox in
+                stepsLock.sync {
+                    steps.append("complete 1")
+                }
+            }
+        )
+
+        let listener2 = await Courier.shared.addInboxListener(
+            onLoading: {
+                stepsLock.sync {
+                    steps.append("loading 2")
+                }
+            },
+            onError: { error in
+                stepsLock.sync {
+                    steps.append("error 2")
+                }
+            },
+            onFeedChanged: { inbox in
+                stepsLock.sync {
+                    steps.append("complete 2")
+                }
+            }
+        )
+
+        let listener3 = await Courier.shared.addInboxListener(
+            onLoading: {
+                stepsLock.sync {
+                    steps.append("loading 3")
+                }
+            },
+            onError: { error in
+                stepsLock.sync {
+                    steps.append("error 3")
+                }
+            },
+            onFeedChanged: { inbox in
+                stepsLock.sync {
+                    steps.append("complete 3")
+                }
+            }
+        )
+        
+        try await UserBuilder.authenticate()
+
+        // Wait for all "complete" messages to appear
+        while true {
+            let completeCount = stepsLock.sync {
+                steps.filter { $0.contains("complete") }.count
+            }
+            if completeCount >= 3 {
+                break
+            }
+            await Task.yield() // Allow other async tasks to progress
+        }
+
+        // Cleanup: remove listeners
+        await Courier.shared.removeInboxListener(listener1)
+        await Courier.shared.removeInboxListener(listener2)
+        await Courier.shared.removeInboxListener(listener3)
+    }
+    
+    func testPagination() async throws {
+
+        var hold = true
+
+        try await UserBuilder.authenticate()
+
+        await Courier.shared.setPaginationLimit(-100)
+        let inboxPaginationLimit1 = await Courier.shared.inboxPaginationLimit == 1
+        XCTAssertTrue(inboxPaginationLimit1)
+
+        await Courier.shared.setPaginationLimit(1000)
+        let inboxPaginationLimit2 = await Courier.shared.inboxPaginationLimit == 100
+        XCTAssertTrue(inboxPaginationLimit2)
+
+        let count = 5
+
+        var messageCount = 0
+        await Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
+            messageCount += 1
+            hold = messageCount < count
+        })
+
+        // Register some random listeners
+        await Courier.shared.addInboxListener()
+        await Courier.shared.addInboxListener()
+        await Courier.shared.addInboxListener()
+        await Courier.shared.addInboxListener()
+        await Courier.shared.addInboxListener()
+
+        // Send some messages
+        for _ in 1...count {
+            try await sendMessage()
+        }
+
+        try? await Task.sleep(nanoseconds: delay)
+
         while (hold) {
             // Hold
         }
 
-        await listener.remove()
+        await Courier.shared.removeAllInboxListeners()
+        await Courier.shared.setPaginationLimit(32)
 
     }
-    
-    // Should fail first, the sign user in, then fetch all messages
-    func testMultipleListeners() async throws {
-        
-        var hold1 = true
-        var hold2 = true
-        var hold3 = true
-        
-        await Courier.shared.signOut()
-
-        let listener1 = await Courier.shared.addInboxListener(
-            onLoading: {
-                print("Loading")
-            },
-            onError: { error in
-                Task {
-                    try await UserBuilder.authenticate()
-                }
-            },
-            onFeedChanged: { inbox in
-                hold1 = false
-            }
-        )
-        
-        let listener2 = await Courier.shared.addInboxListener(
-            onFeedChanged: { inbox in
-                hold2 = false
-            }
-        )
-        
-        let listener3 = await Courier.shared.addInboxListener(
-            onFeedChanged: { inbox in
-                hold3 = false
-            }
-        )
-        
-        while (hold1 || hold2 || hold3) {
-            // Hold
-        }
-
-        await listener1.remove()
-        await listener2.remove()
-        await listener3.remove()
-
-    }
-    
-//    func testPagination() async throws {
-//
-//        var hold = true
-//
-//        try await UserBuilder.authenticate()
-//
-//        await Courier.shared.inboxPaginationLimit = -100
-//        XCTAssertTrue(Courier.shared.inboxPaginationLimit == 1)
-//
-//        Courier.shared.inboxPaginationLimit = 1000
-//        XCTAssertTrue(Courier.shared.inboxPaginationLimit == 100)
-//
-//        let count = 5
-//
-//        var messageCount = 0
-//        await Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
-//            messageCount += 1
-//            hold = messageCount < count
-//        })
-//
-//        // Register some random listeners
-//        await Courier.shared.addInboxListener()
-//        await Courier.shared.addInboxListener()
-//        await Courier.shared.addInboxListener()
-//        await Courier.shared.addInboxListener()
-//        await Courier.shared.addInboxListener()
-//
-//        // Send some messages
-//        for _ in 1...count {
-//            try await sendMessage()
-//        }
-//
-//        try? await Task.sleep(nanoseconds: delay)
-//
-//        while (hold) {
-//            // Hold
-//        }
-//
-//        await Courier.shared.removeAllInboxListeners()
-//        await Courier.shared.inboxPaginationLimit = 32
-//
-//    }
     
     func testOpenMessage() async throws {
         
@@ -271,7 +326,7 @@ class InboxTests: XCTestCase {
             // Wait
         }
         
-        await listener.remove()
+        await Courier.shared.removeInboxListener(listener)
         
     }
     
@@ -307,7 +362,7 @@ class InboxTests: XCTestCase {
             // Wait
         }
         
-        await listener.remove()
+        await Courier.shared.removeInboxListener(listener)
         
     }
     
@@ -361,7 +416,7 @@ class InboxTests: XCTestCase {
             // Wait
         }
         
-        await listener.remove()
+        await Courier.shared.removeInboxListener(listener)
         
     }
     
@@ -400,7 +455,7 @@ class InboxTests: XCTestCase {
         
         while (hold1) {}
         
-        await listener1.remove()
+        await Courier.shared.removeInboxListener(listener1)
         
         // Remove user on feed changed
         
@@ -419,7 +474,7 @@ class InboxTests: XCTestCase {
         
         while (hold2) {}
         
-        await listener2.remove()
+        await Courier.shared.removeInboxListener(listener2)
         
         // Remove user on feed changed
         
@@ -436,7 +491,7 @@ class InboxTests: XCTestCase {
         
         while (hold3) {}
         
-        await listener3.remove()
+        await Courier.shared.removeInboxListener(listener3)
         
     }
     
@@ -460,6 +515,53 @@ class InboxTests: XCTestCase {
         await Courier.shared.signIn(userId: userId, accessToken: jwt)
         let _ = try await Courier.shared.client?.inbox.getMessages()
         await Courier.shared.signOut()
+    }
+    
+    func testListenerSpam() async throws {
+        
+        await Courier.shared.signOut()
+        
+        var fetches = 0
+        
+        // Define a closure for handling feed changes
+        let onFeedChanged: (Int, InboxMessageSet) -> Void = { listener, set in
+            fetches += 1
+            print("Listener: \(listener), Feed fetched: \(fetches). Message Count: \(set.totalCount)")
+        }
+        
+        // Launch multiple tasks concurrently using Task Group for better scalability
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for _ in 1...5 { // 5 listeners as per the original tasks
+                group.addTask {
+                    await self.registerInboxListeners(numberOfListeners: 10, onFeedChanged: onFeedChanged)
+                }
+            }
+            
+            // Wait for all tasks to complete
+            try await group.waitForAll()
+        }
+        
+        try await UserBuilder.authenticate(userId: "mike")
+        
+        while (fetches < 50) {
+            
+        }
+        
+        // Remove all listeners after the tasks are completed
+        await Courier.shared.removeAllInboxListeners()
+        
+    }
+
+    private func registerInboxListeners(numberOfListeners: Int = 10, onFeedChanged: @escaping (Int, InboxMessageSet) -> Void) async {
+        await withTaskGroup(of: Void.self) { group in
+            for i in 1...numberOfListeners {
+                group.addTask {
+                    await Courier.shared.addInboxListener(onFeedChanged: { set in
+                        onFeedChanged(i, set)
+                    })
+                }
+            }
+        }
     }
     
 }

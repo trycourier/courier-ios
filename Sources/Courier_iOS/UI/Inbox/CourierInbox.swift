@@ -373,9 +373,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     }
     
     deinit {
-        Task { [weak self] in
-            await self?.inboxListener?.remove()
-        }
+        inboxListener?.remove()
     }
     
 }

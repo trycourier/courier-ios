@@ -136,8 +136,7 @@ class AuthViewController: UIViewController {
         
         if let userId = userId {
             authButton.setTitle("Sign Out", for: .normal)
-//            authLabel.text = "Courier User Id: \(userId)\n\nTenant Id: \(Courier.shared.tenantId ?? "None")"
-            authLabel.text = "Courier User Id: \(userId)\n"
+            authLabel.text = "Courier User Id: \(userId)\n\nTenant Id: \(Courier.shared.tenantId ?? "None")"
         } else {
             authButton.setTitle("Sign In", for: .normal)
             authLabel.text = "No Courier User Id Found"
@@ -148,9 +147,7 @@ class AuthViewController: UIViewController {
     }
     
     deinit {
-        Task { [weak self] in
-            await self?.authListener?.remove()
-        }
+        authListener?.remove()
     }
 
 }

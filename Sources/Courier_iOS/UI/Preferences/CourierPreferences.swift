@@ -683,9 +683,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
      Clear the listeners
      */
     deinit {
-        Task { [weak self] in
-            await self?.authListener?.remove()
-        }
+        authListener?.remove()
     }
     
 }
