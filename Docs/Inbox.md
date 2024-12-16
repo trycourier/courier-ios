@@ -342,36 +342,38 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
         
         ..
         
-        // Allows you to listen to all inbox changes and build whatever you'd like
-        self.inboxListener = Courier.shared.addInboxListener(
-            onLoading: { [weak self] in
-                // Called when listener is registered, refreshing or restarting
-            },
-            onError: { [weak self] error in
-                // Called on error or sign out
-            },
-            onUnreadCountChanged: { [weak self] count in
-                // Will return 0 when a user is signed out
-            },
-            onFeedChanged: { [weak self] set in
-                // Called when the feed initially loads or is restarted from scratch
-            },
-            onArchiveChanged: { [weak self] set in
-                // Called when the archive initially loads or is restarted from scratch
-            },
-            onPageAdded: { [weak self] feed, set in
-                // Called when pagination happens
-            },
-            onMessageChanged: { [weak self] feed, index, message in
-                // Called when a message is change (i.e. read / unread)
-            },
-            onMessageAdded: { [weak self] feed, index, message in
-                // Called when a message is added (i.e. new message received in realtime)
-            },
-            onMessageRemoved: { [weak self] feed, index, message in
-                // Called when a message is removed (i.e. message is archived)
-            }
-        )
+        Task {
+            // Allows you to listen to all inbox changes and build whatever you'd like
+            self.inboxListener = await Courier.shared.addInboxListener(
+                onLoading: { [weak self] in
+                    // Called when listener is registered, refreshing or restarting
+                },
+                onError: { [weak self] error in
+                    // Called on error or sign out
+                },
+                onUnreadCountChanged: { [weak self] count in
+                    // Will return 0 when a user is signed out
+                },
+                onFeedChanged: { [weak self] set in
+                    // Called when the feed initially loads or is restarted from scratch
+                },
+                onArchiveChanged: { [weak self] set in
+                    // Called when the archive initially loads or is restarted from scratch
+                },
+                onPageAdded: { [weak self] feed, set in
+                    // Called when pagination happens
+                },
+                onMessageChanged: { [weak self] feed, index, message in
+                    // Called when a message is change (i.e. read / unread)
+                },
+                onMessageAdded: { [weak self] feed, index, message in
+                    // Called when a message is added (i.e. new message received in realtime)
+                },
+                onMessageRemoved: { [weak self] feed, index, message in
+                    // Called when a message is removed (i.e. message is archived)
+                }
+            )
+        }
         
     }
     
@@ -389,50 +391,50 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
 ```swift
 import Courier_iOS
 
-// Listen to all inbox events
-// Only one "pipe" of data is created behind the scenes for network / performance reasons
-let inboxListener = Courier.shared.addInboxListener(
-    onLoading: { [weak self] in
-        // Called when listener is registered, refreshing or restarting
-    },
-    onError: { [weak self] error in
-        // Called on error or sign out
-    },
-    onUnreadCountChanged: { [weak self] count in
-        // Will return 0 when a user is signed out
-    },
-    onFeedChanged: { [weak self] set in
-        // Called when the feed initially loads or is restarted from scratch
-    },
-    onArchiveChanged: { [weak self] set in
-        // Called when the archive initially loads or is restarted from scratch
-    },
-    onPageAdded: { [weak self] feed, set in
-        // Called when pagination happens
-    },
-    onMessageChanged: { [weak self] feed, index, message in
-        // Called when a message is change (i.e. read / unread)
-    },
-    onMessageAdded: { [weak self] feed, index, message in
-        // Called when a message is added (i.e. new message received in realtime)
-    },
-    onMessageRemoved: { [weak self] feed, index, message in
-        // Called when a message is removed (i.e. message is archived)
-    }
-)
-
-// Stop the current listener
-inboxListener.remove()
-
-// Remove all listeners
-// This will also remove the listener of the prebuilt UI
-Courier.shared.removeAllInboxListeners()
-
-// The amount of inbox messages to fetch at a time
-// Will affect prebuilt UI
-Courier.shared.inboxPaginationLimit = 123
-
 Task {
+
+    // Listen to all inbox events
+    // Only one "pipe" of data is created behind the scenes for network / performance reasons
+    let inboxListener = await Courier.shared.addInboxListener(
+        onLoading: { [weak self] in
+            // Called when listener is registered, refreshing or restarting
+        },
+        onError: { [weak self] error in
+            // Called on error or sign out
+        },
+        onUnreadCountChanged: { [weak self] count in
+            // Will return 0 when a user is signed out
+        },
+        onFeedChanged: { [weak self] set in
+            // Called when the feed initially loads or is restarted from scratch
+        },
+        onArchiveChanged: { [weak self] set in
+            // Called when the archive initially loads or is restarted from scratch
+        },
+        onPageAdded: { [weak self] feed, set in
+            // Called when pagination happens
+        },
+        onMessageChanged: { [weak self] feed, index, message in
+            // Called when a message is change (i.e. read / unread)
+        },
+        onMessageAdded: { [weak self] feed, index, message in
+            // Called when a message is added (i.e. new message received in realtime)
+        },
+        onMessageRemoved: { [weak self] feed, index, message in
+            // Called when a message is removed (i.e. message is archived)
+        }
+    )
+    
+    // Stop the current listener
+    inboxListener.remove()
+    
+    // Remove all listeners
+    // This will also remove the listener of the prebuilt UI
+    await Courier.shared.removeAllInboxListeners()
+    
+    // The amount of inbox messages to fetch at a time
+    // Will affect prebuilt UI
+    await Courier.shared.setPaginationLimit(123)
 
     // The available messages the inbox has
     let inboxMessages = await Courier.shared.inboxMessages
