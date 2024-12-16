@@ -51,17 +51,21 @@ import Foundation
 extension CourierInboxListener {
     
     internal func onLoad(data: CourierInboxData) {
-        if !isInitialized {
-            return
+        DispatchQueue.main.async {
+            if !self.isInitialized {
+                return
+            }
+            self.onFeedChanged?(data.feed)
+            self.onArchiveChanged?(data.archived)
+            self.onUnreadCountChanged?(data.unreadCount)
         }
-        onFeedChanged?(data.feed)
-        onArchiveChanged?(data.archived)
-        onUnreadCountChanged?(data.unreadCount)
     }
     
     internal func initialize() {
-        onLoading?()
-        isInitialized = true
+        DispatchQueue.main.async {
+            self.onLoading?()
+            self.isInitialized = true
+        }
     }
     
     // Unregisters a listener on a background task

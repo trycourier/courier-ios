@@ -407,14 +407,18 @@ extension Courier {
         
         // Ensure the user is signed in
         if !isUserSignedIn {
-            Logger.warn("User is not signed in. Please call Courier.shared.signIn(...) to setup the inbox listener.")
-            listener.onError?(CourierError.userNotFound)
+            DispatchQueue.main.async {
+                Logger.warn("User is not signed in. Please call Courier.shared.signIn(...) to setup the inbox listener.")
+                listener.onError?(CourierError.userNotFound)
+            }
             return listener
         }
         
         // Notify that data exists if needed
         if let data = await inboxModule.data {
-            listener.onLoad(data: data)
+            DispatchQueue.main.async {
+                listener.onLoad(data: data)
+            }
             return listener
         }
         
