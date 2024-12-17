@@ -57,6 +57,16 @@ extension Courier {
         
     }
     
+    @objc public static func setAPNSToken(_ rawToken: Data) {
+        Task {
+            do {
+                try await Courier.shared.setAPNSToken(rawToken)
+            } catch let error as NSError {
+                await Courier.shared.client?.log(error.localizedDescription)
+            }
+        }
+    }
+    
     // Shortcut to open the settings app for the current app
     @MainActor @available(iOSApplicationExtension, unavailable)
     @objc public static func openSettingsForApp() {
