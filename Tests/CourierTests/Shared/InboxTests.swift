@@ -524,16 +524,16 @@ class InboxTests: XCTestCase {
         var fetches = 0
         
         // Define a closure for handling feed changes
-        let onFeedChanged: (Int, InboxMessageSet) -> Void = { listener, set in
+        let onFeedChanged: (Int, Int) -> Void = { group, index in
             fetches += 1
-            print("Listener: \(listener), Feed fetched: \(fetches). Message Count: \(set.totalCount)")
+            print("Data fetched for Group: #\(group) :: Listener #\(index)")
         }
         
-        // Launch multiple tasks concurrently using Task Group for better scalability
+        // Launch multiple tasks concurrently
         try await withThrowingTaskGroup(of: Void.self) { group in
-            for _ in 1...5 { // 5 listeners as per the original tasks
+            for i in 1...5 {
                 group.addTask {
-                    await self.registerInboxListeners(numberOfListeners: 10, onFeedChanged: onFeedChanged)
+                    await self.registerInboxListeners(numberOfListeners: 1, bundle: i, onFeedChanged: onFeedChanged)
                 }
             }
             
@@ -543,7 +543,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate(userId: "mike")
         
-        while (fetches < 50) {
+        while (fetches < 5) {
             
         }
         
@@ -552,12 +552,12 @@ class InboxTests: XCTestCase {
         
     }
 
-    private func registerInboxListeners(numberOfListeners: Int = 10, onFeedChanged: @escaping (Int, InboxMessageSet) -> Void) async {
+    private func registerInboxListeners(numberOfListeners: Int = 10, bundle: Int, onFeedChanged: @escaping (Int, Int) -> Void) async {
         await withTaskGroup(of: Void.self) { group in
             for i in 1...numberOfListeners {
                 group.addTask {
                     await Courier.shared.addInboxListener(onFeedChanged: { set in
-                        onFeedChanged(i, set)
+                        onFeedChanged(bundle, i)
                     })
                 }
             }

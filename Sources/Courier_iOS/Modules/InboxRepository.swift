@@ -137,6 +137,9 @@ internal actor InboxRepository {
         try await socket.connect()
         try await socket.sendSubscribe()
         
+        // Ensure the socket is kept alive
+        socket.keepAlive()
+        
     }
     
     func getNextPage(_ feed: InboxMessageFeed, inboxData: CourierInboxData) async throws -> InboxMessageSet? {

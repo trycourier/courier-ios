@@ -19,6 +19,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     internal var onError: ((Error) -> Void)?
     
     private let url: String
+    private var pingTimer: Timer?
     
     init(url: String) {
         self.url = url
@@ -57,8 +58,15 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     }
     
     public func disconnect() {
+        
+        // Stop the ping timer
+        pingTimer?.invalidate()
+        pingTimer = nil
+        
+        // Cancel the WebSocket task
         webSocketTask?.cancel(with: .normalClosure, reason: nil)
         webSocketTask = nil
+        
     }
     
     public func send(_ message: [String: Any]) async throws {
@@ -70,6 +78,28 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         
         // Send message to socket
         try await webSocketTask?.send(message)
+        
+    }
+    
+    // Pings keep alive. Will ping every 5 minutes by default
+    public func keepAlive(interval: TimeInterval = 300) {
+        
+        // Ensure any existing timer is invalidated
+        pingTimer?.invalidate()
+        
+        // Create and schedule a new timer
+        pingTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            Task {
+                do {
+                    try await self.send([
+                        "action": "keepAlive"
+                    ])
+                } catch {
+                    await Courier.shared.client?.log(error.localizedDescription)
+                }
+            }
+        }
         
     }
     
