@@ -93,7 +93,9 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
             self.pingTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
                 Task {
                     do {
-                        try await self.send(["action": "keepAlive"])
+                        try await self.send([
+                            "action": "keepAlive"
+                        ])
                     } catch {
                         await Courier.shared.client?.log(error.localizedDescription)
                     }

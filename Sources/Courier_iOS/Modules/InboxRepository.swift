@@ -138,7 +138,8 @@ internal actor InboxRepository {
         try await socket.sendSubscribe()
         
         // Ensure the socket is kept alive
-        socket.keepAlive(interval: 10)
+        // Will ping every 5 minutes
+        socket.keepAlive()
         
     }
     
