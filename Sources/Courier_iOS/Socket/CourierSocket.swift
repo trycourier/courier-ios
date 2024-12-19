@@ -88,17 +88,19 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         pingTimer?.invalidate()
         
         // Create and schedule a new timer
-        pingTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            Task {
-                do {
-                    try await self.send([
-                        "action": "keepAlive"
-                    ])
-                } catch {
-                    await Courier.shared.client?.log(error.localizedDescription)
+            self.pingTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
+                Task {
+                    do {
+                        try await self.send(["action": "keepAlive"])
+                    } catch {
+                        await Courier.shared.client?.log(error.localizedDescription)
+                    }
                 }
             }
+            // Ensure the timer runs in the common run loop mode
+            RunLoop.main.add(self.pingTimer!, forMode: .common)
         }
         
     }
