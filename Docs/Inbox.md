@@ -340,7 +340,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
         
         Task {
            
-            // Allows you to listen to all inbox changes and build whatever you'd like
+            // Allows you to listen to all inbox changes and show a fully custom UI
             self.inboxListener = await Courier.shared.addInboxListener(
                 onLoading: { [weak self] in
                     // Called when listener is registered, refreshing or restarting
