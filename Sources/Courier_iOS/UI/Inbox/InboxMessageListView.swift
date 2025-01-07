@@ -414,6 +414,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private func handleLongPress(for message: InboxMessage) async {
         let messages = self.feed == .feed ? await Courier.shared.feedMessages : await Courier.shared.archivedMessages
         if let index = messages.firstIndex(where: { $0.messageId == message.messageId }) {
+            vibrate()
             self.didLongPressInboxMessageAtIndex(message, index)
         }
     }

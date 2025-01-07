@@ -358,3 +358,9 @@ public extension NSDictionary {
     }
     
 }
+
+internal func vibrate(style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
+    let generator = UIImpactFeedbackGenerator(style: style)
+    generator.prepare()
+    generator.impactOccurred()
+}
