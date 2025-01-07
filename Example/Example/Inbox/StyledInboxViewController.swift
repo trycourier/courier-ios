@@ -138,6 +138,34 @@ class StyledInboxViewController: UIViewController {
             ),
             darkTheme: CourierInboxTheme(
                 brandId: Env.COURIER_BRAND_ID,
+                tabStyle: CourierStyles.Inbox.TabStyle(
+                    selected: CourierStyles.Inbox.TabItemStyle(
+                        font: CourierStyles.Font(
+                            font: UIFont(name: "Avenir Black", size: 18)!,
+                            color: .white
+                        ),
+                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                            font: CourierStyles.Font(
+                                font: UIFont(name: "Avenir Medium", size: 14)!,
+                                color: .white
+                            ),
+                            color: nil
+                        )
+                    ),
+                    unselected: CourierStyles.Inbox.TabItemStyle(
+                        font: CourierStyles.Font(
+                            font: UIFont(name: "Avenir Medium", size: 18)!,
+                            color: .white
+                        ),
+                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                            font: CourierStyles.Font(
+                                font: UIFont(name: "Avenir Medium", size: 14)!,
+                                color: .white
+                            ),
+                            color: nil
+                        )
+                    )
+                ),
                 unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
                     indicator: .dot
                 ),
