@@ -72,7 +72,7 @@ class InboxTests: XCTestCase {
 
         // Add a listener
         let listener = await Courier.shared.addInboxListener(
-            onLoading: {
+            onLoading: { _ in
                 stepsLock.sync {
                     steps.append("loading")
                 }
@@ -118,7 +118,7 @@ class InboxTests: XCTestCase {
 
         // Add listeners
         let listener1 = await Courier.shared.addInboxListener(
-            onLoading: {
+            onLoading: { _ in
                 stepsLock.sync {
                     steps.append("loading 1")
                 }
@@ -136,7 +136,7 @@ class InboxTests: XCTestCase {
         )
 
         let listener2 = await Courier.shared.addInboxListener(
-            onLoading: {
+            onLoading: { _ in
                 stepsLock.sync {
                     steps.append("loading 2")
                 }
@@ -154,7 +154,7 @@ class InboxTests: XCTestCase {
         )
 
         let listener3 = await Courier.shared.addInboxListener(
-            onLoading: {
+            onLoading: { _ in
                 stepsLock.sync {
                     steps.append("loading 3")
                 }
@@ -443,7 +443,7 @@ class InboxTests: XCTestCase {
         var hold1 = true
         
         let listener1 = await Courier.shared.addInboxListener(
-            onLoading: {
+            onLoading: { _ in
                 Task {
                     await Courier.shared.signOut()
                     hold1 = false

@@ -35,7 +35,7 @@ internal actor InboxRepository {
         await handler.onInboxKilled()
     }
     
-    @discardableResult func get(with handler: InboxMutationHandler, inboxData: CourierInboxData?, isRefresh: Bool) async -> CourierInboxData? {
+    @discardableResult func get(with handler: InboxMutationHandler, feedMessageCount: Int?, archiveMessageCount: Int?, isRefresh: Bool) async -> CourierInboxData? {
         
         await stop(with: handler)
         
@@ -44,7 +44,8 @@ internal actor InboxRepository {
         do {
             
             let inboxData = try await getInbox(
-                inboxData: inboxData,
+                feedMessageCount: feedMessageCount,
+                archiveMessageCount: archiveMessageCount,
                 isRefresh: isRefresh
             )
             
@@ -71,12 +72,12 @@ internal actor InboxRepository {
         
     }
     
-    private func getInitialLimit(for set: InboxMessageSet?, isRefresh: Bool) async -> Int {
+    private func getInitialLimit(messageCount: Int?, isRefresh: Bool) async -> Int {
         
         let defaultPaginationLimit = await Courier.shared.paginationLimit
         
         if isRefresh {
-            let existingCount = set?.messages.count ?? defaultPaginationLimit
+            let existingCount = messageCount ?? defaultPaginationLimit
             return max(existingCount, defaultPaginationLimit)
         }
         
@@ -84,7 +85,7 @@ internal actor InboxRepository {
         
     }
     
-    private func getInbox(inboxData: CourierInboxData?, isRefresh: Bool) async throws -> CourierInboxData {
+    private func getInbox(feedMessageCount: Int?, archiveMessageCount: Int?, isRefresh: Bool) async throws -> CourierInboxData {
          
         if await !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
@@ -94,22 +95,59 @@ internal actor InboxRepository {
             throw CourierError.inboxNotInitialized
         }
         
+        // Make a strong local copy to ensure it is not deallocated mid-call
+        let strongClient = client
+        
         // Get either the same number of items shown, or the pagination limit
         // This handles the case or refreshes or fresh data pulls
-        let feedLimit = await getInitialLimit(for: inboxData?.feed, isRefresh: isRefresh)
-        let archivedLimit = await getInitialLimit(for: inboxData?.archived, isRefresh: isRefresh)
-        
-        // Functions for getting data
-        async let feedTask = client.inbox.getMessages(paginationLimit: feedLimit, startCursor: nil)
-        async let archivedTask = client.inbox.getArchivedMessages(paginationLimit: archivedLimit, startCursor: nil)
-        async let unreadCountTask = client.inbox.getUnreadMessageCount()
-        
-        let (feedRes, archivedRes, unreadCount) = try await (
-            feedTask,
-            archivedTask,
-            unreadCountTask
+        let feedLimit = await getInitialLimit(
+            messageCount: feedMessageCount,
+            isRefresh: isRefresh
+        )
+        let archivedLimit = await getInitialLimit(
+            messageCount: archiveMessageCount,
+            isRefresh: isRefresh
         )
         
+        var feedRes: InboxResponse?
+        var archivedRes: InboxResponse?
+        var unreadCount: Int?
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            
+            // Get feed
+            group.addTask {
+                feedRes = try await strongClient.inbox.getMessages(
+                    paginationLimit: feedLimit,
+                    startCursor: nil
+                )
+            }
+            
+            // Get archived
+            group.addTask {
+                archivedRes = try await strongClient.inbox.getArchivedMessages(
+                    paginationLimit: archivedLimit,
+                    startCursor: nil
+                )
+            }
+            
+            // Get unread count
+            group.addTask {
+                unreadCount = try await strongClient.inbox.getUnreadMessageCount()
+            }
+            
+            // Wait for all tasks to finish or one to throw
+            try await group.waitForAll()
+        }
+
+        guard
+            let feedRes = feedRes,
+            let archivedRes = archivedRes,
+            let unreadCount = unreadCount
+        else {
+            throw CourierError.inboxNotInitialized
+        }
+
         return CourierInboxData(
             feed: feedRes.toInboxMessageSet(),
             archived: archivedRes.toInboxMessageSet(),
@@ -153,6 +191,9 @@ internal actor InboxRepository {
             throw CourierError.inboxNotInitialized
         }
         
+        // Create strong ref copy
+        let strongClient = client
+        
         let limit = await Courier.shared.paginationLimit
         
         if feed == .feed {
@@ -163,7 +204,7 @@ internal actor InboxRepository {
             
             self.isPagingFeed = true
             
-            let res = try await client.inbox.getMessages(
+            let res = try await strongClient.inbox.getMessages(
                 paginationLimit: limit,
                 startCursor: inboxData.feed.paginationCursor
             )
@@ -180,7 +221,7 @@ internal actor InboxRepository {
             
             self.isPagingArchived = true
             
-            let res = try await client.inbox.getArchivedMessages(
+            let res = try await strongClient.inbox.getArchivedMessages(
                 paginationLimit: limit,
                 startCursor: inboxData.archived.paginationCursor
             )

@@ -74,15 +74,17 @@ public class CourierInboxData {
             throw CourierError.inboxNotInitialized
         }
         
+        let strongClient = client
+        
         // Copy the original state of the data
         let original = copy()
         
         await readAll(handler)
         
         do {
-            try await client.inbox.readAll()
+            try await strongClient.inbox.readAll()
         } catch {
-            client.options.log(error.localizedDescription)
+            strongClient.options.log(error.localizedDescription)
             await handler.onInboxReset(inbox: original, error: error)
         }
         
@@ -93,6 +95,8 @@ public class CourierInboxData {
         guard let client = client else {
             throw CourierError.inboxNotInitialized
         }
+        
+        let strongClient = client
         
         let values = getMessages(for: messageId)
         let inboxFeed = values?.0
@@ -120,9 +124,9 @@ public class CourierInboxData {
         // Perform server update
         // If fails, reset the change to the original copy
         do {
-            try await mutateServerData(using: client, for: messages![index], event: event)
+            try await mutateServerData(using: strongClient, for: messages![index], event: event)
         } catch {
-            client.options.log(error.localizedDescription)
+            strongClient.options.log(error.localizedDescription)
             await handler.onInboxReset(inbox: original, error: error)
         }
         
