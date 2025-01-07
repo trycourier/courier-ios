@@ -168,7 +168,7 @@ extension Courier: InboxMutationHandler {
         
         DispatchQueue.main.async {
             listeners.forEach({ listener in
-                listener.onLoading?()
+                listener.onLoading?(isRefresh)
             })
         }
         
@@ -313,7 +313,8 @@ extension Courier {
         
         await inboxModule.repo.get(
             with: inboxMutationHandler,
-            inboxData: inboxModule.data,
+            feedMessageCount: inboxModule.data?.feed.messages.count,
+            archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: true
         )
         
@@ -338,7 +339,8 @@ extension Courier {
     public func refreshInbox() async {
         await inboxModule.repo.get(
             with: inboxMutationHandler,
-            inboxData: inboxModule.data,
+            feedMessageCount: inboxModule.data?.feed.messages.count,
+            archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: true
         )
     }
@@ -346,7 +348,8 @@ extension Courier {
     func restartInbox() async {
         await inboxModule.repo.get(
             with: inboxMutationHandler,
-            inboxData: inboxModule.data,
+            feedMessageCount: inboxModule.data?.feed.messages.count,
+            archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: false
         )
     }
@@ -377,7 +380,7 @@ extension Courier {
     
     @discardableResult
     public func addInboxListener(
-        onLoading: (() -> Void)? = nil,
+        onLoading: ((Bool) -> Void)? = nil,
         onError: ((Error) -> Void)? = nil,
         onUnreadCountChanged: ((_ count: Int) -> Void)? = nil,
         onFeedChanged: ((_ messageSet: InboxMessageSet) -> Void)? = nil,
@@ -427,7 +430,8 @@ extension Courier {
         // This will return data for the last inbox listener that is registered
         await inboxModule.repo.get(
             with: inboxMutationHandler,
-            inboxData: inboxModule.data,
+            feedMessageCount: inboxModule.data?.feed.messages.count,
+            archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: false
         )
         

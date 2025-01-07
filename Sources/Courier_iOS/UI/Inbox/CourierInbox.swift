@@ -180,7 +180,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             await self.refreshBrand()
             
             self.inboxListener = await Courier.shared.addInboxListener(
-                onLoading: { [weak self] in
+                onLoading: { [weak self] isRefresh in
                     self?.getPages().forEach { page in
                         page.page.setLoading()
                     }

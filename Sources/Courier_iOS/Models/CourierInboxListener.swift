@@ -11,7 +11,7 @@ import Foundation
 
 @objc public class CourierInboxListener: NSObject {
     
-    let onLoading: (() -> Void)?
+    let onLoading: ((Bool) -> Void)?
     let onError: ((Error) -> Void)?
     let onUnreadCountChanged: ((_ count: Int) -> Void)?
     let onFeedChanged: ((_ messageSet: InboxMessageSet) -> Void)?
@@ -24,7 +24,7 @@ import Foundation
     private var isInitialized = false
     
     public init(
-        onLoading: (() -> Void)? = nil,
+        onLoading: ((Bool) -> Void)? = nil,
         onError: ((Error) -> Void)? = nil,
         onUnreadCountChanged: ((_ count: Int) -> Void)? = nil,
         onFeedChanged: ((_ messageSet: InboxMessageSet) -> Void)? = nil,
@@ -63,7 +63,7 @@ extension CourierInboxListener {
     
     internal func initialize() {
         DispatchQueue.main.async {
-            self.onLoading?()
+            self.onLoading?(false)
             self.isInitialized = true
         }
     }
