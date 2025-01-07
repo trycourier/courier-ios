@@ -59,7 +59,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
 
         Task {
             inboxListener = await Courier.shared.addInboxListener(
-                onLoading: {
+                onLoading: { _ in
                     self.setState(.loading)
                 },
                 onError: { error in
