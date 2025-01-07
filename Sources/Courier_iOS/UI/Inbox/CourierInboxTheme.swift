@@ -44,7 +44,7 @@ import UIKit
                         font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
                         color: .white
                     ),
-                    color: .systemBlue
+                    color: nil
                 )
             ),
             unselected: CourierStyles.Inbox.TabItemStyle(
@@ -167,6 +167,24 @@ import UIKit
                 return brandColor
             } else {
                 return .systemBlue
+            }
+        }
+    }
+    
+    internal func getUnreadCountColor(isSelected: Bool) -> UIColor? {
+        if isSelected {
+            if let customColor = tabStyle.selected.indicator.color {
+                return customColor
+            } else if let brandColor = UIColor(brand?.settings?.colors?.primary ?? "") {
+                return brandColor
+            } else {
+                return .systemBlue
+            }
+        } else {
+            if let customColor = tabStyle.unselected.indicator.color {
+                return customColor
+            } else {
+                return .lightGray
             }
         }
     }

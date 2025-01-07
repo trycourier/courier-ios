@@ -345,7 +345,7 @@ internal class TabBadge: UIView {
         
         titleLabel.textColor = style.font.color
         titleLabel.font = style.font.font
-        backgroundColor = style.color
+        backgroundColor = theme.getUnreadCountColor(isSelected: isSelected)
 
         layoutIfNeeded()
         

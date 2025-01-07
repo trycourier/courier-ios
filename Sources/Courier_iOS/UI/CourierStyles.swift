@@ -40,9 +40,9 @@ public enum CourierStyles {
         public class TabIndicatorStyle: NSObject {
             
             public let font: CourierStyles.Font
-            public let color: UIColor
+            public let color: UIColor?
             
-            public init(font: CourierStyles.Font, color: UIColor) {
+            public init(font: CourierStyles.Font, color: UIColor?) {
                 self.font = font
                 self.color = color
             }
