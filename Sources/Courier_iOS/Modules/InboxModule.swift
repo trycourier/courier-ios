@@ -160,10 +160,6 @@ extension Courier: InboxMutationHandler {
     
     func onInboxReload(isRefresh: Bool) async {
         
-        if isRefresh {
-            return
-        }
-        
         let listeners = await self.inboxModule.inboxListeners
         
         DispatchQueue.main.async {

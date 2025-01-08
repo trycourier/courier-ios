@@ -181,8 +181,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             
             self.inboxListener = await Courier.shared.addInboxListener(
                 onLoading: { [weak self] isRefresh in
-                    self?.getPages().forEach { page in
-                        page.page.setLoading()
+                    if !isRefresh {
+                        self?.getPages().forEach { page in
+                            page.page.setLoading()
+                        }
                     }
                 },
                 onError: { [weak self] error in
