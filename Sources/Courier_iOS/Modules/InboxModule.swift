@@ -356,19 +356,19 @@ extension Courier {
     }
     
     @discardableResult
-    public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> [InboxMessage] {
+    public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> InboxMessageSet? {
         
         guard let inboxData = await inboxModule.data else {
-            return []
+            return nil
         }
         
         guard let messageSet = try await inboxModule.repo.getNextPage(feed, inboxData: inboxData) else {
-            return []
+            return nil
         }
         
         await inboxMutationHandler.onInboxPageFetched(feed: feed, messageSet: messageSet)
         
-        return messageSet.messages
+        return messageSet
         
     }
     
@@ -415,7 +415,7 @@ extension Courier {
         
         // Notify that data exists if needed
         if let data = await inboxModule.data {
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { 
                 listener.onLoad(data: data)
             }
             return listener
