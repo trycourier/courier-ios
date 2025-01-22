@@ -2,7 +2,7 @@
 //  CourierNotificationProxy.swift
 //  Courier_iOS
 //
-//  Created by Michael Miller on 12/13/24.
+//  Created by https://github.com/mikemilla on 12/13/24.
 //
 
 import Foundation

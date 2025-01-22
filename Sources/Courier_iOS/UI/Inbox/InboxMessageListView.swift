@@ -2,7 +2,7 @@
 //  InboxMessageListView.swift
 //  Courier_iOS
 //
-//  Created by Michael Miller on 9/23/24.
+//  Created by https://github.com/mikemilla on 9/23/24.
 //
 
 import UIKit

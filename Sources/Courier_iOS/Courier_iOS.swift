@@ -46,12 +46,12 @@ import UIKit
     
     // MARK: Tokens
     
-    internal lazy var tokenModule = { TokenModule() }()
+    internal let tokenModule = TokenModule()
     
     // MARK: Inbox
     internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue
-    internal lazy var inboxMutationHandler: InboxMutationHandler = { self }()
-    internal lazy var inboxModule = { InboxModule() }()
+    internal var inboxMutationHandler: InboxMutationHandler?
+    internal let inboxModule = InboxModule()
     
     // MARK: Proxy
     private var notificationProxy: CourierNotificationProxy?
@@ -78,7 +78,12 @@ import UIKit
             object: nil
         )
         
+        // Attach mutation handler
+        inboxMutationHandler = self
+        
     }
+    
+    // MARK: Deinit
     
     deinit {
         if let proxy = notificationProxy {

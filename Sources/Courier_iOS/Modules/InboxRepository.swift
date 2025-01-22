@@ -2,7 +2,7 @@
 //  InboxRepository.swift
 //  Courier_iOS
 //
-//  Created by Michael Miller on 10/2/24.
+//  Created by https://github.com/mikemilla on 10/2/24.
 //
 
 internal actor InboxRepository {

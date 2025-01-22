@@ -2,7 +2,7 @@
 //  CodableValue.swift
 //
 //
-//  Created by Michael Miller on 8/23/24.
+//  Created by https://github.com/mikemilla on 8/23/24.
 //
 
 import Foundation

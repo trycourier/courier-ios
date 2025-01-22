@@ -9,12 +9,12 @@ import Foundation
 
 public class InboxClient: CourierApiClient {
     
-    public lazy var socket = { InboxSocket(options: self.options) }()
-    
     private let options: CourierClient.Options
+    public let socket: InboxSocket
         
     init(options: CourierClient.Options) {
         self.options = options
+        self.socket = InboxSocket(options: self.options)
         super.init()
     }
     

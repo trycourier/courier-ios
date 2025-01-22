@@ -7,39 +7,12 @@
 
 import UIKit
 
-internal protocol InboxMutationHandler {
-    func onInboxReload(isRefresh: Bool) async
-    func onInboxKilled() async
-    func onInboxReset(inbox: CourierInboxData, error: Error) async
-    func onInboxUpdated(inbox: CourierInboxData) async
-    func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
-    func onInboxItemRemove(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
-    func onInboxItemUpdated(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async
-    func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async
-    func onInboxMessageReceived(message: InboxMessage) async
-    func onInboxEventReceived(event: InboxSocket.MessageEvent) async
-    func onInboxError(with error: Error) async
-    func onUnreadCountChange(count: Int) async
-}
-
-internal enum InboxEventType: String, Codable {
-    case markAllRead = "mark-all-read"
-    case read = "read"
-    case unread = "unread"
-    case opened = "opened"
-    case unopened = "unopened"
-    case archive = "archive"
-    case unarchive = "unarchive"
-    case click = "click"
-    case unclick = "unclick"
-}
-
 internal actor InboxModule {
     
     internal var inboxListeners: [CourierInboxListener] = []
     
     var data: CourierInboxData? = nil
-    lazy var repo = InboxRepository()
+    let repo = InboxRepository()
     
     func updateData(data: CourierInboxData?) {
         self.data = data
@@ -70,7 +43,7 @@ extension Courier: InboxMutationHandler {
         
         let listeners = await self.inboxModule.inboxListeners
         
-        DispatchQueue.main.async {
+        await MainActor.run {
             listeners.forEach { listener in
                 listener.onMessageAdded?(feed, index, message)
             }
@@ -82,7 +55,7 @@ extension Courier: InboxMutationHandler {
         
         let listeners = await self.inboxModule.inboxListeners
         
-        DispatchQueue.main.async {
+        await MainActor.run {
             listeners.forEach { listener in
                 listener.onMessageRemoved?(feed, index, message)
             }
@@ -96,7 +69,7 @@ extension Courier: InboxMutationHandler {
         
         let listeners = await self.inboxModule.inboxListeners
         
-        DispatchQueue.main.async {
+        await MainActor.run {
             listeners.forEach { listener in
                 listener.onMessageChanged?(feed, index, message)
             }
@@ -112,7 +85,7 @@ extension Courier: InboxMutationHandler {
             
             let listeners = await self.inboxModule.inboxListeners
             
-            DispatchQueue.main.async {
+            await MainActor.run {
                 listeners.forEach { listener in
                     listener.onLoad(data: data)
                 }
@@ -130,7 +103,7 @@ extension Courier: InboxMutationHandler {
             
             let listeners = await self.inboxModule.inboxListeners
             
-            DispatchQueue.main.async {
+            await MainActor.run {
                 listeners.forEach { listener in
                     listener.onUnreadCountChanged?(unreadCount)
                 }
@@ -148,7 +121,7 @@ extension Courier: InboxMutationHandler {
             
             let listeners = await self.inboxModule.inboxListeners
                 
-            DispatchQueue.main.async {
+            await MainActor.run {
                 listeners.forEach { listener in
                     listener.onLoad(data: data)
                 }
@@ -162,16 +135,12 @@ extension Courier: InboxMutationHandler {
         
         let listeners = await self.inboxModule.inboxListeners
         
-        DispatchQueue.main.async {
+        await MainActor.run {
             listeners.forEach({ listener in
                 listener.onLoading?(isRefresh)
             })
         }
         
-    }
-    
-    func onInboxKilled() async {
-        client?.options.log("Courier Shared Inbox Killed")
     }
     
     func onInboxError(with error: any Error) async {
@@ -180,7 +149,7 @@ extension Courier: InboxMutationHandler {
         
         let listeners = await self.inboxModule.inboxListeners
         
-        DispatchQueue.main.async {
+        await MainActor.run {
             listeners.forEach({ listener in
                 listener.onError?(error)
             })
@@ -196,7 +165,7 @@ extension Courier: InboxMutationHandler {
         let listeners = await self.inboxModule.inboxListeners
         
         // Call the listeners
-        DispatchQueue.main.async {
+        await MainActor.run {
             listeners.forEach { listener in
                 listener.onPageAdded?(feed, messageSet)
             }
@@ -214,7 +183,7 @@ extension Courier: InboxMutationHandler {
             
             let listeners = await self.inboxModule.inboxListeners
             
-            DispatchQueue.main.async {
+            await MainActor.run {
                 listeners.forEach { listener in
                     listener.onMessageAdded?(feed, index, message)
                     listener.onUnreadCountChanged?(data.unreadCount)
@@ -259,6 +228,10 @@ extension Courier: InboxMutationHandler {
         } catch {
             await Courier.shared.client?.log(error.localizedDescription)
         }
+    }
+    
+    func onInboxKilled() async {
+        client?.options.log("Courier Shared Inbox Killed")
     }
     
 }
@@ -307,8 +280,12 @@ extension Courier {
             return
         }
         
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         await inboxModule.repo.get(
-            with: inboxMutationHandler,
+            with: handler,
             feedMessageCount: inboxModule.data?.feed.messages.count,
             archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: true
@@ -328,31 +305,53 @@ extension Courier {
             return
         }
         
-        await inboxModule.repo.stop(with: inboxMutationHandler)
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
+        await inboxModule.repo.stop(with: handler)
         
     }
     
     public func refreshInbox() async {
+        
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         await inboxModule.repo.get(
-            with: inboxMutationHandler,
+            with: handler,
             feedMessageCount: inboxModule.data?.feed.messages.count,
             archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: true
         )
+        
     }
     
     func restartInbox() async {
+        
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         await inboxModule.repo.get(
-            with: inboxMutationHandler,
+            with: handler,
             feedMessageCount: inboxModule.data?.feed.messages.count,
             archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: false
         )
+        
     }
     
     func closeInbox() async {
-        await inboxModule.repo.stop(with: inboxMutationHandler)
+        
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
+        await inboxModule.repo.stop(with: handler)
         await onInboxError(with: CourierError.userNotFound)
+        
     }
     
     @discardableResult
@@ -366,7 +365,11 @@ extension Courier {
             return nil
         }
         
-        await inboxMutationHandler.onInboxPageFetched(feed: feed, messageSet: messageSet)
+        guard let handler = self.inboxMutationHandler else {
+            return nil
+        }
+        
+        await handler.onInboxPageFetched(feed: feed, messageSet: messageSet)
         
         return messageSet
         
@@ -406,7 +409,7 @@ extension Courier {
         
         // Ensure the user is signed in
         if !isUserSignedIn {
-            DispatchQueue.main.async {
+            await MainActor.run {
                 Logger.warn("User is not signed in. Please call Courier.shared.signIn(...) to setup the inbox listener.")
                 listener.onError?(CourierError.userNotFound)
             }
@@ -415,9 +418,14 @@ extension Courier {
         
         // Notify that data exists if needed
         if let data = await inboxModule.data {
-            DispatchQueue.main.async { 
+            await MainActor.run {
                 listener.onLoad(data: data)
             }
+            return listener
+        }
+        
+        // Unwrap mutation handler
+        guard let handler = self.inboxMutationHandler else {
             return listener
         }
         
@@ -425,7 +433,7 @@ extension Courier {
         // If an existing call is going out, it will cancel that call.
         // This will return data for the last inbox listener that is registered
         await inboxModule.repo.get(
-            with: inboxMutationHandler,
+            with: handler,
             feedMessageCount: inboxModule.data?.feed.messages.count,
             archiveMessageCount: inboxModule.data?.archived.messages.count,
             isRefresh: false
@@ -467,11 +475,15 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .click,
             client: client,
-            handler: inboxMutationHandler
+            handler: handler
         )
         
     }
@@ -482,11 +494,15 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .read,
             client: client,
-            handler: inboxMutationHandler
+            handler: handler
         )
 
     }
@@ -497,11 +513,15 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .unread,
             client: client,
-            handler: inboxMutationHandler
+            handler: handler
         )
 
     }
@@ -512,11 +532,15 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .archive,
             client: client,
-            handler: inboxMutationHandler
+            handler: handler
         )
 
     }
@@ -527,11 +551,15 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .opened,
             client: client,
-            handler: inboxMutationHandler
+            handler: handler
         )
 
     }
@@ -542,9 +570,13 @@ extension Courier {
             throw CourierError.userNotFound
         }
         
+        guard let handler = self.inboxMutationHandler else {
+            return
+        }
+        
         try await inboxModule.data?.readAllMessages(
             client: client,
-            handler: inboxMutationHandler
+            handler: handler
         )
 
     }

@@ -20,11 +20,11 @@ public class CourierClient {
     
     public let options: Options
     
-    public lazy var tokens = { TokenClient(options: self.options) }()
-    public lazy var brands = { BrandClient(options: self.options) }()
-    public lazy var inbox = { InboxClient(options: self.options) }()
-    public lazy var preferences = { PreferenceClient(options: self.options) }()
-    public lazy var tracking = { TrackingClient(options: self.options) }()
+    public let tokens: TokenClient
+    public let brands: BrandClient
+    public let inbox: InboxClient
+    public let preferences: PreferenceClient
+    public let tracking: TrackingClient
     
     public init(
         jwt: String? = nil,
@@ -40,6 +40,8 @@ public class CourierClient {
             #endif
         }()
     ) {
+        
+        // Setup options
         self.options = Options(
             jwt: jwt,
             clientKey: clientKey,
@@ -48,6 +50,14 @@ public class CourierClient {
             tenantId: tenantId,
             showLogs: showLogs
         )
+        
+        // Create subclients
+        self.tokens = TokenClient(options: options)
+        self.brands = BrandClient(options: options)
+        self.inbox = InboxClient(options: options)
+        self.preferences = PreferenceClient(options: options)
+        self.tracking = TrackingClient(options: options)
+        
     }
     
     public static var `default`: CourierClient {

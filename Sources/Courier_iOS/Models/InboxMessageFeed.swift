@@ -2,7 +2,7 @@
 //  InboxMessageFeed.swift
 //  Courier_iOS
 //
-//  Created by Michael Miller on 10/8/24.
+//  Created by https://github.com/mikemilla on 10/8/24.
 //
 
 public enum InboxMessageFeed {
