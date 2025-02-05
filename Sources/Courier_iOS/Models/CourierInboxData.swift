@@ -140,7 +140,7 @@ public class CourierInboxData {
         case .unopened:    return await unopen(&message, index, inboxFeed, handler)
         case .archive:     return await archive(&message, index, inboxFeed, handler)
         case .unarchive:   return false
-        case .click:       return false
+        case .click:       return await click(&message, index, inboxFeed, handler)
         case .unclick:     return false
         case .markAllRead: return false
         }
@@ -266,6 +266,10 @@ public class CourierInboxData {
             
         }
         return false
+    }
+    
+    private func click(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+        return true
     }
     
     private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
