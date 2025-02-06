@@ -12,53 +12,27 @@ struct SwiftUIViewController: View {
     var body: some View {
         CourierInboxView { message, index in
             HStack(alignment: .top, spacing: 12) {
-                // Indicator for Unread Messages (Blue dot)
-                if !message.isRead {
-                    Circle()
-                        .fill(Color.blue)
-                        .frame(width: 10, height: 10)
-                        .padding(.top, 6)
-                } else {
-                    // Empty space to align with unread indicator
-                    Circle()
-                        .fill(Color.clear)
-                        .frame(width: 10, height: 10)
-                        .padding(.top, 6)
-                }
-                
-                // Message Content
+                Circle()
+                    .fill(message.isRead ? Color.blue : Color.clear)
+                    .frame(width: 10, height: 10)
+                    .padding(.top, 6)
                 VStack(alignment: .leading, spacing: 4) {
                     Text(message.title ?? "No Title")
                         .font(.headline)
-                        .fontWeight(message.isRead ? .regular : .bold) // Bold if unread
+                        .fontWeight(message.isRead ? .regular : .bold)
                         .foregroundColor(.primary)
-                        .lineLimit(1) // Limit to one line
-
                     Text(message.subtitle ?? "No Subtitle")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                        .lineLimit(2) // Limit to two lines
                 }
-                
-                Spacer() // Push content to the left
+                Spacer()
             }
-            .padding(.vertical, 12)
+            .padding(.vertical, 16)
             .padding(.horizontal, 16)
-            .background(Color.white) // Consistent background
-            .contentShape(Rectangle()) // Make the whole area tappable
+            .contentShape(Rectangle())
             .onTapGesture {
-                // Toggle read/unread on tap
-                if message.isRead {
-                    message.markAsUnread()
-                } else {
-                    message.markAsRead()
-                }
+                message.isRead ? message.markAsUnread() : message.markAsRead()
             }
-            .overlay(
-                Divider()
-                    .padding(.leading, message.isRead ? 16 : 34), // Align divider with content
-                alignment: .bottom
-            )
         }
     }
 }

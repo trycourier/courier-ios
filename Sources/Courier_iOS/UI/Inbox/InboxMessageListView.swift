@@ -646,12 +646,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private func reloadViews() {
         
         // Hide the divider if the dev is using a custom item
-        if self.customListItem != nil {
+        if self.customListItem == nil {
             tableView.separatorStyle = theme.cellStyle.separatorStyle
             tableView.separatorInset = theme.cellStyle.separatorInsets
             tableView.separatorColor = theme.cellStyle.separatorColor
         } else {
             tableView.separatorStyle = .none
+            tableView.separatorInset = .zero
+            tableView.separatorColor = nil
         }
         
         tableView.refreshControl?.tintColor = theme.loadingColor
