@@ -20,21 +20,42 @@ public struct CourierInboxView<Content: View>: UIViewRepresentable {
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
+        didScrollInbox: ((UIScrollView) -> Void)? = nil
+    ) {
+        self.inbox = CourierInbox(
+            canSwipePages: canSwipePages,
+            pagingDuration: pagingDuration,
+            lightTheme: lightTheme,
+            darkTheme: darkTheme,
+            customListItem: nil,
+            didClickInboxMessageAtIndex: didClickInboxMessageAtIndex,
+            didLongPressInboxMessageAtIndex: didLongPressInboxMessageAtIndex,
+            didClickInboxActionForMessageAtIndex: didClickInboxActionForMessageAtIndex,
+            didScrollInbox: didScrollInbox
+        )
+    }
+    
+    public init(
+        canSwipePages: Bool = false,
+        pagingDuration: TimeInterval = 0.1,
+        lightTheme: CourierInboxTheme = .defaultLight,
+        darkTheme: CourierInboxTheme = .defaultDark,
+        didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
+        didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
+        didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil,
-        _ customListItem: ((InboxMessage, Int) -> Content)? = nil
+        @ViewBuilder customListItem: @escaping (InboxMessage, Int) -> Content
     ) {
         
-        // Handle the optional customListItem
-        let wrappedCustomListItem: ((InboxMessage, Int) -> UIView)? = customListItem.map { builder in
-            return { message, index in
-                let hostingController = UIHostingController(rootView: builder(message, index))
-                hostingController.view.backgroundColor = .clear
-                hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-                return hostingController.view
-            }
+        // Handle the customListItem
+        let wrappedCustomListItem: (InboxMessage, Int) -> UIView = { message, index in
+            let hostingController = UIHostingController(rootView: customListItem(message, index))
+            hostingController.view.backgroundColor = .clear
+            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+            return hostingController.view
         }
         
-        // Initialize CourierInbox with or without a customListItem
+        // Initialize CourierInbox with customListItem
         self.inbox = CourierInbox(
             canSwipePages: canSwipePages,
             pagingDuration: pagingDuration,
