@@ -21,13 +21,13 @@ public struct CourierInboxView<Content: View>: UIViewRepresentable {
         didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
         didScrollInbox: ((UIScrollView) -> Void)? = nil,
-        customListItem: ((Int, InboxMessage) -> Content)? = nil // Make this optional
+        _ customListItem: ((InboxMessage, Int) -> Content)? = nil
     ) {
         
         // Handle the optional customListItem
         let wrappedCustomListItem: ((InboxMessage, Int) -> UIView)? = customListItem.map { builder in
             return { message, index in
-                let hostingController = UIHostingController(rootView: builder(index, message))
+                let hostingController = UIHostingController(rootView: builder(message, index))
                 hostingController.view.backgroundColor = .clear // Optional: Transparent background
                 hostingController.view.translatesAutoresizingMaskIntoConstraints = false
                 return hostingController.view
