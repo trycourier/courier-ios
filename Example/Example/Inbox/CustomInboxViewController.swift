@@ -8,187 +8,57 @@
 import UIKit
 import Courier_iOS
 
-class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    private let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
+class CustomInboxViewController: UIViewController {
     
-    private let stateLabel: UILabel = {
+    func makeListItem(_ index: Int, _ message: InboxMessage) -> UIView {
+        // Create a container view
+        let container = UIView()
+        container.backgroundColor = message.isRead ? .systemBackground : .red
+        
+        // Create a label
         let label = UILabel()
+        label.numberOfLines = 0
+        label.text = "\(message.title ?? "Title") — \(message.subtitle ?? "Subtitle")"
+        label.textAlignment = .left
+        
+        // Enable Auto Layout
         label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private var inboxListener: CourierInboxListener? = nil
-    private var inboxMessages: [InboxMessage] = []
-    private var canPaginate = false
-    
-    enum State {
-        case loading
-        case error
-        case content
-        case empty
+        
+        // Add label to container
+        container.addSubview(label)
+        
+        // Make the label fill the container with padding
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16)
+        ])
+        
+        return container
     }
+    
+    private lazy var courierInbox = {
+        return CourierInbox(
+            customListItem: { index, message in
+                return self.makeListItem(index, message)
+            }
+        )
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.addSubview(tableView)
-        
-        tableView.refreshControl = UIRefreshControl()
-        tableView.refreshControl?.addTarget(self, action: #selector(onPullRefresh), for: .valueChanged)
 
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
-        
-        tableView.register(LoadingTableViewCell.self, forCellReuseIdentifier: LoadingTableViewCell.id)
-        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: CustomTableViewCell.id)
+        courierInbox.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(courierInbox)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-
-        Task {
-            inboxListener = await Courier.shared.addInboxListener(
-                onLoading: { _ in
-                    self.setState(.loading)
-                },
-                onError: { error in
-                    self.setState(.error, error: String(describing: error))
-                },
-                onFeedChanged: { inbox in
-                    self.canPaginate = inbox.canPaginate
-                    self.refreshMessages()
-                },
-                onMessageChanged: { feed, message, index in
-                    self.refreshMessages()
-                },
-                onMessageAdded: { feed, message, index in
-                    self.refreshMessages()
-                },
-                onMessageRemoved: { feed, message, index in
-                    self.refreshMessages()
-                }
-            )
-        }
-
-        view.addSubview(stateLabel)
-        
-        NSLayoutConstraint.activate([
-            stateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            courierInbox.topAnchor.constraint(equalTo: view.topAnchor),
+            courierInbox.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
-    }
-    
-    private func refreshMessages() {
-        Task {
-            self.inboxMessages = await Courier.shared.feedMessages
-            self.setState(self.inboxMessages.isEmpty ? .empty : .content)
-            self.tableView.reloadData()
-        }
-    }
-    
-    @objc private func onPullRefresh() {
-        Task {
-            await Courier.shared.refreshInbox()
-            self.tableView.refreshControl?.endRefreshing()
-        }
-    }
-    
-    private func setState(_ state: State, error: String? = nil) {
-        switch (state) {
-        case .loading:
-            self.tableView.isHidden = true
-            self.stateLabel.isHidden = false
-            self.stateLabel.text = "Loading..."
-        case .error:
-            self.tableView.isHidden = true
-            self.stateLabel.isHidden = false
-            self.stateLabel.text = error ?? "Error"
-        case .content:
-            self.tableView.isHidden = false
-            self.stateLabel.isHidden = true
-            self.stateLabel.text = ""
-        case .empty:
-            self.tableView.isHidden = true
-            self.stateLabel.isHidden = false
-            self.stateLabel.text = "No messages found"
-        }
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.canPaginate ? 2 : 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? self.inboxMessages.count : 1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if indexPath.section == 0 {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.id, for: indexPath) as! CustomTableViewCell
-            let message = self.inboxMessages[indexPath.row]
-            cell.label.text = message.toJson()
-            cell.contentView.backgroundColor = !message.isRead ? .green : .clear
-            return cell
-            
-        } else {
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: LoadingTableViewCell.id, for: indexPath) as! LoadingTableViewCell
-            return cell
-            
-        }
-        
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if indexPath.section == 0 {
-            
-            let message = inboxMessages[indexPath.row]
-            message.isRead ? message.markAsUnread() : message.markAsRead()
-            tableView.deselectRow(at: indexPath, animated: true)
-            
-        }
-        
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        if (indexPath.section == 1) {
-            
-            Task {
-                
-                do {
-                    try await Courier.shared.fetchNextInboxPage(.feed)
-                } catch {
-                    await Courier.shared.client?.options.log(error.localizedDescription)
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    deinit {
-        inboxListener?.remove()
     }
 
 }

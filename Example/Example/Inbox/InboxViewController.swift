@@ -10,7 +10,8 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
     let pages: [(String, UIViewController)] = [
         ("Default", PrebuiltInboxViewController()),
         ("Styled", StyledInboxViewController()),
-        ("Custom", CustomInboxViewController())
+        ("Custom", CustomInboxViewController()),
+        ("Raw", RawInboxViewController())
     ]
     
     override func viewDidLoad() {

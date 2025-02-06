@@ -532,7 +532,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         let message = inboxMessages[indexPath.row]
         
-        if (self.canSwipePages || message.isArchived) {
+        if (self.canSwipePages || message.isArchived || self.customListItem != nil) {
             return nil
         }
         
@@ -562,7 +562,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         let message = inboxMessages[indexPath.row]
         
-        if (self.canSwipePages || message.isArchived) {
+        if (self.canSwipePages || message.isArchived || self.customListItem != nil) {
             return nil
         }
         
