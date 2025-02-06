@@ -22,6 +22,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private var theme: CourierInboxTheme = .defaultLight
     
+    // MARK: Custom List Item
+    
+    private let customListItem: ((Int, InboxMessage) -> UIView)?
+    
     // MARK: Interaction
     
     public var didClickInboxMessageAtIndex: ((InboxMessage, Int) -> Void)? = nil
@@ -116,6 +120,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         pagingDuration: TimeInterval = 0.1,
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
+    customListItem: ((Int, InboxMessage) -> UIView)? = nil,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
@@ -127,6 +132,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
+        
+        self.customListItem = customListItem
         
         super.init(frame: .zero)
         
@@ -143,6 +150,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.pagingDuration = 0.1
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customListItem = nil
         super.init(frame: frame)
         setup()
     }
@@ -152,6 +160,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.pagingDuration = 0.1
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customListItem = nil
         super.init(coder: coder)
         setup()
     }
@@ -257,6 +266,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private func makeInboxList(_ feed: InboxMessageFeed) -> InboxMessageListView {
         let list = InboxMessageListView(
             feed: feed,
+            customListItem: self.customListItem,
             didClickInboxMessageAtIndex: { [weak self] message, index in
                 self?.didClickInboxMessageAtIndex?(message, index)
             },

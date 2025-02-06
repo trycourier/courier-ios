@@ -16,6 +16,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
     private var theme: CourierInboxTheme = .defaultLight
     
+    // MARK: Custom List Item
+    
+    private static let customListItemId = "CustomListItem"
+    private let customListItem: ((Int, InboxMessage) -> UIView)?
+    
     // MARK: Interaction
     
     private let didClickInboxMessageAtIndex: (InboxMessage, Int) -> Void
@@ -40,6 +45,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         tableView.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
+        if customListItem != nil {
+            tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: InboxMessageListView.customListItemId)
+        }
         tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
         tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
         tableView.rowHeight = UITableView.automaticDimension
@@ -112,12 +120,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public init(
         feed: InboxMessageFeed,
+        customListItem: ((Int, InboxMessage) -> UIView)?,
         didClickInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
         didLongPressInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
         didClickInboxActionForMessageAtIndex: @escaping (_ action: InboxAction, _ message: InboxMessage, _ index: Int) -> Void,
         didScrollInbox: @escaping (UIScrollView) -> Void
     ) {
         self.feed = feed
+        self.customListItem = customListItem
         self.didClickInboxMessageAtIndex = didClickInboxMessageAtIndex
         self.didLongPressInboxMessageAtIndex = didLongPressInboxMessageAtIndex
         self.didClickInboxActionForMessageAtIndex = didClickInboxActionForMessageAtIndex
@@ -128,6 +138,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
     override init(frame: CGRect) {
         self.feed = .feed
+        self.customListItem = nil
         self.didClickInboxMessageAtIndex = { _, _ in }
         self.didLongPressInboxMessageAtIndex = { _, _ in }
         self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
@@ -138,6 +149,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public required init?(coder: NSCoder) {
         self.feed = .feed
+        self.customListItem = nil
         self.didClickInboxMessageAtIndex = { _, _ in }
         self.didLongPressInboxMessageAtIndex = { _, _ in }
         self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
@@ -375,39 +387,63 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (indexPath.section == 0) {
-            
-            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
-                
-                let index = indexPath.row
-                let message = inboxMessages[index]
-                
-                cell.setMessage(message, theme,
-                    onActionClick: { [weak self] inboxAction in
-                        self?.didClickInboxActionForMessageAtIndex(
-                            inboxAction,
-                            message,
-                            index
-                        )
-                    },
-                    onLongPress: { [weak self] inboxMessage in
-                        Task {
-                            await self?.handleLongPress(for: inboxMessage)
-                        }
-                    }
-                )
-                
-                return cell
-            }
-            
-        } else {
+        // Section 1 (index == 1) is your Pagination cell logic
+        // so return that if needed.
+        if indexPath.section == 1 {
             // Pagination cell
-            if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell {
-                cell.setTheme(theme)
-                return cell
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell else {
+                return UITableViewCell()
             }
+            cell.setTheme(theme)
+            return cell
         }
-        
+
+        // Otherwise, section == 0 → messages
+        let index = indexPath.row
+        let message = inboxMessages[index]
+
+        // 1) If user provided a customListItem, use that
+        if let customListItem = self.customListItem {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: InboxMessageListView.customListItemId, for: indexPath)
+
+            // Clear out any old content
+            cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+
+            // Build the user’s custom view
+            let customView = customListItem(index, message)
+            customView.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(customView)
+
+            // Add constraints so the custom view fills the cell
+            NSLayoutConstraint.activate([
+                customView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                customView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+                customView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                customView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor)
+            ])
+
+            return cell
+            
+        } else if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
+            
+            cell.setMessage(
+                message,
+                theme,
+                onActionClick: { [weak self] inboxAction in
+                    self?.didClickInboxActionForMessageAtIndex(inboxAction, message, index)
+                },
+                onLongPress: { [weak self] inboxMessage in
+                    Task {
+                        await self?.handleLongPress(for: inboxMessage)
+                    }
+                }
+            )
+            
+            return cell
+        }
+
+        // If something goes wrong, fallback to a blank cell
         return UITableViewCell()
     }
     
