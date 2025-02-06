@@ -10,7 +10,7 @@ import Courier_iOS
 
 class CustomInboxViewController: UIViewController {
     
-    func makeListItem(_ index: Int, _ message: InboxMessage, onClick: @escaping () -> Void) -> UIView {
+    func makeListItem(_ message: InboxMessage, _ index: Int, onClick: @escaping () -> Void) -> UIView {
         
         // Create a container view
         let container = UIView()
@@ -50,8 +50,8 @@ class CustomInboxViewController: UIViewController {
     
     private lazy var courierInbox = {
         return CourierInbox(
-            customListItem: { index, message in
-                return self.makeListItem(index, message) {
+            customListItem: { message, index in
+                return self.makeListItem(message, index) {
                     message.isRead ? message.markAsUnread() : message.markAsRead()
                 }
             }

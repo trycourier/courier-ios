@@ -411,6 +411,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         if let customListItem = self.customListItem {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: InboxMessageListView.customListItemId, for: indexPath)
+            cell.selectionStyle = .none
 
             // Clear out any old content
             cell.contentView.subviews.forEach { $0.removeFromSuperview() }

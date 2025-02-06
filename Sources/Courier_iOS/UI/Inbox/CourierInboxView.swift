@@ -28,7 +28,7 @@ public struct CourierInboxView<Content: View>: UIViewRepresentable {
         let wrappedCustomListItem: ((InboxMessage, Int) -> UIView)? = customListItem.map { builder in
             return { message, index in
                 let hostingController = UIHostingController(rootView: builder(message, index))
-                hostingController.view.backgroundColor = .clear // Optional: Transparent background
+                hostingController.view.backgroundColor = .clear
                 hostingController.view.translatesAutoresizingMaskIntoConstraints = false
                 return hostingController.view
             }
