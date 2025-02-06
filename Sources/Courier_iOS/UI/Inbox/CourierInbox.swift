@@ -24,7 +24,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     // MARK: Custom List Item
     
-    private let customListItem: ((Int, InboxMessage) -> UIView)?
+    private let customListItem: ((InboxMessage, Int) -> UIView)?
     
     // MARK: Interaction
     
@@ -120,7 +120,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         pagingDuration: TimeInterval = 0.1,
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
-    customListItem: ((Int, InboxMessage) -> UIView)? = nil,
+        customListItem: ((_ message: InboxMessage, _ index: Int) -> UIView)? = nil,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,

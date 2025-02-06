@@ -19,7 +19,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // MARK: Custom List Item
     
     private static let customListItemId = "CustomListItem"
-    private let customListItem: ((Int, InboxMessage) -> UIView)?
+    private let customListItem: ((InboxMessage, Int) -> UIView)?
     
     // MARK: Interaction
     
@@ -120,7 +120,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public init(
         feed: InboxMessageFeed,
-        customListItem: ((Int, InboxMessage) -> UIView)?,
+        customListItem: ((_ message: InboxMessage, _ index: Int) -> UIView)?,
         didClickInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
         didLongPressInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
         didClickInboxActionForMessageAtIndex: @escaping (_ action: InboxAction, _ message: InboxMessage, _ index: Int) -> Void,
@@ -416,7 +416,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             cell.contentView.subviews.forEach { $0.removeFromSuperview() }
 
             // Build the user’s custom view
-            let customView = customListItem(index, message)
+            let customView = customListItem(message, index)
             customView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(customView)
 

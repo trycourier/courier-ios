@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import Courier_iOS
 
 class InboxViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -31,6 +32,10 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         view.addSubview(collectionView)
+        
+        // Add nav item
+        let swiftUIButton = UIBarButtonItem(title: "SwiftUI", style: .plain, target: self, action: #selector(swiftUIButton))
+        navigationItem.leftBarButtonItem = swiftUIButton
         
         // Add nav item
         let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))
@@ -117,17 +122,19 @@ class InboxViewController: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
     
+    @objc private func swiftUIButton() {
+        let swiftUIView = SwiftUIViewController()
+        let hostingController = UIHostingController(rootView: swiftUIView)
+        navigationController?.pushViewController(hostingController, animated: true)
+    }
+    
     @objc private func readAllClick() {
-        
         Task {
-            
             do {
                 try await Courier.shared.readAllInboxMessages()
             } catch {
                 await Courier.shared.client?.log(error.localizedDescription)
             }
-            
         }
-        
     }
 }
