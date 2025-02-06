@@ -276,11 +276,16 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         self.inboxMessages[index] = message
         self.state = inboxMessages.isEmpty ? .empty : .content
-
-        // Refresh the cell
+        
         let indexPath = IndexPath(row: index, section: 0)
-        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        cell?.refreshMessage(message)
+        
+        // Refresh the cell
+        if self.customListItem != nil {
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        } else {
+            let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+            cell?.refreshMessage(message)
+        }
         
     }
     
