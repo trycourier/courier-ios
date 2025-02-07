@@ -462,10 +462,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let indexToPageAt = self.inboxMessages.count - Int(InboxRepository.Pagination.default.rawValue / 3)
-        
-        // Only fetch if we are safe to
-        if (indexPath.row == indexToPageAt && self.canPaginate) {
+        if (indexPath.section == 1 && self.canPaginate) {
             Task {
                 do {
                     try await Courier.shared.fetchNextInboxPage(self.feed)
