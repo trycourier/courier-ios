@@ -37,21 +37,31 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         // Ensure any previous connection is terminated
         disconnect()
         
-        guard let url = URL(string: self.url) else {
-            throw URLError(.badURL)
-        }
-        
+        // Start a new connection
         return try await withCheckedThrowingContinuation { continuation in
             
-            // Initialize and start the WebSocket task
-            self.webSocketTask = urlSession?.webSocketTask(with: url)
-            self.webSocketTask?.resume()
-            
-            // Register receiver
-            self.receiveData()
-            
-            // Continue
-            continuation.resume()
+            DispatchQueue.main.async { [weak self] in
+                
+                guard let self = self else {
+                    return
+                }
+                
+                guard let url = URL(string: self.url) else {
+                    continuation.resume(throwing: URLError(.badURL))
+                    return
+                }
+                
+                // Initialize and start the WebSocket task
+                self.webSocketTask = urlSession?.webSocketTask(with: url)
+                self.webSocketTask?.resume()
+                
+                // Register receiver
+                self.receiveData()
+                
+                // Continue
+                continuation.resume()
+                
+            }
             
         }
         
@@ -61,13 +71,17 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         
         DispatchQueue.main.async { [weak self] in
             
+            guard let self = self else {
+                return
+            }
+            
             // Stop the ping timer
-            self?.pingTimer?.invalidate()
-            self?.pingTimer = nil
+            self.pingTimer?.invalidate()
+            self.pingTimer = nil
             
             // Cancel the WebSocket task
-            self?.webSocketTask?.cancel(with: .normalClosure, reason: nil)
-            self?.webSocketTask = nil
+            self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
+            self.webSocketTask = nil
             
         }
         
