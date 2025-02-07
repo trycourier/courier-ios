@@ -420,7 +420,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if (indexPath.row == self.inboxMessages.count && self.canPaginate) {
+        if (indexPath.section == 1 && self.canPaginate) {
             Task {
                 do {
                     try await Courier.shared.fetchNextInboxPage(self.feed)
