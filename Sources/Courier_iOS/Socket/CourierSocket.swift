@@ -59,13 +59,17 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     
     public func disconnect() {
         
-        // Stop the ping timer
-        pingTimer?.invalidate()
-        pingTimer = nil
-        
-        // Cancel the WebSocket task
-        webSocketTask?.cancel(with: .normalClosure, reason: nil)
-        webSocketTask = nil
+        DispatchQueue.main.async { [weak self] in
+            
+            // Stop the ping timer
+            self?.pingTimer?.invalidate()
+            self?.pingTimer = nil
+            
+            // Cancel the WebSocket task
+            self?.webSocketTask?.cancel(with: .normalClosure, reason: nil)
+            self?.webSocketTask = nil
+            
+        }
         
     }
     
