@@ -17,13 +17,13 @@ internal class CourierNotificationProxy: NSObject {
     }
     
     @objc func didEnterForeground() {
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             await self?.courier?.linkInbox()
         }
     }
     
     @objc func didEnterBackground() {
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             await self?.courier?.unlinkInbox()
         }
     }
