@@ -182,13 +182,15 @@ extension Courier: InboxMutationHandler {
         if let data = await inboxModule.data {
             
             let listeners = await self.inboxModule.inboxListeners
+            let unreadCount = await data.unreadCount
             
             await MainActor.run {
                 listeners.forEach { listener in
                     listener.onMessageAdded?(feed, index, message)
-                    listener.onUnreadCountChanged?(data.unreadCount)
+                    listener.onUnreadCountChanged?(unreadCount)
                 }
             }
+            
         }
         
     }

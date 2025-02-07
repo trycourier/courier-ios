@@ -198,7 +198,7 @@ internal actor InboxRepository {
         
         if feed == .feed {
             
-            if !inboxData.feed.canPaginate || isPagingFeed {
+            if await !inboxData.feed.canPaginate || isPagingFeed {
                 return nil
             }
             
@@ -215,7 +215,7 @@ internal actor InboxRepository {
             
         } else {
             
-            if !inboxData.archived.canPaginate || isPagingArchived {
+            if await !inboxData.archived.canPaginate || isPagingArchived {
                 return nil
             }
             
