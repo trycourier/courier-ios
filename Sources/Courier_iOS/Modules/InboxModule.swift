@@ -20,17 +20,23 @@ internal actor InboxModule {
     
     internal func addListener(_ listener: CourierInboxListener) {
         self.inboxListeners.append(listener)
-        print("Courier Inbox Listener Registered. Total Listeners: \(self.inboxListeners.count)")
+        Task {
+            await Courier.shared.client?.log("Courier Inbox Listener Registered. Total Listeners: \(self.inboxListeners.count)")
+        }
     }
     
     internal func removeListener(_ listener: CourierInboxListener) {
         self.inboxListeners.removeAll(where: { return $0 == listener })
-        print("Courier Inbox Listener Unregistered. Total Listeners: \(self.inboxListeners.count)")
+        Task {
+            await Courier.shared.client?.log("Courier Inbox Listener Unregistered. Total Listeners: \(self.inboxListeners.count)")
+        }
     }
     
     internal func removeAllListeners() {
         self.inboxListeners.removeAll()
-        print("Courier Inbox Listeners Removed. Total Listeners: \(self.inboxListeners.count)")
+        Task {
+            await Courier.shared.client?.log("Courier Inbox Listeners Removed. Total Listeners: \(self.inboxListeners.count)")
+        }
     }
     
 }
