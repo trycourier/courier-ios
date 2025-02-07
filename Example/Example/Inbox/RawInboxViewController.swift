@@ -59,8 +59,10 @@ class RawInboxViewController: UIViewController, UITableViewDelegate, UITableView
 
         Task {
             inboxListener = await Courier.shared.addInboxListener(
-                onLoading: { _ in
-                    self.setState(.loading)
+                onLoading: { isRefresh in
+                    if !isRefresh {
+                        self.setState(.loading)
+                    }
                 },
                 onError: { error in
                     self.setState(.error, error: String(describing: error))
@@ -141,7 +143,7 @@ class RawInboxViewController: UIViewController, UITableViewDelegate, UITableView
             let cell = tableView.dequeueReusableCell(withIdentifier: CustomTableViewCell.id, for: indexPath) as! CustomTableViewCell
             let message = self.inboxMessages[indexPath.row]
             cell.label.text = message.toJson()
-            cell.contentView.backgroundColor = !message.isRead ? .green : .clear
+            cell.contentView.backgroundColor = !message.isRead ? UIColor.systemBlue.withAlphaComponent(0.25) : .clear
             return cell
             
         } else {

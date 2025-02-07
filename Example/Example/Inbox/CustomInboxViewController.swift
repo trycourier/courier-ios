@@ -14,7 +14,7 @@ class CustomInboxViewController: UIViewController {
         
         // Create a container view
         let container = UIView()
-        container.backgroundColor = message.isRead ? .systemBackground : .red
+        container.backgroundColor = message.isRead ? .systemBackground : UIColor.systemBlue.withAlphaComponent(0.25)
         container.isUserInteractionEnabled = true
         
         // Create a label
