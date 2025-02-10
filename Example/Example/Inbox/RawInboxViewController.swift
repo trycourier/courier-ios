@@ -9,16 +9,6 @@ import UIKit
 import Courier_iOS
 
 class RawInboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    @objc private func readAllClick() {
-        Task {
-            do {
-                try await Courier.shared.readAllInboxMessages()
-            } catch {
-                await Courier.shared.client?.log(error.localizedDescription)
-            }
-        }
-    }
 
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -45,8 +35,6 @@ class RawInboxViewController: UIViewController, UITableViewDelegate, UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        title = "Raw JSON"
         
         view.addSubview(tableView)
         
@@ -101,9 +89,6 @@ class RawInboxViewController: UIViewController, UITableViewDelegate, UITableView
             stateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        
-        let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))
-        navigationItem.rightBarButtonItem = readAllButton
         
     }
     

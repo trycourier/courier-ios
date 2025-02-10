@@ -250,16 +250,6 @@ class StyledInboxViewController: UIViewController {
             }
         )
     }()
-    
-    @objc private func readAllClick() {
-        Task {
-            do {
-                try await Courier.shared.readAllInboxMessages()
-            } catch {
-                await Courier.shared.client?.log(error.localizedDescription)
-            }
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -275,9 +265,6 @@ class StyledInboxViewController: UIViewController {
             courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        
-        let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))
-        navigationItem.rightBarButtonItem = readAllButton
         
     }
 

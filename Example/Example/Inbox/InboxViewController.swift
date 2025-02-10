@@ -1,5 +1,6 @@
 import UIKit
 import SwiftUI
+import Courier_iOS
 
 class InboxViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -48,9 +49,31 @@ class InboxViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = inboxes[indexPath.row].1()
+        
+        // Get the page
+        let page = inboxes[indexPath.row]
+        
+        // Create the view controller
+        let viewController = page.1()
+        viewController.title = page.0
+        
+        // Add the read all button
+        let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))
+        viewController.navigationItem.rightBarButtonItem = readAllButton
+        
+        // Push the view controller and deselect
         navigationController?.pushViewController(viewController, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    @objc private func readAllClick() {
+        Task {
+            do {
+                try await Courier.shared.readAllInboxMessages()
+            } catch {
+                await Courier.shared.client?.log(error.localizedDescription)
+            }
+        }
     }
     
 }

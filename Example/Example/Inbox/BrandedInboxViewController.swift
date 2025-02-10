@@ -10,16 +10,6 @@ import Courier_iOS
 
 class BrandedInboxViewController: UIViewController {
     
-    @objc private func readAllClick() {
-        Task {
-            do {
-                try await Courier.shared.readAllInboxMessages()
-            } catch {
-                await Courier.shared.client?.log(error.localizedDescription)
-            }
-        }
-    }
-    
     private let theme = CourierInboxTheme(brandId: Env.COURIER_BRAND_ID)
     
     private lazy var courierInbox = {
@@ -40,8 +30,6 @@ class BrandedInboxViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        title = "Branded"
 
         courierInbox.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(courierInbox)
@@ -52,9 +40,6 @@ class BrandedInboxViewController: UIViewController {
             courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        
-        let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))
-        navigationItem.rightBarButtonItem = readAllButton
         
     }
 

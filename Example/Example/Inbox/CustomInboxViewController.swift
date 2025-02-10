@@ -9,16 +9,6 @@ import UIKit
 import Courier_iOS
 
 class CustomInboxViewController: UIViewController {
-    
-    @objc private func readAllClick() {
-        Task {
-            do {
-                try await Courier.shared.readAllInboxMessages()
-            } catch {
-                await Courier.shared.client?.log(error.localizedDescription)
-            }
-        }
-    }
 
     private lazy var courierInbox = CourierInbox(
         customListItem: { message, index in
@@ -30,8 +20,6 @@ class CustomInboxViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        title = "Custom List Item"
 
         courierInbox.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(courierInbox)
@@ -42,9 +30,6 @@ class CustomInboxViewController: UIViewController {
             courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        
-        let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))
-        navigationItem.rightBarButtonItem = readAllButton
         
     }
 }
