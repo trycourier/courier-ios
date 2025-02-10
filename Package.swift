@@ -17,13 +17,15 @@ let package = Package(
     targets: [
         .target(
             name: "Courier_iOS",
+            path: "Sources/Courier_iOS",
             resources: [
                 Resource.process("Media.xcassets")
             ]
         ),
         .testTarget(
             name: "CourierTests",
-            dependencies: ["Courier_iOS"]
+            dependencies: ["Courier_iOS"],
+            path: "Tests/CourierTests"
         ),
     ]
 )
