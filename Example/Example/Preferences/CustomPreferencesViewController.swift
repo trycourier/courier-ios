@@ -12,7 +12,9 @@ class CustomPreferencesViewController: UIViewController {
     
     private lazy var courierPreferences = {
         return CourierPreferences(
-            custom
+            customListItem: { topic, section, index in
+                
+            }
             onError: { error in
                 self.showCodeAlert(title: "Preferences Error", code: error.localizedDescription)
             }
