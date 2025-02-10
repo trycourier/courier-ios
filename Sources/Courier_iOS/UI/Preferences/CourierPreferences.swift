@@ -30,7 +30,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     // MARK: Custom List Item
     
     private static let customListItemId = "CustomListItem"
-    private let customListItem: ((_ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)?
+    let customListItem: ((_ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)?
     
     // MARK: Data
     

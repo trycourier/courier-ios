@@ -26,7 +26,7 @@ class InboxViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Inboxes"
+        self.title = "Inbox"
         
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self

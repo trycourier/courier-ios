@@ -28,7 +28,7 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         ("Styled", { StyledPreferencesViewController() }),
 //        ("Custom (UIKit)", { CustomInboxViewController() }),
 //        ("Custom (SwiftUI)", { self.swiftUIViewController }),
-        ("Raw JSON", { CustomPreferencesViewController() }),
+        ("Raw JSON", { RawPreferencesViewController() }),
     ]
 
     override func viewDidLoad() {
