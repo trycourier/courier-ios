@@ -294,6 +294,7 @@
 			packageReferences = (
 				273354202D5AB4920044BFD7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				273354212D5AB4E30044BFD7 /* XCRemoteSwiftPackageReference "ShowTime" */,
+				278E0F262D5ABD7400DDE821 /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -675,6 +676,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.3;
+			};
+		};
+		278E0F262D5ABD7400DDE821 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/trycourier/courier-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
