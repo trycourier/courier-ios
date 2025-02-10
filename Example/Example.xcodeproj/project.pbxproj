@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2723612D2D5AC71F00A7ABB5 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2723612C2D5AC71F00A7ABB5 /* Courier_iOS */; };
+		2723612F2D5AC73000A7ABB5 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2723612E2D5AC73000A7ABB5 /* Courier_iOS */; };
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
 		273353E72D553C6E0044BFD7 /* RawInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273353E62D553C650044BFD7 /* RawInboxViewController.swift */; };
@@ -112,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2723612F2D5AC73000A7ABB5 /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +122,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2723612D2D5AC71F00A7ABB5 /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,6 +242,7 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
+				2723612E2D5AC73000A7ABB5 /* Courier_iOS */,
 			);
 			productName = CourierService;
 			productReference = 273354282D5AB6560044BFD7 /* CourierService.appex */;
@@ -259,6 +264,7 @@
 			);
 			name = Example;
 			packageProductDependencies = (
+				2723612C2D5AC71F00A7ABB5 /* Courier_iOS */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
@@ -294,7 +300,7 @@
 			packageReferences = (
 				273354202D5AB4920044BFD7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				273354212D5AB4E30044BFD7 /* XCRemoteSwiftPackageReference "ShowTime" */,
-				278E0F262D5ABD7400DDE821 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				2723612B2D5AC71F00A7ABB5 /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -662,6 +668,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2723612B2D5AC71F00A7ABB5 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/trycourier/courier-ios";
+			requirement = {
+				branch = feature/customlistitems;
+				kind = branch;
+			};
+		};
 		273354202D5AB4920044BFD7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -672,21 +686,26 @@
 		};
 		273354212D5AB4E30044BFD7 /* XCRemoteSwiftPackageReference "ShowTime" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/KaneCheshire/ShowTime";
+			repositoryURL = "https://github.com/KaneCheshire/ShowTime.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.3;
 			};
 		};
-		278E0F262D5ABD7400DDE821 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/trycourier/courier-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.6.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2723612C2D5AC71F00A7ABB5 /* Courier_iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2723612B2D5AC71F00A7ABB5 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			productName = Courier_iOS;
+		};
+		2723612E2D5AC73000A7ABB5 /* Courier_iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2723612B2D5AC71F00A7ABB5 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			productName = Courier_iOS;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2789515B292689460070F501 /* Project object */;
 }
