@@ -1,35 +1,29 @@
 //
-//  PrebuiltPreferencesViewController.swift
+//  BrandedPreferencesViewController.swift
 //  Example
 //
-//  Created by https://github.com/mikemilla on 3/11/24.
+//  Created by Michael Miller on 2/10/25.
 //
 
 import UIKit
 import Courier_iOS
 
-class PrebuiltPreferencesViewController: UIViewController {
+class BrandedPreferencesViewController: UIViewController {
     
-    private let mode: CourierPreferences.Mode
-    
-    init(mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases)) {
-        self.mode = mode
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    private let theme = CourierPreferencesTheme(
+        brandId: Env.COURIER_BRAND_ID
+    )
+
     private lazy var courierPreferences = {
         return CourierPreferences(
-            mode: self.mode,
+            lightTheme: theme,
+            darkTheme: theme,
             onError: { error in
                 self.showCodeAlert(title: "Preferences Error", code: error.localizedDescription)
             }
         )
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,3 +40,4 @@ class PrebuiltPreferencesViewController: UIViewController {
     }
 
 }
+

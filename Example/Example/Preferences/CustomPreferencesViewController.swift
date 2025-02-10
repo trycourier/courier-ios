@@ -31,18 +31,6 @@ class CustomPreferencesViewController: UIViewController, UITableViewDelegate, UI
         case empty
     }
     
-    private let navController: UINavigationController
-    
-    init(navController: UINavigationController) {
-        self.navController = navController
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        self.navController = UINavigationController()
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -140,7 +128,7 @@ class CustomPreferencesViewController: UIViewController, UITableViewDelegate, UI
         // Open the view controller
         let topic = self.topics[indexPath.row]
         let viewController = UpdatePreferencesViewController(topicId: topic.topicId)
-        self.navController.pushViewController(viewController, animated: true)
+        navigationController!.pushViewController(viewController, animated: true)
         
     }
 

@@ -56,6 +56,7 @@ class InboxViewController: UIViewController, UITableViewDelegate, UITableViewDat
         // Create the view controller
         let viewController = page.1()
         viewController.title = page.0
+        viewController.view.backgroundColor = .systemBackground
         
         // Add the read all button
         let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))

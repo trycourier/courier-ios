@@ -8,104 +8,66 @@
 import UIKit
 import Courier_iOS
 
-class PreferencesViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PreferencesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var collectionView: UICollectionView!
-    var segmentedControl: UISegmentedControl!
-    var isScrollingFromSegmentedControl = false
+    private static let listItemId = "preferences_preview_cell"
+
+    var tableView: UITableView!
     
-    private lazy var pages: [(String, UIViewController)] = [
-        ("Default", PrebuiltPreferencesViewController()),
-        ("Styled", StyledPreferencesViewController()),
-        ("Custom", CustomPreferencesViewController(navController: self.navigationController!))
+//    private lazy var swiftUIViewController: UIHostingController<SwiftUIViewController> = {
+//        let swiftUIView = SwiftUIViewController()
+//        let hostingController = UIHostingController(rootView: swiftUIView)
+//        hostingController.title = "SwiftUI Inbox"
+//        return hostingController
+//    }()
+
+    private lazy var preferences: [(String, () -> UIViewController)] = [
+        ("Default", { PrebuiltPreferencesViewController() }),
+        ("Default (Topic Mode)", { PrebuiltPreferencesViewController(mode: .topic) }),
+        ("Branded", { BrandedPreferencesViewController() }),
+        ("Styled", { StyledPreferencesViewController() }),
+//        ("Custom (UIKit)", { CustomInboxViewController() }),
+//        ("Custom (SwiftUI)", { self.swiftUIViewController }),
+        ("Raw JSON", { CustomPreferencesViewController() }),
     ]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Preferences"
         
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
+        tableView = UITableView(frame: view.bounds, style: .plain)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: PreferencesViewController.listItemId)
         
-        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(ContentCollectionViewCell.self, forCellWithReuseIdentifier: ContentCollectionViewCell.identifier)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.isPagingEnabled = true
-        collectionView.showsHorizontalScrollIndicator = false
-        view.addSubview(collectionView)
-        
-        // Add segmented control
-        segmentedControl = UISegmentedControl(items: pages.map { $0.0 })
-        segmentedControl.sizeToFit()
-        segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
-        navigationItem.titleView = segmentedControl
-        
-        // Apply constraints
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
-        
+        view.addSubview(tableView)
     }
-    
-    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
-        
-        isScrollingFromSegmentedControl = true
-                
-        let selectedSegmentIndex = sender.selectedSegmentIndex
-        if selectedSegmentIndex < pages.map({ $0.1 }).count {
-            let indexPath = IndexPath(item: selectedSegmentIndex, section: 0)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        }
-        
-        // Reset flag after changing the segment
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.isScrollingFromSegmentedControl = false
-        }
-        
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return preferences.count
     }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pages.map { $0.1 }.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ContentCollectionViewCell.identifier, for: indexPath) as! ContentCollectionViewCell
-        
-        // Embed the view controller in the cell
-        let viewController = pages.map { $0.1 }[indexPath.item]
-        cell.embeddedViewController = viewController
-        
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: PreferencesViewController.listItemId, for: indexPath)
+        cell.textLabel?.font = UIFont.monospacedSystemFont(ofSize: 16, weight: .regular)
+        cell.textLabel?.text = preferences[indexPath.row].0
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return collectionView.bounds.size
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard !isScrollingFromSegmentedControl else { return }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let xOffset = scrollView.contentOffset.x
-        let contentWidth = scrollView.contentSize.width
-        let collectionViewWidth = scrollView.frame.size.width
+        // Get the page
+        let page = preferences[indexPath.row]
         
-        // Check if contentWidth or collectionViewWidth is zero to avoid division by zero
-        guard contentWidth > 0, collectionViewWidth > 0 else { return }
+        // Create the view controller
+        let viewController = page.1()
+        viewController.title = page.0
+        viewController.view.backgroundColor = .systemBackground
         
-        // Calculate currentIndex with boundary checks
-        var currentIndex = Int((xOffset + collectionViewWidth / 2) / collectionViewWidth)
-        currentIndex = max(0, min(pages.map { $0.1 }.count - 1, currentIndex))
-        
-        if segmentedControl.selectedSegmentIndex != currentIndex {
-            segmentedControl.selectedSegmentIndex = currentIndex
-        }
+        // Push the view controller and deselect
+        navigationController?.pushViewController(viewController, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 }

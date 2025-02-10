@@ -13,6 +13,7 @@
 		273353E72D553C6E0044BFD7 /* RawInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273353E62D553C650044BFD7 /* RawInboxViewController.swift */; };
 		273353E92D555E2E0044BFD7 /* SwiftUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273353E82D555E260044BFD7 /* SwiftUIViewController.swift */; };
 		2733541B2D5A932D0044BFD7 /* BrandedInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2733541A2D5A93260044BFD7 /* BrandedInboxViewController.swift */; };
+		2733541D2D5AA9B80044BFD7 /* BrandedPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2733541C2D5AA9B30044BFD7 /* BrandedPreferencesViewController.swift */; };
 		276425A42B9F87EC00DB08E1 /* Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425A32B9F87EC00DB08E1 /* Cells.swift */; };
 		276425AA2B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425A92B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift */; };
 		276425AC2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425AB2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift */; };
@@ -69,6 +70,7 @@
 		273353E62D553C650044BFD7 /* RawInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawInboxViewController.swift; sourceTree = "<group>"; };
 		273353E82D555E260044BFD7 /* SwiftUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIViewController.swift; sourceTree = "<group>"; };
 		2733541A2D5A93260044BFD7 /* BrandedInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandedInboxViewController.swift; sourceTree = "<group>"; };
+		2733541C2D5AA9B30044BFD7 /* BrandedPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandedPreferencesViewController.swift; sourceTree = "<group>"; };
 		276425A32B9F87EC00DB08E1 /* Cells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
 		276425A92B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltPreferencesViewController.swift; sourceTree = "<group>"; };
 		276425AB2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPreferencesViewController.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 		276425A72B9F9F5100DB08E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				2733541C2D5AA9B30044BFD7 /* BrandedPreferencesViewController.swift */,
 				27B18CDD2B4DF6460005904E /* PreferencesViewController.swift */,
 				276425A92B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift */,
 				276425AB2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift */,
@@ -352,6 +355,7 @@
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,
 				273353E72D553C6E0044BFD7 /* RawInboxViewController.swift in Sources */,
+				2733541D2D5AA9B80044BFD7 /* BrandedPreferencesViewController.swift in Sources */,
 				27AD11982AE9D0BE00867BF9 /* Env.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
