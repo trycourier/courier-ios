@@ -8,7 +8,7 @@
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-internal struct Page {
+public struct Page {
     let title: String
     let page: InboxMessageListView
 }

@@ -27,6 +27,11 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     // Defaults to light mode, but will change when the theme is set
     private var theme: CourierPreferencesTheme = .defaultLight
     
+    // MARK: Custom List Item
+    
+    private static let customListItemId = "CustomListItem"
+    private let customListItem: ((_ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)?
+    
     // MARK: Data
     
     internal struct Section {
@@ -49,12 +54,15 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     
     private var sheetViewController: PreferencesSheetViewController?
     
-    private lazy var tableView: UITableView = {
+    private(set) lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
+        if customListItem != nil {
+            tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferences.customListItemId)
+        }
         tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
         tableView.refreshControl = refreshControl
@@ -137,12 +145,14 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
+        customListItem: ((_ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)? = nil,
         didScrollPreferences: ((UIScrollView) -> Void)? = nil,
         onError: ((CourierError) -> Void)? = nil
     ) {
         self.mode = mode
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
+        self.customListItem = customListItem
         self.didScrollPreferences = didScrollPreferences
         self.onError = onError
         super.init(frame: .zero)
@@ -155,6 +165,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         self.mode = .channels(CourierUserPreferencesChannel.allCases)
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customListItem = nil
         self.onError = nil
         super.init(frame: frame)
         setup()
@@ -164,6 +175,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         self.mode = .channels(CourierUserPreferencesChannel.allCases)
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customListItem = nil
         self.onError = nil
         super.init(coder: coder)
         setup()
@@ -432,19 +444,48 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
-        
         let topic = preferences[indexPath.section].topics[indexPath.row]
-        cell.configureCell(
-            topic: topic,
-            mode: self.mode,
-            onEditButtonClick: {
-                self.tableView(tableView, didSelectRowAt: indexPath)
-            }
-        )
-        cell.setTheme(theme: self.theme)
         
-        return cell
+        if let customListItem = self.customListItem {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferences.customListItemId, for: indexPath)
+            cell.selectionStyle = .none
+
+            // Clear out any old content
+            cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+
+            // Build the user’s custom view
+            let customView = customListItem(topic, indexPath.section, indexPath.row)
+            customView.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(customView)
+
+            // Add constraints so the custom view fills the cell
+            NSLayoutConstraint.activate([
+                customView.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+                customView.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+                customView.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+                customView.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor)
+            ])
+
+            return cell
+            
+        } else {
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
+            
+            cell.configureCell(
+                topic: topic,
+                mode: self.mode,
+                onEditButtonClick: {
+                    self.tableView(tableView, didSelectRowAt: indexPath)
+                }
+            )
+            cell.setTheme(theme: self.theme)
+            
+        }
+        
+        // If something goes wrong, fallback to a blank cell
+        return UITableViewCell()
         
     }
     

@@ -44,14 +44,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         return stackView
     }()
     
-    private lazy var messagesPage = {
+    private(set) lazy var notificationsPage = {
         return Page(
             title: "Notifications",
             page: makeInboxList(.feed)
         )
     }()
     
-    private lazy var archivedPage = {
+    private(set) lazy var archivedPage = {
         return Page(
             title: "Archived",
             page: makeInboxList(.archived)
@@ -60,7 +60,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func getPages() -> [Page] {
         return [
-            messagesPage,
+            notificationsPage,
             archivedPage,
         ]
     }
