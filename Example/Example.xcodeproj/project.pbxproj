@@ -12,6 +12,7 @@
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
 		273353E72D553C6E0044BFD7 /* RawInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273353E62D553C650044BFD7 /* RawInboxViewController.swift */; };
 		273353E92D555E2E0044BFD7 /* SwiftUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273353E82D555E260044BFD7 /* SwiftUIViewController.swift */; };
+		2733541B2D5A932D0044BFD7 /* BrandedInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2733541A2D5A93260044BFD7 /* BrandedInboxViewController.swift */; };
 		276425A42B9F87EC00DB08E1 /* Cells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425A32B9F87EC00DB08E1 /* Cells.swift */; };
 		276425AA2B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425A92B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift */; };
 		276425AC2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425AB2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift */; };
@@ -67,6 +68,7 @@
 		272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltInboxViewController.swift; sourceTree = "<group>"; };
 		273353E62D553C650044BFD7 /* RawInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawInboxViewController.swift; sourceTree = "<group>"; };
 		273353E82D555E260044BFD7 /* SwiftUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIViewController.swift; sourceTree = "<group>"; };
+		2733541A2D5A93260044BFD7 /* BrandedInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandedInboxViewController.swift; sourceTree = "<group>"; };
 		276425A32B9F87EC00DB08E1 /* Cells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
 		276425A92B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltPreferencesViewController.swift; sourceTree = "<group>"; };
 		276425AB2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPreferencesViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 		276425A52B9F9F1200DB08E1 /* Inbox */ = {
 			isa = PBXGroup;
 			children = (
+				2733541A2D5A93260044BFD7 /* BrandedInboxViewController.swift */,
 				273353E82D555E260044BFD7 /* SwiftUIViewController.swift */,
 				273353E62D553C650044BFD7 /* RawInboxViewController.swift */,
 				27644EEB29AE7378002F907B /* CustomInboxViewController.swift */,
@@ -338,6 +341,7 @@
 				27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */,
 				276425A42B9F87EC00DB08E1 /* Cells.swift in Sources */,
 				272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */,
+				2733541B2D5A932D0044BFD7 /* BrandedInboxViewController.swift in Sources */,
 				27644EF429AFF741002F907B /* AuthViewController.swift in Sources */,
 				27B18CDC2B4DCAA30005904E /* InboxViewController.swift in Sources */,
 				27B18CDE2B4DF6460005904E /* PreferencesViewController.swift in Sources */,

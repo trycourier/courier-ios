@@ -18,7 +18,6 @@ class StyledInboxViewController: UIViewController {
         return CourierInbox(
             canSwipePages: true,
             lightTheme: CourierInboxTheme(
-                brandId: Env.COURIER_BRAND_ID,
                 tabIndicatorColor: primaryColor,
                 tabStyle: CourierStyles.Inbox.TabStyle(
                     selected: CourierStyles.Inbox.TabItemStyle(
@@ -137,7 +136,6 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             darkTheme: CourierInboxTheme(
-                brandId: Env.COURIER_BRAND_ID,
                 tabStyle: CourierStyles.Inbox.TabStyle(
                     selected: CourierStyles.Inbox.TabItemStyle(
                         font: CourierStyles.Font(
@@ -252,19 +250,34 @@ class StyledInboxViewController: UIViewController {
             }
         )
     }()
+    
+    @objc private func readAllClick() {
+        Task {
+            do {
+                try await Courier.shared.readAllInboxMessages()
+            } catch {
+                await Courier.shared.client?.log(error.localizedDescription)
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = "Styled"
 
         courierInbox.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(courierInbox)
         
         NSLayoutConstraint.activate([
-            courierInbox.topAnchor.constraint(equalTo: view.topAnchor),
-            courierInbox.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            courierInbox.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            courierInbox.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             courierInbox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             courierInbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
+        
+        let readAllButton = UIBarButtonItem(title: "Read All", style: .plain, target: self, action: #selector(readAllClick))
+        navigationItem.rightBarButtonItem = readAllButton
         
     }
 
