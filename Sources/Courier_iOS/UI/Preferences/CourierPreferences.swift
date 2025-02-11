@@ -482,10 +482,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
             )
             cell.setTheme(theme: self.theme)
             
+            return cell
+            
         }
-        
-        // If something goes wrong, fallback to a blank cell
-        return UITableViewCell()
         
     }
     

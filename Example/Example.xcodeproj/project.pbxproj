@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		2723612D2D5AC71F00A7ABB5 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2723612C2D5AC71F00A7ABB5 /* Courier_iOS */; };
 		2723612F2D5AC73000A7ABB5 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 2723612E2D5AC73000A7ABB5 /* Courier_iOS */; };
+		272361342D5ACA7C00A7ABB5 /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 272361332D5ACA7C00A7ABB5 /* ShowTime */; };
+		272361372D5ACABC00A7ABB5 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 272361362D5ACABC00A7ABB5 /* FirebaseCore */; };
+		272361392D5ACABC00A7ABB5 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 272361382D5ACABC00A7ABB5 /* FirebaseMessaging */; };
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
 		273353E72D553C6E0044BFD7 /* RawInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273353E62D553C650044BFD7 /* RawInboxViewController.swift */; };
@@ -122,6 +125,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				272361392D5ACABC00A7ABB5 /* FirebaseMessaging in Frameworks */,
+				272361342D5ACA7C00A7ABB5 /* ShowTime in Frameworks */,
+				272361372D5ACABC00A7ABB5 /* FirebaseCore in Frameworks */,
 				2723612D2D5AC71F00A7ABB5 /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -265,6 +271,9 @@
 			name = Example;
 			packageProductDependencies = (
 				2723612C2D5AC71F00A7ABB5 /* Courier_iOS */,
+				272361332D5ACA7C00A7ABB5 /* ShowTime */,
+				272361362D5ACABC00A7ABB5 /* FirebaseCore */,
+				272361382D5ACABC00A7ABB5 /* FirebaseMessaging */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
@@ -298,9 +307,9 @@
 			);
 			mainGroup = 2789515A292689460070F501;
 			packageReferences = (
-				273354202D5AB4920044BFD7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				273354212D5AB4E30044BFD7 /* XCRemoteSwiftPackageReference "ShowTime" */,
 				2723612B2D5AC71F00A7ABB5 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				272361322D5ACA7C00A7ABB5 /* XCRemoteSwiftPackageReference "ShowTime" */,
+				272361352D5ACABC00A7ABB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -676,20 +685,20 @@
 				kind = branch;
 			};
 		};
-		273354202D5AB4920044BFD7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 11.8.1;
-			};
-		};
-		273354212D5AB4E30044BFD7 /* XCRemoteSwiftPackageReference "ShowTime" */ = {
+		272361322D5ACA7C00A7ABB5 /* XCRemoteSwiftPackageReference "ShowTime" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/KaneCheshire/ShowTime.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.3;
+			};
+		};
+		272361352D5ACABC00A7ABB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.8.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -704,6 +713,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2723612B2D5AC71F00A7ABB5 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier_iOS;
+		};
+		272361332D5ACA7C00A7ABB5 /* ShowTime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 272361322D5ACA7C00A7ABB5 /* XCRemoteSwiftPackageReference "ShowTime" */;
+			productName = ShowTime;
+		};
+		272361362D5ACABC00A7ABB5 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 272361352D5ACABC00A7ABB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		272361382D5ACABC00A7ABB5 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 272361352D5ACABC00A7ABB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
