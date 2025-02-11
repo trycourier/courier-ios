@@ -11,28 +11,60 @@ import SwiftUI
 @available(iOSApplicationExtension, unavailable)
 public struct CourierPreferencesView: UIViewRepresentable {
     
+    public typealias UIViewType = CourierPreferences
+
     private let preferences: CourierPreferences
-    
+
     public init(
         mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
-        onError: ((CourierError) -> Void)? = nil
+        onError: ((CourierError) -> Void)? = nil,
+        customListItem: ((CourierUserPreferencesTopic, Int, Int) -> UIView)? = nil
     ) {
         self.preferences = CourierPreferences(
             mode: mode,
             lightTheme: lightTheme,
             darkTheme: darkTheme,
+            customListItem: customListItem,
             onError: onError
         )
     }
-    
-    public func makeUIView(context: Context) -> some UIView {
+
+    public func makeUIView(context: Context) -> CourierPreferences {
         return preferences
     }
-    
+
     public func updateUIView(_ uiView: UIViewType, context: Context) {
         // Empty
     }
-    
 }
+
+// Extension to handle SwiftUI Views as Custom Preference Items
+@available(iOS 15.0, *)
+public extension CourierPreferencesView {
+    init<Content: View>(
+        mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
+        lightTheme: CourierPreferencesTheme = .defaultLight,
+        darkTheme: CourierPreferencesTheme = .defaultDark,
+        onError: ((CourierError) -> Void)? = nil,
+        @ViewBuilder customListItem: @escaping (CourierUserPreferencesTopic, Int, Int) -> Content
+    ) {
+        // Wrap SwiftUI View in UIHostingController
+        let wrappedCustomListItem: (CourierUserPreferencesTopic, Int, Int) -> UIView = { item, section, index in
+            let hostingController = UIHostingController(rootView: customListItem(item, section, index))
+            hostingController.view.backgroundColor = .clear
+            hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+            return hostingController.view
+        }
+
+        self.init(
+            mode: mode,
+            lightTheme: lightTheme,
+            darkTheme: darkTheme,
+            onError: onError,
+            customListItem: wrappedCustomListItem
+        )
+    }
+}
+
