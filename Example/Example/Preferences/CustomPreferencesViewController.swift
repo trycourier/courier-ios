@@ -58,7 +58,7 @@ class CustomPreferencesListItem: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let subtitleLabel = UILabel()
-        subtitleLabel.text = topic.status == .optedOut ? "Off" : "On"
+        subtitleLabel.text = "Notifications are: \(topic.status == .optedOut ? "Off" : "On")"
         subtitleLabel.font = UIFont.monospacedSystemFont(ofSize: 16, weight: .regular)
         subtitleLabel.textColor = .darkGray.withAlphaComponent(alphaValue)
         subtitleLabel.numberOfLines = 0

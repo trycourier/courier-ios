@@ -29,7 +29,7 @@ struct CustomTopicListItemView: View {
                     .font(.system(size: 16, weight: .bold, design: .monospaced))
                     .lineLimit(nil)
 
-                Text(topic.status == .optedOut ? "Off" : "On")
+                Text("Notifications are: \(topic.status == .optedOut ? "Off" : "On")")
                     .font(.system(size: 16, weight: .regular, design: .monospaced))
                     .lineLimit(nil)
             }

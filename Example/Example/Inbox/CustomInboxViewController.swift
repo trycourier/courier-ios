@@ -12,7 +12,7 @@ class CustomInboxViewController: UIViewController {
 
     private lazy var courierInbox = CourierInbox(
         customListItem: { message, index in
-            return CustomInboxListItem(message: message, index: index) {
+            return CustomInboxListItem(message: message) {
                 message.isRead ? message.markAsUnread() : message.markAsRead()
             }
         }
@@ -38,7 +38,7 @@ class CustomInboxListItem: UIView {
 
     private let onClick: () -> Void
 
-    init(message: InboxMessage, index: Int, onClick: @escaping () -> Void) {
+    init(message: InboxMessage, onClick: @escaping () -> Void) {
         self.onClick = onClick
         super.init(frame: .zero)
         isUserInteractionEnabled = true
