@@ -12,7 +12,7 @@ extension Courier {
     /**
      * A read only value set to the current user id
      */
-    public var userId: String? {
+    @CourierActor public var userId: String? {
         get {
             return UserManager.shared.getUserId()
         }
@@ -50,13 +50,13 @@ extension Courier {
         }
     }
     
-    public var tenantId: String? {
+    @CourierActor public var tenantId: String? {
         get {
             return UserManager.shared.getTenantId()
         }
     }
     
-    public var isUserSignedIn: Bool {
+    @CourierActor public var isUserSignedIn: Bool {
         get {
             return userId != nil
         }
@@ -64,7 +64,7 @@ extension Courier {
     
     // MARK: User Registration
     
-    public func signIn(userId: String, tenantId: String? = nil, accessToken: String, clientKey: String? = nil, showLogs: Bool = {
+    @CourierActor public func signIn(userId: String, tenantId: String? = nil, accessToken: String, clientKey: String? = nil, showLogs: Bool = {
         #if DEBUG
         return true
         #else
@@ -110,11 +110,11 @@ extension Courier {
         await putPushTokens()
         await restartInbox()
         
-        notifyListeners(userId)
+        await notifyListeners(userId)
         
     }
     
-    public func signOut() async {
+    @CourierActor public func signOut() async {
         
         // Check if the current user exists
         if (!isUserSignedIn) {
@@ -133,35 +133,35 @@ extension Courier {
         // existing tokens in Courier if failure
         UserManager.shared.removeCredentials()
         
-        notifyListeners(nil)
+        await notifyListeners(nil)
         
     }
     
     // MARK: Listeners
     
     @discardableResult
-    public func addAuthenticationListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
+    @CourierActor public func addAuthenticationListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
         let listener = CourierAuthenticationListener(onChange: onChange)
         self.authListeners.append(listener)
         print("Courier Authentication Listener Registered. Total Listeners: \(self.authListeners.count)")
         return listener
     }
 
-    public func removeAuthenticationListener(_ listener: CourierAuthenticationListener) {
+    @CourierActor public func removeAuthenticationListener(_ listener: CourierAuthenticationListener) {
         self.authListeners.removeAll(where: { return $0 == listener })
         print("Courier Authentication Listener Unregistered. Total Listeners: \(self.authListeners.count)")
     }
     
-    public func removeAllAuthenticationListeners() {
+    @CourierActor public func removeAllAuthenticationListeners() {
         self.authListeners.removeAll()
         print("Courier Authentication Listeners Removed. Total Listeners: \(self.authListeners.count)")
     }
     
     // MARK: Notifications
 
-    private func notifyListeners(_ userId: String?) {
-        authListeners.forEach { listener in
-            DispatchQueue.main.async {
+    private func notifyListeners(_ userId: String?) async {
+        await MainActor.run {
+            authListeners.forEach { listener in
                 listener.onChange(userId)
             }
         }

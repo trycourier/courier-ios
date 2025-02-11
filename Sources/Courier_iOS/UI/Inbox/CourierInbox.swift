@@ -338,7 +338,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         refreshTheme()
     }
     
-    @discardableResult internal func refreshBrand() async -> CourierBrand? {
+    @discardableResult
+    internal func refreshBrand() async -> CourierBrand? {
         do {
             if let brandId = self.theme.brandId {
                 let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
@@ -347,7 +348,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 return res?.data.brand
             }
         } catch {
-            await Courier.shared.client?.log(error.localizedDescription)
+            Courier.shared.client?.log(error.localizedDescription)
         }
         return nil
     }

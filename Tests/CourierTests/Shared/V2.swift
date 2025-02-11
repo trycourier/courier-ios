@@ -10,14 +10,4 @@ import XCTest
 
 class V2: XCTestCase {
     
-    func testAuth() async throws {
-        
-        try await Courier2.shared.signIn()
-        
-        print(Courier2.shared.currentUserId ?? "No user found")
-        
-        try await Courier2.shared.signOut()
-        
-    }
-    
 }

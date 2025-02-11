@@ -51,14 +51,12 @@ import Foundation
 extension CourierInboxListener {
     
     internal func onLoad(data: CourierInboxData) {
-        DispatchQueue.main.async {
-            if !self.isInitialized {
-                return
-            }
-            self.onFeedChanged?(data.feed)
-            self.onArchiveChanged?(data.archived)
-            self.onUnreadCountChanged?(data.unreadCount)
+        if !self.isInitialized {
+            return
         }
+        self.onFeedChanged?(data.feed)
+        self.onArchiveChanged?(data.archived)
+        self.onUnreadCountChanged?(data.unreadCount)
     }
     
     internal func initialize() {

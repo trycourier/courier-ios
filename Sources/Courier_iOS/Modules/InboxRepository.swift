@@ -5,7 +5,7 @@
 //  Created by https://github.com/mikemilla on 10/2/24.
 //
 
-internal actor InboxRepository {
+internal class InboxRepository {
     
     private let inboxSocketManager = InboxSocketManager()
     
@@ -24,8 +24,8 @@ internal actor InboxRepository {
     }
     
     private var client: CourierClient? {
-        get async {
-            return await Courier.shared.client
+        get {
+            return Courier.shared.client
         }
     }
     
@@ -74,7 +74,7 @@ internal actor InboxRepository {
     
     private func getInitialLimit(messageCount: Int?, isRefresh: Bool) async -> Int {
         
-        let defaultPaginationLimit = await Courier.shared.paginationLimit
+        let defaultPaginationLimit = Courier.shared.paginationLimit
         
         if isRefresh {
             let existingCount = messageCount ?? defaultPaginationLimit
@@ -91,7 +91,7 @@ internal actor InboxRepository {
             throw CourierError.userNotFound
         }
         
-        guard let client = await client else {
+        guard let client = client else {
             throw CourierError.inboxNotInitialized
         }
         
@@ -158,7 +158,7 @@ internal actor InboxRepository {
     
     private func connectWebSocket(onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws {
         
-        guard let client = await client else {
+        guard let client = client else {
             throw CourierError.inboxNotInitialized
         }
         
@@ -187,18 +187,18 @@ internal actor InboxRepository {
             throw CourierError.userNotFound
         }
         
-        guard let client = await client else {
+        guard let client = client else {
             throw CourierError.inboxNotInitialized
         }
         
         // Create strong ref copy
         let strongClient = client
         
-        let limit = await Courier.shared.paginationLimit
+        let limit = Courier.shared.paginationLimit
         
         if feed == .feed {
             
-            if await !inboxData.feed.canPaginate || isPagingFeed {
+            if !inboxData.feed.canPaginate || isPagingFeed {
                 return nil
             }
             
@@ -215,7 +215,7 @@ internal actor InboxRepository {
             
         } else {
             
-            if await !inboxData.archived.canPaginate || isPagingArchived {
+            if !inboxData.archived.canPaginate || isPagingArchived {
                 return nil
             }
             

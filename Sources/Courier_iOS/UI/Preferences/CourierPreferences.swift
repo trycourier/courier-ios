@@ -590,9 +590,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                         hasCustomRouting: newTopic.hasCustomRouting,
                         customRouting: newTopic.customRouting
                     )
-                    await Courier.shared.client?.log("Topic updated: \(topic.topicId)")
+                    Courier.shared.client?.log("Topic updated: \(topic.topicId)")
                 } catch {
-                    await Courier.shared.client?.log(error.localizedDescription)
+                    Courier.shared.client?.log(error.localizedDescription)
                     self.onError?(CourierError(from: error))
                     self.updateTopic(topicId: topic.topicId, newTopic: topic)
                 }
@@ -654,9 +654,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                         hasCustomRouting: hasCustomRouting,
                         customRouting: customRouting
                     )
-                    await Courier.shared.client?.log("Topic updated: \(topic.topicId)")
+                    Courier.shared.client?.log("Topic updated: \(topic.topicId)")
                 } catch {
-                    await Courier.shared.client?.log(error.localizedDescription)
+                    Courier.shared.client?.log(error.localizedDescription)
                     self.onError?(CourierError(from: error))
                     self.updateTopic(topicId: topic.topicId, newTopic: topic)
                 }
@@ -683,7 +683,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
      Clear the listeners
      */
     deinit {
-        authListener?.remove()
+        Task { [self] in
+            await self.authListener?.remove()
+        }
     }
     
 }

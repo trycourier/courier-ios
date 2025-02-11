@@ -23,11 +23,8 @@ public class CourierAuthenticationListener: NSObject {
 
 extension CourierAuthenticationListener {
     
-    // Unregisters a listener on a background task
-    @objc public func remove() {
-        Task {
-            await Courier.shared.removeAuthenticationListener(self)
-        }
+    @CourierActor @objc public func remove() {
+        Courier.shared.removeAuthenticationListener(self)
     }
     
 }

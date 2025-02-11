@@ -22,7 +22,7 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 
 import UIKit
 
-@objc public actor Courier: NSObject {
+@objc public class Courier: NSObject {
     
     /**
      * Versioning
@@ -122,30 +122,4 @@ extension CourierActorImpl: SerialExecutor {
     nonisolated public func asUnownedSerialExecutor() -> UnownedSerialExecutor {
         UnownedSerialExecutor(ordinary: self)
     }
-}
-
-@objc public class Courier2: NSObject {
-    
-    /// A shared singleton instance
-    @objc public static let shared = Courier2()
-    
-    // MARK: Init
-    private override init() {
-        super.init()
-    }
-    
-    @objc public private(set) var currentUserId: String?
-    
-    @CourierActor
-    public func signIn() async throws {
-        try await Task.sleep(nanoseconds: 5_000_000_000)
-        currentUserId = UUID().uuidString
-    }
-    
-    @CourierActor
-    public func signOut() async throws {
-        try await Task.sleep(nanoseconds: 5_000_000_000)
-        currentUserId = nil
-    }
-    
 }

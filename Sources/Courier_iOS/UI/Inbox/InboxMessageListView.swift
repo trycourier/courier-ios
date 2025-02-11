@@ -242,9 +242,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
         // Ensure the indexPath is valid for the tableView
         guard index >= 0 && index <= tableView.numberOfRows(inSection: 0) else {
-            Task {
-                await Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
-            }
+            Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
             self.tableView.reloadData()
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
@@ -425,7 +423,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 do {
                     try await Courier.shared.fetchNextInboxPage(self.feed)
                 } catch {
-                    await Courier.shared.client?.error(error.localizedDescription)
+                    Courier.shared.client?.error(error.localizedDescription)
                 }
             }
         }
@@ -464,7 +462,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             do {
                 try await Courier.shared.archiveMessage(message.messageId)
             } catch {
-                await Courier.shared.client?.log(error.localizedDescription)
+                Courier.shared.client?.log(error.localizedDescription)
             }
         }
         
@@ -482,7 +480,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                     try await Courier.shared.readMessage(message.messageId)
                 }
             } catch {
-                await Courier.shared.client?.log(error.localizedDescription)
+                Courier.shared.client?.log(error.localizedDescription)
             }
         }
         
@@ -612,7 +610,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
      Clear the listeners
      */
     deinit {
-        authListener?.remove()
+        Task { [self] in
+            await self.authListener?.remove()
+        }
     }
     
 }

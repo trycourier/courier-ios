@@ -115,7 +115,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
                             "action": "keepAlive"
                         ])
                     } catch {
-                        await Courier.shared.client?.log(error.localizedDescription)
+                        Courier.shared.client?.log(error.localizedDescription)
                     }
                 }
             }
@@ -146,9 +146,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
                 
                 // Handle closing socket
                 if e.domain == NSPOSIXErrorDomain && e.code == 57 {
-                    Task {
-                        await Courier.shared.client?.log("WebSocket closed")
-                    }
+                    Courier.shared.client?.log("WebSocket closed")
                     return
                 }
                 

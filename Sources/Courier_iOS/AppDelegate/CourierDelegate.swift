@@ -68,9 +68,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     // MARK: Token Management
 
     open func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        Task {
-            await Courier.shared.client?.log("Unable to register for remote notifications: \(error.localizedDescription)")
-        }
+        Courier.shared.client?.log("Unable to register for remote notifications: \(error.localizedDescription)")
     }
 
     open func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -86,7 +84,7 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
                 try await Courier.shared.setAPNSToken(deviceToken)
                 
             } catch {
-                await Courier.shared.client?.log(error.localizedDescription)
+                Courier.shared.client?.log(error.localizedDescription)
             }
         }
     }
