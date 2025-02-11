@@ -8,10 +8,9 @@ class InboxViewController: UIViewController, UITableViewDelegate, UITableViewDat
 
     var tableView: UITableView!
     
-    private lazy var swiftUIViewController: UIHostingController<SwiftUIViewController> = {
-        let swiftUIView = SwiftUIViewController()
+    private lazy var swiftUIViewController: UIHostingController<SwiftUIInboxViewController> = {
+        let swiftUIView = SwiftUIInboxViewController()
         let hostingController = UIHostingController(rootView: swiftUIView)
-        hostingController.title = "SwiftUI Inbox"
         return hostingController
     }()
 

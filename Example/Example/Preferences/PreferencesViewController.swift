@@ -7,6 +7,7 @@
 
 import UIKit
 import Courier_iOS
+import SwiftUI
 
 class PreferencesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -14,12 +15,11 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
 
     var tableView: UITableView!
     
-//    private lazy var swiftUIViewController: UIHostingController<SwiftUIViewController> = {
-//        let swiftUIView = SwiftUIViewController()
-//        let hostingController = UIHostingController(rootView: swiftUIView)
-//        hostingController.title = "SwiftUI Inbox"
-//        return hostingController
-//    }()
+    private lazy var swiftUIViewController: UIHostingController<SwiftUIPreferencesViewController> = {
+        let swiftUIView = SwiftUIPreferencesViewController()
+        let hostingController = UIHostingController(rootView: swiftUIView)
+        return hostingController
+    }()
 
     private lazy var preferences: [(String, () -> UIViewController)] = [
         ("Default", { PrebuiltPreferencesViewController() }),
@@ -27,7 +27,7 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         ("Branded", { BrandedPreferencesViewController() }),
         ("Styled", { StyledPreferencesViewController() }),
         ("Custom (UIKit)", { CustomPreferencesViewController() }),
-//        ("Custom (SwiftUI)", { self.swiftUIViewController }),
+        ("Custom (SwiftUI)", { self.swiftUIViewController }),
         ("Raw JSON", { RawPreferencesViewController() }),
     ]
 

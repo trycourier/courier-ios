@@ -511,7 +511,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         return Theme.Preferences.topicCellHeight
     }
     
-    private func showSheet(topic: CourierUserPreferencesTopic) {
+    public func showSheet(topic: CourierUserPreferencesTopic) {
         
         guard let parentViewController = parentViewController else {
             fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")
@@ -570,8 +570,15 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
             topic: topic,
             items: items,
             onDismiss: { items in
+                
                 self.handleChangeForMode(mode: self.mode, topic: topic, items: items)
                 self.sheetViewController = nil
+                
+                // Reload data
+                if self.customListItem != nil {
+                    self.tableView.reloadData()
+                }
+                
             }
         )
         

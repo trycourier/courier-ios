@@ -25,8 +25,9 @@
 		276425B02B9FA5B500DB08E1 /* UpdatePreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276425AF2B9FA5B500DB08E1 /* UpdatePreferencesViewController.swift */; };
 		27644EEC29AE7378002F907B /* CustomInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EEB29AE7378002F907B /* CustomInboxViewController.swift */; };
 		27644EF429AFF741002F907B /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27644EF329AFF741002F907B /* AuthViewController.swift */; };
-		277FF4D82D5ACD9F005BE364 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 277FF4D72D5ACD9F005BE364 /* Courier_iOS */; };
-		277FF4DA2D5ACDBE005BE364 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 277FF4D92D5ACDBE005BE364 /* Courier_iOS */; };
+		277FF4DC2D5AD72A005BE364 /* SwiftUIPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277FF4DB2D5AD723005BE364 /* SwiftUIPreferencesViewController.swift */; };
+		27809BA62D5AD96F00E2D884 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27809BA52D5AD96F00E2D884 /* Courier_iOS */; };
+		27809BA82D5AD97700E2D884 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 27809BA72D5AD97700E2D884 /* Courier_iOS */; };
 		27895167292689460070F501 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895166292689460070F501 /* AppDelegate.swift */; };
 		27895169292689460070F501 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27895168292689460070F501 /* SceneDelegate.swift */; };
 		2789516B292689460070F501 /* PushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2789516A292689460070F501 /* PushViewController.swift */; };
@@ -81,6 +82,7 @@
 		276425AF2B9FA5B500DB08E1 /* UpdatePreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatePreferencesViewController.swift; sourceTree = "<group>"; };
 		27644EEB29AE7378002F907B /* CustomInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInboxViewController.swift; sourceTree = "<group>"; };
 		27644EF329AFF741002F907B /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		277FF4DB2D5AD723005BE364 /* SwiftUIPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIPreferencesViewController.swift; sourceTree = "<group>"; };
 		27895163292689460070F501 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27895166292689460070F501 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27895168292689460070F501 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -117,7 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				277FF4DA2D5ACDBE005BE364 /* Courier_iOS in Frameworks */,
+				27809BA82D5AD97700E2D884 /* Courier_iOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +129,7 @@
 			files = (
 				272361392D5ACABC00A7ABB5 /* FirebaseMessaging in Frameworks */,
 				272361342D5ACA7C00A7ABB5 /* ShowTime in Frameworks */,
-				277FF4D82D5ACD9F005BE364 /* Courier_iOS in Frameworks */,
+				27809BA62D5AD96F00E2D884 /* Courier_iOS in Frameworks */,
 				272361372D5ACABC00A7ABB5 /* FirebaseCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -160,6 +162,7 @@
 		276425A72B9F9F5100DB08E1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				277FF4DB2D5AD723005BE364 /* SwiftUIPreferencesViewController.swift */,
 				2733541E2D5AB2B70044BFD7 /* CustomPreferencesViewController.swift */,
 				2733541C2D5AA9B30044BFD7 /* BrandedPreferencesViewController.swift */,
 				27B18CDD2B4DF6460005904E /* PreferencesViewController.swift */,
@@ -248,7 +251,7 @@
 			);
 			name = CourierService;
 			packageProductDependencies = (
-				277FF4D92D5ACDBE005BE364 /* Courier_iOS */,
+				27809BA72D5AD97700E2D884 /* Courier_iOS */,
 			);
 			productName = CourierService;
 			productReference = 273354282D5AB6560044BFD7 /* CourierService.appex */;
@@ -273,7 +276,7 @@
 				272361332D5ACA7C00A7ABB5 /* ShowTime */,
 				272361362D5ACABC00A7ABB5 /* FirebaseCore */,
 				272361382D5ACABC00A7ABB5 /* FirebaseMessaging */,
-				277FF4D72D5ACD9F005BE364 /* Courier_iOS */,
+				27809BA52D5AD96F00E2D884 /* Courier_iOS */,
 			);
 			productName = Example;
 			productReference = 27895163292689460070F501 /* Example.app */;
@@ -309,7 +312,7 @@
 			packageReferences = (
 				272361322D5ACA7C00A7ABB5 /* XCRemoteSwiftPackageReference "ShowTime" */,
 				272361352D5ACABC00A7ABB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				277FF4D62D5ACD9F005BE364 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				27809BA42D5AD96F00E2D884 /* XCRemoteSwiftPackageReference "courier-ios" */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -370,6 +373,7 @@
 				273353E92D555E2E0044BFD7 /* SwiftUIViewController.swift in Sources */,
 				27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */,
 				276425AA2B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift in Sources */,
+				277FF4DC2D5AD72A005BE364 /* SwiftUIPreferencesViewController.swift in Sources */,
 				276425AE2B9FA39300DB08E1 /* RawPreferencesViewController.swift in Sources */,
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,
@@ -693,7 +697,7 @@
 				minimumVersion = 11.8.1;
 			};
 		};
-		277FF4D62D5ACD9F005BE364 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
+		27809BA42D5AD96F00E2D884 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
@@ -719,14 +723,14 @@
 			package = 272361352D5ACABC00A7ABB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
 		};
-		277FF4D72D5ACD9F005BE364 /* Courier_iOS */ = {
+		27809BA52D5AD96F00E2D884 /* Courier_iOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 277FF4D62D5ACD9F005BE364 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 27809BA42D5AD96F00E2D884 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier_iOS;
 		};
-		277FF4D92D5ACDBE005BE364 /* Courier_iOS */ = {
+		27809BA72D5AD97700E2D884 /* Courier_iOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 277FF4D62D5ACD9F005BE364 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 27809BA42D5AD96F00E2D884 /* XCRemoteSwiftPackageReference "courier-ios" */;
 			productName = Courier_iOS;
 		};
 /* End XCSwiftPackageProductDependency section */

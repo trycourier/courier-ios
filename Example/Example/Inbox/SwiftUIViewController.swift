@@ -1,5 +1,5 @@
 //
-//  SwiftUIViewController.swift
+//  SwiftUIInboxViewController.swift
 //  Example
 //
 //  Created by Michael Miller on 2/6/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Courier_iOS
 
-struct SwiftUIViewController: View {
+struct SwiftUIInboxViewController: View {
     var body: some View {
         CourierInboxView { message, index in
             CustomInboxListItemView(message: message) {
@@ -21,8 +21,6 @@ struct SwiftUIViewController: View {
 struct CustomInboxListItemView: View {
     var message: InboxMessage
     var onClick: () -> Void
-
-    @State private var isHighlighted = false
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -74,7 +72,6 @@ struct CustomInboxListItemView: View {
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 16)
-        .background(isHighlighted ? Color.blue.opacity(0.3) : Color.clear)
         .contentShape(Rectangle())
         .onTapGesture {
             onClick()
