@@ -91,7 +91,7 @@ public enum CourierUserPreferencesStatus: String, Codable {
     }
     
     // Title property
-    var title: String {
+    public var title: String {
         switch self {
         case .optedIn:
             return "Opted In"
@@ -130,7 +130,7 @@ public enum CourierUserPreferencesChannel: String, Codable {
     }
     
     // Title property
-    var title: String {
+    public var title: String {
         switch self {
         case .directMessage:
             return "In App Messages"

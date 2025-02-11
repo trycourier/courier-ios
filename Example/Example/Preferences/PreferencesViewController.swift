@@ -26,7 +26,7 @@ class PreferencesViewController: UIViewController, UITableViewDelegate, UITableV
         ("Default (Topic Mode)", { PrebuiltPreferencesViewController(mode: .topic) }),
         ("Branded", { BrandedPreferencesViewController() }),
         ("Styled", { StyledPreferencesViewController() }),
-//        ("Custom (UIKit)", { CustomInboxViewController() }),
+        ("Custom (UIKit)", { CustomPreferencesViewController() }),
 //        ("Custom (SwiftUI)", { self.swiftUIViewController }),
         ("Raw JSON", { RawPreferencesViewController() }),
     ]

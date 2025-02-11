@@ -1,5 +1,5 @@
 {
-  "originHash" : "41f0f9db68b385a29488740ab00846637812bb51ade33b042a144e76383f149f",
+  "originHash" : "3ca07fe8660e8757df1eeb3ff778ea0884541a5dfbc6c6ef57883f47a7770da5",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -25,7 +25,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "feature/customlistitems",
-        "revision" : "fbebc6a936dc533918259b898d13377423576066"
+        "revision" : "9f6a82b8ba8d6bc742d9bddd6a5faaf2a8f09a26"
       }
     },
     {
