@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal actor InboxModule {
+@CourierActor internal class InboxModule {
     
     internal var inboxListeners: [CourierInboxListener] = []
     
@@ -35,13 +35,13 @@ internal actor InboxModule {
     
 }
 
-extension Courier: InboxMutationHandler {
+@CourierActor extension Courier: InboxMutationHandler {
     
     func onInboxItemAdded(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
         
-        await inboxModule.data?.addMessage(at: index, in: feed, with: message)
+        inboxModule.data?.addMessage(at: index, in: feed, with: message)
         
-        let listeners = await self.inboxModule.inboxListeners
+        let listeners = self.inboxModule.inboxListeners
         
         await MainActor.run {
             listeners.forEach { listener in
@@ -53,7 +53,7 @@ extension Courier: InboxMutationHandler {
     
     func onInboxItemRemove(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
         
-        let listeners = await self.inboxModule.inboxListeners
+        let listeners = self.inboxModule.inboxListeners
         
         await MainActor.run {
             listeners.forEach { listener in
@@ -65,9 +65,9 @@ extension Courier: InboxMutationHandler {
     
     func onInboxItemUpdated(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) async {
         
-        await inboxModule.data?.updateMessage(at: index, in: feed, with: message)
+        inboxModule.data?.updateMessage(at: index, in: feed, with: message)
         
-        let listeners = await self.inboxModule.inboxListeners
+        let listeners = self.inboxModule.inboxListeners
         
         await MainActor.run {
             listeners.forEach { listener in
@@ -79,11 +79,11 @@ extension Courier: InboxMutationHandler {
     
     func onInboxUpdated(inbox: CourierInboxData) async {
         
-        await inboxModule.updateData(data: inbox)
+        inboxModule.updateData(data: inbox)
         
-        if let data = await inboxModule.data {
+        if let data = inboxModule.data {
             
-            let listeners = await self.inboxModule.inboxListeners
+            let listeners = self.inboxModule.inboxListeners
             
             await MainActor.run {
                 listeners.forEach { listener in
@@ -97,11 +97,11 @@ extension Courier: InboxMutationHandler {
     
     func onUnreadCountChange(count: Int) async {
         
-        await inboxModule.data?.updateUnreadCount(count: count)
+        inboxModule.data?.updateUnreadCount(count: count)
         
-        if let unreadCount = await inboxModule.data?.unreadCount {
+        if let unreadCount = inboxModule.data?.unreadCount {
             
-            let listeners = await self.inboxModule.inboxListeners
+            let listeners = self.inboxModule.inboxListeners
             
             await MainActor.run {
                 listeners.forEach { listener in
@@ -115,11 +115,11 @@ extension Courier: InboxMutationHandler {
     
     func onInboxReset(inbox: CourierInboxData, error: any Error) async {
         
-        await inboxModule.updateData(data: inbox)
+        inboxModule.updateData(data: inbox)
         
-        if let data = await inboxModule.data {
+        if let data = inboxModule.data {
             
-            let listeners = await self.inboxModule.inboxListeners
+            let listeners = self.inboxModule.inboxListeners
                 
             await MainActor.run {
                 listeners.forEach { listener in
@@ -133,7 +133,7 @@ extension Courier: InboxMutationHandler {
     
     func onInboxReload(isRefresh: Bool) async {
         
-        let listeners = await self.inboxModule.inboxListeners
+        let listeners = self.inboxModule.inboxListeners
         
         await MainActor.run {
             listeners.forEach({ listener in
@@ -147,7 +147,7 @@ extension Courier: InboxMutationHandler {
         
         await onUnreadCountChange(count: 0)
         
-        let listeners = await self.inboxModule.inboxListeners
+        let listeners = self.inboxModule.inboxListeners
         
         await MainActor.run {
             listeners.forEach({ listener in
@@ -160,9 +160,9 @@ extension Courier: InboxMutationHandler {
     func onInboxPageFetched(feed: InboxMessageFeed, messageSet: InboxMessageSet) async {
         
         // Add the page
-        await inboxModule.data?.addPage(in: feed, with: messageSet)
+        inboxModule.data?.addPage(in: feed, with: messageSet)
         
-        let listeners = await self.inboxModule.inboxListeners
+        let listeners = self.inboxModule.inboxListeners
         
         // Call the listeners
         await MainActor.run {
@@ -177,11 +177,11 @@ extension Courier: InboxMutationHandler {
         
         let index = 0
         let feed: InboxMessageFeed = message.isArchived ? .archived : .feed
-        await inboxModule.data?.addMessage(at: index, in: feed, with: message)
+        inboxModule.data?.addMessage(at: index, in: feed, with: message)
         
-        if let data = await inboxModule.data {
+        if let data = inboxModule.data {
             
-            let listeners = await self.inboxModule.inboxListeners
+            let listeners = self.inboxModule.inboxListeners
             let unreadCount = data.unreadCount
             
             await MainActor.run {
@@ -238,27 +238,27 @@ extension Courier: InboxMutationHandler {
     
 }
 
-extension Courier {
+@CourierActor extension Courier {
     
-    @CourierActor public var feedMessages: [InboxMessage] {
-        get async {
-            return await inboxModule.data?.feed.messages ?? []
+    public var feedMessages: [InboxMessage] {
+        get {
+            return inboxModule.data?.feed.messages ?? []
         }
     }
     
-    @CourierActor public var archivedMessages: [InboxMessage] {
-        get async {
-            return await inboxModule.data?.archived.messages ?? []
+    public var archivedMessages: [InboxMessage] {
+        get {
+            return inboxModule.data?.archived.messages ?? []
         }
     }
     
-    @CourierActor public var inboxPaginationLimit: Int {
+    public var inboxPaginationLimit: Int {
         get {
             return self.paginationLimit
         }
     }
     
-    @CourierActor @objc public func setPaginationLimit(_ limit: Int) async {
+    @objc public func setPaginationLimit(_ limit: Int) async {
         let min = min(InboxRepository.Pagination.max.rawValue, limit)
         self.paginationLimit = max(InboxRepository.Pagination.min.rawValue, min)
     }
@@ -272,9 +272,9 @@ extension Courier {
     // Reconnects and refreshes the data
     // Called because the websocket may have disconnected or
     // new data may have been sent when the user closed their app
-    @CourierActor internal func linkInbox() async {
+    internal func linkInbox() async {
         
-        if await self.inboxModule.inboxListeners.isEmpty {
+        if self.inboxModule.inboxListeners.isEmpty {
             return
         }
         
@@ -297,9 +297,9 @@ extension Courier {
 
     // Disconnects the websocket
     // Helps keep battery usage lower
-    @CourierActor internal func unlinkInbox() async {
+    internal func unlinkInbox() async {
         
-        if await self.inboxModule.inboxListeners.isEmpty {
+        if self.inboxModule.inboxListeners.isEmpty {
             return
         }
         
@@ -315,7 +315,7 @@ extension Courier {
         
     }
     
-    @CourierActor public func refreshInbox() async {
+    public func refreshInbox() async {
         
         guard let handler = self.inboxMutationHandler else {
             return
@@ -330,7 +330,7 @@ extension Courier {
         
     }
     
-    @CourierActor func restartInbox() async {
+    func restartInbox() async {
         
         guard let handler = self.inboxMutationHandler else {
             return
@@ -345,7 +345,7 @@ extension Courier {
         
     }
     
-    @CourierActor func closeInbox() async {
+    func closeInbox() async {
         
         guard let handler = self.inboxMutationHandler else {
             return
@@ -357,9 +357,9 @@ extension Courier {
     }
     
     @discardableResult
-    @CourierActor public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> InboxMessageSet? {
+    public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> InboxMessageSet? {
         
-        guard let inboxData = await inboxModule.data else {
+        guard let inboxData = inboxModule.data else {
             return nil
         }
         
@@ -380,7 +380,7 @@ extension Courier {
     // MARK: Listeners
     
     @discardableResult
-    @CourierActor public func addInboxListener(
+    public func addInboxListener(
         onLoading: ((Bool) -> Void)? = nil,
         onError: ((Error) -> Void)? = nil,
         onUnreadCountChanged: ((_ count: Int) -> Void)? = nil,
@@ -407,7 +407,7 @@ extension Courier {
         listener.initialize()
         
         // Register listener
-        await inboxModule.addListener(listener)
+        inboxModule.addListener(listener)
         
         // Ensure the user is signed in
         if !isUserSignedIn {
@@ -419,7 +419,7 @@ extension Courier {
         }
         
         // Notify that data exists if needed
-        if let data = await inboxModule.data {
+        if let data = inboxModule.data {
             await MainActor.run {
                 listener.onLoad(data: data)
             }
@@ -445,23 +445,23 @@ extension Courier {
         
     }
     
-    @CourierActor public func removeInboxListener(_ listener: CourierInboxListener) async {
+    public func removeInboxListener(_ listener: CourierInboxListener) async {
         
-        await inboxModule.removeListener(listener)
+        inboxModule.removeListener(listener)
         
-        if await inboxModule.inboxListeners.isEmpty {
+        if inboxModule.inboxListeners.isEmpty {
             await closeInbox()
         }
         
     }
     
-    @CourierActor public func removeAllInboxListeners() {
+    public func removeAllInboxListeners() {
         
         Task {
             
-            await inboxModule.removeAllListeners()
+            inboxModule.removeAllListeners()
             
-            if await inboxModule.inboxListeners.isEmpty {
+            if inboxModule.inboxListeners.isEmpty {
                 Task {
                     await closeInbox()
                 }
@@ -471,7 +471,7 @@ extension Courier {
         
     }
     
-    @CourierActor public func clickMessage(_ messageId: String) async throws {
+    public func clickMessage(_ messageId: String) async throws {
         
         if !isUserSignedIn {
             throw CourierError.userNotFound
@@ -490,7 +490,7 @@ extension Courier {
         
     }
     
-    @CourierActor public func readMessage(_ messageId: String) async throws {
+    public func readMessage(_ messageId: String) async throws {
         
         if !isUserSignedIn {
             throw CourierError.userNotFound
@@ -509,7 +509,7 @@ extension Courier {
 
     }
     
-    @CourierActor public func unreadMessage(_ messageId: String) async throws {
+    public func unreadMessage(_ messageId: String) async throws {
         
         if !isUserSignedIn {
             throw CourierError.userNotFound
@@ -528,7 +528,7 @@ extension Courier {
 
     }
     
-    @CourierActor public func archiveMessage(_ messageId: String) async throws {
+    public func archiveMessage(_ messageId: String) async throws {
         
         if !isUserSignedIn {
             throw CourierError.userNotFound
@@ -547,7 +547,7 @@ extension Courier {
 
     }
     
-    @CourierActor public func openMessage(_ messageId: String) async throws {
+    public func openMessage(_ messageId: String) async throws {
         
         if !isUserSignedIn {
             throw CourierError.userNotFound
@@ -566,7 +566,7 @@ extension Courier {
 
     }
     
-    @CourierActor public func readAllInboxMessages() async throws {
+    public func readAllInboxMessages() async throws {
         
         if !isUserSignedIn {
             throw CourierError.userNotFound

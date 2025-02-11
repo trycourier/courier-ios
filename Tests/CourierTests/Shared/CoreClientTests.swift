@@ -34,7 +34,7 @@ class CoreClientTests: XCTestCase {
 
     }
     
-    func testUserAgent() throws {
+    @CourierActor func testUserAgent() throws {
         
         Courier.agent = CourierAgent.nativeIOS("1.2.3")
         XCTAssertEqual(Courier.agent.value, "courier-ios/1.2.3")

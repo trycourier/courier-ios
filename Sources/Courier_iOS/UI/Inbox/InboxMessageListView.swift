@@ -242,7 +242,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
         // Ensure the indexPath is valid for the tableView
         guard index >= 0 && index <= tableView.numberOfRows(inSection: 0) else {
-            Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
+            await Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
             self.tableView.reloadData()
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
@@ -270,7 +270,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
     }
     
-    internal func removeMessage(at index: Int, message: InboxMessage) {
+    internal func removeMessage(at index: Int, message: InboxMessage) async {
         
         // Check if index is within bounds and if the message matches
         guard index >= 0 && index < inboxMessages.count, inboxMessages[index].messageId == message.messageId else {
@@ -287,7 +287,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         inboxMessages.remove(at: index)
         
         // React Native Bug fix... weird.
-        if (Courier.agent.isReactNative()) {
+        if (await Courier.agent.isReactNative()) {
             self.tableView.reloadData()
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
@@ -423,7 +423,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 do {
                     try await Courier.shared.fetchNextInboxPage(self.feed)
                 } catch {
-                    Courier.shared.client?.error(error.localizedDescription)
+                    await Courier.shared.client?.error(error.localizedDescription)
                 }
             }
         }
@@ -453,17 +453,20 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     private func archiveCell(at index: Int) {
         
         let message = inboxMessages[index]
-        removeMessage(at: index, message: message)
-        
-        // Hold the message id
-        self.manuallyArchivedMessageId = message.messageId
         
         Task {
+            
+            await removeMessage(at: index, message: message)
+            
+            // Hold the message id
+            self.manuallyArchivedMessageId = message.messageId
+            
             do {
                 try await Courier.shared.archiveMessage(message.messageId)
             } catch {
-                Courier.shared.client?.log(error.localizedDescription)
+                await Courier.shared.client?.log(error.localizedDescription)
             }
+            
         }
         
     }
@@ -480,7 +483,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                     try await Courier.shared.readMessage(message.messageId)
                 }
             } catch {
-                Courier.shared.client?.log(error.localizedDescription)
+                await Courier.shared.client?.log(error.localizedDescription)
             }
         }
         

@@ -226,7 +226,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 },
                 onMessageRemoved: { feed, index, message in
                     Task { [weak self] in
-                        self?.getPage(for: feed).page.removeMessage(at: index, message: message)
+                        await self?.getPage(for: feed).page.removeMessage(at: index, message: message)
                     }
                 }
             )
@@ -348,7 +348,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                 return res?.data.brand
             }
         } catch {
-            Courier.shared.client?.log(error.localizedDescription)
+            await Courier.shared.client?.log(error.localizedDescription)
         }
         return nil
     }

@@ -7,12 +7,12 @@
 
 import Foundation
 
-extension Courier {
+@CourierActor extension Courier {
     
     /**
      * A read only value set to the current user id
      */
-    @CourierActor public var userId: String? {
+    public var userId: String? {
         get {
             return UserManager.shared.getUserId()
         }
@@ -50,13 +50,13 @@ extension Courier {
         }
     }
     
-    @CourierActor public var tenantId: String? {
+    public var tenantId: String? {
         get {
             return UserManager.shared.getTenantId()
         }
     }
     
-    @CourierActor public var isUserSignedIn: Bool {
+    public var isUserSignedIn: Bool {
         get {
             return userId != nil
         }
@@ -64,7 +64,7 @@ extension Courier {
     
     // MARK: User Registration
     
-    @CourierActor public func signIn(userId: String, tenantId: String? = nil, accessToken: String, clientKey: String? = nil, showLogs: Bool = {
+    public func signIn(userId: String, tenantId: String? = nil, accessToken: String, clientKey: String? = nil, showLogs: Bool = {
         #if DEBUG
         return true
         #else
@@ -114,7 +114,7 @@ extension Courier {
         
     }
     
-    @CourierActor public func signOut() async {
+    public func signOut() async {
         
         // Check if the current user exists
         if (!isUserSignedIn) {
@@ -140,19 +140,19 @@ extension Courier {
     // MARK: Listeners
     
     @discardableResult
-    @CourierActor public func addAuthenticationListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
+    public func addAuthenticationListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
         let listener = CourierAuthenticationListener(onChange: onChange)
         self.authListeners.append(listener)
         print("Courier Authentication Listener Registered. Total Listeners: \(self.authListeners.count)")
         return listener
     }
 
-    @CourierActor public func removeAuthenticationListener(_ listener: CourierAuthenticationListener) {
+    public func removeAuthenticationListener(_ listener: CourierAuthenticationListener) {
         self.authListeners.removeAll(where: { return $0 == listener })
         print("Courier Authentication Listener Unregistered. Total Listeners: \(self.authListeners.count)")
     }
     
-    @CourierActor public func removeAllAuthenticationListeners() {
+    public func removeAllAuthenticationListeners() {
         self.authListeners.removeAll()
         print("Courier Authentication Listeners Removed. Total Listeners: \(self.authListeners.count)")
     }
@@ -160,8 +160,9 @@ extension Courier {
     // MARK: Notifications
 
     private func notifyListeners(_ userId: String?) async {
+        let listeners = self.authListeners
         await MainActor.run {
-            authListeners.forEach { listener in
+            listeners.forEach { listener in
                 listener.onChange(userId)
             }
         }

@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: Inbox Socket Singleton
 
-internal actor InboxSocketManager {
+@CourierActor internal class InboxSocketManager {
 
     private var shared: InboxSocket?
 
@@ -100,7 +100,7 @@ public class InboxSocket: CourierSocket {
         var data: [String: Any] = [
             "action": "subscribe",
             "data": [
-                "userAgent": Courier.agent.value,
+                "userAgent": await Courier.agent.value,
                 "channel": options.userId,
                 "event": "*",
                 "version": version

@@ -18,7 +18,7 @@ public class TrackingClient: CourierApiClient {
     
     public func postTrackingUrl(url: String, event: CourierTrackingEvent) async throws {
 
-        let request = try http(url) {
+        let request = try await http(url) {
             
             $0.httpMethod = "POST"
             

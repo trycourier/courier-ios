@@ -51,7 +51,7 @@ internal actor TokenModule {
     
 }
 
-extension Courier {
+@CourierActor extension Courier {
     
     // MARK: Getters
     
@@ -71,14 +71,14 @@ extension Courier {
     // MARK: Tokens
     
     /// Returns the current APNS token
-    @CourierActor public var apnsToken: Data? {
+    public var apnsToken: Data? {
         get async {
             await tokenModule.apnsToken
         }
     }
     
     /// Returns all cached tokens
-    @CourierActor public var tokens: [String: String] {
+    public var tokens: [String: String] {
         get async {
             await tokenModule.tokens
         }
@@ -86,7 +86,7 @@ extension Courier {
     
     // MARK: Token Management
     
-    @CourierActor internal func putToken(provider: String, token: String) async throws {
+    internal func putToken(provider: String, token: String) async throws {
         
         if (!isUserSignedIn) {
             throw CourierError.userNotFound
@@ -99,7 +99,7 @@ extension Courier {
         
     }
     
-    @CourierActor internal func deleteToken(_ token: String) async throws {
+    internal func deleteToken(_ token: String) async throws {
         
         if (!isUserSignedIn) {
             throw CourierError.userNotFound
@@ -144,7 +144,7 @@ extension Courier {
     
     // MARK: APNS
     
-    @CourierActor public func setAPNSToken(_ rawToken: Data) async throws {
+    public func setAPNSToken(_ rawToken: Data) async throws {
         
         let provider = CourierPushProvider.apn.rawValue
         
@@ -175,7 +175,7 @@ extension Courier {
         
     }
     
-    @CourierActor @objc public func setAPNSToken(rawToken: Data, completion: @escaping (Error?) -> Void) async {
+    @objc public func setAPNSToken(rawToken: Data, completion: @escaping (Error?) -> Void) async {
         do {
             try await setAPNSToken(rawToken)
             await MainActor.run {
@@ -191,14 +191,14 @@ extension Courier {
     
     // MARK: Any Token
     
-    @CourierActor public func setToken(for provider: CourierPushProvider, token: String) async throws {
+    public func setToken(for provider: CourierPushProvider, token: String) async throws {
         try await setToken(
             for: provider.rawValue,
             token: token
         )
     }
     
-    @CourierActor public func setToken(for provider: String, token: String) async throws {
+    public func setToken(for provider: String, token: String) async throws {
         
         if !isUserSignedIn {
             await tokenModule.cacheToken(key: provider, value: token)

@@ -5,7 +5,7 @@
 //  Created by https://github.com/mikemilla on 10/2/24.
 //
 
-internal class InboxRepository {
+@CourierActor internal class InboxRepository {
     
     private let inboxSocketManager = InboxSocketManager()
     
@@ -31,7 +31,7 @@ internal class InboxRepository {
     
     func stop(with handler: InboxMutationHandler) async {
         endPaging()
-        await inboxSocketManager.closeSocket()
+        inboxSocketManager.closeSocket()
         await handler.onInboxKilled()
     }
     
@@ -87,7 +87,7 @@ internal class InboxRepository {
     
     private func getInbox(feedMessageCount: Int?, archiveMessageCount: Int?, isRefresh: Bool) async throws -> CourierInboxData {
          
-        if await !Courier.shared.isUserSignedIn {
+        if !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
         }
         
@@ -163,7 +163,7 @@ internal class InboxRepository {
         }
         
         // Create the socket if needed
-        let socket = await inboxSocketManager.updateInstance(
+        let socket = inboxSocketManager.updateInstance(
             options: client.options
         )
         
@@ -183,7 +183,7 @@ internal class InboxRepository {
     
     func getNextPage(_ feed: InboxMessageFeed, inboxData: CourierInboxData) async throws -> InboxMessageSet? {
         
-        if await !Courier.shared.isUserSignedIn {
+        if !Courier.shared.isUserSignedIn {
             throw CourierError.userNotFound
         }
         

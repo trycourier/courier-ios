@@ -22,7 +22,7 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 
 import UIKit
 
-@objc public class Courier: NSObject {
+@CourierActor @objc public class Courier: NSObject {
     
     /**
      * Versioning

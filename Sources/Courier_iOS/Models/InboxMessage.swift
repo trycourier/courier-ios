@@ -192,11 +192,15 @@ extension InboxMessage {
         Task {
             do {
                 try await markAsRead()
-                onSuccess?()
+                await MainActor.run {
+                    onSuccess?()
+                }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
-                onFailure?(e)
+                await Courier.shared.client?.log(e.message)
+                await MainActor.run {
+                    onFailure?(e)
+                }
             }
         }
     }
@@ -209,11 +213,15 @@ extension InboxMessage {
         Task {
             do {
                 try await markAsUnread()
-                onSuccess?()
+                await MainActor.run {
+                    onSuccess?()
+                }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
-                onFailure?(e)
+                await Courier.shared.client?.log(e.message)
+                await MainActor.run {
+                    onFailure?(e)
+                }
             }
         }
     }
@@ -226,11 +234,15 @@ extension InboxMessage {
         Task {
             do {
                 try await markAsOpened()
-                onSuccess?()
+                await MainActor.run {
+                    onSuccess?()
+                }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
-                onFailure?(e)
+                await Courier.shared.client?.log(e.message)
+                await MainActor.run {
+                    onFailure?(e)
+                }
             }
         }
     }
@@ -243,11 +255,15 @@ extension InboxMessage {
         Task {
             do {
                 try await markAsClicked()
-                onSuccess?()
+                await MainActor.run {
+                    onSuccess?()
+                }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
-                onFailure?(e)
+                await Courier.shared.client?.log(e.message)
+                await MainActor.run {
+                    onFailure?(e)
+                }
             }
         }
     }
@@ -260,11 +276,15 @@ extension InboxMessage {
         Task {
             do {
                 try await markAsArchived()
-                onSuccess?()
+                await MainActor.run {
+                    onSuccess?()
+                }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
-                onFailure?(e)
+                await Courier.shared.client?.log(e.message)
+                await MainActor.run {
+                    onFailure?(e)
+                }
             }
         }
     }

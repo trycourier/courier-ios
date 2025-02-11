@@ -21,9 +21,9 @@ public class CourierAuthenticationListener: NSObject {
 
 // MARK: Extensions
 
-extension CourierAuthenticationListener {
+@CourierActor extension CourierAuthenticationListener {
     
-    @CourierActor @objc public func remove() {
+    @objc public func remove() {
         Courier.shared.removeAuthenticationListener(self)
     }
     
