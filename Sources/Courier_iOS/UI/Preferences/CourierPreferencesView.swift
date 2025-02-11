@@ -20,7 +20,7 @@ public struct CourierPreferencesView: UIViewRepresentable {
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
         onError: ((CourierError) -> Void)? = nil,
-        customListItem: ((CourierUserPreferencesTopic, Int, Int) -> UIView)? = nil
+        customListItem: ((CourierPreferences, CourierUserPreferencesTopic, Int, Int) -> UIView)? = nil
     ) {
         self.preferences = CourierPreferences(
             mode: mode,
@@ -48,11 +48,11 @@ public extension CourierPreferencesView {
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
         onError: ((CourierError) -> Void)? = nil,
-        @ViewBuilder customListItem: @escaping (CourierUserPreferencesTopic, Int, Int) -> Content
+        @ViewBuilder customListItem: @escaping (CourierPreferences, CourierUserPreferencesTopic, Int, Int) -> Content
     ) {
         // Wrap SwiftUI View in UIHostingController
-        let wrappedCustomListItem: (CourierUserPreferencesTopic, Int, Int) -> UIView = { item, section, index in
-            let hostingController = UIHostingController(rootView: customListItem(item, section, index))
+        let wrappedCustomListItem: (CourierPreferences, CourierUserPreferencesTopic, Int, Int) -> UIView = { view, item, section, index in
+            let hostingController = UIHostingController(rootView: customListItem(view, item, section, index))
             hostingController.view.backgroundColor = .clear
             hostingController.view.translatesAutoresizingMaskIntoConstraints = false
             return hostingController.view

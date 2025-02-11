@@ -30,7 +30,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     // MARK: Custom List Item
     
     private static let customListItemId = "CustomListItem"
-    let customListItem: ((_ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)?
+    let customListItem: ((_ view: CourierPreferences, _ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)?
     
     // MARK: Data
     
@@ -145,7 +145,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
-        customListItem: ((_ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)? = nil,
+        customListItem: ((_ view: CourierPreferences, _ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView)? = nil,
         didScrollPreferences: ((UIScrollView) -> Void)? = nil,
         onError: ((CourierError) -> Void)? = nil
     ) {
@@ -455,7 +455,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
             cell.contentView.subviews.forEach { $0.removeFromSuperview() }
 
             // Build the user’s custom view
-            let customView = customListItem(topic, indexPath.section, indexPath.row)
+            let customView = customListItem(self, topic, indexPath.section, indexPath.row)
             customView.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(customView)
 
@@ -574,7 +574,6 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                 self.handleChangeForMode(mode: self.mode, topic: topic, items: items)
                 self.sheetViewController = nil
                 
-                // Reload data
                 if self.customListItem != nil {
                     self.tableView.reloadData()
                 }
