@@ -8,7 +8,6 @@
 import XCTest
 @testable import Courier_iOS
 
-// 1) Add a small extension on NSLock providing a scoped locking function.
 extension NSLock {
     @discardableResult
     func withLock<T>(_ action: () throws -> T) rethrows -> T {
