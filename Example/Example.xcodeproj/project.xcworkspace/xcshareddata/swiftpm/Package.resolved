@@ -25,7 +25,7 @@
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
         "branch" : "master",
-        "revision" : "d7c45459f7dde5601b646571ba849fa5487aaac2"
+        "revision" : "5366cb6462a42f81ba9587151deae1b47cec1ba3"
       }
     },
     {
@@ -121,7 +121,7 @@
     {
       "identity" : "showtime",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/KaneCheshire/ShowTime.git",
+      "location" : "https://github.com/KaneCheshire/ShowTime",
       "state" : {
         "revision" : "f4e976931fc5f9b7a7d011f40c62a250c4ff53ab",
         "version" : "2.5.3"
