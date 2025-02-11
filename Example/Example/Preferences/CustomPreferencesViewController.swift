@@ -12,9 +12,9 @@ class CustomPreferencesViewController: UIViewController {
     
     private lazy var courierPreferences = {
         return CourierPreferences(
-            customListItem: { topic, section, index in
+            customListItem: { view, topic, section, index in
                 return CustomPreferencesListItem(topic: topic, section: section, index: index, onClick: {
-                    print("On Click")
+                    view.showSheet(topic: topic)
                 })
             },
             onError: { error in

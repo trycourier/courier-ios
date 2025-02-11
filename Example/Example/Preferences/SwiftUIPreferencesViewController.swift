@@ -10,9 +10,9 @@ import Courier_iOS
 
 struct SwiftUIPreferencesViewController: View {
     var body: some View {
-        CourierPreferencesView { topic, section, index in
+        CourierPreferencesView { view, topic, section, index in
             CustomTopicListItemView(topic: topic) {
-                print("Preference Click")
+                view.showSheet(topic: topic)
             }
         }
     }

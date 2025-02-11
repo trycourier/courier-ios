@@ -701,8 +701,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = feature/customlistitems;
-				kind = branch;
+				kind = revision;
+				revision = 82738169aab960519b75b8bf553575912f5a22bf;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

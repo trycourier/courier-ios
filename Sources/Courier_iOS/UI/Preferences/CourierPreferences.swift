@@ -570,14 +570,8 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
             topic: topic,
             items: items,
             onDismiss: { items in
-                
                 self.handleChangeForMode(mode: self.mode, topic: topic, items: items)
                 self.sheetViewController = nil
-                
-                if self.customListItem != nil {
-                    self.tableView.reloadData()
-                }
-                
             }
         )
         
