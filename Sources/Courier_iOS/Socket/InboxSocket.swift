@@ -13,14 +13,14 @@ import Foundation
 
     private var shared: InboxSocket?
 
-    @discardableResult func updateInstance(options: CourierClient.Options) -> InboxSocket {
-        closeSocket()
+    @discardableResult func updateInstance(options: CourierClient.Options) async -> InboxSocket {
+        await closeSocket()
         shared = InboxSocket(options: options)
         return shared!
     }
 
-    func closeSocket() {
-        shared?.disconnect()
+    func closeSocket() async {
+        await shared?.disconnect()
         shared?.receivedMessage = nil
         shared?.receivedMessageEvent = nil
         shared = nil

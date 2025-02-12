@@ -31,7 +31,7 @@
     
     func stop(with handler: InboxMutationHandler) async {
         endPaging()
-        inboxSocketManager.closeSocket()
+        await inboxSocketManager.closeSocket()
         await handler.onInboxKilled()
     }
     
@@ -163,7 +163,7 @@
         }
         
         // Create the socket if needed
-        let socket = inboxSocketManager.updateInstance(
+        let socket = await inboxSocketManager.updateInstance(
             options: client.options
         )
         
@@ -177,7 +177,7 @@
         
         // Ensure the socket is kept alive
         // Will ping every 5 minutes
-        socket.keepAlive()
+        await socket.keepAlive()
         
     }
     

@@ -163,206 +163,180 @@ class InboxClientTests: XCTestCase {
     }
     
     func testContentMessage() async throws {
-        
         let userId = UUID().uuidString
-        var caughtError: Error?
-        var hold = true
-        
         let client = try await ClientBuilder.build(userId: userId)
-        
         let socket = client.inbox.socket
 
-        socket.onError = { error in
-            hold = false
-            caughtError = error
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            
+            // Handle socket errors
+            socket.onError = { error in
+                continuation.resume(throwing: error)
+            }
+
+            // Optional: Handle message events if needed
+            socket.receivedMessageEvent = { event in
+                print(event)
+            }
+
+            // Handle received messages
+            socket.receivedMessage = { message in
+                print("socket.receivedMessage")
+                print(message)
+                continuation.resume() // Resume on message reception
+            }
+            
+            Task {
+                do {
+                    try await socket.connect()
+                    try await socket.sendSubscribe()
+                    try await sendMessage(userId: userId)
+                } catch {
+                    continuation.resume(throwing: error) // Resume with failure if any error occurs
+                }
+            }
         }
 
-        socket.receivedMessageEvent = { event in
-            print(event)
-        }
-
-        socket.receivedMessage = { message in
-            print("socket.receivedMessage")
-            print(message)
-            hold = false
-        }
-        
-        try await socket.connect()
-        try await socket.sendSubscribe()
-        
-        try await sendMessage(userId: userId)
-        
-        while hold {}
-        
-        socket.disconnect()
-        
-        if let error = caughtError {
-            throw error
-        }
-        
+        await socket.disconnect()
     }
     
     func testTemplateMessage() async throws {
-        
         let userId = UUID().uuidString
-        var caughtError: Error?
-        var hold = true
-        
         let client = try await ClientBuilder.build(userId: userId)
-        
         let socket = client.inbox.socket
 
-        socket.onError = { error in
-            hold = false
-            caughtError = error
+        // Use continuation to await until the test completes
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            
+            // Handle socket errors
+            socket.onError = { error in
+                continuation.resume(throwing: error) // Directly throw the error
+            }
+
+            // Handle received message events (if needed)
+            socket.receivedMessageEvent = { event in
+                print(event)
+            }
+
+            // Handle received messages
+            socket.receivedMessage = { message in
+                print("socket.receivedMessage")
+                print(message)
+                continuation.resume() // Resume normally on success
+            }
+
+            // Move async operations into a Task
+            Task {
+                do {
+                    try await socket.connect()
+                    try await socket.sendSubscribe()
+                    try await sendMessageTemplate(userId: userId)
+                } catch {
+                    continuation.resume(throwing: error) // Resume with failure if any error occurs
+                }
+            }
         }
 
-        socket.receivedMessageEvent = { event in
-            print(event)
-        }
-
-        socket.receivedMessage = { message in
-            print("socket.receivedMessage")
-            print(message)
-            hold = false
-        }
-        
-        try await socket.connect()
-        try await socket.sendSubscribe()
-        
-        try await sendMessageTemplate(userId: userId)
-        
-        while hold {}
-        
-        socket.disconnect()
-        
-        if let error = caughtError {
-            throw error
-        }
-        
+        await socket.disconnect()
     }
     
     func testMultipleSocketsOnSingleUser() async throws {
-
-        var hold1 = true
-        var hold2 = true
-
         // Open the first socket connection
         let client1 = try await ClientBuilder.build(connectionId: UUID().uuidString)
-        
         let socket1 = client1.inbox.socket
 
-        socket1.onOpen = {
-            print("Socket Opened")
-        }
+        // Open the second socket connection
+        let client2 = try await ClientBuilder.build(connectionId: UUID().uuidString)
+        let socket2 = client2.inbox.socket
 
-        socket1.onClose = { code, reason in
-            print("Socket closed: \(code), \(String(describing: reason))")
-        }
-
-        socket1.onError = { error in
-            XCTAssertNil(error)
-        }
-
-        socket1.receivedMessageEvent = { event in
-            print(event)
-        }
-
-        socket1.receivedMessage = { message in
-            print("socket1.receivedMessage")
-            print(message)
-            hold1 = false
+        // Helper function to handle socket events and return when a message is received
+        func waitForMessage(socket: InboxSocket) async -> Result<Void, Error> {
+            return await withCheckedContinuation { (continuation: CheckedContinuation<Result<Void, Error>, Never>) in
+                socket.onOpen = {
+                    print("Socket Opened")
+                }
+                
+                socket.onClose = { code, reason in
+                    print("Socket closed: \(code), \(String(describing: reason))")
+                }
+                
+                socket.onError = { error in
+                    continuation.resume(returning: .failure(error))
+                }
+                
+                socket.receivedMessageEvent = { event in
+                    print(event)
+                }
+                
+                socket.receivedMessage = { message in
+                    print("Received message on socket: \(message)")
+                    continuation.resume(returning: .success(()))
+                }
+            }
         }
 
         try await socket1.connect()
         try await socket1.sendSubscribe()
-
-        // Open the second socket connection
-        let client2 = try await ClientBuilder.build(connectionId: UUID().uuidString)
-        
-        let socket2 = client2.inbox.socket
-
-        socket2.onOpen = {
-            print("Socket Opened")
-        }
-
-        socket2.onClose = { code, reason in
-            print("Socket closed: \(code), \(String(describing: reason))")
-        }
-
-        socket2.onError = { error in
-            XCTAssertNil(error)
-        }
-
-        socket2.receivedMessageEvent = { event in
-            print(event)
-        }
-
-        socket2.receivedMessage = { message in
-            print("socket2.receivedMessage")
-            print(message)
-            hold2 = false
-        }
 
         try await socket2.connect()
         try await socket2.sendSubscribe()
 
         let messageId = try await sendMessage()
+        print("Sent message with ID: \(messageId)")
 
-        print(messageId)
+        // Wait for both sockets to receive the message concurrently
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                let result = await waitForMessage(socket: socket1)
+                if case .failure(let error) = result {
+                    throw error
+                }
+            }
+            
+            group.addTask {
+                let result = await waitForMessage(socket: socket2)
+                if case .failure(let error) = result {
+                    throw error
+                }
+            }
 
-        while (hold1 || hold2) {
-            // Wait for the message to be received in the sockets
+            try await group.waitForAll()
         }
 
-        client1.inbox.socket.disconnect()
-        client2.inbox.socket.disconnect()
-
+        await socket1.disconnect()
+        await socket2.disconnect()
     }
     
     func testMultipleUserConnections() async throws {
-
         let userId1 = "user_1"
         let userId2 = "user_2"
 
-        var hold1 = true
-        var hold2 = true
-
         // Open the first socket connection
         let client1 = try await ClientBuilder.build(userId: userId1)
-        
         let socket1 = client1.inbox.socket
-        
-        socket1.onError = { error in
-            print(error.localizedDescription)
-            hold1 = false
-            hold2 = false
-        }
-        
-        socket1.receivedMessage = { message in
-            print(message)
-            hold1 = false
-        }
-        
-        try await socket1.connect()
-        try await socket1.sendSubscribe()
 
         // Open the second socket connection
         let client2 = try await ClientBuilder.build(userId: userId2)
-        
         let socket2 = client2.inbox.socket
-        
-        socket2.onError = { error in
-            print(error.localizedDescription)
-            hold1 = false
-            hold2 = false
+
+        // Helper function to handle socket events and await message reception
+        func waitForMessage(socket: InboxSocket) async -> Result<Void, Error> {
+            return await withCheckedContinuation { (continuation: CheckedContinuation<Result<Void, Error>, Never>) in
+                socket.onError = { error in
+                    print(error.localizedDescription)
+                    continuation.resume(returning: .failure(error))
+                }
+
+                socket.receivedMessage = { message in
+                    print("Received message: \(message)")
+                    continuation.resume(returning: .success(()))
+                }
+            }
         }
-        
-        socket2.receivedMessage = { message in
-            print(message)
-            hold2 = false
-        }
-        
+
+        try await socket1.connect()
+        try await socket1.sendSubscribe()
+
         try await socket2.connect()
         try await socket2.sendSubscribe()
 
@@ -370,13 +344,27 @@ class InboxClientTests: XCTestCase {
         try await sendMessage(userId: userId1)
         try await sendMessage(userId: userId2)
 
-        while (hold1 || hold2) {
-            // Wait for the message to be received in the sockets
+        // Wait for both sockets to receive messages concurrently
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                let result = await waitForMessage(socket: socket1)
+                if case .failure(let error) = result {
+                    throw error
+                }
+            }
+
+            group.addTask {
+                let result = await waitForMessage(socket: socket2)
+                if case .failure(let error) = result {
+                    throw error
+                }
+            }
+
+            try await group.waitForAll()
         }
 
-        client1.inbox.socket.disconnect()
-        client2.inbox.socket.disconnect()
-
+        await socket1.disconnect()
+        await socket2.disconnect()
     }
     
 }

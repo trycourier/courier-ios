@@ -35,45 +35,29 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     public func connect() async throws {
         
         // Ensure any previous connection is terminated
-        disconnect()
+        await disconnect()
         
         // Start a new connection
-        return try await withCheckedThrowingContinuation { continuation in
+        try await MainActor.run {
             
-            DispatchQueue.main.async { [weak self] in
-                
-                guard let self = self else {
-                    return
-                }
-                
-                guard let url = URL(string: self.url) else {
-                    continuation.resume(throwing: URLError(.badURL))
-                    return
-                }
-                
-                // Initialize and start the WebSocket task
-                self.webSocketTask = urlSession?.webSocketTask(with: url)
-                self.webSocketTask?.resume()
-                
-                // Register receiver
-                self.receiveData()
-                
-                // Continue
-                continuation.resume()
-                
+            guard let url = URL(string: self.url) else {
+                throw URLError(.badURL)
             }
+            
+            // Initialize and start the WebSocket task
+            self.webSocketTask = urlSession?.webSocketTask(with: url)
+            self.webSocketTask?.resume()
+            
+            // Register receiver
+            self.receiveData()
             
         }
         
     }
     
-    public func disconnect() {
+    public func disconnect() async {
         
-        DispatchQueue.main.async { [weak self] in
-            
-            guard let self = self else {
-                return
-            }
+        await MainActor.run {
             
             // Stop the ping timer
             self.pingTimer?.invalidate()
@@ -100,13 +84,13 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     }
     
     // Pings keep alive. Will ping every 5 minutes by default
-    public func keepAlive(interval: TimeInterval = 300) {
+    public func keepAlive(interval: TimeInterval = 300) async {
         
         // Ensure any existing timer is invalidated
         pingTimer?.invalidate()
         
         // Create and schedule a new timer
-        DispatchQueue.main.async { [weak self] in
+        await MainActor.run { [weak self] in
             guard let self = self else { return }
             self.pingTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
                 Task {

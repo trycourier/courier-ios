@@ -312,58 +312,67 @@ class InboxTests: XCTestCase {
     }
     
     func testAddMessage() async throws {
-        
         try await UserBuilder.authenticate()
         
-        var hold = true
-        let listener = await Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
-            hold = false
+        var continuation: CheckedContinuation<Void, Never>? // Holds the continuation reference
+
+        // Add the listener before starting the continuation
+        let listener = await Courier.shared.addInboxListener(onMessageAdded:  { set, message, index in
+            continuation?.resume()
         })
-        
-        try await sendMessage()
-        
-        while (hold) {
-            // Wait
+
+        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+            continuation = cont
+            Task {
+                try? await sendMessage() // Send the message after adding the listener
+            }
         }
-        
-        await Courier.shared.removeInboxListener(listener)
-        
+
+        await Courier.shared.removeInboxListener(listener) // Clean up the listener after completion
+
+        // Assertion to ensure the flow completes successfully
+        XCTAssertTrue(true)
     }
     
     func testSpamMessages() async throws {
-        
         try await UserBuilder.authenticate()
-        
+
         let count = 25
-        var hold = true
-        
         var messageCount = 0
-        let listener = await Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
-            messageCount += 1
-            hold = messageCount != count
-            print("Message Counted updated: \(messageCount)")
-        })
-        
-        try await withThrowingTaskGroup(of: String.self) { group in
-            
-            for _ in 1...25 {
-                group.addTask { [self] in
-                    try await sendMessage()
-                    return ""
-                }
+
+        // Use a continuation to await message reception for all messages
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            Task {
+                await Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
+                    messageCount += 1
+                    print("Message Count updated: \(messageCount)")
+
+                    // Resume the continuation when all messages are received
+                    if messageCount == count {
+                        continuation.resume()
+                    }
+                })
             }
 
-            try await group.waitForAll()
-            print("All tasks have completed")
-            
+            Task {
+                // Send messages concurrently
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                    for _ in 1...count {
+                        group.addTask {
+                            try await self.sendMessage()
+                        }
+                    }
+                    try await group.waitForAll()
+                    print("All message send tasks have completed")
+                }
+            }
         }
         
-        while (hold) {
-            // Wait
-        }
-        
-        await Courier.shared.removeInboxListener(listener)
-        
+        // Remove the listener after receiving all messages
+        await Courier.shared.removeAllInboxListeners()
+
+        // Assert to ensure all messages were received
+        XCTAssertEqual(messageCount, count)
     }
     
     struct Child: Codable {
@@ -388,36 +397,35 @@ class InboxTests: XCTestCase {
     }
     
     func testSingleMessage() async throws {
-        
         try await UserBuilder.authenticate()
-        
-        var hold = true
-        
-        let listener = await Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
-            
-            if let childrenData = message.data?["children"] as? [[String: Any]] {
-                let children = childrenData.compactMap { Child(dictionary: $0) }
-                children.forEach { child in
-                    print(child.id ?? "No id found")
-                    print(child.name ?? "No name found")
-                    print(child.optional ?? "No optional found")
-                    print(child.children?.count ?? "No subchildren found")
-                    print("=======")
-                }
+
+        // Use a continuation to await message reception
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            Task {
+                await Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
+                    if let childrenData = message.data?["children"] as? [[String: Any]] {
+                        let children = childrenData.compactMap { Child(dictionary: $0) }
+                        children.forEach { child in
+                            print(child.id ?? "No id found")
+                            print(child.name ?? "No name found")
+                            print(child.optional ?? "No optional found")
+                            print(child.children?.count ?? "No subchildren found")
+                            print("=======")
+                        }
+                    }
+
+                    // Resume the continuation when the message is received
+                    continuation.resume()
+                })
+
+                try await sendMessage()
             }
-            
-            hold = false
-            
-        })
-        
-        try await sendMessage()
-        
-        while (hold) {
-            // Wait
         }
         
-        await Courier.shared.removeInboxListener(listener)
+        await Courier.shared.removeAllInboxListeners()
         
+        // Assert to ensure the flow completes successfully
+        XCTAssertTrue(true)
     }
     
 }

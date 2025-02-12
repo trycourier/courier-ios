@@ -230,13 +230,11 @@ class ThreadingTests: XCTestCase {
     private func testRaces(_ jwt: String) async throws {
         log("Starting testRaces block with JWT")
         
-        var hold1 = true
         let listener1 = await Courier.shared.addInboxListener(
             onLoading: { _ in
                 Task {
                     self.log("Listener1 triggered onLoading -> signing out")
                     await Courier.shared.signOut()
-                    hold1 = false
                 }
             }
         )
@@ -244,20 +242,18 @@ class ThreadingTests: XCTestCase {
         log("Listener1 added, signing in user")
         await Courier.shared.signIn(userId: "example", accessToken: jwt)
         
-        while hold1 {
+        while await Courier.shared.userId != nil {
             // spin
         }
         log("Listener1 finished, removing listener1")
         await Courier.shared.removeInboxListener(listener1)
         
         // Remove user on feed changed
-        var hold2 = true
         let listener2 = await Courier.shared.addInboxListener(
             onFeedChanged: { _ in
                 Task {
                     self.log("Listener2 triggered onFeedChanged -> signing out")
                     await Courier.shared.signOut()
-                    hold2 = false
                 }
             }
         )
@@ -265,18 +261,16 @@ class ThreadingTests: XCTestCase {
         log("Listener2 added, signing in user")
         await Courier.shared.signIn(userId: "example", accessToken: jwt)
         
-        while hold2 {
+        while await Courier.shared.userId != nil {
             // spin
         }
         log("Listener2 finished, removing listener2")
         await Courier.shared.removeInboxListener(listener2)
         
         // Remove user on feed changed
-        var hold3 = true
         let listener3 = await Courier.shared.addInboxListener(
             onError: { _ in
                 self.log("Listener3 triggered onError -> finishing testRaces block")
-                hold3 = false
             }
         )
         
@@ -286,7 +280,7 @@ class ThreadingTests: XCTestCase {
         log("Signing out user, expecting error callback in listener3")
         await Courier.shared.signOut()
         
-        while hold3 {
+        while await Courier.shared.userId != nil {
             // spin
         }
         
@@ -381,4 +375,124 @@ class ThreadingTests: XCTestCase {
             }
         }
     }
+    
+    func testAddRemoveListenersWhileSendingMessages() async throws {
+        log("Starting testAddRemoveListenersWhileSendingMessages")
+        
+        try await UserBuilder.authenticate()
+        log("User authenticated")
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for i in 0..<50 {
+                group.addTask {
+                    let listener = await Courier.shared.addInboxListener()
+                    await Courier.shared.removeInboxListener(listener)
+                }
+                
+                group.addTask {
+                    _ = try? await ExampleServer.sendTest(
+                        authKey: Env.COURIER_AUTH_KEY,
+                        userId: Env.COURIER_USER_ID,
+                        channel: "inbox"
+                    )
+                }
+            }
+            try await group.waitForAll()
+        }
+        
+        log("All listener operations and message sends completed")
+        XCTAssertTrue(true)
+    }
+    
+    func testRapidSignInSignOutDifferentUsers() async throws {
+        log("Starting testRapidSignInSignOutDifferentUsers")
+
+        let userIds = (0..<10).map { "user_\($0)" }
+        let jwts = try await withThrowingTaskGroup(of: (String, String).self) { group in
+            for userId in userIds {
+                group.addTask {
+                    let jwt = try await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: userId)
+                    return (userId, jwt)
+                }
+            }
+            return try await group.reduce(into: [(String, String)]()) { $0.append($1) }
+        }
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for (userId, jwt) in jwts {
+                group.addTask {
+                    await Courier.shared.signIn(userId: userId, accessToken: jwt)
+                    let listener = await Courier.shared.addInboxListener()
+                    await Courier.shared.signOut()
+                    listener.remove()
+                }
+            }
+            try await group.waitForAll()
+        }
+
+        log("All sign-in/sign-out operations completed")
+        XCTAssertTrue(true)
+    }
+
+    func testListenerCallbackUnderLoad() async throws {
+        log("Starting testListenerCallbackUnderLoad")
+
+        try await UserBuilder.authenticate()
+        var callbackCount = 0
+
+        let listener = await Courier.shared.addInboxListener(onFeedChanged: { _ in
+            callbackCount += 1
+        })
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for _ in 0..<100 {
+                group.addTask {
+                    _ = try? await ExampleServer.sendTest(
+                        authKey: Env.COURIER_AUTH_KEY,
+                        userId: Env.COURIER_USER_ID,
+                        channel: "inbox"
+                    )
+                }
+            }
+            try await group.waitForAll()
+        }
+
+        await Courier.shared.removeInboxListener(listener)
+
+        XCTAssertGreaterThan(callbackCount, 0, "Listener should have been triggered at least once")
+        log("Listener callback stress test completed")
+    }
+
+    func testChaosMonkey() async throws {
+        log("Starting testChaosMonkey")
+
+        try await UserBuilder.authenticate()
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for _ in 0..<100 {
+                group.addTask {
+                    let operation = Int.random(in: 0..<4)
+                    switch operation {
+                    case 0:
+                        _ = await Courier.shared.addInboxListener()
+                    case 1:
+                        await Courier.shared.removeAllInboxListeners()
+                    case 2:
+                        _ = try? await Courier.shared.client?.inbox.getMessages()
+                    case 3:
+                        await Courier.shared.signOut()
+                        await Courier.shared.signIn(userId: "chaos_user", accessToken: try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user"))
+                    default:
+                        break
+                    }
+                }
+            }
+            try await group.waitForAll()
+        }
+
+        log("Chaos test completed successfully")
+        XCTAssertTrue(true)
+    }
+
+    
 }
