@@ -11,18 +11,17 @@ import XCTest
 class AuthTests: XCTestCase {
     
     func testSignUserIn() async throws {
-
-        var hold = true
-
+        let expectation = XCTestExpectation(description: "User signed in")
+        
         let listener = await Courier.shared.addAuthenticationListener { userId in
             print(userId ?? "No user found")
-            if (userId != nil) {
-                hold = false
+            if userId != nil {
+                expectation.fulfill()
             }
         }
-
+        
         await Courier.shared.signIn(
-            userId: Env.COURIER_USER_ID, 
+            userId: Env.COURIER_USER_ID,
             accessToken: Env.COURIER_AUTH_KEY
         )
         
@@ -34,27 +33,23 @@ class AuthTests: XCTestCase {
         
         let clientKey = (await Courier.shared.clientKey) == nil
         XCTAssertTrue(clientKey)
-
-        while (hold) {}
-
+        
         await Courier.shared.removeAuthenticationListener(listener)
-
+        
         let listeners = await Courier.shared.authListeners.isEmpty
         XCTAssertTrue(listeners)
-
     }
 
     func testSignUserOut() async throws {
-
-        var hold = true
-
+        let expectation = XCTestExpectation(description: "User signed out")
+        
         let listener = await Courier.shared.addAuthenticationListener { userId in
             print(userId ?? "No user found")
-            if (userId == nil) {
-                hold = false
+            if userId == nil {
+                expectation.fulfill()
             }
         }
-
+        
         await Courier.shared.signOut()
         
         let missingAccessToken = await Courier.shared.accessToken == nil
@@ -65,15 +60,13 @@ class AuthTests: XCTestCase {
         
         let missingClientKey = await Courier.shared.clientKey == nil
         XCTAssertTrue(missingClientKey)
-
-        while (hold) {}
-
+        
         await Courier.shared.removeAuthenticationListener(listener)
-
+        
         let emptyListeners = await Courier.shared.authListeners.isEmpty
         XCTAssertTrue(emptyListeners)
-
     }
+
     
     func testSingleListenerRemoval() async throws {
 

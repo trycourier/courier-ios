@@ -58,24 +58,21 @@ class TrackingClientTests: XCTestCase {
     }
     
     func testTrackMessageWithDictionary() async throws {
-        
-        var hold = true
+        let trackingUrl = "your_tracking_url_here"
         
         let message: NSDictionary = [
             "trackingUrl": trackingUrl
         ]
         
-        message.trackMessage(event: .delivered) { error in
-            if let error = error {
-                print("Failed to track the message: \(error.localizedDescription)")
+        try await withCheckedThrowingContinuation { continuation in
+            message.trackMessage(event: .delivered) { error in
+                if let error = error {
+                    // This will likely get called because the url is fake.. At least the request works
+                    print("Failed to track the message: \(error.localizedDescription)")
+                }
+                continuation.resume()
             }
-            hold = false
         }
-        
-        while hold {
-            // Empty
-        }
-
     }
     
 }

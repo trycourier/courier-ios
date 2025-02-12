@@ -92,34 +92,3 @@ import UIKit
     }
     
 }
-
-/// A global actor for our SDK that ensures
-/// all tasks run on a custom serial `DispatchQueue`.
-@globalActor
-public struct CourierActor {
-    public static let shared = CourierActorImpl()
-}
-
-/// The internal actor that will do the scheduling.
-public actor CourierActorImpl { }
-
-/// Conform to `SerialExecutor` to guarantee
-/// tasks run one-at-a-time on our queue.
-extension CourierActorImpl: SerialExecutor {
-
-    // A private serial queue for all SDK operations
-    nonisolated static let queue = DispatchQueue(label: "com.example.courier-actor")
-
-    // Required by SerialExecutor:
-    // Tells Swift how to schedule tasks for this actor.
-    nonisolated public func enqueue(_ job: UnownedJob) {
-        Self.queue.async {
-            job.runSynchronously(on: self.asUnownedSerialExecutor())
-        }
-    }
-    
-    // Also required by SerialExecutor in Swift 5.9
-    nonisolated public func asUnownedSerialExecutor() -> UnownedSerialExecutor {
-        UnownedSerialExecutor(ordinary: self)
-    }
-}

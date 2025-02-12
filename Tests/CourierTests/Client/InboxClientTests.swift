@@ -168,32 +168,19 @@ class InboxClientTests: XCTestCase {
         let socket = client.inbox.socket
 
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            
-            // Handle socket errors
-            socket.onError = { error in
-                continuation.resume(throwing: error)
-            }
-
-            // Optional: Handle message events if needed
-            socket.receivedMessageEvent = { event in
-                print(event)
-            }
-
-            // Handle received messages
-            socket.receivedMessage = { message in
-                print("socket.receivedMessage")
-                print(message)
-                continuation.resume() // Resume on message reception
-            }
-            
             Task {
-                do {
-                    try await socket.connect()
-                    try await socket.sendSubscribe()
-                    try await sendMessage(userId: userId)
-                } catch {
-                    continuation.resume(throwing: error) // Resume with failure if any error occurs
-                }
+                try await socket.connect(
+                    receivedMessage: { message in
+                        print("socket.receivedMessage")
+                        print(message)
+                        continuation.resume()
+                    },
+                    receivedMessageEvent: { event in
+                        print(event)
+                    }
+                )
+                try await socket.sendSubscribe()
+                try await sendMessage(userId: userId)
             }
         }
 
@@ -205,35 +192,20 @@ class InboxClientTests: XCTestCase {
         let client = try await ClientBuilder.build(userId: userId)
         let socket = client.inbox.socket
 
-        // Use continuation to await until the test completes
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            
-            // Handle socket errors
-            socket.onError = { error in
-                continuation.resume(throwing: error) // Directly throw the error
-            }
-
-            // Handle received message events (if needed)
-            socket.receivedMessageEvent = { event in
-                print(event)
-            }
-
-            // Handle received messages
-            socket.receivedMessage = { message in
-                print("socket.receivedMessage")
-                print(message)
-                continuation.resume() // Resume normally on success
-            }
-
-            // Move async operations into a Task
             Task {
-                do {
-                    try await socket.connect()
-                    try await socket.sendSubscribe()
-                    try await sendMessageTemplate(userId: userId)
-                } catch {
-                    continuation.resume(throwing: error) // Resume with failure if any error occurs
-                }
+                try await socket.connect(
+                    receivedMessage: { message in
+                        print("socket.receivedMessage")
+                        print(message)
+                        continuation.resume()
+                    },
+                    receivedMessageEvent: { event in
+                        print(event)
+                    }
+                )
+                try await socket.sendSubscribe()
+                try await sendMessageTemplate(userId: userId)
             }
         }
 

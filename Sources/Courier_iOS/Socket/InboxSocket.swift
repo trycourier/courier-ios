@@ -53,8 +53,8 @@ public class InboxSocket: CourierSocket {
         let type: String
     }
     
-    public var receivedMessage: ((InboxMessage) -> Void)?
-    public var receivedMessageEvent: ((MessageEvent) -> Void)?
+    internal var receivedMessage: ((InboxMessage) -> Void)?
+    internal var receivedMessageEvent: ((MessageEvent) -> Void)?
     
     init(options: CourierClient.Options) {
         self.options = options
@@ -69,30 +69,10 @@ public class InboxSocket: CourierSocket {
         
     }
     
-    private func convertToType(from data: String) {
-        
-        do {
-            
-            let decoder = JSONDecoder()
-            let json = data.data(using: .utf8) ?? Data()
-            let payload = try decoder.decode(SocketPayload.self, from: json)
-            
-            switch (payload.type) {
-            case .event:
-                let event = try decoder.decode(MessageEvent.self, from: json)
-                receivedMessageEvent?(event)
-            case .message:
-                let message = try decoder.decode(InboxMessage.self, from: json)
-                receivedMessage?(message)
-            }
-            
-        } catch {
-            
-            options.error(error.localizedDescription)
-            self.onError?(error)
-            
-        }
-        
+    public func connect(receivedMessage: ((InboxMessage) -> Void)? = nil, receivedMessageEvent: ((MessageEvent) -> Void)? = nil) async throws {
+        self.receivedMessage = receivedMessage
+        self.receivedMessageEvent = receivedMessageEvent
+        try await super.connect()
     }
     
     public func sendSubscribe(version: Int = 5) async throws {
@@ -126,6 +106,32 @@ public class InboxSocket: CourierSocket {
         }
         
         try await send(data)
+        
+    }
+    
+    private func convertToType(from data: String) {
+        
+        do {
+            
+            let decoder = JSONDecoder()
+            let json = data.data(using: .utf8) ?? Data()
+            let payload = try decoder.decode(SocketPayload.self, from: json)
+            
+            switch (payload.type) {
+            case .event:
+                let event = try decoder.decode(MessageEvent.self, from: json)
+                receivedMessageEvent?(event)
+            case .message:
+                let message = try decoder.decode(InboxMessage.self, from: json)
+                receivedMessage?(message)
+            }
+            
+        } catch {
+            
+            options.error(error.localizedDescription)
+            self.onError?(error)
+            
+        }
         
     }
     

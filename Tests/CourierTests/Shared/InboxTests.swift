@@ -13,7 +13,7 @@ class InboxTests: XCTestCase {
     private let delay: UInt64 = 10_000_000_000
     
     @discardableResult
-    private func sendMessage(userId: String? = nil) async throws -> String {
+    public static func sendMessage(userId: String? = nil) async throws -> String {
         let clientUserId = await Courier.shared.client?.options.userId
         return try await ExampleServer.sendTest(
             authKey: Env.COURIER_AUTH_KEY,
@@ -55,7 +55,7 @@ class InboxTests: XCTestCase {
     
     private func getVerifiedInboxMessage() async throws -> String {
 
-        let messageId = try await sendMessage()
+        let messageId = try await InboxTests.sendMessage()
 
         try? await Task.sleep(nanoseconds: delay)
  
@@ -221,7 +221,7 @@ class InboxTests: XCTestCase {
 
         // Send some messages
         for _ in 1...count {
-            try await sendMessage()
+            try await InboxTests.sendMessage()
         }
 
         try? await Task.sleep(nanoseconds: delay)
@@ -313,66 +313,20 @@ class InboxTests: XCTestCase {
     
     func testAddMessage() async throws {
         try await UserBuilder.authenticate()
-        
-        var continuation: CheckedContinuation<Void, Never>? // Holds the continuation reference
 
-        // Add the listener before starting the continuation
-        let listener = await Courier.shared.addInboxListener(onMessageAdded:  { set, message, index in
-            continuation?.resume()
-        })
-
-        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
-            continuation = cont
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             Task {
-                try? await sendMessage() // Send the message after adding the listener
+                await Courier.shared.addInboxListener(onMessageAdded:  { set, message, index in
+                    continuation.resume()
+                })
+                try await InboxTests.sendMessage()
             }
         }
 
-        await Courier.shared.removeInboxListener(listener) // Clean up the listener after completion
+        await Courier.shared.removeAllInboxListeners() // Clean up the listener after completion
 
         // Assertion to ensure the flow completes successfully
         XCTAssertTrue(true)
-    }
-    
-    func testSpamMessages() async throws {
-        try await UserBuilder.authenticate()
-
-        let count = 25
-        var messageCount = 0
-
-        // Use a continuation to await message reception for all messages
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            Task {
-                await Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
-                    messageCount += 1
-                    print("Message Count updated: \(messageCount)")
-
-                    // Resume the continuation when all messages are received
-                    if messageCount == count {
-                        continuation.resume()
-                    }
-                })
-            }
-
-            Task {
-                // Send messages concurrently
-                try await withThrowingTaskGroup(of: Void.self) { group in
-                    for _ in 1...count {
-                        group.addTask {
-                            try await self.sendMessage()
-                        }
-                    }
-                    try await group.waitForAll()
-                    print("All message send tasks have completed")
-                }
-            }
-        }
-        
-        // Remove the listener after receiving all messages
-        await Courier.shared.removeAllInboxListeners()
-
-        // Assert to ensure all messages were received
-        XCTAssertEqual(messageCount, count)
     }
     
     struct Child: Codable {
@@ -418,7 +372,7 @@ class InboxTests: XCTestCase {
                     continuation.resume()
                 })
 
-                try await sendMessage()
+                try await InboxTests.sendMessage()
             }
         }
         
@@ -426,6 +380,47 @@ class InboxTests: XCTestCase {
         
         // Assert to ensure the flow completes successfully
         XCTAssertTrue(true)
+    }
+    
+    func testSpamMessages() async throws {
+        try await UserBuilder.authenticate()
+
+        let count = 25
+        var messageCount = 0
+
+        // Use a continuation to await message reception for all messages
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            Task {
+                await Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
+                    messageCount += 1
+                    print("Message Count updated: \(messageCount)")
+
+                    // Resume the continuation when all messages are received
+                    if messageCount == count {
+                        continuation.resume()
+                    }
+                })
+            }
+
+            Task {
+                // Send messages concurrently
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                    for _ in 1...count {
+                        group.addTask {
+                            try await InboxTests.sendMessage()
+                        }
+                    }
+                    try await group.waitForAll()
+                    print("All message send tasks have completed")
+                }
+            }
+        }
+        
+        // Remove the listener after receiving all messages
+        await Courier.shared.removeAllInboxListeners()
+
+        // Assert to ensure all messages were received
+        XCTAssertEqual(messageCount, count)
     }
     
 }
