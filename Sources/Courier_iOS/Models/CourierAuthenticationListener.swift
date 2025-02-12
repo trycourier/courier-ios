@@ -21,10 +21,12 @@ public class CourierAuthenticationListener: NSObject {
 
 // MARK: Extensions
 
-@CourierActor extension CourierAuthenticationListener {
+extension CourierAuthenticationListener {
     
     @objc public func remove() {
-        Courier.shared.removeAuthenticationListener(self)
+        Task {
+            await Courier.shared.removeAuthenticationListener(self)
+        }
     }
     
 }
