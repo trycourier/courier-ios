@@ -80,7 +80,7 @@ public class InboxSocket: CourierSocket {
         var data: [String: Any] = [
             "action": "subscribe",
             "data": [
-                "userAgent": await Courier.agent.value,
+                "userAgent": Courier.agent.value,
                 "channel": options.userId,
                 "event": "*",
                 "version": version

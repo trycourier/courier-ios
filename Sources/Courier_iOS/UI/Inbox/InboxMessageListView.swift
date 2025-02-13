@@ -184,17 +184,17 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.state = .error(error)
     }
     
-    internal func setInbox(set: InboxMessageSet) async {
+    internal func setInbox(set: InboxMessageSet) {
         self.manuallyArchivedMessageId = nil
         self.inboxMessages = set.messages
         self.canPaginate = set.canPaginate
         self.tableView.reloadData()
         self.tableView.refreshControl?.endRefreshing()
         self.state = inboxMessages.isEmpty ? .empty : .content
-        await self.openVisibleMessages()
+        self.openVisibleMessages()
     }
     
-    internal func addPage(set: InboxMessageSet) async {
+    internal func addPage(set: InboxMessageSet) {
         
         self.manuallyArchivedMessageId = nil
         
@@ -222,11 +222,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             tableView.deleteSections(IndexSet(integer: 1), with: .automatic)
         }
         
-        await self.openVisibleMessages()
+        self.openVisibleMessages()
         
     }
     
-    internal func addMessage(at index: Int, message: InboxMessage) async {
+    internal func addMessage(at index: Int, message: InboxMessage) {
         
         // Ensure the index is within bounds for insertion
         guard index >= 0 && index <= inboxMessages.count else {
@@ -242,7 +242,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
         // Ensure the indexPath is valid for the tableView
         guard index >= 0 && index <= tableView.numberOfRows(inSection: 0) else {
-            await Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
+            Task {
+                await Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
+            }
             self.tableView.reloadData()
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
@@ -250,7 +252,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
 
         let indexPath = IndexPath(row: index, section: 0)
         self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle) // Safe table view update
-        await self.openVisibleMessages() // Additional logic
+        self.openVisibleMessages() // Additional logic
         
     }
     
@@ -270,7 +272,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
     }
     
-    internal func removeMessage(at index: Int, message: InboxMessage) async {
+    internal func removeMessage(at index: Int, message: InboxMessage) {
         
         // Check if index is within bounds and if the message matches
         guard index >= 0 && index < inboxMessages.count, inboxMessages[index].messageId == message.messageId else {
@@ -287,7 +289,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         inboxMessages.remove(at: index)
         
         // React Native Bug fix... weird.
-        if (await Courier.agent.isReactNative()) {
+        if (Courier.agent.isReactNative()) {
             self.tableView.reloadData()
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
@@ -454,19 +456,17 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         let message = inboxMessages[index]
         
+        removeMessage(at: index, message: message)
+        
+        // Hold the message id
+        self.manuallyArchivedMessageId = message.messageId
+        
         Task {
-            
-            await removeMessage(at: index, message: message)
-            
-            // Hold the message id
-            self.manuallyArchivedMessageId = message.messageId
-            
             do {
                 try await Courier.shared.archiveMessage(message.messageId)
             } catch {
                 await Courier.shared.client?.log(error.localizedDescription)
             }
-            
         }
         
     }
@@ -548,19 +548,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        Task { [weak self] in
-            self?.didScrollInbox(scrollView)
-            await self?.openVisibleMessages()
-        }
+        self.didScrollInbox(scrollView)
+        self.openVisibleMessages()
     }
     
-    private func openVisibleMessages() async {
-        
-        if await !Courier.shared.isUserSignedIn {
-            return
-        }
+    private func openVisibleMessages() {
             
         self.tableView.indexPathsForVisibleRows?.forEach { indexPath in
+            
             // Get the current message
             let index = indexPath.row
             
@@ -575,6 +570,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             if (!message.isOpened) {
                 message.markAsOpened()
             }
+            
         }
         
     }

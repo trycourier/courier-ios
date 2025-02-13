@@ -51,7 +51,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -122,7 +122,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -193,7 +193,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -230,7 +230,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -259,7 +259,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -291,7 +291,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -323,7 +323,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -355,7 +355,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -387,7 +387,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             
@@ -419,7 +419,7 @@ public class InboxClient: CourierApiClient {
             }
         """
 
-        let request = try await http(InboxClient.INBOX_GRAPH_QL) {
+        let request = try http(InboxClient.INBOX_GRAPH_QL) {
             
             $0.httpMethod = "POST"
             

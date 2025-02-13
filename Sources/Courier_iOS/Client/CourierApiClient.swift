@@ -14,7 +14,7 @@ public class CourierApiClient {
     static let INBOX_GRAPH_QL = "https://inbox.courier.com/q"
     static let INBOX_WEBSOCKET = "wss://realtime.courier.com"
     
-    func http(_ url: String, _ configuration: (inout URLRequest) -> Void) async throws -> URLRequest {
+    func http(_ url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
         
         guard let url = URL(string: url) else {
             throw NSError(domain: "Invalid URL", code: -1, userInfo: nil)
@@ -25,7 +25,7 @@ public class CourierApiClient {
         configuration(&request)
         
         // Attach agent
-        let userAgent = await Courier.agent.value
+        let userAgent = Courier.agent.value
         request.addHeader(key: "User-Agent", value: userAgent)
         
         // Always attach json content type

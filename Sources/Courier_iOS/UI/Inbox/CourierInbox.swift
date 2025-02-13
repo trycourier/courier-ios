@@ -200,34 +200,22 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                     }
                 },
                 onFeedChanged: { [weak self] set in
-                    Task { [weak self] in
-                        await self?.getPage(for: .feed).page.setInbox(set: set)
-                    }
+                    self?.getPage(for: .feed).page.setInbox(set: set)
                 },
-                onArchiveChanged: { set in
-                    Task { [weak self] in
-                        await self?.getPage(for: .archived).page.setInbox(set: set)
-                    }
+                onArchiveChanged: { [weak self] set in
+                    self?.getPage(for: .archived).page.setInbox(set: set)
                 },
-                onPageAdded: { feed, set in
-                    Task { [weak self] in
-                        await self?.getPage(for: feed).page.addPage(set: set)
-                    }
+                onPageAdded: { [weak self] feed, set in
+                    self?.getPage(for: feed).page.addPage(set: set)
                 },
-                onMessageChanged: { feed, index, message in
-                    Task { [weak self] in
-                        self?.getPage(for: feed).page.updateMessage(at: index, message: message)
-                    }
+                onMessageChanged: { [weak self] feed, index, message in
+                    self?.getPage(for: feed).page.updateMessage(at: index, message: message)
                 },
-                onMessageAdded: { feed, index, message in
-                    Task { [weak self] in
-                        await self?.getPage(for: feed).page.addMessage(at: index, message: message)
-                    }
+                onMessageAdded: { [weak self] feed, index, message in
+                    self?.getPage(for: feed).page.addMessage(at: index, message: message)
                 },
-                onMessageRemoved: { feed, index, message in
-                    Task { [weak self] in
-                        await self?.getPage(for: feed).page.removeMessage(at: index, message: message)
-                    }
+                onMessageRemoved: { [weak self] feed, index, message in
+                    self?.getPage(for: feed).page.removeMessage(at: index, message: message)
                 }
             )
             

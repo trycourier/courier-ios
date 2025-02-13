@@ -22,7 +22,7 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 
 import UIKit
 
-@CourierActor @objc public class Courier: NSObject {
+@objc public class Courier: NSObject {
     
     /**
      * Versioning
@@ -34,7 +34,7 @@ import UIKit
      * Singleton reference to the SDK
      * Please ensure you use this to maintain state
      */
-    @objc public static let shared = Courier()
+    @CourierActor @objc public static let shared = Courier()
     
     // MARK: Client API
     
@@ -51,7 +51,7 @@ import UIKit
     // MARK: Inbox
     internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue
     internal var inboxMutationHandler: InboxMutationHandler?
-    internal let inboxModule = InboxModule()
+    @CourierActor internal let inboxModule = InboxModule()
     
     // MARK: Proxy
     private var notificationProxy: CourierNotificationProxy?

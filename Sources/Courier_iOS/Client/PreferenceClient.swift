@@ -24,7 +24,7 @@ public class PreferenceClient: CourierApiClient {
             url += "?cursor=\(cursor)"
         }
 
-        let request = try await http(url) {
+        let request = try http(url) {
             
             $0.httpMethod = "GET"
             
@@ -42,7 +42,7 @@ public class PreferenceClient: CourierApiClient {
         
         let url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences/\(topicId)"
 
-        let request = try await http(url) {
+        let request = try http(url) {
             
             $0.httpMethod = "GET"
             
@@ -61,7 +61,7 @@ public class PreferenceClient: CourierApiClient {
         
         let url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences/\(topicId)"
 
-        let request = try await http(url) {
+        let request = try http(url) {
             
             $0.httpMethod = "PUT"
             
