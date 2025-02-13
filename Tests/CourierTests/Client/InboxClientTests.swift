@@ -222,8 +222,8 @@ class InboxClientTests: XCTestCase {
         let socket2 = client2.inbox.socket
 
         // Helper function to handle socket events and return when a message is received
-        func waitForMessage(socket: InboxSocket) async -> Result<Void, Error> {
-            return await withCheckedContinuation { (continuation: CheckedContinuation<Result<Void, Error>, Never>) in
+        func waitForMessage(socket: InboxSocket) async throws -> Void {
+            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 socket.onOpen = {
                     print("Socket Opened")
                 }
@@ -233,7 +233,7 @@ class InboxClientTests: XCTestCase {
                 }
                 
                 socket.onError = { error in
-                    continuation.resume(returning: .failure(error))
+                    continuation.resume(throwing: error)
                 }
                 
                 socket.receivedMessageEvent = { event in
@@ -242,7 +242,7 @@ class InboxClientTests: XCTestCase {
                 
                 socket.receivedMessage = { message in
                     print("Received message on socket: \(message)")
-                    continuation.resume(returning: .success(()))
+                    continuation.resume()
                 }
             }
         }
@@ -259,19 +259,11 @@ class InboxClientTests: XCTestCase {
         // Wait for both sockets to receive the message concurrently
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
-                let result = await waitForMessage(socket: socket1)
-                if case .failure(let error) = result {
-                    throw error
-                }
+                try await waitForMessage(socket: socket1)
             }
-            
             group.addTask {
-                let result = await waitForMessage(socket: socket2)
-                if case .failure(let error) = result {
-                    throw error
-                }
+                try await waitForMessage(socket: socket2)
             }
-
             try await group.waitForAll()
         }
 

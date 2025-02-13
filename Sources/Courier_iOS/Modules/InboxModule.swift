@@ -85,9 +85,9 @@ import UIKit
             
             let listeners = self.inboxModule.inboxListeners
             
-            await MainActor.run {
-                listeners.forEach { listener in
-                    listener.onLoad(data: data)
+            listeners.forEach { listener in
+                Task {
+                    await listener.onLoad(data: data)
                 }
             }
             
@@ -121,9 +121,9 @@ import UIKit
             
             let listeners = self.inboxModule.inboxListeners
                 
-            await MainActor.run {
-                listeners.forEach { listener in
-                    listener.onLoad(data: data)
+            listeners.forEach { listener in
+                Task {
+                    await listener.onLoad(data: data)
                 }
             }
             
@@ -404,7 +404,7 @@ import UIKit
             onMessageRemoved: onMessageRemoved
         )
         
-        listener.initialize()
+        await listener.initialize()
         
         // Register listener
         inboxModule.addListener(listener)
@@ -420,9 +420,7 @@ import UIKit
         
         // Notify that data exists if needed
         if let data = inboxModule.data {
-            await MainActor.run {
-                listener.onLoad(data: data)
-            }
+            await listener.onLoad(data: data)
             return listener
         }
         

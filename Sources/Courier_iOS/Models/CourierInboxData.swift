@@ -5,7 +5,7 @@
 //  Created by https://github.com/mikemilla on 9/30/24.
 //
 
-public class CourierInboxData {
+@CourierActor public class CourierInboxData {
     
     internal(set) public var feed: InboxMessageSet
     internal(set) public var archived: InboxMessageSet

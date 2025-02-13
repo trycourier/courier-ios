@@ -48,25 +48,37 @@ import Foundation
 
 // MARK: - Extensions
 
-extension CourierInboxListener {
+@CourierActor extension CourierInboxListener {
     
-    internal func onLoad(data: CourierInboxData) {
+    internal func onLoad(data: CourierInboxData) async {
         if !self.isInitialized {
             return
         }
-        self.onFeedChanged?(data.feed)
-        self.onArchiveChanged?(data.archived)
-        self.onUnreadCountChanged?(data.unreadCount)
+        
+        // Capture the values before switching to MainActor
+        let feed = data.feed
+        let archived = data.archived
+        let unreadCount = data.unreadCount
+
+        await MainActor.run {
+            self.onFeedChanged?(feed)
+            self.onArchiveChanged?(archived)
+            self.onUnreadCountChanged?(unreadCount)
+        }
     }
+
     
-    internal func initialize() {
-        DispatchQueue.main.async {
+    internal func initialize() async {
+        await MainActor.run {
             self.onLoading?(false)
             self.isInitialized = true
         }
     }
     
-    // Unregisters a listener on a background task
+}
+
+extension CourierInboxListener {
+    
     @objc public func remove() {
         Task {
             await Courier.shared.removeInboxListener(self)

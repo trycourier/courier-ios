@@ -360,7 +360,7 @@ class ThreadingTests: XCTestCase {
         try await UserBuilder.authenticate()
         var callbackCount = 0
 
-        let listener = await Courier.shared.addInboxListener(onFeedChanged: { _ in
+        let listener = await Courier.shared.addInboxListener(onMessageAdded: { _,_,_  in
             callbackCount += 1
         })
 
