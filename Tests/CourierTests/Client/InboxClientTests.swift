@@ -212,59 +212,62 @@ class InboxClientTests: XCTestCase {
         await socket.disconnect()
     }
     
+    actor SocketMessageCounter {
+        
+        private let maxCount: Int
+        
+        init(maxCount: Int) {
+            self.maxCount = maxCount
+        }
+        
+        private var count = 0
+        
+        func increment() -> Bool {
+            count += 1
+            return count >= maxCount
+        }
+    }
+
     func testMultipleSocketsOnSingleUser() async throws {
-        // Open the first socket connection
+        
         let client1 = try await ClientBuilder.build(connectionId: UUID().uuidString)
         let socket1 = client1.inbox.socket
 
-        // Open the second socket connection
         let client2 = try await ClientBuilder.build(connectionId: UUID().uuidString)
         let socket2 = client2.inbox.socket
 
-        // Helper function to handle socket events and return when a message is received
-        func waitForMessage(socket: InboxSocket) async throws -> Void {
-            return try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                socket.onOpen = {
-                    print("Socket Opened")
-                }
-                
-                socket.onClose = { code, reason in
-                    print("Socket closed: \(code), \(String(describing: reason))")
-                }
-                
-                socket.onError = { error in
+        let counter = SocketMessageCounter(maxCount: [socket1, socket2].count)
+
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            Task {
+                do {
+                    // Socket 1 connection
+                    try await socket1.connect(receivedMessage: { _ in
+                        Task {
+                            if await counter.increment() {
+                                continuation.resume()
+                            }
+                        }
+                    })
+                    try await socket1.sendSubscribe()
+
+                    // Socket 2 connection
+                    try await socket2.connect(receivedMessage: { _ in
+                        Task {
+                            if await counter.increment() {
+                                continuation.resume()
+                            }
+                        }
+                    })
+                    try await socket2.sendSubscribe()
+
+                    let messageId = try await sendMessage()
+                    print("Sent message with ID: \(messageId)")
+                    
+                } catch {
                     continuation.resume(throwing: error)
                 }
-                
-                socket.receivedMessageEvent = { event in
-                    print(event)
-                }
-                
-                socket.receivedMessage = { message in
-                    print("Received message on socket: \(message)")
-                    continuation.resume()
-                }
             }
-        }
-
-        try await socket1.connect()
-        try await socket1.sendSubscribe()
-
-        try await socket2.connect()
-        try await socket2.sendSubscribe()
-
-        let messageId = try await sendMessage()
-        print("Sent message with ID: \(messageId)")
-
-        // Wait for both sockets to receive the message concurrently
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                try await waitForMessage(socket: socket1)
-            }
-            group.addTask {
-                try await waitForMessage(socket: socket2)
-            }
-            try await group.waitForAll()
         }
 
         await socket1.disconnect()
@@ -272,9 +275,10 @@ class InboxClientTests: XCTestCase {
     }
     
     func testMultipleUserConnections() async throws {
+        
         let userId1 = "user_1"
         let userId2 = "user_2"
-
+        
         // Open the first socket connection
         let client1 = try await ClientBuilder.build(userId: userId1)
         let socket1 = client1.inbox.socket
@@ -283,48 +287,39 @@ class InboxClientTests: XCTestCase {
         let client2 = try await ClientBuilder.build(userId: userId2)
         let socket2 = client2.inbox.socket
 
-        // Helper function to handle socket events and await message reception
-        func waitForMessage(socket: InboxSocket) async -> Result<Void, Error> {
-            return await withCheckedContinuation { (continuation: CheckedContinuation<Result<Void, Error>, Never>) in
-                socket.onError = { error in
-                    print(error.localizedDescription)
-                    continuation.resume(returning: .failure(error))
-                }
+        let counter = SocketMessageCounter(maxCount: [socket1, socket2].count)
 
-                socket.receivedMessage = { message in
-                    print("Received message: \(message)")
-                    continuation.resume(returning: .success(()))
-                }
-            }
-        }
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            Task {
+                do {
+                    // Socket 1 connection
+                    try await socket1.connect(receivedMessage: { _ in
+                        Task {
+                            if await counter.increment() {
+                                continuation.resume()
+                            }
+                        }
+                    })
+                    try await socket1.sendSubscribe()
 
-        try await socket1.connect()
-        try await socket1.sendSubscribe()
+                    // Socket 2 connection
+                    try await socket2.connect(receivedMessage: { _ in
+                        Task {
+                            if await counter.increment() {
+                                continuation.resume()
+                            }
+                        }
+                    })
+                    try await socket2.sendSubscribe()
 
-        try await socket2.connect()
-        try await socket2.sendSubscribe()
-
-        // Send a message to each user
-        try await sendMessage(userId: userId1)
-        try await sendMessage(userId: userId2)
-
-        // Wait for both sockets to receive messages concurrently
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                let result = await waitForMessage(socket: socket1)
-                if case .failure(let error) = result {
-                    throw error
-                }
-            }
-
-            group.addTask {
-                let result = await waitForMessage(socket: socket2)
-                if case .failure(let error) = result {
-                    throw error
+                    // Send a message to each user
+                    try await sendMessage(userId: userId1)
+                    try await sendMessage(userId: userId2)
+                    
+                } catch {
+                    continuation.resume(throwing: error)
                 }
             }
-
-            try await group.waitForAll()
         }
 
         await socket1.disconnect()

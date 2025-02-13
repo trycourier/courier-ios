@@ -7,11 +7,25 @@
 
 import Foundation
 
+private actor WebSocketState {
+    
+    private var webSocketTask: URLSessionWebSocketTask?
+
+    func setWebSocketTask(_ task: URLSessionWebSocketTask?) {
+        webSocketTask = task
+    }
+
+    func getWebSocketTask() -> URLSessionWebSocketTask? {
+        return webSocketTask
+    }
+    
+}
+
 public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     
-    internal var webSocketTask: URLSessionWebSocketTask?
-    internal var urlSession: URLSession?
+    private let state = WebSocketState()
     
+    internal var urlSession: URLSession?
     var onMessageReceived: ((String) -> Void)?
     
     internal var onOpen: (() -> Void)?
@@ -37,37 +51,31 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         // Ensure any previous connection is terminated
         await disconnect()
         
-        // Start a new connection
-        try await MainActor.run {
-            
-            guard let url = URL(string: self.url) else {
-                throw URLError(.badURL)
-            }
-            
-            // Initialize and start the WebSocket task
-            self.webSocketTask = urlSession?.webSocketTask(with: url)
-            self.webSocketTask?.resume()
-            
-            // Register receiver
-            self.receiveData()
-            
+        guard let url = URL(string: self.url) else {
+            throw URLError(.badURL)
         }
+        
+        let task = urlSession?.webSocketTask(with: url)
+        await state.setWebSocketTask(task) // Store the task safely
+        task?.resume()
+        
+        // Register receiver
+        self.receiveData()
         
     }
     
     public func disconnect() async {
         
+        // Stop the ping timer
         await MainActor.run {
-            
-            // Stop the ping timer
             self.pingTimer?.invalidate()
             self.pingTimer = nil
-            
-            // Cancel the WebSocket task
-            self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
-            self.webSocketTask = nil
-            
         }
+        
+        // Cancel the WebSocket task safely
+        let task = await state.getWebSocketTask()
+        task?.cancel(with: .normalClosure, reason: nil)
+        await state.setWebSocketTask(nil) // Safely set to nil
         
     }
     
@@ -79,8 +87,8 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         let message = URLSessionWebSocketTask.Message.string(jsonString)
         
         // Send message to socket
-        try await webSocketTask?.send(message)
-        
+        let task = await state.getWebSocketTask()
+        try await task?.send(message)
     }
     
     // Pings keep alive. Will ping every 5 minutes by default
@@ -110,31 +118,34 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     }
     
     func receiveData() {
-        webSocketTask?.receive { result in
-            switch result {
-            case .success(let message):
-                switch message {
-                case .string(let text):
-                    self.onMessageReceived?(text)
-                case .data(let data):
-                    if let str = String(data: data, encoding: .utf8) {
-                        self.onMessageReceived?(str)
+        Task {
+            let task = await state.getWebSocketTask()
+            task?.receive { result in
+                switch result {
+                case .success(let message):
+                    switch message {
+                    case .string(let text):
+                        self.onMessageReceived?(text)
+                    case .data(let data):
+                        if let str = String(data: data, encoding: .utf8) {
+                            self.onMessageReceived?(str)
+                        }
+                    @unknown default:
+                        fatalError()
                     }
-                @unknown default:
-                    fatalError()
+                    self.receiveData()
+                case .failure(let error):
+                    
+                    let e = error as NSError
+                    
+                    // Handle closing socket
+                    if e.domain == NSPOSIXErrorDomain && e.code == 57 {
+                        return
+                    }
+                    
+                    self.onError?(e)
+                    
                 }
-                self.receiveData()
-            case .failure(let error):
-                
-                let e = error as NSError
-                
-                // Handle closing socket
-                if e.domain == NSPOSIXErrorDomain && e.code == 57 {
-                    return
-                }
-                
-                self.onError?(e)
-                
             }
         }
     }
@@ -146,5 +157,4 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.onClose?(closeCode, reason)
     }
-    
 }

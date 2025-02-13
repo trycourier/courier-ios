@@ -238,18 +238,33 @@ class ThreadingTests: XCTestCase {
         await Courier.shared.signOut()
     }
     
+    actor FetchCounter {
+        private var count = 0
+        
+        func increment() -> Int {
+            count += 1
+            return count
+        }
+        
+        func getCount() -> Int {
+            return count
+        }
+    }
+
     func testListenerSpam() async throws {
         log("Starting testListenerSpam")
         
         await Courier.shared.signOut()
         log("Signed out user to start test cleanly")
         
-        var fetches = 0
+        let fetchCounter = FetchCounter() // Actor to track fetches safely
         
         // Define a closure for handling feed changes
         let onFeedChanged: (Int, Int) -> Void = { group, index in
-            fetches += 1
-            print("Data fetched for Group #\(group) :: Listener #\(index). (fetches total: \(fetches))")
+            Task {
+                let count = await fetchCounter.increment()
+                print("Data fetched for Group #\(group) :: Listener #\(index). (fetches total: \(count))")
+            }
         }
         
         // Launch multiple tasks concurrently
@@ -268,9 +283,10 @@ class ThreadingTests: XCTestCase {
         log("All inbox listener tasks completed, now authenticating user 'mike'")
         try await UserBuilder.authenticate(userId: "mike")
         
-        log("Waiting until at least 5 feed changes have occurred (fetches = \(fetches))")
-        while fetches < 5 {
-            // spin
+        log("Waiting until at least 5 feed changes have occurred")
+        
+        while await fetchCounter.getCount() < 5 {
+            try await Task.sleep(nanoseconds: 1_000_000) // Prevents CPU spin
         }
         
         log("We have at least 5 feed changes, removing all listeners now.")
@@ -278,6 +294,7 @@ class ThreadingTests: XCTestCase {
         
         log("testListenerSpam completed")
     }
+
 
     private func registerInboxListeners(
         numberOfListeners: Int = 10,
@@ -400,8 +417,12 @@ class ThreadingTests: XCTestCase {
                     case 2:
                         _ = try? await Courier.shared.client?.inbox.getMessages()
                     case 3:
-                        await Courier.shared.signOut()
-                        await Courier.shared.signIn(userId: "chaos_user", accessToken: try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user"))
+                        let jwt = try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
+                        await Courier.shared.signIn(userId: "chaos_user", accessToken: jwt)
+                    case 4:
+                        let jwt = try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
+                        let client = CourierClient(jwt: jwt, userId: "chaos_user")
+                        try await client.tokens.putUserToken(token: "example_token", provider: "example_provider")
                     default:
                         break
                     }
@@ -412,6 +433,9 @@ class ThreadingTests: XCTestCase {
 
         log("Chaos test completed successfully")
         XCTAssertTrue(true)
+        
+        await Courier.shared.removeAllInboxListeners()
+        
     }
 
     
