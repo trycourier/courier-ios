@@ -51,7 +51,7 @@ internal actor TokenModule {
     
 }
 
-@CourierActor extension Courier {
+extension Courier {
     
     // MARK: Getters
     
@@ -67,6 +67,10 @@ internal actor TokenModule {
             return [.alert, .badge, .sound]
         }
     }
+    
+}
+
+@CourierActor extension Courier {
     
     // MARK: Tokens
     
@@ -185,6 +189,16 @@ internal actor TokenModule {
             client?.error(error.localizedDescription)
             await MainActor.run {
                 completion(error)
+            }
+        }
+    }
+    
+    @objc public static func setAPNSToken(_ rawToken: Data) {
+        Task {
+            do {
+                try await Courier.shared.setAPNSToken(rawToken)
+            } catch let error as NSError {
+                Courier.shared.client?.log(error.localizedDescription)
             }
         }
     }
