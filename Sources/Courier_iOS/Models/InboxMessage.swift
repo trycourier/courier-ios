@@ -57,15 +57,15 @@ public class InboxMessage: Codable {
         return body ?? preview
     }
     
-    public var isRead: Bool {
+    @CourierActor public var isRead: Bool {
         return read != nil
     }
     
-    public var isOpened: Bool {
+    @CourierActor public var isOpened: Bool {
         return opened != nil
     }
     
-    public var isArchived: Bool {
+    @CourierActor public var isArchived: Bool {
         return archived != nil
     }
     
