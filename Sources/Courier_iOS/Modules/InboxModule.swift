@@ -482,7 +482,6 @@ import UIKit
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .click,
-            client: client,
             handler: handler
         )
         
@@ -501,7 +500,6 @@ import UIKit
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .read,
-            client: client,
             handler: handler
         )
 
@@ -520,7 +518,6 @@ import UIKit
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .unread,
-            client: client,
             handler: handler
         )
 
@@ -539,7 +536,6 @@ import UIKit
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .archive,
-            client: client,
             handler: handler
         )
 
@@ -558,7 +554,6 @@ import UIKit
         try await inboxModule.data?.updateMessage(
             messageId: messageId,
             event: .opened,
-            client: client,
             handler: handler
         )
 
@@ -575,7 +570,6 @@ import UIKit
         }
         
         try await inboxModule.data?.readAllMessages(
-            client: client,
             handler: handler
         )
 

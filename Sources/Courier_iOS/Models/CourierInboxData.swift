@@ -5,6 +5,13 @@
 //  Created by https://github.com/mikemilla on 9/30/24.
 //
 
+//
+//  CourierInboxData.swift
+//  Courier_iOS
+//
+//  Created by https://github.com/mikemilla on 9/30/24.
+//
+
 @CourierActor public class CourierInboxData {
     
     internal(set) public var feed: InboxMessageSet
@@ -25,16 +32,18 @@
         )
     }
     
-    internal func updateUnreadCount(count: Int) {
-        self.unreadCount = count
+    private func getMessageActor(for messageId: String) -> (InboxMessageFeed, InboxMessageActor)? {
+        if let message = feed.messages.first(where: { $0.messageId == messageId }) {
+            return (.feed, InboxMessageActor(message: message))
+        } else if let message = archived.messages.first(where: { $0.messageId == messageId }) {
+            return (.archived, InboxMessageActor(message: message))
+        } else {
+            return nil
+        }
     }
     
-    internal func updateMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
-        if feed == .feed {
-            self.feed.messages[index] = message
-        } else {
-            self.archived.messages[index] = message
-        }
+    internal func updateUnreadCount(count: Int) {
+        self.unreadCount = count
     }
     
     internal func addMessage(at index: Int, in feed: InboxMessageFeed, with message: InboxMessage) {
@@ -46,129 +55,50 @@
         }
     }
     
-    internal func addPage(in feed: InboxMessageFeed, with set: InboxMessageSet) {
-        if feed == .feed {
-            self.feed.messages.append(contentsOf: set.messages)
-            self.feed.paginationCursor = set.paginationCursor
-            self.feed.canPaginate = set.canPaginate
-        } else {
-            self.archived.messages.append(contentsOf: set.messages)
-            self.archived.paginationCursor = set.paginationCursor
-            self.archived.canPaginate = set.canPaginate
+    internal func updateMessage(messageId: String, event: InboxEventType, handler: InboxMutationHandler) async throws {
+        
+        guard let (inboxFeed, messageActor) = getMessageActor(for: messageId) else {
+            return
+        }
+        
+        guard let index = feed.messages.firstIndex(where: { $0.messageId == messageId }) ??
+                          archived.messages.firstIndex(where: { $0.messageId == messageId }) else {
+            return
+        }
+        
+        let original = copy()
+        
+        let canUpdateServerData = await mutateLocalData(with: messageActor, event: event, inboxFeed: inboxFeed, index: index, handler: handler)
+        
+        if !canUpdateServerData {
+            return
+        }
+        
+        do {
+            let message = await messageActor.getMessage()
+            try await mutateServerData(for: message, event: event)
+        } catch {
+            Courier.shared.client?.options.log(error.localizedDescription)
+            await handler.onInboxReset(inbox: original, error: error)
         }
     }
     
-    private func getMessages(for messageId: String) -> (InboxMessageFeed, [InboxMessage])? {
-        if let _ = feed.messages.first(where: { $0.messageId == messageId }) {
-            return (.feed, feed.messages)
-        } else if let _ = archived.messages.first(where: { $0.messageId == messageId }) {
-            return (.archived, archived.messages)
-        } else {
-            return nil
-        }
-    }
-    
-    internal func readAllMessages(client: CourierClient?, handler: InboxMutationHandler) async throws {
-        
-        guard let client = client else {
-            throw CourierError.inboxNotInitialized
-        }
-        
-        let strongClient = client
+    internal func readAllMessages(handler: InboxMutationHandler) async throws {
         
         // Copy the original state of the data
         let original = copy()
         
         await readAll(handler)
         
+        let client = Courier.shared.client
+        
         do {
-            try await strongClient.inbox.readAll()
+            try await client?.inbox.readAll()
         } catch {
-            strongClient.options.log(error.localizedDescription)
+            client?.options.log(error.localizedDescription)
             await handler.onInboxReset(inbox: original, error: error)
         }
         
-    }
-    
-    internal func updateMessage(messageId: String, event: InboxEventType, client: CourierClient?, handler: InboxMutationHandler) async throws {
-        
-        guard let client = client else {
-            throw CourierError.inboxNotInitialized
-        }
-        
-        let strongClient = client
-        
-        let values = getMessages(for: messageId)
-        let inboxFeed = values?.0
-        var messages = values?.1
-        
-        if values == nil {
-            return
-        }
-        
-        // Get the current message
-        guard let index = messages!.firstIndex(where: { $0.messageId == messageId }) else {
-            return
-        }
-        
-        // Copy the original state of the data
-        let original = copy()
-        
-        // Change the local data
-        let canUpdateServerData = await mutateLocalData(with: &messages![index], event: event, inboxFeed: inboxFeed!, index: index, handler: handler)
-        
-        if !canUpdateServerData {
-            return
-        }
-        
-        // Perform server update
-        // If fails, reset the change to the original copy
-        do {
-            try await mutateServerData(using: strongClient, for: messages![index], event: event)
-        } catch {
-            strongClient.options.log(error.localizedDescription)
-            await handler.onInboxReset(inbox: original, error: error)
-        }
-        
-    }
-    
-    private func mutateLocalData(with message: inout InboxMessage, event: InboxEventType, inboxFeed: InboxMessageFeed, index: Int, handler: InboxMutationHandler) async -> Bool {
-        switch event {
-        case .read:        return await read(&message, index, inboxFeed, handler)
-        case .unread:      return await unread(&message, index, inboxFeed, handler)
-        case .opened:      return await open(&message, index, inboxFeed, handler)
-        case .unopened:    return await unopen(&message, index, inboxFeed, handler)
-        case .archive:     return await archive(&message, index, inboxFeed, handler)
-        case .unarchive:   return false
-        case .click:       return await click(&message, index, inboxFeed, handler)
-        case .unclick:     return false
-        case .markAllRead: return false
-        }
-    }
-    
-    private func mutateServerData(using client: CourierClient, for message: InboxMessage, event: InboxEventType) async throws {
-        switch event {
-        case .read:
-            try await client.inbox.read(messageId: message.messageId)
-        case .unread:
-            try await client.inbox.unread(messageId: message.messageId)
-        case .opened:
-            try await client.inbox.open(messageId: message.messageId)
-        case .unopened:
-            break
-        case .archive:
-            try await client.inbox.archive(messageId: message.messageId)
-        case .unarchive:
-            break
-        case .click:
-            if let channelId = message.trackingIds?.clickTrackingId {
-                try await client.inbox.click(messageId: message.messageId, trackingId: channelId)
-            }
-        case .unclick:
-            break
-        case .markAllRead:
-            break
-        }
     }
     
     private func readAll(_ handler: InboxMutationHandler) async {
@@ -178,121 +108,171 @@
         await handler.onUnreadCountChange(count: 0)
     }
     
-    private func read(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
-        
-        if message.isArchived {
-            return false
+    private func mutateLocalData(with messageActor: InboxMessageActor, event: InboxEventType, inboxFeed: InboxMessageFeed, index: Int, handler: InboxMutationHandler) async -> Bool {
+        switch event {
+        case .read:        return await read(messageActor, index, inboxFeed, handler)
+        case .unread:      return await unread(messageActor, index, inboxFeed, handler)
+        case .opened:      return await open(messageActor, index, inboxFeed, handler)
+        case .unopened:    return await unopen(messageActor, index, inboxFeed, handler)
+        case .archive:     return await archive(messageActor, index, inboxFeed, handler)
+        case .unarchive:   return await unarchive(messageActor, index, inboxFeed, handler)
+        case .click:       return await click(messageActor, index, inboxFeed, handler)
+        case .unclick:     return false
+        case .markAllRead: return false
         }
-        
-        if !message.isRead {
-            
-            message.setRead()
-            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
-            
+    }
+    
+    private func mutateServerData(for message: InboxMessage, event: InboxEventType) async throws {
+        let client = Courier.shared.client
+        switch event {
+        case .read:
+            try await client?.inbox.read(messageId: message.messageId)
+        case .unread:
+            try await client?.inbox.unread(messageId: message.messageId)
+        case .opened:
+            try await client?.inbox.open(messageId: message.messageId)
+        case .unopened:
+            break
+        case .archive:
+            try await client?.inbox.archive(messageId: message.messageId)
+        case .unarchive:
+            break
+        case .click:
+            if let channelId = message.trackingIds?.clickTrackingId {
+                try await client?.inbox.click(messageId: message.messageId, trackingId: channelId)
+            }
+        case .unclick:
+            break
+        case .markAllRead:
+            break
+        }
+    }
+    
+    private func open(_ messageActor: InboxMessageActor, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+        let wasOpened = await messageActor.markOpened()
+        if wasOpened {
+            let updatedMessage = await messageActor.getMessage()
+            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: updatedMessage)
+        }
+        return wasOpened
+    }
+
+    private func unopen(_ messageActor: InboxMessageActor, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+        let wasUnopened = await messageActor.markUnopened()
+        if wasUnopened {
+            let updatedMessage = await messageActor.getMessage()
+            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: updatedMessage)
+        }
+        return wasUnopened
+    }
+    
+    private func read(_ messageActor: InboxMessageActor, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+        let wasRead = await messageActor.markRead()
+        if wasRead {
+            let updatedMessage = await messageActor.getMessage()
+            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: updatedMessage)
             unreadCount = max(unreadCount - 1, 0)
             await handler.onUnreadCountChange(count: unreadCount)
-            
-            return true
-            
         }
-        
-        return false
-        
+        return wasRead
     }
     
-    private func unread(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
-        
-        if message.isArchived {
-            return false
-        }
-        
-        if message.isRead {
-            
-            message.setUnread()
-            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
-            
+    private func unread(_ messageActor: InboxMessageActor, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+        let wasUnread = await messageActor.markUnread()
+        if wasUnread {
+            let updatedMessage = await messageActor.getMessage()
+            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: updatedMessage)
             unreadCount += 1
             await handler.onUnreadCountChange(count: unreadCount)
-            
-            return true
-            
         }
-        
-        return false
-        
+        return wasUnread
     }
     
-    private func open(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
-        if !message.isOpened {
-            message.setOpened()
-            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
-            return true
+    private func archive(_ messageActor: InboxMessageActor, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+        let wasArchived = await messageActor.markArchived()
+        if wasArchived {
+            await handler.onInboxItemRemove(at: index, in: inboxFeed, with: await messageActor.getMessage())
         }
-        return false
+        return wasArchived
+    }
+
+    private func unarchive(_ messageActor: InboxMessageActor, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+        let wasUnarchived = await messageActor.markUnarchived()
+        if wasUnarchived {
+            let updatedMessage = await messageActor.getMessage()
+            await handler.onInboxItemAdded(at: index, in: inboxFeed, with: updatedMessage)
+        }
+        return wasUnarchived
     }
     
-    private func unopen(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
-        if message.isOpened {
-            message.setUnopened()
-            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
-            return true
-        }
-        return false
-    }
-    
-    private func archive(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
-        if !message.isArchived {
-            
-            // Read the message
-            let _ = await read(&message, index, inboxFeed, handler)
-            
-            // Change archived status
-            message.setArchived()
-            await handler.onInboxItemUpdated(at: index, in: inboxFeed, with: message)
-            
-            // Create copy
-            let newMessage = message.copy()
-            
-            // Remove the item from the feed
-            feed.messages.remove(at: index)
-            await handler.onInboxItemRemove(at: index, in: .feed, with: message)
-            
-            // Add the item to the archive
-            let insertIndex = findInsertIndex(for: newMessage, in: archived.messages)
-            archived.messages.insert(newMessage, at: insertIndex)
-            await handler.onInboxItemAdded(at: insertIndex, in: .archived, with: message)
-            
-            return true
-            
-        }
-        return false
-    }
-    
-    private func click(_ message: inout InboxMessage, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
+    private func click(_ messageActor: InboxMessageActor, _ index: Int, _ inboxFeed: InboxMessageFeed, _ handler: InboxMutationHandler) async -> Bool {
         return true
     }
     
-    private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
-        
-        var allMessages = messages
-        
-        // Add the new message to the array
-        allMessages.append(newMessage)
-
-        // Sort the messages by createdAt (descending order)
-        allMessages.sort { $0.timestamp > $1.timestamp }
-
-        // Find the index of the newly inserted message
-        if let index = allMessages.firstIndex(where: { $0.messageId == newMessage.messageId }) {
-            return max(index - 1, 0)
-        }
-
-        // Fallback
-        return 0
-        
-    }
-    
 }
+
+// MARK: - Thread-Safe InboxMessage Actor
+
+private actor InboxMessageActor {
+    private var message: InboxMessage
+
+    init(message: InboxMessage) {
+        self.message = message
+    }
+
+    func getMessage() -> InboxMessage {
+        return message
+    }
+
+    func markRead() -> Bool {
+        if !message.isRead {
+            message.setRead()
+            return true
+        }
+        return false
+    }
+
+    func markUnread() -> Bool {
+        if message.isRead {
+            message.setUnread()
+            return true
+        }
+        return false
+    }
+
+    func markOpened() -> Bool {
+        if !message.isOpened {
+            message.setOpened()
+            return true
+        }
+        return false
+    }
+
+    func markUnopened() -> Bool {
+        if message.isOpened {
+            message.setUnopened()
+            return true
+        }
+        return false
+    }
+
+    func markArchived() -> Bool {
+        if !message.isArchived {
+            message.setArchived()
+            return true
+        }
+        return false
+    }
+
+    func markUnarchived() -> Bool {
+        if message.isArchived {
+            message.setUnarchived()
+            return true
+        }
+        return false
+    }
+}
+
 
 public struct InboxMessageSet: Codable {
     internal(set) public var messages: [InboxMessage]

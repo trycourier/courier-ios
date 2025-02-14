@@ -22,7 +22,9 @@ class PrebuiltInboxViewController: UIViewController {
                 }
             },
             didLongPressInboxMessageAtIndex: { message, index in
-                self.showActionSheet(message: message)
+                Task {
+                    await self.showActionSheet(message: message)
+                }
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
                 self.showCodeAlert(title: "Inbox Action Click", code: action.toJson() ?? "")

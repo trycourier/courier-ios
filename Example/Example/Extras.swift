@@ -71,33 +71,46 @@ extension AppDelegate {
 
 extension UIViewController {
     
-    func showActionSheet(message: InboxMessage) {
+    func showActionSheet(message: InboxMessage) async {
+        
+        let json = await message.toJson()
+        let isRead = await message.isRead
         
         // Create the action sheet
         let actionSheet = UIAlertController(title: message.messageId, message: nil, preferredStyle: .actionSheet)
         
         // Add the first action
-        let action1 = UIAlertAction(title: message.isRead ? "Unread Message" : "Read Message", style: .default) { _ in
+        let action1 = UIAlertAction(title: isRead ? "Unread Message" : "Read Message", style: .default) { _ in
             Task {
-                message.isRead ? try await Courier.shared.unreadMessage(message.messageId) : try await Courier.shared.readMessage(message.messageId)
+                do {
+                    if isRead {
+                        try await Courier.shared.unreadMessage(message.messageId)
+                    } else {
+                        try await Courier.shared.readMessage(message.messageId)
+                    }
+                } catch {
+                    print("Error updating message read status: \(error)")
+                }
             }
         }
         
         // Add the second action
         let action2 = UIAlertAction(title: "Archive Message", style: .default) { _ in
             Task {
-                try await Courier.shared.archiveMessage(message.messageId)
+                do {
+                    try await Courier.shared.archiveMessage(message.messageId)
+                } catch {
+                    print("Error archiving message: \(error)")
+                }
             }
         }
         
         let action3 = UIAlertAction(title: "View Message Details", style: .default) { _ in
-            self.showCodeAlert(title: "Inbox Message", code: message.toJson() ?? "")
+            self.showCodeAlert(title: "Inbox Message", code: json ?? "")
         }
         
         // Add the cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         // Add actions to the action sheet
         actionSheet.addAction(action1)
@@ -105,11 +118,10 @@ extension UIViewController {
         actionSheet.addAction(action3)
         actionSheet.addAction(cancelAction)
         
-        // Present the action sheet
+        // Present the action sheet safely
         if let topController = UIApplication.shared.keyWindow?.rootViewController {
             topController.present(actionSheet, animated: true)
         }
-        
     }
     
     func showCodeAlert(title: String, code: String) {
@@ -224,7 +236,7 @@ extension InboxAction {
 
 extension InboxMessage {
     
-    func toJson() -> String? {
+    @CourierActor func toJson() -> String? {
         
         let dictionary: [String: Any] = [
             "messageId": self.messageId,
