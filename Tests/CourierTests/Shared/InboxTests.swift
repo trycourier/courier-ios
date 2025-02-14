@@ -190,9 +190,23 @@ class InboxTests: XCTestCase {
         await Courier.shared.removeInboxListener(listener3)
     }
     
-    func testPagination() async throws {
+    actor MessageTracker {
+        private var messageCount = 0
+        private var hold = true
 
-        var hold = true
+        func incrementMessageCount(limit: Int) -> Bool {
+            messageCount += 1
+            hold = messageCount < limit
+            return hold
+        }
+
+        func shouldHold() -> Bool {
+            return hold
+        }
+    }
+    
+    func testPagination() async throws {
+        let tracker = MessageTracker() // Actor to track messages safely
 
         try await UserBuilder.authenticate()
 
@@ -206,10 +220,13 @@ class InboxTests: XCTestCase {
 
         let count = 5
 
-        var messageCount = 0
         await Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
-            messageCount += 1
-            hold = messageCount < count
+            Task {
+                let shouldContinue = await tracker.incrementMessageCount(limit: count)
+                if !shouldContinue {
+                    return
+                }
+            }
         })
 
         // Register some random listeners
@@ -226,13 +243,12 @@ class InboxTests: XCTestCase {
 
         try? await Task.sleep(nanoseconds: delay)
 
-        while (hold) {
-            // Hold
+        while await tracker.shouldHold() {
+            try await Task.sleep(nanoseconds: 1_000_000) // Prevents CPU spin
         }
 
         await Courier.shared.removeAllInboxListeners()
         await Courier.shared.setPaginationLimit(32)
-
     }
     
     func testOpenMessage() async throws {
