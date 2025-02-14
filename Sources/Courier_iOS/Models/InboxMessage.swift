@@ -57,39 +57,39 @@ public class InboxMessage: Codable {
         return body ?? preview
     }
     
-    @CourierActor public var isRead: Bool {
+    public var isRead: Bool {
         return read != nil
     }
     
-    @CourierActor public var isOpened: Bool {
+    public var isOpened: Bool {
         return opened != nil
     }
     
-    @CourierActor public var isArchived: Bool {
+    public var isArchived: Bool {
         return archived != nil
     }
     
-    @CourierActor internal func setArchived() {
+    internal func setArchived() {
         archived = Date().timestamp
     }
     
-    @CourierActor internal func setUnarchived() {
+    internal func setUnarchived() {
         archived = nil
     }
     
-    @CourierActor internal func setRead() {
+    internal func setRead() {
         read = Date().timestamp
     }
     
-    @CourierActor internal func setUnread() {
+    internal func setUnread() {
         read = nil
     }
     
-    @CourierActor internal func setOpened() {
+    internal func setOpened() {
         opened = Date().timestamp
     }
     
-    @CourierActor internal func setUnopened() {
+    internal func setUnopened() {
         opened = nil
     }
     
