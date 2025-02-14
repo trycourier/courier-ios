@@ -34,11 +34,19 @@ import UIKit
      * Singleton reference to the SDK
      * Please ensure you use this to maintain state
      */
-    @CourierActor @objc public static let shared = Courier()
+    @CourierActor
+    @objc public static let shared = Courier()
     
-    // MARK: Client API
-    
+    /**
+     Low level API client
+     */
     public internal(set) var client: CourierClient? = nil
+    
+    /**
+     Inbox data handler
+     */
+    @CourierActor
+    internal lazy var newInboxModule: NewInboxModule = NewInboxModule(courier: self)
     
     // MARK: Authentication
     
