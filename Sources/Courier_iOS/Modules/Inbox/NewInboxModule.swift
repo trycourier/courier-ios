@@ -18,14 +18,14 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
     
     // MARK: Listeners
     
-    var inboxListeners: [CourierInboxListener] = []
+    var inboxListeners: [NewCourierInboxListener] = []
     
-    func addListener(_ listener: CourierInboxListener) {
+    func addListener(_ listener: NewCourierInboxListener) {
         self.inboxListeners.append(listener)
         self.courier.client?.log("Courier Inbox Listener Registered. Total Listeners: \(self.inboxListeners.count)")
     }
     
-    func removeListener(_ listener: CourierInboxListener) {
+    func removeListener(_ listener: NewCourierInboxListener) {
         self.inboxListeners.removeAll(where: { return $0 == listener })
         self.courier.client?.log("Courier Inbox Listener Unregistered. Total Listeners: \(self.inboxListeners.count)")
     }
@@ -40,22 +40,22 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         self.removeAllListeners()
     }
     
-    // MARK: Inbox DataStore Events
+    // MARK: DataStore Events
     
-    func onMessageAdded(_ message: InboxMessage, at index: Int, to feed: InboxMessageFeed) async {
+    func onDataSetUpdated(_ data: InboxMessageDataSet, for feed: InboxMessageFeed) async {
         let listeners = self.inboxListeners
         await MainActor.run {
             listeners.forEach { listener in
-                listener.onMessageAdded?(feed, index, message)
+                listener.onMessagesChanged?(data.messages, data.totalCount, data.canPaginate, feed)
             }
         }
     }
     
-    func onMessageRemoved(_ message: InboxMessage, at index: Int, to feed: InboxMessageFeed) async {
+    func onMessageEvent(_ message: InboxMessage, at index: Int, to feed: InboxMessageFeed, event: InboxMessageEvent) async {
         let listeners = self.inboxListeners
         await MainActor.run {
             listeners.forEach { listener in
-                listener.onMessageRemoved?(feed, index, message)
+                listener.onMessageEvent?(message, index, feed, event)
             }
         }
     }

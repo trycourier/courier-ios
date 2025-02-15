@@ -10,6 +10,15 @@ import Foundation
 import XCTest
 @testable import Courier_iOS
 
+extension InboxMessage {
+    
+    static func new() -> InboxMessage {
+        let id = UUID().uuidString
+        return InboxMessage(messageId: id)
+    }
+    
+}
+
 class InboxModuleUnitTests: XCTestCase {
     
     override func tearDown() async throws {
@@ -18,95 +27,248 @@ class InboxModuleUnitTests: XCTestCase {
     }
     
     func testListenerRegistration() async {
-        let listener = CourierInboxListener()
+        let listener = NewCourierInboxListener()
         await Courier.shared.newInboxModule.addListener(listener)
         let listeners = await Courier.shared.newInboxModule.inboxListeners
         XCTAssertEqual(listeners.count, 1, "Total count should increase by 1.")
     }
     
-    func testAddMessageToFeed() async {
+    func testReloadData() async {
         
-        let id = UUID().uuidString
+        // Set initial data
+        let initialMessage = InboxMessage.new()
+        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
-        // Arrange: Create a new message and get initial count
-        let newMessage = InboxMessage(messageId: id)
+        // Reload the data store
         let dataStore = await Courier.shared.newInboxModule.dataStore
+        await dataStore.updateDataSet(initialData, for: .feed)
+        let initialDataStoreMessageCount = await dataStore.feed.messages.count
+        XCTAssertEqual(initialDataStoreMessageCount, 1)
         
-        // Act: Add message to feed at index 0
+        // Reload with empty messages
+        let newData = InboxMessageDataSet(messages: [])
+        await dataStore.updateDataSet(newData, for: .feed)
+        let updatedDataStoreMessageCount = await dataStore.feed.messages.count
+        XCTAssertEqual(updatedDataStoreMessageCount, 0)
+        
+    }
+    
+    func testReadMessage() async {
+        
+        // Set initial data
+        let initialMessage = InboxMessage.new()
+        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
+        
+        // Reload the data store
+        let dataStore = await Courier.shared.newInboxModule.dataStore
+        await dataStore.updateDataSet(initialData, for: .feed)
+        await dataStore.updateUnreadCount(1)
+        let initialDataStoreMessage = await dataStore.feed.messages.first
+        XCTAssertEqual(initialDataStoreMessage?.messageId, initialMessage.messageId)
+        let initialUnreadCount = await dataStore.unreadCount
+        XCTAssertEqual(initialUnreadCount, 1)
+        
+        // Read the message
+        await dataStore.readMessage(initialMessage, from: .feed)
+        let updatedDataStoreMessage = await dataStore.feed.messages.first
+        XCTAssertEqual(updatedDataStoreMessage?.isRead, true)
+        let updatedUnreadCount = await dataStore.unreadCount
+        XCTAssertEqual(updatedUnreadCount, 0)
+        
+    }
+    
+    func testUnreadMessage() async {
+        
+        // Set initial data
+        let initialMessage = InboxMessage.new()
+        initialMessage.setRead()
+        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
+        
+        // Reload the data store
+        let dataStore = await Courier.shared.newInboxModule.dataStore
+        await dataStore.updateDataSet(initialData, for: .feed)
+        let initialDataStoreMessage = await dataStore.feed.messages.first
+        XCTAssertEqual(initialDataStoreMessage?.messageId, initialMessage.messageId)
+        
+        // Read the message
+        await dataStore.unreadMessage(initialMessage, from: .feed)
+        let updatedDataStoreMessage = await dataStore.feed.messages.first
+        XCTAssertEqual(updatedDataStoreMessage?.isRead, false)
+        
+    }
+    
+    func testAddMessage() async {
+        
+        // Set initial data
+        let initialData = InboxMessageDataSet()
+        
+        // Reload the data store
+        let dataStore = await Courier.shared.newInboxModule.dataStore
+        await dataStore.updateDataSet(initialData, for: .feed)
+        let initialDataStoreMessage = await dataStore.feed.messages
+        XCTAssertEqual(initialDataStoreMessage.isEmpty, true)
+        
+        // Add the message
+        let newMessage = InboxMessage.new()
         await dataStore.addMessage(newMessage, at: 0, to: .feed)
         
-        // Assert: Check if the message is in the feed
-        let storedMessage = await dataStore.feed.messages.first
-        let totalCount = await dataStore.feed.totalCount
-        let unreadCount = await dataStore.unreadCount
-        
-        XCTAssertEqual(totalCount, 1, "Total count should increase by 1 after adding a message.")
-        XCTAssertEqual(storedMessage?.messageId, id, "The first message in the feed should match the added message.")
-        XCTAssertEqual(unreadCount, 1, "Unread count should increase by 1 after adding a message to feed.")
+        let updatedDataStoreMessage = await dataStore.feed.messages.first
+        XCTAssertEqual(updatedDataStoreMessage?.messageId, newMessage.messageId)
+        let updatedUnreadCount = await dataStore.unreadCount
+        XCTAssertEqual(updatedUnreadCount, 1)
         
     }
     
-    func testAddMessageToFeed_OutOfBounds() async {
+    func testArchiveMessage() async {
         
-        let id = UUID().uuidString
+        // Set initial data
+        let initialMessage = InboxMessage.new()
+        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
-        // Arrange: Create a new message and get initial count
-        let newMessage = InboxMessage(messageId: id)
+        // Reload the data store
         let dataStore = await Courier.shared.newInboxModule.dataStore
+        await dataStore.updateDataSet(initialData, for: .feed)
+        await dataStore.updateUnreadCount(1)
+        let initialDataStoreMessageCount = await dataStore.feed.messages.count
+        XCTAssertEqual(initialDataStoreMessageCount, 1)
+        let initialUnreadCount = await dataStore.unreadCount
+        XCTAssertEqual(initialUnreadCount, 1)
+        let initialFeedTotalCount = await dataStore.feed.totalCount
+        XCTAssertEqual(initialFeedTotalCount, 1)
+        let initialArchiveTotalCount = await dataStore.archive.totalCount
+        XCTAssertEqual(initialArchiveTotalCount, 0)
         
-        // Act: Add message to feed at index 0
-        await dataStore.addMessage(newMessage, at: 999, to: .feed)
+        // Archive the message
+        await dataStore.archiveMessage(initialMessage, from: .feed)
         
-        // Assert: Check if the message is in the feed
-        let storedMessage = await dataStore.feed.messages.first
-        let count = await dataStore.feed.totalCount
-        let unreadCount = await dataStore.unreadCount
+        let updatedDataStoreMessageCount = await dataStore.feed.messages.count
+        XCTAssertEqual(updatedDataStoreMessageCount, 0)
+        let updatedUnreadCount = await dataStore.unreadCount
+        XCTAssertEqual(updatedUnreadCount, 0)
+        let archiveCount = await dataStore.archive.messages.count
+        XCTAssertEqual(archiveCount, 1)
+        let updatedFeedTotalCount = await dataStore.feed.totalCount
+        XCTAssertEqual(updatedFeedTotalCount, 0)
+        let updatedArchiveTotalCount = await dataStore.archive.totalCount
+        XCTAssertEqual(updatedArchiveTotalCount, 1)
         
-        XCTAssertEqual(count, 1, "Total count should increase by 1 after adding a message.")
-        XCTAssertEqual(storedMessage?.messageId, id, "The first message in the feed should match the added message.")
-        XCTAssertEqual(unreadCount, 1, "Unread count should increase by 1 after adding a message to feed.")
     }
     
-    func testAddMessageToArchive() async {
+    func testOpenMessage() async {
         
-        let id = UUID().uuidString
+        // Set initial data
+        let initialMessage = InboxMessage.new()
+        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
-        // Arrange: Create a new message and get initial count
-        let newMessage = InboxMessage(messageId: id)
+        // Reload the data store
         let dataStore = await Courier.shared.newInboxModule.dataStore
+        await dataStore.updateDataSet(initialData, for: .feed)
+        await dataStore.updateUnreadCount(1)
+        let initialDataStoreMessageCount = await dataStore.feed.messages.count
+        XCTAssertEqual(initialDataStoreMessageCount, 1)
+        let initialUnreadCount = await dataStore.unreadCount
+        XCTAssertEqual(initialUnreadCount, 1)
+        let initialFeedTotalCount = await dataStore.feed.totalCount
+        XCTAssertEqual(initialFeedTotalCount, 1)
+        let initialArchiveTotalCount = await dataStore.archive.totalCount
+        XCTAssertEqual(initialArchiveTotalCount, 0)
         
-        // Act: Add message to feed at index 0
-        await dataStore.addMessage(newMessage, at: 0, to: .archived)
+        // Archive the message
+        await dataStore.openMessage(initialMessage, from: .feed)
         
-        // Assert: Check if the message is in the feed
-        let storedMessage = await dataStore.archive.messages.first
-        let totalCount = await dataStore.archive.totalCount
-        let unreadCount = await dataStore.unreadCount
+        let updatedDataStoreMessageCount = await dataStore.feed.messages.count
+        XCTAssertEqual(updatedDataStoreMessageCount, 1)
+        let updatedUnreadCount = await dataStore.unreadCount
+        XCTAssertEqual(updatedUnreadCount, 1)
+        let updatedMessage = await dataStore.feed.messages.first
+        XCTAssertEqual(updatedMessage?.isOpened, true)
+        let updatedFeedTotalCount = await dataStore.feed.totalCount
+        XCTAssertEqual(updatedFeedTotalCount, 1)
+        let updatedArchiveTotalCount = await dataStore.archive.totalCount
+        XCTAssertEqual(updatedArchiveTotalCount, 0)
         
-        XCTAssertEqual(totalCount, 1, "Total count should increase by 1 after adding a message.")
-        XCTAssertEqual(storedMessage?.messageId, id, "The first message in the feed should match the added message.")
-        XCTAssertEqual(unreadCount, 0, "Unread count should be 0.")
     }
     
-    func testAddMessageToArchive_OutOfBounds() async {
+    func testConcurrentAddMessages() async {
+        let dataStore = await Courier.shared.newInboxModule.dataStore
+        await dataStore.updateDataSet(InboxMessageDataSet(), for: .feed)
+
+        // Concurrently add 20 messages
+        async let task1: () = Task {
+            for i in 0..<10 {
+                let message = InboxMessage(messageId: "msg_\(i)")
+                await dataStore.addMessage(message, at: 999, to: .feed)
+                print("Inserting message with: \(message.messageId)")
+            }
+        }.value
+
+        async let task2: () = Task {
+            for i in 10..<20 {
+                let message = InboxMessage(messageId: "msg_\(i)")
+                await dataStore.addMessage(message, at: 999, to: .feed)
+                print("Inserting message with: \(message.messageId)")
+            }
+        }.value
+
+        await task1
+        await task2
+
+        // Validate total message count
+        let totalMessages = await dataStore.feed.messages.count
+        XCTAssertEqual(totalMessages, 20, "Total messages should be 20 after concurrent inserts.")
+    }
+    
+    func testConcurrentReading() async {
         
-        let id = UUID().uuidString
-        
-        // Arrange: Create a new message and get initial count
-        let newMessage = InboxMessage(messageId: id)
         let dataStore = await Courier.shared.newInboxModule.dataStore
         
-        // Act: Add message to feed at index 0
-        await dataStore.addMessage(newMessage, at: 999, to: .archived)
+        func getMessage() -> InboxMessage {
+            let message = InboxMessage(messageId: UUID().uuidString)
+            message.setUnread()
+            return message
+        }
         
-        // Assert: Check if the message is in the feed
-        let storedMessage = await dataStore.archive.messages.first
-        let count = await dataStore.archive.totalCount
-        let unreadCount = await dataStore.unreadCount
+        let unreadCount = 3
+        let initialData = InboxMessageDataSet(messages: (0..<unreadCount).map { _ in getMessage() })
+        await dataStore.updateDataSet(initialData, for: .feed)
+        await dataStore.updateUnreadCount(unreadCount)
+
+        // Run concurrent read operations
+        let tasks = (0..<unreadCount).map { index in
+            Task {
+                
+                // Get the message
+                let message = await dataStore.feed.messages[index]
+                
+                // Random delay
+                let randomDelay = UInt64.random(in: 10_000_000...100_000_000)
+                try? await Task.sleep(nanoseconds: randomDelay)
+                
+                // Read the message
+                await dataStore.readMessage(message, from: .feed)
+                print("Message read \(message.messageId) at index: \(index)")
+                
+            }
+        }
+
+        // Await all tasks
+        for task in tasks {
+            await task.value
+        }
+
+        // Validate
+        let totalMessages = await dataStore.feed.messages.count
+        XCTAssertEqual(totalMessages, unreadCount)
         
-        XCTAssertEqual(count, 1, "Total count should increase by 1 after adding a message.")
-        XCTAssertEqual(storedMessage?.messageId, id, "The first message in the feed should match the added message.")
-        XCTAssertEqual(unreadCount, 0, "Unread count should be 0.")
+        let feedMessages = await dataStore.feed.messages
+        feedMessages.forEach { message in
+            XCTAssertEqual(message.isRead, true)
+        }
+        
+        let unreadFeedCount = await dataStore.unreadCount
+        XCTAssertEqual(unreadFeedCount, 0)
+        
     }
+
     
 }

@@ -19,17 +19,17 @@ internal class InboxDataStore {
     ///   - message: The message to be added
     ///   - index: The position in the array (if out of bounds, appends)
     ///   - feedType: Determines whether to add to `feed` or `archived`
-    internal func addMessage(_ message: InboxMessage, at index: Int, to feedType: InboxMessageFeed) async {
+    func addMessage(_ message: InboxMessage, at index: Int, to feedType: InboxMessageFeed) async {
         switch feedType {
         case .feed:
             
             // Add message to feed
             if index >= 0, index <= feed.messages.count {
                 feed.messages.insert(message, at: index)
-                await delegate?.onMessageAdded(message, at: index, to: feedType)
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .added)
             } else {
                 feed.messages.append(message)
-                await delegate?.onMessageAdded(message, at: 0, to: feedType)
+                await delegate?.onMessageEvent(message, at: 0, to: feedType, event: .added)
             }
             
             // Update Count
@@ -47,10 +47,10 @@ internal class InboxDataStore {
             // Add message to archive
             if index >= 0, index <= archive.messages.count {
                 archive.messages.insert(message, at: index)
-                await delegate?.onMessageAdded(message, at: index, to: feedType)
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .added)
             } else {
                 archive.messages.append(message)
-                await delegate?.onMessageAdded(message, at: index, to: feedType)
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .added)
             }
             
             // Update Count
@@ -59,15 +59,113 @@ internal class InboxDataStore {
             
         }
     }
+    
+    /// Reads a message at a specific index in the specified dataset
+    /// - Returns: `true` if successful, `false` if index is invalid
+    @discardableResult
+    func readMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
+        switch feedType {
+        case .feed:
+            
+            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+                return false
+            }
+            
+            let message = feed.messages[index]
+            
+            // Read the message
+            if !message.isRead {
+                
+                // Toggle read
+                message.setRead()
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .read)
+                
+                // Update unread count
+                unreadCount -= 1
+                await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
+                return true
+                
+            }
+            
+        case .archived:
+            
+            guard let index = archive.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+                return false
+            }
+            
+            let message = archive.messages[index]
+            
+            // Read the message
+            if !message.isRead {
+                message.setRead()
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .read)
+                return true
+            }
+            
+        }
+        
+        return false
+        
+    }
+    
+    /// Unreads a message at a specific index in the specified dataset
+    /// - Returns: `true` if successful, `false` if index is invalid
+    @discardableResult
+    func unreadMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
+        switch feedType {
+        case .feed:
+            
+            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+                return false
+            }
+            
+            let message = feed.messages[index]
+            
+            // Read the message
+            if message.isRead {
+                
+                // Toggle read
+                message.setUnread()
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .unread)
+                
+                // Update unread count
+                unreadCount += 1
+                await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
+                return true
+                
+            }
+            
+        case .archived:
+            
+            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+                return false
+            }
+            
+            let message = archive.messages[index]
+            
+            // Read the message
+            if message.isRead {
+                message.setUnread()
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .unread)
+                return true
+            }
+            
+        }
+        
+        return false
+        
+    }
 
     /// Archives a message at a specific index in the specified dataset
     /// - Returns: `true` if successful, `false` if index is invalid
     @discardableResult
-    internal func archiveMessage(at index: Int, from feedType: InboxMessageFeed) async -> Bool {
+    func archiveMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
         switch feedType {
         case .feed:
             
-            guard index >= 0, index < feed.messages.count else { return false }
+            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+                return false
+            }
             
             // Update the unread count
             if !feed.messages[index].isRead {
@@ -75,13 +173,27 @@ internal class InboxDataStore {
                 await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
             }
             
-            // Remove message
             let message = feed.messages[index]
-            feed.messages.remove(at: index)
-            await delegate?.onMessageRemoved(message, at: index, to: feedType)
             
+            // Remove message from feed
+            feed.messages.remove(at: index)
+            await delegate?.onMessageEvent(message, at: index, to: feedType, event: .archived)
+            
+            // Update feed total counts
             feed.totalCount -= 1
-            await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
+            await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: .feed)
+            
+            // Create copy
+            let newMessage = message.copy()
+            
+            // Add the item to the archive
+            let insertIndex = findInsertIndex(for: newMessage, in: archive.messages)
+            archive.messages.insert(newMessage, at: insertIndex)
+            await delegate?.onMessageEvent(newMessage, at: insertIndex, to: .archived, event: .added)
+            
+            // Update feed total counts
+            archive.totalCount += 1
+            await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: .archived)
             
             return true
             
@@ -90,29 +202,93 @@ internal class InboxDataStore {
         }
     }
     
+    /// Opens a message at a specific index in the specified dataset
+    /// - Returns: `true` if successful, `false` if index is invalid
+    @discardableResult
+    func openMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
+        switch feedType {
+        case .feed:
+            
+            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+                return false
+            }
+            
+            let message = feed.messages[index]
+            
+            // Read the message
+            if !message.isOpened {
+                message.setOpened()
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
+                return true
+            }
+            
+        case .archived:
+            
+            guard let index = archive.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+                return false
+            }
+            
+            let message = archive.messages[index]
+            
+            // Read the message
+            if !message.isOpened {
+                message.setOpened()
+                await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
+                return true
+            }
+            
+        }
+        
+        return false
+        
+    }
+    
+    /// Insert new messages
+    func updateDataSet(_ data: InboxMessageDataSet, for feedType: InboxMessageFeed) async {
+        switch feedType {
+        case .feed:
+            feed = data
+            await delegate?.onDataSetUpdated(feed, for: feedType)
+            await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
+        case .archived:
+            archive = data
+            await delegate?.onDataSetUpdated(feed, for: feedType)
+            await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
+        }
+    }
+    
+    /// Update unread count
+    func updateUnreadCount(_ count: Int) async {
+        unreadCount = count
+        await delegate?.onUnreadCountUpdated(unreadCount: count)
+    }
+    
     /// Removes and resets everything
-    internal func dispose() async {
+    func dispose() async {
         self.feed = InboxMessageDataSet()
         self.archive = InboxMessageDataSet()
         self.unreadCount = 0
         await delegate?.onDispose()
     }
     
-//
-//    /// Updates unread count
-//    internal func updateUnreadCount(_ count: Int) {
-//        self.unreadCount = count
-//    }
-//
-//    /// Moves a message from `feed` to `archived`
-//    /// - Returns: `true` if successful, `false` if the message was not found
-//    @discardableResult
-//    internal func archiveMessage(at index: Int) -> Bool {
-//        guard index >= 0, index < feed.messages.count else { return false }
-//        let message = feed.messages.remove(at: index)
-//        feed.totalCount -= 1
-//        archived.messages.append(message)
-//        archived.totalCount += 1
-//        return true
-//    }
+    private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {
+        
+        var allMessages = messages
+        
+        // Add the new message to the array
+        allMessages.append(newMessage)
+
+        // Sort the messages by createdAt (descending order)
+        allMessages.sort { $0.timestamp > $1.timestamp }
+
+        // Find the index of the newly inserted message
+        if let index = allMessages.firstIndex(where: { $0.messageId == newMessage.messageId }) {
+            return max(index - 1, 0)
+        }
+
+        // Fallback
+        return 0
+        
+    }
+    
 }
