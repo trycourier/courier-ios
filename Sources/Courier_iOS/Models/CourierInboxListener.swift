@@ -92,19 +92,22 @@ extension CourierInboxListener {
     let onLoading: ((_ isRefresh: Bool) -> Void)?
     let onError: ((_ error: Error) -> Void)?
     let onUnreadCountChanged: ((_ unreadCount: Int) -> Void)?
-    let onMessagesChanged: ((_ message: [InboxMessage], _ totalCount: Int, _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)?
+    let onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)?
+    let onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)?
     let onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)?
     
     public init(
         onLoading: ((_ isRefresh: Bool) -> Void)? = nil,
         onError: ((_ error: Error) -> Void)? = nil,
-        onUnreadCountChanged: ((_ count: Int) -> Void)? = nil,
-        onMessagesChanged: ((_ message: [InboxMessage], _ totalCount: Int, _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onUnreadCountChanged: ((_ unreadCount: Int) -> Void)? = nil,
+        onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
         onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
     ) {
         self.onLoading = onLoading
         self.onError = onError
         self.onUnreadCountChanged = onUnreadCountChanged
+        self.onTotalCountChanged = onTotalCountChanged
         self.onMessagesChanged = onMessagesChanged
         self.onMessageEvent = onMessageEvent
     }

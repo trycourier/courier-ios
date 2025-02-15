@@ -248,11 +248,11 @@ internal class InboxDataStore {
         switch feedType {
         case .feed:
             feed = data
-            await delegate?.onDataSetUpdated(feed, for: feedType)
+            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
         case .archived:
             archive = data
-            await delegate?.onDataSetUpdated(feed, for: feedType)
+            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
         }
     }
@@ -265,10 +265,9 @@ internal class InboxDataStore {
     
     /// Removes and resets everything
     func dispose() async {
-        self.feed = InboxMessageDataSet()
-        self.archive = InboxMessageDataSet()
-        self.unreadCount = 0
-        await delegate?.onDispose()
+        await updateDataSet(InboxMessageDataSet(), for: .feed)
+        await updateDataSet(InboxMessageDataSet(), for: .archived)
+        await updateUnreadCount(0)
     }
     
     private func findInsertIndex(for newMessage: InboxMessage, in messages: [InboxMessage]) -> Int {

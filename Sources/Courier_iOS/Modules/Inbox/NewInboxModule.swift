@@ -42,11 +42,11 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
     
     // MARK: DataStore Events
     
-    func onDataSetUpdated(_ data: InboxMessageDataSet, for feed: InboxMessageFeed) async {
+    func onMessagesChanged(_ messages: [InboxMessage], _ canPaginate: Bool, for feed: InboxMessageFeed) async {
         let listeners = self.inboxListeners
         await MainActor.run {
             listeners.forEach { listener in
-                listener.onMessagesChanged?(data.messages, data.totalCount, data.canPaginate, feed)
+                listener.onMessagesChanged?(messages, canPaginate, feed)
             }
         }
     }
@@ -61,7 +61,12 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
     }
     
     func onTotalCountUpdated(totalCount: Int, to feed: InboxMessageFeed) async {
-        // TODO: Finish
+        let listeners = self.inboxListeners
+        await MainActor.run {
+            listeners.forEach { listener in
+                listener.onTotalCountChanged?(totalCount, feed)
+            }
+        }
     }
     
     func onUnreadCountUpdated(unreadCount: Int) async {
@@ -71,10 +76,6 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
                 listener.onUnreadCountChanged?(unreadCount)
             }
         }
-    }
-    
-    func onDispose() async {
-        // TODO: Finish
     }
     
 }
