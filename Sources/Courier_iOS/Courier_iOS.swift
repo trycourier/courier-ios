@@ -42,19 +42,17 @@ import UIKit
      */
     public internal(set) var client: CourierClient? = nil
     
-    /**
-     Inbox data handler
-     */
+    // MARK: Modules
+    
     @CourierActor
-    internal lazy var newInboxModule: NewInboxModule = NewInboxModule(courier: self)
+    internal lazy var newInboxModule = NewInboxModule(courier: self)
+    
+    @CourierActor
+    internal lazy var tokenModule = TokenModule(courier: self)
     
     // MARK: Authentication
     
     public internal(set) var authListeners: [CourierAuthenticationListener] = []
-    
-    // MARK: Tokens
-    
-    internal let tokenModule = TokenModule()
     
     // MARK: Inbox
     internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue

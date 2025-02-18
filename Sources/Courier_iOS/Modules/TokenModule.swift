@@ -7,7 +7,13 @@
 
 import UIKit
 
-internal actor TokenModule {
+@CourierActor internal class TokenModule {
+    
+    let courier: Courier
+    
+    init(courier: Courier) {
+        self.courier = courier
+    }
     
     /**
      * The token issued by Apple on this device
@@ -49,6 +55,11 @@ internal actor TokenModule {
         
     }
     
+    func dispose() {
+        self.apnsToken = nil
+        self.tokens = [:]
+    }
+    
 }
 
 extension Courier {
@@ -76,15 +87,15 @@ extension Courier {
     
     /// Returns the current APNS token
     public var apnsToken: Data? {
-        get async {
-            await tokenModule.apnsToken
+        get {
+            return tokenModule.apnsToken
         }
     }
     
     /// Returns all cached tokens
     public var tokens: [String: String] {
-        get async {
-            await tokenModule.tokens
+        get {
+            return tokenModule.tokens
         }
     }
     
@@ -117,10 +128,7 @@ extension Courier {
     }
     
     internal func putPushTokens() async {
-        
-        let tokens = await tokenModule.tokens
-        
-        for (provider, token) in tokens {
+        for (provider, token) in tokenModule.tokens {
             do {
                 try await putToken(provider: provider, token: token)
             } catch {
@@ -128,7 +136,6 @@ extension Courier {
                 client?.log(e.message)
             }
         }
-        
     }
     
     internal func deletePushTokens() async {

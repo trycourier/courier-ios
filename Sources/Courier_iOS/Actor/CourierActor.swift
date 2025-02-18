@@ -14,10 +14,8 @@ import Foundation
     public static let shared = CourierExecutor()
 }
 
-public actor CourierExecutor { }
-
-extension CourierExecutor: SerialExecutor {
-
+public actor CourierExecutor: SerialExecutor {
+    
     nonisolated static let queue = DispatchQueue(label: "com.courier.swift")
 
     nonisolated public func enqueue(_ job: UnownedJob) {

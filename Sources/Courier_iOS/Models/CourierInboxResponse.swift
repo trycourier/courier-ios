@@ -24,6 +24,15 @@ internal extension InboxResponse {
         )
     }
     
+    func toInboxMessageDataSet() -> InboxMessageDataSet {
+        return InboxMessageDataSet(
+            messages: data?.messages?.nodes ?? [],
+            totalCount: data?.count ?? 0,
+            canPaginate: data?.messages?.pageInfo?.hasNextPage ?? false,
+            paginationCursor: data?.messages?.pageInfo?.startCursor
+        )
+    }
+    
 }
 
 public struct InboxData: Codable {

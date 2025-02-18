@@ -242,6 +242,21 @@ internal class InboxDataStore {
         return false
         
     }
+
+    /// Reads all the messages
+    @discardableResult
+    func readAllMessages() async -> Bool {
+        
+        // Read all messages
+        feed.messages.forEach { $0.setRead() }
+        archive.messages.forEach { $0.setRead() }
+        
+        // Update unread count
+        unreadCount = 0
+        await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
+        
+        return true
+    }
     
     /// Insert new messages
     func updateDataSet(_ data: InboxMessageDataSet, for feedType: InboxMessageFeed) async {

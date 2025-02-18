@@ -14,7 +14,7 @@ class TokenTests: XCTestCase {
     
     private let token = TokenTests.generateAPNSToken()
     
-    private static func generateAPNSToken() -> Data {
+    static func generateAPNSToken() -> Data {
         var tokenData = Data(count: 32)
         _ = tokenData.withUnsafeMutableBytes { bytes in
             SecRandomCopyBytes(kSecRandomDefault, 32, bytes.baseAddress!)
