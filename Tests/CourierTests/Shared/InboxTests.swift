@@ -59,7 +59,7 @@ class InboxTests: XCTestCase {
             let lock = NSLock()
             var didFinish = false
             
-            func finish(_ result: Result<InboxMessage, Error>, remove listener: NewCourierInboxListener) {
+            func finish(_ result: Result<InboxMessage, Error>, remove listener: CourierInboxListener) {
                 lock.lock()
                 defer { lock.unlock() }
                 guard !didFinish else { return }
@@ -83,7 +83,7 @@ class InboxTests: XCTestCase {
                 do {
                     
                     var messageId: String? = nil
-                    var listener: NewCourierInboxListener? = nil
+                    var listener: CourierInboxListener? = nil
                     
                     // 1. Add the listener and capture both it + messageId safely.
                     listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in

@@ -35,7 +35,7 @@ class ThreadingTests: XCTestCase {
         try await UserBuilder.authenticate()
         log("Authenticated user successfully")
         
-        var listeners: [NewCourierInboxListener] = []
+        var listeners: [CourierInboxListener] = []
         let listenersLock = NSLock()
         
         // 1) Add 100 listeners in parallel
@@ -61,7 +61,7 @@ class ThreadingTests: XCTestCase {
         // 2) Remove all listeners in parallel
         try await withThrowingTaskGroup(of: Void.self) { group in
             // Safely copy and clear the array under the lock
-            let currentListeners: [NewCourierInboxListener] = listenersLock.withLock { () -> [NewCourierInboxListener] in
+            let currentListeners: [CourierInboxListener] = listenersLock.withLock { () -> [CourierInboxListener] in
                 defer {
                     self.log("Clearing out listeners array under lock")
                     listeners.removeAll()

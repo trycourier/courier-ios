@@ -1,5 +1,5 @@
 //
-//  NewInboxModule.swift
+//  InboxModule.swift
 //  Courier_iOS
 //
 //  Created by Michael Miller on 2/14/25.
@@ -8,7 +8,7 @@
 import Foundation
 
 @CourierActor
-internal class NewInboxModule: InboxDataStoreEventDelegate {
+internal class InboxModule: InboxDataStoreEventDelegate {
     
     enum Pagination: Int {
         case `default` = 32
@@ -207,14 +207,14 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
     
     // MARK: Listeners
     
-    var inboxListeners: [NewCourierInboxListener] = []
+    var inboxListeners: [CourierInboxListener] = []
     
-    func addListener(_ listener: NewCourierInboxListener) {
+    func addListener(_ listener: CourierInboxListener) {
         self.inboxListeners.append(listener)
         self.courier.client?.log("Courier Inbox Listener Registered. Total Listeners: \(self.inboxListeners.count)")
     }
     
-    func removeListener(_ listener: NewCourierInboxListener) {
+    func removeListener(_ listener: CourierInboxListener) {
         self.inboxListeners.removeAll(where: { return $0 == listener })
         self.courier.client?.log("Courier Inbox Listener Unregistered. Total Listeners: \(self.inboxListeners.count)")
     }
@@ -318,8 +318,8 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
     }
     
     @objc public func setPaginationLimit(_ limit: Int) {
-        let min = min(InboxRepository.Pagination.max.rawValue, limit)
-        self.inboxModule.paginationLimit = max(InboxRepository.Pagination.min.rawValue, min)
+        let min = min(InboxModule.Pagination.max.rawValue, limit)
+        self.inboxModule.paginationLimit = max(InboxModule.Pagination.min.rawValue, min)
     }
     
     // MARK: Getters
@@ -368,9 +368,9 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
         onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
         onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
-    ) async -> NewCourierInboxListener {
+    ) async -> CourierInboxListener {
         
-        let listener = NewCourierInboxListener(
+        let listener = CourierInboxListener(
             onLoading: onLoading,
             onError: onError,
             onUnreadCountChanged: onUnreadCountChanged,
@@ -408,7 +408,7 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         
     }
     
-    public func removeInboxListener(_ listener: NewCourierInboxListener) async {
+    public func removeInboxListener(_ listener: CourierInboxListener) async {
         
         inboxModule.removeListener(listener)
         

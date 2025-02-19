@@ -45,7 +45,7 @@ import UIKit
     // MARK: Modules
     
     @CourierActor
-    internal lazy var inboxModule = NewInboxModule(courier: self)
+    internal lazy var inboxModule = InboxModule(courier: self)
     
     @CourierActor
     internal lazy var tokenModule = TokenModule(courier: self)

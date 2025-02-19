@@ -102,7 +102,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     // MARK: Listeners
     
-    private var inboxListener: NewCourierInboxListener? = nil
+    private var inboxListener: CourierInboxListener? = nil
     
     // MARK: Datasource
     

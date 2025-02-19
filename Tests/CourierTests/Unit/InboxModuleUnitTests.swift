@@ -26,7 +26,7 @@ class InboxModuleUnitTests: XCTestCase {
     }
     
     func testListenerRegistration() async {
-        let listener = NewCourierInboxListener()
+        let listener = CourierInboxListener()
         await Courier.shared.inboxModule.addListener(listener)
         let listeners = await Courier.shared.inboxModule.inboxListeners
         XCTAssertEqual(listeners.count, 1, "Total count should increase by 1.")
