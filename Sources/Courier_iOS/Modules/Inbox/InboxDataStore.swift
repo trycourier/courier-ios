@@ -25,6 +25,39 @@ internal class InboxDataStore {
         await updateDataSet(snapshot.archive, for: .archived)
         await updateUnreadCount(snapshot.unreadCount)
     }
+    
+    /// Returns a message by id
+    func getMessageIndexById(feedType: InboxMessageFeed, messageId: String) -> Int? {
+        
+        switch feedType {
+        case .feed:
+            guard let index = feed.messages.firstIndex(where: { $0.messageId == messageId }) else {
+                return nil
+            }
+            return index
+        case .archived:
+            guard let index = archive.messages.firstIndex(where: { $0.messageId == messageId }) else {
+                return nil
+            }
+            return index
+        }
+        
+    }
+    
+    func getMessageById(feedType: InboxMessageFeed, messageId: String) -> InboxMessage? {
+        
+        guard let index = getMessageIndexById(feedType: feedType, messageId: messageId) else {
+            return nil
+        }
+        
+        switch feedType {
+        case .feed:
+            return feed.messages[index]
+        case .archived:
+            return archive.messages[index]
+        }
+        
+    }
 
     /// Adds a message to either `feed` or `archived`
     /// - Parameters:
@@ -86,7 +119,7 @@ internal class InboxDataStore {
         switch feedType {
         case .feed:
             
-            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
             }
             
@@ -108,8 +141,8 @@ internal class InboxDataStore {
             
         case .archived:
             
-            guard let index = archive.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
-                return false
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
+                return canUpdate
             }
             
             let message = archive.messages[index]
@@ -148,7 +181,7 @@ internal class InboxDataStore {
         switch feedType {
         case .feed:
             
-            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
             }
             
@@ -170,7 +203,7 @@ internal class InboxDataStore {
             
         case .archived:
             
-            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
             }
             
@@ -209,7 +242,7 @@ internal class InboxDataStore {
         switch feedType {
         case .feed:
             
-            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
             }
             
@@ -230,6 +263,7 @@ internal class InboxDataStore {
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: .feed)
             
             // Create copy
+            message.setArchived()
             let newMessage = message.copy()
             
             // Add the item to the archive
@@ -272,7 +306,7 @@ internal class InboxDataStore {
         switch feedType {
         case .feed:
             
-            guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
             }
             
@@ -287,7 +321,7 @@ internal class InboxDataStore {
             
         case .archived:
             
-            guard let index = archive.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
             }
             

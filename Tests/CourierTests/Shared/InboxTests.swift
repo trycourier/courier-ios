@@ -306,12 +306,27 @@ class InboxTests: XCTestCase {
         try await UserBuilder.authenticate()
         
         let message = try await getVerifiedInboxMessage()
+        
+        let dataStore = await Courier.shared.inboxModule.dataStore
 
         try await message.markAsOpened()
+        let messageState1 = await dataStore.getMessageById(feedType: .feed, messageId: message.messageId)
+        XCTAssertEqual(messageState1?.isOpened, true)
+        
         try await message.markAsUnread()
+        let messageState2 = await dataStore.getMessageById(feedType: .feed, messageId: message.messageId)
+        XCTAssertEqual(messageState2?.isRead, false)
+        
         try await message.markAsRead()
+        let messageState3 = await dataStore.getMessageById(feedType: .feed, messageId: message.messageId)
+        XCTAssertEqual(messageState3?.isRead, true)
+        
         try await message.markAsClicked()
+        // Cant test this :/
+
         try await message.markAsArchived()
+        let messageState4 = await dataStore.getMessageById(feedType: .archived, messageId: message.messageId)
+        XCTAssertEqual(messageState4?.isArchived, true)
 
     }
     

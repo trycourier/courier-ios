@@ -182,7 +182,7 @@ public class InboxMessage: Codable {
     
 }
 
-extension InboxMessage {
+@CourierActor extension InboxMessage {
     
     public func markAsRead() async throws {
         try await Courier.shared.readMessage(messageId)
@@ -197,7 +197,7 @@ extension InboxMessage {
                 }
             } catch {
                 let e = CourierError(from: error)
-                await Courier.shared.client?.log(e.message)
+                Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -218,7 +218,7 @@ extension InboxMessage {
                 }
             } catch {
                 let e = CourierError(from: error)
-                await Courier.shared.client?.log(e.message)
+                Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -239,7 +239,7 @@ extension InboxMessage {
                 }
             } catch {
                 let e = CourierError(from: error)
-                await Courier.shared.client?.log(e.message)
+                Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -260,7 +260,7 @@ extension InboxMessage {
                 }
             } catch {
                 let e = CourierError(from: error)
-                await Courier.shared.client?.log(e.message)
+                Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -281,7 +281,7 @@ extension InboxMessage {
                 }
             } catch {
                 let e = CourierError(from: error)
-                await Courier.shared.client?.log(e.message)
+                Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }

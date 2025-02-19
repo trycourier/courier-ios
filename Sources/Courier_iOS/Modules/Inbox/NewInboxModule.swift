@@ -474,7 +474,6 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         
         let message = InboxMessage(messageId: messageId)
         await inboxModule.dataStore.archiveMessage(message, from: .feed, client: client)
-        await inboxModule.dataStore.archiveMessage(message, from: .archived, client: client)
 
     }
     
