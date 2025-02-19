@@ -658,7 +658,7 @@
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
 				kind = revision;
-				revision = 51245f00d1321569e69d273edc5de2f746c94f89;
+				revision = 8347bc1ceee1a295a934d4f2c56650b9cdf47408;
 			};
 		};
 		27D8F1B02AE885DB00E54210 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {

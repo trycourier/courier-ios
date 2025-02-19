@@ -118,7 +118,7 @@ extension CourierInboxListener {
     internal func onLoad(_ snapshot: (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int)) {
         if !self.isInitialized { return }
         self.onMessagesChanged?(snapshot.feed.messages, snapshot.feed.canPaginate, .feed)
-        self.onMessagesChanged?(snapshot.archive.messages, snapshot.archive.canPaginate, .feed)
+        self.onMessagesChanged?(snapshot.archive.messages, snapshot.archive.canPaginate, .archive)
         self.onUnreadCountChanged?(snapshot.unreadCount)
     }
     
