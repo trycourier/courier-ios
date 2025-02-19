@@ -32,11 +32,37 @@ import Foundation
     
 }
 
+// MARK: Socket state. Prevents data races
+
+internal actor InboxSocketState {
+    
+    private var receivedMessage: ((InboxMessage) -> Void)?
+    private var receivedMessageEvent: ((InboxSocket.MessageEvent) -> Void)?
+
+    func setReceivedMessage(_ handler: ((InboxMessage) -> Void)?) {
+        self.receivedMessage = handler
+    }
+
+    func setReceivedMessageEvent(_ handler: ((InboxSocket.MessageEvent) -> Void)?) {
+        self.receivedMessageEvent = handler
+    }
+
+    func callReceivedMessage(_ message: InboxMessage) {
+        receivedMessage?(message)
+    }
+
+    func callReceivedMessageEvent(_ event: InboxSocket.MessageEvent) {
+        receivedMessageEvent?(event)
+    }
+}
+
+
 // MARK: Inbox Socket
 
 public class InboxSocket: CourierSocket {
     
     private let options: CourierClient.Options
+    private let state = InboxSocketState()
     
     enum PayloadType: String, Codable {
         case event = "event"
@@ -70,8 +96,8 @@ public class InboxSocket: CourierSocket {
     }
     
     public func connect(receivedMessage: ((InboxMessage) -> Void)? = nil, receivedMessageEvent: ((MessageEvent) -> Void)? = nil) async throws {
-        self.receivedMessage = receivedMessage
-        self.receivedMessageEvent = receivedMessageEvent
+        await state.setReceivedMessage(receivedMessage)
+        await state.setReceivedMessageEvent(receivedMessageEvent)
         try await super.connect()
     }
     
@@ -110,29 +136,23 @@ public class InboxSocket: CourierSocket {
     }
     
     private func convertToType(from data: String) {
-        
         do {
-            
             let decoder = JSONDecoder()
             let json = data.data(using: .utf8) ?? Data()
             let payload = try decoder.decode(SocketPayload.self, from: json)
-            
-            switch (payload.type) {
+
+            switch payload.type {
             case .event:
                 let event = try decoder.decode(MessageEvent.self, from: json)
-                receivedMessageEvent?(event)
+                Task { await state.callReceivedMessageEvent(event) } // Read safely via actor
             case .message:
                 let message = try decoder.decode(InboxMessage.self, from: json)
-                receivedMessage?(message)
+                Task { await state.callReceivedMessage(message) } // Read safely via actor
             }
-            
         } catch {
-            
             options.error(error.localizedDescription)
             self.onError?(error)
-            
         }
-        
     }
     
     private static func buildUrl(clientKey: String?, jwt: String?) -> String {

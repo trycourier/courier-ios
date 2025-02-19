@@ -40,6 +40,7 @@ import UIKit
     /**
      Low level API client
      */
+    @CourierActor
     public internal(set) var client: CourierClient? = nil
     
     // MARK: Modules
@@ -50,9 +51,8 @@ import UIKit
     @CourierActor
     internal lazy var tokenModule = TokenModule(courier: self)
     
-    // MARK: Authentication
-    
-    public internal(set) var authListeners: [CourierAuthenticationListener] = []
+    @CourierActor
+    internal lazy var authenticationModule = AuthenticationModule(courier: self)
     
     // MARK: Proxy
     private var notificationProxy: CourierNotificationProxy?

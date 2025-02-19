@@ -22,7 +22,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
         return label
     }()
     
-    private var inboxListener: NewCourierInboxListener? = nil
+    private var inboxListener: CourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     

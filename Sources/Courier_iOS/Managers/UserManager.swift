@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal class UserManager {
+@CourierActor internal class UserManager {
     
     private let credentialsKey = "courier_credentials"
     private let userIdKey = "courier_user_id"
