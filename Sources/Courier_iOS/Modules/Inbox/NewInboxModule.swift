@@ -198,6 +198,13 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         
     }
     
+    // Clears out the current user data and returns an error
+    func kill() async {
+        await self.dataStore.dispose()
+        await dataService.stop()
+        await self.dataStore.delegate?.onError(CourierError.userNotFound)
+    }
+    
     // MARK: Listeners
     
     var inboxListeners: [NewCourierInboxListener] = []
@@ -219,8 +226,8 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
     }
     
     func dispose() async {
-        await self.dataStore.dispose()
         await self.removeAllListeners()
+        await kill()
     }
     
     // MARK: DataStore Events
@@ -343,7 +350,7 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
     }
     
     func closeInbox() async {
-        await inboxModule.dataService.stop()
+        await inboxModule.kill()
     }
     
     @discardableResult
