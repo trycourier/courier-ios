@@ -13,6 +13,18 @@ internal class InboxDataStore {
     internal(set) public var feed: InboxMessageDataSet = InboxMessageDataSet()
     internal(set) public var archive: InboxMessageDataSet = InboxMessageDataSet()
     internal(set) public var unreadCount: Int = 0
+    
+    /// Creates an  identical copy of the data
+    func getSnapshot() -> (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int) {
+        return (feed, archive, unreadCount)
+    }
+    
+    /// Reloads the data store from a snapshot
+    func reloadSnapshot(_ snapshot: (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int)) async {
+        await updateDataSet(snapshot.feed, for: .feed)
+        await updateDataSet(snapshot.archive, for: .archived)
+        await updateUnreadCount(snapshot.unreadCount)
+    }
 
     /// Adds a message to either `feed` or `archived`
     /// - Parameters:
@@ -63,12 +75,19 @@ internal class InboxDataStore {
     /// Reads a message at a specific index in the specified dataset
     /// - Returns: `true` if successful, `false` if index is invalid
     @discardableResult
-    func readMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
+    func readMessage(_ message: InboxMessage, from feedType: InboxMessageFeed, client: CourierClient?) async -> Bool {
+        
+        // Create a copy of the state
+        let snapshot = getSnapshot()
+        
+        // Value for handling server updates
+        var canUpdate = false
+        
         switch feedType {
         case .feed:
             
             guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
-                return false
+                return canUpdate
             }
             
             let message = feed.messages[index]
@@ -83,7 +102,7 @@ internal class InboxDataStore {
                 // Update unread count
                 unreadCount -= 1
                 await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
-                return true
+                canUpdate = true
                 
             }
             
@@ -99,24 +118,38 @@ internal class InboxDataStore {
             if !message.isRead {
                 message.setRead()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .read)
-                return true
+                canUpdate = true
             }
             
         }
         
-        return false
+        // Perform server update
+        if canUpdate {
+            do {
+                try await client?.inbox.read(messageId: message.messageId)
+            } catch {
+                client?.log(error.localizedDescription)
+                await reloadSnapshot(snapshot)
+            }
+        }
+        
+        return canUpdate
         
     }
     
     /// Unreads a message at a specific index in the specified dataset
     /// - Returns: `true` if successful, `false` if index is invalid
     @discardableResult
-    func unreadMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
+    func unreadMessage(_ message: InboxMessage, from feedType: InboxMessageFeed, client: CourierClient?) async -> Bool {
+        
+        let snapshot = getSnapshot()
+        var canUpdate = false
+        
         switch feedType {
         case .feed:
             
             guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
-                return false
+                return canUpdate
             }
             
             let message = feed.messages[index]
@@ -131,14 +164,14 @@ internal class InboxDataStore {
                 // Update unread count
                 unreadCount += 1
                 await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
-                return true
+                canUpdate = true
                 
             }
             
         case .archived:
             
             guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
-                return false
+                return canUpdate
             }
             
             let message = archive.messages[index]
@@ -147,24 +180,37 @@ internal class InboxDataStore {
             if message.isRead {
                 message.setUnread()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .unread)
-                return true
+                canUpdate = true
             }
             
         }
         
-        return false
+        if canUpdate {
+            do {
+                try await client?.inbox.unread(messageId: message.messageId)
+            } catch {
+                client?.log(error.localizedDescription)
+                await reloadSnapshot(snapshot)
+            }
+        }
+        
+        return canUpdate
         
     }
 
     /// Archives a message at a specific index in the specified dataset
     /// - Returns: `true` if successful, `false` if index is invalid
     @discardableResult
-    func archiveMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
+    func archiveMessage(_ message: InboxMessage, from feedType: InboxMessageFeed, client: CourierClient?) async -> Bool {
+        
+        let snapshot = getSnapshot()
+        var canUpdate = false
+        
         switch feedType {
         case .feed:
             
             guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
-                return false
+                return canUpdate
             }
             
             // Update the unread count
@@ -195,22 +241,39 @@ internal class InboxDataStore {
             archive.totalCount += 1
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: .archived)
             
-            return true
+            canUpdate = true
             
         case .archived:
-            return false
+            return canUpdate
         }
+        
+        if canUpdate {
+            do {
+                try await client?.inbox.archive(messageId: message.messageId)
+            } catch {
+                client?.log(error.localizedDescription)
+                await reloadSnapshot(snapshot)
+            }
+        }
+        
+        return canUpdate
+        
     }
     
     /// Opens a message at a specific index in the specified dataset
     /// - Returns: `true` if successful, `false` if index is invalid
     @discardableResult
-    func openMessage(_ message: InboxMessage, from feedType: InboxMessageFeed) async -> Bool {
+    func openMessage(_ message: InboxMessage, from feedType: InboxMessageFeed, client: CourierClient?) async -> Bool {
+        
+        let snapshot = getSnapshot()
+        
+        var canUpdate = false
+        
         switch feedType {
         case .feed:
             
             guard let index = feed.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
-                return false
+                return canUpdate
             }
             
             let message = feed.messages[index]
@@ -219,13 +282,13 @@ internal class InboxDataStore {
             if !message.isOpened {
                 message.setOpened()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
-                return true
+                canUpdate = true
             }
             
         case .archived:
             
             guard let index = archive.messages.firstIndex(where: { $0.messageId == message.messageId }) else {
-                return false
+                return canUpdate
             }
             
             let message = archive.messages[index]
@@ -234,28 +297,78 @@ internal class InboxDataStore {
             if !message.isOpened {
                 message.setOpened()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
-                return true
+                canUpdate = true
             }
             
         }
         
-        return false
+        if canUpdate {
+            do {
+                try await client?.inbox.open(messageId: message.messageId)
+            } catch {
+                client?.log(error.localizedDescription)
+                await reloadSnapshot(snapshot)
+            }
+        }
+        
+        return canUpdate
         
     }
 
     /// Reads all the messages
     @discardableResult
-    func readAllMessages() async -> Bool {
+    func readAllMessages(client: CourierClient?) async -> Bool {
+        
+        let snapshot = getSnapshot()
         
         // Read all messages
-        feed.messages.forEach { $0.setRead() }
-        archive.messages.forEach { $0.setRead() }
+        for (index, message) in feed.messages.enumerated() {
+            if !message.isRead {
+                message.setRead()
+                await delegate?.onMessageEvent(message, at: index, to: .feed, event: .read)
+            }
+        }
+        
+        for (index, message) in archive.messages.enumerated() {
+            if !message.isRead {
+                message.setRead()
+                await delegate?.onMessageEvent(message, at: index, to: .archived, event: .read)
+            }
+        }
         
         // Update unread count
         unreadCount = 0
         await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
         
+        do {
+            try await client?.inbox.readAll()
+        } catch {
+            client?.log(error.localizedDescription)
+            await reloadSnapshot(snapshot)
+        }
+        
         return true
+        
+    }
+    
+    /// Add page of messages
+    func addPage(_ page: InboxMessageDataSet, for feedType: InboxMessageFeed) async {
+        switch feedType {
+        case .feed:
+            feed.totalCount = page.totalCount
+            feed.canPaginate = page.canPaginate
+            feed.paginationCursor = page.paginationCursor
+            feed.messages.append(contentsOf: page.messages)
+            await delegate?.onPageAdded(feed.messages, feed.canPaginate, for: feedType)
+            await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
+        case .archived:
+            archive.totalCount = page.totalCount
+            archive.canPaginate = page.canPaginate
+            archive.paginationCursor = page.paginationCursor
+            archive.messages.append(contentsOf: page.messages)
+            await delegate?.onPageAdded(archive.messages, archive.canPaginate, for: feedType)
+            await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
+        }
     }
     
     /// Insert new messages

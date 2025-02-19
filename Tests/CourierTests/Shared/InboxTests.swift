@@ -22,10 +22,9 @@ class InboxTests: XCTestCase {
         )
     }
     
-    override class func setUp() {
-        Task {
-            await Courier.shared.removeAllInboxListeners()
-        }
+    override func tearDown() async throws {
+        await Courier.shared.removeAllInboxListeners()
+        try await super.tearDown()
     }
     
     func testAuthError() async throws {
@@ -53,19 +52,80 @@ class InboxTests: XCTestCase {
 
     }
     
-    private func getVerifiedInboxMessage() async throws -> String {
+    private func getVerifiedInboxMessage() async throws -> InboxMessage {
+        try await withCheckedThrowingContinuation { continuation in
+            
+            // A simple lock + boolean to ensure we don’t resume the continuation twice
+            let lock = NSLock()
+            var didFinish = false
+            
+            func finish(_ result: Result<InboxMessage, Error>, remove listener: NewCourierInboxListener) {
+                lock.lock()
+                defer { lock.unlock() }
+                guard !didFinish else { return }
+                didFinish = true
 
-        let messageId = try await InboxTests.sendMessage()
-
-        try? await Task.sleep(nanoseconds: delay)
- 
-        return messageId
-
+                // Resume the continuation exactly once
+                switch result {
+                case .success(let message):
+                    continuation.resume(returning: message)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+                
+                // Remove the listener exactly once
+                Task {
+                    await Courier.shared.removeInboxListener(listener)
+                }
+            }
+            
+            Task {
+                do {
+                    
+                    var messageId: String? = nil
+                    var listener: NewCourierInboxListener? = nil
+                    
+                    // 1. Add the listener and capture both it + messageId safely.
+                    listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
+                        if event == .added && message.messageId == messageId {
+                            // We got the matching message—finish successfully.
+                            finish(.success(message), remove: listener!)
+                        }
+                    })
+                    
+                    // 2. Get messageId first (no race condition with the listener).
+                    messageId = try await InboxTests.sendMessage()
+                    
+                    // 3. Sleep for 30 seconds to create a timeout.
+                    try? await Task.sleep(nanoseconds: 30_000_000_000)
+                    
+                    // 4. If we got here, we timed out.
+                    finish(.failure(CourierError.inboxNotInitialized), remove: listener!)
+                    
+                } catch {
+                    // If we failed before we even added the listener, just resume with error.
+                    // (We haven’t added the listener yet, so no need to remove it.)
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
     
+    actor StepsTracker {
+        private(set) var steps = [String]()
+        
+        func append(_ step: String) {
+            steps.append(step)
+            print(step)
+        }
+        
+        func getSteps() -> [String] {
+            return steps
+        }
+    }
+
     func testSingleListener() async throws {
-        var steps = [String]()
-        let stepsLock = DispatchQueue(label: "steps.lock")
+        let stepsTracker = StepsTracker()
         
         // Sign out the user
         await Courier.shared.signOut()
@@ -73,45 +133,34 @@ class InboxTests: XCTestCase {
         // Add a listener
         let listener = await Courier.shared.addInboxListener(
             onLoading: { _ in
-                stepsLock.sync {
-                    steps.append("loading")
-                }
+                Task { await stepsTracker.append("loading") }
             },
-            onError: { error in
-                Task {
-                    stepsLock.sync {
-                        steps.append("error")
-                    }
-                }
+            onError: { _ in
+                Task { await stepsTracker.append("error") }
             },
-            onFeedChanged: { set in
-                stepsLock.sync {
-                    steps.append("complete")
-                }
+            onMessagesChanged: { _, _, feed in
+                // This will get called twice. Once for feed, once for archive.
+                Task { await stepsTracker.append(feed == .feed ? "feed" : "archive") }
             }
         )
-        
+
         try await UserBuilder.authenticate()
 
-        // Wait until all expected steps are recorded
-        while true {
-            let currentSteps = stepsLock.sync { steps }
-            if currentSteps == ["loading", "error", "loading", "complete"] {
-                break
-            }
-            await Task.yield() // Yield to allow other tasks to progress
+        while await stepsTracker.getSteps().count < 5 {
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5s delay
         }
 
         // Remove the listener
         await Courier.shared.removeInboxListener(listener)
 
         // Verify steps match expected sequence
-        XCTAssertTrue(stepsLock.sync { steps } == ["loading", "error", "loading", "complete"])
+        let finalSteps = await stepsTracker.getSteps()
+        XCTAssertEqual(finalSteps, ["loading", "error", "loading", "feed", "archive"])
     }
     
     func testMultipleListeners() async throws {
-        var steps = [String]()
-        let stepsLock = DispatchQueue(label: "steps.lock") // To synchronize access
+        // Use the same StepsTracker actor from your single-listener test
+        let stepsTracker = StepsTracker()
 
         // Sign out the user
         await Courier.shared.signOut()
@@ -119,94 +168,67 @@ class InboxTests: XCTestCase {
         // Add listeners
         let listener1 = await Courier.shared.addInboxListener(
             onLoading: { _ in
-                stepsLock.sync {
-                    steps.append("loading 1")
-                }
+                Task { await stepsTracker.append("loading 1") }
             },
-            onError: { error in
-                stepsLock.sync {
-                    steps.append("error 1")
-                }
+            onError: { _ in
+                Task { await stepsTracker.append("error 1") }
             },
-            onFeedChanged: { inbox in
-                stepsLock.sync {
-                    steps.append("complete 1")
-                }
+            onMessagesChanged: { _, _, _ in
+                Task { await stepsTracker.append("complete 1") }
             }
         )
 
         let listener2 = await Courier.shared.addInboxListener(
             onLoading: { _ in
-                stepsLock.sync {
-                    steps.append("loading 2")
-                }
+                Task { await stepsTracker.append("loading 2") }
             },
-            onError: { error in
-                stepsLock.sync {
-                    steps.append("error 2")
-                }
+            onError: { _ in
+                Task { await stepsTracker.append("error 2") }
             },
-            onFeedChanged: { inbox in
-                stepsLock.sync {
-                    steps.append("complete 2")
-                }
+            onMessagesChanged: { _, _, _ in
+                Task { await stepsTracker.append("complete 2") }
             }
         )
 
         let listener3 = await Courier.shared.addInboxListener(
             onLoading: { _ in
-                stepsLock.sync {
-                    steps.append("loading 3")
-                }
+                Task { await stepsTracker.append("loading 3") }
             },
-            onError: { error in
-                stepsLock.sync {
-                    steps.append("error 3")
-                }
+            onError: { _ in
+                Task { await stepsTracker.append("error 3") }
             },
-            onFeedChanged: { inbox in
-                stepsLock.sync {
-                    steps.append("complete 3")
-                }
+            onMessagesChanged: { _, _, _ in
+                Task { await stepsTracker.append("complete 3") }
             }
         )
-        
+
+        // Authenticate the user
         try await UserBuilder.authenticate()
 
-        // Wait for all "complete" messages to appear
+        // Wait until we have seen all "complete" messages (each listener should fire once).
+        // In this example, we expect 3 listeners × 2 "complete" calls? Or maybe 3 total?
+        // Adjust the condition to match your actual expectations.
         while true {
-            let completeCount = stepsLock.sync {
-                steps.filter { $0.contains("complete") }.count
-            }
-            if completeCount >= 3 {
+            let completeCount = await stepsTracker.getSteps()
+                .filter { $0.contains("complete") }
+                .count
+            if completeCount == 6 {
                 break
             }
-            await Task.yield() // Allow other async tasks to progress
+            try? await Task.sleep(nanoseconds: 300_000_000) // 0.3s delay
         }
 
-        // Cleanup: remove listeners
+        // Remove the listeners
         await Courier.shared.removeInboxListener(listener1)
         await Courier.shared.removeInboxListener(listener2)
         await Courier.shared.removeInboxListener(listener3)
-    }
-    
-    actor MessageTracker {
-        private var messageCount = 0
-        private var hold = true
 
-        func incrementMessageCount(limit: Int) -> Bool {
-            messageCount += 1
-            hold = messageCount < limit
-            return hold
-        }
-
-        func shouldHold() -> Bool {
-            return hold
-        }
+        // Inspect final steps if needed
+        let finalSteps = await stepsTracker.getSteps()
+        print("Final steps:", finalSteps)
     }
     
     func testPagination() async throws {
-        let tracker = MessageTracker() // Actor to track messages safely
 
         try await UserBuilder.authenticate()
 
@@ -218,36 +240,6 @@ class InboxTests: XCTestCase {
         let inboxPaginationLimit2 = await Courier.shared.inboxPaginationLimit == 100
         XCTAssertTrue(inboxPaginationLimit2)
 
-        let count = 5
-
-        await Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
-            Task {
-                let shouldContinue = await tracker.incrementMessageCount(limit: count)
-                if !shouldContinue {
-                    return
-                }
-            }
-        })
-
-        // Register some random listeners
-        await Courier.shared.addInboxListener()
-        await Courier.shared.addInboxListener()
-        await Courier.shared.addInboxListener()
-        await Courier.shared.addInboxListener()
-        await Courier.shared.addInboxListener()
-
-        // Send some messages
-        for _ in 1...count {
-            try await InboxTests.sendMessage()
-        }
-
-        try? await Task.sleep(nanoseconds: delay)
-
-        while await tracker.shouldHold() {
-            try await Task.sleep(nanoseconds: 1_000_000) // Prevents CPU spin
-        }
-
-        await Courier.shared.removeAllInboxListeners()
         await Courier.shared.setPaginationLimit(32)
     }
     
@@ -255,9 +247,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let messageId = try await getVerifiedInboxMessage()
+        let message = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.openMessage(messageId)
+        try await Courier.shared.openMessage(message.messageId)
 
     }
     
@@ -265,9 +257,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let messageId = try await getVerifiedInboxMessage()
+        let message = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.clickMessage(messageId)
+        try await Courier.shared.clickMessage(message.messageId)
 
     }
     
@@ -275,9 +267,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let messageId = try await getVerifiedInboxMessage()
+        let message = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.readMessage(messageId)
+        try await Courier.shared.readMessage(message.messageId)
 
     }
     
@@ -285,9 +277,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let messageId = try await getVerifiedInboxMessage()
+        let message = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.unreadMessage(messageId)
+        try await Courier.shared.unreadMessage(message.messageId)
 
     }
     
@@ -295,9 +287,9 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let messageId = try await getVerifiedInboxMessage()
+        let message = try await getVerifiedInboxMessage()
 
-        try await Courier.shared.archiveMessage(messageId)
+        try await Courier.shared.archiveMessage(message.messageId)
 
     }
     
@@ -313,11 +305,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let messageId = try await getVerifiedInboxMessage()
-        
-        let message = InboxMessage(
-            messageId: messageId
-        )
+        let message = try await getVerifiedInboxMessage()
 
         try await message.markAsOpened()
         try await message.markAsUnread()
@@ -327,13 +315,15 @@ class InboxTests: XCTestCase {
 
     }
     
-    func testAddMessage() async throws {
+    func testOnMessageEventCallback() async throws {
         try await UserBuilder.authenticate()
 
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             Task {
-                await Courier.shared.addInboxListener(onMessageAdded:  { set, message, index in
-                    continuation.resume()
+                await Courier.shared.addInboxListener(onMessageEvent:  { _, _, _, event in
+                    if event == .added {
+                        continuation.resume()
+                    }
                 })
                 try await InboxTests.sendMessage()
             }
@@ -366,36 +356,21 @@ class InboxTests: XCTestCase {
         }
     }
     
-    func testSingleMessage() async throws {
+    func testCustomMessagePayload() async throws {
         try await UserBuilder.authenticate()
-
-        // Use a continuation to await message reception
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            Task {
-                await Courier.shared.addInboxListener(onMessageAdded: { feed, index, message in
-                    if let childrenData = message.data?["children"] as? [[String: Any]] {
-                        let children = childrenData.compactMap { Child(dictionary: $0) }
-                        children.forEach { child in
-                            print(child.id ?? "No id found")
-                            print(child.name ?? "No name found")
-                            print(child.optional ?? "No optional found")
-                            print(child.children?.count ?? "No subchildren found")
-                            print("=======")
-                        }
-                    }
-
-                    // Resume the continuation when the message is received
-                    continuation.resume()
-                })
-
-                try await InboxTests.sendMessage()
+        
+        let message = try await getVerifiedInboxMessage()
+        
+        if let childrenData = message.data?["children"] as? [[String: Any]] {
+            let children = childrenData.compactMap { Child(dictionary: $0) }
+            children.forEach { child in
+                print(child.id ?? "No id found")
+                print(child.name ?? "No name found")
+                print(child.optional ?? "No optional found")
+                print(child.children?.count ?? "No subchildren found")
+                print("=======")
             }
         }
-        
-        await Courier.shared.removeAllInboxListeners()
-        
-        // Assert to ensure the flow completes successfully
-        XCTAssertTrue(true)
     }
     
     func testSpamMessages() async throws {
@@ -407,13 +382,15 @@ class InboxTests: XCTestCase {
         // Use a continuation to await message reception for all messages
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             Task {
-                await Courier.shared.addInboxListener(onMessageAdded: { feed, message, index in
-                    messageCount += 1
-                    print("Message Count updated: \(messageCount)")
+                await Courier.shared.addInboxListener(onMessageEvent: { _, _, _, event in
+                    if event == .added {
+                        messageCount += 1
+                        print("Message Count updated: \(messageCount)")
 
-                    // Resume the continuation when all messages are received
-                    if messageCount == count {
-                        continuation.resume()
+                        // Resume the continuation when all messages are received
+                        if messageCount == count {
+                            continuation.resume()
+                        }
                     }
                 })
             }

@@ -179,45 +179,45 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             
             await self.refreshBrand()
             
-            self.inboxListener = await Courier.shared.addInboxListener(
-                onLoading: { [weak self] isRefresh in
-                    if !isRefresh {
-                        self?.getPages().forEach { page in
-                            page.page.setLoading()
-                        }
-                    }
-                },
-                onError: { [weak self] error in
-                    self?.getPages().forEach { page in
-                        page.page.setError(error)
-                    }
-                },
-                onUnreadCountChanged: { [weak self] count in
-                    if let tabs = self?.tabView.tabs {
-                        if (!tabs.isEmpty) {
-                            tabs[0].badge = count
-                        }
-                    }
-                },
-                onFeedChanged: { [weak self] set in
-                    self?.getPage(for: .feed).page.setInbox(set: set)
-                },
-                onArchiveChanged: { [weak self] set in
-                    self?.getPage(for: .archived).page.setInbox(set: set)
-                },
-                onPageAdded: { [weak self] feed, set in
-                    self?.getPage(for: feed).page.addPage(set: set)
-                },
-                onMessageChanged: { [weak self] feed, index, message in
-                    self?.getPage(for: feed).page.updateMessage(at: index, message: message)
-                },
-                onMessageAdded: { [weak self] feed, index, message in
-                    self?.getPage(for: feed).page.addMessage(at: index, message: message)
-                },
-                onMessageRemoved: { [weak self] feed, index, message in
-                    self?.getPage(for: feed).page.removeMessage(at: index, message: message)
-                }
-            )
+//            self.inboxListener = await Courier.shared.addInboxListener(
+//                onLoading: { [weak self] isRefresh in
+//                    if !isRefresh {
+//                        self?.getPages().forEach { page in
+//                            page.page.setLoading()
+//                        }
+//                    }
+//                },
+//                onError: { [weak self] error in
+//                    self?.getPages().forEach { page in
+//                        page.page.setError(error)
+//                    }
+//                },
+//                onUnreadCountChanged: { [weak self] count in
+//                    if let tabs = self?.tabView.tabs {
+//                        if (!tabs.isEmpty) {
+//                            tabs[0].badge = count
+//                        }
+//                    }
+//                },
+//                onFeedChanged: { [weak self] set in
+//                    self?.getPage(for: .feed).page.setInbox(set: set)
+//                },
+//                onArchiveChanged: { [weak self] set in
+//                    self?.getPage(for: .archived).page.setInbox(set: set)
+//                },
+//                onPageAdded: { [weak self] feed, set in
+//                    self?.getPage(for: feed).page.addPage(set: set)
+//                },
+//                onMessageChanged: { [weak self] feed, index, message in
+//                    self?.getPage(for: feed).page.updateMessage(at: index, message: message)
+//                },
+//                onMessageAdded: { [weak self] feed, index, message in
+//                    self?.getPage(for: feed).page.addMessage(at: index, message: message)
+//                },
+//                onMessageRemoved: { [weak self] feed, index, message in
+//                    self?.getPage(for: feed).page.removeMessage(at: index, message: message)
+//                }
+//            )
             
         }
         

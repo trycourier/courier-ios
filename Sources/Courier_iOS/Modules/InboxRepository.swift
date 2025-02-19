@@ -74,14 +74,14 @@
     
     private func getInitialLimit(messageCount: Int?, isRefresh: Bool) async -> Int {
         
-        let defaultPaginationLimit = Courier.shared.paginationLimit
+//        let defaultPaginationLimit = Courier.shared.paginationLimit
+//        
+//        if isRefresh {
+//            let existingCount = messageCount ?? defaultPaginationLimit
+//            return max(existingCount, defaultPaginationLimit)
+//        }
         
-        if isRefresh {
-            let existingCount = messageCount ?? defaultPaginationLimit
-            return max(existingCount, defaultPaginationLimit)
-        }
-        
-        return defaultPaginationLimit
+        return 100
         
     }
     
@@ -194,7 +194,7 @@
         // Create strong ref copy
         let strongClient = client
         
-        let limit = Courier.shared.paginationLimit
+        let limit = Courier.shared.inboxPaginationLimit
         
         if feed == .feed {
             

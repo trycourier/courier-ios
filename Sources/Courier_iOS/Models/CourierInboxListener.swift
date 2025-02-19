@@ -80,9 +80,9 @@ import Foundation
 extension CourierInboxListener {
     
     @objc public func remove() {
-        Task {
-            await Courier.shared.removeInboxListener(self)
-        }
+//        Task {
+//            await Courier.shared.removeInboxListener(self)
+//        }
     }
     
 }
@@ -95,6 +95,8 @@ extension CourierInboxListener {
     let onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)?
     let onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)?
     let onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)?
+    
+    private var isInitialized = false
     
     public init(
         onLoading: ((_ isRefresh: Bool) -> Void)? = nil,
@@ -111,4 +113,34 @@ extension CourierInboxListener {
         self.onMessagesChanged = onMessagesChanged
         self.onMessageEvent = onMessageEvent
     }
+    
+    @MainActor
+    internal func onLoad(_ snapshot: (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int)) {
+        if !self.isInitialized { return }
+        self.onMessagesChanged?(snapshot.feed.messages, snapshot.feed.canPaginate, .feed)
+        self.onMessagesChanged?(snapshot.archive.messages, snapshot.archive.canPaginate, .feed)
+        self.onUnreadCountChanged?(snapshot.unreadCount)
+    }
+    
+    @MainActor
+    internal func initialize() {
+        self.onLoading?(false)
+        self.isInitialized = true
+    }
+    
+    @MainActor
+    internal func error(_ error: Error) {
+        self.onError?(error)
+    }
+    
+}
+
+extension NewCourierInboxListener {
+    
+    @objc public func remove() {
+        Task {
+            await Courier.shared.removeInboxListener(self)
+        }
+    }
+    
 }

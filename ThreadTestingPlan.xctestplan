@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "CFBDB4BC-71A8-4135-A6D4-48371B4E2AFA",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true,
+    "threadSanitizerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CourierTests",
+        "name" : "CourierTests"
+      }
+    }
+  ],
+  "version" : 1
+}

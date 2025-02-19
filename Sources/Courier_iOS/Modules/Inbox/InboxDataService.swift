@@ -21,7 +21,7 @@
         await inboxSocketManager.closeSocket()
     }
     
-    func getInboxData(client: CourierClient, feedPaginationLimit: Int, archivePaginationLimit: Int, isRefresh: Bool) async throws -> (feed: InboxMessageDataSet, archived: InboxMessageDataSet, unreadCount: Int) {
+    func getInboxData(client: CourierClient, feedPaginationLimit: Int, archivePaginationLimit: Int, isRefresh: Bool) async throws -> (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int) {
         
         var feedRes: InboxResponse?
         var archivedRes: InboxResponse?
@@ -78,58 +78,35 @@
         await socket.keepAlive()
         
     }
-//    
-//    func getNextPage(_ feed: InboxMessageFeed, inboxData: CourierInboxData) async throws -> InboxMessageSet? {
-//        
-//        if !Courier.shared.isUserSignedIn {
-//            throw CourierError.userNotFound
-//        }
-//        
-//        guard let client = client else {
-//            throw CourierError.inboxNotInitialized
-//        }
-//        
-//        // Create strong ref copy
-//        let strongClient = client
-//        
-//        let limit = Courier.shared.paginationLimit
-//        
-//        if feed == .feed {
-//            
-//            if !inboxData.feed.canPaginate || isPagingFeed {
-//                return nil
-//            }
-//            
-//            self.isPagingFeed = true
-//            
-//            let res = try await strongClient.inbox.getMessages(
-//                paginationLimit: limit,
-//                startCursor: inboxData.feed.paginationCursor
-//            )
-//            
-//            self.isPagingFeed = false
-//            
-//            return res.toInboxMessageSet()
-//            
-//        } else {
-//            
-//            if !inboxData.archived.canPaginate || isPagingArchived {
-//                return nil
-//            }
-//            
-//            self.isPagingArchived = true
-//            
-//            let res = try await strongClient.inbox.getArchivedMessages(
-//                paginationLimit: limit,
-//                startCursor: inboxData.archived.paginationCursor
-//            )
-//            
-//            self.isPagingArchived = false
-//            
-//            return res.toInboxMessageSet()
-//            
-//        }
-//        
-//    }
+    
+    func getNextFeedPage(client: CourierClient, paginationLimit: Int, paginationCursor: String) async throws -> InboxMessageDataSet {
+        
+        self.isPagingFeed = true
+        
+        let res = try await client.inbox.getMessages(
+            paginationLimit: paginationLimit,
+            startCursor: paginationCursor
+        )
+        
+        self.isPagingFeed = false
+        
+        return res.toInboxMessageDataSet()
+        
+    }
+    
+    func getNextArchivePage(client: CourierClient, paginationLimit: Int, paginationCursor: String) async throws -> InboxMessageDataSet {
+        
+        self.isPagingArchived = true
+        
+        let res = try await client.inbox.getArchivedMessages(
+            paginationLimit: paginationLimit,
+            startCursor: paginationCursor
+        )
+        
+        self.isPagingArchived = false
+        
+        return res.toInboxMessageDataSet()
+        
+    }
     
 }

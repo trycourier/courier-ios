@@ -21,14 +21,14 @@ extension InboxMessage {
 class InboxModuleUnitTests: XCTestCase {
     
     override func tearDown() async throws {
-        await Courier.shared.newInboxModule.dispose()
+        await Courier.shared.inboxModule.dispose()
         try await super.tearDown()
     }
     
     func testListenerRegistration() async {
         let listener = NewCourierInboxListener()
-        await Courier.shared.newInboxModule.addListener(listener)
-        let listeners = await Courier.shared.newInboxModule.inboxListeners
+        await Courier.shared.inboxModule.addListener(listener)
+        let listeners = await Courier.shared.inboxModule.inboxListeners
         XCTAssertEqual(listeners.count, 1, "Total count should increase by 1.")
     }
     
@@ -39,7 +39,7 @@ class InboxModuleUnitTests: XCTestCase {
         let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         await dataStore.updateDataSet(initialData, for: .feed)
         let initialDataStoreMessageCount = await dataStore.feed.messages.count
         XCTAssertEqual(initialDataStoreMessageCount, 1)
@@ -59,7 +59,7 @@ class InboxModuleUnitTests: XCTestCase {
         let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         await dataStore.updateDataSet(initialData, for: .feed)
         await dataStore.updateUnreadCount(1)
         let initialDataStoreMessage = await dataStore.feed.messages.first
@@ -68,7 +68,7 @@ class InboxModuleUnitTests: XCTestCase {
         XCTAssertEqual(initialUnreadCount, 1)
         
         // Read the message
-        await dataStore.readMessage(initialMessage, from: .feed)
+        await dataStore.readMessage(initialMessage, from: .feed, client: nil)
         let updatedDataStoreMessage = await dataStore.feed.messages.first
         XCTAssertEqual(updatedDataStoreMessage?.isRead, true)
         let updatedUnreadCount = await dataStore.unreadCount
@@ -84,13 +84,13 @@ class InboxModuleUnitTests: XCTestCase {
         let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         await dataStore.updateDataSet(initialData, for: .feed)
         let initialDataStoreMessage = await dataStore.feed.messages.first
         XCTAssertEqual(initialDataStoreMessage?.messageId, initialMessage.messageId)
         
         // Read the message
-        await dataStore.unreadMessage(initialMessage, from: .feed)
+        await dataStore.unreadMessage(initialMessage, from: .feed, client: nil)
         let updatedDataStoreMessage = await dataStore.feed.messages.first
         XCTAssertEqual(updatedDataStoreMessage?.isRead, false)
         
@@ -102,7 +102,7 @@ class InboxModuleUnitTests: XCTestCase {
         let initialData = InboxMessageDataSet()
         
         // Reload the data store
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         await dataStore.updateDataSet(initialData, for: .feed)
         let initialDataStoreMessage = await dataStore.feed.messages
         XCTAssertEqual(initialDataStoreMessage.isEmpty, true)
@@ -125,7 +125,7 @@ class InboxModuleUnitTests: XCTestCase {
         let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         await dataStore.updateDataSet(initialData, for: .feed)
         await dataStore.updateUnreadCount(1)
         let initialDataStoreMessageCount = await dataStore.feed.messages.count
@@ -138,7 +138,7 @@ class InboxModuleUnitTests: XCTestCase {
         XCTAssertEqual(initialArchiveTotalCount, 0)
         
         // Archive the message
-        await dataStore.archiveMessage(initialMessage, from: .feed)
+        await dataStore.archiveMessage(initialMessage, from: .feed, client: nil)
         
         let updatedDataStoreMessageCount = await dataStore.feed.messages.count
         XCTAssertEqual(updatedDataStoreMessageCount, 0)
@@ -160,7 +160,7 @@ class InboxModuleUnitTests: XCTestCase {
         let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         await dataStore.updateDataSet(initialData, for: .feed)
         await dataStore.updateUnreadCount(1)
         let initialDataStoreMessageCount = await dataStore.feed.messages.count
@@ -173,7 +173,7 @@ class InboxModuleUnitTests: XCTestCase {
         XCTAssertEqual(initialArchiveTotalCount, 0)
         
         // Archive the message
-        await dataStore.openMessage(initialMessage, from: .feed)
+        await dataStore.openMessage(initialMessage, from: .feed, client: nil)
         
         let updatedDataStoreMessageCount = await dataStore.feed.messages.count
         XCTAssertEqual(updatedDataStoreMessageCount, 1)
@@ -189,7 +189,7 @@ class InboxModuleUnitTests: XCTestCase {
     }
     
     func testConcurrentAddMessages() async {
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         await dataStore.updateDataSet(InboxMessageDataSet(), for: .feed)
 
         // Concurrently add 20 messages
@@ -219,7 +219,7 @@ class InboxModuleUnitTests: XCTestCase {
     
     func testConcurrentReading() async {
         
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         
         func getMessage() -> InboxMessage {
             let message = InboxMessage(messageId: UUID().uuidString)
@@ -244,7 +244,7 @@ class InboxModuleUnitTests: XCTestCase {
                 try? await Task.sleep(nanoseconds: randomDelay)
                 
                 // Read the message
-                await dataStore.readMessage(message, from: .feed)
+                await dataStore.readMessage(message, from: .feed, client: nil)
                 print("Message read \(message.messageId) at index: \(index)")
                 
             }
@@ -280,15 +280,15 @@ class InboxModuleUnitTests: XCTestCase {
         let jwt = try await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY,userId: userId)
         
         // Delay
-        try? await Task.sleep(nanoseconds: 5_000_000_000)
+        try? await Task.sleep(nanoseconds: 10_000_000_000)
         
         // Auth
         await Courier.shared.signIn(userId: userId, accessToken: jwt)
         
         // Get data
-        try await Courier.shared.newInboxModule.getInbox(isRefresh: false)
+        try await Courier.shared.inboxModule.getInbox(isRefresh: false)
         
-        let dataStore = await Courier.shared.newInboxModule.dataStore
+        let dataStore = await Courier.shared.inboxModule.dataStore
         
         // Ensure data exists
         let unreadFeedCount = await dataStore.unreadCount

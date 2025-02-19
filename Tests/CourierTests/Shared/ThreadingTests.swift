@@ -35,7 +35,7 @@ class ThreadingTests: XCTestCase {
         try await UserBuilder.authenticate()
         log("Authenticated user successfully")
         
-        var listeners: [CourierInboxListener] = []
+        var listeners: [NewCourierInboxListener] = []
         let listenersLock = NSLock()
         
         // 1) Add 100 listeners in parallel
@@ -61,7 +61,7 @@ class ThreadingTests: XCTestCase {
         // 2) Remove all listeners in parallel
         try await withThrowingTaskGroup(of: Void.self) { group in
             // Safely copy and clear the array under the lock
-            let currentListeners: [CourierInboxListener] = listenersLock.withLock { () -> [CourierInboxListener] in
+            let currentListeners: [NewCourierInboxListener] = listenersLock.withLock { () -> [NewCourierInboxListener] in
                 defer {
                     self.log("Clearing out listeners array under lock")
                     listeners.removeAll()
@@ -156,7 +156,7 @@ class ThreadingTests: XCTestCase {
                 // 1) Add + remove a listener
                 group.addTask {
                     self.log("Task \(i) - adding listener")
-                    let listener = await Courier.shared.addInboxListener(onFeedChanged: { _ in })
+                    let listener = await Courier.shared.addInboxListener()
                     
                     self.log("Task \(i) - removing listener")
                     await Courier.shared.removeInboxListener(listener)
@@ -181,8 +181,10 @@ class ThreadingTests: XCTestCase {
         try await UserBuilder.authenticate()
         log("User authenticated, adding inbox listener")
         
-        let listener = await Courier.shared.addInboxListener(onMessageAdded: { _, _, _ in
-            self.log("Inbox listener triggered - onMessageAdded")
+        let listener = await Courier.shared.addInboxListener(onMessageEvent: { _, _, _, event in
+            if event == .added {
+                self.log("Inbox listener triggered - onMessageAdded")
+            }
         })
         
         log("Listener added, now sending messages in parallel")
@@ -305,7 +307,7 @@ class ThreadingTests: XCTestCase {
             for i in 1...numberOfListeners {
                 group.addTask {
                     self.log("Creating listener #\(i) in bundle #\(bundle)")
-                    await Courier.shared.addInboxListener(onFeedChanged: { _ in
+                    await Courier.shared.addInboxListener(onMessagesChanged: { _, _, _ in
                         onFeedChanged(bundle, i)
                     })
                 }
@@ -377,8 +379,10 @@ class ThreadingTests: XCTestCase {
         try await UserBuilder.authenticate()
         var callbackCount = 0
 
-        let listener = await Courier.shared.addInboxListener(onMessageAdded: { _,_,_  in
-            callbackCount += 1
+        let listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
+            if event == .added {
+                callbackCount += 1
+            }
         })
 
         try await withThrowingTaskGroup(of: Void.self) { group in
@@ -403,7 +407,7 @@ class ThreadingTests: XCTestCase {
     func testChaosMonkey() async throws {
         log("Starting testChaosMonkey")
 
-        try await UserBuilder.authenticate()
+        let jwt = try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
 
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<100 {
@@ -417,10 +421,8 @@ class ThreadingTests: XCTestCase {
                     case 2:
                         _ = try? await Courier.shared.client?.inbox.getMessages()
                     case 3:
-                        let jwt = try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
                         await Courier.shared.signIn(userId: "chaos_user", accessToken: jwt)
                     case 4:
-                        let jwt = try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
                         let client = CourierClient(jwt: jwt, userId: "chaos_user")
                         try await client.tokens.putUserToken(token: "example_token", provider: "example_provider")
                     default:

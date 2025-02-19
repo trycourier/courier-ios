@@ -45,7 +45,7 @@ import UIKit
     // MARK: Modules
     
     @CourierActor
-    internal lazy var newInboxModule = NewInboxModule(courier: self)
+    internal lazy var inboxModule = NewInboxModule(courier: self)
     
     @CourierActor
     internal lazy var tokenModule = TokenModule(courier: self)
@@ -53,11 +53,6 @@ import UIKit
     // MARK: Authentication
     
     public internal(set) var authListeners: [CourierAuthenticationListener] = []
-    
-    // MARK: Inbox
-    internal var paginationLimit: Int = InboxRepository.Pagination.default.rawValue
-    internal var inboxMutationHandler: InboxMutationHandler?
-    @CourierActor internal let inboxModule = InboxModule()
     
     // MARK: Proxy
     private var notificationProxy: CourierNotificationProxy?
@@ -83,9 +78,6 @@ import UIKit
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
-        
-        // Attach mutation handler
-        inboxMutationHandler = self
         
     }
     
