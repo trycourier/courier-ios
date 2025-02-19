@@ -7,5 +7,5 @@
 
 public enum InboxMessageFeed {
     case feed
-    case archived
+    case archive
 }

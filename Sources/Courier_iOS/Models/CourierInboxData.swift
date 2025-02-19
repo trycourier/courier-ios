@@ -62,7 +62,7 @@
         if let _ = feed.messages.first(where: { $0.messageId == messageId }) {
             return (.feed, feed.messages)
         } else if let _ = archived.messages.first(where: { $0.messageId == messageId }) {
-            return (.archived, archived.messages)
+            return (.archive, archived.messages)
         } else {
             return nil
         }
@@ -260,7 +260,7 @@
             // Add the item to the archive
             let insertIndex = findInsertIndex(for: newMessage, in: archived.messages)
             archived.messages.insert(newMessage, at: insertIndex)
-            await handler.onInboxItemAdded(at: insertIndex, in: .archived, with: message)
+            await handler.onInboxItemAdded(at: insertIndex, in: .archive, with: message)
             
             return true
             

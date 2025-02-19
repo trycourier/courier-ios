@@ -10,7 +10,7 @@ import Courier_iOS
 
 class RootTabBarController: UITabBarController {
     
-    private var inboxListener: CourierInboxListener? = nil
+    private var inboxListener: NewCourierInboxListener? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()

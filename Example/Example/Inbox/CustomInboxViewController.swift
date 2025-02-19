@@ -22,7 +22,7 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
         return label
     }()
     
-    private var inboxListener: CourierInboxListener? = nil
+    private var inboxListener: NewCourierInboxListener? = nil
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     
@@ -67,18 +67,16 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
                 onError: { error in
                     self.setState(.error, error: String(describing: error))
                 },
-                onFeedChanged: { inbox in
-                    self.canPaginate = inbox.canPaginate
-                    self.refreshMessages()
+                onMessagesChanged: { messages, canPaginate, feed in
+                    if feed == .feed {
+                        self.canPaginate = canPaginate
+                        self.refreshMessages()
+                    }
                 },
-                onMessageChanged: { feed, message, index in
-                    self.refreshMessages()
-                },
-                onMessageAdded: { feed, message, index in
-                    self.refreshMessages()
-                },
-                onMessageRemoved: { feed, message, index in
-                    self.refreshMessages()
+                onMessageEvent: { message, index, feed, event in
+                    if feed == .feed {
+                        self.refreshMessages()
+                    }
                 }
             )
         }

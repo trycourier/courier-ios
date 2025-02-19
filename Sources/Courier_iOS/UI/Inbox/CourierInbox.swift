@@ -50,7 +50,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private lazy var archivedPage = {
         return Page(
             title: "Archived",
-            page: makeInboxList(.archived)
+            page: makeInboxList(.archive)
         )
     }()
     
@@ -172,7 +172,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
             page.page.setLoading()
         }
         
-        // Perform an async function here
         Task { [weak self] in
             
             guard let self = self else { return }

@@ -22,7 +22,7 @@ internal class InboxDataStore {
     /// Reloads the data store from a snapshot
     func reloadSnapshot(_ snapshot: (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int)) async {
         await updateDataSet(snapshot.feed, for: .feed)
-        await updateDataSet(snapshot.archive, for: .archived)
+        await updateDataSet(snapshot.archive, for: .archive)
         await updateUnreadCount(snapshot.unreadCount)
     }
     
@@ -35,7 +35,7 @@ internal class InboxDataStore {
                 return nil
             }
             return index
-        case .archived:
+        case .archive:
             guard let index = archive.messages.firstIndex(where: { $0.messageId == messageId }) else {
                 return nil
             }
@@ -53,7 +53,7 @@ internal class InboxDataStore {
         switch feedType {
         case .feed:
             return feed.messages[index]
-        case .archived:
+        case .archive:
             return archive.messages[index]
         }
         
@@ -87,7 +87,7 @@ internal class InboxDataStore {
                 await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
             }
             
-        case .archived:
+        case .archive:
             
             // Add message to archive
             if index >= 0, index <= archive.messages.count {
@@ -139,7 +139,7 @@ internal class InboxDataStore {
                 
             }
             
-        case .archived:
+        case .archive:
             
             guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
@@ -201,7 +201,7 @@ internal class InboxDataStore {
                 
             }
             
-        case .archived:
+        case .archive:
             
             guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
@@ -269,15 +269,15 @@ internal class InboxDataStore {
             // Add the item to the archive
             let insertIndex = findInsertIndex(for: newMessage, in: archive.messages)
             archive.messages.insert(newMessage, at: insertIndex)
-            await delegate?.onMessageEvent(newMessage, at: insertIndex, to: .archived, event: .added)
+            await delegate?.onMessageEvent(newMessage, at: insertIndex, to: .archive, event: .added)
             
             // Update feed total counts
             archive.totalCount += 1
-            await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: .archived)
+            await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: .archive)
             
             canUpdate = true
             
-        case .archived:
+        case .archive:
             return canUpdate
         }
         
@@ -319,7 +319,7 @@ internal class InboxDataStore {
                 canUpdate = true
             }
             
-        case .archived:
+        case .archive:
             
             guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
                 return canUpdate
@@ -366,7 +366,7 @@ internal class InboxDataStore {
         for (index, message) in archive.messages.enumerated() {
             if !message.isRead {
                 message.setRead()
-                await delegate?.onMessageEvent(message, at: index, to: .archived, event: .read)
+                await delegate?.onMessageEvent(message, at: index, to: .archive, event: .read)
             }
         }
         
@@ -395,7 +395,7 @@ internal class InboxDataStore {
             feed.messages.append(contentsOf: page.messages)
             await delegate?.onPageAdded(feed.messages, feed.canPaginate, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
-        case .archived:
+        case .archive:
             archive.totalCount = page.totalCount
             archive.canPaginate = page.canPaginate
             archive.paginationCursor = page.paginationCursor
@@ -412,9 +412,9 @@ internal class InboxDataStore {
             feed = data
             await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
-        case .archived:
+        case .archive:
             archive = data
-            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
+            await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
         }
     }
@@ -428,7 +428,7 @@ internal class InboxDataStore {
     /// Removes and resets everything
     func dispose() async {
         await updateDataSet(InboxMessageDataSet(), for: .feed)
-        await updateDataSet(InboxMessageDataSet(), for: .archived)
+        await updateDataSet(InboxMessageDataSet(), for: .archive)
         await updateUnreadCount(0)
     }
     

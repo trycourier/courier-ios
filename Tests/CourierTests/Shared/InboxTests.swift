@@ -325,7 +325,7 @@ class InboxTests: XCTestCase {
         // Cant test this :/
 
         try await message.markAsArchived()
-        let messageState4 = await dataStore.getMessageById(feedType: .archived, messageId: message.messageId)
+        let messageState4 = await dataStore.getMessageById(feedType: .archive, messageId: message.messageId)
         XCTAssertEqual(messageState4?.isArchived, true)
 
     }

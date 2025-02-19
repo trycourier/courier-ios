@@ -104,24 +104,24 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
                             await self?.dataStore.readMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.readMessage(message, from: .archived, client: nil)
+                            await self?.dataStore.readMessage(message, from: .archive, client: nil)
                         case .unread:
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
                             await self?.dataStore.unreadMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.unreadMessage(message, from: .archived, client: nil)
+                            await self?.dataStore.unreadMessage(message, from: .archive, client: nil)
                         case .opened:
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
                             await self?.dataStore.openMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.openMessage(message, from: .archived, client: nil)
+                            await self?.dataStore.openMessage(message, from: .archive, client: nil)
                         case .unopened:
                             break
                         case .archive:
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
                             await self?.dataStore.archiveMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.archiveMessage(message, from: .archived, client: nil)
+                            await self?.dataStore.archiveMessage(message, from: .archive, client: nil)
                         case .unarchive:
                             break
                         case .click:
@@ -178,7 +178,7 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
                 paginationCursor: cursor
             )
             
-        case .archived:
+        case .archive:
             
             if !dataStore.archive.canPaginate {
                 return nil
@@ -442,7 +442,7 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         
         let message = InboxMessage(messageId: messageId)
         await inboxModule.dataStore.readMessage(message, from: .feed, client: client)
-        await inboxModule.dataStore.readMessage(message, from: .archived, client: client)
+        await inboxModule.dataStore.readMessage(message, from: .archive, client: client)
 
     }
     
@@ -458,7 +458,7 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         
         let message = InboxMessage(messageId: messageId)
         await inboxModule.dataStore.unreadMessage(message, from: .feed, client: client)
-        await inboxModule.dataStore.unreadMessage(message, from: .archived, client: client)
+        await inboxModule.dataStore.unreadMessage(message, from: .archive, client: client)
 
     }
     
@@ -489,7 +489,7 @@ internal class NewInboxModule: InboxDataStoreEventDelegate {
         
         let message = InboxMessage(messageId: messageId)
         await inboxModule.dataStore.openMessage(message, from: .feed, client: client)
-        await inboxModule.dataStore.openMessage(message, from: .archived, client: client)
+        await inboxModule.dataStore.openMessage(message, from: .archive, client: client)
 
     }
     
