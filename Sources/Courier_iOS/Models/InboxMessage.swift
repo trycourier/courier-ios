@@ -182,8 +182,9 @@ public class InboxMessage: Codable {
     
 }
 
-@CourierActor extension InboxMessage {
+extension InboxMessage {
     
+    @CourierActor
     public func markAsRead() async throws {
         try await Courier.shared.readMessage(messageId)
     }
@@ -197,7 +198,7 @@ public class InboxMessage: Codable {
                 }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -205,6 +206,7 @@ public class InboxMessage: Codable {
         }
     }
     
+    @CourierActor
     public func markAsUnread() async throws {
         try await Courier.shared.unreadMessage(messageId)
     }
@@ -218,7 +220,7 @@ public class InboxMessage: Codable {
                 }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -226,6 +228,7 @@ public class InboxMessage: Codable {
         }
     }
     
+    @CourierActor
     public func markAsOpened() async throws {
         try await Courier.shared.openMessage(messageId)
     }
@@ -239,7 +242,7 @@ public class InboxMessage: Codable {
                 }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -247,6 +250,7 @@ public class InboxMessage: Codable {
         }
     }
     
+    @CourierActor
     public func markAsClicked() async throws {
         try await Courier.shared.clickMessage(messageId)
     }
@@ -260,7 +264,7 @@ public class InboxMessage: Codable {
                 }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }
@@ -268,6 +272,7 @@ public class InboxMessage: Codable {
         }
     }
     
+    @CourierActor
     public func markAsArchived() async throws {
         try await Courier.shared.archiveMessage(messageId)
     }
@@ -281,7 +286,7 @@ public class InboxMessage: Codable {
                 }
             } catch {
                 let e = CourierError(from: error)
-                Courier.shared.client?.log(e.message)
+                await Courier.shared.client?.log(e.message)
                 await MainActor.run {
                     onFailure?(e)
                 }

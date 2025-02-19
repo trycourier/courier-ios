@@ -184,10 +184,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.state = .error(error)
     }
     
-    internal func setInbox(set: InboxMessageSet) {
+    internal func setInbox(messages: [InboxMessage], canPaginate: Bool) {
         self.manuallyArchivedMessageId = nil
-        self.inboxMessages = set.messages
-        self.canPaginate = set.canPaginate
+        self.inboxMessages = messages
+        self.canPaginate = canPaginate
         self.tableView.reloadData()
         self.tableView.refreshControl?.endRefreshing()
         self.state = inboxMessages.isEmpty ? .empty : .content

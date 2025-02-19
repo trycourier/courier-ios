@@ -286,7 +286,7 @@ class InboxModuleUnitTests: XCTestCase {
         await Courier.shared.signIn(userId: userId, accessToken: jwt)
         
         // Get data
-        try await Courier.shared.inboxModule.getInbox(isRefresh: false)
+        await Courier.shared.inboxModule.getInbox(isRefresh: false)
         
         let dataStore = await Courier.shared.inboxModule.dataStore
         
