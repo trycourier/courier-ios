@@ -52,59 +52,49 @@ class InboxTests: XCTestCase {
 
     }
     
-    private func getVerifiedInboxMessage() async throws -> InboxMessage {
+    private func getVerifiedInboxMessage() async throws -> (InboxMessage, CourierInboxListener) {
         try await withCheckedThrowingContinuation { continuation in
             
-            // A simple lock + boolean to ensure we don’t resume the continuation twice
             let lock = NSLock()
             var didFinish = false
             
-            func finish(_ result: Result<InboxMessage, Error>, remove listener: CourierInboxListener) {
+            func finish(_ result: Result<(InboxMessage, CourierInboxListener), Error>) {
                 lock.lock()
                 defer { lock.unlock() }
                 guard !didFinish else { return }
                 didFinish = true
-
-                // Resume the continuation exactly once
+                
                 switch result {
-                case .success(let message):
-                    continuation.resume(returning: message)
+                case .success(let (message, listener)):
+                    continuation.resume(returning: (message, listener))
                 case .failure(let error):
                     continuation.resume(throwing: error)
-                }
-                
-                // Remove the listener exactly once
-                Task {
-                    await Courier.shared.removeInboxListener(listener)
                 }
             }
             
             Task {
                 do {
-                    
-                    var messageId: String? = nil
+                    // Ensure messageId is assigned before adding the listener
+                    let messageId = try await InboxTests.sendMessage()
                     var listener: CourierInboxListener? = nil
                     
-                    // 1. Add the listener and capture both it + messageId safely.
+                    // Initialize listener
                     listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
                         if event == .added && message.messageId == messageId {
-                            // We got the matching message—finish successfully.
-                            finish(.success(message), remove: listener!)
+                            finish(.success((message, listener!)))
                         }
                     })
                     
-                    // 2. Get messageId first (no race condition with the listener).
-                    messageId = try await InboxTests.sendMessage()
-                    
-                    // 3. Sleep for 30 seconds to create a timeout.
+                    // Sleep for 30 seconds to create a timeout.
                     try? await Task.sleep(nanoseconds: 30_000_000_000)
                     
-                    // 4. If we got here, we timed out.
-                    finish(.failure(CourierError.inboxNotInitialized), remove: listener!)
+                    // Timeout reached, fail safely.
+                    finish(.failure(CourierError.inboxNotInitialized))
+                    
+                    // Ensure listener is removed on failure
+                    await Courier.shared.removeInboxListener(listener!)
                     
                 } catch {
-                    // If we failed before we even added the listener, just resume with error.
-                    // (We haven’t added the listener yet, so no need to remove it.)
                     continuation.resume(throwing: error)
                 }
             }
@@ -247,9 +237,11 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let (message, listener) = try await getVerifiedInboxMessage()
 
         try await Courier.shared.openMessage(message.messageId)
+        
+        await Courier.shared.removeInboxListener(listener)
 
     }
     
@@ -257,9 +249,11 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let (message, listener) = try await getVerifiedInboxMessage()
 
         try await Courier.shared.clickMessage(message.messageId)
+        
+        await Courier.shared.removeInboxListener(listener)
 
     }
     
@@ -267,9 +261,11 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let (message, listener) = try await getVerifiedInboxMessage()
 
         try await Courier.shared.readMessage(message.messageId)
+        
+        await Courier.shared.removeInboxListener(listener)
 
     }
     
@@ -277,9 +273,11 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let (message, listener) = try await getVerifiedInboxMessage()
 
         try await Courier.shared.unreadMessage(message.messageId)
+        
+        await Courier.shared.removeInboxListener(listener)
 
     }
     
@@ -287,9 +285,11 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let (message, listener) = try await getVerifiedInboxMessage()
 
         try await Courier.shared.archiveMessage(message.messageId)
+        
+        await Courier.shared.removeInboxListener(listener)
 
     }
     
@@ -305,7 +305,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let (message, listener) = try await getVerifiedInboxMessage()
         
         let dataStore = await Courier.shared.inboxModule.dataStore
 
@@ -322,11 +322,13 @@ class InboxTests: XCTestCase {
         XCTAssertEqual(messageState3?.isRead, true)
         
         try await message.markAsClicked()
-        // Cant test this :/
+        // InboxMessage does not have a clicked value :/
 
         try await message.markAsArchived()
         let messageState4 = await dataStore.getMessageById(feedType: .archive, messageId: message.messageId)
         XCTAssertEqual(messageState4?.isArchived, true)
+        
+        await Courier.shared.removeInboxListener(listener)
 
     }
     
@@ -374,7 +376,7 @@ class InboxTests: XCTestCase {
     func testCustomMessagePayload() async throws {
         try await UserBuilder.authenticate()
         
-        let message = try await getVerifiedInboxMessage()
+        let (message, listener) = try await getVerifiedInboxMessage()
         
         if let childrenData = message.data?["children"] as? [[String: Any]] {
             let children = childrenData.compactMap { Child(dictionary: $0) }
@@ -386,6 +388,9 @@ class InboxTests: XCTestCase {
                 print("=======")
             }
         }
+        
+        await Courier.shared.removeInboxListener(listener)
+        
     }
     
     func testSpamMessages() async throws {

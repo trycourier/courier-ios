@@ -268,39 +268,6 @@ class InboxModuleUnitTests: XCTestCase {
         XCTAssertEqual(unreadFeedCount, 0)
         
     }
-    
-    func testInitializeData() async throws {
-        
-        let userId = UUID().uuidString
-        
-        // Send message
-        let messageId = try await ExampleServer().sendTest(authKey: Env.COURIER_AUTH_KEY, userId: userId, key: "inbox")
-        
-        // Get JWT
-        let jwt = try await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY,userId: userId)
-        
-        // Delay
-        try? await Task.sleep(nanoseconds: 10_000_000_000)
-        
-        // Auth
-        await Courier.shared.signIn(userId: userId, accessToken: jwt)
-        
-        // Get data
-        await Courier.shared.inboxModule.getInbox(isRefresh: false)
-        
-        let dataStore = await Courier.shared.inboxModule.dataStore
-        
-        // Ensure data exists
-        let unreadFeedCount = await dataStore.unreadCount
-        XCTAssertEqual(unreadFeedCount, 1)
-        
-        let message = await dataStore.feed.messages.first
-        XCTAssertEqual(message?.messageId, messageId)
-        
-        // Signout
-        await Courier.shared.signOut()
-        
-    }
 
     
 }

@@ -230,6 +230,47 @@ internal class InboxDataStore {
         return canUpdate
         
     }
+    
+    /// Clicks a message at a specific index in the specified dataset
+    /// - Returns: `true` if successful, `false` if index is invalid
+    @discardableResult
+    func clickMessage(_ message: InboxMessage, from feedType: InboxMessageFeed, client: CourierClient?) async -> Bool {
+        
+        var trackingId: String?
+        
+        switch feedType {
+        case .feed:
+            
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
+                return false
+            }
+            
+            let message = feed.messages[index]
+            trackingId = message.clickTrackingId
+            
+        case .archive:
+            
+            guard let index = getMessageIndexById(feedType: feedType, messageId: message.messageId) else {
+                return false
+            }
+            
+            let message = archive.messages[index]
+            trackingId = message.clickTrackingId
+            
+        }
+        
+        // Perform server update
+        if let trackingId = trackingId {
+            do {
+                try await client?.inbox.click(messageId: message.messageId, trackingId: trackingId)
+            } catch {
+                client?.log(error.localizedDescription)
+            }
+        }
+        
+        return trackingId != nil
+        
+    }
 
     /// Archives a message at a specific index in the specified dataset
     /// - Returns: `true` if successful, `false` if index is invalid

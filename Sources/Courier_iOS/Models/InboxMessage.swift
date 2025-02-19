@@ -93,6 +93,16 @@ public class InboxMessage: Codable {
         opened = nil
     }
     
+    public var clickTrackingId: String? {
+        get {
+            if let trackingIdsDict = data?["trackingIds"] as? [String: Any],
+               let clickTrackingId = trackingIdsDict["clickTrackingId"] as? String {
+                return clickTrackingId
+            }
+            return trackingIds?.clickTrackingId
+        }
+    }
+    
     public var createdAt: Date {
         guard let created = created else {
             return Date()

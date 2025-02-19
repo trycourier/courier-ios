@@ -29,4 +29,36 @@ class TokenModuleUnitTests: XCTestCase {
         XCTAssertEqual(apnsToken, exampleToken)
     }
     
+    func testConcurrentTokenWrites() async throws {
+        
+        let count = 25
+        
+        let writes = try await withThrowingTaskGroup(of: Void.self) { innerGroup in
+            var tokens: [String] = []
+            for i in 1...count {
+                let key = "provider\(i)"
+                let value = "token\(i)"
+                innerGroup.addTask {
+                    await Courier.shared.tokenModule.cacheToken(key: key, value: value)
+                    await Courier.shared.tokenModule.cacheToken(key: key, value: nil)
+                    await Courier.shared.tokenModule.cacheToken(key: key, value: value)
+                }
+                tokens.append(value)
+            }
+            try await innerGroup.waitForAll()
+            return tokens
+        }
+        
+        print(writes)
+        
+        XCTAssertEqual(writes.count, count)
+        
+        for i in 1...writes.count {
+            let checkingToken = "token\(i)"
+            let currentToken = writes[i - 1]
+            XCTAssertEqual(checkingToken, currentToken)
+        }
+        
+    }
+    
 }

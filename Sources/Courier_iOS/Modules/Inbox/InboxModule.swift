@@ -428,12 +428,9 @@ internal class InboxModule: InboxDataStoreEventDelegate {
             throw CourierError.userNotFound
         }
         
-//        try await inboxModule.data?.updateMessage(
-//            messageId: messageId,
-//            event: .click,
-//            client: client,
-//            handler: handler
-//        )
+        let message = InboxMessage(messageId: messageId)
+        await inboxModule.dataStore.clickMessage(message, from: .feed, client: client)
+        await inboxModule.dataStore.clickMessage(message, from: .archive, client: client)
         
     }
     
