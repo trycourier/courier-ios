@@ -108,6 +108,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
     }
     
+    private let messageOpenManager = CourierMessageOpenManager()
+    
     // MARK: Init
     
     public init(
@@ -551,28 +553,15 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.didScrollInbox(scrollView)
         self.openVisibleMessages()
     }
-    
-    private func openVisibleMessages() {
-            
-        self.tableView.indexPathsForVisibleRows?.forEach { indexPath in
-            
-            // Get the current message
-            let index = indexPath.row
-            
-            // Check if the index is within bounds
-            guard index >= 0 && index < inboxMessages.count else {
-                return
-            }
-            
-            let message = inboxMessages[index]
 
-            // If the message is not opened, open it
-            if (!message.isOpened) {
-                message.markAsOpened()
+    private func openVisibleMessages() {
+        guard let visibleIndexPaths = tableView.indexPathsForVisibleRows else { return }
+        Task {
+            let messagesToOpen = await messageOpenManager.getVisibleMessages(indices: visibleIndexPaths)
+            for message in messagesToOpen {
+                try await Courier.shared.openMessage(message.messageId)
             }
-            
         }
-        
     }
     
     public func scrollToTop(animated: Bool) {
