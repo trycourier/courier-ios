@@ -21,9 +21,9 @@ internal class InboxDataStore {
     
     /// Reloads the data store from a snapshot
     func reloadSnapshot(_ snapshot: (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int)) async {
+        await updateUnreadCount(snapshot.unreadCount)
         await updateDataSet(snapshot.feed, for: .feed)
         await updateDataSet(snapshot.archive, for: .archive)
-        await updateUnreadCount(snapshot.unreadCount)
     }
     
     /// Returns a message by id
@@ -87,6 +87,8 @@ internal class InboxDataStore {
                 await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
             }
             
+            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
+            
         case .archive:
             
             // Add message to archive
@@ -101,6 +103,8 @@ internal class InboxDataStore {
             // Update Count
             archive.totalCount += 1
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
+            
+            await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
             
         }
     }
@@ -135,6 +139,7 @@ internal class InboxDataStore {
                 // Update unread count
                 unreadCount -= 1
                 await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
+                await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
                 canUpdate = true
                 
             }
@@ -151,6 +156,7 @@ internal class InboxDataStore {
             if !message.isRead {
                 message.setRead()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .read)
+                await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
                 canUpdate = true
             }
             
@@ -197,6 +203,7 @@ internal class InboxDataStore {
                 // Update unread count
                 unreadCount += 1
                 await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
+                await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
                 canUpdate = true
                 
             }
@@ -213,6 +220,7 @@ internal class InboxDataStore {
             if message.isRead {
                 message.setUnread()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .unread)
+                await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
                 canUpdate = true
             }
             
@@ -302,6 +310,7 @@ internal class InboxDataStore {
             // Update feed total counts
             feed.totalCount -= 1
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: .feed)
+            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: .feed)
             
             // Create copy
             message.setArchived()
@@ -315,6 +324,7 @@ internal class InboxDataStore {
             // Update feed total counts
             archive.totalCount += 1
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: .archive)
+            await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: .archive)
             
             canUpdate = true
             
@@ -357,6 +367,7 @@ internal class InboxDataStore {
             if !message.isOpened {
                 message.setOpened()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
+                await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
                 canUpdate = true
             }
             
@@ -372,6 +383,7 @@ internal class InboxDataStore {
             if !message.isOpened {
                 message.setOpened()
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
+                await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
                 canUpdate = true
             }
             
@@ -414,6 +426,8 @@ internal class InboxDataStore {
         // Update unread count
         unreadCount = 0
         await delegate?.onUnreadCountUpdated(unreadCount: unreadCount)
+        await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: .feed)
+        await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: .archive)
         
         do {
             try await client?.inbox.readAll()
@@ -434,15 +448,17 @@ internal class InboxDataStore {
             feed.canPaginate = page.canPaginate
             feed.paginationCursor = page.paginationCursor
             feed.messages.append(contentsOf: page.messages)
-            await delegate?.onPageAdded(feed.messages, feed.canPaginate, for: feedType)
+            await delegate?.onPageAdded(feed.messages, feed.canPaginate, isFirstPage: false, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
+            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
         case .archive:
             archive.totalCount = page.totalCount
             archive.canPaginate = page.canPaginate
             archive.paginationCursor = page.paginationCursor
             archive.messages.append(contentsOf: page.messages)
-            await delegate?.onPageAdded(archive.messages, archive.canPaginate, for: feedType)
+            await delegate?.onPageAdded(archive.messages, archive.canPaginate, isFirstPage: false, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
+            await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
         }
     }
     
@@ -451,12 +467,14 @@ internal class InboxDataStore {
         switch feedType {
         case .feed:
             feed = data
-            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
+            await delegate?.onPageAdded(feed.messages, feed.canPaginate, isFirstPage: true, for: feedType)
+            await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
         case .archive:
             archive = data
-            await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
+            await delegate?.onPageAdded(archive.messages, archive.canPaginate, isFirstPage: true, for: feedType)
+            await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
         }
     }
     

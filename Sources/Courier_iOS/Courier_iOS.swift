@@ -24,11 +24,12 @@ import UIKit
 
 @objc public class Courier: NSObject {
     
-    /**
-     * Versioning
-     */
+    // MARK: Versioning
+    
     internal static let version = "5.6.2"
     @objc public static var agent = CourierAgent.nativeIOS(version)
+    
+    // MARK: Singleton
     
     /**
      * Singleton reference to the SDK
@@ -37,9 +38,8 @@ import UIKit
     @CourierActor
     @objc public static let shared = Courier()
     
-    /**
-     Low level API client
-     */
+    // MARK: Client
+    
     @CourierActor
     public internal(set) var client: CourierClient? = nil
     

@@ -172,11 +172,15 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                 return nil
             }
             
-            return try await dataService.getNextFeedPage(
+            let data = try await dataService.getNextFeedPage(
                 client: client,
                 paginationLimit: limit,
                 paginationCursor: cursor
             )
+            
+            await dataStore.addPage(data, for: .feed)
+            
+            return data
             
         case .archive:
             
@@ -188,11 +192,15 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                 return nil
             }
             
-            return try await dataService.getNextFeedPage(
+            let data = try await dataService.getNextFeedPage(
                 client: client,
                 paginationLimit: limit,
                 paginationCursor: cursor
             )
+            
+            await dataStore.addPage(data, for: .feed)
+            
+            return data
             
         }
         
@@ -286,11 +294,11 @@ internal class InboxModule: InboxDataStoreEventDelegate {
         }
     }
     
-    func onPageAdded(_ messages: [InboxMessage], _ canPaginate: Bool, for feed: InboxMessageFeed) async {
+    func onPageAdded(_ messages: [InboxMessage], _ canPaginate: Bool, isFirstPage: Bool, for feed: InboxMessageFeed) async {
         let listeners = self.inboxListeners
         await MainActor.run {
             listeners.forEach { listener in
-                listener.onMessagesChanged?(messages, canPaginate, feed)
+                listener.onPageAdded?(messages, canPaginate, isFirstPage, feed)
             }
         }
     }
