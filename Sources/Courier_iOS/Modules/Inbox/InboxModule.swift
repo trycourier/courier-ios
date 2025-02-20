@@ -198,7 +198,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                 paginationCursor: cursor
             )
             
-            await dataStore.addPage(data, for: .feed)
+            await dataStore.addPage(data, for: .archive)
             
             return data
             
