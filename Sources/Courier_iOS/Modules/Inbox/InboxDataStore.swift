@@ -448,7 +448,7 @@ internal class InboxDataStore {
             feed.canPaginate = page.canPaginate
             feed.paginationCursor = page.paginationCursor
             feed.messages.append(contentsOf: page.messages)
-            await delegate?.onPageAdded(feed.messages, feed.canPaginate, isFirstPage: false, for: feedType)
+            await delegate?.onPageAdded(page.messages, page.canPaginate, isFirstPage: false, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
             await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
         case .archive:
@@ -456,7 +456,7 @@ internal class InboxDataStore {
             archive.canPaginate = page.canPaginate
             archive.paginationCursor = page.paginationCursor
             archive.messages.append(contentsOf: page.messages)
-            await delegate?.onPageAdded(archive.messages, archive.canPaginate, isFirstPage: false, for: feedType)
+            await delegate?.onPageAdded(page.messages, page.canPaginate, isFirstPage: false, for: feedType)
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
             await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
         }
@@ -468,12 +468,12 @@ internal class InboxDataStore {
         case .feed:
             feed = data
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: feedType)
-            await delegate?.onPageAdded(feed.messages, feed.canPaginate, isFirstPage: true, for: feedType)
+            await delegate?.onPageAdded(data.messages, data.canPaginate, isFirstPage: true, for: feedType)
             await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
         case .archive:
             archive = data
             await delegate?.onTotalCountUpdated(totalCount: archive.totalCount, to: feedType)
-            await delegate?.onPageAdded(archive.messages, archive.canPaginate, isFirstPage: true, for: feedType)
+            await delegate?.onPageAdded(data.messages, data.canPaginate, isFirstPage: true, for: feedType)
             await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
         }
     }
