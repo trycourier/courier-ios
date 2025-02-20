@@ -412,7 +412,7 @@ class ThreadingTests: XCTestCase {
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<100 {
                 group.addTask {
-                    let operation = Int.random(in: 0..<4)
+                    let operation = Int.random(in: 0..<6)
                     switch operation {
                     case 0:
                         _ = await Courier.shared.addInboxListener()
@@ -423,8 +423,12 @@ class ThreadingTests: XCTestCase {
                     case 3:
                         await Courier.shared.signIn(userId: "chaos_user", accessToken: jwt)
                     case 4:
-                        let client = CourierClient(jwt: jwt, userId: "chaos_user")
-                        try await client.tokens.putUserToken(token: "example_token", provider: "example_provider")
+                        try await Courier.shared.setToken(for: .apn, token: "example")
+                        await Courier.shared.putPushTokens()
+                    case 5:
+                        await Courier.shared.deletePushTokens()
+                    case 6:
+                        await Courier.shared.signOut()
                     default:
                         break
                     }
