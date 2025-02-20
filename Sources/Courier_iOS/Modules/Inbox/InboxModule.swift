@@ -145,7 +145,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
         
     }
     
-    func getNextPage(feedType: InboxMessageFeed) async throws -> InboxMessageDataSet? {
+    func getNextPage(feedType: InboxMessageFeed) async throws -> InboxMessageSet? {
         
         if self.inboxListeners.isEmpty {
             return nil
@@ -362,7 +362,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     }
     
     @discardableResult
-    public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> InboxMessageDataSet? {
+    public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> InboxMessageSet? {
         return try await inboxModule.getNextPage(feedType: feed)
     }
     
@@ -375,6 +375,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
         onUnreadCountChanged: ((_ unreadCount: Int) -> Void)? = nil,
         onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
         onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onPageAdded: ((_ message: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
         onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
     ) async -> CourierInboxListener {
         
@@ -384,6 +385,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
             onUnreadCountChanged: onUnreadCountChanged,
             onTotalCountChanged: onTotalCountChanged,
             onMessagesChanged: onMessagesChanged,
+            onPageAdded: onPageAdded,
             onMessageEvent: onMessageEvent
         )
         

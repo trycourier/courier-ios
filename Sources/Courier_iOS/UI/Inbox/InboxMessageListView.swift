@@ -196,21 +196,21 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.openVisibleMessages()
     }
     
-    internal func addPage(set: InboxMessageSet) {
+    internal func addPage(messages: [InboxMessage], canPaginate: Bool) {
         
         self.manuallyArchivedMessageId = nil
         
-        if set.messages.isEmpty {
+        if messages.isEmpty {
             self.canPaginate = false
             self.tableView.reloadData()
             return
         }
         
         let insertionIndex = inboxMessages.count
-        self.inboxMessages.insert(contentsOf: set.messages, at: insertionIndex)
+        self.inboxMessages.insert(contentsOf: messages, at: insertionIndex)
         self.state = inboxMessages.isEmpty ? .empty : .content
         
-        let indexPaths = (insertionIndex..<insertionIndex + set.messages.count).map {
+        let indexPaths = (insertionIndex..<insertionIndex + messages.count).map {
             IndexPath(row: $0, section: 0)
         }
         
@@ -219,8 +219,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         
         // Remove the reload cell
         let couldPaginate = self.canPaginate
-        self.canPaginate = set.canPaginate
-        if couldPaginate && !set.canPaginate {
+        self.canPaginate = canPaginate
+        if couldPaginate && !canPaginate {
             tableView.deleteSections(IndexSet(integer: 1), with: .automatic)
         }
         

@@ -198,8 +198,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                         }
                     }
                 },
-                onMessagesChanged: { [weak self] messages, canPaginate, feed in
-                    self?.getPage(for: feed).page.setInbox(messages: messages, canPaginate: canPaginate)
+                onPageAdded: { [weak self] messages, canPaginate, isFirstPage, feed in
+                    if isFirstPage {
+                        self?.getPage(for: feed).page.setInbox(messages: messages, canPaginate: canPaginate)
+                    } else {
+                        self?.getPage(for: feed).page.addPage(messages: messages, canPaginate: canPaginate)
+                    }
                 },
                 onMessageEvent: { [weak self] message, index, feed, event in
                     switch event {

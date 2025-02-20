@@ -21,7 +21,7 @@
         await inboxSocketManager.closeSocket()
     }
     
-    func getInboxData(client: CourierClient, feedPaginationLimit: Int, archivePaginationLimit: Int, isRefresh: Bool) async throws -> (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int) {
+    func getInboxData(client: CourierClient, feedPaginationLimit: Int, archivePaginationLimit: Int, isRefresh: Bool) async throws -> (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int) {
         
         var feedRes: InboxResponse?
         var archivedRes: InboxResponse?
@@ -79,7 +79,7 @@
         
     }
     
-    func getNextFeedPage(client: CourierClient, paginationLimit: Int, paginationCursor: String) async throws -> InboxMessageDataSet {
+    func getNextFeedPage(client: CourierClient, paginationLimit: Int, paginationCursor: String) async throws -> InboxMessageSet {
         
         self.isPagingFeed = true
         
@@ -94,7 +94,7 @@
         
     }
     
-    func getNextArchivePage(client: CourierClient, paginationLimit: Int, paginationCursor: String) async throws -> InboxMessageDataSet {
+    func getNextArchivePage(client: CourierClient, paginationLimit: Int, paginationCursor: String) async throws -> InboxMessageSet {
         
         self.isPagingArchived = true
         

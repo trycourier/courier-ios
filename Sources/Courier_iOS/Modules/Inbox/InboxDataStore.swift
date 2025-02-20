@@ -10,17 +10,17 @@ internal class InboxDataStore {
     
     var delegate: InboxDataStoreEventDelegate? = nil
     
-    internal(set) public var feed: InboxMessageDataSet = InboxMessageDataSet()
-    internal(set) public var archive: InboxMessageDataSet = InboxMessageDataSet()
+    internal(set) public var feed: InboxMessageSet = InboxMessageSet()
+    internal(set) public var archive: InboxMessageSet = InboxMessageSet()
     internal(set) public var unreadCount: Int = 0
     
     /// Creates an  identical copy of the data
-    func getSnapshot() -> (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int) {
+    func getSnapshot() -> (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int) {
         return (feed, archive, unreadCount)
     }
     
     /// Reloads the data store from a snapshot
-    func reloadSnapshot(_ snapshot: (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int)) async {
+    func reloadSnapshot(_ snapshot: (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int)) async {
         await updateUnreadCount(snapshot.unreadCount)
         await updateDataSet(snapshot.feed, for: .feed)
         await updateDataSet(snapshot.archive, for: .archive)
@@ -441,7 +441,7 @@ internal class InboxDataStore {
     }
     
     /// Add page of messages
-    func addPage(_ page: InboxMessageDataSet, for feedType: InboxMessageFeed) async {
+    func addPage(_ page: InboxMessageSet, for feedType: InboxMessageFeed) async {
         switch feedType {
         case .feed:
             feed.totalCount = page.totalCount
@@ -463,7 +463,7 @@ internal class InboxDataStore {
     }
     
     /// Insert new messages
-    func updateDataSet(_ data: InboxMessageDataSet, for feedType: InboxMessageFeed) async {
+    func updateDataSet(_ data: InboxMessageSet, for feedType: InboxMessageFeed) async {
         switch feedType {
         case .feed:
             feed = data
@@ -486,8 +486,8 @@ internal class InboxDataStore {
     
     /// Removes and resets everything
     func dispose() async {
-        await updateDataSet(InboxMessageDataSet(), for: .feed)
-        await updateDataSet(InboxMessageDataSet(), for: .archive)
+        await updateDataSet(InboxMessageSet(), for: .feed)
+        await updateDataSet(InboxMessageSet(), for: .archive)
         await updateUnreadCount(0)
     }
     

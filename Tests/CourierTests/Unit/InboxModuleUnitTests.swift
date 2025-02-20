@@ -36,7 +36,7 @@ class InboxModuleUnitTests: XCTestCase {
         
         // Set initial data
         let initialMessage = InboxMessage.new()
-        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
+        let initialData = InboxMessageSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
         let dataStore = await Courier.shared.inboxModule.dataStore
@@ -45,7 +45,7 @@ class InboxModuleUnitTests: XCTestCase {
         XCTAssertEqual(initialDataStoreMessageCount, 1)
         
         // Reload with empty messages
-        let newData = InboxMessageDataSet(messages: [])
+        let newData = InboxMessageSet(messages: [])
         await dataStore.updateDataSet(newData, for: .feed)
         let updatedDataStoreMessageCount = await dataStore.feed.messages.count
         XCTAssertEqual(updatedDataStoreMessageCount, 0)
@@ -56,7 +56,7 @@ class InboxModuleUnitTests: XCTestCase {
         
         // Set initial data
         let initialMessage = InboxMessage.new()
-        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
+        let initialData = InboxMessageSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
         let dataStore = await Courier.shared.inboxModule.dataStore
@@ -81,7 +81,7 @@ class InboxModuleUnitTests: XCTestCase {
         // Set initial data
         let initialMessage = InboxMessage.new()
         initialMessage.setRead()
-        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
+        let initialData = InboxMessageSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
         let dataStore = await Courier.shared.inboxModule.dataStore
@@ -99,7 +99,7 @@ class InboxModuleUnitTests: XCTestCase {
     func testAddMessage() async {
         
         // Set initial data
-        let initialData = InboxMessageDataSet()
+        let initialData = InboxMessageSet()
         
         // Reload the data store
         let dataStore = await Courier.shared.inboxModule.dataStore
@@ -122,7 +122,7 @@ class InboxModuleUnitTests: XCTestCase {
         
         // Set initial data
         let initialMessage = InboxMessage.new()
-        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
+        let initialData = InboxMessageSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
         let dataStore = await Courier.shared.inboxModule.dataStore
@@ -157,7 +157,7 @@ class InboxModuleUnitTests: XCTestCase {
         
         // Set initial data
         let initialMessage = InboxMessage.new()
-        let initialData = InboxMessageDataSet(messages: [initialMessage], totalCount: 1)
+        let initialData = InboxMessageSet(messages: [initialMessage], totalCount: 1)
         
         // Reload the data store
         let dataStore = await Courier.shared.inboxModule.dataStore
@@ -190,7 +190,7 @@ class InboxModuleUnitTests: XCTestCase {
     
     func testConcurrentAddMessages() async {
         let dataStore = await Courier.shared.inboxModule.dataStore
-        await dataStore.updateDataSet(InboxMessageDataSet(), for: .feed)
+        await dataStore.updateDataSet(InboxMessageSet(), for: .feed)
 
         // Concurrently add 20 messages
         async let task1: () = Task {
@@ -228,7 +228,7 @@ class InboxModuleUnitTests: XCTestCase {
         }
         
         let unreadCount = 3
-        let initialData = InboxMessageDataSet(messages: (0..<unreadCount).map { _ in getMessage() })
+        let initialData = InboxMessageSet(messages: (0..<unreadCount).map { _ in getMessage() })
         await dataStore.updateDataSet(initialData, for: .feed)
         await dataStore.updateUnreadCount(unreadCount)
 

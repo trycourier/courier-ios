@@ -24,8 +24,8 @@ internal extension InboxResponse {
         )
     }
     
-    func toInboxMessageDataSet() -> InboxMessageDataSet {
-        return InboxMessageDataSet(
+    func toInboxMessageDataSet() -> InboxMessageSet {
+        return InboxMessageSet(
             messages: data?.messages?.nodes ?? [],
             totalCount: data?.count ?? 0,
             canPaginate: data?.messages?.pageInfo?.hasNextPage ?? false,

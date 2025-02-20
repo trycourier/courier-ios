@@ -40,7 +40,7 @@ import Foundation
     }
     
     @MainActor
-    internal func onLoad(_ snapshot: (feed: InboxMessageDataSet, archive: InboxMessageDataSet, unreadCount: Int)) {
+    internal func onLoad(_ snapshot: (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int)) {
         if !self.isInitialized { return }
         self.onMessagesChanged?(snapshot.feed.messages, snapshot.feed.canPaginate, .feed)
         self.onMessagesChanged?(snapshot.archive.messages, snapshot.archive.canPaginate, .archive)

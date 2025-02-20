@@ -6,13 +6,6 @@
 //
 
 public struct InboxMessageSet: Codable {
-    internal(set) public var messages: [InboxMessage]
-    internal(set) public var totalCount: Int
-    internal(set) public var canPaginate: Bool
-    internal(set) public var paginationCursor: String?
-}
-
-public struct InboxMessageDataSet: Codable {
     
     internal(set) public var messages: [InboxMessage]
     internal(set) public var totalCount: Int
