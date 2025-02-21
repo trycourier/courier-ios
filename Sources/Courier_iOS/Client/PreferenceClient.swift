@@ -18,7 +18,7 @@ public class PreferenceClient: CourierApiClient {
     
     public func getUserPreferences(paginationCursor: String? = nil) async throws -> CourierUserPreferences {
         
-        var url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences"
+        var url = "\(options.apiUrls.rest)/users/\(options.userId)/preferences"
         
         if let cursor = paginationCursor {
             url += "?cursor=\(cursor)"
@@ -40,7 +40,7 @@ public class PreferenceClient: CourierApiClient {
     
     public func getUserPreferenceTopic(topicId: String) async throws -> CourierUserPreferencesTopic {
         
-        let url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences/\(topicId)"
+        let url = "\(options.apiUrls.rest)/users/\(options.userId)/preferences/\(topicId)"
 
         let request = try http(url) {
             
@@ -59,7 +59,7 @@ public class PreferenceClient: CourierApiClient {
     
     public func putUserPreferenceTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
         
-        let url = "\(PreferenceClient.BASE_REST)/users/\(options.userId)/preferences/\(topicId)"
+        let url = "\(options.apiUrls.rest)/users/\(options.userId)/preferences/\(topicId)"
 
         let request = try http(url) {
             

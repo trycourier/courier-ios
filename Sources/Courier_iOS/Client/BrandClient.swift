@@ -36,7 +36,7 @@ public class BrandClient: CourierApiClient {
             }
         """
 
-        let request = try http(BrandClient.BASE_GRAPH_QL) {
+        let request = try http(options.apiUrls.graphql) {
             
             $0.httpMethod = "POST"
             

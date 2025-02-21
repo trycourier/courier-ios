@@ -85,7 +85,7 @@ public class InboxSocket: CourierSocket {
     init(options: CourierClient.Options) {
         self.options = options
         
-        let url = InboxSocket.buildUrl(clientKey: options.clientKey, jwt: options.jwt)
+        let url = InboxSocket.buildUrl(options: options)
         super.init(url: url)
         
         // Handle received messages
@@ -155,11 +155,11 @@ public class InboxSocket: CourierSocket {
         }
     }
     
-    private static func buildUrl(clientKey: String?, jwt: String?) -> String {
-        var url = CourierApiClient.INBOX_WEBSOCKET
-        if let jwt = jwt {
+    private static func buildUrl(options: CourierClient.Options) -> String {
+        var url = options.apiUrls.inboxWebSocket
+        if let jwt = options.jwt {
             url += "/?auth=\(jwt)"
-        } else if let clientKey = clientKey {
+        } else if let clientKey = options.clientKey {
             url += "/?clientKey=\(clientKey)"
         }
         return url

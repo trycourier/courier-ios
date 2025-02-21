@@ -52,55 +52,6 @@ class InboxTests: XCTestCase {
 
     }
     
-    private func getVerifiedInboxMessage() async throws -> (InboxMessage, CourierInboxListener) {
-        try await withCheckedThrowingContinuation { continuation in
-            
-            let lock = NSLock()
-            var didFinish = false
-            
-            func finish(_ result: Result<(InboxMessage, CourierInboxListener), Error>) {
-                lock.lock()
-                defer { lock.unlock() }
-                guard !didFinish else { return }
-                didFinish = true
-                
-                switch result {
-                case .success(let (message, listener)):
-                    continuation.resume(returning: (message, listener))
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-            
-            Task {
-                do {
-                    // Ensure messageId is assigned before adding the listener
-                    let messageId = try await InboxTests.sendMessage()
-                    var listener: CourierInboxListener? = nil
-                    
-                    // Initialize listener
-                    listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
-                        if event == .added && message.messageId == messageId {
-                            finish(.success((message, listener!)))
-                        }
-                    })
-                    
-                    // Sleep for 30 seconds to create a timeout.
-                    try? await Task.sleep(nanoseconds: 30_000_000_000)
-                    
-                    // Timeout reached, fail safely.
-                    finish(.failure(CourierError.inboxNotInitialized))
-                    
-                    // Ensure listener is removed on failure
-                    await Courier.shared.removeInboxListener(listener!)
-                    
-                } catch {
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-    
     actor StepsTracker {
         private(set) var steps = [String]()
         
@@ -237,7 +188,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let (message, listener) = try await getVerifiedInboxMessage()
+        let (message, listener) = try await Utils.sendMessageAndWaitForDelivery(to: Courier.shared.userId!)
 
         try await Courier.shared.openMessage(message.messageId)
         
@@ -249,7 +200,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let (message, listener) = try await getVerifiedInboxMessage()
+        let (message, listener) = try await Utils.sendMessageAndWaitForDelivery(to: Courier.shared.userId!)
 
         try await Courier.shared.clickMessage(message.messageId)
         
@@ -261,7 +212,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let (message, listener) = try await getVerifiedInboxMessage()
+        let (message, listener) = try await Utils.sendMessageAndWaitForDelivery(to: Courier.shared.userId!)
 
         try await Courier.shared.readMessage(message.messageId)
         
@@ -273,7 +224,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let (message, listener) = try await getVerifiedInboxMessage()
+        let (message, listener) = try await Utils.sendMessageAndWaitForDelivery(to: Courier.shared.userId!)
 
         try await Courier.shared.unreadMessage(message.messageId)
         
@@ -285,7 +236,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let (message, listener) = try await getVerifiedInboxMessage()
+        let (message, listener) = try await Utils.sendMessageAndWaitForDelivery(to: Courier.shared.userId!)
 
         try await Courier.shared.archiveMessage(message.messageId)
         
@@ -305,7 +256,7 @@ class InboxTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
-        let (message, listener) = try await getVerifiedInboxMessage()
+        let (message, listener) = try await Utils.sendMessageAndWaitForDelivery(to: Courier.shared.userId!)
         
         let dataStore = await Courier.shared.inboxModule.dataStore
 
@@ -376,7 +327,7 @@ class InboxTests: XCTestCase {
     func testCustomMessagePayload() async throws {
         try await UserBuilder.authenticate()
         
-        let (message, listener) = try await getVerifiedInboxMessage()
+        let (message, listener) = try await Utils.sendMessageAndWaitForDelivery(to: Courier.shared.userId!)
         
         if let childrenData = message.data?["children"] as? [[String: Any]] {
             let children = childrenData.compactMap { Child(dictionary: $0) }

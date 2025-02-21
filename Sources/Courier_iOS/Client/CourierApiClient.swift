@@ -9,11 +9,6 @@ import Foundation
 
 public class CourierApiClient {
     
-    static let BASE_REST = "https://api.courier.com"
-    static let BASE_GRAPH_QL = "https://api.courier.com/client/q"
-    static let INBOX_GRAPH_QL = "https://inbox.courier.com/q"
-    static let INBOX_WEBSOCKET = "wss://realtime.courier.com"
-    
     func http(_ url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
         
         guard let url = URL(string: url) else {

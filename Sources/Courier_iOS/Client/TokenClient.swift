@@ -18,7 +18,7 @@ public class TokenClient: CourierApiClient {
     
     public func putUserToken(token: String, provider: String, device: CourierDevice = CourierDevice()) async throws {
 
-        let request = try http("\(TokenClient.BASE_REST)/users/\(options.userId)/tokens/\(token)") {
+        let request = try http("\(options.apiUrls.rest)/users/\(options.userId)/tokens/\(token)") {
             
             $0.httpMethod = "PUT"
             
@@ -41,7 +41,7 @@ public class TokenClient: CourierApiClient {
     
     public func deleteUserToken(token: String) async throws {
 
-        let request = try http("\(TokenClient.BASE_REST)/users/\(options.userId)/tokens/\(token)") {
+        let request = try http("\(options.apiUrls.rest)/users/\(options.userId)/tokens/\(token)") {
             
             $0.httpMethod = "DELETE"
             
