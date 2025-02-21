@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "8096F144-5457-44D6-B1AB-40B624F94BDB",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "threadSanitizerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "270A1A5B2D67F29800798B13",
+        "name" : "ExampleUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
