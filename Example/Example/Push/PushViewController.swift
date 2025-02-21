@@ -14,21 +14,14 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
     let refreshControl = UIRefreshControl()
     
     @IBAction func refreshAction(_ sender: Any) {
-        
         refresh()
-        
     }
     
     @IBAction func requestPermissionsButton(_ sender: Any) {
-        
         Task {
-            
             let _ = try await Courier.requestNotificationPermission()
-            
             refresh()
-            
         }
-        
     }
     
     var tokens = [("APNS Token", "Empty"), ("FCM Token", "Empty")]
@@ -53,7 +46,7 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         title = "Push"
         
-        tableView.register(TokenTableViewCell.self, forCellReuseIdentifier: TokenTableViewCell.id)
+        tableView.register(MonoListItem.self, forCellReuseIdentifier: MonoListItem.id)
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -69,10 +62,10 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TokenTableViewCell.id, for: indexPath) as! TokenTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: MonoListItem.id, for: indexPath) as! MonoListItem
         
         let item = tokens[indexPath.row]
-        cell.configureCell(title: item.0, item: item.1)
+        cell.configureCell(title: item.0, value: item.1)
         
         return cell
     }
@@ -90,66 +83,6 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
-    }
-    
-}
-
-class TokenTableViewCell: UITableViewCell {
-    
-    static let id = "TokenTableViewCell"
-    
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .bold)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.setContentHuggingPriority(.required, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
-        return label
-    }()
-    
-    let itemLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.setContentHuggingPriority(.required, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
-        return label
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
-        setupConstraints()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupViews() {
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(itemLabel)
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
-            titleLabel.widthAnchor.constraint(equalToConstant: 100), // Adjust the fixed width here
-            
-            itemLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 16),
-            itemLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            itemLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            itemLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
-        ])
-    }
-    
-    func configureCell(title: String, item: String) {
-        titleLabel.text = title
-        itemLabel.text = item
     }
     
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		270A1A6D2D67FA9A00798B13 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 270A1A6C2D67FA9A00798B13 /* Courier_iOS */; };
+		270A1A762D69213000798B13 /* MonoListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270A1A752D69212B00798B13 /* MonoListItem.swift */; };
 		270E8E9D2BA4A793007E21EF /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 270E8E9C2BA4A793007E21EF /* ShowTime */; };
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
@@ -71,6 +72,7 @@
 /* Begin PBXFileReference section */
 		270A1A5C2D67F29800798B13 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		270A1A6B2D67F4DB00798B13 /* ExampleUITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ExampleUITests.xctestplan; sourceTree = "<group>"; };
+		270A1A752D69212B00798B13 /* MonoListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonoListItem.swift; sourceTree = "<group>"; };
 		272A237F29B2886600B82CFE /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
 		272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltInboxViewController.swift; sourceTree = "<group>"; };
 		276425A32B9F87EC00DB08E1 /* Cells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 		27895165292689460070F501 /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				270A1A752D69212B00798B13 /* MonoListItem.swift */,
 				2789519529268DB70070F501 /* Example.entitlements */,
 				27B18CE12B50A5B30005904E /* GoogleService-Info.plist */,
 				27895174292689470070F501 /* Info.plist */,
@@ -405,6 +408,7 @@
 				27B18CDE2B4DF6460005904E /* PreferencesViewController.swift in Sources */,
 				27C1E45629C0DE2A00A7804C /* StyledInboxViewController.swift in Sources */,
 				276425AA2B9FA09700DB08E1 /* PrebuiltPreferencesViewController.swift in Sources */,
+				270A1A762D69213000798B13 /* MonoListItem.swift in Sources */,
 				276425AE2B9FA39300DB08E1 /* CustomPreferencesViewController.swift in Sources */,
 				27895167292689460070F501 /* AppDelegate.swift in Sources */,
 				27895169292689460070F501 /* SceneDelegate.swift in Sources */,
@@ -785,7 +789,7 @@
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
 				kind = revision;
-				revision = a98744a28be2e801bbd2758bd672f0701fb1604b;
+				revision = 6011eef156cec6ceb43763b1e76455c2034c3da3;
 			};
 		};
 		27D8F1B02AE885DB00E54210 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {

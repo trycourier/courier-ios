@@ -24,7 +24,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "revision" : "a98744a28be2e801bbd2758bd672f0701fb1604b"
+        "revision" : "6011eef156cec6ceb43763b1e76455c2034c3da3"
       }
     },
     {

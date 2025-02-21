@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WFc-8G-AqP">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -83,62 +83,49 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLd-SX-o9O">
-                                <rect key="frame" x="157.33333333333334" y="409" width="75.666666666666657" height="34.333333333333314"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="gray" title="Sign In"/>
-                                <connections>
-                                    <action selector="authButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Dv-xX-CU2"/>
-                                    <action selector="authButtonAction:" destination="miz-bH-rnm" eventType="touchUpInside" id="oev-1P-Dj5"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Courier User Id Found" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="emG-u0-i0I">
-                                <rect key="frame" x="98.333333333333329" y="368.66666666666669" width="193.33333333333337" height="20.333333333333314"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="hUi-Ky-cAY">
-                                <rect key="frame" x="107.33333333333333" y="714" width="175.66666666666669" height="31"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show Touches" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iBo-AB-A07">
-                                        <rect key="frame" x="0.0" y="0.0" width="110.66666666666667" height="31"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Idu-NA-CuY">
-                                        <rect key="frame" x="126.66666666666669" y="0.0" width="51" height="31"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ERM-hR-fyX">
+                                <rect key="frame" x="0.0" y="712" width="390" height="49"/>
+                                <items>
+                                    <barButtonItem title="Show Touches" id="Ouc-IZ-CLc">
                                         <connections>
-                                            <action selector="showTouchesAction:" destination="miz-bH-rnm" eventType="valueChanged" id="j9w-x6-gzN"/>
+                                            <action selector="toggleTouchesButtonAction:" destination="miz-bH-rnm" id="g08-ql-rbJ"/>
                                         </connections>
-                                    </switch>
-                                </subviews>
-                            </stackView>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="s8c-GD-zAE"/>
+                                    <barButtonItem title="Sign In" id="xHU-15-TRx">
+                                        <connections>
+                                            <action selector="authButtonAction:" destination="miz-bH-rnm" id="Srn-Ks-UhH"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="jHh-Iq-2Rq">
+                                <rect key="frame" x="0.0" y="91" width="390" height="621"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aGi-VM-S4U"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="hUi-Ky-cAY" firstAttribute="bottom" secondItem="aGi-VM-S4U" secondAttribute="bottom" constant="-16" id="HcT-hG-gbr"/>
-                            <constraint firstItem="BLd-SX-o9O" firstAttribute="top" secondItem="emG-u0-i0I" secondAttribute="bottom" constant="20" id="M6o-wV-ExL"/>
-                            <constraint firstItem="BLd-SX-o9O" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="QGj-8L-kiy"/>
-                            <constraint firstItem="BLd-SX-o9O" firstAttribute="top" secondItem="emG-u0-i0I" secondAttribute="bottom" constant="20" id="aFF-zO-UL6"/>
-                            <constraint firstItem="emG-u0-i0I" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="kIq-X3-YAQ"/>
-                            <constraint firstItem="BLd-SX-o9O" firstAttribute="centerY" secondItem="aGi-VM-S4U" secondAttribute="centerY" id="kr3-QL-DXd"/>
-                            <constraint firstItem="hUi-Ky-cAY" firstAttribute="centerX" secondItem="aGi-VM-S4U" secondAttribute="centerX" id="vtK-Dk-kZC"/>
+                            <constraint firstItem="jHh-Iq-2Rq" firstAttribute="leading" secondItem="aGi-VM-S4U" secondAttribute="leading" id="6Hu-ry-8vQ"/>
+                            <constraint firstItem="jHh-Iq-2Rq" firstAttribute="trailing" secondItem="aGi-VM-S4U" secondAttribute="trailing" id="6pP-9z-1br"/>
+                            <constraint firstItem="ERM-hR-fyX" firstAttribute="top" secondItem="jHh-Iq-2Rq" secondAttribute="bottom" id="Y91-90-XRq"/>
+                            <constraint firstItem="ERM-hR-fyX" firstAttribute="leading" secondItem="aGi-VM-S4U" secondAttribute="leading" id="Z99-UT-ZsU"/>
+                            <constraint firstItem="aGi-VM-S4U" firstAttribute="bottom" secondItem="ERM-hR-fyX" secondAttribute="bottom" id="oqA-rY-bvq"/>
+                            <constraint firstItem="jHh-Iq-2Rq" firstAttribute="top" secondItem="aGi-VM-S4U" secondAttribute="top" id="sWQ-N1-hGf"/>
+                            <constraint firstItem="ERM-hR-fyX" firstAttribute="trailing" secondItem="aGi-VM-S4U" secondAttribute="trailing" id="vvn-8w-FEv"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="UCa-K7-8wT"/>
                     <connections>
-                        <outlet property="authButton" destination="BLd-SX-o9O" id="2gF-tH-4YX"/>
-                        <outlet property="authLabel" destination="emG-u0-i0I" id="n8b-mC-4QK"/>
-                        <outlet property="showTouchesLabel" destination="iBo-AB-A07" id="fE3-ny-l24"/>
-                        <outlet property="showTouchesSwitch" destination="Idu-NA-CuY" id="Kuw-ll-t8T"/>
+                        <outlet property="authButton" destination="xHU-15-TRx" id="0gK-w6-CK4"/>
+                        <outlet property="tableView" destination="jHh-Iq-2Rq" id="W9A-Lj-DSL"/>
+                        <outlet property="toggleTouchesButton" destination="Ouc-IZ-CLc" id="5AM-Zr-OzY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gi7-we-bW0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2445" y="-509"/>
+            <point key="canvasLocation" x="2444.6153846153848" y="-509.00473933649289"/>
         </scene>
         <!--Push-->
         <scene sceneID="EPn-Ql-4Sm">
@@ -247,7 +234,7 @@
     <resources>
         <image name="message.badge.filled.fill.rtl" catalog="system" width="128" height="122"/>
         <image name="person.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="117"/>
+        <image name="tray.and.arrow.down.fill" catalog="system" width="128" height="115"/>
         <image name="wrench.adjustable.fill" catalog="system" width="128" height="124"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
