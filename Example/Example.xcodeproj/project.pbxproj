@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		270A1A6D2D67FA9A00798B13 /* Courier_iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 270A1A6C2D67FA9A00798B13 /* Courier_iOS */; };
 		270A1A762D69213000798B13 /* MonoListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270A1A752D69212B00798B13 /* MonoListItem.swift */; };
+		270A1A782D76375A00798B13 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270A1A772D76375500798B13 /* UserManager.swift */; };
 		270E8E9D2BA4A793007E21EF /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 270E8E9C2BA4A793007E21EF /* ShowTime */; };
 		272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A237F29B2886600B82CFE /* RootTabBarController.swift */; };
 		272A238329B69E6C00B82CFE /* PrebuiltInboxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */; };
@@ -73,6 +74,7 @@
 		270A1A5C2D67F29800798B13 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		270A1A6B2D67F4DB00798B13 /* ExampleUITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ExampleUITests.xctestplan; sourceTree = "<group>"; };
 		270A1A752D69212B00798B13 /* MonoListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonoListItem.swift; sourceTree = "<group>"; };
+		270A1A772D76375500798B13 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		272A237F29B2886600B82CFE /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
 		272A238229B69E6C00B82CFE /* PrebuiltInboxViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrebuiltInboxViewController.swift; sourceTree = "<group>"; };
 		276425A32B9F87EC00DB08E1 /* Cells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cells.swift; sourceTree = "<group>"; };
@@ -200,13 +202,14 @@
 		27895165292689460070F501 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				270A1A752D69212B00798B13 /* MonoListItem.swift */,
 				2789519529268DB70070F501 /* Example.entitlements */,
 				27B18CE12B50A5B30005904E /* GoogleService-Info.plist */,
 				27895174292689470070F501 /* Info.plist */,
 				2789516F292689470070F501 /* Assets.xcassets */,
 				27895171292689470070F501 /* LaunchScreen.storyboard */,
 				2789516C292689460070F501 /* Main.storyboard */,
+				270A1A772D76375500798B13 /* UserManager.swift */,
+				270A1A752D69212B00798B13 /* MonoListItem.swift */,
 				27AD11972AE9D0BE00867BF9 /* Env.swift */,
 				2789519629268E030070F501 /* Extras.swift */,
 				276425A32B9F87EC00DB08E1 /* Cells.swift */,
@@ -397,6 +400,7 @@
 			files = (
 				2789516B292689460070F501 /* PushViewController.swift in Sources */,
 				276425AC2B9FA16A00DB08E1 /* StyledPreferencesViewController.swift in Sources */,
+				270A1A782D76375A00798B13 /* UserManager.swift in Sources */,
 				272A238029B2886600B82CFE /* RootTabBarController.swift in Sources */,
 				276425B02B9FA5B500DB08E1 /* UpdatePreferencesViewController.swift in Sources */,
 				2789519729268E030070F501 /* Extras.swift in Sources */,
@@ -629,7 +633,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Example/Info.plist;
@@ -659,7 +663,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Example/Info.plist;
@@ -686,7 +690,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
@@ -712,7 +716,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = 83BJVWGX4Q;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;

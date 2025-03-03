@@ -53,21 +53,23 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let inboxGraphQL = options[4].1
                 let inboxWebsocket = options[5].1
                 
+                // Set the usermanager values
+                let userManager = UserManager.shared
+                userManager.setCredential(key: "restUrl", value: rest)
+                userManager.setCredential(key: "graphqlUrl", value: graphQL)
+                userManager.setCredential(key: "inboxGraphqlUrl", value: inboxGraphQL)
+                userManager.setCredential(key: "inboxWebsocketUrl", value: inboxWebsocket)
+                
+                // Get the new jwt
                 let jwt = try await ExampleServer().generateJwt(
                     authKey: Env.COURIER_AUTH_KEY,
                     userId: userId
                 )
                 
-                await Courier.shared.signIn(
+                await signIn(
                     userId: userId,
                     tenantId: tenantId.isEmpty ? nil : tenantId,
-                    accessToken: jwt,
-                    baseUrls: CourierClient.ApiUrls(
-                        rest: rest,
-                        graphql: graphQL,
-                        inboxGraphql: inboxGraphQL,
-                        inboxWebSocket: inboxWebsocket
-                    )
+                    accessToken: jwt
                 )
                 
             }
@@ -86,14 +88,14 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         authButton.isEnabled = true
         authButton.title = await courier.userId == nil ? "Sign In" : "Sign Out"
         
-        let defaultUrls = CourierClient.ApiUrls()
+        let credentials = UserManager.shared.getCredentials()
         
         options[0].1 = await courier.userId ?? ""
         options[1].1 = await courier.tenantId ?? ""
-        options[2].1 = await courier.client?.options.apiUrls.rest ?? defaultUrls.rest
-        options[3].1 = await courier.client?.options.apiUrls.graphql ?? defaultUrls.graphql
-        options[4].1 = await courier.client?.options.apiUrls.inboxGraphql ?? defaultUrls.inboxGraphql
-        options[5].1 = await courier.client?.options.apiUrls.inboxWebSocket ?? defaultUrls.inboxWebSocket
+        options[2].1 = await courier.client?.options.apiUrls.rest ?? credentials["restUrl"]!
+        options[3].1 = await courier.client?.options.apiUrls.graphql ?? credentials["graphqlUrl"]!
+        options[4].1 = await courier.client?.options.apiUrls.inboxGraphql ?? credentials["inboxGraphqlUrl"]!
+        options[5].1 = await courier.client?.options.apiUrls.inboxWebSocket ?? credentials["inboxWebsocketUrl"]!
         
         authButton.isEnabled = !options[0].1.isEmpty
         
@@ -127,7 +129,7 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
                     userId: Courier.shared.userId!
                 )
                 
-                await Courier.shared.signIn(
+                await signIn(
                     userId: Courier.shared.userId!,
                     tenantId: Courier.shared.tenantId,
                     accessToken: jwt
@@ -145,6 +147,21 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
             
         }
         
+    }
+    
+    private func signIn(userId: String, tenantId: String?, accessToken: String) async {
+        let userManager = UserManager.shared
+        await Courier.shared.signIn(
+            userId: userId,
+            tenantId: tenantId,
+            accessToken: accessToken,
+            baseUrls: CourierClient.ApiUrls(
+                rest: userManager.getCredential(forKey: "restUrl")!,
+                graphql: userManager.getCredential(forKey: "graphqlUrl")!,
+                inboxGraphql: userManager.getCredential(forKey: "inboxGraphqlUrl")!,
+                inboxWebSocket: userManager.getCredential(forKey: "inboxWebsocketUrl")!
+            )
+        )
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
