@@ -14,6 +14,7 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
     private var options: [(String, String)] = [
         ("User ID", "Loading..."),
         ("Tenant ID", "Loading..."),
+        ("API Key", "Loading..."),
         ("REST URL", "Loading..."),
         ("GraphQL URL", "Loading..."),
         ("Inbox GraphQL URL", "Loading..."),
@@ -48,10 +49,11 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
                 let userId = options[0].1
                 let tenantId = options[1].1
-                let rest = options[2].1
-                let graphQL = options[3].1
-                let inboxGraphQL = options[4].1
-                let inboxWebsocket = options[5].1
+                let apiKey = options[2].1
+                let rest = options[3].1
+                let graphQL = options[4].1
+                let inboxGraphQL = options[5].1
+                let inboxWebsocket = options[6].1
                 
                 // Set the usermanager values
                 let userManager = UserManager.shared
@@ -60,17 +62,26 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
                 userManager.setCredential(key: "inboxGraphqlUrl", value: inboxGraphQL)
                 userManager.setCredential(key: "inboxWebsocketUrl", value: inboxWebsocket)
                 
-                // Get the new jwt
-                let jwt = try await ExampleServer().generateJwt(
-                    authKey: Env.COURIER_AUTH_KEY,
-                    userId: userId
-                )
-                
-                await signIn(
-                    userId: userId,
-                    tenantId: tenantId.isEmpty ? nil : tenantId,
-                    accessToken: jwt
-                )
+                do {
+                    
+                    // Get the new jwt
+                    let jwt = try await ExampleServer().generateJwt(
+                        authKey: apiKey,
+                        userId: userId
+                    )
+                    
+                    await signIn(
+                        userId: userId,
+                        tenantId: tenantId.isEmpty ? nil : tenantId,
+                        accessToken: jwt
+                    )
+                    
+                } catch {
+                    
+                    await Courier.shared.signOut()
+                    await self.updateUserState(Courier.shared)
+                    
+                }
                 
             }
             
@@ -92,10 +103,11 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         options[0].1 = await courier.userId ?? ""
         options[1].1 = await courier.tenantId ?? ""
-        options[2].1 = await courier.client?.options.apiUrls.rest ?? credentials["restUrl"]!
-        options[3].1 = await courier.client?.options.apiUrls.graphql ?? credentials["graphqlUrl"]!
-        options[4].1 = await courier.client?.options.apiUrls.inboxGraphql ?? credentials["inboxGraphqlUrl"]!
-        options[5].1 = await courier.client?.options.apiUrls.inboxWebSocket ?? credentials["inboxWebsocketUrl"]!
+        options[2].1 = credentials["apiKey"] ?? Env.COURIER_AUTH_KEY
+        options[3].1 = await courier.client?.options.apiUrls.rest ?? credentials["restUrl"]!
+        options[4].1 = await courier.client?.options.apiUrls.graphql ?? credentials["graphqlUrl"]!
+        options[5].1 = await courier.client?.options.apiUrls.inboxGraphql ?? credentials["inboxGraphqlUrl"]!
+        options[6].1 = await courier.client?.options.apiUrls.inboxWebSocket ?? credentials["inboxWebsocketUrl"]!
         
         authButton.isEnabled = !options[0].1.isEmpty
         
@@ -124,16 +136,25 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             if await Courier.shared.isUserSignedIn {
                 
-                let jwt = try await ExampleServer().generateJwt(
-                    authKey: Env.COURIER_AUTH_KEY,
-                    userId: Courier.shared.userId!
-                )
-                
-                await signIn(
-                    userId: Courier.shared.userId!,
-                    tenantId: Courier.shared.tenantId,
-                    accessToken: jwt
-                )
+                do {
+                    
+                    let jwt = try await ExampleServer().generateJwt(
+                        authKey: UserManager.shared.getCredential(forKey: "apiKey") ?? Env.COURIER_AUTH_KEY,
+                        userId: Courier.shared.userId!
+                    )
+                    
+                    await signIn(
+                        userId: Courier.shared.userId!,
+                        tenantId: Courier.shared.tenantId,
+                        accessToken: jwt
+                    )
+                    
+                } catch {
+                    
+                    await Courier.shared.signOut()
+                    await self.updateUserState(Courier.shared)
+                    
+                }
                 
             }
             
@@ -188,7 +209,7 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let item = options[indexPath.row]
         
-        showInputAlert(title: item.0, inputs: [item.0], action: "Update") { [self] values in
+        showInputAlert(title: item.0, inputs: [(item.0, item.1)], action: "Update") { [self] values in
             
             let value = values[0]
             options[indexPath.row].1 = value

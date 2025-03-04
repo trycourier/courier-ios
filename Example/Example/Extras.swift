@@ -152,7 +152,7 @@ extension UIViewController {
         }
     }
     
-    func showInputAlert(title: String, inputs: [String], action: String, onComplete: @escaping ([String]) -> Void) {
+    func showInputAlert(title: String, inputs: [(String, String?)], action: String, onComplete: @escaping ([String]) -> Void) {
         
         alert?.dismiss(animated: true)
         
@@ -168,7 +168,8 @@ extension UIViewController {
             
             inputs.forEach { input in
                 alert.addTextField { field in
-                    field.placeholder = input
+                    field.placeholder = input.0
+                    field.text = input.1
                     field.keyboardType = .default
                     field.autocorrectionType = .no
                     field.autocapitalizationType = .none
