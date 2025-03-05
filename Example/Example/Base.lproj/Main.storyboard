@@ -86,9 +86,9 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ERM-hR-fyX">
                                 <rect key="frame" x="0.0" y="712" width="390" height="49"/>
                                 <items>
-                                    <barButtonItem title="Show Touches" id="Ouc-IZ-CLc">
+                                    <barButtonItem title="Reset" id="Ouc-IZ-CLc">
                                         <connections>
-                                            <action selector="toggleTouchesButtonAction:" destination="miz-bH-rnm" id="g08-ql-rbJ"/>
+                                            <action selector="resetButtonAction:" destination="miz-bH-rnm" id="G53-1d-jjs"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="s8c-GD-zAE"/>
@@ -119,8 +119,8 @@
                     <navigationItem key="navigationItem" id="UCa-K7-8wT"/>
                     <connections>
                         <outlet property="authButton" destination="xHU-15-TRx" id="0gK-w6-CK4"/>
+                        <outlet property="resetButton" destination="Ouc-IZ-CLc" id="S3j-UM-Jik"/>
                         <outlet property="tableView" destination="jHh-Iq-2Rq" id="W9A-Lj-DSL"/>
-                        <outlet property="toggleTouchesButton" destination="Ouc-IZ-CLc" id="5AM-Zr-OzY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gi7-we-bW0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
