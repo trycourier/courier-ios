@@ -11,81 +11,107 @@ import ShowTime
 
 class AuthViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    private var options: [(String, String)] = [
-        ("User ID", "Loading..."),
-        ("Tenant ID", "Loading..."),
-        ("API Key", "Loading..."),
-        ("REST URL", "Loading..."),
-        ("GraphQL URL", "Loading..."),
-        ("Inbox GraphQL URL", "Loading..."),
-        ("Inbox WebSocket", "Loading...")
-    ]
+    private lazy var options: [(String, String)] = {
+        let userManager = UserManager.shared
+        let credentials = userManager.getCredentials()
+        return [
+            ("User ID", credentials["userId"] ?? ""),
+            ("Tenant ID (Optional)", credentials["tenantId"] ?? ""),
+            ("API Key", credentials["apiKey"] ?? Env.COURIER_AUTH_KEY),
+            ("REST URL", credentials["restUrl"] ?? ""),
+            ("GraphQL URL", credentials["graphqlUrl"] ?? ""),
+            ("Inbox GraphQL URL", credentials["inboxGraphqlUrl"] ?? ""),
+            ("Inbox WebSocket", credentials["inboxWebsocketUrl"] ?? "")
+        ]
+    }()
     
     private var canEditAuthentication = false
-    
     private var authListener: CourierAuthenticationListener? = nil
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var toggleTouchesButton: UIBarButtonItem!
-    @IBAction func toggleTouchesButtonAction(_ sender: Any) {
-        ShowTime.enabled = ShowTime.enabled == .always ? .never : .always
-        updateShowTouchesLabel()
+    @IBOutlet weak var resetButton: UIBarButtonItem!
+    @IBOutlet weak var authButton: UIBarButtonItem!
+    var toggleTouchesButton: UIBarButtonItem!
+    
+    @IBAction func resetButtonAction(_ sender: Any) {
+        
+        let alert = UIAlertController(
+            title: "Confirm Reset",
+            message: "Are you sure you want to reset all the values?",
+            preferredStyle: .actionSheet
+        )
+        
+        alert.addAction(UIAlertAction(
+            title: "Yes",
+            style: .destructive,
+            handler: { _ in
+                Task {
+                    // Sign out if currently signed in
+                    if await Courier.shared.userId != nil {
+                        await Courier.shared.signOut()
+                    }
+                    
+                    self.resetUser()
+                    
+                    await self.updateUserState()
+                }
+            }
+        ))
+        
+        alert.addAction(UIAlertAction(
+            title: "Cancel",
+            style: .cancel,
+            handler: nil
+        ))
+        
+        // For iPad support
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.barButtonItem = resetButton
+        }
+        
+        present(alert, animated: true, completion: nil)
+        
     }
     
-    @IBOutlet weak var authButton: UIBarButtonItem!
-    @IBAction func authButtonAction(_ sender: Any) {
+    private func resetUser() {
         
+        // Clear UserManager credentials
+        let userManager = UserManager.shared
+        userManager.removeCredentials()
+        
+        // Reset options to default values
+        let credentials = userManager.getCredentials()
+        self.options = [
+            ("User ID", ""),
+            ("Tenant ID (Optional)", ""),
+            ("API Key", credentials["apiKey"] ?? Env.COURIER_AUTH_KEY),
+            ("REST URL", credentials["restUrl"] ?? ""),
+            ("GraphQL URL", credentials["graphqlUrl"] ?? ""),
+            ("Inbox GraphQL URL", credentials["inboxGraphqlUrl"] ?? ""),
+            ("Inbox WebSocket", credentials["inboxWebsocketUrl"] ?? "")
+        ]
+        
+    }
+    
+    @IBAction func authButtonAction(_ sender: Any) {
         self.canEditAuthentication = false
         self.authButton.isEnabled = false
         self.tableView.reloadData()
         
         Task {
-            
-            if let _ = await Courier.shared.userId {
-                
+            if await Courier.shared.userId != nil {
                 await Courier.shared.signOut()
-                
+                resetUser()
             } else {
-                
-                let userId = options[0].1
-                let tenantId = options[1].1
-                let apiKey = options[2].1
-                let rest = options[3].1
-                let graphQL = options[4].1
-                let inboxGraphQL = options[5].1
-                let inboxWebsocket = options[6].1
-                
-                // Set the usermanager values
-                let userManager = UserManager.shared
-                userManager.setCredential(key: "restUrl", value: rest)
-                userManager.setCredential(key: "graphqlUrl", value: graphQL)
-                userManager.setCredential(key: "inboxGraphqlUrl", value: inboxGraphQL)
-                userManager.setCredential(key: "inboxWebsocketUrl", value: inboxWebsocket)
-                
-                do {
-                    
-                    // Get the new jwt
-                    let jwt = try await ExampleServer().generateJwt(
-                        authKey: apiKey,
-                        userId: userId
-                    )
-                    
-                    await signIn(
-                        userId: userId,
-                        tenantId: tenantId.isEmpty ? nil : tenantId,
-                        accessToken: jwt
-                    )
-                    
-                } catch {
-                    
-                    await Courier.shared.signOut()
-                    await self.updateUserState(Courier.shared)
-                    
-                }
-                
+                await performSignIn()
             }
-            
+            await updateUserState()
         }
+    }
+    
+    @objc private func touchesButtonAction(_ sender: Any) {
+        ShowTime.enabled = ShowTime.enabled == .always ? .never : .always
+        updateShowTouchesLabel()
     }
     
     private func updateShowTouchesLabel() {
@@ -93,26 +119,46 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         toggleTouchesButton.title = showTouches ? "Hide Touches" : "Show Touches"
     }
     
-    private func updateUserState(_ courier: Courier) async {
-        
-        canEditAuthentication = await courier.userId == nil
+    private func updateUserState() async {
+        canEditAuthentication = await Courier.shared.userId == nil
         authButton.isEnabled = true
-        authButton.title = await courier.userId == nil ? "Sign In" : "Sign Out"
-        
-        let credentials = UserManager.shared.getCredentials()
-        
-        options[0].1 = await courier.userId ?? ""
-        options[1].1 = await courier.tenantId ?? ""
-        options[2].1 = credentials["apiKey"] ?? Env.COURIER_AUTH_KEY
-        options[3].1 = await courier.client?.options.apiUrls.rest ?? credentials["restUrl"]!
-        options[4].1 = await courier.client?.options.apiUrls.graphql ?? credentials["graphqlUrl"]!
-        options[5].1 = await courier.client?.options.apiUrls.inboxGraphql ?? credentials["inboxGraphqlUrl"]!
-        options[6].1 = await courier.client?.options.apiUrls.inboxWebSocket ?? credentials["inboxWebsocketUrl"]!
-        
+        authButton.title = await Courier.shared.userId == nil ? "Sign In" : "Sign Out"
         authButton.isEnabled = !options[0].1.isEmpty
-        
         tableView.reloadData()
+    }
+    
+    private func performSignIn() async {
+        let userId = options[0].1
+        let tenantId = options[1].1.isEmpty ? nil : options[1].1
+        let apiKey = options[2].1
         
+        if userId.isEmpty {
+            await Courier.shared.signOut()
+            return
+        }
+        
+        do {
+            let jwt = try await ExampleServer().generateJwt(
+                baseUrl: options[3].1,
+                authKey: apiKey,
+                userId: userId
+            )
+            
+            await Courier.shared.signIn(
+                userId: userId,
+                tenantId: tenantId,
+                accessToken: jwt,
+                baseUrls: CourierClient.ApiUrls(
+                    rest: options[3].1,
+                    graphql: options[4].1,
+                    inboxGraphql: options[5].1,
+                    inboxWebSocket: options[6].1
+                )
+            )
+        } catch {
+            await Courier.shared.signOut()
+            showCodeAlert(title: "Error", code: "\(error)")
+        }
     }
 
     override func viewDidLoad() {
@@ -120,7 +166,18 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         title = "Auth"
         
-        // Set touches
+        // Create toolbar (action bar) with Reset button
+        toggleTouchesButton = UIBarButtonItem(
+            title: "Show Touches",
+            style: .plain,
+            target: self,
+            action: #selector(touchesButtonAction)
+        )
+        
+        // Move Show Touches to top left navigation bar
+        navigationItem.leftBarButtonItem = toggleTouchesButton
+        
+        // Set touches initial state
         ShowTime.enabled = .never
         updateShowTouchesLabel()
         
@@ -133,56 +190,18 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         authButton.isEnabled = false
         
         Task {
-            
-            if await Courier.shared.isUserSignedIn {
-                
-                do {
-                    
-                    let jwt = try await ExampleServer().generateJwt(
-                        authKey: UserManager.shared.getCredential(forKey: "apiKey") ?? Env.COURIER_AUTH_KEY,
-                        userId: Courier.shared.userId!
-                    )
-                    
-                    await signIn(
-                        userId: Courier.shared.userId!,
-                        tenantId: Courier.shared.tenantId,
-                        accessToken: jwt
-                    )
-                    
-                } catch {
-                    
-                    await Courier.shared.signOut()
-                    await self.updateUserState(Courier.shared)
-                    
-                }
-                
-            }
-            
-            await self.updateUserState(Courier.shared)
-            
-            authListener = await Courier.shared.addAuthenticationListener { [weak self] userId in
+            authListener = await Courier.shared.addAuthenticationListener { [weak self] _ in
                 Task {
-                    await self?.updateUserState(Courier.shared)
+                    await self?.updateUserState()
                 }
             }
             
+            if await Courier.shared.userId != nil {
+                await performSignIn()
+            }
+            
+            await self.updateUserState()
         }
-        
-    }
-    
-    private func signIn(userId: String, tenantId: String?, accessToken: String) async {
-        let userManager = UserManager.shared
-        await Courier.shared.signIn(
-            userId: userId,
-            tenantId: tenantId,
-            accessToken: accessToken,
-            baseUrls: CourierClient.ApiUrls(
-                rest: userManager.getCredential(forKey: "restUrl")!,
-                graphql: userManager.getCredential(forKey: "graphqlUrl")!,
-                inboxGraphql: userManager.getCredential(forKey: "inboxGraphqlUrl")!,
-                inboxWebSocket: userManager.getCredential(forKey: "inboxWebsocketUrl")!
-            )
-        )
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -200,17 +219,13 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if !canEditAuthentication {
-            return
-        }
+        if !canEditAuthentication { return }
         
         let item = options[indexPath.row]
         
         showInputAlert(title: item.0, inputs: [(item.0, item.1)], action: "Update") { [self] values in
-            
             let value = values[0]
             options[indexPath.row].1 = value
             
@@ -218,8 +233,20 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
                 authButton.isEnabled = !value.isEmpty
             }
             
-            tableView.reloadData()
+            // Update UserManager with new value
+            let userManager = UserManager.shared
+            switch indexPath.row {
+            case 0: userManager.setCredential(key: "userId", value: value)
+            case 1: userManager.setCredential(key: "tenantId", value: value)
+            case 2: userManager.setCredential(key: "apiKey", value: value)
+            case 3: userManager.setCredential(key: "restUrl", value: value)
+            case 4: userManager.setCredential(key: "graphqlUrl", value: value)
+            case 5: userManager.setCredential(key: "inboxGraphqlUrl", value: value)
+            case 6: userManager.setCredential(key: "inboxWebsocketUrl", value: value)
+            default: break
+            }
             
+            tableView.reloadData()
         }
     }
     
@@ -235,4 +262,3 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         authListener?.remove()
     }
 }
-

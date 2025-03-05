@@ -27,6 +27,8 @@ class UserManager {
     func getCredentials() -> [String: String] {
         let defaultUrls = CourierClient.ApiUrls()
         return defaults.object(forKey: credentialsKey) as? [String: String] ?? [
+            "userId": "",
+            "tenantId": "",
             "apiKey": Env.COURIER_AUTH_KEY,
             "restUrl": defaultUrls.rest,
             "graphqlUrl": defaultUrls.graphql,

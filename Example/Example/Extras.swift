@@ -301,11 +301,11 @@ class ExampleServer {
         let token: String
     }
     
-    internal func generateJwt(authKey: String, userId: String) async throws -> String {
+    internal func generateJwt(baseUrl: String, authKey: String, userId: String) async throws -> String {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             
-            let url = URL(string: "https://api.courier.com/auth/issue-token")!
+            let url = URL(string: "\(baseUrl)/auth/issue-token")!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             
