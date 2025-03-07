@@ -46,6 +46,10 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         urlSession = URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
     }
     
+    func isConnected() async -> Bool {
+        return await state.getWebSocketTask()?.state == .running
+    }
+    
     public func connect() async throws {
         
         // Ensure any previous connection is terminated
