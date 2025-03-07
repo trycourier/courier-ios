@@ -11,10 +11,7 @@ import Foundation
 
 @CourierActor internal class InboxSocketManager {
 
-    static var shared: InboxSocketManager?
     var socket: InboxSocket?
-    
-    private init() {}
 
     @discardableResult func updateInstance(options: CourierClient.Options) async -> InboxSocket {
         await closeSocket()
