@@ -355,7 +355,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     // Disconnects the websocket
     // Helps keep battery usage lower
     internal func unlinkInbox() async {
-//        await inboxModule.dataService.stop()
+        await inboxModule.dataService.stop()
     }
     
     public func refreshInbox() async {

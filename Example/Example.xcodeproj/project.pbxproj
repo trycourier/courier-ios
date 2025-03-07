@@ -792,8 +792,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				kind = revision;
-				revision = 6011eef156cec6ceb43763b1e76455c2034c3da3;
+				branch = "feature/socket-polish";
+				kind = branch;
 			};
 		};
 		27D8F1B02AE885DB00E54210 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
