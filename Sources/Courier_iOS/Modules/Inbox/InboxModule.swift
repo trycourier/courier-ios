@@ -340,13 +340,20 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     // Called because the websocket may have disconnected or
     // new data may have been sent when the user closed their app
     internal func linkInbox() async {
-        await inboxModule.getInbox(isRefresh: true)
+        
+        let sharedSocket = InboxSocketManager.shared?.socket
+        let isSocketConnected = await sharedSocket?.isConnected() == true
+        
+        if !isSocketConnected {
+            await inboxModule.getInbox(isRefresh: true)
+        }
+        
     }
 
     // Disconnects the websocket
     // Helps keep battery usage lower
     internal func unlinkInbox() async {
-        await inboxModule.dataService.stop()
+//        await inboxModule.dataService.stop()
     }
     
     public func refreshInbox() async {

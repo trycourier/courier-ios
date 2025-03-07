@@ -11,23 +11,22 @@ import Foundation
 
 @CourierActor internal class InboxSocketManager {
 
-    private var shared: InboxSocket?
+    static var shared: InboxSocketManager?
+    var socket: InboxSocket?
+    
+    private init() {}
 
     @discardableResult func updateInstance(options: CourierClient.Options) async -> InboxSocket {
         await closeSocket()
-        shared = InboxSocket(options: options)
-        return shared!
+        socket = InboxSocket(options: options)
+        return socket!
     }
 
     func closeSocket() async {
-        await shared?.disconnect()
-        shared?.receivedMessage = nil
-        shared?.receivedMessageEvent = nil
-        shared = nil
-    }
-    
-    func getSharedInstance() -> InboxSocket? {
-        return shared
+        await socket?.disconnect()
+        socket?.receivedMessage = nil
+        socket?.receivedMessageEvent = nil
+        socket = nil
     }
     
 }
