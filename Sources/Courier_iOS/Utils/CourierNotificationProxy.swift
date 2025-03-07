@@ -17,15 +17,17 @@ internal class CourierNotificationProxy: NSObject {
     }
     
     @objc func didEnterForeground() {
+        
+        // Attempt to reconnect the socket when the app enters foreground
+        // if the socket is already connected, the tasks will return out
         Task { @MainActor [weak self] in
             await self?.courier?.linkInbox()
         }
+        
     }
     
     @objc func didEnterBackground() {
-        Task { @MainActor [weak self] in
-            await self?.courier?.unlinkInbox()
-        }
+        // iOS will automatically kill off the inbox socket task
     }
     
 }
