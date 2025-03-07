@@ -341,9 +341,11 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     // new data may have been sent when the user closed their app
     internal func linkInbox() async {
         
-        let sharedSocket = InboxSocketManager.shared?.socket
+        // Get the socket connection
+        let sharedSocket = inboxModule.dataService.inboxSocketManager.socket
         let isSocketConnected = await sharedSocket?.isConnected() == true
         
+        // Only restart if the socket is not connected
         if !isSocketConnected {
             await inboxModule.getInbox(isRefresh: true)
         }

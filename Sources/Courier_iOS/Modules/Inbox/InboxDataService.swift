@@ -7,6 +7,7 @@
 
 @CourierActor internal class InboxDataService {
     
+    let inboxSocketManager = InboxSocketManager()
     private(set) var isPagingFeed = false
     private(set) var isPagingArchived = false
     
@@ -17,7 +18,7 @@
     
     func stop() async {
         endPaging()
-        await InboxSocketManager.shared?.closeSocket()
+        await inboxSocketManager.closeSocket()
     }
     
     func getInboxData(client: CourierClient, feedPaginationLimit: Int, archivePaginationLimit: Int, isRefresh: Bool) async throws -> (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int) {
@@ -60,21 +61,21 @@
     func connectWebSocket(client: CourierClient, onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws {
         
         // Create the socket if needed
-        let socket = await InboxSocketManager.shared?.updateInstance(
+        let socket = await inboxSocketManager.updateInstance(
             options: client.options
         )
         
         // Connect the socket subscription
-        try await socket?.connect(
+        try await socket.connect(
             receivedMessage: onReceivedMessage,
             receivedMessageEvent: onReceivedMessageEvent
         )
         
-        try await socket?.sendSubscribe()
+        try await socket.sendSubscribe()
         
         // Ensure the socket is kept alive
         // Will ping every 5 minutes
-        await socket?.keepAlive()
+        await socket.keepAlive()
         
     }
     
