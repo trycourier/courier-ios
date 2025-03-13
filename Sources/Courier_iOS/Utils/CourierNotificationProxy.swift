@@ -21,21 +21,21 @@ internal class CourierNotificationProxy: NSObject {
     /// Sets up observers for app lifecycle notifications
     func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
-            self,
+            self.courier as Any,
             selector: #selector(didEnterForeground),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
         
         NotificationCenter.default.addObserver(
-            self,
+            self.courier as Any,
             selector: #selector(didEnterBackground),
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
         
         NotificationCenter.default.addObserver(
-            self,
+            self.courier as Any,
             selector: #selector(handleMemoryWarning),
             name: UIApplication.didReceiveMemoryWarningNotification,
             object: nil
@@ -70,7 +70,7 @@ internal class CourierNotificationProxy: NSObject {
         cleanupTimer?.invalidate()
         cleanupTimer = Timer.scheduledTimer(
             timeInterval: 1 * 60,
-            target: self,
+            target: self.courier as Any,
             selector: #selector(backgroundCleanup),
             userInfo: nil,
             repeats: false
