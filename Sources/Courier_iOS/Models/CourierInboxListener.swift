@@ -15,8 +15,8 @@ import Foundation
     let onError: ((_ error: Error) -> Void)?
     let onUnreadCountChanged: ((_ unreadCount: Int) -> Void)?
     let onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)?
-    let onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)?
-    let onPageAdded: ((_ message: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)?
+    let onMessagesChanged: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)?
+    let onPageAdded: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)?
     let onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)?
     
     private var isInitialized = false
@@ -26,8 +26,8 @@ import Foundation
         onError: ((_ error: Error) -> Void)? = nil,
         onUnreadCountChanged: ((_ unreadCount: Int) -> Void)? = nil,
         onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onPageAdded: ((_ message: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onMessagesChanged: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onPageAdded: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
         onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
     ) {
         self.onLoading = onLoading
@@ -46,6 +46,8 @@ import Foundation
         self.onPageAdded?(snapshot.archive.messages, snapshot.archive.canPaginate, true, .archive)
         self.onMessagesChanged?(snapshot.feed.messages, snapshot.feed.canPaginate, .feed)
         self.onMessagesChanged?(snapshot.archive.messages, snapshot.archive.canPaginate, .archive)
+        self.onTotalCountChanged?(snapshot.feed.totalCount, .feed)
+        self.onTotalCountChanged?(snapshot.archive.totalCount, .archive)
         self.onUnreadCountChanged?(snapshot.unreadCount)
     }
     

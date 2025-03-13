@@ -64,29 +64,14 @@ import UIKit
         
         // Set up notification proxy
         self.notificationProxy = CourierNotificationProxy(courier: self)
-        
-        NotificationCenter.default.addObserver(
-            self.notificationProxy!,
-            selector: #selector(CourierNotificationProxy.didEnterForeground),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self.notificationProxy!,
-            selector: #selector(CourierNotificationProxy.didEnterBackground),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
+        self.notificationProxy?.setupNotificationObservers()
         
     }
     
     // MARK: Deinit
     
     deinit {
-        if let proxy = notificationProxy {
-            NotificationCenter.default.removeObserver(proxy)
-        }
+        notificationProxy?.removeObservers()
     }
     
 }

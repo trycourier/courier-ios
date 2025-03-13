@@ -17,3 +17,4 @@ Env.swift
 Example/build/
 /build
 Tests/CourierTests/Env.swift
+Example/Example/Env.swift

@@ -31,7 +31,8 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var resetButton: UIBarButtonItem!
     @IBOutlet weak var authButton: UIBarButtonItem!
-    var toggleTouchesButton: UIBarButtonItem!
+    private var toggleTouchesButton: UIBarButtonItem!
+    private var activityIndicator = UIActivityIndicatorView(style: .medium)
     
     @IBAction func resetButtonAction(_ sender: Any) {
         
@@ -101,7 +102,6 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         Task {
             if await Courier.shared.userId != nil {
                 await Courier.shared.signOut()
-                resetUser()
             } else {
                 await performSignIn()
             }
@@ -124,10 +124,14 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         authButton.isEnabled = true
         authButton.title = await Courier.shared.userId == nil ? "Sign In" : "Sign Out"
         authButton.isEnabled = !options[0].1.isEmpty
+        activityIndicator.stopAnimating()
         tableView.reloadData()
     }
     
     private func performSignIn() async {
+        
+        self.activityIndicator.startAnimating()
+        
         let userId = options[0].1
         let tenantId = options[1].1.isEmpty ? nil : options[1].1
         let apiKey = options[2].1
@@ -188,6 +192,8 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         // Disable auth button on launch
         authButton.isEnabled = false
+        activityIndicator.hidesWhenStopped = true
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: activityIndicator)]
         
         Task {
             authListener = await Courier.shared.addAuthenticationListener { [weak self] _ in
