@@ -19,23 +19,23 @@ internal class CourierNotificationProxy: NSObject {
     }
     
     /// Sets up observers for app lifecycle notifications
-    func setupNotificationObservers(_ observer: Any) {
+    func setupNotificationObservers() {
         NotificationCenter.default.addObserver(
-            observer,
+            self,
             selector: #selector(didEnterForeground),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
         
         NotificationCenter.default.addObserver(
-            observer,
+            self,
             selector: #selector(didEnterBackground),
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
         
         NotificationCenter.default.addObserver(
-            observer,
+            self,
             selector: #selector(handleMemoryWarning),
             name: UIApplication.didReceiveMemoryWarningNotification,
             object: nil
@@ -43,8 +43,8 @@ internal class CourierNotificationProxy: NSObject {
     }
     
     /// Removes observers to prevent memory leaks
-    func removeObservers(_ observer: Any) {
-        NotificationCenter.default.removeObserver(observer)
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc func didEnterForeground() {
