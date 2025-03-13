@@ -69,7 +69,7 @@ internal class CourierNotificationProxy: NSObject {
         // Schedule a 15-minute timer to call backgroundCleanup
         cleanupTimer?.invalidate()
         cleanupTimer = Timer.scheduledTimer(
-            timeInterval: 15 * 60,
+            timeInterval: 1 * 60,
             target: self,
             selector: #selector(backgroundCleanup),
             userInfo: nil,
