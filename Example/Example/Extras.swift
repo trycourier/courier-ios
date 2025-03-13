@@ -318,10 +318,28 @@ class ExampleServer {
             ])
             
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let data = data {
+                    // Log raw data as String
+                    if let rawString = String(data: data, encoding: .utf8) {
+                        print("Raw Response: \(rawString)")
+                    }
+                    
+                    // Log response headers
+                    if let httpResponse = response as? HTTPURLResponse {
+                        print("Status Code: \(httpResponse.statusCode)")
+                        print("Headers: \(httpResponse.allHeaderFields)")
+                    }
+                }
+                
+                if let error = error {
+                    print("Network Error: \(error)")
+                }
+                
                 do {
                     let res = try JSONDecoder().decode(Response.self, from: data ?? Data())
                     continuation.resume(returning: res.token)
                 } catch {
+                    print("Decode Error: \(error)")
                     continuation.resume(throwing: error)
                 }
             }

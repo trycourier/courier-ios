@@ -383,8 +383,8 @@ internal class InboxModule: InboxDataStoreEventDelegate {
         onError: ((_ error: Error) -> Void)? = nil,
         onUnreadCountChanged: ((_ unreadCount: Int) -> Void)? = nil,
         onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onMessagesChanged: ((_ message: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onPageAdded: ((_ message: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onMessagesChanged: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onPageAdded: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
         onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
     ) async -> CourierInboxListener {
         

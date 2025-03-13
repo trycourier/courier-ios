@@ -5,29 +5,101 @@
 //  Created by https://github.com/mikemilla on 12/13/24.
 //
 
-import Foundation
+import UIKit
 
 internal class CourierNotificationProxy: NSObject {
     
     weak var courier: Courier?
+    private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+    private var cleanupTimer: Timer?
     
     init(courier: Courier) {
         self.courier = courier
         super.init()
     }
     
+    /// Sets up observers for app lifecycle notifications
+    func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didEnterForeground),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMemoryWarning),
+            name: UIApplication.didReceiveMemoryWarningNotification,
+            object: nil
+        )
+    }
+    
+    /// Removes observers to prevent memory leaks
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     @objc func didEnterForeground() {
+        // Invalidate the timer if the user returns to the foreground
+        cleanupTimer?.invalidate()
+        cleanupTimer = nil
         
         // Attempt to reconnect the socket when the app enters foreground
-        // if the socket is already connected, the tasks will return out
         Task { @MainActor [weak self] in
             await self?.courier?.linkInbox()
         }
-        
     }
     
     @objc func didEnterBackground() {
-        // iOS will automatically kill off the inbox socket task
+        
+        // Begin background task to ensure we can run cleanup if time permits
+        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
+            // End the background task if time expires
+            self?.endBackgroundTask()
+        }
+        
+        // Schedule a 15-minute timer to call backgroundCleanup
+        cleanupTimer?.invalidate()
+        cleanupTimer = Timer.scheduledTimer(
+            timeInterval: 15 * 60,
+            target: self,
+            selector: #selector(backgroundCleanup),
+            userInfo: nil,
+            repeats: false
+        )
+    }
+    
+    @objc func handleMemoryWarning() {
+        
+        // Kill the inbox socket
+        Task { @MainActor [weak self] in
+            await self?.courier?.unlinkInbox()
+        }
+    }
+    
+    /// Called after 15 minutes in the background
+    @objc private func backgroundCleanup() {
+        
+        // Kill the inbox socket
+        Task { @MainActor [weak self] in
+            await self?.courier?.unlinkInbox()
+        }
+        
+        // Clean up background task if it's still active
+        endBackgroundTask()
+    }
+    
+    private func endBackgroundTask() {
+        UIApplication.shared.endBackgroundTask(backgroundTask)
+        backgroundTask = .invalid
     }
     
 }
