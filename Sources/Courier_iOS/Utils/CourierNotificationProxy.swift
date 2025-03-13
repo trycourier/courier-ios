@@ -62,14 +62,13 @@ internal class CourierNotificationProxy: NSObject {
         
         // Begin background task to ensure we can run cleanup if time permits
         backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-            // End the background task if time expires
             self?.endBackgroundTask()
         }
         
         // Schedule a 15-minute timer to call backgroundCleanup
         cleanupTimer?.invalidate()
         cleanupTimer = Timer.scheduledTimer(
-            timeInterval: 1 * 60,
+            timeInterval: 2 * 60,
             target: self.courier as Any,
             selector: #selector(backgroundCleanup),
             userInfo: nil,
@@ -78,28 +77,24 @@ internal class CourierNotificationProxy: NSObject {
     }
     
     @objc func handleMemoryWarning() {
-        
-        // Kill the inbox socket
-        Task { @MainActor [weak self] in
-            await self?.courier?.unlinkInbox()
-        }
+        cleanup()
     }
     
     /// Called after 15 minutes in the background
     @objc private func backgroundCleanup() {
-        
-        // Kill the inbox socket
-        Task { @MainActor [weak self] in
-            await self?.courier?.unlinkInbox()
-        }
-        
-        // Clean up background task if it's still active
         endBackgroundTask()
     }
     
     private func endBackgroundTask() {
         UIApplication.shared.endBackgroundTask(backgroundTask)
         backgroundTask = .invalid
+        cleanup()
+    }
+    
+    private func cleanup() {
+        Task { @MainActor [weak self] in
+            await self?.courier?.unlinkInbox()
+        }
     }
     
 }
