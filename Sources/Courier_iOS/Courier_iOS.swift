@@ -64,14 +64,14 @@ import UIKit
         
         // Set up notification proxy
         self.notificationProxy = CourierNotificationProxy(courier: self)
-        self.notificationProxy?.setupNotificationObservers()
+        self.notificationProxy?.setupNotificationObservers(self)
         
     }
     
     // MARK: Deinit
     
     deinit {
-        notificationProxy?.removeObservers()
+        notificationProxy?.removeObservers(self)
     }
     
 }
