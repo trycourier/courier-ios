@@ -10,8 +10,6 @@ import UIKit
 internal class CourierNotificationProxy: NSObject {
     
     weak var courier: Courier?
-    private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
-    private var cleanupTimer: Timer?
     
     init(courier: Courier) {
         self.courier = courier
@@ -36,6 +34,13 @@ internal class CourierNotificationProxy: NSObject {
         
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(didTerminate),
+            name: UIApplication.willTerminateNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(handleMemoryWarning),
             name: UIApplication.didReceiveMemoryWarningNotification,
             object: nil
@@ -48,9 +53,6 @@ internal class CourierNotificationProxy: NSObject {
     }
     
     @objc func didEnterForeground() {
-        // Invalidate the timer if the user returns to the foreground
-        cleanupTimer?.invalidate()
-        cleanupTimer = nil
         
         // Attempt to reconnect the socket when the app enters foreground
         Task { @MainActor [weak self] in
@@ -59,35 +61,14 @@ internal class CourierNotificationProxy: NSObject {
     }
     
     @objc func didEnterBackground() {
-        
-        // Begin background task to ensure we can run cleanup if time permits
-        backgroundTask = UIApplication.shared.beginBackgroundTask { [weak self] in
-            self?.endBackgroundTask()
-        }
-        
-        // Schedule a 15-minute timer to call backgroundCleanup
-        cleanupTimer?.invalidate()
-        cleanupTimer = Timer.scheduledTimer(
-            timeInterval: 2 * 60,
-            target: self.courier as Any,
-            selector: #selector(backgroundCleanup),
-            userInfo: nil,
-            repeats: false
-        )
+        // Nothing for now
     }
     
-    @objc func handleMemoryWarning() {
+    @objc func didTerminate() {
         cleanup()
     }
     
-    /// Called after 15 minutes in the background
-    @objc private func backgroundCleanup() {
-        endBackgroundTask()
-    }
-    
-    private func endBackgroundTask() {
-        UIApplication.shared.endBackgroundTask(backgroundTask)
-        backgroundTask = .invalid
+    @objc func handleMemoryWarning() {
         cleanup()
     }
     
