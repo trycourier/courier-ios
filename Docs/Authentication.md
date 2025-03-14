@@ -93,7 +93,7 @@ Signed in users will stay signed in between app sessions.
 ```swift
 Task {
     let userId = "your_user_id"
-    await Courier.shared.signIn(accessToken: jwt, userId: userId)
+    await Courier.shared.signIn(userId: userId, accessToken: jwt)
 }
 ```
 
