@@ -70,7 +70,7 @@ curl --request POST \
      --header 'Accept: application/json' \
      --header 'Authorization: Bearer $YOUR_AUTH_KEY' \
      --header 'Content-Type: application/json' \
-     --data
+     --data \
  '{
     "scope": "user_id:$YOUR_USER_ID write:user-tokens inbox:read:messages inbox:write:events read:preferences write:preferences read:brands",
     "expires_in": "$YOUR_NUMBER days"
