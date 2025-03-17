@@ -347,7 +347,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
         
         // Only restart if the socket is not connected
         if !isSocketConnected {
-            await inboxModule.getInbox(isRefresh: true)
+            await refreshInbox()
         }
         
     }
@@ -359,11 +359,15 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     }
     
     public func refreshInbox() async {
-        await inboxModule.getInbox(isRefresh: true)
+        if !inboxModule.inboxListeners.isEmpty {
+            await inboxModule.getInbox(isRefresh: true)
+        }
     }
     
     func restartInbox() async {
-        await inboxModule.getInbox(isRefresh: false)
+        if !inboxModule.inboxListeners.isEmpty {
+            await inboxModule.getInbox(isRefresh: false)
+        }
     }
     
     func closeInbox() async {
