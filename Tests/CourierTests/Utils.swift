@@ -10,54 +10,71 @@ import Foundation
 
 class Utils {
     
-    static func sendMessageAndWaitForDelivery(to userId: String) async throws -> (InboxMessage, CourierInboxListener) {
+    actor MessageIdStore {
+        private var id: String?
+        
+        func set(_ newValue: String?) {
+            id = newValue
+        }
+        
+        func get() -> String? {
+            id
+        }
+    }
+
+    static func sendInboxMessageWithConfirmation(to userId: String) async throws -> (InboxMessage, CourierInboxListener) {
+        let messageIdStore = MessageIdStore()
+        var listener: CourierInboxListener? = nil
+
         return try await withCheckedThrowingContinuation { continuation in
-            
-            let lock = NSLock()
-            var didFinish = false
-            
-            func finish(_ result: Result<(InboxMessage, CourierInboxListener), Error>) {
-                lock.lock()
-                defer { lock.unlock() }
-                guard !didFinish else { return }
-                didFinish = true
-                
-                switch result {
-                case .success(let (message, listener)):
-                    continuation.resume(returning: (message, listener))
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-            
             Task {
-                do {
-                    
-                    // Ensure messageId is assigned before adding the listener
-                    let messageId = try await InboxTests.sendMessage()
-                    var listener: CourierInboxListener? = nil
-                    
-                    // Initialize listener
-                    listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
-                        if event == .added && message.messageId == messageId {
-                            finish(.success((message, listener!)))
+                
+                // Set up our listener first so we don't miss the message
+                listener = await Courier.shared.addInboxListener(
+                    onMessageEvent: { message, index, feed, event in
+                        // The closure might be called on a different concurrency context
+                        // so we hop into a Task to safely interact with the actor
+                        Task {
+                            guard let currentId = await messageIdStore.get() else { return }
+                            if event == .added, message.messageId == currentId {
+                                // Once we match, clear out the ID and resume
+                                await messageIdStore.set(nil)
+                                continuation.resume(returning: (message, listener!))
+                            }
                         }
-                    })
-                    
-                    // Sleep for 30 seconds to create a timeout.
-                    try? await Task.sleep(nanoseconds: 30_000_000_000)
-                    
-                    // Timeout reached, fail safely.
-                    finish(.failure(CourierError.inboxNotInitialized))
-                    
-                    // Ensure listener is removed on failure
-                    await Courier.shared.removeInboxListener(listener!)
-                    
-                } catch {
-                    continuation.resume(throwing: error)
+                    }
+                )
+
+                // Now send a test message that eventually triggers the listener
+                let newMessageId = try await ExampleServer.sendTest(
+                    authKey: Env.COURIER_AUTH_KEY,
+                    userId: userId,
+                    channel: "inbox"
+                )
+                
+                // Publish the ID to the actor so the listener can see it
+                await messageIdStore.set(newMessageId)
+                print("New message sent: \(newMessageId)")
+
+                // Failsafe timeout: if we haven't gotten a matching message in 30s, throw
+                try? await Task.sleep(nanoseconds: 30_000_000_000)
+                
+                if await messageIdStore.get() != nil {
+                    continuation.resume(throwing: CourierError.inboxNotInitialized)
                 }
             }
         }
     }
     
+    static func sendMessageWithDelay(to userId: String, channel: String = "inbox", delay: UInt64 = 30_000_000_000) async throws -> String {
+        let messageId = try await ExampleServer.sendTest(
+            authKey: Env.COURIER_AUTH_KEY,
+            userId: userId,
+            channel: channel
+        )
+        print("New message sent: \(messageId)")
+        try? await Task.sleep(nanoseconds: delay)
+        return messageId
+    }
+
 }

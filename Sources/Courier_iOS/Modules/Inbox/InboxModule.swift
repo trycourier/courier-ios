@@ -51,6 +51,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
         
         do {
             
+            self.state = .uninitialized
             await dataService.stop()
             
             if self.inboxListeners.isEmpty {
@@ -208,6 +209,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     
     // Clears out the current user data and returns an error
     func kill() async {
+        self.state = .uninitialized
         await self.dataStore.dispose()
         await dataService.stop()
         await self.dataStore.delegate?.onError(CourierError.userNotFound)
@@ -374,15 +376,13 @@ internal class InboxModule: InboxDataStoreEventDelegate {
         await inboxModule.kill()
     }
     
-    @discardableResult
-    public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> InboxMessageSet? {
+    @discardableResult public func fetchNextInboxPage(_ feed: InboxMessageFeed) async throws -> InboxMessageSet? {
         return try await inboxModule.getNextPage(feedType: feed)
     }
     
     // MARK: Listeners
     
-    @discardableResult
-    public func addInboxListener(
+    @discardableResult public func addInboxListener(
         onLoading: ((_ isRefresh: Bool) -> Void)? = nil,
         onError: ((_ error: Error) -> Void)? = nil,
         onUnreadCountChanged: ((_ unreadCount: Int) -> Void)? = nil,
@@ -424,7 +424,8 @@ internal class InboxModule: InboxDataStoreEventDelegate {
             // Do not hit any callbacks while data is fetching
             break
         case .initialized:
-            await listener.onLoad(inboxModule.dataStore.getSnapshot())
+            let snapshot = inboxModule.dataStore.getSnapshot()
+            await listener.onLoad(snapshot)
         }
         
         return listener
