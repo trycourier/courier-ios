@@ -22,7 +22,7 @@ class Utils {
         }
     }
 
-    static func sendInboxMessageWithConfirmation(to userId: String) async throws -> (InboxMessage, CourierInboxListener) {
+    static func sendInboxMessageWithConfirmation(to userId: String, tenantId: String? = nil) async throws -> (InboxMessage, CourierInboxListener) {
         let messageIdStore = MessageIdStore()
         var listener: CourierInboxListener? = nil
 
@@ -49,12 +49,21 @@ class Utils {
                 let newMessageId = try await ExampleServer.sendTest(
                     authKey: Env.COURIER_AUTH_KEY,
                     userId: userId,
+                    tenantId: tenantId,
                     channel: "inbox"
                 )
                 
+                var savableMessageId = newMessageId
+                
+                // This is such a hack...
+                // The backend needs love 💔
+                if tenantId != nil {
+                    savableMessageId += ":\(userId)"
+                }
+                
                 // Publish the ID to the actor so the listener can see it
-                await messageIdStore.set(newMessageId)
-                print("New message sent: \(newMessageId)")
+                await messageIdStore.set(savableMessageId)
+                print("New message sent: \(savableMessageId)")
 
                 // Failsafe timeout: if we haven't gotten a matching message in 30s, throw
                 try? await Task.sleep(nanoseconds: 30_000_000_000)

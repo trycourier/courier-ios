@@ -112,7 +112,7 @@ class ThreadingTests: XCTestCase {
         log("Starting testSimultaneousSignInSignOut (BackgroundActor)")
 
         let userId = "test_user"
-        let jwt = try await ExampleServer().generateJwt(
+        let jwt = try await ExampleServer.generateJwt(
             authKey: Env.COURIER_AUTH_KEY,
             userId: userId
         )
@@ -214,7 +214,7 @@ class ThreadingTests: XCTestCase {
         log("Starting testSpamMessageFetch")
         
         let userId = "mike"
-        let jwt = try await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: userId)
+        let jwt = try await ExampleServer.generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: userId)
         
         log("Got JWT for \(userId), launching spam tasks")
         
@@ -350,7 +350,7 @@ class ThreadingTests: XCTestCase {
         let jwts = try await withThrowingTaskGroup(of: (String, String).self) { group in
             for userId in userIds {
                 group.addTask {
-                    let jwt = try await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: userId)
+                    let jwt = try await ExampleServer.generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: userId)
                     return (userId, jwt)
                 }
             }
@@ -407,7 +407,7 @@ class ThreadingTests: XCTestCase {
     func testChaosMonkey() async throws {
         log("Starting testChaosMonkey")
 
-        let jwt = try! await ExampleServer().generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
+        let jwt = try! await ExampleServer.generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
 
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<100 {

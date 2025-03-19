@@ -251,7 +251,25 @@ class InboxTests: XCTestCase {
         await Courier.shared.removeInboxListener(listener)
     }
     
-    // TODO: Tenant test
+    // MARK: - Test "Tenant Message"
+    func testTenantMessage() async throws {
+        
+        let userId = "t1-user"
+        let tenantId = "t1"
+        
+        // 1) Authenticate
+        try await UserBuilder.authenticate(userId: userId, tenantId: tenantId)
+        
+        // 2) Send with delay
+        let (message, listener) = try await Utils.sendInboxMessageWithConfirmation(to: userId, tenantId: tenantId)
+        
+        // 4) Check initial feed
+        let state1 = await getMessageFromDataStore(message.messageId, .feed)
+        XCTAssertFalse(state1.isArchived, "Message should not be archived initially")
+        
+        // 7) Remove listener
+        await Courier.shared.removeInboxListener(listener)
+    }
     
     // MARK: - Test "Archive Message"
     func testArchiveMessage() async throws {
