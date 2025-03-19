@@ -67,8 +67,22 @@ class CustomInboxViewController: UIViewController, UITableViewDelegate, UITableV
                 onError: { error in
                     self.setState(.error, error: String(describing: error))
                 },
+                onUnreadCountChanged: { count in
+                    print(count)
+                },
+                onTotalCountChanged: { count, feed in
+                    if feed == .feed {
+                        print(count)
+                    }
+                },
                 onMessagesChanged: { messages, canPaginate, feed in
                     if feed == .feed {
+                        self.canPaginate = canPaginate
+                        self.refreshMessages()
+                    }
+                },
+                onPageAdded: { messages, canPaginate, isFirstPage, feed in
+                    if !isFirstPage && feed == .feed {
                         self.canPaginate = canPaginate
                         self.refreshMessages()
                     }
