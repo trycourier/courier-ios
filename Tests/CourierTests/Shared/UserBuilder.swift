@@ -9,7 +9,7 @@ import Courier_iOS
 
 class UserBuilder {
     
-    static func authenticate(useJWT: Bool = true, userId: String = Env.COURIER_USER_ID, connectionId: String? = nil, tenantId: String? = nil) async throws {
+    @discardableResult static func authenticate(useJWT: Bool = true, userId: String = Env.COURIER_USER_ID, connectionId: String? = nil, tenantId: String? = nil) async throws -> String {
         
         await Courier.shared.removeAllAuthenticationListeners()
         
@@ -40,6 +40,8 @@ class UserBuilder {
         
         // Remove the listener
         await Courier.shared.removeAuthenticationListener(listener)
+        
+        return userId
         
     }
     

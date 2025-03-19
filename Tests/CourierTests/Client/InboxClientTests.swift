@@ -74,10 +74,9 @@ class InboxClientTests: XCTestCase {
         // Send a message and wait for delivery confirmation
         let jwt = try await ExampleServer.generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: client.options.userId)
         await Courier.shared.signIn(userId: client.options.userId, accessToken: jwt)
-        let (sentMessage, listener) = try await Utils.sendMessageAndWaitForDelivery(to: client.options.userId)
-        await Courier.shared.removeInboxListener(listener)
+        let messageId = try await Utils.sendMessageWithDelay(to: client.options.userId)
         
-        try await client.inbox.archive(messageId: sentMessage.messageId)
+        try await client.inbox.archive(messageId: messageId)
         
         // This is a bit strange that it does not update state instantly...
         // We have to wait for something to happen on the backend and update the state
