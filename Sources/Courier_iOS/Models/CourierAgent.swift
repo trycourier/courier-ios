@@ -25,6 +25,10 @@ import Foundation
         return CourierAgent(agentType: "courier-react-native-ios", version: version)
     }
     
+    @objc public static func reactNativeExpoIOS(_ version: String) -> CourierAgent {
+        return CourierAgent(agentType: "courier-react-native-expo-ios", version: version)
+    }
+    
     @objc public static func flutterIOS(_ version: String) -> CourierAgent {
         return CourierAgent(agentType: "courier-flutter-ios", version: version)
     }

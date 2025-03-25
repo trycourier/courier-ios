@@ -233,6 +233,7 @@ class StyledInboxViewController: UIViewController {
                 )
             ),
             didClickInboxMessageAtIndex: { message, index in
+                if message.isArchived { return }
                 Task {
                     do {
                         message.isRead ? try await message.markAsUnread() : try await message.markAsRead()

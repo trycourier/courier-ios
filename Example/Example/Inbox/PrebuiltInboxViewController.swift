@@ -13,6 +13,7 @@ class PrebuiltInboxViewController: UIViewController {
     private lazy var courierInbox = {
         return CourierInbox(
             didClickInboxMessageAtIndex: { message, index in
+                if message.isArchived { return }
                 Task {
                     do {
                         message.isRead ? try await message.markAsUnread() : try await message.markAsRead()
