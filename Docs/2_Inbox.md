@@ -28,7 +28,7 @@ An in-app notification center list you can use to notify your users. Allows you 
                 </td>
             </tr>
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/1_Authentication.md">
                     <code>Authentication</code>
                 </a>
             </td>
@@ -318,7 +318,7 @@ You can control your branding from the [`Courier Studio`](https://app.courier.co
 
 ---
 
-👋 `Branding APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#branding-apis"><code>here</code></a>
+👋 `Branding APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/5_Client.md#branding-apis"><code>here</code></a>
 
 &emsp;
 
@@ -462,4 +462,4 @@ message.markAsArchived()
 
 ---
 
-👋 `Inbox APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#inbox-apis"><code>here</code></a>
+👋 `Inbox APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/5_Client.md#inbox-apis"><code>here</code></a>

@@ -109,6 +109,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private var inboxMessages: [InboxMessage] = []
     private var canPaginate = false
     
+    // MARK: Error handling
+    
+    private var onError: ((CourierError) -> String)? = nil
+    
     // MARK: Init
     
     public init(
@@ -119,7 +123,8 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
-        didScrollInbox: ((UIScrollView) -> Void)? = nil
+        didScrollInbox: ((UIScrollView) -> Void)? = nil,
+        onError: ((CourierError) -> String)? = nil
     ) {
         
         self.canSwipePages = canSwipePages
@@ -134,6 +139,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.didLongPressInboxMessageAtIndex = didLongPressInboxMessageAtIndex
         self.didClickInboxActionForMessageAtIndex = didClickInboxActionForMessageAtIndex
         self.didScrollInbox = didScrollInbox
+        self.onError = onError
         
         setup()
     }
@@ -187,8 +193,10 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
                     }
                 },
                 onError: { [weak self] error in
+                    let courierError = CourierError(from: error)
+                    let message = self?.onError?(courierError)
                     self?.getPages().forEach { page in
-                        page.page.setError(error)
+                        page.page.setError(message ?? courierError.message)
                     }
                 },
                 onUnreadCountChanged: { [weak self] count in

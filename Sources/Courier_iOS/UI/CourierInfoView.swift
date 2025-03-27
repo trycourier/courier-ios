@@ -92,12 +92,11 @@ internal class CourierInfoView: UIView {
     internal func updateView(_ state: State, actionTitle: String, contentTitle: String) {
         
         switch (state) {
-        case .error(let error):
+        case .error(let message):
             titleLabel.isHidden = false
             buttonContainer.isHidden = false
             actionButton.title = actionTitle
-            let e = CourierError(from: error)
-            titleLabel.text = e.message
+            titleLabel.text = message
         case .empty:
             titleLabel.isHidden = false
             buttonContainer.isHidden = true

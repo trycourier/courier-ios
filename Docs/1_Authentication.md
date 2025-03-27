@@ -16,7 +16,7 @@ Manages user credentials between app sessions.
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/2_Inbox.md">
                     <code>Inbox</code>
                 </a>
             </td>
@@ -26,7 +26,7 @@ Manages user credentials between app sessions.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md">
                     <code>Push Notifications</code>
                 </a>
             </td>
@@ -36,7 +36,7 @@ Manages user credentials between app sessions.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Preferences.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/4_Preferences.md">
                     <code>Preferences</code>
                 </a>
             </td>
@@ -51,7 +51,7 @@ Manages user credentials between app sessions.
 
 # Getting Started
 
-Put this code where you normally manage your user's state. The user's access to [`Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/Inbox.md), [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md) and [`Preferences`](https://github.com/trycourier/courier-ios/blob/master/Docs/Preferences.md) will automatically be managed by the SDK and stored in persistent storage. This means that if your user fully closes your app and starts it back up, they will still be "signed in".
+Put this code where you normally manage your user's state. The user's access to [`Inbox`](https://github.com/trycourier/courier-ios/blob/master/Docs/2_Inbox.md), [`Push Notifications`](https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md) and [`Preferences`](https://github.com/trycourier/courier-ios/blob/master/Docs/4_Preferences.md) will automatically be managed by the SDK and stored in persistent storage. This means that if your user fully closes your app and starts it back up, they will still be "signed in".
 
 &emsp;
 

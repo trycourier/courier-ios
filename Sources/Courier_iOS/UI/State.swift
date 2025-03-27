@@ -8,19 +8,8 @@
 import Foundation
 
 internal enum State {
-    
     case loading
-    case error(_ error: Error)
+    case error(_ message: String)
     case content
     case empty
-    
-    func error() -> Error? {
-        switch self {
-        case .error(let value):
-            return value
-        default:
-            return nil
-        }
-    }
-    
 }

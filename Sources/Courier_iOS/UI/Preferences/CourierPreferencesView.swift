@@ -17,7 +17,7 @@ public struct CourierPreferencesView: UIViewRepresentable {
         mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
-        onError: ((CourierError) -> Void)? = nil
+        onError: ((CourierError) -> String)? = nil
     ) {
         self.preferences = CourierPreferences(
             mode: mode,

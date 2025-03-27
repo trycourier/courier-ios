@@ -131,14 +131,14 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     
     // MARK: Error handling
     
-    private var onError: ((CourierError) -> Void)? = nil
+    private var onError: ((CourierError) -> String)? = nil
     
     public init(
         mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
         didScrollPreferences: ((UIScrollView) -> Void)? = nil,
-        onError: ((CourierError) -> Void)? = nil
+        onError: ((CourierError) -> String)? = nil
     ) {
         self.mode = mode
         self.lightTheme = lightTheme
@@ -257,7 +257,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                 
             } catch {
                 
-                state = .error(error)
+                let courierError = CourierError(from: error)
+                let message = self.onError?(courierError)
+                state = .error(message ?? courierError.message)
                 
             }
             

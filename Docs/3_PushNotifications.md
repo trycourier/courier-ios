@@ -18,7 +18,7 @@ The easiest way to support push notifications in your app.
     <tbody>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#3-implement-the-courierdelegate">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#3-implement-the-courierdelegate">
                     <code>Automatic Token Management</code>
                 </a>
             </td>
@@ -28,7 +28,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#3-implement-the-courierdelegate">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#3-implement-the-courierdelegate">
                     <code>Notification Tracking</code>
                 </a>
             </td>
@@ -38,7 +38,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#5-send-a-test-push-notification">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#5-send-a-test-push-notification">
                     <code>Permission Requests & Checking</code>
                 </a>
             </td>
@@ -81,7 +81,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#1-setup-a-push-notification-provider">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#1-setup-a-push-notification-provider">
                     <code>A Configured Provider</code>
                 </a>
             </td>
@@ -91,7 +91,7 @@ The easiest way to support push notifications in your app.
         </tr>
         <tr width="600px">
             <td align="left">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Authentication.md">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/1_Authentication.md">
                     <code>Authentication</code>
                 </a>
             </td>
@@ -125,7 +125,7 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#automatic-token-syncing-apns-only">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#automatic-token-syncing-apns-only">
                     <code>Automatic</code>
                 </a>
             </td>
@@ -137,7 +137,7 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#manual-token-syncing">
                     <code>Manual</code>
                 </a>
             </td>
@@ -149,7 +149,7 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#manual-token-syncing">
                     <code>Manual</code>
                 </a>
             </td>
@@ -161,7 +161,7 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#manual-token-syncing">
                     <code>Manual</code>
                 </a>
             </td>
@@ -173,7 +173,7 @@ Select which push notification provider you would like Courier to route push not
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/PushNotifications.md#manual-token-syncing">
+                <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/3_PushNotifications.md#manual-token-syncing">
                     <code>Manual</code>
                 </a>
             </td>
@@ -386,4 +386,4 @@ Task {
 
 ---
 
-👋 `TokenManagement APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/Client.md#token-management-apis"><code>here</code></a>
+👋 `TokenManagement APIs` can be found <a href="https://github.com/trycourier/courier-ios/blob/master/Docs/5_Client.md#token-management-apis"><code>here</code></a>

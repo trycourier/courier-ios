@@ -182,8 +182,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.state = .loading
     }
     
-    internal func setError(_ error: Error) {
-        self.state = .error(error)
+    internal func setError(_ message: String) {
+        self.state = .error(message)
     }
     
     internal func setInbox(messages: [InboxMessage], canPaginate: Bool) {

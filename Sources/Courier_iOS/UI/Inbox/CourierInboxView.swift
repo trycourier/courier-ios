@@ -20,7 +20,8 @@ public struct CourierInboxView: UIViewRepresentable {
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
-        didScrollInbox: ((UIScrollView) -> Void)? = nil
+        didScrollInbox: ((UIScrollView) -> Void)? = nil,
+        onError: ((CourierError) -> String)? = nil
     ) {
         self.inbox = CourierInbox(
             canSwipePages: canSwipePages,
@@ -30,7 +31,8 @@ public struct CourierInboxView: UIViewRepresentable {
             didClickInboxMessageAtIndex: didClickInboxMessageAtIndex,
             didLongPressInboxMessageAtIndex: didLongPressInboxMessageAtIndex,
             didClickInboxActionForMessageAtIndex: didClickInboxActionForMessageAtIndex,
-            didScrollInbox: didScrollInbox
+            didScrollInbox: didScrollInbox,
+            onError: onError
         )
     }
     
