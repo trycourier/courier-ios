@@ -378,5 +378,16 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     deinit {
         inboxListener?.remove()
     }
-    
+
+    // MARK: Theme update
+
+    public func update(_ darkTheme: CourierTheme? = nil, lightTheme: CourierTheme? = nil) {
+        if let darkTheme = darkTheme {
+            self.darkTheme = darkTheme
+        }
+        if let lightTheme = lightTheme {
+            self.lightTheme = lightTheme
+        }
+        traitCollectionDidChange(nil)
+    }
 }
