@@ -78,7 +78,9 @@ internal class CourierActionButton: UIButton {
         setTitleColor(theme.topicButton.font.color, for: .normal)
         backgroundColor = theme.topicButton.backgroundColor
         layer.cornerRadius = theme.topicButton.cornerRadius
-        
+
+        self.appendAccessibilityIdentifier("preferences")
+
     }
     
     internal func setInfoButtonInboxTheme(_ theme: CourierInboxTheme) {
@@ -90,7 +92,9 @@ internal class CourierActionButton: UIButton {
         setTitleColor(theme.infoViewStyle.button.font.color, for: .normal)
         backgroundColor = theme.getInfoButtonColor()
         layer.cornerRadius = theme.infoViewStyle.button.cornerRadius
-        
+
+        self.appendAccessibilityIdentifier("inboxInfo")
+
     }
     
     internal func setActionInboxTheme(_ theme: CourierInboxTheme, isRead: Bool) {
@@ -102,7 +106,9 @@ internal class CourierActionButton: UIButton {
         setTitleColor(isRead ? theme.buttonStyle.read.font.color : theme.buttonStyle.unread.font.color, for: .normal)
         backgroundColor = theme.getButtonColor(isRead: isRead)
         layer.cornerRadius = isRead ? theme.buttonStyle.read.cornerRadius : theme.buttonStyle.unread.cornerRadius
-        
+
+        self.appendAccessibilityIdentifier("action")
+
     }
     
     internal func setInfoButtonPreferencesTheme(_ theme: CourierPreferencesTheme) {
@@ -114,7 +120,9 @@ internal class CourierActionButton: UIButton {
         setTitleColor(theme.infoViewStyle.button.font.color, for: .normal)
         backgroundColor = theme.getInfoButtonColor()
         layer.cornerRadius = theme.infoViewStyle.button.cornerRadius
-        
+
+        self.appendAccessibilityIdentifier("preferencesInfo")
+
     }
     
     private func animate(fadeIn: Bool) {

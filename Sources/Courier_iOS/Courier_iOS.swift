@@ -42,7 +42,15 @@ import UIKit
     
     @CourierActor
     public internal(set) var client: CourierClient? = nil
-    
+
+    // MARK: UI debug options
+
+    /**
+     * This simplifies UI testing by providing
+     * used fonts and colors in accessibility identifiers
+     */
+    public var isUITestsActive: Bool = false
+
     // MARK: Modules
     
     @CourierActor

@@ -354,3 +354,65 @@ internal func vibrate(style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
     generator.prepare()
     generator.impactOccurred()
 }
+
+extension UIButton {
+    func appendAccessibilityIdentifier(_ prefix: String) {
+        if Courier.shared.isUITestsActive {
+            self.accessibilityIdentifier = "\(prefix)Button, backgroundColor: \(backgroundColor), cornerRadius" \(layer.cornerRadius)
+            titleLabel?.accessibilityIdentifier = "\(prefix)ButtonTitleLabel, fontName: \(titleLabel?.font.fontName), fontSize: \(titleLabel?.font.pointSize), fontColor: \(titleLabel?.textColor.toString() ?? "")"
+        }
+    }
+}
+
+extension UITableView {
+    func appendAccessibilityIdentifier(_ prefix: String) {
+        if Courier.shared.isUITestsActive {
+            tableView.accessibilityIdentifier = "\(prefix)TableView, separatorStyle: \(tableView.separatorStyle), separatorInset: \(tableView.separatorInset), separatorColor: \(tableView.separatorColor.toString() ?? ""), loadingColor: \(refreshControl?.tintColor.toString() ?? "")"
+            loadingIndicator.accessibilityIdentifier = "\(prefix), loadingColor: \(loadingIndicator.color)"
+        }
+    }
+}
+
+extension UITableViewCell {
+    func appendAccessibilityIdentifier(_ prefix: String) {
+        if Courier.shared.isUITestsActive {
+            self.accessibilityIdentifier = "\(prefix)Cell, selectionStyle: \(selectionStyle)"
+            titleLabel?.accessibilityIdentifier = "\(prefix)CellTitleLabel, fontName: \(titleLabel?.font.fontName ?? ""), fontSize: \(titleLabel?.font.pointSize ?? 0), fontColor: \(titleLabel?.textColor.toString() ?? "")"
+            subtitleLabel?.accessibilityIdentifier = "\(prefix)SubtitleLabel, fontName: \(subtitleLabel?.font.fontName ?? ""), fontSize: \(subtitleLabel?.font.pointSize ?? 0), fontColor: \(subtitleLabel?.textColor.toString() ?? "")"
+            itemLabel?.accessibilityIdentifier = "\(prefix)CellItemLabel, fontName: \(itemLabel?.font.fontName ?? ""), fontSize: \(itemLabel?.font.pointSize ?? 0), fontColor: \(itemLabel?.textColor.toString() ?? "")"
+            toggleSwitch?.accessibilityIdentifier = "\(prefix)ToggleSwitch, onTintColor: \(toggleSwitch.onTintColor)"
+        }
+    }
+}
+
+extension UITableViewHeaderFooterView {
+    func appendAccessibilityIdentifier(_ prefix: String) {
+        if Courier.shared.isUITestsActive {
+            titleLabel?.accessibilityIdentifier = "\(prefix), fontName: \(titleLabel?.font.fontName ?? ""), fontSize: \(titleLabel?.font.pointSize ?? 0), fontColor: \(titleLabel?.textColor.toString() ?? "")"
+        }
+    }
+}
+
+extension UIView {
+    func appendAccessibilityIdentifier(_ prefix: String) {
+        if Courier.shared.isUITestsActive {
+            titleLabel?.accessibilityIdentifier = "\(prefix)View, fontName: \(titleLabel?.font.fontName ?? ""), fontSize: \(titleLabel?.font.pointSize ?? 0), fontColor: \(titleLabel?.textColor.toString() ?? "")"
+        }
+    }
+}
+
+extension UILabel {
+    func appendAccessibilityIdentifier(_ prefix: String) {
+        if Courier.shared.isUITestsActive {
+            self.accessibilityIdentifier = "\(prefix)Label, fontName: \(font.fontName ?? ""), fontSize: \(font.pointSize ?? 0), fontColor: \(textColor.toString() ?? "")"
+        }
+    }
+}
+
+extension UIActivityIndicatorView {
+    func appendAccessibilityIdentifier(_ prefix: String) {
+        if Courier.shared.isUITestsActive {
+            self.accessibilityIdentifier = "\(prefix)LoadingIndicator, color: \(color.toString() ?? "")"
+        }
+    }
+}
