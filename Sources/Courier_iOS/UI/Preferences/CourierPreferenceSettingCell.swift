@@ -78,6 +78,8 @@ internal class CourierPreferenceSettingCell: UITableViewCell {
         self.selectionStyle = theme.sheetCellStyles.selectionStyle
 
         self.appendAccessibilityIdentifier("preferenceSetting")
+        self.itemLabel.appendAccessibilityIdentifier("preferenceSetting")
+        self.toggleSwitch.appendAccessibilityIdentifier("preferenceSetting")
     }
     
     internal func toggle() {

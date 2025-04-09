@@ -112,16 +112,14 @@ internal class CourierInfoView: UIView {
         titleLabel.font = theme.infoViewStyle.font.font
         titleLabel.textColor = theme.infoViewStyle.font.color
         actionButton.setInfoButtonInboxTheme(theme)
-
-        appendAccessibilityIdentifier("inboxInfo")
+        titleLabel.appendAccessibilityIdentifier("inboxInfo")
     }
     
     internal func setTheme(_ theme: CourierPreferencesTheme) {
         titleLabel.font = theme.infoViewStyle.font.font
         titleLabel.textColor = theme.infoViewStyle.font.color
         actionButton.setInfoButtonPreferencesTheme(theme)
-
-        appendAccessibilityIdentifier("preferencesInfo")
+        titleLabel.appendAccessibilityIdentifier("preferencesInfo")
     }
     
 }

@@ -17,9 +17,9 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     // MARK: Theme
     
-    private let lightTheme: CourierInboxTheme
-    private let darkTheme: CourierInboxTheme
-    
+    private var lightTheme: CourierInboxTheme
+    private var darkTheme: CourierInboxTheme
+
     private var theme: CourierInboxTheme = .defaultLight
     
     // MARK: Interaction
@@ -381,13 +381,14 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
 
     // MARK: Theme update
 
-    public func update(_ darkTheme: CourierTheme? = nil, lightTheme: CourierTheme? = nil) {
+    public func update(darkTheme: CourierInboxTheme? = nil, lightTheme: CourierInboxTheme? = nil) {
         if let darkTheme = darkTheme {
             self.darkTheme = darkTheme
         }
         if let lightTheme = lightTheme {
             self.lightTheme = lightTheme
         }
+        // Refreshes theme
         traitCollectionDidChange(nil)
     }
 }

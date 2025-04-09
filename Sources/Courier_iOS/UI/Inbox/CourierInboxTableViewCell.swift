@@ -252,7 +252,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         appendAccessibilityIdentifier("inbox")
         timeLabel.appendAccessibilityIdentifier("inboxTime")
         bodyLabel.appendAccessibilityIdentifier("inboxBody")
-
     }
     
     private func setupButtons(_ message: InboxMessage, _ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {

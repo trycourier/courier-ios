@@ -593,6 +593,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         infoView.setTheme(theme)
 
         tableView.appendAccessibilityIdentifier("inboxMessage")
+        loadingIndicator.appendAccessibilityIdentifier("inboxMessage")
 
         self.tableView.reloadData()
     }

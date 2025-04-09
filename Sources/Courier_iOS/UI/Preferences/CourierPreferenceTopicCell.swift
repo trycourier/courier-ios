@@ -129,8 +129,10 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         self.subtitleLabel.font = theme.topicSubtitleFont.font
         self.subtitleLabel.textColor = theme.topicSubtitleFont.color
 
-        self.editButton.appendAccessibilityIdentifier("preferenceTopic")
         self.appendAccessibilityIdentifier("preferenceTopic")
+        self.editButton.appendAccessibilityIdentifier("preferenceTopic")
+        self.titleLabel.appendAccessibilityIdentifier("preferenceTopic")
+        self.subtitleLabel.appendAccessibilityIdentifier("preferenceTopic")
     }
     
 }
