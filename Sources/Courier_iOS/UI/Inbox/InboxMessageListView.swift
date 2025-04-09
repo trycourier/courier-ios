@@ -591,6 +591,10 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         tableView.refreshControl?.tintColor = theme.loadingColor
         loadingIndicator.color = theme.loadingColor
         infoView.setTheme(theme)
+
+        tableView.appendAccessibilityIdentifier("inboxMessage")
+        loadingIndicator.appendAccessibilityIdentifier("inboxMessage")
+
         self.tableView.reloadData()
     }
     

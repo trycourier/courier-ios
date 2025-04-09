@@ -20,9 +20,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     
     private let mode: Mode
     
-    private let lightTheme: CourierPreferencesTheme
-    private let darkTheme: CourierPreferencesTheme
-    
+    private var lightTheme: CourierPreferencesTheme
+    private var darkTheme: CourierPreferencesTheme
+
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
     private var theme: CourierPreferencesTheme = .defaultLight
@@ -689,5 +689,17 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
             await self.authListener?.remove()
         }
     }
-    
+
+    // MARK: Theme update
+
+    public func update(darkTheme: CourierPreferencesTheme? = nil, lightTheme: CourierPreferencesTheme? = nil) {
+        if let darkTheme = darkTheme {
+            self.darkTheme = darkTheme
+        }
+        if let lightTheme = lightTheme {
+            self.lightTheme = lightTheme
+        }
+        // Refreshes theme
+        traitCollectionDidChange(nil)
+    }
 }

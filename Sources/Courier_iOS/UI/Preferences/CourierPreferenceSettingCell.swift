@@ -76,6 +76,10 @@ internal class CourierPreferenceSettingCell: UITableViewCell {
         self.itemLabel.textColor = theme.sheetSettingStyles.font?.color
         self.toggleSwitch.onTintColor = theme.sheetSettingStyles.toggleColor
         self.selectionStyle = theme.sheetCellStyles.selectionStyle
+
+        self.appendAccessibilityIdentifier("preferenceSetting")
+        self.itemLabel.appendAccessibilityIdentifier("preferenceSetting")
+        self.toggleSwitch.appendAccessibilityIdentifier("preferenceSetting")
     }
     
     internal func toggle() {

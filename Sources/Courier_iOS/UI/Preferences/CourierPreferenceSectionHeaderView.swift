@@ -41,6 +41,7 @@ class CourierPreferenceSectionHeaderView: UITableViewHeaderFooterView {
     func setTheme(theme: CourierPreferencesTheme) {
         titleLabel.font = theme.sectionTitleFont.font
         titleLabel.textColor = theme.sectionTitleFont.color
+        titleLabel.appendAccessibilityIdentifier("preferenceSectionHeader")
     }
     
 }
