@@ -357,20 +357,22 @@ internal func vibrate(style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
 
 internal extension UIColor {
     func toHexString() -> String {
-        let components = self.cgColor.components
-        let r: CGFloat = components?[0] ?? 0.0
-        let g: CGFloat = components?[1] ?? 0.0
-        let b: CGFloat = components?[2] ?? 0.0
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
 
-        let hexString = String.init(format: "#%02lX%02lX%02lX", lroundf(Float(r * 255)), lroundf(Float(g * 255)), lroundf(Float(b * 255)))
-        print(hexString)
-        return hexString
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+
+        let rgb: Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
+
+        return String(format: "#%06x", rgb)
     }
 }
 
 internal extension UIButton {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.shared.isUITestsActive {
+        if Courier.isUITestsActive {
             self.accessibilityIdentifier = "\(prefix)Button, backgroundColor: \(String(describing: backgroundColor)), cornerRadius: \(layer.cornerRadius)"
 
             let fontName: String = titleLabel?.font.fontName ?? ""
@@ -383,15 +385,15 @@ internal extension UIButton {
 
 internal extension UITableView {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.shared.isUITestsActive {
-            self.accessibilityIdentifier = "\(prefix)TableView, separatorStyle: \(separatorStyle), separatorInset: \(separatorInset), separatorColor: \(separatorColor?.toHexString() ?? ""), loadingColor: \(refreshControl?.tintColor.toHexString() ?? "")"
+        if Courier.isUITestsActive {
+            self.accessibilityIdentifier = "\(prefix)TableView, separatorStyle: \(separatorStyle), separatorInset: \(separatorInset), separatorColor: \(separatorColor?.toHexString() ?? ""), loadingColor: \(refreshControl?.tintColor?.toHexString() ?? "")"
         }
     }
 }
 
 internal extension UITableViewCell {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.shared.isUITestsActive {
+        if Courier.isUITestsActive {
             self.accessibilityIdentifier = "\(prefix)Cell, selectionStyle: \(selectionStyle)"
         }
     }
@@ -399,7 +401,7 @@ internal extension UITableViewCell {
 
 internal extension UILabel {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.shared.isUITestsActive {
+        if Courier.isUITestsActive {
             self.accessibilityIdentifier = "\(prefix)Label, fontName: \(font.fontName), fontSize: \(font.pointSize), fontColor: \(textColor.toHexString())"
         }
     }
@@ -407,7 +409,7 @@ internal extension UILabel {
 
 internal extension UIActivityIndicatorView {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.shared.isUITestsActive {
+        if Courier.isUITestsActive {
             self.accessibilityIdentifier = "\(prefix)LoadingIndicator, color: \(color.toHexString())"
         }
     }
@@ -415,7 +417,7 @@ internal extension UIActivityIndicatorView {
 
 internal extension UISwitch {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.shared.isUITestsActive {
+        if Courier.isUITestsActive {
             self.accessibilityIdentifier = "\(prefix)Switch, onTintColor: \(onTintColor?.toHexString() ?? "")"
         }
     }

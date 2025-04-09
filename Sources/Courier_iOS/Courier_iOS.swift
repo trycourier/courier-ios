@@ -49,7 +49,7 @@ import UIKit
      * This simplifies UI testing by providing
      * used fonts and colors in accessibility identifiers
      */
-    public var isUITestsActive: Bool = false
+    public static var isUITestsActive: Bool = false
 
     // MARK: Modules
     
