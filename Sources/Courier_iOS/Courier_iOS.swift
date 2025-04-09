@@ -43,14 +43,6 @@ import UIKit
     @CourierActor
     public internal(set) var client: CourierClient? = nil
 
-    // MARK: UI debug options
-
-    /**
-     * This simplifies UI testing by providing
-     * used fonts and colors in accessibility identifiers
-     */
-    public static var isUITestsActive: Bool = false
-
     // MARK: Modules
     
     @CourierActor
@@ -81,5 +73,13 @@ import UIKit
     deinit {
         notificationProxy?.removeObservers()
     }
+    
+    // MARK: UI debug options
+
+    /**
+     * This simplifies UI testing by providing
+     * used fonts and colors in accessibility identifiers
+     */
+    public static var isUITestsActive: Bool = false
     
 }
