@@ -47,6 +47,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.appendAccessibilityIdentifier("InboxMessageListTableView")
         return tableView
     }()
     
