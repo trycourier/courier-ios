@@ -210,6 +210,7 @@ internal class Tab: UIButton {
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.appendAccessibilityIdentifier("TabNameLabel")
         return label
     }()
     
@@ -358,6 +359,7 @@ internal class TabBadge: UIView {
         let label = UILabel()
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.appendAccessibilityIdentifier("TabBadgeLabel")
         return label
     }()
     

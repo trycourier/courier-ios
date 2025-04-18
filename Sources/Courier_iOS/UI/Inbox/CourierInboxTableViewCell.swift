@@ -66,6 +66,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.appendAccessibilityIdentifier("InboxMessageTitleLabel")
         return label
     }()
 
@@ -74,6 +75,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.textAlignment = .right
+        label.appendAccessibilityIdentifier("InboxMessageTimeLabel")
         return label
     }()
 
@@ -81,6 +83,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
+        label.appendAccessibilityIdentifier("InboxMessageBodyLabel")
         return label
     }()
 

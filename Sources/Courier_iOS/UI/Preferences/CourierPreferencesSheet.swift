@@ -24,6 +24,7 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(CourierPreferenceSettingCell.self, forCellReuseIdentifier: CourierPreferenceSettingCell.id)
+        tableView.appendAccessibilityIdentifier("PreferencesTableView")
         return tableView
     }()
     
@@ -39,12 +40,14 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
         let label = UILabel()
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.appendAccessibilityIdentifier("PreferencesTitleLabel")
         return label
     }()
     
     lazy var rightButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.appendAccessibilityIdentifier("PreferencesRightButton")
         return button
     }()
     

@@ -21,12 +21,14 @@ internal class CourierPreferenceSettingCell: UITableViewCell {
         label.numberOfLines = 0
         label.setContentHuggingPriority(.required, for: .vertical)
         label.setContentCompressionResistancePriority(.required, for: .vertical)
+        label.appendAccessibilityIdentifier("PreferencesItemLabel")
         return label
     }()
     
     let toggleSwitch: UISwitch = {
         let toggle = UISwitch()
         toggle.translatesAutoresizingMaskIntoConstraints = false
+        toggle.appendAccessibilityIdentifier("PreferencesToggleSwitch")
         return toggle
     }()
     
@@ -77,9 +79,7 @@ internal class CourierPreferenceSettingCell: UITableViewCell {
         self.toggleSwitch.onTintColor = theme.sheetSettingStyles.toggleColor
         self.selectionStyle = theme.sheetCellStyles.selectionStyle
 
-        self.appendAccessibilityIdentifier("preferenceSetting")
-        self.itemLabel.appendAccessibilityIdentifier("preferenceSetting")
-        self.toggleSwitch.appendAccessibilityIdentifier("preferenceSetting")
+        self.appendAccessibilityIdentifier("PreferenceSetting")
     }
     
     internal func toggle() {
