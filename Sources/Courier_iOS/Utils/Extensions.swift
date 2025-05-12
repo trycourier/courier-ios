@@ -377,8 +377,10 @@ fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, prop
         return base
     }
 
-    let jsonString = SemanticProperties(properties: properties).toJsonString() ?? ""
-    return "\(base), \(jsonString)"
+    var props = properties
+    props.append(SemanticProperty(name: "component", value: base))
+    let jsonString = SemanticProperties(properties: props).toJsonString() ?? ""
+    return jsonString
 }
 
 internal extension UIButton {
