@@ -26,7 +26,7 @@ import UIKit
     
     // MARK: Versioning
     
-    internal static let version = "5.7.7"
+    internal static let version = "[A[A"
     @objc public static var agent = CourierAgent.nativeIOS(version)
     
     // MARK: Singleton
