@@ -370,55 +370,101 @@ internal extension UIColor {
     }
 }
 
+fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, properties: [SemanticProperty]) -> String {
+    let base = "\(prefix)\(type)"
+
+    if Courier.isUITestsActive {
+        return base
+    }
+
+    let jsonString = SemanticProperties(properties: properties).toJsonString() ?? ""
+    return "\(base), \(jsonString)"
+}
+
 internal extension UIButton {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.isUITestsActive {
-            self.accessibilityIdentifier = "\(prefix)Button, backgroundColor: \(String(describing: backgroundColor)), cornerRadius: \(layer.cornerRadius)"
+        self.accessibilityIdentifier = buildAccessibilityIdentifier(
+            prefix: prefix,
+            type: "Button",
+            properties: [
+                SemanticProperty(name: "backgroundColor", value: backgroundColor?.toHexString() ?? "nil"),
+                SemanticProperty(name: "cornerRadius", value: "\(layer.cornerRadius)")
+            ]
+        )
 
-            let fontName: String = titleLabel?.font.fontName ?? ""
-            let fontSize = titleLabel?.font.pointSize ?? 0
-            let fontColor: String = titleLabel?.textColor.toHexString() ?? ""
-            titleLabel?.accessibilityIdentifier = "\(prefix)ButtonTitleLabel, fontName: \(fontName), fontSize: \(fontSize), fontColor: \(fontColor)"
-        }
+        titleLabel?.accessibilityIdentifier = buildAccessibilityIdentifier(
+            prefix: prefix,
+            type: "ButtonTitleLabel",
+            properties: [
+                SemanticProperty(name: "fontName", value: titleLabel?.font.fontName ?? ""),
+                SemanticProperty(name: "fontSize", value: "\(titleLabel?.font.pointSize ?? 0)"),
+                SemanticProperty(name: "fontColor", value: titleLabel?.textColor.toHexString() ?? "")
+            ]
+        )
     }
 }
 
 internal extension UITableView {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.isUITestsActive {
-            self.accessibilityIdentifier = "\(prefix)TableView, separatorStyle: \(separatorStyle), separatorInset: \(separatorInset), separatorColor: \(separatorColor?.toHexString() ?? ""), loadingColor: \(refreshControl?.tintColor?.toHexString() ?? "")"
-        }
+        self.accessibilityIdentifier = buildAccessibilityIdentifier(
+            prefix: prefix,
+            type: "TableView",
+            properties: [
+                SemanticProperty(name: "separatorStyle", value: "\(separatorStyle.rawValue)"),
+                SemanticProperty(name: "separatorInset", value: "\(separatorInset)"),
+                SemanticProperty(name: "separatorColor", value: separatorColor?.toHexString() ?? ""),
+                SemanticProperty(name: "loadingColor", value: refreshControl?.tintColor?.toHexString() ?? "")
+            ]
+        )
     }
 }
 
 internal extension UITableViewCell {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.isUITestsActive {
-            self.accessibilityIdentifier = "\(prefix)Cell, selectionStyle: \(selectionStyle)"
-        }
+        self.accessibilityIdentifier = buildAccessibilityIdentifier(
+            prefix: prefix,
+            type: "Cell",
+            properties: [
+                SemanticProperty(name: "selectionStyle", value: "\(selectionStyle.rawValue)")
+            ]
+        )
     }
 }
 
 internal extension UILabel {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.isUITestsActive {
-            self.accessibilityIdentifier = "\(prefix)Label, fontName: \(font.fontName), fontSize: \(font.pointSize), fontColor: \(textColor.toHexString())"
-        }
+        self.accessibilityIdentifier = buildAccessibilityIdentifier(
+            prefix: prefix,
+            type: "Label",
+            properties: [
+                SemanticProperty(name: "fontName", value: font.fontName),
+                SemanticProperty(name: "fontSize", value: "\(font.pointSize)"),
+                SemanticProperty(name: "fontColor", value: textColor.toHexString())
+            ]
+        )
     }
 }
 
 internal extension UIActivityIndicatorView {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.isUITestsActive {
-            self.accessibilityIdentifier = "\(prefix)LoadingIndicator, color: \(color.toHexString())"
-        }
+        self.accessibilityIdentifier = buildAccessibilityIdentifier(
+            prefix: prefix,
+            type: "LoadingIndicator",
+            properties: [
+                SemanticProperty(name: "color", value: color.toHexString())
+            ]
+        )
     }
 }
 
 internal extension UISwitch {
     func appendAccessibilityIdentifier(_ prefix: String) {
-        if Courier.isUITestsActive {
-            self.accessibilityIdentifier = "\(prefix)Switch, onTintColor: \(onTintColor?.toHexString() ?? "")"
-        }
+        self.accessibilityIdentifier = buildAccessibilityIdentifier(
+            prefix: prefix,
+            type: "Switch",
+            properties: [
+                SemanticProperty(name: "onTintColor", value: onTintColor?.toHexString() ?? "")
+            ]
+        )
     }
 }
