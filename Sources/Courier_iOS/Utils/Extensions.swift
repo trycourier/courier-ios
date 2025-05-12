@@ -373,13 +373,14 @@ internal extension UIColor {
 fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, properties: [SemanticProperty]) -> String {
     let base = "\(prefix)\(type)"
 
-    if Courier.isUITestsActive {
+    guard Courier.isUITestsActive else {
         return base
     }
 
     var props = properties
     props.append(SemanticProperty(name: "component", value: base))
     let jsonString = SemanticProperties(properties: props).toJsonString() ?? ""
+
     return jsonString
 }
 
