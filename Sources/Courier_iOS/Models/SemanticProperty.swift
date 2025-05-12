@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SemanticProperty.swift
 //  Courier_iOS
 //
 //  Created by Uldis Zingis on 12/05/2025.
