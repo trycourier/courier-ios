@@ -15,7 +15,6 @@ class CourierPreferenceSectionHeaderView: UITableViewHeaderFooterView {
     let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.appendAccessibilityIdentifier("PreferencesSectionTitleLabel")
         return label
     }()
     
@@ -42,6 +41,7 @@ class CourierPreferenceSectionHeaderView: UITableViewHeaderFooterView {
     func setTheme(theme: CourierPreferencesTheme) {
         titleLabel.font = theme.sectionTitleFont.font
         titleLabel.textColor = theme.sectionTitleFont.color
+        titleLabel.appendAccessibilityIdentifier("PreferencesSectionTitleLabel")
     }
     
 }

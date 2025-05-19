@@ -18,7 +18,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        label.appendAccessibilityIdentifier("PreferencesTopicTitleLabel")
         return label
     }()
     
@@ -28,7 +27,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        label.appendAccessibilityIdentifier("PreferencesSubtitleLabel")
         return label
     }()
     
@@ -46,7 +44,6 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             self.onEditButtonClick?()
         })
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.appendAccessibilityIdentifier("PreferencesEditButton")
         return button
     }()
     
@@ -133,6 +130,9 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
         self.subtitleLabel.textColor = theme.topicSubtitleFont.color
 
         self.appendAccessibilityIdentifier("PreferenceTopic")
+        titleLabel.appendAccessibilityIdentifier("PreferencesTopicTitleLabel")
+        subtitleLabel.appendAccessibilityIdentifier("PreferencesSubtitleLabel")
+        editButton.appendAccessibilityIdentifier("PreferencesEditButton")
     }
     
 }

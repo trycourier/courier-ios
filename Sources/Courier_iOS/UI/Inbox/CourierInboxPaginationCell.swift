@@ -59,7 +59,7 @@ internal class CourierInboxPaginationCell: UITableViewCell {
     internal func setTheme(_ theme: CourierInboxTheme) {
         loadingIndicator.color = theme.loadingColor
         loadingIndicator.startAnimating()
-        loadingIndicator.appendAccessibilityIdentifier("inbox")
+        loadingIndicator.appendAccessibilityIdentifier("Inbox")
     }
     
 }

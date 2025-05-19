@@ -210,7 +210,6 @@ internal class Tab: UIButton {
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.appendAccessibilityIdentifier("TabNameLabel")
         return label
     }()
     
@@ -239,7 +238,9 @@ internal class Tab: UIButton {
         }
         
         setNeedsLayout()
-        
+
+        tabNameLabel.appendAccessibilityIdentifier("TabNameLabel")
+
     }
     
     private func getBadgeValue(value: Int) -> String? {
@@ -353,13 +354,14 @@ internal class TabBadge: UIView {
         // Dynamically set corner radius based on the height of the badge
         layer.cornerRadius = bounds.height / 2 // Half the height for a fully rounded effect
         layer.masksToBounds = true // Ensure the corners are clipped
+
+        titleLabel.appendAccessibilityIdentifier("TabBadgeLabel")
     }
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.appendAccessibilityIdentifier("TabBadgeLabel")
         return label
     }()
     

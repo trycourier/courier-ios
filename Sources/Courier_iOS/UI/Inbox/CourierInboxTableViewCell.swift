@@ -66,7 +66,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        label.appendAccessibilityIdentifier("InboxMessageTitleLabel")
         return label
     }()
 
@@ -75,7 +74,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.textAlignment = .right
-        label.appendAccessibilityIdentifier("InboxMessageTimeLabel")
         return label
     }()
 
@@ -83,7 +81,6 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.appendAccessibilityIdentifier("InboxMessageBodyLabel")
         return label
     }()
 
@@ -252,9 +249,12 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         // Selection style
         selectionStyle = theme.cellStyle.selectionStyle
 
-        appendAccessibilityIdentifier("inbox")
-        timeLabel.appendAccessibilityIdentifier("inboxTime")
-        bodyLabel.appendAccessibilityIdentifier("inboxBody")
+        titleLabel.appendAccessibilityIdentifier("InboxMessageTitleLabel")
+        timeLabel.appendAccessibilityIdentifier("InboxMessageTimeLabel")
+        bodyLabel.appendAccessibilityIdentifier("InboxMessageBodyLabel")
+        appendAccessibilityIdentifier("Inbox")
+        timeLabel.appendAccessibilityIdentifier("InboxTime")
+        bodyLabel.appendAccessibilityIdentifier("InboxBody")
     }
     
     private func setupButtons(_ message: InboxMessage, _ theme: CourierInboxTheme, _ onActionClick: @escaping (InboxAction) -> Void) {

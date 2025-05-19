@@ -47,7 +47,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action: #selector(onRefresh), for: .valueChanged)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.appendAccessibilityIdentifier("InboxMessageListTableView")
         return tableView
     }()
     
@@ -593,8 +592,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         loadingIndicator.color = theme.loadingColor
         infoView.setTheme(theme)
 
-        tableView.appendAccessibilityIdentifier("inboxMessage")
-        loadingIndicator.appendAccessibilityIdentifier("inboxMessage")
+        tableView.appendAccessibilityIdentifier("InboxMessage")
+        loadingIndicator.appendAccessibilityIdentifier("InboxMessage")
 
         self.tableView.reloadData()
     }
