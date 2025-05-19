@@ -15,6 +15,7 @@ class PrebuiltPreferencesViewController: UIViewController {
             mode: .topic,
             onError: { error in
                 self.showCodeAlert(title: "Preferences Error", code: error.localizedDescription)
+                return error.localizedDescription
             }
         )
     }()

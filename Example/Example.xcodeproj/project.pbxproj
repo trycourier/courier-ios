@@ -792,7 +792,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "feature/socket-polish";
+				branch = master;
 				kind = branch;
 			};
 		};

@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "feature/socket-polish",
-        "revision" : "f51696e422f03fab34efab6e2b79df8b2023955b"
+        "branch" : "master",
+        "revision" : "0e001b9ae6118ddf13242e2e3859e2f619797764"
       }
     },
     {
