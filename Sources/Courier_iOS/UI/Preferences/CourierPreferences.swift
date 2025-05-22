@@ -595,7 +595,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                     await Courier.shared.client?.log("Topic updated: \(topic.topicId)")
                 } catch {
                     await Courier.shared.client?.log(error.localizedDescription)
-                    self.onError?(CourierError(from: error))
+                    let _ = self.onError?(CourierError(from: error))
                     self.updateTopic(topicId: topic.topicId, newTopic: topic)
                 }
                 
@@ -659,7 +659,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                     await Courier.shared.client?.log("Topic updated: \(topic.topicId)")
                 } catch {
                     await Courier.shared.client?.log(error.localizedDescription)
-                    self.onError?(CourierError(from: error))
+                    let _ = self.onError?(CourierError(from: error))
                     self.updateTopic(topicId: topic.topicId, newTopic: topic)
                 }
                 

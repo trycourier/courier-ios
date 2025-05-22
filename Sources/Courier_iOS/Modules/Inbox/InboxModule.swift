@@ -89,6 +89,24 @@ internal class InboxModule: InboxDataStoreEventDelegate {
             )
             
             // Connect the socket
+            // If this fails, it will fail silently
+            await connectSocketIfPossible(client)
+            
+            // Post the data
+            await dataStore.reloadSnapshot(snapshot)
+            self.state = .initialized
+            
+        } catch {
+            
+            await dataStore.delegate?.onError(error)
+            self.state = .uninitialized
+            
+        }
+        
+    }
+    
+    private func connectSocketIfPossible(_ client: CourierClient) async {
+        do {
             try await dataService.connectWebSocket(
                 client: client,
                 onReceivedMessage: { [weak self] message in
@@ -133,17 +151,9 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                     }
                 }
             )
-            
-            await dataStore.reloadSnapshot(snapshot)
-            self.state = .initialized
-            
         } catch {
-            
-            await dataStore.delegate?.onError(error)
-            self.state = .uninitialized
-            
+            Courier.shared.client?.error(error.localizedDescription)
         }
-        
     }
     
     func getNextPage(feedType: InboxMessageFeed) async throws -> InboxMessageSet? {
