@@ -152,7 +152,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                 }
             )
         } catch {
-            Courier.shared.client?.error(error.localizedDescription)
+            Courier.shared.client?.options.log(error.localizedDescription)
         }
     }
     
