@@ -110,6 +110,7 @@ public enum CourierUserPreferencesStatus: String, Codable {
 public enum CourierUserPreferencesChannel: String, Codable {
     
     case directMessage = "direct_message"
+    case inbox
     case email
     case push
     case sms
@@ -134,6 +135,8 @@ public enum CourierUserPreferencesChannel: String, Codable {
         switch self {
         case .directMessage:
             return "In App Messages"
+        case .inbox:
+            return "Inbox"
         case .email:
             return "Emails"
         case .push:
@@ -149,7 +152,7 @@ public enum CourierUserPreferencesChannel: String, Codable {
     
     // Static property to return all cases
     public static var allCases: [CourierUserPreferencesChannel] {
-        return [.push, .sms, .email, .directMessage, .webhook]
+        return [.push, .sms, .email, .directMessage, .inbox, .webhook]
     }
 }
 

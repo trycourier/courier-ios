@@ -34,7 +34,7 @@ class ExampleServer {
         
     }
     
-    static func sendTest(authKey: String, userId: String, tenantId: String? = nil, channel: String) async throws -> String {
+    @discardableResult static func sendTest(authKey: String, userId: String, tenantId: String? = nil, channel: String) async throws -> String {
         
         return try await withCheckedThrowingContinuation({ (continuation: CheckedContinuation<String, Error>) in
             

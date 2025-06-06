@@ -40,8 +40,37 @@ class PreferenceClientTests: XCTestCase {
             topicId: Env.COURIER_PREFERENCE_TOPIC_ID,
             status: .optedIn,
             hasCustomRouting: true,
-            customRouting: [.push]
+            customRouting: [.inbox]
         )
+
+    }
+    
+    func testInboxMessageOptedOut() async throws {
+
+        let client = try await ClientBuilder.build()
+        
+        try await client.preferences.putUserPreferenceTopic(
+            topicId: Env.COURIER_PREFERENCE_TOPIC_ID,
+            status: .optedOut,
+            hasCustomRouting: false,
+            customRouting: []
+        )
+        
+        try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+        
+        let messageId = try await ExampleServer.sendTemplateTest(
+            authKey: Env.COURIER_AUTH_KEY,
+            userId: client.options.userId,
+            templateId: Env.COURIER_MESSAGE_TEMPLATE_ID
+        )
+        
+        try await Task.sleep(nanoseconds: 20 * 1_000_000_000)
+        
+        let res = try await client.inbox.getMessages()
+        
+        let message = res.data?.messages?.nodes?.first(where: { $0.messageId == messageId })
+        
+        XCTAssertTrue(message == nil)
 
     }
     
