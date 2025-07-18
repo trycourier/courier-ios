@@ -23,38 +23,23 @@
     
     func getInboxData(client: CourierClient, feedPaginationLimit: Int, archivePaginationLimit: Int, isRefresh: Bool) async throws -> (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int) {
         
-        var feedRes: InboxResponse?
-        var archivedRes: InboxResponse?
-        var unreadCount: Int?
+        async let feedRes = client.inbox.getMessages(
+            paginationLimit: feedPaginationLimit,
+            startCursor: nil
+        )
+        async let archivedRes = client.inbox.getArchivedMessages(
+            paginationLimit: archivePaginationLimit,
+            startCursor: nil
+        )
+        async let unreadCount = client.inbox.getUnreadMessageCount()
 
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                feedRes = try await client.inbox.getMessages(
-                    paginationLimit: feedPaginationLimit,
-                    startCursor: nil
-                )
-            }
-            group.addTask {
-                archivedRes = try await client.inbox.getArchivedMessages(
-                    paginationLimit: archivePaginationLimit,
-                    startCursor: nil
-                )
-            }
-            group.addTask {
-                unreadCount = try await client.inbox.getUnreadMessageCount()
-            }
-            try await group.waitForAll()
-        }
+        let (feed, archive, unread) = try await (feedRes, archivedRes, unreadCount)
 
-        guard
-            let feedRes = feedRes,
-            let archivedRes = archivedRes,
-            let unreadCount = unreadCount
-        else {
-            throw CourierError.inboxNotInitialized
-        }
-        
-        return (feedRes.toInboxMessageDataSet(), archivedRes.toInboxMessageDataSet(), unreadCount)
+        return (
+            feed.toInboxMessageDataSet(),
+            archive.toInboxMessageDataSet(),
+            unread
+        )
         
     }
     

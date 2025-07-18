@@ -385,7 +385,9 @@ fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, prop
 }
 
 internal extension UIButton {
+    
     func appendAccessibilityIdentifier(_ prefix: String) {
+        
         self.accessibilityIdentifier = buildAccessibilityIdentifier(
             prefix: prefix,
             type: "Button",
