@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "master",
-        "revision" : "0e001b9ae6118ddf13242e2e3859e2f619797764"
+        "branch" : "feature/threading-adjustment",
+        "revision" : "ae24ffa5536002ff96d90375d2a77adc9eefc117"
       }
     },
     {
