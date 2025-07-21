@@ -1,0 +1,20 @@
+name: Test Status Report
+
+on:
+  repository_dispatch:
+    types: [test-status]
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo test status
+        run: echo "Tests for ${{ github.event.client_payload.source }} ${{ github.event.client_payload.status }}"
+
+      - name: Fail if tests failed
+        run: |
+          if [[ "${{ github.event.client_payload.status }}" == "failed" ]]; then
+            echo "Tests failed. Exiting with error."
+            exit 1
+          fi
+          echo "Tests passed."
