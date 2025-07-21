@@ -108,8 +108,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
     }
     
-    private let messageOpenManager = CourierMessageOpenManager()
-    
     // MARK: Init
     
     public init(
@@ -553,11 +551,21 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         self.didScrollInbox(scrollView)
         self.openVisibleMessages()
     }
+    
+    private func getVisibleMessages(messages: [InboxMessage], indices: [IndexPath]) -> [InboxMessage] {
+        indices.compactMap { indexPath in
+            let index = indexPath.row
+            guard index >= 0 && index < inboxMessages.count else { return nil }
+            let message = inboxMessages[index]
+            return message.isOpened ? nil : message
+        }
+    }
 
     private func openVisibleMessages() {
         guard let visibleIndexPaths = tableView.indexPathsForVisibleRows else { return }
-        Task {
-            let messagesToOpen = await messageOpenManager.getVisibleMessages(indices: visibleIndexPaths)
+        Task { @CourierActor in
+            let messages = await feed == .feed ? Courier.shared.feedMessages : Courier.shared.archivedMessages
+            let messagesToOpen = await getVisibleMessages(messages: messages, indices: visibleIndexPaths)
             for message in messagesToOpen {
                 try await Courier.shared.openMessage(message.messageId)
             }
