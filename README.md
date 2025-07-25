@@ -209,6 +209,6 @@ Several common starter projects using the SDK.
 
 # **Share feedback with Courier**
 
-We are building the best SDKs for handling notifications! Have an idea or feedback about our SDKs? Please let us know:
+We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Let us know!
 
-- [Courier iOS Issues](https://github.com/trycourier/courier-ios/issues)
+[Courier iOS Issues](https://github.com/trycourier/courier-ios/issues)
