@@ -691,7 +691,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 81;
-				DEVELOPMENT_TEAM = 83BJVWGX4Q;
+				DEVELOPMENT_TEAM = VJQ245Q28G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
@@ -717,7 +717,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 81;
-				DEVELOPMENT_TEAM = 83BJVWGX4Q;
+				DEVELOPMENT_TEAM = VJQ245Q28G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CourierService/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CourierService;
