@@ -4,9 +4,40 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
+  pull_request:
+    branches: [master]
 
 jobs:
-  notify-app:
+  tests-on-push:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch App Build
+        run: |
+          curl -sS --fail-with-body -X POST \
+            -H "Authorization: token ${{ secrets.AUTOMATION_ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/trycourier/mobile-automation-tests/dispatches \
+            -d '{"event_type": "iOS-UIKit", "client_payload": {"sha":"'"${{ github.sha }}"'","ref":"'"${{ github.ref }}"'"}}'
+
+  tests-on-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch App Build
+        run: |
+          curl -sS --fail-with-body -X POST \
+            -H "Authorization: token ${{ secrets.AUTOMATION_ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/trycourier/mobile-automation-tests/dispatches \
+            -d "$(jq -n \
+                  --arg et 'iOS-UIKit' \
+                  --arg prnum '${{ github.event.pull_request.number }}' \
+                  --arg sh '${{ github.event.pull_request.head.sha }}' \
+                  '{event_type:$et, client_payload:{pr:$prnum, sha:$sh}}')"
+
+  tests-manual:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Dispatch App Build
@@ -15,4 +46,4 @@ jobs:
             -H "Authorization: token ${{ secrets.AUTOMATION_ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/trycourier/mobile-automation-tests/dispatches \
-            -d '{"event_type": "iOS-UIKit", "client_payload": { "dummy_payload": "some_value_todo_logic" }}'
+            -d '{"event_type": "iOS-UIKit", "client_payload": {"sha":"'"${{ github.sha }}"'","ref":"'"${{ github.ref }}"'"}}'
