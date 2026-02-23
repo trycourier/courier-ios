@@ -1,5 +1,7 @@
 <img width="1000" alt="ios-banner" src="https://github.com/user-attachments/assets/3e7de20b-5b68-40df-90ca-057b18fd70ab">
 
+<!-- AUTO-GENERATED-OVERVIEW:START — Do not edit this section. It is synced from mintlify-docs. -->
+
 &emsp;
 
 # Requirements & Support
@@ -92,6 +94,8 @@ end
 ```sh
 pod install
 ```
+
+<!-- AUTO-GENERATED-OVERVIEW:END -->
 
 &emsp;
 
