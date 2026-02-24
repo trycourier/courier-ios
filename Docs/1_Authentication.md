@@ -1,3 +1,5 @@
+> **Note**: These docs have moved to [courier.com/docs/sdk-libraries/ios](https://www.courier.com/docs/sdk-libraries/ios/). The content below may be outdated.
+
 # Authentication
 
 Manages user credentials between app sessions.
