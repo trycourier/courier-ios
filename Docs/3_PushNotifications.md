@@ -1,5 +1,7 @@
 <img width="1000" alt="push-banner" src="https://user-images.githubusercontent.com/6370613/229574537-0d45260f-120a-4b88-80b0-59880860bb46.png">
 
+> **Note**: These docs have moved to [courier.com/docs/sdk-libraries/ios](https://www.courier.com/docs/sdk-libraries/ios/). The content below may be outdated.
+
 &emsp;
 
 # Push Notifications
