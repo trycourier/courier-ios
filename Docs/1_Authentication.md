@@ -97,6 +97,19 @@ Task {
 }
 ```
 
+For EU-hosted workspaces, pass the built-in EU endpoint preset:
+
+```swift
+Task {
+    let userId = "your_user_id"
+    await Courier.shared.signIn(
+        userId: userId,
+        accessToken: jwt,
+        baseUrls: .eu
+    )
+}
+```
+
 If the token is expired, you can generate a new one from your endpoint and call `Courier.shared.signIn(...)` again. You will need to check the token manually for expiration or generate a new one when the user views a specific screen in your app. It is up to you to handle token expiration and refresh based on your security needs.
 
 ## 4. Sign your user out
