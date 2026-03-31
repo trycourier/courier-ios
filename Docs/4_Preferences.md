@@ -1,5 +1,7 @@
 <img width="1000" alt="ios-preferences-banner" src="https://github.com/trycourier/courier-ios/assets/6370613/52414bb0-b546-4a29-8137-65ec8d9c410e">
 
+> **Note**: These docs have moved to [courier.com/docs/sdk-libraries/ios](https://www.courier.com/docs/sdk-libraries/ios/). The content below may be outdated.
+
 # Courier Preferences
 
 In-app notification settings that allow your users to customize which of your notifications they receive. Allows you to build high quality, flexible preference settings very quickly.

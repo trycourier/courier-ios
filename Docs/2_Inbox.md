@@ -1,5 +1,7 @@
 <img width="1000" alt="inbox-banner" src="https://user-images.githubusercontent.com/6370613/232106969-a9b31065-0b81-4013-9e03-1f2d3b634ab7.png">
 
+> **Note**: These docs have moved to [courier.com/docs/sdk-libraries/ios](https://www.courier.com/docs/sdk-libraries/ios/). The content below may be outdated.
+
 &emsp;
 
 # Courier Inbox
