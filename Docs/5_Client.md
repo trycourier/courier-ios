@@ -14,7 +14,7 @@ let client = CourierClient(
     userId:        "your_user_id",
     connectionId:  "...",          // Optional. Used for inbox websocket
     tenantId:      "...",          // Optional. Used for scoping a client to a specific tenant
-    baseUrls:      .eu,            // Optional. Use for EU-hosted workspaces
+    apiUrls:       .eu,            // Optional. Use for EU-hosted workspaces
     showLogs:      ..              // Optional. Defaults to your current BuildConfig
 )
 

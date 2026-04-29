@@ -105,7 +105,7 @@ Task {
     await Courier.shared.signIn(
         userId: userId,
         accessToken: jwt,
-        baseUrls: .eu
+        apiUrls: .eu
     )
 }
 ```

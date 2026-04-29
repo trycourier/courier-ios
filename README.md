@@ -219,14 +219,14 @@ We want to make this the best SDK for managing notifications! Have an idea or fe
 
 ## EU endpoints
 
-If your workspace uses EU-hosted Courier endpoints, pass the built-in EU preset through `baseUrls`.
+If your workspace uses EU-hosted Courier endpoints, pass the built-in EU preset through `apiUrls`.
 
 ```swift
 Task {
     await Courier.shared.signIn(
         userId: "your_user_id",
         accessToken: jwt,
-        baseUrls: .eu
+        apiUrls: .eu
     )
 }
 ```

@@ -9,7 +9,7 @@ import Courier_iOS
 
 class ClientBuilder {
     
-    static func build(useJWT: Bool = true, userId: String = Env.COURIER_USER_ID, connectionId: String? = nil, tenantId: String? = nil) async throws -> CourierClient {
+    static func build(useJWT: Bool = true, userId: String = Env.COURIER_USER_ID, connectionId: String? = nil, tenantId: String? = nil, apiUrls: CourierClient.ApiUrls = CourierClient.ApiUrls()) async throws -> CourierClient {
         
         var jwt: String? = nil
 
@@ -26,6 +26,7 @@ class ClientBuilder {
             userId: userId,
             connectionId: connectionId,
             tenantId: tenantId,
+            apiUrls: apiUrls,
             showLogs: true
         )
         

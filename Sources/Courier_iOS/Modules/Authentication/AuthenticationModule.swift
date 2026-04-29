@@ -19,7 +19,7 @@ import Foundation
     
     // MARK: User Registration
     
-    func signIn(userId: String, tenantId: String?, accessToken: String, clientKey: String?, baseUrls: CourierClient.ApiUrls, showLogs: Bool) async {
+    func signIn(userId: String, tenantId: String?, accessToken: String, clientKey: String?, apiUrls: CourierClient.ApiUrls, showLogs: Bool) async {
         
         // Check if the current user exists
         if (courier.isUserSignedIn) {
@@ -37,7 +37,7 @@ import Foundation
             userId: userId,
             connectionId: connectionId,
             tenantId: tenantId,
-            baseUrls: baseUrls,
+            apiUrls: apiUrls,
             showLogs: showLogs
         )
         
@@ -181,7 +181,7 @@ import Foundation
         }
     }
     
-    public func signIn(userId: String, tenantId: String? = nil, accessToken: String, clientKey: String? = nil, baseUrls: CourierClient.ApiUrls = CourierClient.ApiUrls(), showLogs: Bool = {
+    public func signIn(userId: String, tenantId: String? = nil, accessToken: String, clientKey: String? = nil, apiUrls: CourierClient.ApiUrls = CourierClient.ApiUrls(), showLogs: Bool = {
         #if DEBUG
         return true
         #else
@@ -189,7 +189,7 @@ import Foundation
         #endif
     }()) async
     {
-        await authenticationModule.signIn(userId: userId, tenantId: tenantId, accessToken: accessToken, clientKey: clientKey, baseUrls: baseUrls, showLogs: showLogs)
+        await authenticationModule.signIn(userId: userId, tenantId: tenantId, accessToken: accessToken, clientKey: clientKey, apiUrls: apiUrls, showLogs: showLogs)
     }
     
     public func signOut() async {

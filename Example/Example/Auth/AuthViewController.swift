@@ -9,12 +9,36 @@ import UIKit
 import Courier_iOS
 import ShowTime
 
+enum CourierEnvironment: String, CaseIterable {
+    case production = "Production"
+    case productionEU = "Production EU"
+    case custom = "Custom"
+    
+    var urls: CourierClient.ApiUrls? {
+        switch self {
+        case .production:
+            return .us
+        case .productionEU:
+            return .eu
+        case .custom:
+            return nil
+        }
+    }
+}
+
 class AuthViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    private var selectedEnvironment: CourierEnvironment = .production
     
     private lazy var options: [(String, String)] = {
         let userManager = UserManager.shared
         let credentials = userManager.getCredentials()
+        
+        let envName = credentials["environment"] ?? CourierEnvironment.production.rawValue
+        selectedEnvironment = CourierEnvironment(rawValue: envName) ?? .production
+        
         return [
+            ("Environment", selectedEnvironment.rawValue),
             ("User ID", credentials["userId"] ?? ""),
             ("Tenant ID (Optional)", credentials["tenantId"] ?? ""),
             ("API Key", credentials["apiKey"] ?? Env.COURIER_AUTH_KEY),
@@ -25,88 +49,32 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         ]
     }()
     
-    private var canEditAuthentication = false
     private var authListener: CourierAuthenticationListener? = nil
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var resetButton: UIBarButtonItem!
-    @IBOutlet weak var authButton: UIBarButtonItem!
     private var toggleTouchesButton: UIBarButtonItem!
+    private var saveButton: UIBarButtonItem!
     private var activityIndicator = UIActivityIndicatorView(style: .medium)
     
-    @IBAction func resetButtonAction(_ sender: Any) {
-        
-        let alert = UIAlertController(
-            title: "Confirm Reset",
-            message: "Are you sure you want to reset all the values?",
-            preferredStyle: .actionSheet
-        )
-        
-        alert.addAction(UIAlertAction(
-            title: "Yes",
-            style: .destructive,
-            handler: { _ in
-                Task {
-                    // Sign out if currently signed in
-                    if await Courier.shared.userId != nil {
-                        await Courier.shared.signOut()
-                    }
-                    
-                    self.resetUser()
-                    
-                    await self.updateUserState()
-                }
-            }
-        ))
-        
-        alert.addAction(UIAlertAction(
-            title: "Cancel",
-            style: .cancel,
-            handler: nil
-        ))
-        
-        // For iPad support
-        if let popoverController = alert.popoverPresentationController {
-            popoverController.barButtonItem = resetButton
-        }
-        
-        present(alert, animated: true, completion: nil)
-        
-    }
-    
-    private func resetUser() {
-        
-        // Clear UserManager credentials
-        let userManager = UserManager.shared
-        userManager.removeCredentials()
-        
-        // Reset options to default values
-        let credentials = userManager.getCredentials()
-        self.options = [
-            ("User ID", ""),
-            ("Tenant ID (Optional)", ""),
-            ("API Key", credentials["apiKey"] ?? Env.COURIER_AUTH_KEY),
-            ("REST URL", credentials["restUrl"] ?? ""),
-            ("GraphQL URL", credentials["graphqlUrl"] ?? ""),
-            ("Inbox GraphQL URL", credentials["inboxGraphqlUrl"] ?? ""),
-            ("Inbox WebSocket", credentials["inboxWebsocketUrl"] ?? "")
-        ]
-        
-    }
-    
-    @IBAction func authButtonAction(_ sender: Any) {
-        self.canEditAuthentication = false
-        self.authButton.isEnabled = false
-        self.tableView.reloadData()
+    @objc private func saveButtonAction(_ sender: Any) {
+        saveButton.isEnabled = false
         
         Task {
-            if await Courier.shared.userId != nil {
-                await Courier.shared.signOut()
-            } else {
-                await performSignIn()
-            }
-            await updateUserState()
+            await performSave()
         }
+    }
+    
+    private func performSave() async {
+        activityIndicator.startAnimating()
+        
+        if await Courier.shared.userId != nil {
+            await Courier.shared.signOut()
+        }
+        
+        await performSignIn()
+        
+        activityIndicator.stopAnimating()
+        saveButton.isEnabled = !options[1].1.isEmpty
     }
     
     @objc private func touchesButtonAction(_ sender: Any) {
@@ -119,22 +87,11 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         toggleTouchesButton.title = showTouches ? "Hide Touches" : "Show Touches"
     }
     
-    private func updateUserState() async {
-        canEditAuthentication = await Courier.shared.userId == nil
-        authButton.isEnabled = true
-        authButton.title = await Courier.shared.userId == nil ? "Sign In" : "Sign Out"
-        authButton.isEnabled = !options[0].1.isEmpty
-        activityIndicator.stopAnimating()
-        tableView.reloadData()
-    }
-    
     private func performSignIn() async {
         
-        self.activityIndicator.startAnimating()
-        
-        let userId = options[0].1
-        let tenantId = options[1].1.isEmpty ? nil : options[1].1
-        let apiKey = options[2].1
+        let userId = options[1].1
+        let tenantId = options[2].1.isEmpty ? nil : options[2].1
+        let apiKey = options[3].1
         
         if userId.isEmpty {
             await Courier.shared.signOut()
@@ -143,7 +100,7 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         do {
             let jwt = try await ExampleServer().generateJwt(
-                baseUrl: options[3].1,
+                baseUrl: options[4].1,
                 authKey: apiKey,
                 userId: userId
             )
@@ -152,16 +109,76 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
                 userId: userId,
                 tenantId: tenantId,
                 accessToken: jwt,
-                baseUrls: CourierClient.ApiUrls(
-                    rest: options[3].1,
-                    graphql: options[4].1,
-                    inboxGraphql: options[5].1,
-                    inboxWebSocket: options[6].1
+                apiUrls: CourierClient.ApiUrls(
+                    rest: options[4].1,
+                    graphql: options[5].1,
+                    inboxGraphql: options[6].1,
+                    inboxWebSocket: options[7].1
                 )
             )
         } catch {
             await Courier.shared.signOut()
             showCodeAlert(title: "Error", code: "\(error)")
+        }
+    }
+    
+    private func applyEnvironment(_ env: CourierEnvironment) {
+        selectedEnvironment = env
+        options[0].1 = env.rawValue
+        
+        let userManager = UserManager.shared
+        userManager.setCredential(key: "environment", value: env.rawValue)
+        
+        if let urls = env.urls {
+            options[4].1 = urls.rest
+            options[5].1 = urls.graphql
+            options[6].1 = urls.inboxGraphql
+            options[7].1 = urls.inboxWebSocket
+            
+            userManager.setCredential(key: "restUrl", value: urls.rest)
+            userManager.setCredential(key: "graphqlUrl", value: urls.graphql)
+            userManager.setCredential(key: "inboxGraphqlUrl", value: urls.inboxGraphql)
+            userManager.setCredential(key: "inboxWebsocketUrl", value: urls.inboxWebSocket)
+        }
+        
+        tableView.reloadData()
+    }
+    
+    private func showEnvironmentPicker(from cell: UITableViewCell) {
+        let alert = UIAlertController(
+            title: "Select Environment",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        
+        for env in CourierEnvironment.allCases {
+            let action = UIAlertAction(title: env.rawValue, style: .default) { [weak self] _ in
+                self?.applyEnvironment(env)
+            }
+            if env == selectedEnvironment {
+                action.setValue(true, forKey: "checked")
+            }
+            alert.addAction(action)
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = cell
+            popoverController.sourceRect = cell.bounds
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    private func copyUrlToPasteboard(_ url: String, cell: UITableViewCell) {
+        UIPasteboard.general.string = url
+        
+        let original = cell.accessoryView?.tintColor
+        cell.accessoryView?.tintColor = .systemGreen
+        
+        UIView.animate(withDuration: 0.3, delay: 0.4, options: []) {
+            cell.accessoryView?.tintColor = original
         }
     }
 
@@ -170,7 +187,6 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         title = "Auth"
         
-        // Create toolbar (action bar) with Reset button
         toggleTouchesButton = UIBarButtonItem(
             title: "Show Touches",
             style: .plain,
@@ -178,35 +194,41 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
             action: #selector(touchesButtonAction)
         )
         
-        // Move Show Touches to top left navigation bar
         navigationItem.leftBarButtonItem = toggleTouchesButton
         
-        // Set touches initial state
         ShowTime.enabled = .never
         updateShowTouchesLabel()
         
-        // Build the tableview
+        saveButton = UIBarButtonItem(
+            title: "Save",
+            style: .done,
+            target: self,
+            action: #selector(saveButtonAction)
+        )
+        
+        activityIndicator.hidesWhenStopped = true
+        navigationItem.rightBarButtonItems = [
+            saveButton,
+            UIBarButtonItem(customView: activityIndicator)
+        ]
+        
         tableView.register(MonoListItem.self, forCellReuseIdentifier: MonoListItem.id)
         tableView.delegate = self
         tableView.dataSource = self
         
-        // Disable auth button on launch
-        authButton.isEnabled = false
-        activityIndicator.hidesWhenStopped = true
-        navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: activityIndicator)]
+        saveButton.isEnabled = !options[1].1.isEmpty
         
         Task {
             authListener = await Courier.shared.addAuthenticationListener { [weak self] _ in
                 Task {
-                    await self?.updateUserState()
+                    self?.saveButton.isEnabled = !(self?.options[1].1.isEmpty ?? true)
+                    self?.tableView.reloadData()
                 }
             }
             
             if await Courier.shared.userId != nil {
-                await performSignIn()
+                await performSave()
             }
-            
-            await self.updateUserState()
         }
     }
     
@@ -219,7 +241,21 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let item = options[indexPath.row]
         let value = item.1.isEmpty ? "NOT SET" : item.1
-        cell.configureCell(title: item.0, value: value, canEdit: canEditAuthentication)
+        cell.configureCell(title: item.0, value: value)
+        
+        if indexPath.row == 0 {
+            cell.accessoryType = .disclosureIndicator
+            cell.accessoryView = nil
+        } else if indexPath.row >= 4 && selectedEnvironment != .custom {
+            let copyImage = UIImageView(image: UIImage(systemName: "doc.on.doc"))
+            copyImage.tintColor = .secondaryLabel
+            copyImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+            cell.accessoryView = copyImage
+            cell.accessoryType = .none
+        } else {
+            cell.accessoryType = .none
+            cell.accessoryView = nil
+        }
         
         return cell
     }
@@ -227,7 +263,20 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if !canEditAuthentication { return }
+        if indexPath.row == 0 {
+            if let cell = tableView.cellForRow(at: indexPath) {
+                showEnvironmentPicker(from: cell)
+            }
+            return
+        }
+        
+        if indexPath.row >= 4 && selectedEnvironment != .custom {
+            let url = options[indexPath.row].1
+            if !url.isEmpty, let cell = tableView.cellForRow(at: indexPath) {
+                copyUrlToPasteboard(url, cell: cell)
+            }
+            return
+        }
         
         let item = options[indexPath.row]
         
@@ -235,21 +284,26 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
             let value = values[0]
             options[indexPath.row].1 = value
             
-            if indexPath.row == 0 {
-                authButton.isEnabled = !value.isEmpty
+            if indexPath.row == 1 {
+                saveButton.isEnabled = !value.isEmpty
             }
             
-            // Update UserManager with new value
             let userManager = UserManager.shared
             switch indexPath.row {
-            case 0: userManager.setCredential(key: "userId", value: value)
-            case 1: userManager.setCredential(key: "tenantId", value: value)
-            case 2: userManager.setCredential(key: "apiKey", value: value)
-            case 3: userManager.setCredential(key: "restUrl", value: value)
-            case 4: userManager.setCredential(key: "graphqlUrl", value: value)
-            case 5: userManager.setCredential(key: "inboxGraphqlUrl", value: value)
-            case 6: userManager.setCredential(key: "inboxWebsocketUrl", value: value)
+            case 1: userManager.setCredential(key: "userId", value: value)
+            case 2: userManager.setCredential(key: "tenantId", value: value)
+            case 3: userManager.setCredential(key: "apiKey", value: value)
+            case 4: userManager.setCredential(key: "restUrl", value: value)
+            case 5: userManager.setCredential(key: "graphqlUrl", value: value)
+            case 6: userManager.setCredential(key: "inboxGraphqlUrl", value: value)
+            case 7: userManager.setCredential(key: "inboxWebsocketUrl", value: value)
             default: break
+            }
+            
+            if indexPath.row >= 4 && self.selectedEnvironment != .custom {
+                self.selectedEnvironment = .custom
+                self.options[0].1 = CourierEnvironment.custom.rawValue
+                userManager.setCredential(key: "environment", value: CourierEnvironment.custom.rawValue)
             }
             
             tableView.reloadData()
