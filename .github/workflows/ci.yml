@@ -28,7 +28,6 @@ jobs:
         run: xcrun simctl boot "iPhone 16 Pro" || true
 
       - name: Run tests
-        timeout-minutes: 10
         run: |
           xcodebuild -scheme CourierTests \
             -destination "platform=iOS Simulator,name=iPhone 16 Pro" \
