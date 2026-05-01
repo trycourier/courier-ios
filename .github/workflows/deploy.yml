@@ -99,6 +99,12 @@ jobs:
           owner: trycourier
           repositories: courier-flutter,courier-react-native
 
+      # gh repo clone uses GH_TOKEN; git push does not unless git is configured.
+      - name: Configure git for HTTPS with app token
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: gh auth setup-git
+
       - name: Bump courier-flutter
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
