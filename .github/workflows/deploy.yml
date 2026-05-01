@@ -136,14 +136,19 @@ jobs:
 
           git add -A
           git commit -m "Bump Courier_iOS to $VERSION"
-          git push -u origin "bump-courier-ios-$VERSION"
+          # Retry runs reuse the same branch name; overwrite prior bot pushes on remote.
+          git push -u origin "bump-courier-ios-$VERSION" --force
           # gh defaults to GITHUB_REPOSITORY (courier-ios) in Actions unless --repo is set.
-          gh pr create \
-            --repo trycourier/courier-flutter \
-            --base main \
-            --head "bump-courier-ios-$VERSION" \
-            --title "Bump Courier_iOS to $VERSION" \
-            --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
+          if [ "$(gh pr list --repo trycourier/courier-flutter --state open --head "bump-courier-ios-$VERSION" --json number --jq 'length')" -eq 0 ]; then
+            gh pr create \
+              --repo trycourier/courier-flutter \
+              --base main \
+              --head "bump-courier-ios-$VERSION" \
+              --title "Bump Courier_iOS to $VERSION" \
+              --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
+          else
+            echo "PR already open for bump-courier-ios-$VERSION; branch updated."
+          fi
 
       - name: Bump courier-react-native
         env:
@@ -177,10 +182,14 @@ jobs:
 
           git add -A
           git commit -m "Bump Courier_iOS to $VERSION"
-          git push -u origin "bump-courier-ios-$VERSION"
-          gh pr create \
-            --repo trycourier/courier-react-native \
-            --base main \
-            --head "bump-courier-ios-$VERSION" \
-            --title "Bump Courier_iOS to $VERSION" \
-            --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
+          git push -u origin "bump-courier-ios-$VERSION" --force
+          if [ "$(gh pr list --repo trycourier/courier-react-native --state open --head "bump-courier-ios-$VERSION" --json number --jq 'length')" -eq 0 ]; then
+            gh pr create \
+              --repo trycourier/courier-react-native \
+              --base main \
+              --head "bump-courier-ios-$VERSION" \
+              --title "Bump Courier_iOS to $VERSION" \
+              --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
+          else
+            echo "PR already open for bump-courier-ios-$VERSION; branch updated."
+          fi
