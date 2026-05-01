@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Env.swift
+        env:
+          COURIER_ACCESS_TOKEN: ${{ secrets.COURIER_ACCESS_TOKEN }}
+          COURIER_AUTH_KEY: ${{ secrets.COURIER_AUTH_KEY }}
+          COURIER_CLIENT_KEY: ${{ secrets.COURIER_CLIENT_KEY }}
+          COURIER_USER_ID: ${{ secrets.COURIER_USER_ID }}
+        run: |
+          printf 'import Foundation\n\nclass Env {\n    static let COURIER_ACCESS_TOKEN = "%s"\n    static let COURIER_AUTH_KEY = "%s"\n    static let COURIER_CLIENT_KEY = "%s"\n    static let COURIER_USER_ID = "%s"\n}\n' \
+            "$COURIER_ACCESS_TOKEN" "$COURIER_AUTH_KEY" "$COURIER_CLIENT_KEY" "$COURIER_USER_ID" \
+            > Tests/CourierTests/Env.swift
+
+      - name: Boot simulator
+        run: xcrun simctl boot "iPhone 16 Pro" || true
+
+      - name: Run tests
+        run: |
+          xcodebuild -scheme CourierTests \
+            -destination "platform=iOS Simulator,name=iPhone 16 Pro" \
+            test
+
+  version-check:
+    name: Version Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check version consistency
+        run: |
+          SWIFT_VERSION=$(grep 'internal static let version =' Sources/Courier_iOS/Courier_iOS.swift | awk -F '"' '{print $2}')
+          PODSPEC_VERSION=$(grep "s.version" Courier_iOS.podspec | awk -F "'" '{print $2}')
+
+          echo "Courier_iOS.swift version: $SWIFT_VERSION"
+          echo "Courier_iOS.podspec version: $PODSPEC_VERSION"
+
+          if [ "$SWIFT_VERSION" != "$PODSPEC_VERSION" ]; then
+            echo "::error::Version mismatch! Courier_iOS.swift ($SWIFT_VERSION) != Courier_iOS.podspec ($PODSPEC_VERSION)"
+            exit 1
+          fi
+
+          echo "Versions match: $SWIFT_VERSION"
