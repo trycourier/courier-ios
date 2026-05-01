@@ -11,7 +11,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Generate Env.swift
         env:
@@ -29,7 +29,7 @@ jobs:
 
       - name: Run tests
         run: |
-          xcodebuild -scheme CourierTests \
+          xcodebuild -scheme Courier_iOS \
             -destination "platform=iOS Simulator,name=iPhone 16 Pro" \
             -test-timeouts-enabled YES \
             -default-test-execution-time-allowance 10 \
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check version consistency
         run: |
