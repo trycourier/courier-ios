@@ -21,6 +21,19 @@ From here, you are all set to start working on the package! 🙌
 
 All set! This is the development flow
 
+## CI secrets (GitHub Actions)
+
+CI generates `Tests/CourierTests/Env.swift` at runtime. Configure these repository secrets:
+
+| Secret | Purpose |
+|--------|---------|
+| `COURIER_ACCESS_TOKEN` | JWT / access token for API tests |
+| `COURIER_USER_ID` | Test user id |
+| `COURIER_MESSAGE_TEMPLATE_ID` | Template id used by inbox / preference tests |
+| `COURIER_PREFERENCE_TOPIC_ID` | Preference topic id used by preference tests |
+
+Publishable keys (`COURIER_AUTH_KEY`, `COURIER_CLIENT_KEY`, `COURIER_BRAND_ID`) are inlined in `.github/workflows/ci.yml` and do not need to be secrets.
+
 ## Testing 
 
 1. Always test the Example project on a physical device

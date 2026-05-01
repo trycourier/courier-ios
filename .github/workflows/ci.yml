@@ -16,13 +16,28 @@ jobs:
       - name: Generate Env.swift
         env:
           COURIER_ACCESS_TOKEN: ${{ secrets.COURIER_ACCESS_TOKEN }}
-          COURIER_AUTH_KEY: ${{ secrets.COURIER_AUTH_KEY }}
-          COURIER_CLIENT_KEY: ${{ secrets.COURIER_CLIENT_KEY }}
           COURIER_USER_ID: ${{ secrets.COURIER_USER_ID }}
+          COURIER_MESSAGE_TEMPLATE_ID: ${{ secrets.COURIER_MESSAGE_TEMPLATE_ID }}
+          COURIER_PREFERENCE_TOPIC_ID: ${{ secrets.COURIER_PREFERENCE_TOPIC_ID }}
         run: |
-          printf 'import Foundation\n\nclass Env {\n    static let COURIER_ACCESS_TOKEN = "%s"\n    static let COURIER_AUTH_KEY = "%s"\n    static let COURIER_CLIENT_KEY = "%s"\n    static let COURIER_USER_ID = "%s"\n}\n' \
-            "$COURIER_ACCESS_TOKEN" "$COURIER_AUTH_KEY" "$COURIER_CLIENT_KEY" "$COURIER_USER_ID" \
-            > Tests/CourierTests/Env.swift
+          python3 << 'PY'
+          import os
+          src = f'''import Foundation
+
+          class Env {{
+
+              static let COURIER_ACCESS_TOKEN = "{os.environ.get('COURIER_ACCESS_TOKEN', '')}"
+              static let COURIER_AUTH_KEY = "pk_prod_V1TMCW4FEG4PZNM52P4EM55D1SF2"
+              static let COURIER_CLIENT_KEY = "NmE1MWJmOGMtYWQyZS00MmJmLWJlNmEtODM4NWI1ZDRhMGY1"
+              static let COURIER_USER_ID = "{os.environ.get('COURIER_USER_ID', '')}"
+              static let COURIER_BRAND_ID = "7S9RBWHHS9MBYRPSRYAFYF9K3Q1M"
+              static let COURIER_MESSAGE_TEMPLATE_ID = "{os.environ.get('COURIER_MESSAGE_TEMPLATE_ID', '')}"
+              static let COURIER_PREFERENCE_TOPIC_ID = "{os.environ.get('COURIER_PREFERENCE_TOPIC_ID', '')}"
+
+          }}
+          '''
+          open("Tests/CourierTests/Env.swift", "w").write(src)
+          PY
 
       - name: Boot simulator
         run: xcrun simctl boot "iPhone 16 Pro" || true
