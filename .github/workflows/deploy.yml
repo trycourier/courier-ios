@@ -115,10 +115,11 @@ jobs:
           git config --global user.name "courier-ios-automation[bot]"
           git config --global user.email "courier-ios-automation[bot]@users.noreply.github.com"
 
-          # Full clone avoids shallow-merge quirks; PR base must exist on each repo (not always `main`).
+          # Full clone avoids shallow-merge quirks; branch bumps from `main` and PRs target `main`.
           gh repo clone trycourier/courier-flutter
           cd courier-flutter
-          BASE_BRANCH=$(gh repo view trycourier/courier-flutter --json defaultBranchRef --jq '.defaultBranchRef.name // "main"')
+          git fetch origin main
+          git checkout main
 
           # Single-quoted podspec: s.dependency 'Courier_iOS', 'x.y.z'
           CURRENT=$(grep -oP "Courier_iOS',\\s*'\\K[^']+" ios/courier_flutter.podspec | head -1)
@@ -143,10 +144,10 @@ jobs:
           # gh defaults to GITHUB_REPOSITORY (courier-ios) in Actions unless --repo is set.
           BUMP_BRANCH="bump-courier-ios-$VERSION"
           if [ "$(gh pr list --repo trycourier/courier-flutter --state open --head "$BUMP_BRANCH" --json number --jq 'length')" -eq 0 ]; then
-            echo "Creating PR: base=$BASE_BRANCH head=$BUMP_BRANCH"
+            echo "Creating PR: base=main head=$BUMP_BRANCH"
             gh pr create \
               --repo trycourier/courier-flutter \
-              --base "$BASE_BRANCH" \
+              --base main \
               --head "$BUMP_BRANCH" \
               --title "Bump Courier_iOS to $VERSION" \
               --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
@@ -164,7 +165,8 @@ jobs:
 
           gh repo clone trycourier/courier-react-native
           cd courier-react-native
-          BASE_BRANCH=$(gh repo view trycourier/courier-react-native --json defaultBranchRef --jq '.defaultBranchRef.name // "main"')
+          git fetch origin main
+          git checkout main
 
           # Double-quoted podspec: s.dependency "Courier_iOS", "x.y.z"
           CURRENT=$(grep -oP 'Courier_iOS",\s*"\K[^"]+' courier-react-native.podspec | head -1)
@@ -190,10 +192,10 @@ jobs:
           git push -u origin "bump-courier-ios-$VERSION" --force
           BUMP_BRANCH="bump-courier-ios-$VERSION"
           if [ "$(gh pr list --repo trycourier/courier-react-native --state open --head "$BUMP_BRANCH" --json number --jq 'length')" -eq 0 ]; then
-            echo "Creating PR: base=$BASE_BRANCH head=$BUMP_BRANCH"
+            echo "Creating PR: base=main head=$BUMP_BRANCH"
             gh pr create \
               --repo trycourier/courier-react-native \
-              --base "$BASE_BRANCH" \
+              --base main \
               --head "$BUMP_BRANCH" \
               --title "Bump Courier_iOS to $VERSION" \
               --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
