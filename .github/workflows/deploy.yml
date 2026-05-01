@@ -110,13 +110,26 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ needs.deploy.outputs.version }}
         run: |
+          set -euo pipefail
           git config --global user.name "courier-ios-automation[bot]"
           git config --global user.email "courier-ios-automation[bot]@users.noreply.github.com"
 
           gh repo clone trycourier/courier-flutter -- --depth 1
           cd courier-flutter
-          git checkout -b "bump-courier-ios-$VERSION"
 
+          # Single-quoted podspec: s.dependency 'Courier_iOS', 'x.y.z'
+          CURRENT=$(grep -oP "Courier_iOS',\\s*'\\K[^']+" ios/courier_flutter.podspec | head -1)
+          if [ -z "$CURRENT" ]; then
+            echo "::error::Could not read Courier_iOS version from ios/courier_flutter.podspec"
+            exit 1
+          fi
+          if [ "$CURRENT" = "$VERSION" ]; then
+            echo "courier-flutter already pins Courier_iOS $VERSION; skipping."
+            exit 0
+          fi
+          echo "courier-flutter: bumping Courier_iOS $CURRENT -> $VERSION"
+
+          git checkout -b "bump-courier-ios-$VERSION"
           # Flutter podspec uses single quotes: s.dependency 'Courier_iOS', '5.7.14'
           sed -i "s/s.dependency 'Courier_iOS', '[^']*'/s.dependency 'Courier_iOS', '$VERSION'/" ios/courier_flutter.podspec
 
@@ -132,12 +145,28 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ needs.deploy.outputs.version }}
         run: |
+          set -euo pipefail
           cd "${{ runner.temp }}"
 
           gh repo clone trycourier/courier-react-native -- --depth 1
           cd courier-react-native
-          git checkout -b "bump-courier-ios-$VERSION"
 
+          # Double-quoted podspec: s.dependency "Courier_iOS", "x.y.z"
+          CURRENT=$(grep -oP 'Courier_iOS",\s*"\K[^"]+' courier-react-native.podspec | head -1)
+          if [ -z "$CURRENT" ]; then
+            echo "::error::Could not read Courier_iOS version from courier-react-native.podspec"
+            exit 1
+          fi
+          if [ "$CURRENT" = "$VERSION" ]; then
+            echo "courier-react-native already pins Courier_iOS $VERSION; skipping."
+            exit 0
+          fi
+          echo "courier-react-native: bumping Courier_iOS $CURRENT -> $VERSION"
+
+          git config --global user.name "courier-ios-automation[bot]"
+          git config --global user.email "courier-ios-automation[bot]@users.noreply.github.com"
+
+          git checkout -b "bump-courier-ios-$VERSION"
           # React Native podspec uses double quotes: s.dependency "Courier_iOS", "5.7.15"
           sed -i 's/s.dependency "Courier_iOS", "[^"]*"/s.dependency "Courier_iOS", "'"$VERSION"'"/' courier-react-native.podspec
 
