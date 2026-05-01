@@ -8,6 +8,8 @@ jobs:
   deploy:
     name: Deploy to CocoaPods
     runs-on: macos-latest
+    permissions:
+      contents: write   # tag push + gh release create with GITHUB_TOKEN
     outputs:
       deployed: ${{ steps.check.outputs.deployed }}
       version: ${{ steps.check.outputs.version }}
