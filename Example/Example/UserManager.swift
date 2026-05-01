@@ -30,6 +30,7 @@ class UserManager {
             "userId": "",
             "tenantId": "",
             "apiKey": Env.COURIER_AUTH_KEY,
+            "environment": "Production",
             "restUrl": defaultUrls.rest,
             "graphqlUrl": defaultUrls.graphql,
             "inboxGraphqlUrl": defaultUrls.inboxGraphql,

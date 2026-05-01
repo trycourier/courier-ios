@@ -16,24 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kmV-Tb-bfa">
-                                <rect key="frame" x="0.0" y="712" width="390" height="49"/>
-                                <items>
-                                    <barButtonItem title="Refresh Tokens" id="Kjh-oL-EIT">
-                                        <connections>
-                                            <action selector="refreshAction:" destination="BYZ-38-t0r" id="kkK-eC-DCf"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="aji-fK-nKe"/>
-                                    <barButtonItem title="Request Permissions" id="7uZ-ZP-IUp">
-                                        <connections>
-                                            <action selector="requestPermissionsButton:" destination="BYZ-38-t0r" id="lnM-rN-eoJ"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="z1X-Eo-nrL">
-                                <rect key="frame" x="0.0" y="91" width="390" height="621"/>
+                                <rect key="frame" x="0.0" y="91" width="390" height="670"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -41,12 +25,9 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="z1X-Eo-nrL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="P3B-8y-0oL"/>
-                            <constraint firstAttribute="trailing" secondItem="kmV-Tb-bfa" secondAttribute="trailing" id="VAR-Fu-ekP"/>
-                            <constraint firstItem="kmV-Tb-bfa" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="f0n-tu-iqb"/>
-                            <constraint firstItem="kmV-Tb-bfa" firstAttribute="top" secondItem="z1X-Eo-nrL" secondAttribute="bottom" id="gj0-Xo-aE9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="z1X-Eo-nrL" secondAttribute="trailing" id="iLN-P4-gVb"/>
-                            <constraint firstItem="kmV-Tb-bfa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rOx-o6-uFa"/>
                             <constraint firstItem="z1X-Eo-nrL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="rkj-DW-PSV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="z1X-Eo-nrL" secondAttribute="bottom" id="f0n-tu-iqb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DB4-LO-Fsv"/>
@@ -83,24 +64,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ERM-hR-fyX">
-                                <rect key="frame" x="0.0" y="712" width="390" height="49"/>
-                                <items>
-                                    <barButtonItem title="Reset" id="Ouc-IZ-CLc">
-                                        <connections>
-                                            <action selector="resetButtonAction:" destination="miz-bH-rnm" id="G53-1d-jjs"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="s8c-GD-zAE"/>
-                                    <barButtonItem title="Sign In" id="xHU-15-TRx">
-                                        <connections>
-                                            <action selector="authButtonAction:" destination="miz-bH-rnm" id="Srn-Ks-UhH"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="jHh-Iq-2Rq">
-                                <rect key="frame" x="0.0" y="91" width="390" height="621"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="jHh-Iq-2Rq">
+                                <rect key="frame" x="0.0" y="91" width="390" height="670"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -109,17 +74,12 @@
                         <constraints>
                             <constraint firstItem="jHh-Iq-2Rq" firstAttribute="leading" secondItem="aGi-VM-S4U" secondAttribute="leading" id="6Hu-ry-8vQ"/>
                             <constraint firstItem="jHh-Iq-2Rq" firstAttribute="trailing" secondItem="aGi-VM-S4U" secondAttribute="trailing" id="6pP-9z-1br"/>
-                            <constraint firstItem="ERM-hR-fyX" firstAttribute="top" secondItem="jHh-Iq-2Rq" secondAttribute="bottom" id="Y91-90-XRq"/>
-                            <constraint firstItem="ERM-hR-fyX" firstAttribute="leading" secondItem="aGi-VM-S4U" secondAttribute="leading" id="Z99-UT-ZsU"/>
-                            <constraint firstItem="aGi-VM-S4U" firstAttribute="bottom" secondItem="ERM-hR-fyX" secondAttribute="bottom" id="oqA-rY-bvq"/>
                             <constraint firstItem="jHh-Iq-2Rq" firstAttribute="top" secondItem="aGi-VM-S4U" secondAttribute="top" id="sWQ-N1-hGf"/>
-                            <constraint firstItem="ERM-hR-fyX" firstAttribute="trailing" secondItem="aGi-VM-S4U" secondAttribute="trailing" id="vvn-8w-FEv"/>
+                            <constraint firstItem="aGi-VM-S4U" firstAttribute="bottom" secondItem="jHh-Iq-2Rq" secondAttribute="bottom" id="oqA-rY-bvq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="UCa-K7-8wT"/>
                     <connections>
-                        <outlet property="authButton" destination="xHU-15-TRx" id="0gK-w6-CK4"/>
-                        <outlet property="resetButton" destination="Ouc-IZ-CLc" id="S3j-UM-Jik"/>
                         <outlet property="tableView" destination="jHh-Iq-2Rq" id="W9A-Lj-DSL"/>
                     </connections>
                 </viewController>

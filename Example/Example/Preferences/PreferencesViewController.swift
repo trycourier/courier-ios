@@ -33,6 +33,7 @@ class PreferencesViewController: UIViewController, UICollectionViewDataSource, U
         collectionView.register(ContentCollectionViewCell.self, forCellWithReuseIdentifier: ContentCollectionViewCell.identifier)
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.isScrollEnabled = false
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         view.addSubview(collectionView)
@@ -61,7 +62,7 @@ class PreferencesViewController: UIViewController, UICollectionViewDataSource, U
         let selectedSegmentIndex = sender.selectedSegmentIndex
         if selectedSegmentIndex < pages.map({ $0.1 }).count {
             let indexPath = IndexPath(item: selectedSegmentIndex, section: 0)
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
         }
         
         // Reset flag after changing the segment
@@ -89,6 +90,16 @@ class PreferencesViewController: UIViewController, UICollectionViewDataSource, U
         return collectionView.bounds.size
     }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if !isScrollingFromSegmentedControl {
+            scrollView.isScrollEnabled = false
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollView.isScrollEnabled = true
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard !isScrollingFromSegmentedControl else { return }
         
@@ -96,10 +107,8 @@ class PreferencesViewController: UIViewController, UICollectionViewDataSource, U
         let contentWidth = scrollView.contentSize.width
         let collectionViewWidth = scrollView.frame.size.width
         
-        // Check if contentWidth or collectionViewWidth is zero to avoid division by zero
         guard contentWidth > 0, collectionViewWidth > 0 else { return }
         
-        // Calculate currentIndex with boundary checks
         var currentIndex = Int((xOffset + collectionViewWidth / 2) / collectionViewWidth)
         currentIndex = max(0, min(pages.map { $0.1 }.count - 1, currentIndex))
         

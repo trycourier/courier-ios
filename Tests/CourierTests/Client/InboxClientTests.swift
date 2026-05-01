@@ -208,7 +208,8 @@ class InboxClientTests: XCTestCase {
                     }
                 )
                 try await socket.sendSubscribe()
-                try await sendMessageTemplate(userId: userId)
+                let test = try await sendMessageTemplate(userId: userId)
+                print(test)
             }
         }
 
@@ -231,6 +232,59 @@ class InboxClientTests: XCTestCase {
         }
     }
 
+    // MARK: - EU
+    
+    func testGetAllMessagesEu() async throws {
+        
+        let euClient = try await ClientBuilder.build(
+            connectionId: UUID().uuidString,
+            apiUrls: .eu
+        )
+        
+        let limit = 24
+        
+        let res = try await euClient.inbox.getMessages(
+            paginationLimit: limit,
+            startCursor: nil
+        )
+        
+        XCTAssertTrue(res.data!.messages!.nodes!.count <= limit)
+        
+    }
+    
+    func testGetArchivedMessagesEu() async throws {
+        
+        let euClient = try await ClientBuilder.build(
+            connectionId: UUID().uuidString,
+            apiUrls: .eu
+        )
+        
+        let limit = 24
+        
+        let res = try await euClient.inbox.getArchivedMessages(
+            paginationLimit: limit,
+            startCursor: nil
+        )
+        
+        XCTAssertNotNil(res.data)
+        
+    }
+    
+    func testGetUnreadCountEu() async throws {
+        
+        let euClient = try await ClientBuilder.build(
+            connectionId: UUID().uuidString,
+            apiUrls: .eu
+        )
+        
+        let count = try await euClient.inbox.getUnreadMessageCount()
+        
+        XCTAssertTrue(count >= 0)
+        
+    }
+    
+    // MARK: - Sockets
+    
     func testMultipleSocketsOnSingleUser() async throws {
         
         let client1 = try await ClientBuilder.build(connectionId: UUID().uuidString)

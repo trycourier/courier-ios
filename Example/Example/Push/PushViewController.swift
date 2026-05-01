@@ -13,32 +13,22 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var tableView: UITableView!
     let refreshControl = UIRefreshControl()
     
-    @IBAction func refreshAction(_ sender: Any) {
-        refresh()
+    var tokens = [("APNS Token", "Empty"), ("FCM Token", "Empty")]
+    
+    @objc func refresh() {
+        Task {
+            tokens[0].1 = await Courier.shared.getToken(for: .apn) ?? "Empty"
+            tokens[1].1 = await Courier.shared.getToken(for: .firebaseFcm) ?? "Empty"
+            tableView.reloadData()
+            refreshControl.endRefreshing()
+        }
     }
     
-    @IBAction func requestPermissionsButton(_ sender: Any) {
+    @objc private func requestPermissions() {
         Task {
             let _ = try await Courier.requestNotificationPermission()
             refresh()
         }
-    }
-    
-    var tokens = [("APNS Token", "Empty"), ("FCM Token", "Empty")]
-    
-    @objc func refresh() {
-        
-        Task {
-            
-            tokens[0].1 = await Courier.shared.getToken(for: .apn) ?? "Empty"
-            tokens[1].1 = await Courier.shared.getToken(for: .firebaseFcm) ?? "Empty"
-            
-            tableView.reloadData()
-            
-            refreshControl.endRefreshing()
-            
-        }
-        
     }
 
     override func viewDidLoad() {
@@ -53,8 +43,21 @@ class PushViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         
-        refresh()
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Refresh Tokens",
+            style: .plain,
+            target: self,
+            action: #selector(refresh)
+        )
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Request Permissions",
+            style: .plain,
+            target: self,
+            action: #selector(requestPermissions)
+        )
+        
+        refresh()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

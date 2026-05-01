@@ -106,4 +106,101 @@ class AuthTests: XCTestCase {
         }
     }
     
+    // MARK: - ApiUrls
+    
+    func testDefaultApiUrlsUseCurrentInboxHosts() {
+        let urls = CourierClient.ApiUrls()
+        
+        XCTAssertEqual(urls.rest, "https://api.courier.com")
+        XCTAssertEqual(urls.graphql, "https://api.courier.com/client/q")
+        XCTAssertEqual(urls.inboxGraphql, "https://inbox.courier.com/q")
+        XCTAssertEqual(urls.inboxWebSocket, "wss://realtime.courier.io")
+    }
+    
+    func testEuApiUrlsPreset() {
+        let urls = CourierClient.ApiUrls.eu
+        
+        XCTAssertEqual(urls.rest, "https://api.eu.courier.com")
+        XCTAssertEqual(urls.graphql, "https://api.eu.courier.com/client/q")
+        XCTAssertEqual(urls.inboxGraphql, "https://inbox.eu.courier.io/q")
+        XCTAssertEqual(urls.inboxWebSocket, "wss://realtime.eu.courier.io")
+    }
+    
+    func testUsPresetMatchesDefault() {
+        let defaultUrls = CourierClient.ApiUrls()
+        let usUrls = CourierClient.ApiUrls.us
+        
+        XCTAssertEqual(defaultUrls.rest, usUrls.rest)
+        XCTAssertEqual(defaultUrls.graphql, usUrls.graphql)
+        XCTAssertEqual(defaultUrls.inboxGraphql, usUrls.inboxGraphql)
+        XCTAssertEqual(defaultUrls.inboxWebSocket, usUrls.inboxWebSocket)
+    }
+    
+    func testCustomApiUrls() {
+        let urls = CourierClient.ApiUrls(
+            rest: "https://custom.api.example.com",
+            graphql: "https://custom.api.example.com/client/q",
+            inboxGraphql: "https://custom.inbox.example.com/q",
+            inboxWebSocket: "wss://custom.realtime.example.com"
+        )
+        
+        XCTAssertEqual(urls.rest, "https://custom.api.example.com")
+        XCTAssertEqual(urls.graphql, "https://custom.api.example.com/client/q")
+        XCTAssertEqual(urls.inboxGraphql, "https://custom.inbox.example.com/q")
+        XCTAssertEqual(urls.inboxWebSocket, "wss://custom.realtime.example.com")
+    }
+    
+    func testPartialCustomApiUrlsFallBackToDefaults() {
+        let urls = CourierClient.ApiUrls(
+            rest: "https://custom.api.example.com"
+        )
+        
+        XCTAssertEqual(urls.rest, "https://custom.api.example.com")
+        XCTAssertEqual(urls.graphql, "https://api.courier.com/client/q")
+        XCTAssertEqual(urls.inboxGraphql, "https://inbox.courier.com/q")
+        XCTAssertEqual(urls.inboxWebSocket, "wss://realtime.courier.io")
+    }
+    
+    func testClientOptionsReceiveCustomApiUrls() {
+        let customUrls = CourierClient.ApiUrls(
+            rest: "https://custom.api.example.com",
+            graphql: "https://custom.api.example.com/client/q",
+            inboxGraphql: "https://custom.inbox.example.com/q",
+            inboxWebSocket: "wss://custom.realtime.example.com"
+        )
+        
+        let client = CourierClient(
+            userId: "test-user",
+            apiUrls: customUrls
+        )
+        
+        XCTAssertEqual(client.options.apiUrls.rest, customUrls.rest)
+        XCTAssertEqual(client.options.apiUrls.graphql, customUrls.graphql)
+        XCTAssertEqual(client.options.apiUrls.inboxGraphql, customUrls.inboxGraphql)
+        XCTAssertEqual(client.options.apiUrls.inboxWebSocket, customUrls.inboxWebSocket)
+    }
+    
+    func testClientOptionsReceiveEuApiUrls() {
+        let client = CourierClient(
+            userId: "test-user",
+            apiUrls: .eu
+        )
+        
+        let euUrls = CourierClient.ApiUrls.eu
+        XCTAssertEqual(client.options.apiUrls.rest, euUrls.rest)
+        XCTAssertEqual(client.options.apiUrls.graphql, euUrls.graphql)
+        XCTAssertEqual(client.options.apiUrls.inboxGraphql, euUrls.inboxGraphql)
+        XCTAssertEqual(client.options.apiUrls.inboxWebSocket, euUrls.inboxWebSocket)
+    }
+    
+    func testDefaultClientUsesDefaultApiUrls() {
+        let client = CourierClient(userId: "test-user")
+        let defaultUrls = CourierClient.ApiUrls()
+        
+        XCTAssertEqual(client.options.apiUrls.rest, defaultUrls.rest)
+        XCTAssertEqual(client.options.apiUrls.graphql, defaultUrls.graphql)
+        XCTAssertEqual(client.options.apiUrls.inboxGraphql, defaultUrls.inboxGraphql)
+        XCTAssertEqual(client.options.apiUrls.inboxWebSocket, defaultUrls.inboxWebSocket)
+    }
+    
 }

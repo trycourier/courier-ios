@@ -60,11 +60,9 @@ class MonoListItem: UITableViewCell {
         ])
     }
     
-    func configureCell(title: String, value: String, canEdit: Bool = true) {
+    func configureCell(title: String, value: String) {
         titleLabel.text = title
         itemLabel.text = value
-        titleLabel.isEnabled = canEdit
-        itemLabel.isEnabled = canEdit
     }
     
 }

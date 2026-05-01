@@ -24,11 +24,20 @@ public class CourierClient {
         public let graphql: String
         public let inboxGraphql: String
         public let inboxWebSocket: String
+
+        public static let us = CourierClient.ApiUrls()
+        public static let eu = CourierClient.ApiUrls(
+            rest: "https://api.eu.courier.com",
+            graphql: "https://api.eu.courier.com/client/q",
+            inboxGraphql: "https://inbox.eu.courier.io/q",
+            inboxWebSocket: "wss://realtime.eu.courier.io"
+        )
+
         public init(
             rest: String = "https://api.courier.com",
             graphql: String = "https://api.courier.com/client/q",
             inboxGraphql: String = "https://inbox.courier.com/q",
-            inboxWebSocket: String = "wss://realtime.courier.com"
+            inboxWebSocket: String = "wss://realtime.courier.io"
         ) {
             self.rest = rest
             self.graphql = graphql
@@ -51,7 +60,7 @@ public class CourierClient {
         userId: String,
         connectionId: String? = nil,
         tenantId: String? = nil,
-        baseUrls: CourierClient.ApiUrls = CourierClient.ApiUrls(),
+        apiUrls: CourierClient.ApiUrls = CourierClient.ApiUrls(),
         showLogs: Bool = {
             #if DEBUG
             return true
@@ -69,7 +78,7 @@ public class CourierClient {
             connectionId: connectionId,
             tenantId: tenantId,
             showLogs: showLogs,
-            apiUrls: baseUrls
+            apiUrls: apiUrls
         )
         
         // Create subclients

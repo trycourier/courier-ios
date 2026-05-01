@@ -175,3 +175,17 @@ Several common starter projects using the SDK.
 We want to make this the best SDK for managing notifications! Have an idea or feedback about our SDKs? Let us know!
 
 [Courier iOS Issues](https://github.com/trycourier/courier-ios/issues)
+
+## EU endpoints
+
+If your workspace uses EU-hosted Courier endpoints, pass the built-in EU preset through `apiUrls`.
+
+```swift
+Task {
+    await Courier.shared.signIn(
+        userId: "your_user_id",
+        accessToken: jwt,
+        apiUrls: .eu
+    )
+}
+```
