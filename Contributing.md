@@ -21,6 +21,21 @@ From here, you are all set to start working on the package! 🙌
 
 All set! This is the development flow
 
+## CI secrets (GitHub Actions)
+
+CI writes `Tests/CourierTests/Env.swift` during the test job from repository secrets. Add these in **Settings → Secrets and variables → Actions**:
+
+| Secret | Purpose |
+|--------|---------|
+| `COURIER_USER_ID` | Test user id |
+| `COURIER_AUTH_KEY` | Courier publishable key |
+| `COURIER_CLIENT_KEY` | Courier client key |
+| `COURIER_BRAND_ID` | Brand id for brand/inbox tests |
+| `COURIER_PREFERENCE_TOPIC_ID` | Preference topic id |
+| `COURIER_MESSAGE_TEMPLATE_ID` | Message template id |
+
+Locally, copy `EnvSample.swift` to `Tests/CourierTests/Env.swift` (or run `sh env_setup.sh`) and replace placeholders with your values. That file stays gitignored.
+
 ## Testing 
 
 1. Always test the Example project on a physical device

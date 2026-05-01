@@ -16,3 +16,4 @@ Example/Example/GoogleService-Info.plist
 Example/build/
 /build
 Example/Example/Env.swift
+Tests/CourierTests/Env.swift

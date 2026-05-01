@@ -13,6 +13,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Generate Env.swift from secrets
+        env:
+          COURIER_USER_ID: ${{ secrets.COURIER_USER_ID }}
+          COURIER_AUTH_KEY: ${{ secrets.COURIER_AUTH_KEY }}
+          COURIER_CLIENT_KEY: ${{ secrets.COURIER_CLIENT_KEY }}
+          COURIER_BRAND_ID: ${{ secrets.COURIER_BRAND_ID }}
+          COURIER_PREFERENCE_TOPIC_ID: ${{ secrets.COURIER_PREFERENCE_TOPIC_ID }}
+          COURIER_MESSAGE_TEMPLATE_ID: ${{ secrets.COURIER_MESSAGE_TEMPLATE_ID }}
+        run: |
+          python3 << 'PY'
+          import os
+          def q(k):
+              return os.environ.get(k, "").replace("\\", "\\\\").replace('"', '\\"')
+          src = f'''import Foundation
+
+          class Env {{
+
+              static let COURIER_USER_ID = "{q('COURIER_USER_ID')}"
+              static let COURIER_AUTH_KEY = "{q('COURIER_AUTH_KEY')}"
+              static let COURIER_CLIENT_KEY = "{q('COURIER_CLIENT_KEY')}"
+              static let COURIER_BRAND_ID = "{q('COURIER_BRAND_ID')}"
+              static let COURIER_PREFERENCE_TOPIC_ID = "{q('COURIER_PREFERENCE_TOPIC_ID')}"
+              static let COURIER_MESSAGE_TEMPLATE_ID = "{q('COURIER_MESSAGE_TEMPLATE_ID')}"
+
+          }}
+          '''
+          open("Tests/CourierTests/Env.swift", "w").write(src)
+          PY
+
       - name: Boot simulator
         run: xcrun simctl boot "iPhone 16 Pro" || true
 
