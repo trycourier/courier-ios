@@ -137,7 +137,11 @@ jobs:
           git add -A
           git commit -m "Bump Courier_iOS to $VERSION"
           git push -u origin "bump-courier-ios-$VERSION"
+          # gh defaults to GITHUB_REPOSITORY (courier-ios) in Actions unless --repo is set.
           gh pr create \
+            --repo trycourier/courier-flutter \
+            --base main \
+            --head "bump-courier-ios-$VERSION" \
             --title "Bump Courier_iOS to $VERSION" \
             --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
 
@@ -175,5 +179,8 @@ jobs:
           git commit -m "Bump Courier_iOS to $VERSION"
           git push -u origin "bump-courier-ios-$VERSION"
           gh pr create \
+            --repo trycourier/courier-react-native \
+            --base main \
+            --head "bump-courier-ios-$VERSION" \
             --title "Bump Courier_iOS to $VERSION" \
             --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
