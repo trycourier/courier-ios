@@ -84,11 +84,12 @@ jobs:
         if: steps.check.outputs.deployed == 'true'
         run: pod trunk push Courier_iOS.podspec --allow-warnings
 
+  # Runs whenever deploy succeeds, even if Trunk already had this version (deployed=false).
+  # Downstream repos may still pin an older Courier_iOS; each step compares podspec to VERSION.
   bump-downstream:
     name: Bump Downstream Dependencies
     runs-on: ubuntu-latest
     needs: deploy
-    if: needs.deploy.outputs.deployed == 'true'
     steps:
       - name: Generate GitHub App token
         id: app-token
