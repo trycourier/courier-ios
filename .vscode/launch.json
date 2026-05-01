@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Update Package Version",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "sh Scripts/update_package_version.sh; exit",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Build Demo App",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "sh Scripts/build_demo_app.sh; exit",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Manually Release Pod",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "sh Scripts/manually_release_pod.sh; exit",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

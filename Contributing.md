@@ -21,6 +21,21 @@ From here, you are all set to start working on the package! 🙌
 
 All set! This is the development flow
 
+## CI secrets (GitHub Actions)
+
+CI writes `Tests/CourierTests/Env.swift` during the test job from repository secrets. Add these in **Settings → Secrets and variables → Actions**:
+
+| Secret | Purpose |
+|--------|---------|
+| `COURIER_USER_ID` | Test user id |
+| `COURIER_AUTH_KEY` | Courier publishable key |
+| `COURIER_CLIENT_KEY` | Courier client key |
+| `COURIER_BRAND_ID` | Brand id for brand/inbox tests |
+| `COURIER_PREFERENCE_TOPIC_ID` | Preference topic id |
+| `COURIER_MESSAGE_TEMPLATE_ID` | Message template id |
+
+Locally, copy `EnvSample.swift` to `Tests/CourierTests/Env.swift` (or run `sh env_setup.sh`) and replace placeholders with your values. That file stays gitignored.
+
 ## Testing 
 
 1. Always test the Example project on a physical device
@@ -29,12 +44,16 @@ All set! This is the development flow
 
 ## Releasing
 
-Courier supports 2 packages managers:
+Courier supports 2 package managers:
 1. Swift Package Manager (Which is the style the project is based on)
-2. Cocoapods (Used for traditional iOS apps, Flutter and React Native)
+2. CocoaPods (Used for traditional iOS apps, Flutter and React Native)
 
-To release the package:
-1. Update the `version` in `Sources/Courier_iOS/Courier_iOS.swift` to be the version you would like to release
-2. Run `sh release.sh` from root
+Releases are automated via CI. To release a new version:
+1. Run `sh Scripts/update_package_version.sh` to bump the version (requires `brew install gum`)
+2. Commit the version changes and open a PR to `main`
+3. Once tests pass and the PR is merged, CI will automatically:
+   - Create a git tag and GitHub release
+   - Publish to CocoaPods
+   - Open dependency bump PRs in `courier-flutter` and `courier-react-native`
 
-This will create a new release in github and cocoapods that anyone can install. Requires special Github permissions.
+To manually release a pod (if CI fails): `sh Scripts/manually_release_pod.sh`

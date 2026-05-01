@@ -9,6 +9,7 @@
     }
   ],
   "defaultOptions" : {
+    "defaultTestExecutionTimeAllowance" : 10,
     "testTimeoutsEnabled" : true,
     "threadSanitizerEnabled" : true
   },

@@ -1,0 +1,143 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to CocoaPods
+    runs-on: macos-latest
+    outputs:
+      deployed: ${{ steps.check.outputs.deployed }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check version
+        id: check
+        run: |
+          SWIFT_VERSION=$(grep 'internal static let version =' Sources/Courier_iOS/Courier_iOS.swift | awk -F '"' '{print $2}')
+          PODSPEC_VERSION=$(grep "s\.version\s*=" Courier_iOS.podspec | head -1 | awk -F "'" '{print $2}')
+
+          if [ "$SWIFT_VERSION" != "$PODSPEC_VERSION" ]; then
+            echo "::error::Version mismatch! Courier_iOS.swift ($SWIFT_VERSION) != Courier_iOS.podspec ($PODSPEC_VERSION)"
+            exit 1
+          fi
+
+          VERSION="$SWIFT_VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Version: $VERSION"
+
+          PUBLISHED=$(curl -sf "https://trunk.cocoapods.org/api/v1/pods/Courier_iOS" \
+            | python3 -c "import sys,json; vs=[v['name'] for v in json.load(sys.stdin)['versions']]; print('\n'.join(vs))" 2>/dev/null || echo "")
+
+          if echo "$PUBLISHED" | grep -qx "$VERSION"; then
+            echo "Version $VERSION already published on CocoaPods. Skipping deploy."
+            echo "deployed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version $VERSION not yet published. Deploying."
+            echo "deployed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create git tag
+        if: steps.check.outputs.deployed == 'true'
+        run: |
+          VERSION="${{ steps.check.outputs.version }}"
+          git tag "$VERSION"
+          git push origin "$VERSION"
+
+      - name: Generate release notes
+        if: steps.check.outputs.deployed == 'true'
+        id: notes
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          NOTES=$(git log "$PREVIOUS_TAG"..HEAD --pretty=format:"- %s" --no-merges)
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        if: steps.check.outputs.deployed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ steps.check.outputs.version }}"
+          gh release create "$VERSION" --notes "${{ steps.notes.outputs.notes }}"
+
+      - name: Setup CocoaPods auth
+        if: steps.check.outputs.deployed == 'true'
+        run: |
+          echo "machine trunk.cocoapods.org
+            login ${{ secrets.COCOAPODS_TRUNK_EMAIL }}
+            password ${{ secrets.COCOAPODS_TRUNK_TOKEN }}" > ~/.netrc
+          chmod 0600 ~/.netrc
+
+      - name: Install CocoaPods
+        if: steps.check.outputs.deployed == 'true'
+        run: gem install cocoapods
+
+      - name: Publish to CocoaPods
+        if: steps.check.outputs.deployed == 'true'
+        run: pod trunk push Courier_iOS.podspec --allow-warnings
+
+  bump-downstream:
+    name: Bump Downstream Dependencies
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: needs.deploy.outputs.deployed == 'true'
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: trycourier
+          repositories: courier-flutter,courier-react-native
+
+      - name: Bump courier-flutter
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ needs.deploy.outputs.version }}
+        run: |
+          git config --global user.name "courier-ios-automation[bot]"
+          git config --global user.email "courier-ios-automation[bot]@users.noreply.github.com"
+
+          gh repo clone trycourier/courier-flutter -- --depth 1
+          cd courier-flutter
+          git checkout -b "bump-courier-ios-$VERSION"
+
+          # Flutter podspec uses single quotes: s.dependency 'Courier_iOS', '5.7.14'
+          sed -i "s/s.dependency 'Courier_iOS', '[^']*'/s.dependency 'Courier_iOS', '$VERSION'/" ios/courier_flutter.podspec
+
+          git add -A
+          git commit -m "Bump Courier_iOS to $VERSION"
+          git push -u origin "bump-courier-ios-$VERSION"
+          gh pr create \
+            --title "Bump Courier_iOS to $VERSION" \
+            --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
+
+      - name: Bump courier-react-native
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ needs.deploy.outputs.version }}
+        run: |
+          cd "${{ runner.temp }}"
+
+          gh repo clone trycourier/courier-react-native -- --depth 1
+          cd courier-react-native
+          git checkout -b "bump-courier-ios-$VERSION"
+
+          # React Native podspec uses double quotes: s.dependency "Courier_iOS", "5.7.15"
+          sed -i 's/s.dependency "Courier_iOS", "[^"]*"/s.dependency "Courier_iOS", "'"$VERSION"'"/' courier-react-native.podspec
+
+          git add -A
+          git commit -m "Bump Courier_iOS to $VERSION"
+          git push -u origin "bump-courier-ios-$VERSION"
+          gh pr create \
+            --title "Bump Courier_iOS to $VERSION" \
+            --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
