@@ -11,10 +11,8 @@ DerivedData/
 save_changes.sh
 GoogleService-Info.plist*
 Example/Example/GoogleService-Info.plist
-Env.swift
 /Pod-Example/Pods
 /.swiftpm
 Example/build/
 /build
-Tests/CourierTests/Env.swift
 Example/Example/Env.swift
