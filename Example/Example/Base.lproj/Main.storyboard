@@ -16,24 +16,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kmV-Tb-bfa">
-                                <rect key="frame" x="0.0" y="712" width="390" height="49"/>
-                                <items>
-                                    <barButtonItem title="Refresh Tokens" id="Kjh-oL-EIT">
-                                        <connections>
-                                            <action selector="refreshAction:" destination="BYZ-38-t0r" id="kkK-eC-DCf"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="aji-fK-nKe"/>
-                                    <barButtonItem title="Request Permissions" id="7uZ-ZP-IUp">
-                                        <connections>
-                                            <action selector="requestPermissionsButton:" destination="BYZ-38-t0r" id="lnM-rN-eoJ"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="z1X-Eo-nrL">
-                                <rect key="frame" x="0.0" y="91" width="390" height="621"/>
+                                <rect key="frame" x="0.0" y="91" width="390" height="670"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -41,12 +25,9 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="z1X-Eo-nrL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="P3B-8y-0oL"/>
-                            <constraint firstAttribute="trailing" secondItem="kmV-Tb-bfa" secondAttribute="trailing" id="VAR-Fu-ekP"/>
-                            <constraint firstItem="kmV-Tb-bfa" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="f0n-tu-iqb"/>
-                            <constraint firstItem="kmV-Tb-bfa" firstAttribute="top" secondItem="z1X-Eo-nrL" secondAttribute="bottom" id="gj0-Xo-aE9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="z1X-Eo-nrL" secondAttribute="trailing" id="iLN-P4-gVb"/>
-                            <constraint firstItem="kmV-Tb-bfa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rOx-o6-uFa"/>
                             <constraint firstItem="z1X-Eo-nrL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="rkj-DW-PSV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="z1X-Eo-nrL" secondAttribute="bottom" id="f0n-tu-iqb"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DB4-LO-Fsv"/>

@@ -12,6 +12,8 @@ import ShowTime
 enum CourierEnvironment: String, CaseIterable {
     case production = "Production"
     case productionEU = "Production EU"
+    case staging = "Staging"
+    case dev = "Dev"
     case custom = "Custom"
     
     var urls: CourierClient.ApiUrls? {
@@ -20,6 +22,20 @@ enum CourierEnvironment: String, CaseIterable {
             return .us
         case .productionEU:
             return .eu
+        case .staging:
+            return CourierClient.ApiUrls(
+                rest: "https://api.staging-trycourier.com",
+                graphql: "https://yubmnstah4.execute-api.us-east-1.amazonaws.com/staging/client/q",
+                inboxGraphql: "https://4rq7n8hhjd.execute-api.us-east-1.amazonaws.com/staging/q",
+                inboxWebSocket: "http://inbox-staging-ws-alb-490231599.us-east-1.elb.amazonaws.com"
+            )
+        case .dev:
+            return CourierClient.ApiUrls(
+                rest: "https://api.courierdev.com",
+                graphql: "https://api.courierdev.com/client/q",
+                inboxGraphql: "https://inbox.courierdev.com/q",
+                inboxWebSocket: "wss://9mrugsdnk1.execute-api.us-east-1.amazonaws.com/dev"
+            )
         case .custom:
             return nil
         }
@@ -57,15 +73,27 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
     private var activityIndicator = UIActivityIndicatorView(style: .medium)
     
     @objc private func saveButtonAction(_ sender: Any) {
-        saveButton.isEnabled = false
-        
         Task {
             await performSave()
         }
     }
     
+    private func setSaving(_ isSaving: Bool) {
+        if isSaving {
+            saveButton.isEnabled = false
+            activityIndicator.startAnimating()
+            navigationItem.rightBarButtonItems = [
+                UIBarButtonItem(customView: activityIndicator)
+            ]
+        } else {
+            activityIndicator.stopAnimating()
+            saveButton.isEnabled = !options[1].1.isEmpty
+            navigationItem.rightBarButtonItems = [saveButton]
+        }
+    }
+    
     private func performSave() async {
-        activityIndicator.startAnimating()
+        setSaving(true)
         
         if await Courier.shared.userId != nil {
             await Courier.shared.signOut()
@@ -73,8 +101,7 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         await performSignIn()
         
-        activityIndicator.stopAnimating()
-        saveButton.isEnabled = !options[1].1.isEmpty
+        setSaving(false)
     }
     
     @objc private func touchesButtonAction(_ sender: Any) {
@@ -171,14 +198,101 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         present(alert, animated: true)
     }
     
+    private func showEditAlert(for row: Int) {
+        let item = options[row]
+        
+        let alert = UIAlertController(title: item.0, message: nil, preferredStyle: .alert)
+        
+        alert.addTextField { field in
+            field.placeholder = item.0
+            field.text = item.1
+            field.autocorrectionType = .no
+            field.autocapitalizationType = .none
+            field.clearButtonMode = .always
+        }
+        
+        alert.addAction(UIAlertAction(title: "Copy", style: .default) { [weak self] _ in
+            let value = alert.textFields?.first?.text ?? ""
+            if !value.isEmpty {
+                UIPasteboard.general.string = value
+                self?.showCopiedToast()
+            }
+        })
+        
+        let updateAction = UIAlertAction(title: "Update", style: .default) { [self] _ in
+            let value = alert.textFields?.first?.text ?? ""
+            applyEdit(row: row, value: value)
+        }
+        
+        alert.addAction(updateAction)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.preferredAction = updateAction
+        
+        present(alert, animated: true)
+    }
+    
+    private func applyEdit(row: Int, value: String) {
+        options[row].1 = value
+        
+        if row == 1 {
+            saveButton.isEnabled = !value.isEmpty
+        }
+        
+        let userManager = UserManager.shared
+        switch row {
+        case 1: userManager.setCredential(key: "userId", value: value)
+        case 2: userManager.setCredential(key: "tenantId", value: value)
+        case 3: userManager.setCredential(key: "apiKey", value: value)
+        case 4: userManager.setCredential(key: "restUrl", value: value)
+        case 5: userManager.setCredential(key: "graphqlUrl", value: value)
+        case 6: userManager.setCredential(key: "inboxGraphqlUrl", value: value)
+        case 7: userManager.setCredential(key: "inboxWebsocketUrl", value: value)
+        default: break
+        }
+        
+        if row >= 4 && selectedEnvironment != .custom {
+            selectedEnvironment = .custom
+            options[0].1 = CourierEnvironment.custom.rawValue
+            userManager.setCredential(key: "environment", value: CourierEnvironment.custom.rawValue)
+        }
+        
+        tableView.reloadData()
+    }
+    
     private func copyUrlToPasteboard(_ url: String, cell: UITableViewCell) {
         UIPasteboard.general.string = url
+        showCopiedToast()
+    }
+    
+    private func showCopiedToast() {
+        let toastLabel = UILabel()
+        toastLabel.text = "Copied to clipboard"
+        toastLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.75)
+        toastLabel.layer.cornerRadius = 20
+        toastLabel.clipsToBounds = true
+        toastLabel.alpha = 0
+        toastLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        let original = cell.accessoryView?.tintColor
-        cell.accessoryView?.tintColor = .systemGreen
+        view.addSubview(toastLabel)
         
-        UIView.animate(withDuration: 0.3, delay: 0.4, options: []) {
-            cell.accessoryView?.tintColor = original
+        NSLayoutConstraint.activate([
+            toastLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            toastLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            toastLabel.heightAnchor.constraint(equalToConstant: 40),
+            toastLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 200)
+        ])
+        
+        UIView.animate(withDuration: 0.2, animations: {
+            toastLabel.alpha = 1
+        }) { _ in
+            UIView.animate(withDuration: 0.3, delay: 1.2, options: [], animations: {
+                toastLabel.alpha = 0
+            }) { _ in
+                toastLabel.removeFromSuperview()
+            }
         }
     }
 
@@ -207,10 +321,7 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         )
         
         activityIndicator.hidesWhenStopped = true
-        navigationItem.rightBarButtonItems = [
-            saveButton,
-            UIBarButtonItem(customView: activityIndicator)
-        ]
+        navigationItem.rightBarButtonItems = [saveButton]
         
         tableView.register(MonoListItem.self, forCellReuseIdentifier: MonoListItem.id)
         tableView.delegate = self
@@ -244,8 +355,11 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.configureCell(title: item.0, value: value)
         
         if indexPath.row == 0 {
-            cell.accessoryType = .disclosureIndicator
-            cell.accessoryView = nil
+            let editImage = UIImageView(image: UIImage(systemName: "pencil"))
+            editImage.tintColor = .secondaryLabel
+            editImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+            cell.accessoryView = editImage
+            cell.accessoryType = .none
         } else if indexPath.row >= 4 && selectedEnvironment != .custom {
             let copyImage = UIImageView(image: UIImage(systemName: "doc.on.doc"))
             copyImage.tintColor = .secondaryLabel
@@ -278,36 +392,7 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
             return
         }
         
-        let item = options[indexPath.row]
-        
-        showInputAlert(title: item.0, inputs: [(item.0, item.1)], action: "Update") { [self] values in
-            let value = values[0]
-            options[indexPath.row].1 = value
-            
-            if indexPath.row == 1 {
-                saveButton.isEnabled = !value.isEmpty
-            }
-            
-            let userManager = UserManager.shared
-            switch indexPath.row {
-            case 1: userManager.setCredential(key: "userId", value: value)
-            case 2: userManager.setCredential(key: "tenantId", value: value)
-            case 3: userManager.setCredential(key: "apiKey", value: value)
-            case 4: userManager.setCredential(key: "restUrl", value: value)
-            case 5: userManager.setCredential(key: "graphqlUrl", value: value)
-            case 6: userManager.setCredential(key: "inboxGraphqlUrl", value: value)
-            case 7: userManager.setCredential(key: "inboxWebsocketUrl", value: value)
-            default: break
-            }
-            
-            if indexPath.row >= 4 && self.selectedEnvironment != .custom {
-                self.selectedEnvironment = .custom
-                self.options[0].1 = CourierEnvironment.custom.rawValue
-                userManager.setCredential(key: "environment", value: CourierEnvironment.custom.rawValue)
-            }
-            
-            tableView.reloadData()
-        }
+        showEditAlert(for: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
