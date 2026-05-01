@@ -43,7 +43,7 @@ jobs:
       - name: Check version consistency
         run: |
           SWIFT_VERSION=$(grep 'internal static let version =' Sources/Courier_iOS/Courier_iOS.swift | awk -F '"' '{print $2}')
-          PODSPEC_VERSION=$(grep "s.version" Courier_iOS.podspec | awk -F "'" '{print $2}')
+          PODSPEC_VERSION=$(grep "s\.version\s*=" Courier_iOS.podspec | head -1 | awk -F "'" '{print $2}')
 
           echo "Courier_iOS.swift version: $SWIFT_VERSION"
           echo "Courier_iOS.podspec version: $PODSPEC_VERSION"

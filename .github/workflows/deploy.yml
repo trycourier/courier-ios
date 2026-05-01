@@ -21,7 +21,7 @@ jobs:
         id: check
         run: |
           SWIFT_VERSION=$(grep 'internal static let version =' Sources/Courier_iOS/Courier_iOS.swift | awk -F '"' '{print $2}')
-          PODSPEC_VERSION=$(grep "s.version" Courier_iOS.podspec | awk -F "'" '{print $2}')
+          PODSPEC_VERSION=$(grep "s\.version\s*=" Courier_iOS.podspec | head -1 | awk -F "'" '{print $2}')
 
           if [ "$SWIFT_VERSION" != "$PODSPEC_VERSION" ]; then
             echo "::error::Version mismatch! Courier_iOS.swift ($SWIFT_VERSION) != Courier_iOS.podspec ($PODSPEC_VERSION)"
