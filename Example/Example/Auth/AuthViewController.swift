@@ -24,10 +24,10 @@ enum CourierEnvironment: String, CaseIterable {
             return .eu
         case .staging:
             return CourierClient.ApiUrls(
-                rest: "https://api.staging-trycourier.com",
-                graphql: "https://yubmnstah4.execute-api.us-east-1.amazonaws.com/staging/client/q",
-                inboxGraphql: "https://4rq7n8hhjd.execute-api.us-east-1.amazonaws.com/staging/q",
-                inboxWebSocket: "http://inbox-staging-ws-alb-490231599.us-east-1.elb.amazonaws.com"
+                rest: "https://api.courierstaging.com",
+                graphql: "https://api.courierstaging.com/client/q",
+                inboxGraphql: "http://inbox.courierstaging.com/",
+                inboxWebSocket: "wss://inbox-staging-ws-alb-490231599.us-east-1.elb.amazonaws.com"
             )
         case .dev:
             return CourierClient.ApiUrls(
