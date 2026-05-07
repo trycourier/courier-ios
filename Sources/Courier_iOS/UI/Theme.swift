@@ -18,8 +18,6 @@ public enum Theme {
     public enum Inbox {
         static let loadingIndicatorBottom: CGFloat = 24.0
         static let indicatorDotSize: CGFloat = 12.0
-        static let lightBrandColor: UIColor = UIColor("73819B") ?? .black
-        static let darkBrandColor: UIColor = .white
         static let actionButtonMaxHeight: CGFloat = 34.33
     }
     

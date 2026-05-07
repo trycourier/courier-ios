@@ -49,6 +49,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
     
     func setTheme(theme: CourierPreferencesTheme) {
         self.theme = theme
+        self.view.backgroundColor = theme.backgroundColor
         self.sheet.setTheme(theme: theme)
         sheetPresentationController?.preferredCornerRadius = self.theme.sheetCornerRadius
     }
@@ -57,7 +58,7 @@ internal class PreferencesSheetViewController: UIViewController, UISheetPresenta
         super.viewDidLoad()
         
         // Set up the view
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = theme.backgroundColor
         
         // Create the sheet controller
         sheetPresentationController?.delegate = self

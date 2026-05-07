@@ -12,6 +12,7 @@ import UIKit
     // MARK: Styling
     
     public let brandId: String?
+    public let backgroundColor: UIColor
     public let tabIndicatorColor: UIColor?
     public let tabStyle: CourierStyles.Inbox.TabStyle
     public let readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle
@@ -32,6 +33,7 @@ import UIKit
 
     public init(
         brandId: String? = nil,
+        backgroundColor: UIColor = .systemBackground,
         tabIndicatorColor: UIColor? = nil,
         tabStyle: CourierStyles.Inbox.TabStyle = CourierStyles.Inbox.TabStyle(
             selected: CourierStyles.Inbox.TabItemStyle(
@@ -123,6 +125,7 @@ import UIKit
         )
     ) {
         self.brandId = brandId
+        self.backgroundColor = backgroundColor
         self.tabIndicatorColor = tabIndicatorColor
         self.tabStyle = tabStyle
         self.readingSwipeActionStyle = readingSwipeActionStyle

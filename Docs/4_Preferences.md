@@ -210,10 +210,6 @@ You can control your branding from the [`Courier Studio`](https://app.courier.co
             <td align="left"><code>Primary Color</code></td>
             <td align="center">✅</td>
         </tr>
-        <tr width="600px">
-            <td align="left"><code>Show/Hide Courier Footer</code></td>
-            <td align="center">✅</td>
-        </tr>
     </tbody>
 </table>
 

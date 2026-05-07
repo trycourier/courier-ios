@@ -12,6 +12,7 @@ import UIKit
     // MARK: Styling
     
     public let brandId: String?
+    public let backgroundColor: UIColor
     public let loadingIndicatorColor: UIColor?
     public let topicCellStyles: CourierStyles.Cell
     public let sectionTitleFont: CourierStyles.Font
@@ -28,6 +29,7 @@ import UIKit
     
     public init(
         brandId: String? = nil,
+        backgroundColor: UIColor = .systemBackground,
         loadingIndicatorColor: UIColor? = nil,
         sectionTitleFont: CourierStyles.Font = CourierStyles.Font(
             font: UIFont.boldSystemFont(ofSize: Theme.Preferences.sectionTitleFontSize),
@@ -65,6 +67,7 @@ import UIKit
         )
     ) {
         self.brandId = brandId
+        self.backgroundColor = backgroundColor
         self.loadingIndicatorColor = loadingIndicatorColor
         self.topicCellStyles = topicCellStyles
         self.sectionTitleFont = sectionTitleFont
