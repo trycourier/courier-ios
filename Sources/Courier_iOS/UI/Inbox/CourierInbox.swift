@@ -93,13 +93,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         return scrollView
     }()
     
-    private let courierBar: CourierBar = {
-        let courierBar = CourierBar()
-        courierBar.translatesAutoresizingMaskIntoConstraints = false
-        courierBar.heightAnchor.constraint(equalToConstant: Theme.Bar.barHeight).isActive = true
-        return courierBar
-    }()
-    
     // MARK: Listeners
     
     private var inboxListener: CourierInboxListener? = nil
@@ -166,8 +159,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         addStack(
             top: tabView,
-            middle: scrollView,
-            bottom: courierBar
+            bottom: scrollView
         )
         
         addPagesToScrollView(tabView)
@@ -239,7 +231,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         return self.getPages()[feed == .feed ? 0 : 1]
     }
     
-    private func addStack(top: UIView, middle: UIView, bottom: UIView) {
+    private func addStack(top: UIView, bottom: UIView) {
         addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -250,7 +242,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         ])
         
         stackView.addArrangedSubview(top)
-        stackView.addArrangedSubview(middle)
         stackView.addArrangedSubview(bottom)
     }
     
@@ -370,8 +361,6 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         let bgColor = theme.backgroundColor
         stackView.backgroundColor = bgColor
         scrollView.backgroundColor = bgColor
-        courierBar.setColors(with: bgColor)
-        courierBar.setTheme(self.theme)
         tabView.setTheme(self.theme)
         getPages().forEach { page in
             page.page.setTheme(self.theme)

@@ -85,12 +85,6 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         return refreshControl
     }()
     
-    private let courierBar: CourierBar = {
-        let courierBar = CourierBar()
-        courierBar.translatesAutoresizingMaskIntoConstraints = false
-        return courierBar
-    }()
-    
     // MARK: Constraints
     
     private var infoViewY: NSLayoutConstraint?
@@ -191,7 +185,6 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         addTableView()
         addLoadingIndicator()
         addInfoView()
-        addCourierBar()
         
         // Set state
         state = .loading
@@ -284,46 +277,6 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         
     }
     
-    private func refreshCourierBarIfNeeded() {
-        
-        if (!courierBar.isHidden) {
-            
-            // Set the courier bar background color
-            courierBar.setColors(with: theme.backgroundColor)
-            
-            // Add content inset
-            tableView.verticalScrollIndicatorInsets.bottom = Theme.Bar.barHeight
-            tableView.contentInset.bottom = Theme.Bar.barHeight
-            
-            // Update position
-            courierBar.bottomConstraint?.constant = -(tableView.adjustedContentInset.bottom - Theme.Bar.barHeight)
-            courierBar.layoutIfNeeded()
-            
-            // Update infoView position
-            infoViewY?.constant = -(Theme.Bar.barHeight / 2)
-            infoView.layoutIfNeeded()
-            
-        }
-        
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        refreshCourierBarIfNeeded()
-    }
-    
-    private func addCourierBar() {
-        
-        addSubview(courierBar)
-        
-        NSLayoutConstraint.activate([
-            courierBar.bottomAnchor.constraint(equalTo: bottomAnchor),
-            courierBar.leadingAnchor.constraint(equalTo: leadingAnchor),
-            courierBar.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-        
-    }
-    
     private func addTableView() {
         
         addSubview(tableView)
@@ -377,9 +330,6 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     }
     
     private func reloadViews() {
-        
-        courierBar.setColors(with: theme.backgroundColor)
-        courierBar.setTheme(theme)
         
         sheetViewController?.setTheme(theme: self.theme)
         
