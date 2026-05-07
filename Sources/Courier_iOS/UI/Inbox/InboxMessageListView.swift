@@ -593,6 +593,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     private func reloadViews() {
+        tableView.backgroundColor = theme.backgroundColor
         tableView.separatorStyle = theme.cellStyle.separatorStyle
         tableView.separatorInset = theme.cellStyle.separatorInsets
         tableView.separatorColor = theme.cellStyle.separatorColor

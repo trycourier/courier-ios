@@ -127,6 +127,8 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
     func setTheme(_ theme: CourierInboxTheme) {
         self.theme = theme
+        self.backgroundColor = theme.backgroundColor
+        self.tabsStackView.backgroundColor = theme.backgroundColor
         self.border.backgroundColor = theme.cellStyle.separatorColor ?? .separator
         self.indicatorView.backgroundColor = theme.indicatorColor
         self.tabsStackView.subviews.forEach { view in
@@ -255,6 +257,8 @@ internal class Tab: UIButton {
     
     func setTheme(theme: CourierInboxTheme) {
         self.theme = theme
+        self.backgroundColor = theme.backgroundColor
+        self.stackView.backgroundColor = theme.backgroundColor
         refresh()
     }
     

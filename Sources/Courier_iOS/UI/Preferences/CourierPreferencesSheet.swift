@@ -93,6 +93,9 @@ internal class CourierPreferencesSheet: UIView, UITableViewDelegate, UITableView
     
     private func reloadViews() {
         
+        // Background
+        tableView.backgroundColor = self.theme.backgroundColor
+        
         // Update navbar
         navigationBar.titleTextAttributes = [
             .font: self.theme.sheetTitleFont.font,

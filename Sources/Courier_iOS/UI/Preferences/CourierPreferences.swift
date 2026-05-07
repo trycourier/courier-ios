@@ -289,7 +289,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         if (!courierBar.isHidden) {
             
             // Set the courier bar background color
-            courierBar.setColors(with: superview?.backgroundColor)
+            courierBar.setColors(with: theme.backgroundColor)
             
             // Add content inset
             tableView.verticalScrollIndicatorInsets.bottom = Theme.Bar.barHeight
@@ -378,9 +378,13 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     
     private func reloadViews() {
         
+        courierBar.setColors(with: theme.backgroundColor)
         courierBar.setTheme(theme)
         
         sheetViewController?.setTheme(theme: self.theme)
+        
+        // Background
+        tableView.backgroundColor = self.theme.backgroundColor
         
         // Table theme
         tableView.separatorStyle = self.theme.topicCellStyles.separatorStyle
