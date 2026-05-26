@@ -296,7 +296,7 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     internal func applyListItemBackgroundColor(_ color: UIColor) {
         backgroundColor = color
-        contentView.backgroundColor = color
+        contentView.backgroundColor = .clear
         let bgView = UIView()
         bgView.backgroundColor = color
         backgroundView = bgView

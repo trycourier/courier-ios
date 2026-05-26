@@ -21,7 +21,7 @@ class StyledInboxViewController: UIViewController {
                 brandId: Env.COURIER_BRAND_ID,
                 backgroundColor: UIColor(red: 250 / 255, green: 245 / 255, blue: 252 / 255, alpha: 1),
                 tabBackgroundColor: UIColor(red: 240 / 255, green: 230 / 255, blue: 248 / 255, alpha: 1),
-                listItemBackgroundColor: .white,
+                listItemBackgroundColor: .red,
                 tabIndicatorColor: primaryColor,
                 tabStyle: CourierStyles.Inbox.TabStyle(
                     selected: CourierStyles.Inbox.TabItemStyle(
