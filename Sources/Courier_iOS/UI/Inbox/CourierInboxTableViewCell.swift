@@ -219,6 +219,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     private func setTheme(_ theme: CourierInboxTheme, isRead: Bool) {
         
+        backgroundColor = theme.listItemBackgroundColor
+        contentView.backgroundColor = theme.listItemBackgroundColor
+        
         // Adjust the margin leading
         switch (theme.unreadIndicatorStyle.indicator) {
         case .line:

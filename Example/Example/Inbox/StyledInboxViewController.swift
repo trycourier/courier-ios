@@ -19,6 +19,9 @@ class StyledInboxViewController: UIViewController {
             canSwipePages: true,
             lightTheme: CourierInboxTheme(
                 brandId: Env.COURIER_BRAND_ID,
+                backgroundColor: UIColor(red: 250 / 255, green: 245 / 255, blue: 252 / 255, alpha: 1),
+                tabBackgroundColor: UIColor(red: 240 / 255, green: 230 / 255, blue: 248 / 255, alpha: 1),
+                listItemBackgroundColor: .white,
                 tabIndicatorColor: primaryColor,
                 tabStyle: CourierStyles.Inbox.TabStyle(
                     selected: CourierStyles.Inbox.TabItemStyle(
@@ -138,6 +141,9 @@ class StyledInboxViewController: UIViewController {
             ),
             darkTheme: CourierInboxTheme(
                 brandId: Env.COURIER_BRAND_ID,
+                backgroundColor: UIColor(red: 20 / 255, green: 18 / 255, blue: 30 / 255, alpha: 1),
+                tabBackgroundColor: UIColor(red: 32 / 255, green: 28 / 255, blue: 48 / 255, alpha: 1),
+                listItemBackgroundColor: UIColor(red: 28 / 255, green: 24 / 255, blue: 40 / 255, alpha: 1),
                 tabStyle: CourierStyles.Inbox.TabStyle(
                     selected: CourierStyles.Inbox.TabItemStyle(
                         font: CourierStyles.Font(
