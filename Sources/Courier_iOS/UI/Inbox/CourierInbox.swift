@@ -359,6 +359,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private func refreshTheme() {
         let bgColor = theme.backgroundColor
+        self.backgroundColor = bgColor
         stackView.backgroundColor = bgColor
         scrollView.backgroundColor = bgColor
         tabView.setTheme(self.theme)

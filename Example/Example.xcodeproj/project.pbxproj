@@ -797,7 +797,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/trycourier/courier-ios";
 			requirement = {
-				branch = "gabriellima/c-17238-align-courier-ios-apiurls-defaults-and-add-eu-endpoint";
+				branch = "feat/inbox-background-colors";
 				kind = branch;
 			};
 		};
