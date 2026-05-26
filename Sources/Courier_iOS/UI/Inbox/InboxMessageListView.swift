@@ -420,6 +420,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let messageCell = cell as? CourierInboxTableViewCell {
+            messageCell.applyListItemBackgroundColor(theme.listItemBackgroundColor)
+        }
         if (indexPath.section == 1 && self.canPaginate) {
             Task {
                 do {

@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/trycourier/courier-ios",
       "state" : {
-        "branch" : "gabriellima/c-17238-align-courier-ios-apiurls-defaults-and-add-eu-endpoint",
-        "revision" : "1c00a253d59c4c406fd2589f06640d46ab336622"
+        "branch" : "feat/inbox-background-colors",
+        "revision" : "337a2d527f747e07b750f614021101309f069123"
       }
     },
     {

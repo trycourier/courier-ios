@@ -218,10 +218,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     }
     
     private func setTheme(_ theme: CourierInboxTheme, isRead: Bool) {
-        
-        backgroundColor = theme.listItemBackgroundColor
-        contentView.backgroundColor = theme.listItemBackgroundColor
-        
+
+        applyListItemBackgroundColor(theme.listItemBackgroundColor)
+
         // Adjust the margin leading
         switch (theme.unreadIndicatorStyle.indicator) {
         case .line:
@@ -293,6 +292,14 @@ internal class CourierInboxTableViewCell: UITableViewCell {
         
         buttonStack.isHidden = actions.isEmpty
         
+    }
+    
+    internal func applyListItemBackgroundColor(_ color: UIColor) {
+        backgroundColor = color
+        contentView.backgroundColor = color
+        let bgView = UIView()
+        bgView.backgroundColor = color
+        backgroundView = bgView
     }
     
     override func prepareForReuse() {
