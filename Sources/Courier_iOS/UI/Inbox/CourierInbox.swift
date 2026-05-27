@@ -10,6 +10,13 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 open class CourierInbox: UIView, UIScrollViewDelegate {
     
+    public typealias CustomTabItemView = (_ feed: InboxMessageFeed, _ title: String, _ isSelected: Bool, _ unreadCount: Int?) -> UIView
+    public typealias CustomListItemView = (_ message: InboxMessage, _ index: Int) -> UIView
+    public typealias CustomLoadingStateView = (_ feed: InboxMessageFeed) -> UIView
+    public typealias CustomEmptyStateView = (_ feed: InboxMessageFeed, _ onRetry: @escaping () -> Void) -> UIView
+    public typealias CustomErrorStateView = (_ feed: InboxMessageFeed, _ message: String, _ onRetry: @escaping () -> Void) -> UIView
+    public typealias CustomPaginationItemView = (_ feed: InboxMessageFeed) -> UIView
+    
     // MARK: Interaction
     
     private let canSwipePages: Bool
@@ -21,6 +28,15 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private var darkTheme: CourierInboxTheme
 
     private var theme: CourierInboxTheme = .defaultLight
+    
+    // MARK: Custom Views
+    
+    private let customTabItem: CustomTabItemView?
+    private let customListItem: CustomListItemView?
+    private let customLoadingState: CustomLoadingStateView?
+    private let customEmptyState: CustomEmptyStateView?
+    private let customErrorState: CustomErrorStateView?
+    private let customPaginationItem: CustomPaginationItemView?
     
     // MARK: Interaction
     
@@ -42,6 +58,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private lazy var messagesPage = {
         return Page(
+            feed: .feed,
             title: "Notifications",
             page: makeInboxList(.feed)
         )
@@ -49,6 +66,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     
     private lazy var archivedPage = {
         return Page(
+            feed: .archive,
             title: "Archived",
             page: makeInboxList(.archive)
         )
@@ -66,6 +84,7 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         let tabs = TabView(
             pages: getPages(),
             scrollView: scrollView,
+            customTabItem: customTabItem,
             onTabSelected: { [weak self] index in
                 self?.updateScrollViewToPage(index)
             },
@@ -113,6 +132,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         pagingDuration: TimeInterval = 0.1,
         lightTheme: CourierInboxTheme = .defaultLight,
         darkTheme: CourierInboxTheme = .defaultDark,
+        customTabItem: CustomTabItemView? = nil,
+        customListItem: CustomListItemView? = nil,
+        customLoadingState: CustomLoadingStateView? = nil,
+        customEmptyState: CustomEmptyStateView? = nil,
+        customErrorState: CustomErrorStateView? = nil,
+        customPaginationItem: CustomPaginationItemView? = nil,
         didClickInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didLongPressInboxMessageAtIndex: ((_ message: InboxMessage, _ index: Int) -> Void)? = nil,
         didClickInboxActionForMessageAtIndex: ((InboxAction, InboxMessage, Int) -> Void)? = nil,
@@ -125,6 +150,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
+        self.customTabItem = customTabItem
+        self.customListItem = customListItem
+        self.customLoadingState = customLoadingState
+        self.customEmptyState = customEmptyState
+        self.customErrorState = customErrorState
+        self.customPaginationItem = customPaginationItem
         
         super.init(frame: .zero)
         
@@ -142,6 +173,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.pagingDuration = 0.1
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customTabItem = nil
+        self.customListItem = nil
+        self.customLoadingState = nil
+        self.customEmptyState = nil
+        self.customErrorState = nil
+        self.customPaginationItem = nil
         super.init(frame: frame)
         setup()
     }
@@ -151,6 +188,12 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
         self.pagingDuration = 0.1
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customTabItem = nil
+        self.customListItem = nil
+        self.customLoadingState = nil
+        self.customEmptyState = nil
+        self.customErrorState = nil
+        self.customPaginationItem = nil
         super.init(coder: coder)
         setup()
     }
@@ -248,6 +291,11 @@ open class CourierInbox: UIView, UIScrollViewDelegate {
     private func makeInboxList(_ feed: InboxMessageFeed) -> InboxMessageListView {
         let list = InboxMessageListView(
             feed: feed,
+            customListItem: customListItem,
+            customLoadingState: customLoadingState,
+            customEmptyState: customEmptyState,
+            customErrorState: customErrorState,
+            customPaginationItem: customPaginationItem,
             didClickInboxMessageAtIndex: { [weak self] message, index in
                 self?.didClickInboxMessageAtIndex?(message, index)
             },

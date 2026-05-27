@@ -9,6 +9,7 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 internal struct Page {
+    let feed: InboxMessageFeed
     let title: String
     let page: InboxMessageListView
 }
@@ -26,6 +27,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     let scrollView: UIScrollView
     let onTabSelected: (Int) -> Void
     let onTabReselected: (Int) -> Void
+    let customTabItem: ((InboxMessageFeed, String, Bool, Int?) -> UIView)?
     private var theme: CourierInboxTheme? = nil
     private(set) var selectedIndex: Int = 0
     
@@ -46,9 +48,16 @@ internal class TabView: UIView, UIScrollViewDelegate {
     
     private(set) var tabs: [Tab] = []
     
-    public init(pages: [Page], scrollView: UIScrollView, onTabSelected: @escaping (Int) -> Void, onTabReselected: @escaping (Int) -> Void) {
+    public init(
+        pages: [Page],
+        scrollView: UIScrollView,
+        customTabItem: ((InboxMessageFeed, String, Bool, Int?) -> UIView)? = nil,
+        onTabSelected: @escaping (Int) -> Void,
+        onTabReselected: @escaping (Int) -> Void
+    ) {
         self.pages = pages
         self.scrollView = scrollView
+        self.customTabItem = customTabItem
         self.onTabSelected = onTabSelected
         self.onTabReselected = onTabReselected
         super.init(frame: .zero)
@@ -58,6 +67,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     override init(frame: CGRect) {
         self.pages = []
         self.scrollView = UIScrollView()
+        self.customTabItem = nil
         self.onTabSelected = { _ in }
         self.onTabReselected = { _ in }
         super.init(frame: frame)
@@ -67,6 +77,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
     public required init?(coder: NSCoder) {
         self.pages = []
         self.scrollView = UIScrollView()
+        self.customTabItem = nil
         self.onTabSelected = { _ in }
         self.onTabReselected = { _ in }
         super.init(coder: coder)
@@ -88,7 +99,11 @@ internal class TabView: UIView, UIScrollViewDelegate {
         
         // Initialize tabs and add them to the stack view
         for (pageIndex, page) in pages.enumerated() {
-            let tab = Tab(title: page.title, onTapped: { [weak self] in
+            let tab = Tab(
+                title: page.title,
+                feed: page.feed,
+                customTabItem: customTabItem,
+                onTapped: { [weak self] in
                 guard let self = self else { return }
                 
                 if self.selectedIndex == pageIndex {
@@ -181,8 +196,11 @@ internal class TabView: UIView, UIScrollViewDelegate {
 internal class Tab: UIButton {
     
     let title: String
+    let feed: InboxMessageFeed
+    let customTabItem: ((InboxMessageFeed, String, Bool, Int?) -> UIView)?
     let onTapped: () -> Void
     private var theme: CourierInboxTheme? = nil
+    private var customContentView: UIView? = nil
     
     var isTabSelected = false {
         didSet {
@@ -223,20 +241,39 @@ internal class Tab: UIButton {
     }()
 
     private func refresh() {
-        
-        tabNameLabel.text = title
-        
-        let style = isTabSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
-        tabNameLabel.textColor = style?.color
-        tabNameLabel.font = style?.font
-        
-        if let theme = self.theme {
-            let badge = getBadgeValue(value: self.badge ?? 0)
-            badgeLabel.refresh(
-                theme: theme,
-                badge: badge,
-                isSelected: isTabSelected
-            )
+        if let customTabItem = customTabItem {
+            stackView.isHidden = true
+            customContentView?.removeFromSuperview()
+            let customView = customTabItem(feed, title, isTabSelected, badge)
+            customView.translatesAutoresizingMaskIntoConstraints = false
+            customView.isUserInteractionEnabled = false
+            addSubview(customView)
+            NSLayoutConstraint.activate([
+                customView.topAnchor.constraint(equalTo: topAnchor),
+                customView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                customView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                customView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
+            customContentView = customView
+        } else {
+            stackView.isHidden = false
+            customContentView?.removeFromSuperview()
+            customContentView = nil
+            
+            tabNameLabel.text = title
+            
+            let style = isTabSelected ? theme?.tabStyle.selected.font : theme?.tabStyle.unselected.font
+            tabNameLabel.textColor = style?.color
+            tabNameLabel.font = style?.font
+            
+            if let theme = self.theme {
+                let badge = getBadgeValue(value: self.badge ?? 0)
+                badgeLabel.refresh(
+                    theme: theme,
+                    badge: badge,
+                    isSelected: isTabSelected
+                )
+            }
         }
         
         setNeedsLayout()
@@ -262,8 +299,15 @@ internal class Tab: UIButton {
         refresh()
     }
     
-    public init(title: String, onTapped: @escaping () -> Void) {
+    public init(
+        title: String,
+        feed: InboxMessageFeed,
+        customTabItem: ((InboxMessageFeed, String, Bool, Int?) -> UIView)? = nil,
+        onTapped: @escaping () -> Void
+    ) {
         self.title = title
+        self.feed = feed
+        self.customTabItem = customTabItem
         self.onTapped = onTapped
         super.init(frame: .zero)
         setup()
@@ -271,6 +315,8 @@ internal class Tab: UIButton {
 
     override init(frame: CGRect) {
         self.title = ""
+        self.feed = .feed
+        self.customTabItem = nil
         self.onTapped = {}
         super.init(frame: frame)
         setup()
@@ -278,6 +324,8 @@ internal class Tab: UIButton {
     
     public required init?(coder: NSCoder) {
         self.title = ""
+        self.feed = .feed
+        self.customTabItem = nil
         self.onTapped = {}
         super.init(coder: coder)
         setup()

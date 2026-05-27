@@ -11,6 +11,11 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSource, UISheetPresentationControllerDelegate {
     
+    public typealias CustomListItemView = (_ view: CourierPreferences, _ topic: CourierUserPreferencesTopic, _ section: Int, _ index: Int) -> UIView
+    public typealias CustomLoadingStateView = () -> UIView
+    public typealias CustomEmptyStateView = (_ onRetry: @escaping () -> Void) -> UIView
+    public typealias CustomErrorStateView = (_ message: String, _ onRetry: @escaping () -> Void) -> UIView
+    
     // MARK: Theme
     
     public enum Mode {
@@ -26,6 +31,15 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     // Sets the theme and propagates the change
     // Defaults to light mode, but will change when the theme is set
     private var theme: CourierPreferencesTheme = .defaultLight
+    
+    // MARK: Custom Views
+    
+    private static let customListItemId = "CustomPreferenceListItem"
+    private let customListItem: CustomListItemView?
+    private let customLoadingState: CustomLoadingStateView?
+    private let customEmptyState: CustomEmptyStateView?
+    private let customErrorState: CustomErrorStateView?
+    private var activeStateView: UIView? = nil
     
     // MARK: Data
     
@@ -55,6 +69,9 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         tableView.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
+        if customListItem != nil {
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: CourierPreferences.customListItemId)
+        }
         tableView.register(CourierPreferenceSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: CourierPreferenceSectionHeaderView.id)
         tableView.register(CourierPreferenceTopicCell.self, forCellReuseIdentifier: CourierPreferenceTopicCell.id)
         tableView.refreshControl = refreshControl
@@ -85,6 +102,13 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         return refreshControl
     }()
     
+    private lazy var stateContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: Constraints
     
     private var infoViewY: NSLayoutConstraint?
@@ -96,23 +120,52 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
             
             switch (state) {
             case .loading:
-                self.loadingIndicator.startAnimating()
-                self.tableView.isHidden = true
-                self.infoView.isHidden = true
-            case .error:
-                self.loadingIndicator.stopAnimating()
-                self.tableView.isHidden = true
-                self.infoView.isHidden = false
-                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No preferences found")
+                if let customLoadingState = self.customLoadingState {
+                    self.loadingIndicator.stopAnimating()
+                    self.tableView.isHidden = true
+                    self.infoView.isHidden = true
+                    self.showStateView(customLoadingState())
+                } else {
+                    self.hideStateView()
+                    self.loadingIndicator.startAnimating()
+                    self.tableView.isHidden = true
+                    self.infoView.isHidden = true
+                }
+            case .error(let message):
+                if let customErrorState = self.customErrorState {
+                    self.loadingIndicator.stopAnimating()
+                    self.tableView.isHidden = true
+                    self.infoView.isHidden = true
+                    self.showStateView(customErrorState(message, { [weak self] in
+                        self?.retry()
+                    }))
+                } else {
+                    self.hideStateView()
+                    self.loadingIndicator.stopAnimating()
+                    self.tableView.isHidden = true
+                    self.infoView.isHidden = false
+                    self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No preferences found")
+                }
             case .content:
+                self.hideStateView()
                 self.loadingIndicator.stopAnimating()
                 self.tableView.isHidden = false
                 self.infoView.isHidden = true
             case .empty:
-                self.loadingIndicator.stopAnimating()
-                self.tableView.isHidden = true
-                self.infoView.isHidden = false
-                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No preferences found")
+                if let customEmptyState = self.customEmptyState {
+                    self.loadingIndicator.stopAnimating()
+                    self.tableView.isHidden = true
+                    self.infoView.isHidden = true
+                    self.showStateView(customEmptyState({ [weak self] in
+                        self?.retry()
+                    }))
+                } else {
+                    self.hideStateView()
+                    self.loadingIndicator.stopAnimating()
+                    self.tableView.isHidden = true
+                    self.infoView.isHidden = false
+                    self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No preferences found")
+                }
             }
             
             // Scroll to top if needed
@@ -131,12 +184,20 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         mode: CourierPreferences.Mode = .channels(CourierUserPreferencesChannel.allCases),
         lightTheme: CourierPreferencesTheme = .defaultLight,
         darkTheme: CourierPreferencesTheme = .defaultDark,
+        customListItem: CustomListItemView? = nil,
+        customLoadingState: CustomLoadingStateView? = nil,
+        customEmptyState: CustomEmptyStateView? = nil,
+        customErrorState: CustomErrorStateView? = nil,
         didScrollPreferences: ((UIScrollView) -> Void)? = nil,
         onError: ((CourierError) -> String)? = nil
     ) {
         self.mode = mode
         self.lightTheme = lightTheme
         self.darkTheme = darkTheme
+        self.customListItem = customListItem
+        self.customLoadingState = customLoadingState
+        self.customEmptyState = customEmptyState
+        self.customErrorState = customErrorState
         self.didScrollPreferences = didScrollPreferences
         self.onError = onError
         super.init(frame: .zero)
@@ -149,6 +210,10 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         self.mode = .channels(CourierUserPreferencesChannel.allCases)
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customListItem = nil
+        self.customLoadingState = nil
+        self.customEmptyState = nil
+        self.customErrorState = nil
         self.onError = nil
         super.init(frame: frame)
         setup()
@@ -158,6 +223,10 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         self.mode = .channels(CourierUserPreferencesChannel.allCases)
         self.lightTheme = .defaultLight
         self.darkTheme = .defaultDark
+        self.customListItem = nil
+        self.customLoadingState = nil
+        self.customEmptyState = nil
+        self.customErrorState = nil
         self.onError = nil
         super.init(coder: coder)
         setup()
@@ -185,6 +254,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         addTableView()
         addLoadingIndicator()
         addInfoView()
+        addStateContainer()
         
         // Set state
         state = .loading
@@ -195,6 +265,11 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         // Grab details
         refresh()
         
+    }
+    
+    private func retry() {
+        state = .loading
+        onRefresh()
     }
     
     func refresh() {
@@ -315,6 +390,50 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         
     }
     
+    private func addStateContainer() {
+        addSubview(stateContainer)
+        
+        NSLayoutConstraint.activate([
+            stateContainer.topAnchor.constraint(equalTo: topAnchor),
+            stateContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stateContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stateContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+    
+    private func showStateView(_ view: UIView) {
+        activeStateView?.removeFromSuperview()
+        activeStateView = view
+        view.translatesAutoresizingMaskIntoConstraints = false
+        stateContainer.isHidden = false
+        stateContainer.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: stateContainer.topAnchor),
+            view.bottomAnchor.constraint(equalTo: stateContainer.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: stateContainer.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: stateContainer.trailingAnchor),
+        ])
+    }
+    
+    private func hideStateView() {
+        activeStateView?.removeFromSuperview()
+        activeStateView = nil
+        stateContainer.isHidden = true
+    }
+    
+    private func renderCustomView(in cell: UITableViewCell, view: UIView) {
+        cell.selectionStyle = .none
+        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+        view.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+            view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+        ])
+    }
+    
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
@@ -337,9 +456,15 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         tableView.backgroundColor = self.theme.backgroundColor
         
         // Table theme
-        tableView.separatorStyle = self.theme.topicCellStyles.separatorStyle
-        tableView.separatorInset = self.theme.topicCellStyles.separatorInsets
-        tableView.separatorColor = self.theme.topicCellStyles.separatorColor
+        if self.customListItem == nil {
+            tableView.separatorStyle = self.theme.topicCellStyles.separatorStyle
+            tableView.separatorInset = self.theme.topicCellStyles.separatorInsets
+            tableView.separatorColor = self.theme.topicCellStyles.separatorColor
+        } else {
+            tableView.separatorStyle = .none
+            tableView.separatorInset = .zero
+            tableView.separatorColor = nil
+        }
         
         // Loading indicators
         tableView.refreshControl?.tintColor = self.theme.loadingColor
@@ -387,10 +512,15 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let topic = preferences[indexPath.section].topics[indexPath.row]
+        
+        if let customListItem = self.customListItem {
+            let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferences.customListItemId, for: indexPath)
+            renderCustomView(in: cell, view: customListItem(self, topic, indexPath.section, indexPath.row))
+            return cell
+        }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CourierPreferenceTopicCell.id, for: indexPath) as! CourierPreferenceTopicCell
-        
-        let topic = preferences[indexPath.section].topics[indexPath.row]
         cell.configureCell(
             topic: topic,
             mode: self.mode,
@@ -427,7 +557,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         return Theme.Preferences.topicCellHeight
     }
     
-    private func showSheet(topic: CourierUserPreferencesTopic) {
+    public func showSheet(topic: CourierUserPreferencesTopic) {
         
         guard let parentViewController = parentViewController else {
             fatalError("CourierPreferences must be added to a view hierarchy with a ViewController.")

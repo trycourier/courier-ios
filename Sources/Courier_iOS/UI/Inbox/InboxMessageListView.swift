@@ -10,11 +10,23 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
+    private static let customListItemId = "CustomInboxListItem"
+    private static let customPaginationItemId = "CustomInboxPaginationItem"
+    
     private let feed: InboxMessageFeed
     
     // MARK: Theme
-
+    
     private var theme: CourierInboxTheme = .defaultLight
+    
+    // MARK: Custom Views
+    
+    private let customListItem: CourierInbox.CustomListItemView?
+    private let customLoadingState: CourierInbox.CustomLoadingStateView?
+    private let customEmptyState: CourierInbox.CustomEmptyStateView?
+    private let customErrorState: CourierInbox.CustomErrorStateView?
+    private let customPaginationItem: CourierInbox.CustomPaginationItemView?
+    private var activeStateView: UIView? = nil
     
     // MARK: Interaction
     
@@ -40,6 +52,12 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         tableView.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
+        if customListItem != nil {
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: InboxMessageListView.customListItemId)
+        }
+        if customPaginationItem != nil {
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: InboxMessageListView.customPaginationItemId)
+        }
         tableView.register(CourierInboxTableViewCell.self, forCellReuseIdentifier: CourierInboxTableViewCell.id)
         tableView.register(CourierInboxPaginationCell.self, forCellReuseIdentifier: CourierInboxPaginationCell.id)
         tableView.rowHeight = UITableView.automaticDimension
@@ -54,8 +72,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         let view = CourierInfoView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.onButtonClick = { [weak self] in
-            self?.state = .loading
-            self?.onRefresh()
+            self?.retry()
         }
         return view
     }()
@@ -67,6 +84,13 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         return indicator
     }()
     
+    private lazy var stateContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: Authentication
     
     private var authListener: CourierAuthenticationListener? = nil
@@ -74,36 +98,62 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     // MARK: State
     
     private var isEmptyState: Bool {
-        get {
-            switch (state) {
-            case .empty: return true
-            default: return false
-            }
+        switch state {
+        case .empty: return true
+        default: return false
         }
     }
     
     private var state: State = .loading {
         didSet {
-            // Update UI
-            switch (state) {
+            switch state {
             case .loading:
-                self.loadingIndicator.startAnimating()
-                self.tableView.isHidden = true
-                self.infoView.isHidden = true
-            case .error:
-                self.loadingIndicator.stopAnimating()
-                self.tableView.isHidden = true
-                self.infoView.isHidden = false
-                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
+                if let customLoadingState = customLoadingState {
+                    loadingIndicator.stopAnimating()
+                    tableView.isHidden = true
+                    infoView.isHidden = true
+                    showStateView(customLoadingState(feed))
+                } else {
+                    hideStateView()
+                    loadingIndicator.startAnimating()
+                    tableView.isHidden = true
+                    infoView.isHidden = true
+                }
+            case .error(let message):
+                if let customErrorState = customErrorState {
+                    loadingIndicator.stopAnimating()
+                    tableView.isHidden = true
+                    infoView.isHidden = true
+                    showStateView(customErrorState(feed, message, { [weak self] in
+                        self?.retry()
+                    }))
+                } else {
+                    hideStateView()
+                    loadingIndicator.stopAnimating()
+                    tableView.isHidden = true
+                    infoView.isHidden = false
+                    infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
+                }
             case .content:
-                self.loadingIndicator.stopAnimating()
-                self.tableView.isHidden = false
-                self.infoView.isHidden = true
+                hideStateView()
+                loadingIndicator.stopAnimating()
+                tableView.isHidden = false
+                infoView.isHidden = true
             case .empty:
-                self.loadingIndicator.stopAnimating()
-                self.tableView.isHidden = false
-                self.infoView.isHidden = false
-                self.infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
+                if let customEmptyState = customEmptyState {
+                    loadingIndicator.stopAnimating()
+                    tableView.isHidden = true
+                    infoView.isHidden = true
+                    showStateView(customEmptyState(feed, { [weak self] in
+                        self?.retry()
+                    }))
+                } else {
+                    hideStateView()
+                    loadingIndicator.stopAnimating()
+                    tableView.isHidden = false
+                    infoView.isHidden = false
+                    infoView.updateView(state, actionTitle: "Retry", contentTitle: "No messages found")
+                }
             }
         }
     }
@@ -112,12 +162,22 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public init(
         feed: InboxMessageFeed,
+        customListItem: CourierInbox.CustomListItemView? = nil,
+        customLoadingState: CourierInbox.CustomLoadingStateView? = nil,
+        customEmptyState: CourierInbox.CustomEmptyStateView? = nil,
+        customErrorState: CourierInbox.CustomErrorStateView? = nil,
+        customPaginationItem: CourierInbox.CustomPaginationItemView? = nil,
         didClickInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
         didLongPressInboxMessageAtIndex: @escaping (_ message: InboxMessage, _ index: Int) -> Void,
         didClickInboxActionForMessageAtIndex: @escaping (_ action: InboxAction, _ message: InboxMessage, _ index: Int) -> Void,
         didScrollInbox: @escaping (UIScrollView) -> Void
     ) {
         self.feed = feed
+        self.customListItem = customListItem
+        self.customLoadingState = customLoadingState
+        self.customEmptyState = customEmptyState
+        self.customErrorState = customErrorState
+        self.customPaginationItem = customPaginationItem
         self.didClickInboxMessageAtIndex = didClickInboxMessageAtIndex
         self.didLongPressInboxMessageAtIndex = didLongPressInboxMessageAtIndex
         self.didClickInboxActionForMessageAtIndex = didClickInboxActionForMessageAtIndex
@@ -125,9 +185,14 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         super.init(frame: .zero)
         setup()
     }
-
+    
     override init(frame: CGRect) {
         self.feed = .feed
+        self.customListItem = nil
+        self.customLoadingState = nil
+        self.customEmptyState = nil
+        self.customErrorState = nil
+        self.customPaginationItem = nil
         self.didClickInboxMessageAtIndex = { _, _ in }
         self.didLongPressInboxMessageAtIndex = { _, _ in }
         self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
@@ -138,6 +203,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     
     public required init?(coder: NSCoder) {
         self.feed = .feed
+        self.customListItem = nil
+        self.customLoadingState = nil
+        self.customEmptyState = nil
+        self.customErrorState = nil
+        self.customPaginationItem = nil
         self.didClickInboxMessageAtIndex = { _, _ in }
         self.didLongPressInboxMessageAtIndex = { _, _ in }
         self.didClickInboxActionForMessageAtIndex = { _, _, _ in }
@@ -147,7 +217,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     private func setup() {
-        
         Task {
             authListener = await Courier.shared.addAuthenticationListener { [weak self] userId in
                 if (userId != nil) {
@@ -158,17 +227,17 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             }
         }
         
-        // Set state
         state = .loading
-
-        // Add the views
         addTableView()
         addLoadingIndicator()
         addInfoView()
-        
-        // Refreshes theme
+        addStateContainer()
         traitCollectionDidChange(nil)
-        
+    }
+    
+    private func retry() {
+        state = .loading
+        onRefresh()
     }
     
     internal func setTheme(_ theme: CourierInboxTheme) {
@@ -195,7 +264,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     internal func addPage(messages: [InboxMessage], canPaginate: Bool) {
-        
         self.manuallyArchivedMessageId = nil
         
         if messages.isEmpty {
@@ -212,10 +280,8 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             IndexPath(row: $0, section: 0)
         }
         
-        // Add items to the table
         self.tableView.insertRows(at: indexPaths, with: .automatic)
         
-        // Remove the reload cell
         let couldPaginate = self.canPaginate
         self.canPaginate = canPaginate
         if couldPaginate && !canPaginate {
@@ -223,24 +289,18 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
         
         self.openVisibleMessages()
-        
     }
     
     internal func addMessage(at index: Int, message: InboxMessage) {
-        
-        // Ensure the index is within bounds for insertion
         guard index >= 0 && index <= inboxMessages.count else {
             print("Error: Index \(index) is out of bounds for inboxMessages.")
             return
         }
-
+        
         self.manuallyArchivedMessageId = nil
-        self.inboxMessages.insert(message, at: index) // Safe insertion
-
-        // Update the state based on inboxMessages' contents
+        self.inboxMessages.insert(message, at: index)
         self.state = inboxMessages.isEmpty ? .empty : .content
-
-        // Ensure the indexPath is valid for the tableView
+        
         guard index >= 0 && index <= tableView.numberOfRows(inSection: 0) else {
             Task {
                 await Courier.shared.client?.log("Error: CourierInboxListView index \(index) is out of bounds.")
@@ -249,53 +309,47 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
         }
-
-        let indexPath = IndexPath(row: index, section: 0)
-        self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle) // Safe table view update
-        self.openVisibleMessages() // Additional logic
         
+        let indexPath = IndexPath(row: index, section: 0)
+        self.tableView.insertRows(at: [indexPath], with: theme.messageAnimationStyle)
+        self.openVisibleMessages()
     }
     
     internal func updateMessage(at index: Int, message: InboxMessage) {
-        
         if !canUpdateMessages(index: index, messageId: message.messageId) {
             return
         }
         
         self.inboxMessages[index] = message
         self.state = inboxMessages.isEmpty ? .empty : .content
-
-        // Refresh the cell
-        let indexPath = IndexPath(row: index, section: 0)
-        let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
-        cell?.refreshMessage(message)
         
+        let indexPath = IndexPath(row: index, section: 0)
+        if self.customListItem != nil {
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        } else {
+            let cell = tableView.cellForRow(at: indexPath) as? CourierInboxTableViewCell
+            cell?.refreshMessage(message)
+        }
     }
     
     internal func removeMessage(at index: Int, message: InboxMessage) {
-        
-        // Check if index is within bounds and if the message matches
         guard index >= 0 && index < inboxMessages.count, inboxMessages[index].messageId == message.messageId else {
             print("Invalid index or message ID mismatch. Cannot remove message.")
             return
         }
         
-        // Proceed if canUpdateMessages allows it
         if !canUpdateMessages(index: index, messageId: message.messageId) {
             return
         }
-
-        // Remove the message from the data source first
+        
         inboxMessages.remove(at: index)
         
-        // React Native Bug fix... weird.
         if (Courier.agent.isReactNative()) {
             self.tableView.reloadData()
             self.state = self.inboxMessages.isEmpty ? .empty : .content
             return
         }
         
-        // Then, update the UI with the deletion
         let indexPath = IndexPath(row: index, section: 0)
         tableView.performBatchUpdates({
             self.tableView.deleteRows(at: [indexPath], with: .left)
@@ -304,11 +358,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 self.state = self.inboxMessages.isEmpty ? .empty : .content
             }
         })
-        
     }
     
     private func canUpdateMessages(index: Int, messageId: String) -> Bool {
-        
         if manuallyArchivedMessageId == messageId {
             return false
         }
@@ -326,7 +378,6 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         }
         
         return true
-        
     }
     
     private func addTableView() {
@@ -359,6 +410,50 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         ])
     }
     
+    private func addStateContainer() {
+        addSubview(stateContainer)
+        
+        NSLayoutConstraint.activate([
+            stateContainer.topAnchor.constraint(equalTo: topAnchor),
+            stateContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stateContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stateContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+    
+    private func showStateView(_ view: UIView) {
+        activeStateView?.removeFromSuperview()
+        activeStateView = view
+        view.translatesAutoresizingMaskIntoConstraints = false
+        stateContainer.isHidden = false
+        stateContainer.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: stateContainer.topAnchor),
+            view.bottomAnchor.constraint(equalTo: stateContainer.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: stateContainer.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: stateContainer.trailingAnchor),
+        ])
+    }
+    
+    private func hideStateView() {
+        activeStateView?.removeFromSuperview()
+        activeStateView = nil
+        stateContainer.isHidden = true
+    }
+    
+    private func renderCustomView(in cell: UITableViewCell, view: UIView, selectionStyle: UITableViewCell.SelectionStyle = .none) {
+        cell.selectionStyle = selectionStyle
+        cell.contentView.subviews.forEach { $0.removeFromSuperview() }
+        view.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
+            view.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor),
+        ])
+    }
+    
     @objc private func onRefresh() {
         Task {
             await rootInbox?.refreshBrand()
@@ -375,13 +470,17 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (indexPath.section == 0) {
+        if indexPath.section == 0 {
+            let index = indexPath.row
+            let message = inboxMessages[index]
+            
+            if let customListItem = self.customListItem {
+                let cell = tableView.dequeueReusableCell(withIdentifier: InboxMessageListView.customListItemId, for: indexPath)
+                renderCustomView(in: cell, view: customListItem(message, index))
+                return cell
+            }
             
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxTableViewCell.id, for: indexPath) as? CourierInboxTableViewCell {
-                
-                let index = indexPath.row
-                let message = inboxMessages[index]
-                
                 cell.setMessage(message, theme,
                     onActionClick: { [weak self] inboxAction in
                         self?.didClickInboxActionForMessageAtIndex(
@@ -396,12 +495,15 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                         }
                     }
                 )
-                
+                return cell
+            }
+        } else {
+            if let customPaginationItem = self.customPaginationItem {
+                let cell = tableView.dequeueReusableCell(withIdentifier: InboxMessageListView.customPaginationItemId, for: indexPath)
+                renderCustomView(in: cell, view: customPaginationItem(feed))
                 return cell
             }
             
-        } else {
-            // Pagination cell
             if let cell = tableView.dequeueReusableCell(withIdentifier: CourierInboxPaginationCell.id, for: indexPath) as? CourierInboxPaginationCell {
                 cell.setTheme(theme)
                 return cell
@@ -423,7 +525,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
         if let messageCell = cell as? CourierInboxTableViewCell {
             messageCell.applyListItemBackgroundColor(theme.listItemBackgroundColor)
         }
-        if (indexPath.section == 1 && self.canPaginate) {
+        if indexPath.section == 1 && self.canPaginate {
             Task {
                 do {
                     try await Courier.shared.fetchNextInboxPage(self.feed)
@@ -435,33 +537,20 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.section == 0) {
-            
-            // Click the cell
+        if indexPath.section == 0 {
             let index = indexPath.row
             let message = self.inboxMessages[index]
-            
-            // Track the click
             message.markAsClicked()
-            
-            // Hit callback
             self.didClickInboxMessageAtIndex(message, index)
-            
-            // Deselect the row
             tableView.deselectRow(at: indexPath, animated: true)
-            
         }
     }
     
     private var manuallyArchivedMessageId: String? = nil
     
     private func archiveCell(at index: Int) {
-        
         let message = inboxMessages[index]
-        
         removeMessage(at: index, message: message)
-        
-        // Hold the message id
         self.manuallyArchivedMessageId = message.messageId
         
         Task {
@@ -471,11 +560,9 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 await Courier.shared.client?.log(error.localizedDescription)
             }
         }
-        
     }
     
     private func readCell(isRead: Bool, at index: Int) {
-
         let message = inboxMessages[index]
         
         Task {
@@ -489,65 +576,52 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 await Courier.shared.client?.log(error.localizedDescription)
             }
         }
-        
     }
     
-    // Reading handler
     public func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
         let message = inboxMessages[indexPath.row]
         
-        if (self.canSwipePages || message.isArchived) {
+        if self.canSwipePages || message.isArchived || self.customListItem != nil {
             return nil
         }
         
         let style = message.isRead ? self.theme.readingSwipeActionStyle.read : self.theme.readingSwipeActionStyle.unread
         let actionTitle = message.isRead ? "Unread" : "Read"
-
-        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (action, view, completionHandler) in
+        
+        let toggleReadAction = UIContextualAction(style: .normal, title: actionTitle) { [weak self] (_, _, completionHandler) in
             tableView.deselectRow(at: indexPath, animated: true)
             self?.readCell(isRead: message.isRead, at: indexPath.row)
             completionHandler(true)
         }
         
-        // Customize the appearance of the action
         toggleReadAction.backgroundColor = style.color
         toggleReadAction.image = style.icon
         
-        // Create a configuration object with the action
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [toggleReadAction])
         swipeConfiguration.performsFirstActionWithFullSwipe = true
-        
         return swipeConfiguration
-        
     }
     
-    // Archiving handler
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
         let message = inboxMessages[indexPath.row]
         
-        if (self.canSwipePages || message.isArchived) {
+        if self.canSwipePages || message.isArchived || self.customListItem != nil {
             return nil
         }
         
-        let archiveAction = UIContextualAction(style: .destructive, title: "Archive") { [weak self] (action, view, completionHandler) in
+        let archiveAction = UIContextualAction(style: .destructive, title: "Archive") { [weak self] (_, _, completionHandler) in
             tableView.deselectRow(at: indexPath, animated: true)
             self?.archiveCell(at: indexPath.row)
             completionHandler(true)
         }
         
-        // Customize the action appearance
         let style = self.theme.archivingSwipeActionStyle.archive
         archiveAction.backgroundColor = style.color
         archiveAction.image = style.icon
         
-        // Create a configuration object with the action
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [archiveAction])
         swipeConfiguration.performsFirstActionWithFullSwipe = true
-        
         return swipeConfiguration
-        
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -563,7 +637,7 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             return message.isOpened ? nil : message
         }
     }
-
+    
     private func openVisibleMessages() {
         guard let visibleIndexPaths = tableView.indexPathsForVisibleRows else { return }
         Task { @CourierActor in
@@ -576,13 +650,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
     }
     
     public func scrollToTop(animated: Bool) {
-        
-        if (self.inboxMessages.isEmpty) {
+        if self.inboxMessages.isEmpty {
             return
         }
         
         let indexPath = IndexPath(row: 0, section: 0)
-
         guard indexPath.row < self.inboxMessages.count else {
             return
         }
@@ -592,32 +664,33 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
             at: .top,
             animated: animated
         )
-        
     }
     
     private func reloadViews() {
         self.backgroundColor = theme.backgroundColor
         tableView.backgroundColor = theme.backgroundColor
-        tableView.separatorStyle = theme.cellStyle.separatorStyle
-        tableView.separatorInset = theme.cellStyle.separatorInsets
-        tableView.separatorColor = theme.cellStyle.separatorColor
+        if self.customListItem == nil {
+            tableView.separatorStyle = theme.cellStyle.separatorStyle
+            tableView.separatorInset = theme.cellStyle.separatorInsets
+            tableView.separatorColor = theme.cellStyle.separatorColor
+        } else {
+            tableView.separatorStyle = .none
+            tableView.separatorInset = .zero
+            tableView.separatorColor = nil
+        }
         tableView.refreshControl?.tintColor = theme.loadingColor
         loadingIndicator.color = theme.loadingColor
         infoView.setTheme(theme)
-
+        
         tableView.appendAccessibilityIdentifier("InboxMessage")
         loadingIndicator.appendAccessibilityIdentifier("InboxMessage")
-
+        
         self.tableView.reloadData()
     }
     
-    /**
-     Clear the listeners
-     */
     deinit {
         Task { [self] in
             await self.authListener?.remove()
         }
     }
-    
 }
