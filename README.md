@@ -4,7 +4,7 @@
 
 The Courier iOS SDK provides prebuilt UI components and Swift APIs for adding in-app notifications, push notifications, and notification preferences to your iOS app. It handles authentication, token management, and real-time message delivery so you can focus on your app.
 
-Requires iOS 13.0+.
+Requires iOS 15.0+.
 
 ## Installation
 
