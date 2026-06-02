@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
 
     s.name = 'Courier_iOS'
-    s.version = '5.8.4'
+    s.version = '5.8.5'
     s.summary = 'Courier makes it easy to add notifications to your app'
 
-    s.homepage = 'https://github.com/trycourier/courier-ios'
+    s.homepage = 'https://courier.com'
     s.license = { :type => 'MIT', :text => <<-LICENSE
                            Copyright 2023 TryCourier
 
