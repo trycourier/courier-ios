@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
 
     s.name = 'Courier_iOS'
-    s.version = '5.8.4'
+    s.version = '5.8.5'
     s.summary = 'Courier makes it easy to add notifications to your app'
 
-    s.homepage = 'https://github.com/trycourier/courier-ios'
+    s.homepage = 'https://courier.com'
     s.license = { :type => 'MIT', :text => <<-LICENSE
-                           Copyright 2023 TryCourier
+                           Copyright 2026 TryCourier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
