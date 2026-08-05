@@ -95,12 +95,22 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
         try await task?.send(message)
     }
     
-    // Pings keep alive. Will ping every 5 minutes by default
+    /**
+     Pings keep alive. Will ping every 5 minutes by default.
+
+     Sends the inbox wire protocol `ping`, not the old `keepAlive` action. `keepAlive` is not a
+     valid IWP action and carries no `tid`, so under `iwpv=v2` it would fail envelope
+     validation and come back as an error frame every interval — the server accepts only
+     subscribe / unsubscribe / ping / pong / stats / get-config, each requiring a `tid`.
+
+     The server also drives its own heartbeat and drops a connection that fails to pong, so
+     this timer is belt-and-braces rather than the sole liveness mechanism.
+     */
     public func keepAlive(interval: TimeInterval = 300) async {
-        
+
         // Ensure any existing timer is invalidated
         pingTimer?.invalidate()
-        
+
         // Create and schedule a new timer
         await MainActor.run { [weak self] in
             guard let self = self else { return }
@@ -108,7 +118,8 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
                 Task {
                     do {
                         try await self.send([
-                            "action": "keepAlive"
+                            "tid": UUID().uuidString,
+                            "action": "ping"
                         ])
                     } catch {
                         await Courier.shared.client?.log(error.localizedDescription)
@@ -118,7 +129,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
             // Ensure the timer runs in the common run loop mode
             RunLoop.main.add(self.pingTimer!, forMode: .common)
         }
-        
+
     }
     
     func receiveData() {

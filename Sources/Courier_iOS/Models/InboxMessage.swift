@@ -93,14 +93,20 @@ public class InboxMessage: Codable {
         opened = nil
     }
     
+    /**
+     Tracking id for a click on this message.
+
+     Reads the root-level `trackingIds` only. Both the GraphQL read and the `iwpv=v2` socket
+     publish it there, so the two shapes finally agree.
+
+     The nested `data["trackingIds"]` branch that used to be checked first is gone. It existed
+     because the socket, on the `legacy` protocol, nested tracking ids under `data` while
+     GraphQL returned them at the root — so this property had to look in both places and
+     guess. Removing it is only safe because the socket now speaks v2; on `legacy` the nested
+     copy was the *only* one present.
+     */
     public var clickTrackingId: String? {
-        get {
-            if let trackingIdsDict = data?["trackingIds"] as? [String: Any],
-               let clickTrackingId = trackingIdsDict["clickTrackingId"] as? String {
-                return clickTrackingId
-            }
-            return trackingIds?.clickTrackingId
-        }
+        return trackingIds?.clickTrackingId
     }
     
     public var createdAt: Date {
