@@ -384,6 +384,11 @@ internal class InboxMessageListView: UIView, UITableViewDelegate, UITableViewDat
                 
                 cell.setMessage(message, theme,
                     onActionClick: { [weak self] inboxAction in
+                        
+                        // Report the click before handing off, so tracking does not depend on
+                        // the integrator remembering to do it.
+                        inboxAction.markAsClicked(messageId: message.messageId)
+                        
                         self?.didClickInboxActionForMessageAtIndex(
                             inboxAction,
                             message,

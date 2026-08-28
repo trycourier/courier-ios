@@ -55,3 +55,49 @@ public struct InboxAction: Codable {
     }
     
 }
+
+/**
+ * Extensions
+ */
+
+extension InboxAction {
+    
+    /// The id Courier uses to attribute a click to this action.
+    ///
+    /// It travels on the action rather than on the message, so a click is recorded against the
+    /// button the user actually pressed. A template that opts out of tracking arrives without
+    /// one.
+    public var trackingId: String? {
+        return data?["trackingId"] as? String
+    }
+    
+    /// Report a click on this action.
+    ///
+    /// `CourierInbox` does this for you when an action is pressed. Call it yourself when you
+    /// render your own action buttons. A no-op when the action carries no tracking id.
+    @CourierActor
+    public func markAsClicked(messageId: String) async throws {
+        guard let trackingId = trackingId else {
+            return
+        }
+        try await Courier.shared.client?.inbox.click(messageId: messageId, trackingId: trackingId)
+    }
+    
+    public func markAsClicked(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        Task {
+            do {
+                try await markAsClicked(messageId: messageId)
+                await MainActor.run {
+                    onSuccess?()
+                }
+            } catch {
+                let e = CourierError(from: error)
+                await Courier.shared.client?.log(e.message)
+                await MainActor.run {
+                    onFailure?(e)
+                }
+            }
+        }
+    }
+    
+}
