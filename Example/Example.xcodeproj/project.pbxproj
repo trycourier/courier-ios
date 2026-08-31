@@ -105,6 +105,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		270A1A5D2D67F29800798B13 /* ExampleUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ExampleUITests; sourceTree = "<group>"; };
+		27E2E27E2DA0000000000001 /* UITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +219,7 @@
 				276425A62B9F9F3700DB08E1 /* Push */,
 				276425A52B9F9F1200DB08E1 /* Inbox */,
 				276425A72B9F9F5100DB08E1 /* Preferences */,
+				27E2E27E2DA0000000000001 /* UITests */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -277,6 +279,9 @@
 			);
 			dependencies = (
 				6729FFB02926F779006A3EC2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				27E2E27E2DA0000000000001 /* UITests */,
 			);
 			name = Example;
 			packageProductDependencies = (

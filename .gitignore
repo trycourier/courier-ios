@@ -17,3 +17,13 @@ Example/build/
 /build
 Example/Example/Env.swift
 Tests/CourierTests/Env.swift
+
+# E2E tests (Behave/Appium)
+e2e/.env
+e2e/uploads/
+e2e/features/artifacts/
+e2e/venv/
+e2e/.venv/
+e2e/__pycache__/
+e2e/features/__pycache__/
+e2e/features/*/__pycache__/

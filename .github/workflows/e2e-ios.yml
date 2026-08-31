@@ -1,0 +1,141 @@
+name: E2E iOS
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [iOS-UIKit]
+
+concurrency:
+  group: e2e-ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Behave / iOS UIKit
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      DEVICE: ios
+      COURIER_AUTH_KEY: ${{ secrets.COURIER_AUTH_KEY }}
+      COURIER_API_KEY: ${{ secrets.COURIER_AUTH_KEY }}
+      COURIER_USER_ID: ${{ secrets.COURIER_USER_ID }}
+      COURIER_CLIENT_KEY: ${{ secrets.COURIER_CLIENT_KEY }}
+      COURIER_BRAND_ID: ${{ secrets.COURIER_BRAND_ID }}
+      COURIER_PREFERENCE_TOPIC_ID: ${{ secrets.COURIER_PREFERENCE_TOPIC_ID }}
+      COURIER_MESSAGE_TEMPLATE_ID: ${{ secrets.COURIER_MESSAGE_TEMPLATE_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Write placeholder GoogleService-Info.plist
+        # The Example target embeds this plist as a build resource but it's
+        # gitignored. Firebase will fail to initialize at runtime with this
+        # stub, which is fine — the e2e tests don't depend on FCM delivery on
+        # the simulator. If/when the smoke_push @iOS scenarios are exercised,
+        # replace this with a real plist from a repo secret.
+        run: |
+          cat > Example/Example/GoogleService-Info.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key><string>placeholder</string>
+            <key>BUNDLE_ID</key><string>com.courier.ios-example</string>
+            <key>CLIENT_ID</key><string>placeholder.apps.googleusercontent.com</string>
+            <key>GCM_SENDER_ID</key><string>0</string>
+            <key>GOOGLE_APP_ID</key><string>1:0:ios:0</string>
+            <key>IS_ADS_ENABLED</key><false/>
+            <key>IS_ANALYTICS_ENABLED</key><false/>
+            <key>IS_APPINVITE_ENABLED</key><false/>
+            <key>IS_GCM_ENABLED</key><true/>
+            <key>IS_SIGNIN_ENABLED</key><false/>
+            <key>PLIST_VERSION</key><string>1</string>
+            <key>PROJECT_ID</key><string>placeholder</string>
+            <key>REVERSED_CLIENT_ID</key><string>com.googleusercontent.apps.placeholder</string>
+            <key>STORAGE_BUCKET</key><string>placeholder.appspot.com</string>
+          </dict>
+          </plist>
+          PLIST
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: e2e/requirements.txt
+
+      - name: Setup Node (for Appium)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Appium + XCUITest driver
+        run: |
+          npm install -g appium@2
+          appium driver install xcuitest
+
+      - name: Boot iOS simulator
+        id: simulator
+        run: |
+          DEVICE_NAME="iPhone 16 Pro"
+          # Pick the highest-numbered iOS runtime available
+          RUNTIME=$(xcrun simctl list runtimes | awk '/iOS [0-9]+/ {print $NF}' | tail -1)
+          echo "Using runtime: $RUNTIME"
+          UDID=$(xcrun simctl list devices | awk -v name="$DEVICE_NAME" '$0 ~ name && /\(Shutdown\)/ {match($0, /\(([0-9A-F-]{36})\)/, m); print m[1]; exit}')
+          if [ -z "$UDID" ]; then
+            UDID=$(xcrun simctl list devices | awk -v name="$DEVICE_NAME" '$0 ~ name {match($0, /\(([0-9A-F-]{36})\)/, m); print m[1]; exit}')
+          fi
+          if [ -z "$UDID" ]; then
+            echo "::error::No '$DEVICE_NAME' simulator found"
+            exit 1
+          fi
+          echo "Booting $UDID"
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Install Python deps
+        working-directory: e2e
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Start Appium server
+        run: |
+          mkdir -p e2e/logs
+          appium --base-path /wd/hub --log-level info > e2e/logs/appium.log 2>&1 &
+          echo $! > e2e/logs/appium.pid
+          # Wait for Appium to come up
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:4723/wd/hub/status > /dev/null; then
+              echo "Appium is up"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Run Behave tests
+        working-directory: e2e
+        env:
+          IOS_UDID: ${{ steps.simulator.outputs.udid }}
+        run: |
+          python -m behave features -t @iOS -k
+
+      - name: Stop Appium server
+        if: always()
+        run: |
+          if [ -f e2e/logs/appium.pid ]; then
+            kill "$(cat e2e/logs/appium.pid)" || true
+          fi
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-ios-artifacts
+          path: |
+            e2e/features/artifacts/
+            e2e/logs/
+          retention-days: 7

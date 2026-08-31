@@ -20,13 +20,20 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
     }
     
     override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        
+
+        // Enable the SDK's UI-tests instrumentation when launched by the
+        // Behave/Appium suite in /e2e. SceneDelegate then swaps the root
+        // controller to UITestsAuthViewController.
+        if UITestsMode.isActive {
+            Courier.isUITestsActive = true
+        }
+
         // Initialize Firebase and FCM
         FirebaseApp.configure()
         firebaseMessaging.delegate = self
-        
+
         return true
-        
+
     }
     
     // MARK: Firebase Cloud Messaging Support

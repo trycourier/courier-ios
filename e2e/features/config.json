@@ -1,0 +1,10 @@
+{
+  "ios": {
+    "platform": "ios",
+    "app_path": "Example",
+    "scheme": "Example",
+    "upload_app_url": "",
+    "udid": "",
+    "bundle_id": "com.courier.ios-example"
+  }
+}
