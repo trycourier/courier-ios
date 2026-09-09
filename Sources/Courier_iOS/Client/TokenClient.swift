@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class TokenClient: CourierApiClient {
+public class TokenClient: CourierApiClient, @unchecked Sendable {
     
     private let options: CourierClient.Options
         
@@ -16,7 +16,15 @@ public class TokenClient: CourierApiClient {
         super.init()
     }
     
-    public func putUserToken(token: String, provider: String, device: CourierDevice = CourierDevice()) async throws {
+    public func putUserToken(token: String, provider: String, device: CourierDevice? = nil) async throws {
+        
+        // Building the default device reads UIDevice, which lives on the main actor
+        let resolvedDevice: CourierDevice
+        if let device = device {
+            resolvedDevice = device
+        } else {
+            resolvedDevice = await CourierDevice()
+        }
 
         let request = try http("\(options.apiUrls.rest)/users/\(options.userId)/tokens/\(token)") {
             
@@ -29,7 +37,7 @@ public class TokenClient: CourierApiClient {
             $0.httpBody = try? JSONEncoder().encode(
                 TokenClient.CourierToken(
                     provider_key: provider,
-                    device: device
+                    device: resolvedDevice
                 )
             )
             

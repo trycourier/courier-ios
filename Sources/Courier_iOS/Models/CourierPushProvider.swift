@@ -7,7 +7,7 @@
 
 // MARK: Public Classes
 
-public enum CourierPushProvider: String {
+public enum CourierPushProvider: String, Sendable {
     case apn = "apn"
     case firebaseFcm = "firebase-fcm"
     case expo = "expo"

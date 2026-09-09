@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public struct CourierDevice: Codable {
+public struct CourierDevice: Codable, Sendable {
 
     public let appId: String?
     public let adId: String?
@@ -17,7 +17,7 @@ public struct CourierDevice: Codable {
     public let manufacturer: String?
     public let model: String?
 
-    public init(
+    @MainActor public init(
         appId: String? = ID.bundle,
         adId: String? = ID.advertising,
         deviceId: String? = ID.device,

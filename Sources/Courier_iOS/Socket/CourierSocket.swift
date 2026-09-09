@@ -21,7 +21,9 @@ private actor WebSocketState {
     
 }
 
-public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
+// URLSessionWebSocketDelegate requires Sendable. The task lives behind WebSocketState, the timer is
+// confined to the main actor, and the callback properties are assigned once during setup.
+public class CourierSocket: NSObject, URLSessionWebSocketDelegate, @unchecked Sendable {
     
     private let state = WebSocketState()
     
@@ -33,7 +35,7 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     internal var onError: ((Error) -> Void)?
     
     private let url: String
-    private var pingTimer: Timer?
+    @MainActor private var pingTimer: Timer?
     
     init(url: String) {
         self.url = url
@@ -98,12 +100,10 @@ public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
     // Pings keep alive. Will ping every 5 minutes by default
     public func keepAlive(interval: TimeInterval = 300) async {
         
-        // Ensure any existing timer is invalidated
-        pingTimer?.invalidate()
-        
-        // Create and schedule a new timer
+        // Invalidate any existing timer, then create and schedule a new one
         await MainActor.run { [weak self] in
             guard let self = self else { return }
+            self.pingTimer?.invalidate()
             self.pingTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { _ in
                 Task {
                     do {

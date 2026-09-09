@@ -15,20 +15,20 @@ class InboxTests: XCTestCase {
     /// Demonstrates handling an authentication error scenario for the inbox.
     /// When no user is authenticated, the listener should receive an "authentication_error".
     func testAuthError() async throws {
-        var hold = true
+        let stepsTracker = StepsTracker()
         await Courier.shared.signOut()
 
         let listener = await Courier.shared.addInboxListener(
             onError: { error in
                 let e = error as? CourierError
                 XCTAssertTrue(e?.type == "authentication_error")
-                hold = false
+                Task { await stepsTracker.append("error") }
             }
         )
         
-        // Spin until the error callback is triggered
-        while hold {
-            // Holding...
+        // Wait until the error callback is triggered
+        while await stepsTracker.getSteps().isEmpty {
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s
         }
         
         await Courier.shared.removeInboxListener(listener)
@@ -498,28 +498,34 @@ class InboxTests: XCTestCase {
     /// 2. Adds a listener that increments `messageCount` each time a message is added.
     /// 3. Sends 25 messages in parallel and waits for the count to reach 25.
     /// 4. Confirms that all 25 messages have been added.
+    /// Tracks the listener and the number of messages it has seen. Isolated to the main actor
+    /// because inbox listener callbacks are delivered there.
+    @MainActor final class SpamState {
+        var messageCount = 0
+        var listener: CourierInboxListener? = nil
+    }
+
     func testSpamMessages() async throws {
         let userId = try await UserBuilder.authenticate()
         let count = 25
-        var messageCount = 0
-        
-        var listener: CourierInboxListener? = nil
+        let state = SpamState()
 
         // Wait for all messages to be received
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             Task {
                 // Add a listener that increments messageCount
-                listener = await Courier.shared.addInboxListener(onMessageEvent: { _, _, _, event in
+                let listener = await Courier.shared.addInboxListener(onMessageEvent: { _, _, _, event in
                     if event == .added {
-                        messageCount += 1
-                        print("Message Count updated: \(messageCount)")
+                        state.messageCount += 1
+                        print("Message Count updated: \(state.messageCount)")
 
                         // Resume once we've seen all 25
-                        if messageCount == count {
+                        if state.messageCount == count {
                             continuation.resume()
                         }
                     }
                 })
+                await MainActor.run { state.listener = listener }
                 
                 // Send all messages in parallel
                 try await withThrowingTaskGroup(of: Void.self) { group in
@@ -536,11 +542,12 @@ class InboxTests: XCTestCase {
         }
         
         // Clean up
-        if let listener = listener {
+        if let listener = await state.listener {
             await Courier.shared.removeInboxListener(listener)
         }
 
         // Final assert: all 25 messages should have arrived
+        let messageCount = await state.messageCount
         XCTAssertEqual(messageCount, count)
     }
 }

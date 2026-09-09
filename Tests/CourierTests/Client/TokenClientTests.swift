@@ -27,7 +27,7 @@ class TokenClientTests: XCTestCase {
 
         let client = try await ClientBuilder.build()
         
-        let device = CourierDevice(
+        let device = await CourierDevice(
             appId: "APP_ID",
             adId: "AD_ID",
             deviceId: "DEVICE_ID",

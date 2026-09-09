@@ -9,17 +9,17 @@ import Foundation
 
 // MARK: Internal Classes
 
-public struct CourierBrandResponse: Codable {
+public struct CourierBrandResponse: Codable, Sendable {
     public let data: CourierBrandData
 }
 
-public struct CourierBrandData: Codable {
+public struct CourierBrandData: Codable, Sendable {
     public let brand: CourierBrand
 }
 
 // MARK: Public Classes
 
-public class CourierBrand: NSObject, Codable {
+public final class CourierBrand: NSObject, Codable, @unchecked Sendable {
     
     public let settings: CourierBrandSettings?
     
@@ -31,7 +31,7 @@ public class CourierBrand: NSObject, Codable {
     
 }
 
-public class CourierBrandSettings: NSObject, Codable {
+public final class CourierBrandSettings: NSObject, Codable, @unchecked Sendable {
     
     public let colors: CourierBrandColors?
     public let inapp: CourierBrandInApp?
@@ -46,7 +46,7 @@ public class CourierBrandSettings: NSObject, Codable {
     
 }
 
-public class CourierBrandColors: NSObject, Codable {
+public final class CourierBrandColors: NSObject, Codable, @unchecked Sendable {
     
     public let primary: String?
     
@@ -58,7 +58,7 @@ public class CourierBrandColors: NSObject, Codable {
     
 }
 
-public class CourierBrandInApp: NSObject, Codable {
+public final class CourierBrandInApp: NSObject, Codable, @unchecked Sendable {
     
     private let disableCourierFooter: Bool?
     

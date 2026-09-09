@@ -11,7 +11,7 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 internal class PreferencesSheetViewController: UIViewController, UISheetPresentationControllerDelegate {
     
-    static var items: [CourierSheetItem] = []
+    @MainActor static var items: [CourierSheetItem] = []
     private(set) var theme: CourierPreferencesTheme
     let topic: CourierUserPreferencesTopic
     let onDismiss: ([CourierSheetItem]) -> Void

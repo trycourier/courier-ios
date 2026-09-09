@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: Public Classes
 
-@objc public enum CourierTrackingEvent: Int, RawRepresentable {
+@objc public enum CourierTrackingEvent: Int, RawRepresentable, Sendable {
     
     case clicked
     case delivered

@@ -7,7 +7,8 @@
 
 import UIKit
 
-internal class CourierNotificationProxy: NSObject {
+// Only holds a weak reference back to Courier, so it is safe to capture in the tasks it spawns.
+internal final class CourierNotificationProxy: NSObject, @unchecked Sendable {
     
     weak var courier: Courier?
     

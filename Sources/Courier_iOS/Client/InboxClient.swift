@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class InboxClient: CourierApiClient {
+public class InboxClient: CourierApiClient, @unchecked Sendable {
     
     private let options: CourierClient.Options
     public let socket: InboxSocket

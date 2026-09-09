@@ -9,11 +9,12 @@ import Foundation
 
 // MARK: Public Classes
 
-public class CourierAuthenticationListener: NSObject {
+// The callback is always delivered on the main actor, and that is now part of its type.
+public class CourierAuthenticationListener: NSObject, @unchecked Sendable {
     
-    let onChange: (String?) -> Void
+    let onChange: @MainActor (String?) -> Void
     
-    public init(onChange: @escaping (String?) -> Void) {
+    public init(onChange: @escaping @MainActor (String?) -> Void) {
         self.onChange = onChange
     }
     

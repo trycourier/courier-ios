@@ -182,7 +182,7 @@ extension Courier {
         
     }
     
-    @objc public func setAPNSToken(rawToken: Data, completion: @escaping (Error?) -> Void) async {
+    @objc public func setAPNSToken(rawToken: Data, completion: @escaping @MainActor (Error?) -> Void) async {
         do {
             try await setAPNSToken(rawToken)
             await MainActor.run {

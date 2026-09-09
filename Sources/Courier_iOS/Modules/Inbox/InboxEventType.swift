@@ -5,7 +5,7 @@
 //  Created by https://github.com/mikemilla on 1/22/25.
 //
 
-internal enum InboxEventType: String, Codable {
+internal enum InboxEventType: String, Codable, Sendable {
     case markAllRead = "mark-all-read"
     case read = "read"
     case unread = "unread"

@@ -70,7 +70,7 @@ extension Courier {
         return try await Courier.getNotificationPermissionStatus()
     }
     
-    @objc public static func requestNotificationPermission(completion: @escaping (UNAuthorizationStatus) -> Void) {
+    @objc public static func requestNotificationPermission(completion: @escaping @MainActor (UNAuthorizationStatus) -> Void) {
         userNotificationCenter.requestAuthorization(
             options: permissionAuthorizationOptions,
             completionHandler: { _, _ in
@@ -84,10 +84,11 @@ extension Courier {
         )
     }
     
-    @objc public static func getNotificationPermissionStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
+    @objc public static func getNotificationPermissionStatus(completion: @escaping @MainActor (UNAuthorizationStatus) -> Void) {
         userNotificationCenter.getNotificationSettings(completionHandler: { settings in
-            DispatchQueue.main.async {
-                completion(settings.authorizationStatus)
+            let status = settings.authorizationStatus
+            Task { @MainActor in
+                completion(status)
             }
         })
     }
@@ -321,10 +322,12 @@ public extension String {
 
 public extension NSDictionary {
     
-    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping (Error?) -> Void) {
+    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping @MainActor (Error?) -> Void) {
         
         guard let trackingUrl = self["trackingUrl"] as? String else {
-            completion(nil)
+            Task { @MainActor in
+                completion(nil)
+            }
             return
         }
         
@@ -337,10 +340,10 @@ public extension NSDictionary {
                     url: trackingUrl,
                     event: event
                 )
-                completion(nil)
+                await completion(nil)
             } catch {
                 client.options.error(error.localizedDescription)
-                completion(error)
+                await completion(error)
             }
             
         }
@@ -349,7 +352,7 @@ public extension NSDictionary {
     
 }
 
-internal func vibrate(style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
+@MainActor internal func vibrate(style: UIImpactFeedbackGenerator.FeedbackStyle = .light) {
     let generator = UIImpactFeedbackGenerator(style: style)
     generator.prepare()
     generator.impactOccurred()
@@ -370,7 +373,7 @@ internal extension UIColor {
     }
 }
 
-fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, properties: [SemanticProperty]) -> String {
+@MainActor fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, properties: [SemanticProperty]) -> String {
     let base = "\(prefix)\(type)"
 
     guard Courier.isUITestsActive else {

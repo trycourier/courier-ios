@@ -9,26 +9,28 @@ import Foundation
 
 // MARK: Public Classes
 
-@objc public class CourierInboxListener: NSObject {
+// Callbacks are always delivered on the main actor, and that is now part of their type.
+// The remaining state is only touched on the main actor, so the listener is safe to hand across actors.
+@objc public class CourierInboxListener: NSObject, @unchecked Sendable {
     
-    let onLoading: ((_ isRefresh: Bool) -> Void)?
-    let onError: ((_ error: Error) -> Void)?
-    let onUnreadCountChanged: ((_ unreadCount: Int) -> Void)?
-    let onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)?
-    let onMessagesChanged: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)?
-    let onPageAdded: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)?
-    let onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)?
+    let onLoading: (@MainActor (_ isRefresh: Bool) -> Void)?
+    let onError: (@MainActor (_ error: Error) -> Void)?
+    let onUnreadCountChanged: (@MainActor (_ unreadCount: Int) -> Void)?
+    let onTotalCountChanged: (@MainActor (_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)?
+    let onMessagesChanged: (@MainActor (_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)?
+    let onPageAdded: (@MainActor (_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)?
+    let onMessageEvent: (@MainActor (_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)?
     
-    private var isInitialized = false
+    @MainActor private var isInitialized = false
     
     public init(
-        onLoading: ((_ isRefresh: Bool) -> Void)? = nil,
-        onError: ((_ error: Error) -> Void)? = nil,
-        onUnreadCountChanged: ((_ unreadCount: Int) -> Void)? = nil,
-        onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onMessagesChanged: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onPageAdded: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
+        onLoading: (@MainActor (_ isRefresh: Bool) -> Void)? = nil,
+        onError: (@MainActor (_ error: Error) -> Void)? = nil,
+        onUnreadCountChanged: (@MainActor (_ unreadCount: Int) -> Void)? = nil,
+        onTotalCountChanged: (@MainActor (_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onMessagesChanged: (@MainActor (_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onPageAdded: (@MainActor (_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onMessageEvent: (@MainActor (_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
     ) {
         self.onLoading = onLoading
         self.onError = onError

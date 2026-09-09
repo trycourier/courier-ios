@@ -32,14 +32,14 @@ import Foundation
 
 internal actor InboxSocketState {
     
-    private var receivedMessage: ((InboxMessage) -> Void)?
-    private var receivedMessageEvent: ((InboxSocket.MessageEvent) -> Void)?
+    private var receivedMessage: (@Sendable (InboxMessage) -> Void)?
+    private var receivedMessageEvent: (@Sendable (InboxSocket.MessageEvent) -> Void)?
 
-    func setReceivedMessage(_ handler: ((InboxMessage) -> Void)?) {
+    func setReceivedMessage(_ handler: (@Sendable (InboxMessage) -> Void)?) {
         self.receivedMessage = handler
     }
 
-    func setReceivedMessageEvent(_ handler: ((InboxSocket.MessageEvent) -> Void)?) {
+    func setReceivedMessageEvent(_ handler: (@Sendable (InboxSocket.MessageEvent) -> Void)?) {
         self.receivedMessageEvent = handler
     }
 
@@ -55,7 +55,7 @@ internal actor InboxSocketState {
 
 // MARK: Inbox Socket
 
-public class InboxSocket: CourierSocket {
+public class InboxSocket: CourierSocket, @unchecked Sendable {
     
     private let options: CourierClient.Options
     private let state = InboxSocketState()
@@ -69,14 +69,14 @@ public class InboxSocket: CourierSocket {
         let type: PayloadType
     }
     
-    public struct MessageEvent: Codable {
+    public struct MessageEvent: Codable, Sendable {
         let event: InboxEventType
         let messageId: String?
         let type: String
     }
     
-    internal var receivedMessage: ((InboxMessage) -> Void)?
-    internal var receivedMessageEvent: ((MessageEvent) -> Void)?
+    internal var receivedMessage: (@Sendable (InboxMessage) -> Void)?
+    internal var receivedMessageEvent: (@Sendable (MessageEvent) -> Void)?
     
     init(options: CourierClient.Options) {
         self.options = options
@@ -91,7 +91,8 @@ public class InboxSocket: CourierSocket {
         
     }
     
-    public func connect(receivedMessage: ((InboxMessage) -> Void)? = nil, receivedMessageEvent: ((MessageEvent) -> Void)? = nil) async throws {
+    // The handlers are stored on an actor and invoked from the socket's receive callback, so they have to be Sendable
+    public func connect(receivedMessage: (@Sendable (InboxMessage) -> Void)? = nil, receivedMessageEvent: (@Sendable (MessageEvent) -> Void)? = nil) async throws {
         await state.setReceivedMessage(receivedMessage)
         await state.setReceivedMessageEvent(receivedMessageEvent)
         try await super.connect()
