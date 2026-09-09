@@ -219,6 +219,11 @@ class ThreadingTests: XCTestCase {
         await Courier.shared.signOut()
     }
     
+    /// Counts listener callbacks on the main actor, where they are delivered, so no extra hop is needed.
+    @MainActor final class CallbackCounter {
+        var count = 0
+    }
+    
     actor FetchCounter {
         private var count = 0
         
@@ -356,11 +361,11 @@ class ThreadingTests: XCTestCase {
         Self.log("Starting testListenerCallbackUnderLoad")
 
         try await UserBuilder.authenticate()
-        let callbackCounter = FetchCounter()
+        let callbackCounter = CallbackCounter()
 
         let listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
             if event == .added {
-                Task { _ = await callbackCounter.increment() }
+                callbackCounter.count += 1
             }
         })
 
@@ -379,7 +384,7 @@ class ThreadingTests: XCTestCase {
 
         await Courier.shared.removeInboxListener(listener)
 
-        let callbackCount = await callbackCounter.getCount()
+        let callbackCount = await callbackCounter.count
         XCTAssertGreaterThan(callbackCount, 0, "Listener should have been triggered at least once")
         Self.log("Listener callback stress test completed")
     }

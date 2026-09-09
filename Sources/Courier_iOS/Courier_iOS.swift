@@ -89,6 +89,10 @@ import UIKit
      * This simplifies UI testing by providing
      * used fonts and colors in accessibility identifiers
      */
-    @MainActor public static var isUITestsActive: Bool = false
+    private static let uiTestsActiveStore = LockedValue(false)
+    public static var isUITestsActive: Bool {
+        get { uiTestsActiveStore.value }
+        set { uiTestsActiveStore.value = newValue }
+    }
     
 }

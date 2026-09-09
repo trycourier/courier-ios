@@ -322,12 +322,10 @@ public extension String {
 
 public extension NSDictionary {
     
-    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping @MainActor (Error?) -> Void) {
+    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping @Sendable (Error?) -> Void) {
         
         guard let trackingUrl = self["trackingUrl"] as? String else {
-            Task { @MainActor in
-                completion(nil)
-            }
+            completion(nil)
             return
         }
         
@@ -340,10 +338,10 @@ public extension NSDictionary {
                     url: trackingUrl,
                     event: event
                 )
-                await completion(nil)
+                completion(nil)
             } catch {
                 client.options.error(error.localizedDescription)
-                await completion(error)
+                completion(error)
             }
             
         }
@@ -373,7 +371,7 @@ internal extension UIColor {
     }
 }
 
-@MainActor fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, properties: [SemanticProperty]) -> String {
+fileprivate func buildAccessibilityIdentifier(prefix: String, type: String, properties: [SemanticProperty]) -> String {
     let base = "\(prefix)\(type)"
 
     guard Courier.isUITestsActive else {

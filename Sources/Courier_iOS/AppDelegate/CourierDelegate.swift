@@ -8,7 +8,7 @@
 import UIKit
 
 @available(iOSApplicationExtension, unavailable)
-open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+open class CourierDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Getters
     
@@ -100,3 +100,14 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate, UNUserNotificati
     open func pushNotificationClicked(message: [AnyHashable : Any]) {}
     
 }
+
+// UNUserNotificationCenterDelegate carries no isolation annotation even though the system calls it on
+// the main thread. The @preconcurrency conformance lets the main-actor methods above satisfy it in the
+// Swift 6 language mode; older compilers do not know the attribute.
+#if compiler(>=6.0)
+@available(iOSApplicationExtension, unavailable)
+extension CourierDelegate: @preconcurrency UNUserNotificationCenterDelegate {}
+#else
+@available(iOSApplicationExtension, unavailable)
+extension CourierDelegate: UNUserNotificationCenterDelegate {}
+#endif

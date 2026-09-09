@@ -29,4 +29,14 @@ internal final class LockedValue<Value>: @unchecked Sendable {
         }
     }
     
+    /// Replaces the value and returns the previous one in a single locked step.
+    @discardableResult
+    func swap(_ newValue: Value) -> Value {
+        lock.lock()
+        defer { lock.unlock() }
+        let previous = storage
+        storage = newValue
+        return previous
+    }
+    
 }

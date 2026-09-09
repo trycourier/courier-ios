@@ -21,8 +21,7 @@ import Foundation
 
     func closeSocket() async {
         await socket?.disconnect()
-        socket?.receivedMessage = nil
-        socket?.receivedMessageEvent = nil
+        await socket?.clearHandlers()
         socket = nil
     }
     
@@ -50,6 +49,11 @@ internal actor InboxSocketState {
     func callReceivedMessageEvent(_ event: InboxSocket.MessageEvent) {
         receivedMessageEvent?(event)
     }
+    
+    func clearHandlers() {
+        receivedMessage = nil
+        receivedMessageEvent = nil
+    }
 }
 
 
@@ -75,9 +79,6 @@ public class InboxSocket: CourierSocket, @unchecked Sendable {
         let type: String
     }
     
-    internal var receivedMessage: (@Sendable (InboxMessage) -> Void)?
-    internal var receivedMessageEvent: (@Sendable (MessageEvent) -> Void)?
-    
     init(options: CourierClient.Options) {
         self.options = options
         
@@ -96,6 +97,11 @@ public class InboxSocket: CourierSocket, @unchecked Sendable {
         await state.setReceivedMessage(receivedMessage)
         await state.setReceivedMessageEvent(receivedMessageEvent)
         try await super.connect()
+    }
+    
+    /// Drops the handlers passed to `connect`, so a closed socket cannot deliver into a torn-down module
+    func clearHandlers() async {
+        await state.clearHandlers()
     }
     
     public func sendSubscribe(version: Int = 5) async throws {
