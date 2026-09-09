@@ -223,7 +223,7 @@ class ThreadingTests: XCTestCase {
     @MainActor final class CallbackCounter {
         var count = 0
     }
-    
+
     actor FetchCounter {
         private var count = 0
         

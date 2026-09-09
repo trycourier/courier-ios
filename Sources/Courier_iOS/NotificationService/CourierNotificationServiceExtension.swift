@@ -26,10 +26,10 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension, 
             contentHandler(request.content)
             return
         }
-        
+
         // Hold the original message so it can still be delivered if the service's time expires
         pendingDelivery.value = PendingDelivery(handler: contentHandler, content: content)
-        
+
         Task {
             
             // Track the message in Courier
@@ -57,5 +57,5 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension, 
         }
         delivery.handler(delivery.content)
     }
-    
+
 }

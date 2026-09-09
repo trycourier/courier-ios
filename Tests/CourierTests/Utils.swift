@@ -21,11 +21,11 @@ class Utils {
         func get() -> String? {
             id
         }
-        
+
         func setListener(_ newValue: CourierInboxListener) {
             listener = newValue
         }
-        
+
         func getListener() -> CourierInboxListener? {
             listener
         }
@@ -52,7 +52,7 @@ class Utils {
                         }
                     }
                 )
-                
+
                 // Make the listener available to the callback above
                 await messageIdStore.setListener(listener)
 

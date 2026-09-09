@@ -113,7 +113,7 @@ class TokenTests: XCTestCase {
         try await UserBuilder.authenticate()
         
         let token = self.token
-        
+
         let tokens = try await withThrowingTaskGroup(of: String.self) { group in
             
             for _ in 1...25 {

@@ -17,7 +17,7 @@ public class TokenClient: CourierApiClient, @unchecked Sendable {
     }
     
     public func putUserToken(token: String, provider: String, device: CourierDevice? = nil) async throws {
-        
+
         // Building the default device reads UIDevice, which lives on the main actor
         let resolvedDevice: CourierDevice
         if let device = device {

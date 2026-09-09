@@ -49,7 +49,7 @@ internal actor InboxSocketState {
     func callReceivedMessageEvent(_ event: InboxSocket.MessageEvent) {
         receivedMessageEvent?(event)
     }
-    
+
     func clearHandlers() {
         receivedMessage = nil
         receivedMessageEvent = nil
@@ -103,7 +103,7 @@ public class InboxSocket: CourierSocket, @unchecked Sendable {
     func clearHandlers() async {
         await state.clearHandlers()
     }
-    
+
     public func sendSubscribe(version: Int = 5) async throws {
         
         var data: [String: Any] = [

@@ -47,7 +47,7 @@ class InboxClientTests: XCTestCase {
     private func sendMessage() async throws -> String {
         return try await Self.sendMessage(userId: client.options.userId)
     }
-    
+
     func testGetInboxMessage() async throws {
 
         let messageId = try await sendMessage()

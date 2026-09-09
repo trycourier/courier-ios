@@ -8,14 +8,14 @@ import Foundation
 /// A lock-guarded box for a value that has to be read and written from any thread
 /// without going through an actor.
 internal final class LockedValue<Value>: @unchecked Sendable {
-    
+
     private let lock = NSLock()
     private var storage: Value
-    
+
     init(_ value: Value) {
         self.storage = value
     }
-    
+
     var value: Value {
         get {
             lock.lock()
@@ -28,7 +28,7 @@ internal final class LockedValue<Value>: @unchecked Sendable {
             storage = newValue
         }
     }
-    
+
     /// Replaces the value and returns the previous one in a single locked step.
     @discardableResult
     func swap(_ newValue: Value) -> Value {
@@ -38,5 +38,5 @@ internal final class LockedValue<Value>: @unchecked Sendable {
         storage = newValue
         return previous
     }
-    
+
 }
