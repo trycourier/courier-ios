@@ -10,7 +10,7 @@ import Foundation
 /**
  The model used to structure CourierInbox messages
  */
-public class InboxMessage: Codable {
+public class InboxMessage: Codable, @unchecked Sendable {
     
     public let messageId: String
     public let title: String?
@@ -199,7 +199,7 @@ extension InboxMessage {
         try await Courier.shared.readMessage(messageId)
     }
     
-    public func markAsRead(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsRead(onSuccess: (@Sendable () -> Void)? = nil, onFailure: (@Sendable (Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsRead()
@@ -221,7 +221,7 @@ extension InboxMessage {
         try await Courier.shared.unreadMessage(messageId)
     }
     
-    public func markAsUnread(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsUnread(onSuccess: (@Sendable () -> Void)? = nil, onFailure: (@Sendable (Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsUnread()
@@ -243,7 +243,7 @@ extension InboxMessage {
         try await Courier.shared.openMessage(messageId)
     }
     
-    public func markAsOpened(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsOpened(onSuccess: (@Sendable () -> Void)? = nil, onFailure: (@Sendable (Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsOpened()
@@ -265,7 +265,7 @@ extension InboxMessage {
         try await Courier.shared.clickMessage(messageId)
     }
     
-    public func markAsClicked(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsClicked(onSuccess: (@Sendable () -> Void)? = nil, onFailure: (@Sendable (Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsClicked()
@@ -287,7 +287,7 @@ extension InboxMessage {
         try await Courier.shared.archiveMessage(messageId)
     }
     
-    public func markAsArchived(onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsArchived(onSuccess: (@Sendable () -> Void)? = nil, onFailure: (@Sendable (Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsArchived()

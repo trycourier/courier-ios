@@ -5,7 +5,7 @@
 //  Created by Michael Miller on 2/14/25.
 //
 
-public struct InboxMessageSet: Codable {
+public struct InboxMessageSet: Codable, Sendable {
     
     internal(set) public var messages: [InboxMessage]
     internal(set) public var totalCount: Int

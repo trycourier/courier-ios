@@ -70,7 +70,7 @@ extension Courier {
         return try await Courier.getNotificationPermissionStatus()
     }
     
-    @objc public static func requestNotificationPermission(completion: @escaping (UNAuthorizationStatus) -> Void) {
+    @objc public static func requestNotificationPermission(completion: @Sendable @escaping (UNAuthorizationStatus) -> Void) {
         userNotificationCenter.requestAuthorization(
             options: permissionAuthorizationOptions,
             completionHandler: { _, _ in
@@ -84,10 +84,11 @@ extension Courier {
         )
     }
     
-    @objc public static func getNotificationPermissionStatus(completion: @escaping (UNAuthorizationStatus) -> Void) {
+    @objc public static func getNotificationPermissionStatus(completion: @Sendable @escaping (UNAuthorizationStatus) -> Void) {
         userNotificationCenter.getNotificationSettings(completionHandler: { settings in
+            let status = settings.authorizationStatus
             DispatchQueue.main.async {
-                completion(settings.authorizationStatus)
+                completion(status)
             }
         })
     }
@@ -321,7 +322,7 @@ public extension String {
 
 public extension NSDictionary {
     
-    @objc func trackMessage(event: CourierTrackingEvent, completion: @escaping (Error?) -> Void) {
+    @objc func trackMessage(event: CourierTrackingEvent, completion: @Sendable @escaping (Error?) -> Void) {
         
         guard let trackingUrl = self["trackingUrl"] as? String else {
             completion(nil)

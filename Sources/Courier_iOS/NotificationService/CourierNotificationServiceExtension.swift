@@ -15,22 +15,27 @@ open class CourierNotificationServiceExtension: UNNotificationServiceExtension {
 
     open override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         
+        // Copy the original message
+        originalHandler = contentHandler
+        originalContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+
+        guard let notification = originalContent else {
+            return
+        }
+
+        // The system guarantees `contentHandler` is called once. Capturing these
+        // non-Sendable values into the tracking Task is safe under that contract.
+        nonisolated(unsafe) let handler = contentHandler
+        nonisolated(unsafe) let content = notification
+
         Task {
-            
-            // Copy the original message
-            originalHandler = contentHandler
-            originalContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-            
-            guard let notification = originalContent else {
-                return
-            }
-            
+
             // Track the message in Courier
-            await notification.userInfo.trackMessage(event: .delivered)
-            
+            await content.userInfo.trackMessage(event: .delivered)
+
             // Show the notification
-            contentHandler(notification)
-            
+            handler(content)
+
         }
         
     }

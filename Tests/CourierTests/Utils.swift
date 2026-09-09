@@ -12,25 +12,31 @@ class Utils {
     
     actor MessageIdStore {
         private var id: String?
-        
+
         func set(_ newValue: String?) {
             id = newValue
         }
-        
+
         func get() -> String? {
             id
         }
     }
 
+    // Holds the listener so it can be safely captured across concurrency
+    // boundaries while it is still being assigned.
+    final class ListenerBox: @unchecked Sendable {
+        var listener: CourierInboxListener?
+    }
+
     static func sendInboxMessageWithConfirmation(to userId: String, tenantId: String? = nil) async throws -> (InboxMessage, CourierInboxListener) {
         let messageIdStore = MessageIdStore()
-        var listener: CourierInboxListener? = nil
+        let listenerBox = ListenerBox()
 
         return try await withCheckedThrowingContinuation { continuation in
             Task {
-                
+
                 // Set up our listener first so we don't miss the message
-                listener = await Courier.shared.addInboxListener(
+                listenerBox.listener = await Courier.shared.addInboxListener(
                     onMessageEvent: { message, index, feed, event in
                         // The closure might be called on a different concurrency context
                         // so we hop into a Task to safely interact with the actor
@@ -39,7 +45,9 @@ class Utils {
                             if event == .added, message.messageId == currentId {
                                 // Once we match, clear out the ID and resume
                                 await messageIdStore.set(nil)
-                                continuation.resume(returning: (message, listener!))
+                                if let listener = listenerBox.listener {
+                                    continuation.resume(returning: (message, listener))
+                                }
                             }
                         }
                     }

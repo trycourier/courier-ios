@@ -393,13 +393,13 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     // MARK: Listeners
     
     @discardableResult public func addInboxListener(
-        onLoading: ((_ isRefresh: Bool) -> Void)? = nil,
-        onError: ((_ error: Error) -> Void)? = nil,
-        onUnreadCountChanged: ((_ unreadCount: Int) -> Void)? = nil,
-        onTotalCountChanged: ((_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onMessagesChanged: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onPageAdded: ((_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
-        onMessageEvent: ((_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
+        onLoading: (@MainActor (_ isRefresh: Bool) -> Void)? = nil,
+        onError: (@MainActor (_ error: Error) -> Void)? = nil,
+        onUnreadCountChanged: (@MainActor (_ unreadCount: Int) -> Void)? = nil,
+        onTotalCountChanged: (@MainActor (_ totalCount: Int, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onMessagesChanged: (@MainActor (_ messages: [InboxMessage], _ canPaginate: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onPageAdded: (@MainActor (_ messages: [InboxMessage], _ canPaginate: Bool, _ isFirstPage: Bool, _ feed: InboxMessageFeed) -> Void)? = nil,
+        onMessageEvent: (@MainActor (_ message: InboxMessage, _ index: Int, _ feed: InboxMessageFeed, _ event: InboxMessageEvent) -> Void)? = nil
     ) async -> CourierInboxListener {
         
         let listener = CourierInboxListener(

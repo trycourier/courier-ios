@@ -7,9 +7,9 @@
 
 import Foundation
 
-public class CourierClient {
-    
-    public struct Options {
+public class CourierClient: @unchecked Sendable {
+
+    public struct Options: Sendable {
         public let jwt: String?
         public let clientKey: String?
         public let userId: String
@@ -19,7 +19,7 @@ public class CourierClient {
         public let apiUrls: ApiUrls
     }
     
-    public struct ApiUrls {
+    public struct ApiUrls: Sendable {
         public let rest: String
         public let graphql: String
         public let inboxGraphql: String

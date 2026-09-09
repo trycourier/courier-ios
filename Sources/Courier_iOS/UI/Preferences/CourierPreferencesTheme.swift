@@ -83,8 +83,8 @@ import UIKit
     
     // MARK: Defaults
     
-    @objc public static let defaultDark = CourierPreferencesTheme()
-    @objc public static let defaultLight = CourierPreferencesTheme()
+    @objc public static nonisolated(unsafe) let defaultDark = CourierPreferencesTheme()
+    @objc public static nonisolated(unsafe) let defaultLight = CourierPreferencesTheme()
     
     // MARK: Brand
     

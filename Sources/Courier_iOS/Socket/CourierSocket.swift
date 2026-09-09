@@ -21,7 +21,7 @@ private actor WebSocketState {
     
 }
 
-public class CourierSocket: NSObject, URLSessionWebSocketDelegate {
+public class CourierSocket: NSObject, URLSessionWebSocketDelegate, @unchecked Sendable {
     
     private let state = WebSocketState()
     

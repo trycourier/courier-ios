@@ -90,7 +90,7 @@ import Foundation
     // MARK: Listeners
     
     @discardableResult
-    public func addAuthenticationListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
+    public func addAuthenticationListener(onChange: @escaping @MainActor (String?) -> Void) -> CourierAuthenticationListener {
         let listener = CourierAuthenticationListener(onChange: onChange)
         self.authListeners.append(listener)
         self.courier.client?.log("Courier Authentication Listener Registered. Total Listeners: \(self.authListeners.count)")
@@ -197,7 +197,7 @@ import Foundation
     }
     
     @discardableResult
-    public func addAuthenticationListener(onChange: @escaping (String?) -> Void) -> CourierAuthenticationListener {
+    public func addAuthenticationListener(onChange: @escaping @MainActor (String?) -> Void) -> CourierAuthenticationListener {
         return self.authenticationModule.addAuthenticationListener(onChange: onChange)
     }
 

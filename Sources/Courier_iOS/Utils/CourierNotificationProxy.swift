@@ -7,7 +7,7 @@
 
 import UIKit
 
-internal class CourierNotificationProxy: NSObject {
+internal class CourierNotificationProxy: NSObject, @unchecked Sendable {
     
     weak var courier: Courier?
     

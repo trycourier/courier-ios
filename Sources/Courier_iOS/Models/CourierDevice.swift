@@ -23,7 +23,7 @@ public struct CourierDevice: Codable {
         deviceId: String? = ID.device,
         platform: String? = "ios",
         manufacturer: String? = "apple",
-        model: String? = UIDevice.current.localizedModel
+        model: String? = ID.model
     ) {
         self.appId = appId
         self.adId = adId

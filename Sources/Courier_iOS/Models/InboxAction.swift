@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct InboxAction: Codable {
+public struct InboxAction: Codable, @unchecked Sendable {
     
     public let content: String?
     public let href: String?
@@ -83,7 +83,7 @@ extension InboxAction {
         try await Courier.shared.client?.inbox.click(messageId: messageId, trackingId: trackingId)
     }
     
-    public func markAsClicked(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsClicked(messageId: String, onSuccess: (@Sendable () -> Void)? = nil, onFailure: (@Sendable (Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsClicked(messageId: messageId)

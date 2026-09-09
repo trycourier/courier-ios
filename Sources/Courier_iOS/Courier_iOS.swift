@@ -22,12 +22,12 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 
 import UIKit
 
-@objc public class Courier: NSObject {
-    
+@objc public class Courier: NSObject, @unchecked Sendable {
+
     // MARK: Versioning
-    
+
     internal static let version = "5.8.6"
-    @objc public static var agent = CourierAgent.nativeIOS(version)
+    @objc public static nonisolated(unsafe) var agent = CourierAgent.nativeIOS(version)
     
     // MARK: Singleton
     
@@ -80,6 +80,6 @@ import UIKit
      * This simplifies UI testing by providing
      * used fonts and colors in accessibility identifiers
      */
-    public static var isUITestsActive: Bool = false
+    public static nonisolated(unsafe) var isUITestsActive: Bool = false
     
 }

@@ -149,8 +149,8 @@ import UIKit
     
     // MARK: Defaults
     
-    @objc public static let defaultDark = CourierInboxTheme()
-    @objc public static let defaultLight = CourierInboxTheme()
+    @objc public static nonisolated(unsafe) let defaultDark = CourierInboxTheme()
+    @objc public static nonisolated(unsafe) let defaultLight = CourierInboxTheme()
     
     // MARK: Brand
     

@@ -31,5 +31,9 @@ public struct ID {
     public static var device: String? {
         return UIDevice.current.identifierForVendor?.uuidString
     }
-    
+
+    public static var model: String? {
+        return UIDevice.current.localizedModel
+    }
+
 }

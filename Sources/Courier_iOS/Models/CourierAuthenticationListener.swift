@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: Public Classes
 
-public class CourierAuthenticationListener: NSObject {
+public class CourierAuthenticationListener: NSObject, @unchecked Sendable {
     
-    let onChange: (String?) -> Void
+    let onChange: @MainActor (String?) -> Void
     
-    public init(onChange: @escaping (String?) -> Void) {
+    public init(onChange: @escaping @MainActor (String?) -> Void) {
         self.onChange = onChange
     }
     

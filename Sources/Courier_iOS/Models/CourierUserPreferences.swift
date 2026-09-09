@@ -70,7 +70,7 @@ extension CourierUserPreferencesTopic {
 
 // MARK: Status
 
-public enum CourierUserPreferencesStatus: String, Codable {
+public enum CourierUserPreferencesStatus: String, Codable, Sendable {
     
     case optedIn = "OPTED_IN"
     case optedOut = "OPTED_OUT"
@@ -107,7 +107,7 @@ public enum CourierUserPreferencesStatus: String, Codable {
 
 // MARK: Channel
 
-public enum CourierUserPreferencesChannel: String, Codable {
+public enum CourierUserPreferencesChannel: String, Codable, Sendable {
     
     case directMessage = "direct_message"
     case inbox
