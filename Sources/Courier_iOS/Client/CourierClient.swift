@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class CourierClient: Sendable {
+public class CourierClient: @unchecked Sendable {
     
     public struct Options: Sendable {
         public let jwt: String?

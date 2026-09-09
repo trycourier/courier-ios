@@ -21,7 +21,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     s.source = { :git => 'https://github.com/trycourier/courier-ios.git', :tag => s.version.to_s }
         
     s.ios.deployment_target = '13.0'
-    s.swift_version = '5.6'
+    s.swift_versions = ['5.6', '6.0']
     
     s.source_files = 'Sources/Courier_iOS/**/*.{swift}'
     s.resource_bundles = {
