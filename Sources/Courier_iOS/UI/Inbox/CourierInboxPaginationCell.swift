@@ -31,7 +31,9 @@ internal class CourierInboxPaginationCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        setup()
+        MainActor.assumeIsolated {
+            setup()
+        }
     }
     
     private func setup() {
