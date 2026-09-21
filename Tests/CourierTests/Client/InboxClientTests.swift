@@ -24,24 +24,30 @@ class InboxClientTests: XCTestCase {
         
     }
     
+    // Static so detached tasks can send without capturing the test case
     @discardableResult
-    private func sendMessage(userId: String? = nil) async throws -> String {
+    private static func sendMessage(userId: String) async throws -> String {
         return try await ExampleServer.sendTest(
             authKey: Env.COURIER_AUTH_KEY,
-            userId: userId ?? client.options.userId,
+            userId: userId,
             channel: "inbox"
         )
     }
     
     @discardableResult
-    private func sendMessageTemplate(userId: String? = nil) async throws -> String {
+    private static func sendMessageTemplate(userId: String) async throws -> String {
         return try await ExampleServer.sendTemplateTest(
             authKey: Env.COURIER_AUTH_KEY,
-            userId: userId ?? client.options.userId,
+            userId: userId,
             templateId: Env.COURIER_MESSAGE_TEMPLATE_ID
         )
     }
     
+    @discardableResult
+    private func sendMessage() async throws -> String {
+        return try await Self.sendMessage(userId: client.options.userId)
+    }
+
     func testGetInboxMessage() async throws {
 
         let messageId = try await sendMessage()
@@ -183,7 +189,7 @@ class InboxClientTests: XCTestCase {
                     }
                 )
                 try await socket.sendSubscribe()
-                try await sendMessage(userId: userId)
+                try await Self.sendMessage(userId: userId)
             }
         }
 
@@ -208,7 +214,7 @@ class InboxClientTests: XCTestCase {
                     }
                 )
                 try await socket.sendSubscribe()
-                let test = try await sendMessageTemplate(userId: userId)
+                let test = try await Self.sendMessageTemplate(userId: userId)
                 print(test)
             }
         }
@@ -318,7 +324,7 @@ class InboxClientTests: XCTestCase {
                     })
                     try await socket2.sendSubscribe()
 
-                    let messageId = try await sendMessage()
+                    let messageId = try await Self.sendMessage(userId: client1.options.userId)
                     print("Sent message with ID: \(messageId)")
                     
                 } catch {
@@ -370,8 +376,8 @@ class InboxClientTests: XCTestCase {
                     try await socket2.sendSubscribe()
 
                     // Send a message to each user
-                    try await sendMessage(userId: userId1)
-                    try await sendMessage(userId: userId2)
+                    try await Self.sendMessage(userId: userId1)
+                    try await Self.sendMessage(userId: userId2)
                     
                 } catch {
                     continuation.resume(throwing: error)

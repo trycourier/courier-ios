@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class TrackingClient: CourierApiClient {
+public class TrackingClient: CourierApiClient, @unchecked Sendable {
     
     private let options: CourierClient.Options
         

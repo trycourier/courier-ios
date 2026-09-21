@@ -7,7 +7,9 @@
 
 import Foundation
 
-public struct InboxAction: Codable {
+// Marked @unchecked because `data` holds decoded JSON as `Any`. The values are all value types
+// and `data` is only assigned during init.
+public struct InboxAction: Codable, @unchecked Sendable {
     
     public let content: String?
     public let href: String?
@@ -83,7 +85,7 @@ extension InboxAction {
         try await Courier.shared.client?.inbox.click(messageId: messageId, trackingId: trackingId)
     }
     
-    public func markAsClicked(messageId: String, onSuccess: (() -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    public func markAsClicked(messageId: String, onSuccess: (@MainActor () -> Void)? = nil, onFailure: (@MainActor (Error) -> Void)? = nil) {
         Task {
             do {
                 try await markAsClicked(messageId: messageId)

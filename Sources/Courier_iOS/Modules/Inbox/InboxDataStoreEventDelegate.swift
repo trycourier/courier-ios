@@ -5,7 +5,7 @@
 //  Created by Michael Miller on 2/14/25.
 //
 
-public enum InboxMessageEvent: String, Codable {
+public enum InboxMessageEvent: String, Codable, Sendable {
     case added = "added"
     case read = "read"
     case unread = "unread"

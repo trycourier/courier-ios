@@ -7,7 +7,8 @@
 
 import Foundation
 
-public class CourierApiClient {
+// Subclasses only hold immutable options and a socket, so instances can move between actors.
+public class CourierApiClient: @unchecked Sendable {
     
     func http(_ url: String, _ configuration: (inout URLRequest) -> Void) throws -> URLRequest {
         

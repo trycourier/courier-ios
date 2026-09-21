@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: Internal Classes
 
-public struct InboxResponse: Codable {
+public struct InboxResponse: Codable, Sendable {
     public let data: InboxData?
 }
 
@@ -35,7 +35,7 @@ internal extension InboxResponse {
     
 }
 
-public struct InboxData: Codable {
+public struct InboxData: Codable, Sendable {
     
     public var count: Int? = 0
     public var messages: InboxNodes?
@@ -49,12 +49,12 @@ public struct InboxData: Codable {
     
 }
 
-public struct InboxNodes: Codable {
+public struct InboxNodes: Codable, Sendable {
     public let pageInfo: InboxPageInfo?
     public let nodes: [InboxMessage]?
 }
 
-public struct InboxPageInfo: Codable {
+public struct InboxPageInfo: Codable, Sendable {
     public let startCursor: String?
     public let hasNextPage: Bool?
 }

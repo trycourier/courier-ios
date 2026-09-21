@@ -9,18 +9,18 @@ import Foundation
 
 // MARK: Public Classes
 
-internal class CourierUserPreferencesTopicResponse: Codable {
+internal final class CourierUserPreferencesTopicResponse: Codable, Sendable {
     public let topic: CourierUserPreferencesTopic
 }
 
-public class CourierUserPreferences: Codable {
+public final class CourierUserPreferences: Codable, Sendable {
     public let items: [CourierUserPreferencesTopic]
     public let paging: CourierUserPreferencesPaging
 }
 
 // MARK: Topic
 
-public class CourierUserPreferencesTopic: Codable {
+public final class CourierUserPreferencesTopic: Codable, Sendable {
     
     public let customRouting: [CourierUserPreferencesChannel]
     public let defaultStatus: CourierUserPreferencesStatus
@@ -70,7 +70,7 @@ extension CourierUserPreferencesTopic {
 
 // MARK: Status
 
-public enum CourierUserPreferencesStatus: String, Codable {
+public enum CourierUserPreferencesStatus: String, Codable, Sendable {
     
     case optedIn = "OPTED_IN"
     case optedOut = "OPTED_OUT"
@@ -107,7 +107,7 @@ public enum CourierUserPreferencesStatus: String, Codable {
 
 // MARK: Channel
 
-public enum CourierUserPreferencesChannel: String, Codable {
+public enum CourierUserPreferencesChannel: String, Codable, Sendable {
     
     case directMessage = "direct_message"
     case inbox
@@ -158,7 +158,7 @@ public enum CourierUserPreferencesChannel: String, Codable {
 
 // MARK: Pagination
 
-public class CourierUserPreferencesPaging: NSObject, Codable {
+public final class CourierUserPreferencesPaging: NSObject, Codable, @unchecked Sendable {
     public let cursor: String?
     public let more: Bool
 }

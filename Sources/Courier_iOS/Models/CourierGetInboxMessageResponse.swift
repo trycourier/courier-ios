@@ -7,6 +7,6 @@
 
 import Foundation
 
-public struct CourierGetInboxMessageResponse: Codable {
+public struct CourierGetInboxMessageResponse: Codable, Sendable {
     public let data: GetInboxMessageData?
 }

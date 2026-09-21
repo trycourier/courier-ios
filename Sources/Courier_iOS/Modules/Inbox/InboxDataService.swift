@@ -43,7 +43,7 @@
         
     }
     
-    func connectWebSocket(client: CourierClient, onReceivedMessage: @escaping (InboxMessage) -> Void, onReceivedMessageEvent: @escaping (InboxSocket.MessageEvent) -> Void) async throws {
+    func connectWebSocket(client: CourierClient, onReceivedMessage: @escaping @Sendable (InboxMessage) -> Void, onReceivedMessageEvent: @escaping @Sendable (InboxSocket.MessageEvent) -> Void) async throws {
         
         // Create the socket if needed
         let socket = await inboxSocketManager.updateInstance(

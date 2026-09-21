@@ -124,7 +124,9 @@ internal class CourierInboxTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        reset()
+        MainActor.assumeIsolated {
+            reset()
+        }
     }
     
     private func setup() {

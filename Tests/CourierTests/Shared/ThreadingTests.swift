@@ -9,20 +9,12 @@ import Foundation
 import XCTest
 @testable import Courier_iOS
 
-extension NSLock {
-    @discardableResult
-    func withLock<T>(_ action: () throws -> T) rethrows -> T {
-        lock()
-        defer { unlock() }
-        return try action()
-    }
-}
-
 class ThreadingTests: XCTestCase {
     
     // MARK: - Helpers
     
-    func log(_ message: String, function: String = #function, line: Int = #line) {
+    // Static so task-group closures can log without capturing the test case
+    static func log(_ message: String, function: String = #function, line: Int = #line) {
         let threadDesc = Thread.isMainThread ? "Main Thread" : "Thread \(Thread.current)"
         print("[\(Date())] \(function):\(line) | \(message) | \(threadDesc)")
     }
@@ -30,86 +22,73 @@ class ThreadingTests: XCTestCase {
     // MARK: - Tests
     
     func testConcurrentListenerRegistrationAndRemoval() async throws {
-        log("Starting testConcurrentListenerRegistrationAndRemoval")
+        Self.log("Starting testConcurrentListenerRegistrationAndRemoval")
         
         try await UserBuilder.authenticate()
-        log("Authenticated user successfully")
+        Self.log("Authenticated user successfully")
         
-        var listeners: [CourierInboxListener] = []
-        let listenersLock = NSLock()
-        
-        // 1) Add 100 listeners in parallel
-        log("Adding 100 listeners in parallel")
-        try await withThrowingTaskGroup(of: Void.self) { group in
+        // 1) Add 100 listeners in parallel, collecting them from the group results
+        Self.log("Adding 100 listeners in parallel")
+        let listeners = try await withThrowingTaskGroup(of: CourierInboxListener.self) { group in
             for i in 0..<100 {
                 group.addTask {
-                    self.log("Task \(i) - adding inbox listener")
+                    Self.log("Task \(i) - adding inbox listener")
                     let listener = await Courier.shared.addInboxListener()
-                    
-                    self.log("Task \(i) - acquired listener, locking to append")
-                    listenersLock.withLock {
-                        listeners.append(listener)
-                    }
-                    self.log("Task \(i) - appended listener successfully")
+                    Self.log("Task \(i) - acquired listener")
+                    return listener
                 }
             }
-            try await group.waitForAll()
+            var added: [CourierInboxListener] = []
+            for try await listener in group {
+                added.append(listener)
+            }
+            return added
         }
         
-        log("All 100 listeners added. Now removing them in parallel.")
+        Self.log("All 100 listeners added. Now removing them in parallel.")
         
         // 2) Remove all listeners in parallel
         try await withThrowingTaskGroup(of: Void.self) { group in
-            // Safely copy and clear the array under the lock
-            let currentListeners: [CourierInboxListener] = listenersLock.withLock { () -> [CourierInboxListener] in
-                defer {
-                    self.log("Clearing out listeners array under lock")
-                    listeners.removeAll()
-                }
-                self.log("Returning current listeners array for removal")
-                return listeners
-            }
-            
-            for (index, listener) in currentListeners.enumerated() {
+            for (index, listener) in listeners.enumerated() {
                 group.addTask {
-                    self.log("Removing listener #\(index)")
+                    Self.log("Removing listener #\(index)")
                     await Courier.shared.removeInboxListener(listener)
-                    self.log("Listener #\(index) removed")
+                    Self.log("Listener #\(index) removed")
                 }
             }
             
             try await group.waitForAll()
         }
         
-        log("Finished removing all listeners")
+        Self.log("Finished removing all listeners")
         XCTAssertTrue(true)
     }
     
     func testRaceConditionOnMessageFetch() async throws {
-        log("Starting testRaceConditionOnMessageFetch")
+        Self.log("Starting testRaceConditionOnMessageFetch")
         
         try await UserBuilder.authenticate()
-        log("User authenticated, starting parallel fetches")
+        Self.log("User authenticated, starting parallel fetches")
         
         try await withThrowingTaskGroup(of: Void.self) { group in
             for i in 0..<50 {
                 group.addTask {
-                    self.log("Task \(i) - fetching messages")
+                    Self.log("Task \(i) - fetching messages")
                     _ = try? await Courier.shared.client?.inbox.getMessages()
-                    self.log("Task \(i) - fetch complete")
+                    Self.log("Task \(i) - fetch complete")
                 }
             }
             try await group.waitForAll()
         }
         
-        log("All fetches completed")
+        Self.log("All fetches completed")
         XCTAssertTrue(true)
     }
     
     // This entire test is now actor-isolated to `BackgroundActor`,
     // meaning all code inside runs serially on that queue.
     func testSimultaneousSignInSignOut() async throws {
-        log("Starting testSimultaneousSignInSignOut (BackgroundActor)")
+        Self.log("Starting testSimultaneousSignInSignOut (BackgroundActor)")
 
         let userId = "test_user"
         let jwt = try await ExampleServer.generateJwt(
@@ -117,7 +96,7 @@ class ThreadingTests: XCTestCase {
             userId: userId
         )
 
-        log("Generated JWT for user: \(userId)")
+        Self.log("Generated JWT for user: \(userId)")
 
         try await withThrowingTaskGroup(of: Void.self) { group in
             for i in 0..<50 {
@@ -125,29 +104,29 @@ class ThreadingTests: XCTestCase {
                     // Even though we have multiple tasks in this task group,
                     // all of them are still actor-isolated to BackgroundActor,
                     // so they will be run *serially* on the same queue.
-                    self.log("Task \(i) - signing in")
+                    Self.log("Task \(i) - signing in")
                     await Courier.shared.signIn(userId: userId, accessToken: jwt)
 
                     let listener = await Courier.shared.addInboxListener()
-                    self.log("Task \(i) - signing out")
+                    Self.log("Task \(i) - signing out")
                     await Courier.shared.signOut()
 
                     listener.remove()
-                    self.log("Task \(i) - listener removed")
+                    Self.log("Task \(i) - listener removed")
                 }
             }
             try await group.waitForAll()
         }
 
-        log("All sign in/sign out tasks completed")
+        Self.log("All sign in/sign out tasks completed")
         XCTAssertTrue(true)
     }
     
     func testRapidAddRemoveListenerWhileFetching() async throws {
-        log("Starting testRapidAddRemoveListenerWhileFetching")
+        Self.log("Starting testRapidAddRemoveListenerWhileFetching")
         
         try await UserBuilder.authenticate()
-        log("User authenticated, starting parallel add/remove + fetching")
+        Self.log("User authenticated, starting parallel add/remove + fetching")
         
         // We'll do 100 loops, each adding/removing a listener
         // and fetching messages simultaneously
@@ -155,91 +134,96 @@ class ThreadingTests: XCTestCase {
             for i in 0..<100 {
                 // 1) Add + remove a listener
                 group.addTask {
-                    self.log("Task \(i) - adding listener")
+                    Self.log("Task \(i) - adding listener")
                     let listener = await Courier.shared.addInboxListener()
                     
-                    self.log("Task \(i) - removing listener")
+                    Self.log("Task \(i) - removing listener")
                     await Courier.shared.removeInboxListener(listener)
                 }
                 // 2) Fetch messages
                 group.addTask {
-                    self.log("Task \(i) - fetching messages")
+                    Self.log("Task \(i) - fetching messages")
                     _ = try? await Courier.shared.client?.inbox.getMessages()
-                    self.log("Task \(i) - fetch completed")
+                    Self.log("Task \(i) - fetch completed")
                 }
             }
             try await group.waitForAll()
         }
         
-        log("All add/remove + fetch tasks completed")
+        Self.log("All add/remove + fetch tasks completed")
         XCTAssertTrue(true)
     }
     
     func testSimultaneousMessageSendAndListenerTrigger() async throws {
-        log("Starting testSimultaneousMessageSendAndListenerTrigger")
+        Self.log("Starting testSimultaneousMessageSendAndListenerTrigger")
         
         try await UserBuilder.authenticate()
-        log("User authenticated, adding inbox listener")
+        Self.log("User authenticated, adding inbox listener")
         
         let listener = await Courier.shared.addInboxListener(onMessageEvent: { _, _, _, event in
             if event == .added {
-                self.log("Inbox listener triggered - onMessageAdded")
+                Self.log("Inbox listener triggered - onMessageAdded")
             }
         })
         
-        log("Listener added, now sending messages in parallel")
+        Self.log("Listener added, now sending messages in parallel")
         try await withThrowingTaskGroup(of: Void.self) { group in
             for i in 0..<50 {
                 group.addTask {
-                    self.log("Task \(i) - sending test message")
+                    Self.log("Task \(i) - sending test message")
                     let _ = try? await ExampleServer.sendTest(
                         authKey: Env.COURIER_AUTH_KEY,
                         userId: Env.COURIER_USER_ID,
                         channel: "inbox"
                     )
-                    self.log("Task \(i) - message sent")
+                    Self.log("Task \(i) - message sent")
                 }
             }
             try await group.waitForAll()
         }
         
-        log("All message sends complete, removing listener")
+        Self.log("All message sends complete, removing listener")
         await Courier.shared.removeInboxListener(listener)
         
-        log("Listener removed")
+        Self.log("Listener removed")
         XCTAssertTrue(true)
     }
     
     func testSpamMessageFetch() async throws {
-        log("Starting testSpamMessageFetch")
+        Self.log("Starting testSpamMessageFetch")
         
         let userId = "mike"
         let jwt = try await ExampleServer.generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: userId)
         
-        log("Got JWT for \(userId), launching spam tasks")
+        Self.log("Got JWT for \(userId), launching spam tasks")
         
-        async let task1: () = spamGetMessages(userId: userId, jwt: jwt)
-        async let task2: () = spamGetMessages(userId: userId, jwt: jwt)
-        async let task3: () = spamGetMessages(userId: userId, jwt: jwt)
-        async let task4: () = spamGetMessages(userId: userId, jwt: jwt)
-        async let task5: () = spamGetMessages(userId: userId, jwt: jwt)
+        async let task1: () = Self.spamGetMessages(userId: userId, jwt: jwt)
+        async let task2: () = Self.spamGetMessages(userId: userId, jwt: jwt)
+        async let task3: () = Self.spamGetMessages(userId: userId, jwt: jwt)
+        async let task4: () = Self.spamGetMessages(userId: userId, jwt: jwt)
+        async let task5: () = Self.spamGetMessages(userId: userId, jwt: jwt)
         
         _ = try await (task1, task2, task3, task4, task5)
         
-        log("All spam tasks completed")
+        Self.log("All spam tasks completed")
     }
     
-    private func spamGetMessages(userId: String, jwt: String) async throws {
-        log("spamGetMessages -> signing in userId: \(userId)")
+    private static func spamGetMessages(userId: String, jwt: String) async throws {
+        Self.log("spamGetMessages -> signing in userId: \(userId)")
         await Courier.shared.signIn(userId: userId, accessToken: jwt)
         
-        log("spamGetMessages -> fetching messages")
+        Self.log("spamGetMessages -> fetching messages")
         let _ = try await Courier.shared.client?.inbox.getMessages()
         
-        log("spamGetMessages -> signing out userId: \(userId)")
+        Self.log("spamGetMessages -> signing out userId: \(userId)")
         await Courier.shared.signOut()
     }
     
+    /// Counts listener callbacks on the main actor, where they are delivered, so no extra hop is needed.
+    @MainActor final class CallbackCounter {
+        var count = 0
+    }
+
     actor FetchCounter {
         private var count = 0
         
@@ -254,15 +238,15 @@ class ThreadingTests: XCTestCase {
     }
 
     func testListenerSpam() async throws {
-        log("Starting testListenerSpam")
+        Self.log("Starting testListenerSpam")
         
         await Courier.shared.signOut()
-        log("Signed out user to start test cleanly")
+        Self.log("Signed out user to start test cleanly")
         
         let fetchCounter = FetchCounter() // Actor to track fetches safely
         
         // Define a closure for handling feed changes
-        let onFeedChanged: (Int, Int) -> Void = { group, index in
+        let onFeedChanged: @Sendable (Int, Int) -> Void = { group, index in
             Task {
                 let count = await fetchCounter.increment()
                 print("Data fetched for Group #\(group) :: Listener #\(index). (fetches total: \(count))")
@@ -273,8 +257,8 @@ class ThreadingTests: XCTestCase {
         try await withThrowingTaskGroup(of: Void.self) { group in
             for i in 1...5 {
                 group.addTask {
-                    self.log("Registering inbox listeners for group \(i)")
-                    await self.registerInboxListeners(numberOfListeners: 1, bundle: i, onFeedChanged: onFeedChanged)
+                    Self.log("Registering inbox listeners for group \(i)")
+                    await Self.registerInboxListeners(numberOfListeners: 1, bundle: i, onFeedChanged: onFeedChanged)
                 }
             }
             
@@ -282,31 +266,31 @@ class ThreadingTests: XCTestCase {
             try await group.waitForAll()
         }
         
-        log("All inbox listener tasks completed, now authenticating user 'mike'")
+        Self.log("All inbox listener tasks completed, now authenticating user 'mike'")
         try await UserBuilder.authenticate(userId: "mike")
         
-        log("Waiting until at least 5 feed changes have occurred")
+        Self.log("Waiting until at least 5 feed changes have occurred")
         
         while await fetchCounter.getCount() < 5 {
             try await Task.sleep(nanoseconds: 1_000_000) // Prevents CPU spin
         }
         
-        log("We have at least 5 feed changes, removing all listeners now.")
+        Self.log("We have at least 5 feed changes, removing all listeners now.")
         await Courier.shared.removeAllInboxListeners()
         
-        log("testListenerSpam completed")
+        Self.log("testListenerSpam completed")
     }
 
 
-    private func registerInboxListeners(
+    private static func registerInboxListeners(
         numberOfListeners: Int = 10,
         bundle: Int,
-        onFeedChanged: @escaping (Int, Int) -> Void
+        onFeedChanged: @escaping @Sendable (Int, Int) -> Void
     ) async {
         await withTaskGroup(of: Void.self) { group in
             for i in 1...numberOfListeners {
                 group.addTask {
-                    self.log("Creating listener #\(i) in bundle #\(bundle)")
+                    Self.log("Creating listener #\(i) in bundle #\(bundle)")
                     await Courier.shared.addInboxListener(onMessagesChanged: { _, _, _ in
                         onFeedChanged(bundle, i)
                     })
@@ -316,10 +300,10 @@ class ThreadingTests: XCTestCase {
     }
     
     func testAddRemoveListenersWhileSendingMessages() async throws {
-        log("Starting testAddRemoveListenersWhileSendingMessages")
+        Self.log("Starting testAddRemoveListenersWhileSendingMessages")
         
         try await UserBuilder.authenticate()
-        log("User authenticated")
+        Self.log("User authenticated")
 
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<50 {
@@ -339,12 +323,12 @@ class ThreadingTests: XCTestCase {
             try await group.waitForAll()
         }
         
-        log("All listener operations and message sends completed")
+        Self.log("All listener operations and message sends completed")
         XCTAssertTrue(true)
     }
     
     func testRapidSignInSignOutDifferentUsers() async throws {
-        log("Starting testRapidSignInSignOutDifferentUsers")
+        Self.log("Starting testRapidSignInSignOutDifferentUsers")
 
         let userIds = (0..<10).map { "user_\($0)" }
         let jwts = try await withThrowingTaskGroup(of: (String, String).self) { group in
@@ -369,19 +353,19 @@ class ThreadingTests: XCTestCase {
             try await group.waitForAll()
         }
 
-        log("All sign-in/sign-out operations completed")
+        Self.log("All sign-in/sign-out operations completed")
         XCTAssertTrue(true)
     }
 
     func testListenerCallbackUnderLoad() async throws {
-        log("Starting testListenerCallbackUnderLoad")
+        Self.log("Starting testListenerCallbackUnderLoad")
 
         try await UserBuilder.authenticate()
-        var callbackCount = 0
+        let callbackCounter = CallbackCounter()
 
         let listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
             if event == .added {
-                callbackCount += 1
+                callbackCounter.count += 1
             }
         })
 
@@ -400,12 +384,13 @@ class ThreadingTests: XCTestCase {
 
         await Courier.shared.removeInboxListener(listener)
 
+        let callbackCount = await callbackCounter.count
         XCTAssertGreaterThan(callbackCount, 0, "Listener should have been triggered at least once")
-        log("Listener callback stress test completed")
+        Self.log("Listener callback stress test completed")
     }
 
     func testChaosMonkey() async throws {
-        log("Starting testChaosMonkey")
+        Self.log("Starting testChaosMonkey")
 
         let jwt = try! await ExampleServer.generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: "chaos_user")
 
@@ -437,7 +422,7 @@ class ThreadingTests: XCTestCase {
             try await group.waitForAll()
         }
 
-        log("Chaos test completed successfully")
+        Self.log("Chaos test completed successfully")
         XCTAssertTrue(true)
         
         await Courier.shared.removeAllInboxListeners()

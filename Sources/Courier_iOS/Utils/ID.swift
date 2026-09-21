@@ -28,7 +28,7 @@ public struct ID {
         return Bundle.main.bundleIdentifier
     }
     
-    public static var device: String? {
+    @MainActor public static var device: String? {
         return UIDevice.current.identifierForVendor?.uuidString
     }
     

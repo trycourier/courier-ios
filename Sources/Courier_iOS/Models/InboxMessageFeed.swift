@@ -5,7 +5,7 @@
 //  Created by https://github.com/mikemilla on 10/8/24.
 //
 
-public enum InboxMessageFeed {
+public enum InboxMessageFeed: Sendable {
     case feed
     case archive
 }

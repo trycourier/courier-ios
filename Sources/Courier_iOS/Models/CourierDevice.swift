@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public struct CourierDevice: Codable {
+public struct CourierDevice: Codable, Sendable {
 
     public let appId: String?
     public let adId: String?
@@ -17,13 +17,14 @@ public struct CourierDevice: Codable {
     public let manufacturer: String?
     public let model: String?
 
+    /// Builds a device from explicit values. Safe to call from any context.
     public init(
         appId: String? = ID.bundle,
         adId: String? = ID.advertising,
-        deviceId: String? = ID.device,
+        deviceId: String?,
         platform: String? = "ios",
         manufacturer: String? = "apple",
-        model: String? = UIDevice.current.localizedModel
+        model: String?
     ) {
         self.appId = appId
         self.adId = adId
@@ -31,6 +32,23 @@ public struct CourierDevice: Codable {
         self.platform = platform
         self.manufacturer = manufacturer
         self.model = model
+    }
+
+    /// Builds a device describing the current hardware. Reads UIDevice, so it runs on the main actor.
+    @MainActor public init(
+        appId: String? = ID.bundle,
+        adId: String? = ID.advertising,
+        platform: String? = "ios",
+        manufacturer: String? = "apple"
+    ) {
+        self.init(
+            appId: appId,
+            adId: adId,
+            deviceId: ID.device,
+            platform: platform,
+            manufacturer: manufacturer,
+            model: UIDevice.current.localizedModel
+        )
     }
 
     enum CodingKeys: String, CodingKey {

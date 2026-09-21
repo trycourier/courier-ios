@@ -624,13 +624,11 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     }
     
     private func updateTopic(topicId: String, newTopic: CourierUserPreferencesTopic) {
-        DispatchQueue.main.async {
-            for (sectionIndex, section) in self.preferences.enumerated() {
-                if let topicIndex = section.topics.firstIndex(where: { $0.topicId == topicId }) {
-                    self.preferences[sectionIndex].topics[topicIndex] = newTopic
-                    self.tableView.reloadRows(at: [IndexPath(row: topicIndex, section: sectionIndex)], with: .fade)
-                    return
-                }
+        for (sectionIndex, section) in self.preferences.enumerated() {
+            if let topicIndex = section.topics.firstIndex(where: { $0.topicId == topicId }) {
+                self.preferences[sectionIndex].topics[topicIndex] = newTopic
+                self.tableView.reloadRows(at: [IndexPath(row: topicIndex, section: sectionIndex)], with: .fade)
+                return
             }
         }
     }
@@ -639,9 +637,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
      Clear the listeners
      */
     deinit {
-        Task { [self] in
-            await self.authListener?.remove()
-        }
+        authListener?.remove()
     }
 
     // MARK: Theme update

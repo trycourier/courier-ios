@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class CourierTrackingIds: Codable {
+public final class CourierTrackingIds: Codable, Sendable {
     public let archiveTrackingId: String?
     public let openTrackingId: String?
     public let clickTrackingId: String?

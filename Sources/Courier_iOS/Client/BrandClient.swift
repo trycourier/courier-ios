@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class BrandClient: CourierApiClient {
+public class BrandClient: CourierApiClient, @unchecked Sendable {
     
     private let options: CourierClient.Options
         

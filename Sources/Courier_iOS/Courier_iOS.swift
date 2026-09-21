@@ -22,12 +22,21 @@ Y8,           i8'    ,8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  ,8'    8I
 
 import UIKit
 
-@objc public class Courier: NSObject {
+// State on this class is isolated to CourierActor, apart from the lock-guarded agent below, so
+// handing the shared instance across actors is safe.
+@objc public class Courier: NSObject, @unchecked Sendable {
     
     // MARK: Versioning
     
-    internal static let version = "5.8.6"
-    @objc public static var agent = CourierAgent.nativeIOS(version)
+    internal static let version = "5.9.0"
+
+    // Wrapper SDKs (React Native, Flutter) set the agent at startup and networking code reads it
+    // from nonisolated contexts, so it sits behind a lock rather than on an actor.
+    private static let agentStore = LockedValue(CourierAgent.nativeIOS(version))
+    @objc public static var agent: CourierAgent {
+        get { agentStore.value }
+        set { agentStore.value = newValue }
+    }
     
     // MARK: Singleton
     
@@ -80,6 +89,10 @@ import UIKit
      * This simplifies UI testing by providing
      * used fonts and colors in accessibility identifiers
      */
-    public static var isUITestsActive: Bool = false
+    private static let uiTestsActiveStore = LockedValue(false)
+    public static var isUITestsActive: Bool {
+        get { uiTestsActiveStore.value }
+        set { uiTestsActiveStore.value = newValue }
+    }
     
 }

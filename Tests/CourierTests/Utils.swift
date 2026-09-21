@@ -12,6 +12,7 @@ class Utils {
     
     actor MessageIdStore {
         private var id: String?
+        private var listener: CourierInboxListener?
         
         func set(_ newValue: String?) {
             id = newValue
@@ -20,30 +21,40 @@ class Utils {
         func get() -> String? {
             id
         }
+
+        func setListener(_ newValue: CourierInboxListener) {
+            listener = newValue
+        }
+
+        func getListener() -> CourierInboxListener? {
+            listener
+        }
     }
 
     static func sendInboxMessageWithConfirmation(to userId: String, tenantId: String? = nil) async throws -> (InboxMessage, CourierInboxListener) {
         let messageIdStore = MessageIdStore()
-        var listener: CourierInboxListener? = nil
 
         return try await withCheckedThrowingContinuation { continuation in
             Task {
                 
                 // Set up our listener first so we don't miss the message
-                listener = await Courier.shared.addInboxListener(
+                let listener = await Courier.shared.addInboxListener(
                     onMessageEvent: { message, index, feed, event in
                         // The closure might be called on a different concurrency context
                         // so we hop into a Task to safely interact with the actor
                         Task {
                             guard let currentId = await messageIdStore.get() else { return }
-                            if event == .added, message.messageId == currentId {
+                            if event == .added, message.messageId == currentId, let listener = await messageIdStore.getListener() {
                                 // Once we match, clear out the ID and resume
                                 await messageIdStore.set(nil)
-                                continuation.resume(returning: (message, listener!))
+                                continuation.resume(returning: (message, listener))
                             }
                         }
                     }
                 )
+
+                // Make the listener available to the callback above
+                await messageIdStore.setListener(listener)
 
                 // Now send a test message that eventually triggers the listener
                 let newMessageId = try await ExampleServer.sendTest(

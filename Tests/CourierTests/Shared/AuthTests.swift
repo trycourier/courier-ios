@@ -80,7 +80,7 @@ class AuthTests: XCTestCase {
     
     func testMultipleListenerRemoval() async throws {
 
-        await registerAuthListeners()
+        await Self.registerAuthListeners()
 
         await Courier.shared.removeAllAuthenticationListeners()
 
@@ -88,11 +88,11 @@ class AuthTests: XCTestCase {
     
     func testListenerSpam() async throws {
         
-        async let task1: () = registerAuthListeners()
-        async let task2: () = registerAuthListeners()
-        async let task3: () = registerAuthListeners()
-        async let task4: () = registerAuthListeners()
-        async let task5: () = registerAuthListeners()
+        async let task1: () = Self.registerAuthListeners()
+        async let task2: () = Self.registerAuthListeners()
+        async let task3: () = Self.registerAuthListeners()
+        async let task4: () = Self.registerAuthListeners()
+        async let task5: () = Self.registerAuthListeners()
         
         let _ = await (task1, task2, task3, task4, task5)
         
@@ -100,7 +100,7 @@ class AuthTests: XCTestCase {
         
     }
     
-    private func registerAuthListeners(_ numberOfListeners: Int = 10) async {
+    private static func registerAuthListeners(_ numberOfListeners: Int = 10) async {
         for _ in 1...numberOfListeners {
             await Courier.shared.addAuthenticationListener { _ in }
         }

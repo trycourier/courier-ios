@@ -7,10 +7,10 @@
 
 import Foundation
 
-@objc public class CourierAgent: NSObject {
+@objc public final class CourierAgent: NSObject, @unchecked Sendable {
     
-    private var agentType: String
-    private var version: String
+    private let agentType: String
+    private let version: String
     
     private init(agentType: String, version: String) {
         self.agentType = agentType

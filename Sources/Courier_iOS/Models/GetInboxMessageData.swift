@@ -7,6 +7,6 @@
 
 import Foundation
 
-public struct GetInboxMessageData: Codable {
+public struct GetInboxMessageData: Codable, Sendable {
     public var message: InboxMessage?
 }

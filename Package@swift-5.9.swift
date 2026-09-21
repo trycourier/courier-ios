@@ -1,8 +1,5 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
-//
-// Toolchains older than 6.0 (Xcode 15) read Package@swift-5.9.swift instead, which builds the
-// same sources in the Swift 5 language mode.
 
 import PackageDescription
 
@@ -28,6 +25,5 @@ let package = Package(
             name: "CourierTests",
             dependencies: ["Courier_iOS"]
         ),
-    ],
-    swiftLanguageModes: [.v6]
+    ]
 )

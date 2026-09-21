@@ -7,7 +7,8 @@
 
 import UIKit
 
-@objc public class CourierInboxTheme: NSObject {
+// Every style is immutable; `brand` is only assigned from the main actor while the theme is in use.
+@objc public class CourierInboxTheme: NSObject, @unchecked Sendable {
     
     // MARK: Styling
     

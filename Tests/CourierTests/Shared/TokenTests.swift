@@ -22,12 +22,12 @@ class TokenTests: XCTestCase {
         return tokenData
     }
     
-    func testDefaultDeviceToken() {
+    @MainActor func testDefaultDeviceToken() {
         let device = CourierDevice()
         XCTAssertTrue(device.appId == "com.apple.dt.xctest.tool")
     }
     
-    func testCustomDeviceToken() {
+    @MainActor func testCustomDeviceToken() {
         let device = CourierDevice(appId: "Example")
         XCTAssertTrue(device.appId == "Example")
     }
@@ -112,10 +112,12 @@ class TokenTests: XCTestCase {
         
         try await UserBuilder.authenticate()
         
+        let token = self.token
+
         let tokens = try await withThrowingTaskGroup(of: String.self) { group in
             
             for _ in 1...25 {
-                group.addTask { [self] in
+                group.addTask {
                     try await Courier.shared.setAPNSToken(token)
                     try await Courier.shared.setToken(for: .firebaseFcm, token: token.string)
                     return ""
