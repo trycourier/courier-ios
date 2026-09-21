@@ -38,7 +38,10 @@ jobs:
             | python3 -c "import sys,json; vs=[v['name'] for v in json.load(sys.stdin)['versions']]; print('\n'.join(vs))" 2>/dev/null || echo "")
 
           if echo "$PUBLISHED" | grep -qx "$VERSION"; then
-            echo "Version $VERSION already published on CocoaPods. Skipping deploy."
+            # Expected for pushes that ship no source changes (docs, workflows). If this fires after
+            # a change under Sources/, the version was not bumped and this release publishes nothing
+            # -- the CI "Version guard" job is meant to block that before merge.
+            echo "::warning::Version $VERSION is already published on CocoaPods; nothing to deploy. If this push changed Sources/, the version needed a bump and those changes are NOT released."
             echo "deployed=false" >> "$GITHUB_OUTPUT"
           else
             echo "Version $VERSION not yet published. Deploying."

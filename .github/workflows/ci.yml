@@ -6,6 +6,80 @@ on:
   workflow_dispatch:
 
 jobs:
+  # CocoaPods trunk versions are immutable, so a PR that ships source changes without bumping the
+  # version cannot be published after merge -- Deploy would find the version already on trunk and
+  # silently skip. Catch that here, before the merge, rather than discovering it in a release.
+  version:
+    name: Version guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check version is releasable
+        run: |
+          set -euo pipefail
+
+          SWIFT_VERSION=$(grep 'internal static let version =' Sources/Courier_iOS/Courier_iOS.swift | awk -F '"' '{print $2}')
+          PODSPEC_VERSION=$(grep "s\.version\s*=" Courier_iOS.podspec | head -1 | awk -F "'" '{print $2}')
+
+          if [ "$SWIFT_VERSION" != "$PODSPEC_VERSION" ]; then
+            echo "::error::Version mismatch! Courier_iOS.swift ($SWIFT_VERSION) != Courier_iOS.podspec ($PODSPEC_VERSION)"
+            exit 1
+          fi
+          echo "Declared version: $PODSPEC_VERSION"
+
+          # Only shippable changes require a bump; docs and workflow edits do not.
+          BASE_REF="${{ github.base_ref }}"
+          if [ -n "$BASE_REF" ]; then
+            git fetch origin "$BASE_REF" -q
+            CHANGED=$(git diff --name-only "origin/$BASE_REF...HEAD" -- Sources/ Courier_iOS.podspec)
+            if [ -z "$CHANGED" ]; then
+              echo "No changes under Sources/ or Courier_iOS.podspec; bump not required."
+              exit 0
+            fi
+            echo "Shippable changes detected:"
+            echo "$CHANGED"
+          fi
+
+          PUBLISHED=$(curl -sf "https://trunk.cocoapods.org/api/v1/pods/Courier_iOS" \
+            | python3 -c "import sys,json; print('\n'.join(v['name'] for v in json.load(sys.stdin)['versions']))")
+
+          VERSION="$PODSPEC_VERSION" PUBLISHED="$PUBLISHED" python3 <<'PY'
+          import os, sys
+
+          def parse(v):
+              try:
+                  return tuple(int(p) for p in v.split("."))
+              except ValueError:
+                  return None
+
+          version = os.environ["VERSION"]
+          published = [p for p in os.environ["PUBLISHED"].split() if p]
+
+          if version in published:
+              print(f"::error::Courier_iOS {version} is already published to CocoaPods trunk. "
+                    "Trunk versions are immutable, so Deploy would skip this release silently. "
+                    "Bump the version in Courier_iOS.podspec and Sources/Courier_iOS/Courier_iOS.swift.")
+              sys.exit(1)
+
+          comparable = [p for p in published if parse(p)]
+          if comparable:
+              latest = max(comparable, key=parse)
+              if parse(version) is None:
+                  print(f"::error::Could not parse version '{version}' as x.y.z.")
+                  sys.exit(1)
+              if parse(version) <= parse(latest):
+                  print(f"::error::Courier_iOS {version} is not ahead of the latest published "
+                        f"version ({latest}). Versions must increase.")
+                  sys.exit(1)
+              print(f"OK: {version} is unpublished and ahead of {latest}.")
+          else:
+              print(f"OK: {version} is unpublished.")
+          PY
+
   test:
     name: Test
     runs-on: macos-15
