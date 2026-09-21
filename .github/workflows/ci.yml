@@ -118,14 +118,26 @@ jobs:
           open("Tests/CourierTests/Env.swift", "w").write(src)
           PY
 
+      # Skip the live suites rather than allow-listing the unit ones. An allow-list silently drops
+      # any newly added unit suite from the required job -- the test looks green because it never
+      # ran. Inverting it means a new suite runs by default, and forgetting to classify a new live
+      # suite fails loudly here instead of hiding a unit test forever.
       - name: Build and run unit tests
         run: |
           xcodebuild -scheme Courier_iOS \
             -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.5" \
             -test-timeouts-enabled YES \
             -default-test-execution-time-allowance 10 \
-            -only-testing:CourierTests/InboxModuleUnitTests \
-            -only-testing:CourierTests/TokenModuleUnitTests \
+            -skip-testing:CourierTests/AuthTests \
+            -skip-testing:CourierTests/BrandClientTests \
+            -skip-testing:CourierTests/CoreClientTests \
+            -skip-testing:CourierTests/InboxClientTests \
+            -skip-testing:CourierTests/InboxTests \
+            -skip-testing:CourierTests/PreferenceClientTests \
+            -skip-testing:CourierTests/ThreadingTests \
+            -skip-testing:CourierTests/TokenClientTests \
+            -skip-testing:CourierTests/TokenTests \
+            -skip-testing:CourierTests/TrackingClientTests \
             test
 
   live-integration-tests:

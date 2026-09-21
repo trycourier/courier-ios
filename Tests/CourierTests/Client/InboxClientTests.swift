@@ -176,20 +176,22 @@ class InboxClientTests: XCTestCase {
         let client = try await ClientBuilder.build(userId: userId)
         let socket = client.inbox.socket
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Task {
-                try await socket.connect(
-                    receivedMessage: { message in
-                        print("socket.receivedMessage")
-                        print(message)
-                        continuation.resume()
-                    },
-                    receivedMessageEvent: { event in
-                        print(event)
-                    }
-                )
-                try await socket.sendSubscribe()
-                try await Self.sendMessage(userId: userId)
+        try await Utils.withTimeout(seconds: 60, description: "a content message on the inbox socket") {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Task {
+                    try await socket.connect(
+                        receivedMessage: { message in
+                            print("socket.receivedMessage")
+                            print(message)
+                            continuation.resume()
+                        },
+                        receivedMessageEvent: { event in
+                            print(event)
+                        }
+                    )
+                    try await socket.sendSubscribe()
+                    try await Self.sendMessage(userId: userId)
+                }
             }
         }
 
@@ -201,21 +203,23 @@ class InboxClientTests: XCTestCase {
         let client = try await ClientBuilder.build(userId: userId)
         let socket = client.inbox.socket
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Task {
-                try await socket.connect(
-                    receivedMessage: { message in
-                        print("socket.receivedMessage")
-                        print(message)
-                        continuation.resume()
-                    },
-                    receivedMessageEvent: { event in
-                        print(event)
-                    }
-                )
-                try await socket.sendSubscribe()
-                let test = try await Self.sendMessageTemplate(userId: userId)
-                print(test)
+        try await Utils.withTimeout(seconds: 60, description: "a template message on the inbox socket") {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Task {
+                    try await socket.connect(
+                        receivedMessage: { message in
+                            print("socket.receivedMessage")
+                            print(message)
+                            continuation.resume()
+                        },
+                        receivedMessageEvent: { event in
+                            print(event)
+                        }
+                    )
+                    try await socket.sendSubscribe()
+                    let test = try await Self.sendMessageTemplate(userId: userId)
+                    print(test)
+                }
             }
         }
 
@@ -301,34 +305,36 @@ class InboxClientTests: XCTestCase {
 
         let counter = SocketMessageCounter(maxCount: [socket1, socket2].count)
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Task {
-                do {
-                    // Socket 1 connection
-                    try await socket1.connect(receivedMessage: { _ in
-                        Task {
-                            if await counter.increment() {
-                                continuation.resume()
+        try await Utils.withTimeout(seconds: 60, description: "both sockets to receive the message") {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Task {
+                    do {
+                        // Socket 1 connection
+                        try await socket1.connect(receivedMessage: { _ in
+                            Task {
+                                if await counter.increment() {
+                                    continuation.resume()
+                                }
                             }
-                        }
-                    })
-                    try await socket1.sendSubscribe()
+                        })
+                        try await socket1.sendSubscribe()
 
-                    // Socket 2 connection
-                    try await socket2.connect(receivedMessage: { _ in
-                        Task {
-                            if await counter.increment() {
-                                continuation.resume()
+                        // Socket 2 connection
+                        try await socket2.connect(receivedMessage: { _ in
+                            Task {
+                                if await counter.increment() {
+                                    continuation.resume()
+                                }
                             }
-                        }
-                    })
-                    try await socket2.sendSubscribe()
+                        })
+                        try await socket2.sendSubscribe()
 
-                    let messageId = try await Self.sendMessage(userId: client1.options.userId)
-                    print("Sent message with ID: \(messageId)")
-                    
-                } catch {
-                    continuation.resume(throwing: error)
+                        let messageId = try await Self.sendMessage(userId: client1.options.userId)
+                        print("Sent message with ID: \(messageId)")
+
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
                 }
             }
         }
@@ -352,35 +358,37 @@ class InboxClientTests: XCTestCase {
 
         let counter = SocketMessageCounter(maxCount: [socket1, socket2].count)
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Task {
-                do {
-                    // Socket 1 connection
-                    try await socket1.connect(receivedMessage: { _ in
-                        Task {
-                            if await counter.increment() {
-                                continuation.resume()
+        try await Utils.withTimeout(seconds: 60, description: "both users' sockets to receive their message") {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Task {
+                    do {
+                        // Socket 1 connection
+                        try await socket1.connect(receivedMessage: { _ in
+                            Task {
+                                if await counter.increment() {
+                                    continuation.resume()
+                                }
                             }
-                        }
-                    })
-                    try await socket1.sendSubscribe()
+                        })
+                        try await socket1.sendSubscribe()
 
-                    // Socket 2 connection
-                    try await socket2.connect(receivedMessage: { _ in
-                        Task {
-                            if await counter.increment() {
-                                continuation.resume()
+                        // Socket 2 connection
+                        try await socket2.connect(receivedMessage: { _ in
+                            Task {
+                                if await counter.increment() {
+                                    continuation.resume()
+                                }
                             }
-                        }
-                    })
-                    try await socket2.sendSubscribe()
+                        })
+                        try await socket2.sendSubscribe()
 
-                    // Send a message to each user
-                    try await Self.sendMessage(userId: userId1)
-                    try await Self.sendMessage(userId: userId2)
-                    
-                } catch {
-                    continuation.resume(throwing: error)
+                        // Send a message to each user
+                        try await Self.sendMessage(userId: userId1)
+                        try await Self.sendMessage(userId: userId2)
+
+                    } catch {
+                        continuation.resume(throwing: error)
+                    }
                 }
             }
         }

@@ -168,11 +168,68 @@ class ExampleServer {
             }
             
             task.resume()
-            
+
         })
-        
+
     }
-    
+
+    // MARK: - Read-back
+
+    /// A push token as the Courier API has stored it.
+    ///
+    /// The SDK has no read path for tokens, so tests that want to prove a write actually landed
+    /// have to ask the API directly. Without this, `putUserToken` tests only assert "did not
+    /// throw", which passes just as happily when nothing was persisted.
+    struct StoredToken: Codable {
+
+        let token: String
+        let providerKey: String
+        let device: StoredDevice?
+
+        enum CodingKeys: String, CodingKey {
+            case token
+            case providerKey = "provider_key"
+            case device
+        }
+
+    }
+
+    struct StoredDevice: Codable {
+
+        let appId: String?
+        let adId: String?
+        let deviceId: String?
+        let platform: String?
+        let manufacturer: String?
+        let model: String?
+
+        enum CodingKeys: String, CodingKey {
+            case appId = "app_id"
+            case adId = "ad_id"
+            case deviceId = "device_id"
+            case platform, manufacturer, model
+        }
+
+    }
+
+    private struct TokenListResponse: Codable {
+        let tokens: [StoredToken]
+    }
+
+    static func getUserTokens(authKey: String, userId: String) async throws -> [StoredToken] {
+
+        let encodedUserId = userId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? userId
+        let url = URL(string: "https://api.courier.com/users/\(encodedUserId)/tokens")!
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("Bearer \(authKey)", forHTTPHeaderField: "Authorization")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+        return try JSONDecoder().decode(TokenListResponse.self, from: data).tokens
+
+    }
+
 }
 
 extension Dictionary {
