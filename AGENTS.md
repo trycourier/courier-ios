@@ -28,8 +28,9 @@ CocoaPods or the wrappers. CI's `Version guard` job blocks that — see the `rel
 
 ## Swift 6
 
-The package builds in the Swift 6 language mode (`Package.swift`), with
-`Package@swift-5.9.swift` keeping older toolchains on Swift 5. Internal state is isolated
+The package builds in the Swift 6 language mode and requires Xcode 16 or newer; CocoaPods
+consumers can still build the sources in Swift 5 mode (`swift_versions` in the podspec).
+Internal state is isolated
 to `@CourierActor`; public callbacks are `@MainActor` so consumers can touch UIKit
 directly. Keep that split — putting `@CourierActor` on public API would force consumer
 code onto the SDK's private executor.
