@@ -12,8 +12,12 @@ import XCTest
 
 class TokenTests: XCTestCase {
     
+    // XCTest builds a new instance per test method, so this is a fresh random token for every
+    // test -- which is why they accumulated: five of the tests below register it against the
+    // workspace's live push providers and nothing removed it. Tokens are real objects on a real
+    // user, and stale ones make every later push to that user fail with BadDeviceToken.
     private let token = TokenTests.generateAPNSToken()
-    
+
     static func generateAPNSToken() -> Data {
         var tokenData = Data(count: 32)
         _ = tokenData.withUnsafeMutableBytes { bytes in
@@ -21,7 +25,18 @@ class TokenTests: XCTestCase {
         }
         return tokenData
     }
-    
+
+    override func tearDown() async throws {
+
+        // Best effort: a failed cleanup must not fail an otherwise passing test, but leaving the
+        // token behind is what caused the pile-up in the first place.
+        let client = try? await ClientBuilder.build()
+        try? await client?.tokens.deleteUserToken(token: token.string)
+
+        try await super.tearDown()
+
+    }
+
     @MainActor func testDefaultDeviceToken() {
         let device = CourierDevice()
         XCTAssertTrue(device.appId == "com.apple.dt.xctest.tool")
