@@ -141,6 +141,12 @@ jobs:
           git checkout -b "bump-courier-ios-$VERSION"
           # Flutter podspec uses single quotes: s.dependency 'Courier_iOS', '5.7.14'
           sed -i "s/s.dependency 'Courier_iOS', '[^']*'/s.dependency 'Courier_iOS', '$VERSION'/" ios/courier_flutter.podspec
+          # Swift Package Manager pins the same version: .package(url: ".../courier-ios", exact: "5.9.0")
+          if [ -f ios/courier_flutter/Package.swift ]; then
+            sed -i 's/\(courier-ios", exact: "\)[^"]*"/\1'"$VERSION"'"/' ios/courier_flutter/Package.swift
+          fi
+          # The example's notification service extension links Courier_iOS through SPM too.
+          perl -0pi -e 's/(repositoryURL = "https:\/\/github\.com\/trycourier\/courier-ios";\s*requirement = \{[^}]*minimumVersion = )[0-9.]+;/${1}'"$VERSION"';/' example/ios/Runner.xcodeproj/project.pbxproj
 
           git add -A
           git commit -m "Bump Courier_iOS to $VERSION"
@@ -173,8 +179,13 @@ jobs:
           git fetch origin main
           git checkout main
 
-          # Double-quoted podspec: s.dependency "Courier_iOS", "x.y.z"
-          CURRENT=$(grep -oP 'Courier_iOS",\s*"\K[^"]+' courier-react-native.podspec | head -1)
+          # The podspec pins `courier_ios_version = "x.y.z"` (used by spm_dependency and the
+          # CocoaPods fallback). Older releases used s.dependency "Courier_iOS", "x.y.z".
+          # `|| true`: under pipefail a grep that matches nothing would end the step.
+          CURRENT=$(grep -oP 'courier_ios_version = "\K[^"]+' courier-react-native.podspec | head -1 || true)
+          if [ -z "$CURRENT" ]; then
+            CURRENT=$(grep -oP 'Courier_iOS",\s*"\K[^"]+' courier-react-native.podspec | head -1 || true)
+          fi
           if [ -z "$CURRENT" ]; then
             echo "::error::Could not read Courier_iOS version from courier-react-native.podspec"
             exit 1
@@ -189,7 +200,7 @@ jobs:
           git config --global user.email "courier-ios-automation[bot]@users.noreply.github.com"
 
           git checkout -b "bump-courier-ios-$VERSION"
-          # React Native podspec uses double quotes: s.dependency "Courier_iOS", "5.7.15"
+          sed -i 's/courier_ios_version = "[^"]*"/courier_ios_version = "'"$VERSION"'"/' courier-react-native.podspec
           sed -i 's/s.dependency "Courier_iOS", "[^"]*"/s.dependency "Courier_iOS", "'"$VERSION"'"/' courier-react-native.podspec
 
           git add -A
