@@ -218,3 +218,132 @@ jobs:
           else
             echo "PR already open for bump-courier-ios-$VERSION; branch updated."
           fi
+
+  # Runs after every successful deploy, so TestFlight always has the sample app built against
+  # what just shipped. The Example builds Courier_iOS from this checkout.
+  # Skips with a warning until the App Store Connect API key secrets exist.
+  testflight:
+    name: Upload sample app to TestFlight
+    runs-on: macos-15
+    needs: deploy
+    env:
+      # App Store uploads require the iOS 26 SDK
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+    steps:
+      - name: Check for App Store Connect key
+        id: keys
+        run: |
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ]; then
+            echo "::warning::APP_STORE_CONNECT_KEY_ID / APP_STORE_CONNECT_ISSUER_ID / APP_STORE_CONNECT_PRIVATE_KEY are not set; skipping the TestFlight upload."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.keys.outputs.ready == 'true'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # the build number is the commit count
+
+      - name: Generate Env.swift from secrets
+        if: steps.keys.outputs.ready == 'true'
+        env:
+          COURIER_USER_ID: ${{ secrets.COURIER_USER_ID }}
+          COURIER_AUTH_KEY: ${{ secrets.COURIER_AUTH_KEY }}
+          COURIER_CLIENT_KEY: ${{ secrets.COURIER_CLIENT_KEY }}
+          COURIER_BRAND_ID: ${{ secrets.COURIER_BRAND_ID }}
+          COURIER_PREFERENCE_TOPIC_ID: ${{ secrets.COURIER_PREFERENCE_TOPIC_ID }}
+          COURIER_MESSAGE_TEMPLATE_ID: ${{ secrets.COURIER_MESSAGE_TEMPLATE_ID }}
+        run: |
+          python3 << 'PY'
+          import os
+          def q(k):
+              return os.environ.get(k, "").replace("\\", "\\\\").replace('"', '\\"')
+          src = f'''import Foundation
+
+          class Env {{
+
+              static let COURIER_USER_ID = "{q('COURIER_USER_ID')}"
+              static let COURIER_AUTH_KEY = "{q('COURIER_AUTH_KEY')}"
+              static let COURIER_CLIENT_KEY = "{q('COURIER_CLIENT_KEY')}"
+              static let COURIER_BRAND_ID = "{q('COURIER_BRAND_ID')}"
+              static let COURIER_PREFERENCE_TOPIC_ID = "{q('COURIER_PREFERENCE_TOPIC_ID')}"
+              static let COURIER_MESSAGE_TEMPLATE_ID = "{q('COURIER_MESSAGE_TEMPLATE_ID')}"
+
+          }}
+          '''
+          open("Example/Example/Env.swift", "w").write(src)
+          PY
+
+      - name: Write App Store Connect key
+        if: steps.keys.outputs.ready == 'true'
+        env:
+          ASC_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          KEY_PATH="$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8"
+          printf '%s\n' "$ASC_PRIVATE_KEY" > "$KEY_PATH"
+          chmod 0600 "$KEY_PATH"
+          echo "ASC_KEY_PATH=$KEY_PATH" >> "$GITHUB_ENV"
+
+      # TestFlight rejects a build number it has already seen. The commit count on main only grows.
+      # The version shown in TestFlight is the Courier_iOS version the build contains.
+      - name: Set version and build number
+        if: steps.keys.outputs.ready == 'true'
+        working-directory: Example
+        run: |
+          BUILD=$(git rev-list --count HEAD)
+          agvtool new-version -all "$BUILD" > /dev/null
+          agvtool new-marketing-version "${{ needs.deploy.outputs.version }}" > /dev/null
+          echo "Sample app ${{ needs.deploy.outputs.version }} ($BUILD)"
+
+      # Automatic signing with the API key: Xcode creates or reuses the cloud-managed
+      # distribution certificate and the profiles for the app and its notification extension.
+      - name: Archive
+        if: steps.keys.outputs.ready == 'true'
+        working-directory: Example
+        run: |
+          xcodebuild archive \
+            -project Example.xcodeproj \
+            -scheme Example \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/Example.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            -quiet
+
+      - name: Upload to TestFlight
+        if: steps.keys.outputs.ready == 'true'
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store-connect</string>
+              <key>destination</key>
+              <string>upload</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>teamID</key>
+              <string>83BJVWGX4Q</string>
+              <key>manageAppVersionAndBuildNumber</key>
+              <false/>
+          </dict>
+          </plist>
+          PLIST
+
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/Example.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$ASC_KEY_PATH" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"

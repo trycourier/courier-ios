@@ -69,6 +69,11 @@ If `Version guard` fails, the fix is always to bump — never to work around it.
    `pod trunk push`es the podspec.
 4. `bump-downstream` opens PRs against **courier-flutter** and **courier-react-native**
    rewriting their podspec pin to the new version.
+5. `testflight` archives the Example against this checkout and uploads it to TestFlight,
+   with the Courier_iOS version as its version and the commit count as its build number.
+   It signs with the App Store Connect API key in `APP_STORE_CONNECT_KEY_ID`,
+   `APP_STORE_CONNECT_ISSUER_ID` and `APP_STORE_CONNECT_PRIVATE_KEY`, and skips with a
+   warning while those are unset. A failed trunk push skips it too.
 
 Those two PRs are the moment the wrappers first compile against the new code. They pin
 `Courier_iOS` **exactly**, so they never float — give each one a real CI run rather than
