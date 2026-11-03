@@ -31,31 +31,35 @@ class ExampleUITests: XCTestCase {
     @MainActor
     func signIn() async {
         
-        // Wait up to 5 seconds, but do nothing if the button doesn't exist
-        let signOutButton = app.buttons["Sign Out"]
+        // Start from a signed out state
+        let signOutButton = app.cells["signOutButton"]
         if signOutButton.waitForExistence(timeout: 5) {
             signOutButton.tap()
         }
         
-        // Tap the "Sign In" button on the main screen
-        let signInButton = app.buttons["Sign In"]
+        // Open the user ID editor
+        let userIdRow = app.staticTexts["User ID"]
+        XCTAssertTrue(userIdRow.waitForExistence(timeout: 5), "The 'User ID' row should exist")
+        userIdRow.tap()
+
+        // Replace whatever was saved before
+        let userIdTextField = app.textFields["User ID"]
+        XCTAssertTrue(userIdTextField.waitForExistence(timeout: 5), "The 'User ID' text field should appear")
+        userIdTextField.tap()
+        let existing = userIdTextField.value as? String ?? ""
+        let deletes = existing == "User ID" ? "" : String(repeating: XCUIKeyboardKey.delete.rawValue, count: existing.count)
+        userIdTextField.typeText(deletes + "mike")
+
+        let doneButton = app.navigationBars["User ID"].buttons["Done"]
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 5), "The 'Done' button should exist")
+        doneButton.tap()
+        
+        // Sign in
+        let signInButton = app.cells["signInButton"]
         XCTAssertTrue(signInButton.waitForExistence(timeout: 5), "The 'Sign In' button should exist")
         signInButton.tap()
-
-        // Locate the alert
-        let signInAlert = app.alerts["Sign in"]
-        XCTAssertTrue(signInAlert.waitForExistence(timeout: 5), "The 'Sign in' alert should appear")
-
-        // Find the text fields within the alert
-        let userIdTextField = signInAlert.textFields.element(boundBy: 0)
-        XCTAssertTrue(userIdTextField.waitForExistence(timeout: 5), "The 'Courier User Id' text field should exist")
-        userIdTextField.tap()
-        userIdTextField.typeText("mike")
-
-        // Tap the "Sign In" button inside the alert
-        let confirmSignInButton = signInAlert.buttons["Sign In"]
-        XCTAssertTrue(confirmSignInButton.waitForExistence(timeout: 5), "The 'Sign In' button inside the alert should exist")
-        confirmSignInButton.tap()
+        
+        XCTAssertTrue(app.cells["signOutButton"].waitForExistence(timeout: 15), "The user should end up signed in")
         
     }
     

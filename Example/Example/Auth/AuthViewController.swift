@@ -42,7 +42,36 @@ enum CourierEnvironment: String, CaseIterable {
     }
 }
 
-class AuthViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class AuthViewController: UIViewController, UICollectionViewDelegate {
+    
+    private enum Section: Int, CaseIterable {
+        case session, user, environment, developer
+        
+        var title: String? {
+            switch self {
+            case .session: return nil
+            case .user: return "User"
+            case .environment: return "Environment"
+            case .developer: return "Developer"
+            }
+        }
+        
+        var footer: String? {
+            switch self {
+            case .session: return nil
+            case .user: return nil
+            case .environment: return "Pick an environment, or edit a URL to use a custom one."
+            case .developer: return "Draws touches on screen, for recordings."
+            }
+        }
+    }
+    
+    private enum Item: Hashable {
+        case status
+        case signInButton
+        case option(Int)
+        case showTouches
+    }
     
     private var selectedEnvironment: CourierEnvironment = .production
     
@@ -66,86 +95,237 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
     }()
     
     private var authListener: CourierAuthenticationListener? = nil
+    private var signedInUserId: String? = nil
+    private var isWorking = false
     
-    @IBOutlet weak var tableView: UITableView!
-    private var toggleTouchesButton: UIBarButtonItem!
-    private var saveButton: UIBarButtonItem!
-    private var activityIndicator = UIActivityIndicatorView(style: .medium)
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    @objc private func saveButtonAction(_ sender: Any) {
-        Task {
-            await performSave()
-        }
+    private var isEditableUrl: Bool {
+        return selectedEnvironment == .custom
     }
     
-    private func setSaving(_ isSaving: Bool) {
-        if isSaving {
-            saveButton.isEnabled = false
-            activityIndicator.startAnimating()
-            navigationItem.rightBarButtonItems = [
-                UIBarButtonItem(customView: activityIndicator)
-            ]
-        } else {
-            activityIndicator.stopAnimating()
-            saveButton.isEnabled = !options[1].1.isEmpty
-            navigationItem.rightBarButtonItems = [saveButton]
-        }
-    }
-    
-    private func performSave() async {
-        setSaving(true)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        if await Courier.shared.userId != nil {
-            await Courier.shared.signOut()
-        }
+        title = "Auth"
+        ShowTime.enabled = .never
         
-        await performSignIn()
+        configureCollectionView()
         
-        setSaving(false)
-    }
-    
-    @objc private func touchesButtonAction(_ sender: Any) {
-        ShowTime.enabled = ShowTime.enabled == .always ? .never : .always
-        updateShowTouchesLabel()
-    }
-    
-    private func updateShowTouchesLabel() {
-        let showTouches = ShowTime.enabled == .always
-        toggleTouchesButton.title = showTouches ? "Hide Touches" : "Show Touches"
-    }
-    
-    private func performSignIn() async {
-        
-        let userId = options[1].1
-        let tenantId = options[2].1.isEmpty ? nil : options[2].1
-        let apiKey = options[3].1
-        
-        if userId.isEmpty {
-            await Courier.shared.signOut()
-            return
-        }
-        
-        do {
-            let jwt = try await ExampleServer().generateJwt(
-                baseUrl: options[4].1,
-                authKey: apiKey,
-                userId: userId
-            )
+        Task { [weak self] in
+            let listener = await Courier.shared.addAuthenticationListener { [weak self] userId in
+                self?.signedInUserId = userId
+                self?.reloadItems()
+            }
+            self?.authListener = listener
             
-            await Courier.shared.signIn(
-                userId: userId,
-                tenantId: tenantId,
-                accessToken: jwt,
-                apiUrls: CourierClient.ApiUrls(
-                    rest: options[4].1,
-                    graphql: options[5].1,
-                    inboxGraphql: options[6].1,
-                    inboxWebSocket: options[7].1
-                )
-            )
-        } catch {
-            await Courier.shared.signOut()
-            showCodeAlert(title: "Error", code: "\(error)")
+            let userId = await Courier.shared.userId
+            self?.signedInUserId = userId
+            self?.reloadItems()
+            
+            // The example issues short-lived tokens, so get a fresh one on every launch
+            if userId != nil {
+                await self?.signIn()
+            }
+        }
+    }
+    
+    // MARK: List
+    
+    private func configureCollectionView() {
+        
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, environment in
+            let section = Section.allCases[sectionIndex]
+            var configuration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+            configuration.headerMode = section.title == nil ? .none : .supplementary
+            configuration.footerMode = section.footer == nil ? .none : .supplementary
+            return NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: environment)
+        }
+        
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.delegate = self
+        view.addSubview(collectionView)
+        
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [unowned self] cell, _, item in
+            configure(cell, for: item)
+        }
+        
+        let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { header, _, indexPath in
+            var content = UIListContentConfiguration.header()
+            content.text = Section.allCases[indexPath.section].title
+            header.contentConfiguration = content
+        }
+        
+        let footerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionFooter) { footer, _, indexPath in
+            var content = UIListContentConfiguration.footer()
+            content.text = Section.allCases[indexPath.section].footer
+            footer.contentConfiguration = content
+        }
+        
+        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
+            collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+        }
+        
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            if kind == UICollectionView.elementKindSectionHeader {
+                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            }
+            return collectionView.dequeueConfiguredReusableSupplementary(using: footerRegistration, for: indexPath)
+        }
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections(Section.allCases)
+        snapshot.appendItems([.status, .signInButton], toSection: .session)
+        snapshot.appendItems([.option(1), .option(2), .option(3)], toSection: .user)
+        snapshot.appendItems([.option(0), .option(4), .option(5), .option(6), .option(7)], toSection: .environment)
+        snapshot.appendItems([.showTouches], toSection: .developer)
+        dataSource.apply(snapshot, animatingDifferences: false)
+        
+    }
+    
+    private func configure(_ cell: UICollectionViewListCell, for item: Item) {
+        
+        cell.accessibilityTraits = []
+        
+        switch item {
+            
+        case .status:
+            var content = UIListContentConfiguration.subtitleCell()
+            content.image = UIImage(systemName: signedInUserId == nil ? "person.crop.circle.badge.xmark" : "person.crop.circle.badge.checkmark")
+            content.imageProperties.tintColor = signedInUserId == nil ? .secondaryLabel : .systemGreen
+            content.text = signedInUserId == nil ? "Signed out" : "Signed in"
+            content.secondaryText = signedInUserId ?? "Set a user ID, then sign in."
+            content.secondaryTextProperties.color = .secondaryLabel
+            cell.contentConfiguration = content
+            cell.accessories = []
+            
+        case .signInButton:
+            let isSignedIn = signedInUserId != nil
+            var content = UIListContentConfiguration.cell()
+            content.text = isSignedIn ? "Sign Out" : "Sign In"
+            content.textProperties.alignment = .center
+            content.textProperties.font = .preferredFont(forTextStyle: .headline)
+            content.textProperties.color = isSignedIn ? .systemRed : (options[1].1.isEmpty ? .tertiaryLabel : .tintColor)
+            cell.contentConfiguration = content
+            cell.accessories = isWorking ? [.customView(configuration: .activityIndicator)] : []
+            cell.accessibilityTraits = .button
+            // The device tests find these by ID
+            cell.accessibilityIdentifier = isSignedIn ? "signOutButton" : "signInButton"
+            
+        case .option(let row):
+            let (title, value) = options[row]
+            if row == 0 {
+                var content = UIListContentConfiguration.valueCell()
+                content.text = title
+                content.secondaryText = value
+                cell.contentConfiguration = content
+                cell.accessories = [.popUpMenu(environmentMenu())]
+            } else {
+                var content = UIListContentConfiguration.subtitleCell()
+                content.text = title
+                content.textProperties.font = .preferredFont(forTextStyle: .footnote)
+                content.textProperties.color = .secondaryLabel
+                content.secondaryText = value.isEmpty ? "Not set" : value
+                content.secondaryTextProperties.font = .monospacedSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .regular)
+                content.secondaryTextProperties.color = value.isEmpty ? .tertiaryLabel : .label
+                content.textToSecondaryTextVerticalPadding = 4
+                cell.contentConfiguration = content
+                cell.accessories = isEditable(row: row) ? [.disclosureIndicator()] : [.customView(configuration: .copyIndicator)]
+            }
+            
+        case .showTouches:
+            var content = UIListContentConfiguration.cell()
+            content.text = "Show Touches"
+            content.image = UIImage(systemName: "hand.tap")
+            cell.contentConfiguration = content
+            let toggle = UISwitch()
+            toggle.isOn = ShowTime.enabled == .always
+            toggle.addAction(UIAction { action in
+                ShowTime.enabled = (action.sender as? UISwitch)?.isOn == true ? .always : .never
+            }, for: .valueChanged)
+            cell.accessories = [.customView(configuration: .init(customView: toggle, placement: .trailing()))]
+            
+        }
+        
+    }
+    
+    private func isEditable(row: Int) -> Bool {
+        return row < 4 || isEditableUrl
+    }
+    
+    private func reloadItems() {
+        guard let dataSource else { return }
+        var snapshot = dataSource.snapshot()
+        snapshot.reconfigureItems(snapshot.itemIdentifiers)
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func environmentMenu() -> UIMenu {
+        return UIMenu(children: CourierEnvironment.allCases.map { env in
+            UIAction(title: env.rawValue, state: env == selectedEnvironment ? .on : .off) { [weak self] _ in
+                self?.applyEnvironment(env)
+            }
+        })
+    }
+    
+    // MARK: Selection
+    
+    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        switch dataSource.itemIdentifier(for: indexPath) {
+        case .status, .showTouches: return false
+        default: return true
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        switch dataSource.itemIdentifier(for: indexPath) {
+        case .signInButton:
+            Task {
+                signedInUserId == nil ? await signIn() : await signOut()
+            }
+        case .option(let row) where row > 0:
+            if isEditable(row: row) {
+                editOption(row: row)
+            } else {
+                copy(options[row])
+            }
+        default:
+            break
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let indexPath = indexPaths.first, case .option(let row) = dataSource.itemIdentifier(for: indexPath), row > 0 else { return nil }
+        let option = options[row]
+        guard !option.1.isEmpty else { return nil }
+        return UIContextMenuConfiguration(actionProvider: { [weak self] _ in
+            UIMenu(children: [
+                UIAction(title: "Copy", image: UIImage(systemName: "doc.on.doc")) { [weak self] _ in
+                    self?.copy(option)
+                },
+                UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { [weak self] _ in
+                    self?.editOption(row: row)
+                }
+            ])
+        })
+    }
+    
+    private func copy(_ option: (String, String)) {
+        guard !option.1.isEmpty else { return }
+        UIPasteboard.general.string = option.1
+        showToast("\(option.0) copied")
+    }
+    
+    // MARK: Editing
+    
+    private func editOption(row: Int) {
+        let item = options[row]
+        EditValueViewController.present(from: self, title: item.0, value: item.1) { [weak self] value in
+            self?.applyEdit(row: row, value: value)
         }
     }
     
@@ -168,75 +348,11 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
             userManager.setCredential(key: "inboxWebsocketUrl", value: urls.inboxWebSocket)
         }
         
-        tableView.reloadData()
-    }
-    
-    private func showEnvironmentPicker(from cell: UITableViewCell) {
-        let alert = UIAlertController(
-            title: "Select Environment",
-            message: nil,
-            preferredStyle: .actionSheet
-        )
-        
-        for env in CourierEnvironment.allCases {
-            let action = UIAlertAction(title: env.rawValue, style: .default) { [weak self] _ in
-                self?.applyEnvironment(env)
-            }
-            if env == selectedEnvironment {
-                action.setValue(true, forKey: "checked")
-            }
-            alert.addAction(action)
-        }
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        
-        if let popoverController = alert.popoverPresentationController {
-            popoverController.sourceView = cell
-            popoverController.sourceRect = cell.bounds
-        }
-        
-        present(alert, animated: true)
-    }
-    
-    private func showEditAlert(for row: Int) {
-        let item = options[row]
-        
-        let alert = UIAlertController(title: item.0, message: nil, preferredStyle: .alert)
-        
-        alert.addTextField { field in
-            field.placeholder = item.0
-            field.text = item.1
-            field.autocorrectionType = .no
-            field.autocapitalizationType = .none
-            field.clearButtonMode = .always
-        }
-        
-        alert.addAction(UIAlertAction(title: "Copy", style: .default) { [weak self] _ in
-            let value = alert.textFields?.first?.text ?? ""
-            if !value.isEmpty {
-                UIPasteboard.general.string = value
-                self?.showCopiedToast()
-            }
-        })
-        
-        let updateAction = UIAlertAction(title: "Update", style: .default) { [self] _ in
-            let value = alert.textFields?.first?.text ?? ""
-            applyEdit(row: row, value: value)
-        }
-        
-        alert.addAction(updateAction)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.preferredAction = updateAction
-        
-        present(alert, animated: true)
+        reloadItems()
     }
     
     private func applyEdit(row: Int, value: String) {
         options[row].1 = value
-        
-        if row == 1 {
-            saveButton.isEnabled = !value.isEmpty
-        }
         
         let userManager = UserManager.shared
         switch row {
@@ -256,154 +372,72 @@ class AuthViewController: UIViewController, UITableViewDelegate, UITableViewData
             userManager.setCredential(key: "environment", value: CourierEnvironment.custom.rawValue)
         }
         
-        tableView.reloadData()
+        reloadItems()
     }
     
-    private func copyUrlToPasteboard(_ url: String, cell: UITableViewCell) {
-        UIPasteboard.general.string = url
-        showCopiedToast()
+    // MARK: Auth
+    
+    private func setWorking(_ working: Bool) {
+        isWorking = working
+        reloadItems()
     }
     
-    private func showCopiedToast() {
-        let toastLabel = UILabel()
-        toastLabel.text = "Copied to clipboard"
-        toastLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        toastLabel.textColor = .white
-        toastLabel.textAlignment = .center
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.75)
-        toastLabel.layer.cornerRadius = 20
-        toastLabel.clipsToBounds = true
-        toastLabel.alpha = 0
-        toastLabel.translatesAutoresizingMaskIntoConstraints = false
+    private func signIn() async {
         
-        view.addSubview(toastLabel)
+        let userId = options[1].1
+        let tenantId = options[2].1.isEmpty ? nil : options[2].1
+        let apiKey = options[3].1
         
-        NSLayoutConstraint.activate([
-            toastLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            toastLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
-            toastLabel.heightAnchor.constraint(equalToConstant: 40),
-            toastLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 200)
-        ])
-        
-        UIView.animate(withDuration: 0.2, animations: {
-            toastLabel.alpha = 1
-        }) { _ in
-            UIView.animate(withDuration: 0.3, delay: 1.2, options: [], animations: {
-                toastLabel.alpha = 0
-            }) { _ in
-                toastLabel.removeFromSuperview()
-            }
+        guard !userId.isEmpty else {
+            editOption(row: 1)
+            return
         }
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
-        title = "Auth"
+        setWorking(true)
+        defer { setWorking(false) }
         
-        toggleTouchesButton = UIBarButtonItem(
-            title: "Show Touches",
-            style: .plain,
-            target: self,
-            action: #selector(touchesButtonAction)
-        )
-        
-        navigationItem.leftBarButtonItem = toggleTouchesButton
-        
-        ShowTime.enabled = .never
-        updateShowTouchesLabel()
-        
-        saveButton = UIBarButtonItem(
-            title: "Save",
-            style: .done,
-            target: self,
-            action: #selector(saveButtonAction)
-        )
-        
-        activityIndicator.hidesWhenStopped = true
-        navigationItem.rightBarButtonItems = [saveButton]
-        
-        tableView.register(MonoListItem.self, forCellReuseIdentifier: MonoListItem.id)
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        saveButton.isEnabled = !options[1].1.isEmpty
-        
-        Task {
-            authListener = await Courier.shared.addAuthenticationListener { [weak self] _ in
-                Task {
-                    self?.saveButton.isEnabled = !(self?.options[1].1.isEmpty ?? true)
-                    self?.tableView.reloadData()
-                }
-            }
+        do {
+            let jwt = try await ExampleServer().generateJwt(
+                baseUrl: options[4].1,
+                authKey: apiKey,
+                userId: userId
+            )
             
-            if await Courier.shared.userId != nil {
-                await performSave()
-            }
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return options.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MonoListItem.id, for: indexPath) as! MonoListItem
-        
-        let item = options[indexPath.row]
-        let value = item.1.isEmpty ? "NOT SET" : item.1
-        cell.configureCell(title: item.0, value: value)
-        
-        if indexPath.row == 0 {
-            let editImage = UIImageView(image: UIImage(systemName: "pencil"))
-            editImage.tintColor = .secondaryLabel
-            editImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            cell.accessoryView = editImage
-            cell.accessoryType = .none
-        } else if indexPath.row >= 4 && selectedEnvironment != .custom {
-            let copyImage = UIImageView(image: UIImage(systemName: "doc.on.doc"))
-            copyImage.tintColor = .secondaryLabel
-            copyImage.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-            cell.accessoryView = copyImage
-            cell.accessoryType = .none
-        } else {
-            cell.accessoryType = .none
-            cell.accessoryView = nil
+            await Courier.shared.signIn(
+                userId: userId,
+                tenantId: tenantId,
+                accessToken: jwt,
+                apiUrls: CourierClient.ApiUrls(
+                    rest: options[4].1,
+                    graphql: options[5].1,
+                    inboxGraphql: options[6].1,
+                    inboxWebSocket: options[7].1
+                )
+            )
+        } catch {
+            await Courier.shared.signOut()
+            showCode(title: "Sign In Error", code: "\(error)")
         }
         
-        return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        if indexPath.row == 0 {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                showEnvironmentPicker(from: cell)
-            }
-            return
-        }
-        
-        if indexPath.row >= 4 && selectedEnvironment != .custom {
-            let url = options[indexPath.row].1
-            if !url.isEmpty, let cell = tableView.cellForRow(at: indexPath) {
-                copyUrlToPasteboard(url, cell: cell)
-            }
-            return
-        }
-        
-        showEditAlert(for: indexPath.row)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+    private func signOut() async {
+        setWorking(true)
+        await Courier.shared.signOut()
+        setWorking(false)
     }
     
     deinit {
         authListener?.remove()
     }
+}
+
+extension UICellAccessory.CustomViewConfiguration {
+    
+    static var activityIndicator: UICellAccessory.CustomViewConfiguration {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.startAnimating()
+        return UICellAccessory.CustomViewConfiguration(customView: indicator, placement: .trailing())
+    }
+    
 }

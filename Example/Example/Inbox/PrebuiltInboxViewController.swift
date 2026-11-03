@@ -26,7 +26,7 @@ class PrebuiltInboxViewController: UIViewController {
                 self.showActionSheet(message: message)
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
-                self.showCodeAlert(title: "Inbox Action Click", code: action.toJson() ?? "")
+                self.showCode(title: "Inbox Action Click", code: action.toJson() ?? "")
             }
         )
     }()

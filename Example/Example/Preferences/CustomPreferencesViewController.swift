@@ -86,7 +86,7 @@ class CustomPreferencesViewController: UIViewController, UITableViewDelegate, UI
                 let prefs = try await Courier.shared.client?.preferences.getUserPreferences()
                 self.topics = prefs?.items ?? []
             } catch {
-                self.showCodeAlert(title: "Error", code: CourierError(from: error).message)
+                self.showCode(title: "Error", code: CourierError(from: error).message)
             }
             self.setState(self.topics.isEmpty ? .empty : .content)
             self.tableView.reloadData()

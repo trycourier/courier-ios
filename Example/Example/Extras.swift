@@ -20,52 +20,22 @@ extension UIApplication {
             .first
     }
     
+    // Push handlers have no screen of their own, so they present over whatever is showing
+    var topViewController: UIViewController? {
+        var top = currentWindow?.rootViewController
+        while let presented = top?.presentedViewController {
+            top = presented
+        }
+        return top
+    }
+    
 }
-
-var alert: UIAlertController? = nil
 
 extension AppDelegate {
     
-    func showCodeAlert(title: String, code: String) {
-        alert?.dismiss(animated: true)
-        
-        if let window = UIApplication.shared.currentWindow {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-            
-            // Create a scrollable text view for the code
-            let messageTextView = UITextView()
-            messageTextView.backgroundColor = .clear
-            messageTextView.text = code
-            messageTextView.isEditable = false
-            messageTextView.isScrollEnabled = true
-            messageTextView.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Set monospaced font for the text view
-            messageTextView.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular) // Adjust font size as needed
-            
-            // Set text view height (adjust as needed)
-            let textViewHeight: CGFloat = 300
-            
-            // Add the text view to the alert
-            alert!.view.addSubview(messageTextView)
-            
-            // Define constraints for the text view
-            NSLayoutConstraint.activate([
-                messageTextView.topAnchor.constraint(equalTo: alert!.view.topAnchor, constant: 60), // Adjust constant as needed
-                messageTextView.bottomAnchor.constraint(equalTo: alert!.view.bottomAnchor, constant: -45), // Adjust constant as needed
-                messageTextView.leadingAnchor.constraint(equalTo: alert!.view.leadingAnchor, constant: 8),
-                messageTextView.trailingAnchor.constraint(equalTo: alert!.view.trailingAnchor, constant: -8),
-                messageTextView.heightAnchor.constraint(equalToConstant: textViewHeight)
-            ])
-            
-            // Add the "OK" button
-            alert!.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            
-            // Present the alert
-            window.rootViewController?.present(alert!, animated: true, completion: nil)
-        }
+    func showCode(title: String, code: String) {
+        UIApplication.shared.topViewController?.showCode(title: title, code: code)
     }
-
     
 }
 
@@ -73,125 +43,101 @@ extension UIViewController {
     
     func showActionSheet(message: InboxMessage) {
         
-        // Create the action sheet
-        let actionSheet = UIAlertController(title: message.messageId, message: nil, preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: message.title, message: message.messageId, preferredStyle: .actionSheet)
         
-        // Add the first action
-        let action1 = UIAlertAction(title: message.isRead ? "Unread Message" : "Read Message", style: .default) { _ in
+        actionSheet.addAction(UIAlertAction(title: message.isRead ? "Mark as Unread" : "Mark as Read", style: .default) { _ in
             Task {
-                message.isRead ? try await Courier.shared.unreadMessage(message.messageId) : try await Courier.shared.readMessage(message.messageId)
+                message.isRead ? try? await Courier.shared.unreadMessage(message.messageId) : try? await Courier.shared.readMessage(message.messageId)
             }
-        }
+        })
         
-        // Add the second action
-        let action2 = UIAlertAction(title: "Archive Message", style: .default) { _ in
+        actionSheet.addAction(UIAlertAction(title: "Archive", style: .destructive) { _ in
             Task {
-                try await Courier.shared.archiveMessage(message.messageId)
+                try? await Courier.shared.archiveMessage(message.messageId)
             }
+        })
+        
+        actionSheet.addAction(UIAlertAction(title: "View Details", style: .default) { _ in
+            self.showCode(title: "Inbox Message", code: message.toJson() ?? "")
+        })
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // iPad shows action sheets as popovers, which need an anchor
+        if let popover = actionSheet.popoverPresentationController {
+            popover.sourceView = view
+            popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+            popover.permittedArrowDirections = []
         }
         
-        let action3 = UIAlertAction(title: "View Message Details", style: .default) { _ in
-            self.showCodeAlert(title: "Inbox Message", code: message.toJson() ?? "")
-        }
-        
-        // Add the cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            
-        }
-        
-        // Add actions to the action sheet
-        actionSheet.addAction(action1)
-        actionSheet.addAction(action2)
-        actionSheet.addAction(action3)
-        actionSheet.addAction(cancelAction)
-        
-        // Present the action sheet
-        if let topController = UIApplication.shared.keyWindow?.rootViewController {
-            topController.present(actionSheet, animated: true)
-        }
+        UIApplication.shared.topViewController?.present(actionSheet, animated: true)
         
     }
     
-    func showCodeAlert(title: String, code: String) {
-        alert?.dismiss(animated: true)
-        
-        if let window = UIApplication.shared.currentWindow {
-            alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-            
-            // Create a scrollable text view for the code
-            let messageTextView = UITextView()
-            messageTextView.backgroundColor = .clear
-            messageTextView.text = code
-            messageTextView.isEditable = false
-            messageTextView.isScrollEnabled = true
-            messageTextView.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Set monospaced font for the text view
-            messageTextView.font = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular) // Adjust font size as needed
-            
-            // Set text view height (adjust as needed)
-            let textViewHeight: CGFloat = 300
-            
-            // Add the text view to the alert
-            alert!.view.addSubview(messageTextView)
-            
-            // Define constraints for the text view
-            NSLayoutConstraint.activate([
-                messageTextView.topAnchor.constraint(equalTo: alert!.view.topAnchor, constant: 60), // Adjust constant as needed
-                messageTextView.bottomAnchor.constraint(equalTo: alert!.view.bottomAnchor, constant: -45), // Adjust constant as needed
-                messageTextView.leadingAnchor.constraint(equalTo: alert!.view.leadingAnchor, constant: 8),
-                messageTextView.trailingAnchor.constraint(equalTo: alert!.view.trailingAnchor, constant: -8),
-                messageTextView.heightAnchor.constraint(equalToConstant: textViewHeight)
-            ])
-            
-            // Add the "OK" button
-            alert!.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            
-            // Present the alert
-            window.rootViewController?.present(alert!, animated: true, completion: nil)
+    func showCode(title: String, code: String) {
+        let navigationController = UINavigationController(rootViewController: CodeViewController(title: title, code: code))
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersGrabberVisible = true
         }
+        present(navigationController, animated: true)
     }
     
-    func showInputAlert(title: String, inputs: [(String, String?)], action: String, onComplete: @escaping ([String]) -> Void) {
+    func showToast(_ text: String, systemImage: String = "checkmark.circle.fill") {
         
-        alert?.dismiss(animated: true)
+        guard let window = view.window else { return }
         
-        alert = UIAlertController(
-            title: title,
-            message: nil,
-            preferredStyle: .alert
-        )
+        // Liquid Glass on iOS 26, the closest material before it
+        let effect: UIVisualEffect
+        if #available(iOS 26.0, *) {
+            effect = UIGlassEffect()
+        } else {
+            effect = UIBlurEffect(style: .systemThickMaterial)
+        }
         
-        if let alert = alert {
-            
-            present(alert, animated: true)
-            
-            inputs.forEach { input in
-                alert.addTextField { field in
-                    field.placeholder = input.0
-                    field.text = input.1
-                    field.keyboardType = .default
-                    field.autocorrectionType = .no
-                    field.autocapitalizationType = .none
-                    field.returnKeyType = .continue
-                }
+        // Starts with no effect, because glass only appears when its effect is animated in, not its alpha
+        let toast = UIVisualEffectView(effect: nil)
+        toast.translatesAutoresizingMaskIntoConstraints = false
+        toast.layer.cornerRadius = 22
+        toast.layer.cornerCurve = .continuous
+        toast.clipsToBounds = true
+        
+        var configuration = UIButton.Configuration.plain()
+        configuration.title = text
+        configuration.image = UIImage(systemName: systemImage)
+        configuration.imagePadding = 8
+        configuration.baseForegroundColor = .label
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 18, bottom: 12, trailing: 18)
+        
+        let label = UIButton(configuration: configuration)
+        label.isUserInteractionEnabled = false
+        label.alpha = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        toast.contentView.addSubview(label)
+        window.addSubview(toast)
+        
+        // Sit above the tab bar
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: toast.contentView.topAnchor),
+            label.bottomAnchor.constraint(equalTo: toast.contentView.bottomAnchor),
+            label.leadingAnchor.constraint(equalTo: toast.contentView.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: toast.contentView.trailingAnchor),
+            toast.centerXAnchor.constraint(equalTo: window.centerXAnchor),
+            toast.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor, constant: -72)
+        ])
+        
+        UIAccessibility.post(notification: .announcement, argument: text)
+        
+        UIView.animate(withDuration: 0.25) {
+            toast.effect = effect
+            label.alpha = 1
+        } completion: { _ in
+            UIView.animate(withDuration: 0.3, delay: 1.4) {
+                toast.effect = nil
+                label.alpha = 0
+            } completion: { _ in
+                toast.removeFromSuperview()
             }
-            
-            alert.addAction(UIAlertAction(
-                title: "Cancel",
-                style: .cancel,
-                handler: nil
-            ))
-            
-            alert.addAction(UIAlertAction(
-                title: action,
-                style: .default,
-                handler: { _ in
-                    let values = alert.textFields?.compactMap { $0.text } ?? []
-                    onComplete(values)
-                }
-            ))
-            
         }
         
     }
