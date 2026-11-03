@@ -3,6 +3,9 @@ name: CI
 on:
   pull_request:
     branches: [main]
+  # Also check main after every merge, so a broken merge shows up on main itself
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -11,6 +14,8 @@ jobs:
   # silently skip. Catch that here, before the merge, rather than discovering it in a release.
   version:
     name: Version guard
+    # Only meaningful before a merge. On main, Deploy decides what to publish.
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -122,10 +127,29 @@ jobs:
       # any newly added unit suite from the required job -- the test looks green because it never
       # ran. Inverting it means a new suite runs by default, and forgetting to classify a new live
       # suite fails loudly here instead of hiding a unit test forever.
+      # The runner image decides which simulators exist, and a hard-coded device or OS version
+      # fails with "Unable to find a device" whenever the image changes. Use any available iPhone.
+      - name: Pick a simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          devices = json.load(sys.stdin)['devices']
+          phones = [(runtime, d) for runtime, ds in devices.items() if 'iOS' in runtime for d in ds if d['name'].startswith('iPhone')]
+          phones.sort(key=lambda p: p[0])
+          print(phones[-1][1]['udid'] if phones else '')
+          ")
+          if [ -z "$UDID" ]; then
+            RUNTIME=$(xcrun simctl list runtimes available -j | python3 -c "import json,sys; r=[x for x in json.load(sys.stdin)['runtimes'] if x['platform']=='iOS']; print(r[-1]['identifier'] if r else '')")
+            [ -n "$RUNTIME" ] || { echo "::error::No iOS simulator runtime on this runner"; exit 1; }
+            UDID=$(xcrun simctl create "CI iPhone" "iPhone 16 Pro" "$RUNTIME")
+          fi
+          xcrun simctl list devices | grep "$UDID"
+          echo "DESTINATION=id=$UDID" >> "$GITHUB_ENV"
+
       - name: Build and run unit tests
         run: |
           xcodebuild -scheme Courier_iOS \
-            -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.5" \
+            -destination "$DESTINATION" \
             -test-timeouts-enabled YES \
             -default-test-execution-time-allowance 10 \
             -skip-testing:CourierTests/AuthTests \
@@ -180,10 +204,29 @@ jobs:
           open("Tests/CourierTests/Env.swift", "w").write(src)
           PY
 
+      # The runner image decides which simulators exist, and a hard-coded device or OS version
+      # fails with "Unable to find a device" whenever the image changes. Use any available iPhone.
+      - name: Pick a simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          devices = json.load(sys.stdin)['devices']
+          phones = [(runtime, d) for runtime, ds in devices.items() if 'iOS' in runtime for d in ds if d['name'].startswith('iPhone')]
+          phones.sort(key=lambda p: p[0])
+          print(phones[-1][1]['udid'] if phones else '')
+          ")
+          if [ -z "$UDID" ]; then
+            RUNTIME=$(xcrun simctl list runtimes available -j | python3 -c "import json,sys; r=[x for x in json.load(sys.stdin)['runtimes'] if x['platform']=='iOS']; print(r[-1]['identifier'] if r else '')")
+            [ -n "$RUNTIME" ] || { echo "::error::No iOS simulator runtime on this runner"; exit 1; }
+            UDID=$(xcrun simctl create "CI iPhone" "iPhone 16 Pro" "$RUNTIME")
+          fi
+          xcrun simctl list devices | grep "$UDID"
+          echo "DESTINATION=id=$UDID" >> "$GITHUB_ENV"
+
       - name: Run live integration tests
         run: |
           xcodebuild -scheme Courier_iOS \
-            -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=18.5" \
+            -destination "$DESTINATION" \
             -test-timeouts-enabled YES \
             -default-test-execution-time-allowance 10 \
             test

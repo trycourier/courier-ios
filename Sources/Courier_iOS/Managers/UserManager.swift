@@ -14,17 +14,28 @@ import Foundation
     private let accessTokenKey = "courier_access_token"
     private let clientKeyKey = "courier_client_key"
     private let tenantIdKey = "courier_tenant_id"
-    
+    private let restUrlKey = "courier_rest_url"
+    private let graphqlUrlKey = "courier_graphql_url"
+    private let inboxGraphqlUrlKey = "courier_inbox_graphql_url"
+    private let inboxWebSocketUrlKey = "courier_inbox_websocket_url"
+    private let showLogsKey = "courier_show_logs"
+
     private let defaults = UserDefaults.standard
     static internal let shared = UserManager()
-    
+
     @discardableResult
-    func setCredentials(userId: String, accessToken: String, clientKey: String?, tenantId: String?) -> Dictionary<String, String>? {
-        
+    func setCredentials(userId: String, accessToken: String, clientKey: String?, tenantId: String?, apiUrls: CourierClient.ApiUrls, showLogs: Bool) -> Dictionary<String, String>? {
+
         // Create the dictionary
+        // The urls and log setting are saved so the client can be rebuilt on the next launch
         var dict = [
             userIdKey: userId,
-            accessTokenKey: accessToken
+            accessTokenKey: accessToken,
+            restUrlKey: apiUrls.rest,
+            graphqlUrlKey: apiUrls.graphql,
+            inboxGraphqlUrlKey: apiUrls.inboxGraphql,
+            inboxWebSocketUrlKey: apiUrls.inboxWebSocket,
+            showLogsKey: String(showLogs)
         ]
         
         // Add client key if possible
@@ -64,7 +75,31 @@ import Foundation
     func getTenantId() -> String? {
         return getCredentials()?[tenantIdKey]
     }
-    
+
+    // Nil for credentials saved before the urls were stored
+    func getApiUrls() -> CourierClient.ApiUrls? {
+
+        guard let credentials = getCredentials(),
+              let rest = credentials[restUrlKey],
+              let graphql = credentials[graphqlUrlKey],
+              let inboxGraphql = credentials[inboxGraphqlUrlKey],
+              let inboxWebSocket = credentials[inboxWebSocketUrlKey] else {
+            return nil
+        }
+
+        return CourierClient.ApiUrls(
+            rest: rest,
+            graphql: graphql,
+            inboxGraphql: inboxGraphql,
+            inboxWebSocket: inboxWebSocket
+        )
+
+    }
+
+    func getShowLogs() -> Bool? {
+        return getCredentials()?[showLogsKey].flatMap { Bool($0) }
+    }
+
     func removeCredentials() {
         defaults.removeObject(forKey: credentialsKey)
     }

@@ -44,6 +44,9 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             self.onEditButtonClick?()
         })
         button.translatesAutoresizingMaskIntoConstraints = false
+        // Keep the whole title visible. The topic labels wrap to make room instead.
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        button.setContentCompressionResistancePriority(.required, for: .horizontal)
         return button
     }()
     
@@ -85,7 +88,8 @@ internal class CourierPreferenceTopicCell: UITableViewCell {
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.margin),
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.margin),
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -Theme.margin),
-            editButton.widthAnchor.constraint(lessThanOrEqualToConstant: 68),
+            // A minimum rather than a cap. A larger themed font used to truncate "Edit" to "…".
+            editButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 68),
             editButton.heightAnchor.constraint(equalToConstant: Theme.Preferences.actionButtonMaxHeight)
         ])
     }
