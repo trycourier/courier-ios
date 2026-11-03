@@ -33,9 +33,11 @@ class RootTabBarController: UITabBarController {
         ]
 
         // Keep the tab bar in view while lists scroll, so every example is one tap away
+        #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             tabBarMinimizeBehavior = .never
         }
+        #endif
 
         Task {
 

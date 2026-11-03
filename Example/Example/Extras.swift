@@ -98,12 +98,13 @@ extension UIViewController {
         guard let window = view.window else { return }
         
         // Liquid Glass on iOS 26, the closest material before it
-        let effect: UIVisualEffect
+        // The compiler check keeps the app building with Xcode 16, whose SDK has no UIGlassEffect
+        var effect: UIVisualEffect = UIBlurEffect(style: .systemThickMaterial)
+        #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             effect = UIGlassEffect()
-        } else {
-            effect = UIBlurEffect(style: .systemThickMaterial)
         }
+        #endif
         
         // Starts with no effect, because glass only appears when its effect is animated in, not its alpha
         let toast = UIVisualEffectView(effect: nil)
