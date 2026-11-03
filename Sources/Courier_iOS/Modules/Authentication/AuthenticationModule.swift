@@ -53,9 +53,11 @@ import Foundation
             userId: userId,
             accessToken: accessToken,
             clientKey: clientKey,
-            tenantId: tenantId
+            tenantId: tenantId,
+            apiUrls: apiUrls,
+            showLogs: showLogs
         )
-        
+
         // Refresh SDK
         await courier.putPushTokens()
         await courier.restartInbox()
@@ -84,9 +86,40 @@ import Foundation
         UserManager.shared.removeCredentials()
         
         await notifyListeners(nil)
-        
+
     }
-    
+
+    // Credentials outlive the process but the client does not, so without this a relaunched
+    // app reports a signed in user while every request is skipped until signIn runs again.
+    func restoreClient() -> CourierClient? {
+
+        let user = UserManager.shared
+
+        // Sessions saved before the urls were stored are left alone. Falling back to the
+        // default urls would send a token issued in another region to the wrong API.
+        guard let userId = user.getUserId(),
+              let accessToken = user.getAccessToken(),
+              let apiUrls = user.getApiUrls(),
+              let showLogs = user.getShowLogs() else {
+            return nil
+        }
+
+        let client = CourierClient(
+            jwt: accessToken,
+            clientKey: user.getClientKey(),
+            userId: userId,
+            connectionId: UUID().uuidString,
+            tenantId: user.getTenantId(),
+            apiUrls: apiUrls,
+            showLogs: showLogs
+        )
+
+        client.log("Restored signed in user: \(userId)")
+
+        return client
+
+    }
+
     // MARK: Listeners
     
     @discardableResult
