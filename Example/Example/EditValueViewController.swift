@@ -16,7 +16,7 @@ class EditValueViewController: UIViewController, UITextFieldDelegate {
     private let textField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.font = UIFont.monospacedSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+        textField.font = .monospaced(.body)
         textField.adjustsFontForContentSizeCategory = true
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
@@ -51,7 +51,10 @@ class EditValueViewController: UIViewController, UITextFieldDelegate {
             rootViewController: EditValueViewController(title: title, value: value, onSave: onSave)
         )
         if let sheet = navigationController.sheetPresentationController {
-            sheet.detents = [.custom { _ in 160 }]
+            // Tall enough for the field at any text size
+            sheet.detents = [.custom { context in
+                min(UIFontMetrics(forTextStyle: .body).scaledValue(for: 160), context.maximumDetentValue)
+            }]
             sheet.prefersGrabberVisible = true
         }
         presenter.present(navigationController, animated: true)

@@ -58,8 +58,10 @@ class RootTabBarController: UITabBarController {
     private func setBadge(_ count: Int) {
         inboxTab.badgeValue = count <= 0 ? nil : "\(count)"
 
-        // The app icon badge needs notification permission
-        Courier.requestNotificationPermission { _ in
+        // The app icon badge needs notification permission. Only set it once the user has allowed
+        // notifications, so the permission prompt stays on the Push tab instead of appearing at launch.
+        Courier.getNotificationPermissionStatus { status in
+            guard status == .authorized || status == .provisional || status == .ephemeral else { return }
             UNUserNotificationCenter.current().setBadgeCount(count)
         }
     }

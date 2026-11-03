@@ -3,6 +3,16 @@ import Courier_iOS
 
 class InboxViewController: SegmentedPagesViewController {
 
+    private var inboxListener: CourierInboxListener? = nil
+
+    private lazy var readAllButton = UIBarButtonItem(
+        title: "Read All",
+        image: UIImage(systemName: "envelope.open"),
+        primaryAction: UIAction { [weak self] _ in
+            self?.readAll()
+        }
+    )
+
     override func makePages() -> [(title: String, viewController: UIViewController)] {
         return [
             ("Default", PrebuiltInboxViewController()),
@@ -14,13 +24,18 @@ class InboxViewController: SegmentedPagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Read All",
-            image: UIImage(systemName: "envelope.open"),
-            primaryAction: UIAction { [weak self] _ in
-                self?.readAll()
-            }
-        )
+        navigationItem.rightBarButtonItem = readAllButton
+        readAllButton.isEnabled = false
+
+        // Only offer Read All when there's something unread
+        Task { [weak self] in
+            let listener = await Courier.shared.addInboxListener(
+                onUnreadCountChanged: { [weak self] count in
+                    self?.readAllButton.isEnabled = count > 0
+                }
+            )
+            self?.inboxListener = listener
+        }
 
     }
 
@@ -36,6 +51,10 @@ class InboxViewController: SegmentedPagesViewController {
 
         }
 
+    }
+
+    deinit {
+        inboxListener?.remove()
     }
 
 }

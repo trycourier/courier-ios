@@ -196,7 +196,7 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
             content.image = UIImage(systemName: signedInUserId == nil ? "person.crop.circle.badge.xmark" : "person.crop.circle.badge.checkmark")
             content.imageProperties.tintColor = signedInUserId == nil ? .secondaryLabel : .systemGreen
             content.text = signedInUserId == nil ? "Signed out" : "Signed in"
-            content.secondaryText = signedInUserId ?? "Set a user ID, then sign in."
+            content.secondaryText = signedInUserId ?? (options[1].1.isEmpty ? "Set a user ID, then sign in." : "Ready to sign in as \(options[1].1).")
             content.secondaryTextProperties.color = .secondaryLabel
             cell.contentConfiguration = content
             cell.accessories = []
@@ -204,12 +204,17 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
         case .signInButton:
             let isSignedIn = signedInUserId != nil
             var content = UIListContentConfiguration.cell()
-            content.text = isSignedIn ? "Sign Out" : "Sign In"
+            // A status label rather than a spinner, so the centered text doesn't shift while it works
+            if isWorking {
+                content.text = isSignedIn ? "Signing Out…" : "Signing In…"
+            } else {
+                content.text = isSignedIn ? "Sign Out" : "Sign In"
+            }
             content.textProperties.alignment = .center
             content.textProperties.font = .preferredFont(forTextStyle: .headline)
-            content.textProperties.color = isSignedIn ? .systemRed : (options[1].1.isEmpty ? .tertiaryLabel : .tintColor)
+            content.textProperties.color = isWorking ? .secondaryLabel : (isSignedIn ? .systemRed : .tintColor)
             cell.contentConfiguration = content
-            cell.accessories = isWorking ? [.customView(configuration: .activityIndicator)] : []
+            cell.accessories = []
             cell.accessibilityTraits = .button
             // The device tests find these by ID
             cell.accessibilityIdentifier = isSignedIn ? "signOutButton" : "signInButton"
@@ -228,7 +233,12 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
                 content.textProperties.font = .preferredFont(forTextStyle: .footnote)
                 content.textProperties.color = .secondaryLabel
                 content.secondaryText = value.isEmpty ? "Not set" : value
-                content.secondaryTextProperties.font = .monospacedSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .regular)
+                content.secondaryTextProperties.font = value.isEmpty
+                    ? .preferredFont(forTextStyle: .subheadline)
+                    : .monospaced(.subheadline)
+                // Wrap long keys and tokens by character, so no hyphen ends up in a value someone copies
+                content.secondaryTextProperties.lineBreakMode = .byCharWrapping
+                content.secondaryTextProperties.adjustsFontForContentSizeCategory = true
                 content.secondaryTextProperties.color = value.isEmpty ? .tertiaryLabel : .label
                 content.textToSecondaryTextVerticalPadding = 4
                 cell.contentConfiguration = content
@@ -284,6 +294,7 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
         
         switch dataSource.itemIdentifier(for: indexPath) {
         case .signInButton:
+            guard !isWorking else { return }
             Task {
                 signedInUserId == nil ? await signIn() : await signOut()
             }
@@ -322,10 +333,11 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
     
     // MARK: Editing
     
-    private func editOption(row: Int) {
+    private func editOption(row: Int, onSave: (() -> Void)? = nil) {
         let item = options[row]
         EditValueViewController.present(from: self, title: item.0, value: item.1) { [weak self] value in
             self?.applyEdit(row: row, value: value)
+            onSave?()
         }
     }
     
@@ -388,8 +400,12 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
         let tenantId = options[2].1.isEmpty ? nil : options[2].1
         let apiKey = options[3].1
         
+        // Ask for the user ID, then carry on signing in once it's set
         guard !userId.isEmpty else {
-            editOption(row: 1)
+            editOption(row: 1) { [weak self] in
+                guard let self, !self.options[1].1.isEmpty else { return }
+                Task { await self.signIn() }
+            }
             return
         }
         
@@ -430,14 +446,4 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
     deinit {
         authListener?.remove()
     }
-}
-
-extension UICellAccessory.CustomViewConfiguration {
-    
-    static var activityIndicator: UICellAccessory.CustomViewConfiguration {
-        let indicator = UIActivityIndicatorView(style: .medium)
-        indicator.startAnimating()
-        return UICellAccessory.CustomViewConfiguration(customView: indicator, placement: .trailing())
-    }
-    
 }

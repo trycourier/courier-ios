@@ -31,6 +31,16 @@ extension UIApplication {
     
 }
 
+extension UIFont {
+    
+    // Monospaced for tokens, keys and URLs, scaled with Dynamic Type like the system text styles
+    static func monospaced(_ style: UIFont.TextStyle) -> UIFont {
+        let base = UIFont.preferredFont(forTextStyle: style, compatibleWith: UITraitCollection(preferredContentSizeCategory: .large))
+        return UIFontMetrics(forTextStyle: style).scaledFont(for: .monospacedSystemFont(ofSize: base.pointSize, weight: .regular))
+    }
+    
+}
+
 extension AppDelegate {
     
     func showCode(title: String, code: String) {

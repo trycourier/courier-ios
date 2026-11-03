@@ -55,6 +55,13 @@ class PushViewController: UIViewController, UICollectionViewDelegate {
 
         configureCollectionView()
         refresh()
+
+        // Pick up a permission change made in Settings
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+
+    @objc private func appDidBecomeActive() {
+        refresh()
     }
 
     private func configureCollectionView() {
@@ -87,8 +94,9 @@ class PushViewController: UIViewController, UICollectionViewDelegate {
                 cell.contentConfiguration = content
                 cell.accessories = []
             case .requestPermission:
+                // Once the user has answered, the system prompt won't show again, so send them to Settings
                 var content = UIListContentConfiguration.cell()
-                content.text = "Request Permission"
+                content.text = permissionStatus == .notDetermined ? "Request Permission" : "Open Settings"
                 content.textProperties.color = .tintColor
                 cell.contentConfiguration = content
                 cell.accessories = []
@@ -100,7 +108,12 @@ class PushViewController: UIViewController, UICollectionViewDelegate {
                 content.textProperties.font = .preferredFont(forTextStyle: .footnote)
                 content.textProperties.color = .secondaryLabel
                 content.secondaryText = value.isEmpty ? "Not registered" : value
-                content.secondaryTextProperties.font = .monospacedSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .subheadline).pointSize, weight: .regular)
+                content.secondaryTextProperties.font = value.isEmpty
+                    ? .preferredFont(forTextStyle: .subheadline)
+                    : .monospaced(.subheadline)
+                // Wrap long keys and tokens by character, so no hyphen ends up in a value someone copies
+                content.secondaryTextProperties.lineBreakMode = .byCharWrapping
+                content.secondaryTextProperties.adjustsFontForContentSizeCategory = true
                 content.secondaryTextProperties.color = value.isEmpty ? .tertiaryLabel : .label
                 content.textToSecondaryTextVerticalPadding = 4
                 cell.contentConfiguration = content
@@ -150,6 +163,13 @@ class PushViewController: UIViewController, UICollectionViewDelegate {
     }
 
     private func requestPermission() {
+        guard permissionStatus == .notDetermined else {
+            // The app's own settings page, which holds its Notifications switch
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url)
+            }
+            return
+        }
         Task {
             permissionStatus = (try? await Courier.requestNotificationPermission()) ?? permissionStatus
             refresh()

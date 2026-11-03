@@ -16,7 +16,7 @@ class CodeViewController: UIViewController {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = false
-        textView.font = UIFont.monospacedSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .footnote).pointSize, weight: .regular)
+        textView.font = .monospaced(.footnote)
         textView.adjustsFontForContentSizeCategory = true
         textView.textContainerInset = UIEdgeInsets(top: 16, left: 12, bottom: 16, right: 12)
         textView.backgroundColor = .clear
