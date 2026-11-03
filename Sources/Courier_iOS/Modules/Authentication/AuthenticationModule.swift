@@ -76,10 +76,12 @@ import Foundation
         }
         
         courier.client?.log("Signing user out")
-        courier.client = nil
-        
+
+        // The token deletes go through the client, so it has to outlive them
         await courier.deletePushTokens()
         await courier.closeInbox()
+
+        courier.client = nil
         
         // Sign out will still work, but will keep
         // existing tokens in Courier if failure

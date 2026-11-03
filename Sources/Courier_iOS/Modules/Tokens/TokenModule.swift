@@ -10,9 +10,15 @@ import UIKit
 @CourierActor internal class TokenModule {
     
     let courier: Courier
-    
+
+    // Tokens outlive the process, so the one a provider replaces can still be removed from
+    // Courier after a relaunch. Without this every rotated token stayed on the user.
+    private let tokensKey = "courier_push_tokens"
+    private let defaults = UserDefaults.standard
+
     init(courier: Courier) {
         self.courier = courier
+        self.tokens = defaults.object(forKey: tokensKey) as? [String: String] ?? [:]
     }
     
     /**
@@ -26,8 +32,21 @@ import UIKit
     }
     
     // Keep a reference to all tokens
-    private(set) var tokens: [String: String] = [:]
-    
+    private(set) var tokens: [String: String] = [:] {
+        didSet {
+            defaults.set(tokens, forKey: tokensKey)
+        }
+    }
+
+    /**
+     The token Courier still holds for a provider that the new token replaces.
+     Nil when there is none, or when the provider issued the same token again.
+     */
+    func replacedToken(for provider: String, with token: String) -> String? {
+        guard let current = tokens[provider], current != token else { return nil }
+        return current
+    }
+
     /**
      Caches a token for a key
      This is used to grab current sessions push tokens
@@ -161,10 +180,11 @@ extension Courier {
             return
         }
         
-        // Delete the existing token
-        if let currentToken = tokenModule.tokens[provider] {
+        // Delete the token this one replaces. An unchanged token is only put again, which keeps
+        // it fresh without briefly removing it from Courier.
+        if let replacedToken = tokenModule.replacedToken(for: provider, with: rawToken.string) {
             do {
-                try await deleteToken(currentToken)
+                try await deleteToken(replacedToken)
             } catch {
                 let e = CourierError(from: error)
                 client?.log(e.message)
@@ -222,10 +242,11 @@ extension Courier {
             return
         }
         
-        // Delete the existing token
-        if let currentToken = tokenModule.tokens[provider] {
+        // Delete the token this one replaces. An unchanged token is only put again, which keeps
+        // it fresh without briefly removing it from Courier.
+        if let replacedToken = tokenModule.replacedToken(for: provider, with: token) {
             do {
-                try await deleteToken(currentToken)
+                try await deleteToken(replacedToken)
             } catch {
                 let e = CourierError(from: error)
                 client?.log(e.message)
