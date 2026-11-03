@@ -416,6 +416,10 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    public func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         return Theme.Preferences.topicSectionHeight
     }
     
@@ -492,7 +496,7 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         )
         
         // Present the sheet
-        parentViewController.present(sheetViewController!, animated: true, completion: nil)
+        parentViewController.present(sheetViewController!.makeNavigationController(), animated: true, completion: nil)
         
     }
     

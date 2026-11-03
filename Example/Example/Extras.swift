@@ -308,3 +308,58 @@ class ExampleServer {
     }
     
 }
+
+// MARK: Styled examples
+
+// One palette for the Styled examples, so the inbox and preferences read as the same brand.
+struct StyledPalette {
+
+    let surface: UIColor
+    let text: UIColor
+    let secondaryText: UIColor
+    let accent: UIColor
+    let onAccent: UIColor
+    let accentSoft: UIColor
+    let archive: UIColor
+    let separator: UIColor
+
+    static let light = StyledPalette(
+        surface: .white,
+        text: UIColor(rgb: 0x1D1B2E),
+        secondaryText: UIColor(rgb: 0x6E6A85),
+        accent: UIColor(rgb: 0x5B4FD6),
+        onAccent: .white,
+        accentSoft: UIColor(rgb: 0xECEAFC),
+        archive: UIColor(rgb: 0xE38B3D),
+        separator: UIColor(rgb: 0xE6E4F0)
+    )
+
+    static let dark = StyledPalette(
+        surface: .black,
+        text: UIColor(rgb: 0xF3F2FA),
+        secondaryText: UIColor(rgb: 0x9D99B5),
+        accent: UIColor(rgb: 0x8C83F4),
+        onAccent: UIColor(rgb: 0x121120),
+        accentSoft: UIColor(rgb: 0x2A2748),
+        archive: UIColor(rgb: 0xF0A45F),
+        separator: UIColor(rgb: 0x2A2940)
+    )
+
+}
+
+enum StyledFont {
+    static func black(_ size: CGFloat) -> UIFont { UIFont(name: "Avenir Black", size: size)! }
+    static func heavy(_ size: CGFloat) -> UIFont { UIFont(name: "Avenir Heavy", size: size)! }
+    static func medium(_ size: CGFloat) -> UIFont { UIFont(name: "Avenir Medium", size: size)! }
+}
+
+extension UIColor {
+    convenience init(rgb: UInt32) {
+        self.init(
+            red: CGFloat((rgb >> 16) & 0xFF) / 255,
+            green: CGFloat((rgb >> 8) & 0xFF) / 255,
+            blue: CGFloat(rgb & 0xFF) / 255,
+            alpha: 1
+        )
+    }
+}

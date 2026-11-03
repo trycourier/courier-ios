@@ -10,231 +10,11 @@ import Courier_iOS
 
 class StyledInboxViewController: UIViewController {
     
-    private let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
-    private let primaryColor = UIColor(red: 136 / 255, green: 45 / 255, blue: 185 / 255, alpha: 100)
-    private let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
-    
     private lazy var courierInbox = {
         return CourierInbox(
             canSwipePages: true,
-            lightTheme: CourierInboxTheme(
-                brandId: Env.COURIER_BRAND_ID,
-                tabIndicatorColor: primaryColor,
-                tabStyle: CourierStyles.Inbox.TabStyle(
-                    selected: CourierStyles.Inbox.TabItemStyle(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 18)!,
-                            color: textColor
-                        ),
-                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
-                            font: CourierStyles.Font(
-                                font: UIFont(name: "Avenir Black", size: 14)!,
-                                color: .white
-                            ),
-                            color: primaryColor
-                        )
-                    ),
-                    unselected: CourierStyles.Inbox.TabItemStyle(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Medium", size: 18)!,
-                            color: textColor
-                        ),
-                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
-                            font: CourierStyles.Font(
-                                font: UIFont(name: "Avenir Medium", size: 14)!,
-                                color: .white
-                            ),
-                            color: primaryColor
-                        )
-                    )
-                ),
-                readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle(
-                    read: CourierStyles.Inbox.SwipeActionStyle(
-                        icon: UIImage(systemName: "envelope.open.fill"),
-                        color: .systemGray
-                    ),
-                    unread: CourierStyles.Inbox.SwipeActionStyle(
-                        icon: UIImage(systemName: "envelope.fill"),
-                        color: primaryColor
-                    )
-                ),
-                archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle(
-                    archive: CourierStyles.Inbox.SwipeActionStyle(
-                        icon: UIImage(systemName: "archivebox.fill"),
-                        color: secondaryColor
-                    )
-                ),
-                messageAnimationStyle: .fade,
-                unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
-                    indicator: .dot,
-                    color: primaryColor
-                ),
-                titleStyle: CourierStyles.Inbox.TextStyle(
-                    unread: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Black", size: 18)!,
-                        color: textColor
-                    ),
-                    read: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Black", size: 18)!,
-                        color: textColor
-                    )
-                ),
-                timeStyle: CourierStyles.Inbox.TextStyle(
-                    unread: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: textColor
-                    ),
-                    read: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: textColor
-                    )
-                ),
-                bodyStyle: CourierStyles.Inbox.TextStyle(
-                    unread: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: textColor
-                    ),
-                    read: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: textColor
-                    )
-                ),
-                buttonStyle: CourierStyles.Inbox.ButtonStyle(
-                    unread: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 16)!,
-                            color: .white
-                        ),
-                        backgroundColor: primaryColor,
-                        cornerRadius: 100
-                    ),
-                    read: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 16)!,
-                            color: .white
-                        ),
-                        backgroundColor: primaryColor,
-                        cornerRadius: 100
-                    )
-                ),
-                cellStyle: CourierStyles.Cell(
-                    separatorStyle: .singleLine,
-                    separatorInsets: .zero
-                ),
-                infoViewStyle: CourierStyles.InfoViewStyle(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 20)!,
-                        color: textColor
-                    ),
-                    button: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 16)!,
-                            color: .white
-                        ),
-                        backgroundColor: primaryColor,
-                        cornerRadius: 100
-                    )
-                )
-            ),
-            darkTheme: CourierInboxTheme(
-                brandId: Env.COURIER_BRAND_ID,
-                backgroundColor: UIColor(red: 20 / 255, green: 18 / 255, blue: 30 / 255, alpha: 1),
-                tabBackgroundColor: UIColor(red: 32 / 255, green: 28 / 255, blue: 48 / 255, alpha: 1),
-                listItemBackgroundColor: UIColor(red: 28 / 255, green: 24 / 255, blue: 40 / 255, alpha: 1),
-                tabStyle: CourierStyles.Inbox.TabStyle(
-                    selected: CourierStyles.Inbox.TabItemStyle(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 18)!,
-                            color: .white
-                        ),
-                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
-                            font: CourierStyles.Font(
-                                font: UIFont(name: "Avenir Medium", size: 14)!,
-                                color: .white
-                            ),
-                            color: nil
-                        )
-                    ),
-                    unselected: CourierStyles.Inbox.TabItemStyle(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Medium", size: 18)!,
-                            color: .white
-                        ),
-                        indicator: CourierStyles.Inbox.TabIndicatorStyle(
-                            font: CourierStyles.Font(
-                                font: UIFont(name: "Avenir Medium", size: 14)!,
-                                color: .white
-                            ),
-                            color: nil
-                        )
-                    )
-                ),
-                unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
-                    indicator: .dot
-                ),
-                titleStyle: CourierStyles.Inbox.TextStyle(
-                    unread: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Black", size: 20)!,
-                        color: .white
-                    ),
-                    read: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Black", size: 20)!,
-                        color: .gray
-                    )
-                ),
-                timeStyle: CourierStyles.Inbox.TextStyle(
-                    unread: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 16)!,
-                        color: .white
-                    ),
-                    read: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 16)!,
-                        color: .gray
-                    )
-                ),
-                bodyStyle: CourierStyles.Inbox.TextStyle(
-                    unread: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: .white
-                    ),
-                    read: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: .gray
-                    )
-                ),
-                buttonStyle: CourierStyles.Inbox.ButtonStyle(
-                    unread: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 16)!,
-                            color: .white
-                        ),
-                        cornerRadius: 0
-                    ),
-                    read: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 16)!,
-                            color: .white
-                        ),
-                        cornerRadius: 0
-                    )
-                ),
-                cellStyle: CourierStyles.Cell(
-                    separatorStyle: .none
-                ),
-                infoViewStyle: CourierStyles.InfoViewStyle(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 20)!,
-                        color: .white
-                    ),
-                    button: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Black", size: 16)!,
-                            color: .white
-                        ),
-                        cornerRadius: 0
-                    )
-                )
-            ),
+            lightTheme: makeTheme(.light),
+            darkTheme: makeTheme(.dark),
             didClickInboxMessageAtIndex: { message, index in
                 if message.isArchived { return }
                 Task {
@@ -256,6 +36,89 @@ class StyledInboxViewController: UIViewController {
             }
         )
     }()
+
+    private func makeTheme(_ palette: StyledPalette) -> CourierInboxTheme {
+        return CourierInboxTheme(
+            brandId: Env.COURIER_BRAND_ID,
+            backgroundColor: palette.surface,
+            tabBackgroundColor: palette.surface,
+            listItemBackgroundColor: palette.surface,
+            tabIndicatorColor: palette.accent,
+            tabStyle: CourierStyles.Inbox.TabStyle(
+                selected: CourierStyles.Inbox.TabItemStyle(
+                    font: CourierStyles.Font(font: StyledFont.black(17), color: palette.text),
+                    indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                        font: CourierStyles.Font(font: StyledFont.black(13), color: palette.onAccent),
+                        color: palette.accent
+                    )
+                ),
+                unselected: CourierStyles.Inbox.TabItemStyle(
+                    font: CourierStyles.Font(font: StyledFont.medium(17), color: palette.secondaryText),
+                    indicator: CourierStyles.Inbox.TabIndicatorStyle(
+                        font: CourierStyles.Font(font: StyledFont.heavy(13), color: palette.accent),
+                        color: palette.accentSoft
+                    )
+                )
+            ),
+            readingSwipeActionStyle: CourierStyles.Inbox.ReadingSwipeActionStyle(
+                read: CourierStyles.Inbox.SwipeActionStyle(
+                    icon: UIImage(systemName: "envelope.open.fill"),
+                    color: palette.secondaryText
+                ),
+                unread: CourierStyles.Inbox.SwipeActionStyle(
+                    icon: UIImage(systemName: "envelope.fill"),
+                    color: palette.accent
+                )
+            ),
+            archivingSwipeActionStyle: CourierStyles.Inbox.ArchivingSwipeActionStyle(
+                archive: CourierStyles.Inbox.SwipeActionStyle(
+                    icon: UIImage(systemName: "archivebox.fill"),
+                    color: palette.archive
+                )
+            ),
+            messageAnimationStyle: .fade,
+            unreadIndicatorStyle: CourierStyles.Inbox.UnreadIndicatorStyle(
+                indicator: .dot,
+                color: palette.accent
+            ),
+            titleStyle: CourierStyles.Inbox.TextStyle(
+                unread: CourierStyles.Font(font: StyledFont.black(17), color: palette.text),
+                read: CourierStyles.Font(font: StyledFont.heavy(17), color: palette.secondaryText)
+            ),
+            timeStyle: CourierStyles.Inbox.TextStyle(
+                unread: CourierStyles.Font(font: StyledFont.heavy(14), color: palette.accent),
+                read: CourierStyles.Font(font: StyledFont.medium(14), color: palette.secondaryText)
+            ),
+            bodyStyle: CourierStyles.Inbox.TextStyle(
+                unread: CourierStyles.Font(font: StyledFont.medium(16), color: palette.text),
+                read: CourierStyles.Font(font: StyledFont.medium(16), color: palette.secondaryText)
+            ),
+            buttonStyle: CourierStyles.Inbox.ButtonStyle(
+                unread: CourierStyles.Button(
+                    font: CourierStyles.Font(font: StyledFont.heavy(15), color: palette.onAccent),
+                    backgroundColor: palette.accent,
+                    cornerRadius: 100
+                ),
+                read: CourierStyles.Button(
+                    font: CourierStyles.Font(font: StyledFont.heavy(15), color: palette.accent),
+                    backgroundColor: palette.accentSoft,
+                    cornerRadius: 100
+                )
+            ),
+            cellStyle: CourierStyles.Cell(
+                separatorStyle: .singleLine,
+                separatorColor: palette.separator
+            ),
+            infoViewStyle: CourierStyles.InfoViewStyle(
+                font: CourierStyles.Font(font: StyledFont.medium(18), color: palette.secondaryText),
+                button: CourierStyles.Button(
+                    font: CourierStyles.Font(font: StyledFont.heavy(15), color: palette.onAccent),
+                    backgroundColor: palette.accent,
+                    cornerRadius: 100
+                )
+            )
+        )
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

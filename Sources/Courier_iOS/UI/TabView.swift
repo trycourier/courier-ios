@@ -43,7 +43,11 @@ internal class TabView: UIView, UIScrollViewDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
+    // The indicator moves through this constraint. Setting its frame directly lasted only until
+    // the next layout pass, so an appearance change put it back under the first tab.
+    private lazy var indicatorLeadingConstraint = indicatorView.leadingAnchor.constraint(equalTo: leadingAnchor)
+
     private(set) var tabs: [Tab] = []
     
     public init(pages: [Page], scrollView: UIScrollView, onTabSelected: @escaping (Int) -> Void, onTabReselected: @escaping (Int) -> Void) {
@@ -109,6 +113,7 @@ internal class TabView: UIView, UIScrollViewDelegate {
         NSLayoutConstraint.activate([
             indicatorView.heightAnchor.constraint(equalToConstant: 2),
             indicatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            indicatorLeadingConstraint,
             indicatorView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0 / CGFloat(pages.count))
         ])
         
@@ -165,13 +170,14 @@ internal class TabView: UIView, UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let fullDistance = scrollView.contentSize.width - scrollView.frame.width
-        let adjustedOffset = scrollView.contentOffset.x / fullDistance
-        let singleItemWidth = bounds.width / CGFloat(pages.count)
-        let fullAdjustableDistance = bounds.width - singleItemWidth
-        let x = fullAdjustableDistance * adjustedOffset
-        
+
         // Update the UI
-        indicatorView.frame.origin.x = x
+        if fullDistance > 0 {
+            let adjustedOffset = scrollView.contentOffset.x / fullDistance
+            let singleItemWidth = bounds.width / CGFloat(pages.count)
+            let fullAdjustableDistance = bounds.width - singleItemWidth
+            indicatorLeadingConstraint.constant = fullAdjustableDistance * adjustedOffset
+        }
         setSelectedTab()
         
     }

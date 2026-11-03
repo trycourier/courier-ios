@@ -28,7 +28,7 @@ import UIKit
     
     // MARK: Versioning
     
-    internal static let version = "6.0.1"
+    internal static let version = "6.0.2"
 
     // Wrapper SDKs (React Native, Flutter) set the agent at startup and networking code reads it
     // from nonisolated contexts, so it sits behind a lock rather than on an actor.

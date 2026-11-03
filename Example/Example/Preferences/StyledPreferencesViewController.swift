@@ -10,123 +10,11 @@ import Courier_iOS
 
 class StyledPreferencesViewController: UIViewController {
 
-    private let textColor = UIColor(red: 42 / 255, green: 21 / 255, blue: 55 / 255, alpha: 100)
-    private let secondaryColor = UIColor(red: 234 / 255, green: 104 / 255, blue: 102 / 255, alpha: 100)
-
     private lazy var courierPreferences = {
         return CourierPreferences(
             mode: .channels([.push, .sms, .email]),
-            lightTheme: CourierPreferencesTheme(
-                brandId: Env.COURIER_BRAND_ID,
-                sectionTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Black", size: 20)!,
-                    color: textColor
-                ),
-                topicCellStyles: CourierStyles.Cell(
-                    separatorStyle: .none
-                ),
-                topicTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
-                    color: textColor
-                ),
-                topicSubtitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 16)!,
-                    color: .gray
-                ),
-                topicButton: CourierStyles.Button(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 16)!,
-                        color: .white
-                    ),
-                    backgroundColor: secondaryColor,
-                    cornerRadius: 8
-                ),
-                sheetTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
-                    color: textColor
-                ),
-                sheetSettingStyles: CourierStyles.Preferences.SettingStyles(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: textColor
-                    ),
-                    toggleColor: secondaryColor
-                ),
-                sheetCornerRadius: 0,
-                sheetCellStyles: CourierStyles.Cell(
-                    separatorStyle: .none
-                ),
-                infoViewStyle: CourierStyles.InfoViewStyle(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 20)!,
-                        color: textColor
-                    ),
-                    button: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Medium", size: 16)!,
-                            color: .white
-                        ),
-                        backgroundColor: secondaryColor,
-                        cornerRadius: 8
-                    )
-                )
-            ),
-            darkTheme: CourierPreferencesTheme(
-                brandId: Env.COURIER_BRAND_ID,
-                loadingIndicatorColor: secondaryColor,
-                sectionTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Black", size: 20)!,
-                    color: .white
-                ),
-                topicCellStyles: CourierStyles.Cell(
-                    separatorStyle: .none
-                ),
-                topicTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
-                    color: .white
-                ),
-                topicSubtitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 16)!,
-                    color: .white
-                ),
-                topicButton: CourierStyles.Button(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 16)!,
-                        color: .white
-                    ),
-                    backgroundColor: secondaryColor,
-                    cornerRadius: 8
-                ),
-                sheetTitleFont: CourierStyles.Font(
-                    font: UIFont(name: "Avenir Medium", size: 18)!,
-                    color: .white
-                ),
-                sheetSettingStyles: CourierStyles.Preferences.SettingStyles(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 18)!,
-                        color: .white
-                    ),
-                    toggleColor: secondaryColor
-                ),
-                sheetCornerRadius: 0,
-                sheetCellStyles: CourierStyles.Cell(
-                    separatorStyle: .none
-                ),
-                infoViewStyle: CourierStyles.InfoViewStyle(
-                    font: CourierStyles.Font(
-                        font: UIFont(name: "Avenir Medium", size: 20)!,
-                        color: .white
-                    ),
-                    button: CourierStyles.Button(
-                        font: CourierStyles.Font(
-                            font: UIFont(name: "Avenir Medium", size: 16)!,
-                            color: .white
-                        ),
-                        backgroundColor: secondaryColor,
-                        cornerRadius: 8
-                    )
-                )
-            ),
+            lightTheme: makeTheme(.light),
+            darkTheme: makeTheme(.dark),
             onError: { error in
                 self.showCode(title: "Preferences Error", code: error.localizedDescription)
                 return error.localizedDescription
@@ -134,6 +22,43 @@ class StyledPreferencesViewController: UIViewController {
         )
     }()
     
+    // The background stays the system one, so the topic sheet keeps its Liquid Glass look on iOS 26
+    private func makeTheme(_ palette: StyledPalette) -> CourierPreferencesTheme {
+        return CourierPreferencesTheme(
+            brandId: Env.COURIER_BRAND_ID,
+            loadingIndicatorColor: palette.accent,
+            sectionTitleFont: CourierStyles.Font(font: StyledFont.black(20), color: palette.text),
+            topicCellStyles: CourierStyles.Cell(
+                separatorStyle: .singleLine,
+                separatorColor: palette.separator
+            ),
+            topicTitleFont: CourierStyles.Font(font: StyledFont.heavy(17), color: palette.text),
+            topicSubtitleFont: CourierStyles.Font(font: StyledFont.medium(15), color: palette.secondaryText),
+            topicButton: CourierStyles.Button(
+                font: CourierStyles.Font(font: StyledFont.heavy(15), color: palette.accent),
+                backgroundColor: palette.accentSoft,
+                cornerRadius: 100
+            ),
+            sheetTitleFont: CourierStyles.Font(font: StyledFont.heavy(17), color: palette.text),
+            sheetSettingStyles: CourierStyles.Preferences.SettingStyles(
+                font: CourierStyles.Font(font: StyledFont.medium(17), color: palette.text),
+                toggleColor: palette.accent
+            ),
+            sheetCellStyles: CourierStyles.Cell(
+                separatorStyle: .singleLine,
+                separatorColor: palette.separator
+            ),
+            infoViewStyle: CourierStyles.InfoViewStyle(
+                font: CourierStyles.Font(font: StyledFont.medium(18), color: palette.secondaryText),
+                button: CourierStyles.Button(
+                    font: CourierStyles.Font(font: StyledFont.heavy(15), color: palette.onAccent),
+                    backgroundColor: palette.accent,
+                    cornerRadius: 100
+                )
+            )
+        )
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

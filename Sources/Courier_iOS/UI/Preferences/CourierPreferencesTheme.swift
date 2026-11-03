@@ -114,3 +114,24 @@ import UIKit
     }
     
 }
+
+extension CourierPreferencesTheme {
+    
+    // iOS 26 draws sheets in Liquid Glass, with corners that follow the screen. The default theme
+    // leaves both to the system. A theme that sets its own background or corner radius keeps it.
+    
+    internal var sheetBackgroundColor: UIColor {
+        if #available(iOS 26.0, *), backgroundColor == .systemBackground {
+            return .clear
+        }
+        return backgroundColor
+    }
+    
+    internal var preferredSheetCornerRadius: CGFloat? {
+        if #available(iOS 26.0, *), sheetCornerRadius == Theme.Preferences.sheetCornerRadius {
+            return nil
+        }
+        return sheetCornerRadius
+    }
+    
+}
