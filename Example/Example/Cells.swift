@@ -7,31 +7,6 @@
 
 import UIKit
 
-class ContentCollectionViewCell: UICollectionViewCell {
-    
-    static let identifier = "ContentCollectionViewCell"
-    
-    var embeddedViewController: UIViewController? {
-        willSet {
-            embeddedViewController?.willMove(toParent: nil)
-            embeddedViewController?.view.removeFromSuperview()
-            embeddedViewController?.removeFromParent()
-        }
-        didSet {
-            if let newViewController = embeddedViewController {
-                newViewController.view.frame = contentView.bounds
-                contentView.addSubview(newViewController.view)
-            }
-        }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        embeddedViewController = nil
-    }
-    
-}
-
 class CustomTableViewCell: UITableViewCell {
     
     static let id = "CustomTableViewCell"

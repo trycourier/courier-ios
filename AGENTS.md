@@ -12,7 +12,7 @@ of it. `Env.swift` is gitignored for exactly this reason; never commit real cred
 | `Sources/Courier_iOS/` | The SDK. `Modules/` (stateful facades), `Client/` (REST), `UI/` (UIKit components), `Actor/` (the `@CourierActor` global actor) |
 | `Tests/CourierTests/Unit/` | Deterministic unit tests — what CI requires |
 | `Tests/CourierTests/` | Live integration tests against the real Courier API |
-| `Example/` | Demo app; resolves `Courier_iOS` from the **remote** repo, not this checkout |
+| `Example/` | Demo app; builds `Courier_iOS` from this checkout (a local Swift package reference to `..`) |
 | `Scripts/` | Version bump, manual pod release, demo archive |
 | `.agents/skills/` | Task-specific instructions (`.claude/skills` is a symlink to it) |
 

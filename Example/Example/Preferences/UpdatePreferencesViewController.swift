@@ -100,7 +100,7 @@ class UpdatePreferencesViewController: UIViewController {
             do {
                 self.topic = try await Courier.shared.client?.preferences.getUserPreferenceTopic(topicId: self.topicId)
             } catch {
-                showCodeAlert(title: "Error", code: CourierError(from: error).message)
+                showCode(title: "Error", code: CourierError(from: error).message)
             }
             
             self.isLoading = false
@@ -158,7 +158,7 @@ class UpdatePreferencesViewController: UIViewController {
                 
             } catch {
                 
-                showCodeAlert(title: "Update Error", code: CourierError(from: error).message)
+                showCode(title: "Update Error", code: CourierError(from: error).message)
                 
             }
             

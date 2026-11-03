@@ -20,15 +20,6 @@
       }
     },
     {
-      "identity" : "courier-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/trycourier/courier-ios",
-      "state" : {
-        "branch" : "feat/inbox-background-colors",
-        "revision" : "00305c6f450f5e9aa8f474140c8588bbc5a93cff"
-      }
-    },
-    {
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",

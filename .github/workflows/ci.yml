@@ -164,6 +164,32 @@ jobs:
             -skip-testing:CourierTests/TrackingClientTests \
             test
 
+  # The Example builds Courier_iOS from this checkout, so it catches SDK changes that break
+  # the UI or the sample app itself. Build only: no signing, placeholder Env.swift.
+  example:
+    name: Sample app build
+    runs-on: macos-15
+    env:
+      # Xcode 26 builds the Liquid Glass paths; App Store builds require it too
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Write placeholder Env.swift
+        run: cp EnvSample.swift Example/Example/Env.swift
+
+      - name: Build Example for iOS Simulator
+        working-directory: Example
+        run: |
+          xcodebuild build \
+            -project Example.xcodeproj \
+            -scheme Example \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            -quiet
+
   live-integration-tests:
     name: Live integration tests
     needs: test

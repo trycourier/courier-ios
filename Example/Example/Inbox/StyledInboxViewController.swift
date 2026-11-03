@@ -249,7 +249,7 @@ class StyledInboxViewController: UIViewController {
                 self.showActionSheet(message: message)
             },
             didClickInboxActionForMessageAtIndex: { action, message, index in
-                self.showCodeAlert(title: "Inbox Action Click", code: action.toJson() ?? "")
+                self.showCode(title: "Inbox Action Click", code: action.toJson() ?? "")
             },
             didScrollInbox: { scrollView in
                 print(scrollView.contentOffset.y)

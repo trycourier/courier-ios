@@ -14,7 +14,7 @@ class PrebuiltPreferencesViewController: UIViewController {
         return CourierPreferences(
             mode: .topic,
             onError: { error in
-                self.showCodeAlert(title: "Preferences Error", code: error.localizedDescription)
+                self.showCode(title: "Preferences Error", code: error.localizedDescription)
                 return error.localizedDescription
             }
         )

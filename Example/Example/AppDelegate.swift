@@ -73,7 +73,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         print(json)
         print("\n=================================================\n")
         
-        showCodeAlert(title: "Message Delivered", code: json)
+        showCode(title: "Message Delivered", code: json)
         
         // This is how you want to show your notification in the foreground
         // You can pass "[]" to not show the notification to the user or
@@ -90,7 +90,7 @@ class AppDelegate: CourierDelegate, MessagingDelegate {
         print(json)
         print("\n=================================\n")
         
-        showCodeAlert(title: "Message Clicked", code: json)
+        showCode(title: "Message Clicked", code: json)
         
     }
 
