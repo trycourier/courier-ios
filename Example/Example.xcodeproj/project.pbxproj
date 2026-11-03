@@ -353,7 +353,7 @@
 			packageReferences = (
 				27D8F1B02AE885DB00E54210 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				270E8E9B2BA4A793007E21EF /* XCRemoteSwiftPackageReference "ShowTime" */,
-				7A8809CD2FA5247E0017AEE4 /* XCRemoteSwiftPackageReference "courier-ios" */,
+				7A8809CD2FA5247E0017AEE4 /* XCLocalSwiftPackageReference ".." */,
 			);
 			productRefGroup = 27895164292689460070F501 /* Products */;
 			projectDirPath = "";
@@ -778,6 +778,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		7A8809CD2FA5247E0017AEE4 /* XCLocalSwiftPackageReference ".." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ..;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		270E8E9B2BA4A793007E21EF /* XCRemoteSwiftPackageReference "ShowTime" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -795,14 +802,6 @@
 				minimumVersion = 10.16.0;
 			};
 		};
-		7A8809CD2FA5247E0017AEE4 /* XCRemoteSwiftPackageReference "courier-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/trycourier/courier-ios";
-			requirement = {
-				branch = "feat/inbox-background-colors";
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -818,12 +817,12 @@
 		};
 		7A8809CE2FA5251A0017AEE4 /* Courier_iOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7A8809CD2FA5247E0017AEE4 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 7A8809CD2FA5247E0017AEE4 /* XCLocalSwiftPackageReference ".." */;
 			productName = Courier_iOS;
 		};
 		7A8809D02FA525320017AEE4 /* Courier_iOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7A8809CD2FA5247E0017AEE4 /* XCRemoteSwiftPackageReference "courier-ios" */;
+			package = 7A8809CD2FA5247E0017AEE4 /* XCLocalSwiftPackageReference ".." */;
 			productName = Courier_iOS;
 		};
 /* End XCSwiftPackageProductDependency section */
