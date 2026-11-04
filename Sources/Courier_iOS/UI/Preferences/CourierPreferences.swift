@@ -201,8 +201,8 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         
         Task {
             
-            refreshControl.beginRefreshing()
-            
+            // Pull to refresh starts the control on its own. Starting it from code during the first
+            // load left an animation running, so the app never went idle.
             do {
                 
                 if await !Courier.shared.isUserSignedIn {
