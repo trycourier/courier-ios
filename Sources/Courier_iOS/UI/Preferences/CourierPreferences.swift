@@ -211,38 +211,16 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
                 
                 // Fetch the brand if needed
                 if let brandId = self.theme.brandId {
-                    let res = try await Courier.shared.client?.brands.getBrand(brandId: brandId)
-                    theme.brand = res?.data.brand
-                }
-                
-                let prefs = try await Courier.shared.client?.preferences.getUserPreferences()
-                
-                var sections = [CourierPreferences.Section]()
-                
-                prefs?.items.forEach { topic in
-                    
-                    let sectionId = topic.sectionId
-                    
-                    // Add the item to the proper section
-                    if let sectionIndex = sections.firstIndex(where: { $0.id == sectionId }) {
-                        
-                        sections[sectionIndex].topics.append(topic)
-                        
-                    } else {
-                        
-                        let newSection = CourierPreferences.Section(
-                            title: topic.sectionName,
-                            id: topic.sectionId,
-                            topics: [topic]
-                        )
-                        
-                        sections.append(newSection)
-                        
+                    theme.brand = await CourierPreferences.fetchBrand {
+                        try await Courier.shared.client?.brands.getBrand(brandId: brandId).data.brand
                     }
-                    
                 }
-                
-                self.preferences = sections
+
+                let topics = try await CourierPreferences.fetchAllTopics { cursor in
+                    try await Courier.shared.client?.preferences.getUserPreferences(paginationCursor: cursor)
+                }
+
+                self.preferences = CourierPreferences.sections(from: topics)
                 
                 // Reload the state
                 reloadViews()
@@ -263,6 +241,53 @@ open class CourierPreferences: UIView, UITableViewDelegate, UITableViewDataSourc
         
     }
     
+    // The brand only styles the screen, so a brand that can't be fetched leaves the default
+    // styling. Before, a bad or missing brandId failed the whole screen.
+    internal static func fetchBrand(_ fetch: () async throws -> CourierBrand?) async -> CourierBrand? {
+        do {
+            return try await fetch()
+        } catch {
+            await Courier.shared.client?.error(CourierError(from: error).message)
+            return nil
+        }
+    }
+
+    // The response carries a paging cursor. Reading only the first response would drop any topics
+    // on later pages without an error. A repeated cursor ends the loop instead of spinning.
+    internal static func fetchAllTopics(
+        _ fetchPage: (String?) async throws -> CourierUserPreferences?
+    ) async throws -> [CourierUserPreferencesTopic] {
+
+        var topics = [CourierUserPreferencesTopic]()
+        var cursor: String? = nil
+
+        while let page = try await fetchPage(cursor) {
+            topics += page.items
+            guard page.paging.more, let next = page.paging.cursor, next != cursor else { break }
+            cursor = next
+        }
+
+        return topics
+
+    }
+
+    // Groups topics by section, in the order the sections first appear
+    internal static func sections(from topics: [CourierUserPreferencesTopic]) -> [Section] {
+
+        var sections = [Section]()
+
+        for topic in topics {
+            if let index = sections.firstIndex(where: { $0.id == topic.sectionId }) {
+                sections[index].topics.append(topic)
+            } else {
+                sections.append(Section(title: topic.sectionName, id: topic.sectionId, topics: [topic]))
+            }
+        }
+
+        return sections
+
+    }
+
     public func scrollToTop(animated: Bool) {
         
         if (self.preferences.isEmpty) {
