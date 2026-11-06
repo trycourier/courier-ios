@@ -6,11 +6,8 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to CocoaPods
-    # pod trunk push lints with the runner's default Xcode, so pin the same one CI tests with
-    runs-on: macos-26
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+    name: Release
+    runs-on: ubuntu-latest
     permissions:
       contents: write   # tag push + gh release create with GITHUB_TOKEN
     outputs:
@@ -22,6 +19,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      # A release is a git tag: Swift Package Manager resolves versions from tags. CocoaPods
+      # trunk goes read-only on Dec 2, 2026, and 6.0.5 is the last version published there.
+      # CocoaPods users on later versions point the pod at a tag instead.
       - name: Check version
         id: check
         run: |
@@ -37,17 +37,14 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Version: $VERSION"
 
-          PUBLISHED=$(curl -sf "https://trunk.cocoapods.org/api/v1/pods/Courier_iOS" \
-            | python3 -c "import sys,json; vs=[v['name'] for v in json.load(sys.stdin)['versions']]; print('\n'.join(vs))" 2>/dev/null || echo "")
-
-          if echo "$PUBLISHED" | grep -qx "$VERSION"; then
+          if git rev-parse -q --verify "refs/tags/$VERSION" >/dev/null; then
             # Expected for pushes that ship no source changes (docs, workflows). If this fires after
-            # a change under Sources/, the version was not bumped and this release publishes nothing
+            # a change under Sources/, the version was not bumped and this release ships nothing
             # -- the CI "Version guard" job is meant to block that before merge.
-            echo "::warning::Version $VERSION is already published on CocoaPods; nothing to deploy. If this push changed Sources/, the version needed a bump and those changes are NOT released."
+            echo "::warning::Version $VERSION is already released; nothing to deploy. If this push changed Sources/, the version needed a bump and those changes are NOT released."
             echo "deployed=false" >> "$GITHUB_OUTPUT"
           else
-            echo "Version $VERSION not yet published. Deploying."
+            echo "Version $VERSION not yet released. Deploying."
             echo "deployed=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -79,40 +76,7 @@ jobs:
         run: |
           gh release create "$VERSION" --notes "$RELEASE_NOTES"
 
-      - name: Setup CocoaPods auth
-        if: steps.check.outputs.deployed == 'true'
-        run: |
-          echo "machine trunk.cocoapods.org
-            login ${{ secrets.COCOAPODS_TRUNK_EMAIL }}
-            password ${{ secrets.COCOAPODS_TRUNK_TOKEN }}" > ~/.netrc
-          chmod 0600 ~/.netrc
-
-      - name: Install CocoaPods
-        if: steps.check.outputs.deployed == 'true'
-        run: gem install cocoapods
-
-      # Trunk can answer "Calling the GitHub commit API timed out" for a push that did land. Failing
-      # here would skip Bump Downstream, so check trunk before treating the push as failed.
-      - name: Publish to CocoaPods
-        if: steps.check.outputs.deployed == 'true'
-        env:
-          VERSION: ${{ steps.check.outputs.version }}
-        run: |
-          if pod trunk push Courier_iOS.podspec --allow-warnings; then
-            exit 0
-          fi
-          for attempt in 1 2 3 4 5 6; do
-            sleep 20
-            if curl -sf "https://trunk.cocoapods.org/api/v1/pods/Courier_iOS" \
-              | python3 -c "import sys,json,os; vs=[v['name'] for v in json.load(sys.stdin)['versions']]; sys.exit(0 if os.environ['VERSION'] in vs else 1)"; then
-              echo "::warning::pod trunk push reported an error, but $VERSION is on trunk."
-              exit 0
-            fi
-          done
-          echo "::error::$VERSION is not on trunk."
-          exit 1
-
-  # Runs whenever deploy succeeds, even if Trunk already had this version (deployed=false).
+  # Runs whenever deploy succeeds, even if the version was already released (deployed=false).
   # Downstream repos may still pin an older Courier_iOS; each step compares podspec to VERSION.
   bump-downstream:
     name: Bump Downstream Dependencies
@@ -184,7 +148,7 @@ jobs:
               --base main \
               --head "$BUMP_BRANCH" \
               --title "Bump Courier_iOS to $VERSION" \
-              --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
+              --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (released on GitHub)."
           else
             echo "PR already open for bump-courier-ios-$VERSION; branch updated."
           fi
@@ -237,7 +201,7 @@ jobs:
               --base main \
               --head "$BUMP_BRANCH" \
               --title "Bump Courier_iOS to $VERSION" \
-              --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (published to CocoaPods)."
+              --body "Auto-generated PR to update Courier_iOS dependency to $VERSION (released on GitHub)."
           else
             echo "PR already open for bump-courier-ios-$VERSION; branch updated."
           fi
