@@ -64,7 +64,7 @@ import UIKit
                         font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
                         color: .label
                     ),
-                    color: .lightGray
+                    color: Theme.Inbox.unselectedCountColor
                 )
             )
         ),
@@ -194,7 +194,7 @@ import UIKit
             if let customColor = tabStyle.unselected.indicator.color {
                 return customColor
             } else {
-                return .lightGray
+                return Theme.Inbox.unselectedCountColor
             }
         }
     }

@@ -43,7 +43,7 @@ import UIKit
         ),
         topicSubtitleFont: CourierStyles.Font = CourierStyles.Font(
             font: UIFont.systemFont(ofSize: UIFont.labelFontSize),
-            color: .label
+            color: .secondaryLabel
         ),
         topicButton: CourierStyles.Button = CourierStyles.Button(
             font: CourierStyles.Font(font: UIFont.boldSystemFont(ofSize: UIFont.labelFontSize), color: .label),

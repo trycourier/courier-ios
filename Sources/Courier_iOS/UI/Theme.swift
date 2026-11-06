@@ -19,6 +19,11 @@ public enum Theme {
         static let loadingIndicatorBottom: CGFloat = 24.0
         static let indicatorDotSize: CGFloat = 12.0
         static let actionButtonMaxHeight: CGFloat = 34.33
+        // The unselected count's text is .label, which is white in dark mode, so a fixed light
+        // gray left it at about 2.3:1 contrast there. Light mode keeps the same gray as before.
+        public static let unselectedCountColor = UIColor { traits in
+            traits.userInterfaceStyle == .dark ? .systemGray3 : .lightGray
+        }
     }
     
     public enum Preferences {
