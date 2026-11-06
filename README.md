@@ -4,7 +4,7 @@
 
 The Courier iOS SDK provides prebuilt UI components and Swift APIs for adding in-app notifications, push notifications, and notification preferences to your iOS app. It handles authentication, token management, and real-time message delivery so you can focus on your app.
 
-Requires iOS 15.0+.
+Requires iOS 15.0+ and Xcode 16+.
 
 ## Installation
 
@@ -17,6 +17,10 @@ https://github.com/trycourier/courier-ios
 ```
 
 ### CocoaPods
+
+```ruby
+pod 'Courier_iOS'
+```
 
 CocoaPods trunk goes read-only on December 2, 2026, and 6.0.7 is the last version published
 there. To use a later version, point the pod at its release tag:
