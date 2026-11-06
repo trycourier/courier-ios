@@ -501,8 +501,7 @@ class InboxTests: XCTestCase {
     /// Tracks the listener and the number of messages it has seen. Isolated to the main actor
     /// because inbox listener callbacks are delivered there.
     @MainActor final class SpamState {
-        var messageCount = 0
-        var listener: CourierInboxListener? = nil
+        var receivedIds = Set<String>()
     }
 
     func testSpamMessages() async throws {
@@ -510,44 +509,43 @@ class InboxTests: XCTestCase {
         let count = 25
         let state = SpamState()
 
-        // Wait for all messages to be received
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            Task {
-                // Add a listener that increments messageCount
-                let listener = await Courier.shared.addInboxListener(onMessageEvent: { _, _, _, event in
-                    if event == .added {
-                        state.messageCount += 1
-                        print("Message Count updated: \(state.messageCount)")
+        // Every live test shares one user, so match arrivals to this test's own message ids.
+        // Counting every added event let another test's message fill the count early or push it
+        // to 26 before the listener was removed.
+        let listener = await Courier.shared.addInboxListener(onMessageEvent: { message, _, _, event in
+            if event == .added {
+                state.receivedIds.insert(message.messageId)
+            }
+        })
 
-                        // Resume once we've seen all 25
-                        if state.messageCount == count {
-                            continuation.resume()
-                        }
-                    }
-                })
-                await MainActor.run { state.listener = listener }
-                
-                // Send all messages in parallel
-                try await withThrowingTaskGroup(of: Void.self) { group in
-                    for _ in 1...count {
-                        group.addTask {
-                            // Could also do Utils.sendWithDelay if you want an explicit delay
-                            _ = try await Utils.sendMessageWithDelay(to: userId, delay: 0)
-                        }
-                    }
-                    try await group.waitForAll()
-                    print("All message sends have completed")
+        // Send all messages in parallel
+        let sentIds = try await withThrowingTaskGroup(of: String.self) { group in
+            for _ in 1...count {
+                group.addTask {
+                    try await Utils.sendMessageWithDelay(to: userId, delay: 0)
                 }
             }
+            var ids = Set<String>()
+            for try await id in group {
+                ids.insert(id)
+            }
+            return ids
         }
-        
-        // Clean up
-        if let listener = await state.listener {
-            await Courier.shared.removeInboxListener(listener)
+        print("All message sends have completed")
+        XCTAssertEqual(sentIds.count, count, "Every send should return its own message id")
+
+        // Wait for all of them to be received
+        try await Utils.withTimeout(seconds: 45, description: "all \(count) messages to arrive") {
+            while await MainActor.run(body: { !sentIds.isSubset(of: state.receivedIds) }) {
+                try await Task.sleep(nanoseconds: 250_000_000)
+            }
         }
 
+        // Clean up
+        await Courier.shared.removeInboxListener(listener)
+
         // Final assert: all 25 messages should have arrived
-        let messageCount = await state.messageCount
-        XCTAssertEqual(messageCount, count)
+        let arrived = await MainActor.run { sentIds.intersection(state.receivedIds).count }
+        XCTAssertEqual(arrived, count)
     }
 }

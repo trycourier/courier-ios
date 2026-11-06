@@ -215,7 +215,8 @@ jobs:
   live-integration-tests:
     name: Live integration tests
     needs: test
-    continue-on-error: true
+    # Pull requests from forks get no secrets, so the suite could only fail there
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: macos-26
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
@@ -271,10 +272,13 @@ jobs:
           xcrun simctl list devices | grep "$UDID"
           echo "DESTINATION=id=$UDID" >> "$GITHUB_ENV"
 
+      # Several live tests wait up to 60s for a delivery inside Utils.withTimeout. The allowance has
+      # to be longer than that, or xcodebuild kills the test before the timeout can fail it with a
+      # reason, and reports a crash instead.
       - name: Run live integration tests
         run: |
           xcodebuild -scheme Courier_iOS \
             -destination "$DESTINATION" \
             -test-timeouts-enabled YES \
-            -default-test-execution-time-allowance 10 \
+            -default-test-execution-time-allowance 120 \
             test

@@ -41,10 +41,14 @@ xcodebuild -scheme Courier_iOS \
 ## Live integration tests
 
 Drop the `-only-testing` flags to run everything. These hit the real Courier API — they
-send messages, mutate user preferences, and depend on shared workspace state, which is
-why the `Live integration tests` job is `continue-on-error: true`.
+send messages, mutate user preferences, and depend on shared workspace state. Every live
+test signs in as the same user, so a test that counts inbox events must count only the
+message ids it sent: other tests' messages arrive in its window too.
 
-Raise the time allowance; several live tests legitimately take ~30s:
+Raise the time allowance; several live tests legitimately take ~30s, and some wait up to
+60s inside `Utils.withTimeout`. CI's `Live integration tests` job uses 120s for the same
+reason — below 60s, xcodebuild kills a slow test and reports a crash instead of the
+timeout's message:
 
 ```bash
 xcodebuild -scheme Courier_iOS \
