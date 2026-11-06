@@ -50,8 +50,9 @@ jobs:
 
       - name: Create git tag
         if: steps.check.outputs.deployed == 'true'
+        env:
+          VERSION: ${{ steps.check.outputs.version }}
         run: |
-          VERSION="${{ steps.check.outputs.version }}"
           git tag "$VERSION"
           git push origin "$VERSION"
 
@@ -69,9 +70,11 @@ jobs:
         if: steps.check.outputs.deployed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.check.outputs.version }}
+          # Commit subjects are untrusted; as env they stay data instead of becoming shell source.
+          RELEASE_NOTES: ${{ steps.notes.outputs.notes }}
         run: |
-          VERSION="${{ steps.check.outputs.version }}"
-          gh release create "$VERSION" --notes "${{ steps.notes.outputs.notes }}"
+          gh release create "$VERSION" --notes "$RELEASE_NOTES"
 
       - name: Setup CocoaPods auth
         if: steps.check.outputs.deployed == 'true'
