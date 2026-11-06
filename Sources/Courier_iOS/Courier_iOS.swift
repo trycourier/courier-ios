@@ -28,7 +28,7 @@ import UIKit
     
     // MARK: Versioning
     
-    internal static let version = "6.0.7"
+    internal static let version = "6.0.8"
 
     // Wrapper SDKs (React Native, Flutter) set the agent at startup and networking code reads it
     // from nonisolated contexts, so it sits behind a lock rather than on an actor.
@@ -48,6 +48,7 @@ import UIKit
     @objc public static let shared: Courier = {
         let courier = Courier()
         courier.client = courier.authenticationModule.restoreClient()
+        Task { await courier.tokenModule.retryPendingDeletes() }
         return courier
     }()
     
