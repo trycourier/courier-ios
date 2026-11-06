@@ -87,9 +87,11 @@ jobs:
 
   test:
     name: Test
-    runs-on: macos-15
+    runs-on: macos-26
     env:
-      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      # App Store submissions have required Xcode 26 since April 2026. Pinned so a runner image
+      # update cannot change the toolchain under a release.
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -168,10 +170,10 @@ jobs:
   # the UI or the sample app itself. Build only: no signing, placeholder Env.swift.
   example:
     name: Sample app build
-    runs-on: macos-15
+    runs-on: macos-26
     env:
       # Xcode 26 builds the Liquid Glass paths; App Store builds require it too
-      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -190,13 +192,33 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             -quiet
 
+  # Package.swift declares swift-tools-version 6.0, so apps still on Xcode 16 can add the
+  # package. Building the SDK there catches an API that only exists in a newer SDK before a
+  # release breaks those apps. Build only: tests run on the current Xcode above.
+  oldest-xcode:
+    name: Build on Xcode 16
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Build Courier_iOS
+        run: |
+          xcodebuild build \
+            -scheme Courier_iOS \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            -quiet
+
   live-integration-tests:
     name: Live integration tests
     needs: test
     continue-on-error: true
-    runs-on: macos-15
+    runs-on: macos-26
     env:
-      DEVELOPER_DIR: /Applications/Xcode_16.4.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
     steps:
       - name: Checkout
         uses: actions/checkout@v5
