@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  # CocoaPods trunk versions are immutable, so a PR that ships source changes without bumping the
-  # version cannot be published after merge -- Deploy would find the version already on trunk and
-  # silently skip. Catch that here, before the merge, rather than discovering it in a release.
+  # A released version's tag can't be reused, so a PR that ships source changes without bumping the
+  # version cannot be released after merge -- Deploy would find the tag already there and silently
+  # skip. Catch that here, before the merge, rather than discovering it in a release.
   version:
     name: Version guard
     # Only meaningful before a merge. On main, Deploy decides what to publish.
@@ -49,8 +49,9 @@ jobs:
             echo "$CHANGED"
           fi
 
-          PUBLISHED=$(curl -sf "https://trunk.cocoapods.org/api/v1/pods/Courier_iOS" \
-            | python3 -c "import sys,json; print('\n'.join(v['name'] for v in json.load(sys.stdin)['versions']))")
+          # Releases are the x.y.z tags Deploy creates. CocoaPods trunk stopped at 6.0.5, so it no
+          # longer lists every release.
+          PUBLISHED=$(git tag --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' || true)
 
           VERSION="$PODSPEC_VERSION" PUBLISHED="$PUBLISHED" python3 <<'PY'
           import os, sys
@@ -65,8 +66,8 @@ jobs:
           published = [p for p in os.environ["PUBLISHED"].split() if p]
 
           if version in published:
-              print(f"::error::Courier_iOS {version} is already published to CocoaPods trunk. "
-                    "Trunk versions are immutable, so Deploy would skip this release silently. "
+              print(f"::error::Courier_iOS {version} is already released (the {version} tag exists), "
+                    "so Deploy would skip this release silently. "
                     "Bump the version in Courier_iOS.podspec and Sources/Courier_iOS/Courier_iOS.swift.")
               sys.exit(1)
 
@@ -77,12 +78,12 @@ jobs:
                   print(f"::error::Could not parse version '{version}' as x.y.z.")
                   sys.exit(1)
               if parse(version) <= parse(latest):
-                  print(f"::error::Courier_iOS {version} is not ahead of the latest published "
+                  print(f"::error::Courier_iOS {version} is not ahead of the latest released "
                         f"version ({latest}). Versions must increase.")
                   sys.exit(1)
-              print(f"OK: {version} is unpublished and ahead of {latest}.")
+              print(f"OK: {version} is unreleased and ahead of {latest}.")
           else:
-              print(f"OK: {version} is unpublished.")
+              print(f"OK: {version} is unreleased.")
           PY
 
   test:

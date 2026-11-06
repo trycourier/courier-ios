@@ -1,6 +1,6 @@
 ---
 name: release
-description: Bump the Courier_iOS version and get it published to CocoaPods. Use when cutting a release, deciding whether a change is a patch/minor/major bump, when CI's "Version guard" job fails, when a merge to main didn't publish anything, or when the Flutter/React Native wrappers need to pick up a new Courier_iOS. Covers the immutable-trunk trap that makes a missed bump fail silently.
+description: Bump the Courier_iOS version and get it released. Use when cutting a release, deciding whether a change is a patch/minor/major bump, when CI's "Version guard" job fails, when a merge to main didn't release anything, or when the Flutter/React Native wrappers need to pick up a new Courier_iOS. Covers the reused-version trap that makes a missed bump fail silently, and why releases no longer go to CocoaPods trunk.
 ---
 
 # Release a version
@@ -42,18 +42,18 @@ Minor (or higher), not patch, when the change:
 
 Patch is for fixes and internal changes that no integrator needs to know about.
 
-## Trunk versions are immutable
+## A released version can't be reused
 
-**A version published to CocoaPods trunk can never be re-pushed.** This is the trap
-worth internalizing: if you merge source changes without bumping, Deploy finds the
-version already on trunk, sets `deployed=false`, and **the run still succeeds** — having
-published nothing. The changes sit on `main` and never reach CocoaPods or the wrappers.
+**A release is the version's git tag, and a tag is never moved.** This is the trap worth
+internalizing: if you merge source changes without bumping, Deploy finds the tag already
+there, sets `deployed=false`, and **the run still succeeds** — having released nothing.
+The changes sit on `main` and never reach Swift Package Manager or the wrappers.
 
 Two things guard this:
 
 - **CI `Version guard`** (`.github/workflows/ci.yml`) fails a PR whose changes under
-  `Sources/` or the podspec are not paired with a version that is unpublished *and*
-  ahead of the latest on trunk. PRs that touch only docs or workflows are exempt.
+  `Sources/` or the podspec are not paired with a version that has no tag yet *and* is
+  ahead of the latest released tag. PRs that touch only docs or workflows are exempt.
 - **Deploy** emits a `::warning::` on its skip path so a bypassed guard is still visible
   in the run summary.
 
@@ -64,20 +64,23 @@ If `Version guard` fails, the fix is always to bump — never to work around it.
 `.github/workflows/deploy.yml` runs on every push to `main`:
 
 1. Reads both versions, fails on mismatch.
-2. Checks trunk. Already there → warn and skip (see above). Otherwise:
-3. Tags the commit, creates a GitHub release with generated notes,
-   `pod trunk push`es the podspec.
+2. Checks for the version's tag. Already there → warn and skip (see above). Otherwise:
+3. Tags the commit and creates a GitHub release with generated notes. Swift Package
+   Manager picks the version up from the tag.
 4. `bump-downstream` opens PRs against **courier-flutter** and **courier-react-native**
-   rewriting their podspec pin to the new version.
+   rewriting their Courier_iOS pins (podspec, and Swift Package Manager where the
+   wrapper has one) to the new version.
 
 Those two PRs are the moment the wrappers first compile against the new code. They pin
 `Courier_iOS` **exactly**, so they never float — give each one a real CI run rather than
 a rubber stamp, particularly for a release that changes concurrency or public API.
 
-## Publishing by hand
+## CocoaPods trunk
 
-Only if Deploy is broken:
+6.0.5 is the last version on CocoaPods trunk, which goes read-only on December 2, 2026,
+so Deploy no longer pushes there. Keep `Courier_iOS.podspec` in step anyway: CocoaPods
+users install later versions by tag (`pod 'Courier_iOS', :git => …, :tag => 'x.y.z'`),
+which reads the podspec at that tag.
 
-```bash
-./Scripts/manually_release_pod.sh       # pod trunk push, needs trunk auth
-```
+`./Scripts/manually_release_pod.sh` still runs `pod trunk push`, which only works until
+trunk goes read-only and needs trunk auth.
