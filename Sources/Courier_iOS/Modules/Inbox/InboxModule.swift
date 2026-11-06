@@ -28,6 +28,32 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     
     var state: State = .uninitialized
     var paginationLimit: Int = Pagination.default.rawValue
+
+    // The network loads, as replaceable closures so tests can hold one open across a sign-out
+    lazy var loadInbox: @CourierActor (CourierClient, Int, Int, Bool) async throws -> (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int) = { [dataService] client, feedLimit, archiveLimit, isRefresh in
+        try await dataService.getInboxData(
+            client: client,
+            feedPaginationLimit: feedLimit,
+            archivePaginationLimit: archiveLimit,
+            isRefresh: isRefresh
+        )
+    }
+
+    lazy var loadNextPage: @CourierActor (CourierClient, InboxMessageFeed, Int, String) async throws -> InboxMessageSet = { [dataService] client, feed, limit, cursor in
+        switch feed {
+        case .feed:
+            return try await dataService.getNextFeedPage(client: client, paginationLimit: limit, paginationCursor: cursor)
+        case .archive:
+            return try await dataService.getNextArchivePage(client: client, paginationLimit: limit, paginationCursor: cursor)
+        }
+    }
+
+    // @CourierActor is reentrant across awaits, so a user can sign out or another user can sign in
+    // while a request is in flight. Its results belong to the old session and must be dropped, or
+    // the previous user's inbox comes back on screen.
+    func isCurrent(_ client: CourierClient) -> Bool {
+        return courier.client === client
+    }
     
     init(courier: Courier) {
         self.courier = courier
@@ -81,17 +107,14 @@ internal class InboxModule: InboxDataStoreEventDelegate {
             )
             
             // Get the inbox data
-            let snapshot = try await dataService.getInboxData(
-                client: client,
-                feedPaginationLimit: feedPaginationLimit,
-                archivePaginationLimit: archivePaginationLimit,
-                isRefresh: isRefresh
-            )
-            
+            let snapshot = try await loadInbox(client, feedPaginationLimit, archivePaginationLimit, isRefresh)
+            guard isCurrent(client) else { return }
+
             // Connect the socket
             // If this fails, it will fail silently
             await connectSocketIfPossible(client)
-            
+            guard isCurrent(client) else { return }
+
             // Post the data
             await dataStore.reloadSnapshot(snapshot)
             self.state = .initialized
@@ -111,36 +134,38 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                 client: client,
                 onReceivedMessage: { [weak self] message in
                     Task {
-                        await self?.dataStore.addMessage(message, at: 0, to: .feed)
+                        guard let self, await self.isCurrent(client) else { return }
+                        await self.dataStore.addMessage(message, at: 0, to: .feed)
                     }
                 },
                 onReceivedMessageEvent: { [weak self] event in
                     Task {
+                        guard let self, await self.isCurrent(client) else { return }
                         switch event.event {
                         case .markAllRead:
-                            await self?.dataStore.readAllMessages(client: nil)
+                            await self.dataStore.readAllMessages(client: nil)
                         case .read:
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
-                            await self?.dataStore.readMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.readMessage(message, from: .archive, client: nil)
+                            await self.dataStore.readMessage(message, from: .feed, client: nil)
+                            await self.dataStore.readMessage(message, from: .archive, client: nil)
                         case .unread:
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
-                            await self?.dataStore.unreadMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.unreadMessage(message, from: .archive, client: nil)
+                            await self.dataStore.unreadMessage(message, from: .feed, client: nil)
+                            await self.dataStore.unreadMessage(message, from: .archive, client: nil)
                         case .opened:
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
-                            await self?.dataStore.openMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.openMessage(message, from: .archive, client: nil)
+                            await self.dataStore.openMessage(message, from: .feed, client: nil)
+                            await self.dataStore.openMessage(message, from: .archive, client: nil)
                         case .unopened:
                             break
                         case .archive:
                             guard let messageId = event.messageId else { return }
                             let message = InboxMessage(messageId: messageId)
-                            await self?.dataStore.archiveMessage(message, from: .feed, client: nil)
-                            await self?.dataStore.archiveMessage(message, from: .archive, client: nil)
+                            await self.dataStore.archiveMessage(message, from: .feed, client: nil)
+                            await self.dataStore.archiveMessage(message, from: .archive, client: nil)
                         case .unarchive:
                             break
                         case .click:
@@ -183,12 +208,9 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                 return nil
             }
             
-            let data = try await dataService.getNextFeedPage(
-                client: client,
-                paginationLimit: limit,
-                paginationCursor: cursor
-            )
-            
+            let data = try await loadNextPage(client, .feed, limit, cursor)
+            guard isCurrent(client) else { return nil }
+
             await dataStore.addPage(data, for: .feed)
             
             return data
@@ -203,12 +225,9 @@ internal class InboxModule: InboxDataStoreEventDelegate {
                 return nil
             }
             
-            let data = try await dataService.getNextFeedPage(
-                client: client,
-                paginationLimit: limit,
-                paginationCursor: cursor
-            )
-            
+            let data = try await loadNextPage(client, .archive, limit, cursor)
+            guard isCurrent(client) else { return nil }
+
             await dataStore.addPage(data, for: .archive)
             
             return data
