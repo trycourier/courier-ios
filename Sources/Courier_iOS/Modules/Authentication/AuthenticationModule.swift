@@ -58,6 +58,10 @@ import Foundation
             showLogs: showLogs
         )
 
+        // Finish removing tokens from earlier sign-outs, but not ones about to be registered here
+        await courier.tokenModule.retryPendingDeletes()
+        courier.tokenModule.forgetPendingDeletes(for: Array(courier.tokenModule.tokens.values))
+
         // Refresh SDK
         await courier.putPushTokens()
         await courier.restartInbox()

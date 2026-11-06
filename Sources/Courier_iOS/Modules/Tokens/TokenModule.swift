@@ -78,6 +78,97 @@ import UIKit
         self.apnsToken = nil
         self.tokens = [:]
     }
+
+    // MARK: Pending deletes
+
+    private let pendingDeletesKey = "courier_pending_token_deletes"
+
+    var pendingDeletes: [PendingTokenDelete] {
+        get {
+            guard case .found(let json) = UserManager.shared.secrets.read(pendingDeletesKey),
+                  let deletes = try? JSONDecoder().decode([PendingTokenDelete].self, from: Data(json.utf8)) else {
+                return []
+            }
+            return deletes
+        }
+        set {
+            let secrets = UserManager.shared.secrets
+            guard !newValue.isEmpty,
+                  let data = try? JSONEncoder().encode(newValue),
+                  let json = String(data: data, encoding: .utf8) else {
+                secrets.delete(pendingDeletesKey)
+                return
+            }
+            secrets.write(json, for: pendingDeletesKey)
+        }
+    }
+
+    // Replaceable so unit tests can run without the network
+    lazy var sendPendingDelete: @CourierActor (PendingTokenDelete) async throws -> Void = { delete in
+        try await delete.client.tokens.deleteUserToken(token: delete.token)
+    }
+
+    private var retrying: Task<Void, Never>?
+
+    func rememberFailedDelete(_ token: String, client: CourierClient?, error: Error) {
+        guard PendingTokenDelete.isRetryable(error), let client, let jwt = client.options.jwt else {
+            return
+        }
+        let delete = PendingTokenDelete(
+            userId: client.options.userId,
+            token: token,
+            jwt: jwt,
+            restUrl: client.options.apiUrls.rest,
+            createdAt: Date()
+        )
+        pendingDeletes = pendingDeletes.filter { $0.token != token || $0.userId != delete.userId } + [delete]
+    }
+
+    // The server moves a token to whoever registers it, so a late delete for the previous user
+    // could take it away from the next one. Called before a token is registered again.
+    func forgetPendingDeletes(for tokens: [String]) {
+        let deletes = pendingDeletes
+        let kept = deletes.filter { !tokens.contains($0.token) }
+        if kept.count != deletes.count {
+            pendingDeletes = kept
+        }
+    }
+
+    // Launch and sign-in can both ask at once; they share one pass
+    func retryPendingDeletes() async {
+        if let retrying {
+            return await retrying.value
+        }
+        let task = Task { await sendPendingDeletes() }
+        retrying = task
+        await task.value
+        retrying = nil
+    }
+
+    private func sendPendingDeletes() async {
+
+        let deletes = pendingDeletes
+        if deletes.isEmpty {
+            return
+        }
+
+        var remaining: [PendingTokenDelete] = []
+        for delete in deletes where !delete.isExpired {
+            do {
+                try await sendPendingDelete(delete)
+            } catch let error where PendingTokenDelete.isRetryable(error) {
+                remaining.append(delete)
+            } catch {
+                continue
+            }
+        }
+
+        // Keep what was added or forgotten while these were in flight
+        let current = pendingDeletes
+        let added = current.filter { !deletes.contains($0) }
+        pendingDeletes = remaining.filter { current.contains($0) } + added
+
+    }
     
 }
 
@@ -164,6 +255,7 @@ extension Courier {
             } catch {
                 let e = CourierError(from: error)
                 client?.log(e.message)
+                tokenModule.rememberFailedDelete(token, client: client, error: error)
             }
         }
     }
