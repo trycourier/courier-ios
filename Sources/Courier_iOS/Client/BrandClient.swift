@@ -20,7 +20,7 @@ public class BrandClient: CourierApiClient, @unchecked Sendable {
         
         let query = """
             query GetBrand {
-                brand(brandId: "\(brandId)") {
+                brand(brandId: \(brandId.graphQLString)) {
                     settings {
                         colors {
                             primary

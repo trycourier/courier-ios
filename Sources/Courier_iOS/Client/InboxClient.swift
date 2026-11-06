@@ -27,7 +27,7 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let query = """
             query GetInboxMessage {
-                message(messageId: \"\(messageId)\") {
+                message(messageId: \(messageId.graphQLString)) {
                     messageId
                     read
                     archived
@@ -75,14 +75,14 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let params: String
         if let tenantId = options.tenantId {
-            params = "= { accountId: \"\(tenantId)\" }"
+            params = "= { accountId: \(tenantId.graphQLString) }"
         } else {
             params = ""
         }
 
         let after: String
         if let startCursor = startCursor {
-            after = "= \"\(startCursor)\""
+            after = "= \(startCursor.graphQLString)"
         } else {
             after = ""
         }
@@ -146,14 +146,14 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let params: String
         if let tenantId = options.tenantId {
-            params = "= { accountId: \"\(tenantId)\", archived: true }"
+            params = "= { accountId: \(tenantId.graphQLString), archived: true }"
         } else {
             params = "= { archived: true }"
         }
 
         let after: String
         if let startCursor = startCursor {
-            after = "= \"\(startCursor)\""
+            after = "= \(startCursor.graphQLString)"
         } else {
             after = ""
         }
@@ -217,7 +217,7 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let params: String
         if let tenantId = options.tenantId {
-            params = "{ accountId: \"\(tenantId)\", status: \"unread\" }"
+            params = "{ accountId: \(tenantId.graphQLString), status: \"unread\" }"
         } else {
             params = "{ status: \"unread\" }"
         }
@@ -255,7 +255,7 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let mutation = """
             mutation TrackEvent {
-                clicked(messageId: \"\(messageId)\", trackingId: \"\(trackingId)\")
+                clicked(messageId: \(messageId.graphQLString), trackingId: \(trackingId.graphQLString))
             }
         """
 
@@ -287,7 +287,7 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let mutation = """
             mutation TrackEvent {
-                read(messageId: \"\(messageId)\")
+                read(messageId: \(messageId.graphQLString))
             }
         """
 
@@ -319,7 +319,7 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let mutation = """
             mutation TrackEvent {
-                unread(messageId: \"\(messageId)\")
+                unread(messageId: \(messageId.graphQLString))
             }
         """
 
@@ -351,7 +351,7 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let mutation = """
             mutation TrackEvent {
-                opened(messageId: \"\(messageId)\")
+                opened(messageId: \(messageId.graphQLString))
             }
         """
 
@@ -383,7 +383,7 @@ public class InboxClient: CourierApiClient, @unchecked Sendable {
         
         let mutation = """
             mutation TrackEvent {
-                archive(messageId: \"\(messageId)\")
+                archive(messageId: \(messageId.graphQLString))
             }
         """
 

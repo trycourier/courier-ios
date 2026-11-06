@@ -23,6 +23,10 @@ import Foundation
     private let defaults = UserDefaults.standard
     static internal let shared = UserManager()
 
+    // The access token and client key go to the Keychain; everything else stays in UserDefaults.
+    // Replaceable so unit tests can run where the Keychain isn't available.
+    var secrets: SecretStore = KeychainSecretStore()
+
     @discardableResult
     func setCredentials(userId: String, accessToken: String, clientKey: String?, tenantId: String?, apiUrls: CourierClient.ApiUrls, showLogs: Bool) -> Dictionary<String, String>? {
 
@@ -30,7 +34,6 @@ import Foundation
         // The urls and log setting are saved so the client can be rebuilt on the next launch
         var dict = [
             userIdKey: userId,
-            accessTokenKey: accessToken,
             restUrlKey: apiUrls.rest,
             graphqlUrlKey: apiUrls.graphql,
             inboxGraphqlUrlKey: apiUrls.inboxGraphql,
@@ -38,8 +41,14 @@ import Foundation
             showLogsKey: String(showLogs)
         ]
         
-        // Add client key if possible
-        if let key = clientKey {
+        // The secrets go to the Keychain. If it can't be written, they stay in UserDefaults as
+        // before, so signing in never fails because of it.
+        if !secrets.write(accessToken, for: accessTokenKey) {
+            dict[accessTokenKey] = accessToken
+        }
+
+        secrets.delete(clientKeyKey)
+        if let key = clientKey, !secrets.write(key, for: clientKeyKey) {
             dict[clientKeyKey] = key
         }
         
@@ -65,11 +74,40 @@ import Foundation
     }
     
     func getClientKey() -> String? {
-        return getCredentials()?[clientKeyKey]
+        guard getCredentials() != nil else { return nil }
+        return secret(clientKeyKey)
     }
     
     func getAccessToken() -> String? {
-        return getCredentials()?[accessTokenKey]
+        guard getCredentials() != nil else { return nil }
+        let token = secret(accessTokenKey)
+
+        // A saved session with no token: restored from a backup to a new device, where the Keychain
+        // item didn't come along. Sign out, rather than report a user with no client.
+        if token == nil, case .missing = secrets.read(accessTokenKey) {
+            removeCredentials()
+        }
+
+        return token
+    }
+
+    // Reads a secret, moving one saved by an earlier version from UserDefaults into the Keychain
+    private func secret(_ key: String) -> String? {
+
+        if var credentials = getCredentials(), let legacy = credentials[key] {
+            if secrets.write(legacy, for: key) {
+                credentials[key] = nil
+                defaults.set(credentials, forKey: credentialsKey)
+            }
+            return legacy
+        }
+
+        if case .found(let value) = secrets.read(key) {
+            return value
+        }
+
+        return nil
+
     }
     
     func getTenantId() -> String? {
@@ -102,6 +140,8 @@ import Foundation
 
     func removeCredentials() {
         defaults.removeObject(forKey: credentialsKey)
+        secrets.delete(accessTokenKey)
+        secrets.delete(clientKeyKey)
     }
     
 }

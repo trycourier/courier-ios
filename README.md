@@ -18,7 +18,7 @@ https://github.com/trycourier/courier-ios
 
 ### CocoaPods
 
-CocoaPods trunk goes read-only on December 2, 2026, and 6.0.6 is the last version published
+CocoaPods trunk goes read-only on December 2, 2026, and 6.0.7 is the last version published
 there. To use a later version, point the pod at its release tag:
 
 ```ruby

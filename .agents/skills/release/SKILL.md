@@ -77,7 +77,7 @@ a rubber stamp, particularly for a release that changes concurrency or public AP
 
 ## CocoaPods trunk
 
-6.0.6 is the last version on CocoaPods trunk, which goes read-only on December 2, 2026,
+6.0.7 is the last version on CocoaPods trunk, which goes read-only on December 2, 2026,
 so Deploy no longer pushes there. Keep `Courier_iOS.podspec` in step anyway: CocoaPods
 users install later versions by tag (`pod 'Courier_iOS', :git => …, :tag => 'x.y.z'`),
 which reads the podspec at that tag.

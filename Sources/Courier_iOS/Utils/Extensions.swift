@@ -301,6 +301,36 @@ public extension [AnyHashable : Any] {
     
 }
 
+internal extension String {
+
+    // A GraphQL string literal, quotes included. GraphQL's escapes are JSON's, so JSON-encoding the
+    // value can't break out of the string the way plain interpolation could.
+    var graphQLString: String {
+        // Slashes stay as they are, so a base64 cursor goes back exactly as the server sent it
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .withoutEscapingSlashes
+        guard let data = try? encoder.encode(self), let literal = String(data: data, encoding: .utf8) else {
+            return "\"\""
+        }
+        return literal
+    }
+
+    // One URL path segment. Ids can contain `/`, `?`, `#` or `+`, which would otherwise change the path.
+    var urlPathSegment: String {
+        var allowed = CharacterSet.urlPathAllowed
+        allowed.remove(charactersIn: "/?#+")
+        return addingPercentEncoding(withAllowedCharacters: allowed) ?? self
+    }
+
+    // One query value. `+`, `&` and `=` would otherwise change the query.
+    var urlQueryValue: String {
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "+&=?#")
+        return addingPercentEncoding(withAllowedCharacters: allowed) ?? self
+    }
+
+}
+
 public extension String {
     
     func track(with event: CourierTrackingEvent) async {

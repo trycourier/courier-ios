@@ -18,10 +18,10 @@ public class PreferenceClient: CourierApiClient, @unchecked Sendable {
     
     public func getUserPreferences(paginationCursor: String? = nil) async throws -> CourierUserPreferences {
         
-        var url = "\(options.apiUrls.rest)/users/\(options.userId)/preferences"
+        var url = "\(options.apiUrls.rest)/users/\(options.userId.urlPathSegment)/preferences"
         
         if let cursor = paginationCursor {
-            url += "?cursor=\(cursor)"
+            url += "?cursor=\(cursor.urlQueryValue)"
         }
 
         let request = try http(url) {
@@ -40,7 +40,7 @@ public class PreferenceClient: CourierApiClient, @unchecked Sendable {
     
     public func getUserPreferenceTopic(topicId: String) async throws -> CourierUserPreferencesTopic {
         
-        let url = "\(options.apiUrls.rest)/users/\(options.userId)/preferences/\(topicId)"
+        let url = "\(options.apiUrls.rest)/users/\(options.userId.urlPathSegment)/preferences/\(topicId.urlPathSegment)"
 
         let request = try http(url) {
             
@@ -59,7 +59,7 @@ public class PreferenceClient: CourierApiClient, @unchecked Sendable {
     
     public func putUserPreferenceTopic(topicId: String, status: CourierUserPreferencesStatus, hasCustomRouting: Bool, customRouting: [CourierUserPreferencesChannel]) async throws {
         
-        let url = "\(options.apiUrls.rest)/users/\(options.userId)/preferences/\(topicId)"
+        let url = "\(options.apiUrls.rest)/users/\(options.userId.urlPathSegment)/preferences/\(topicId.urlPathSegment)"
 
         let request = try http(url) {
             

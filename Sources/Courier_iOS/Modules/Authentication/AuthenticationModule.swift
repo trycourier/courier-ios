@@ -45,8 +45,8 @@ import Foundation
         Signing user in
         User Id: \(userId)
         Tenant Id: \(tenantId ?? "Not set")
-        Access Token: \(accessToken)
-        Client Key: \(clientKey ?? "Not set")
+        Access Token: <redacted>
+        Client Key: \(clientKey == nil ? "Not set" : "<redacted>")
         """)
         
         UserManager.shared.setCredentials(
