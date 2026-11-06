@@ -9,38 +9,54 @@ import UIKit
 import Courier_iOS
 import ShowTime
 
-enum CourierEnvironment: String, CaseIterable {
-    case production = "Production"
-    case productionEU = "Production EU"
-    case staging = "Staging"
-    case dev = "Dev"
-    case custom = "Custom"
-    
-    var urls: CourierClient.ApiUrls? {
-        switch self {
-        case .production:
-            return .us
-        case .productionEU:
-            return .eu
-        case .staging:
-            return CourierClient.ApiUrls(
-                rest: "https://api.courierstaging.com",
-                graphql: "https://api.courierstaging.com/client/q",
-                inboxGraphql: "http://inbox.courierstaging.com/",
-                inboxWebSocket: "wss://inbox-staging-ws-alb-490231599.us-east-1.elb.amazonaws.com"
-            )
-        case .dev:
-            return CourierClient.ApiUrls(
-                rest: "https://api.courierdev.com",
-                graphql: "https://api.courierdev.com/client/q",
-                inboxGraphql: "https://inbox.courierdev.com/q",
-                inboxWebSocket: "wss://9mrugsdnk1.execute-api.us-east-1.amazonaws.com/dev"
-            )
-        case .custom:
-            return nil
-        }
+struct CourierEnvironment: Equatable {
+    let name: String
+    let urls: CourierClient.ApiUrls?
+
+    static let production = CourierEnvironment(name: "Production", urls: .us)
+    static let productionEU = CourierEnvironment(name: "Production EU", urls: .eu)
+    static let custom = CourierEnvironment(name: "Custom", urls: nil)
+
+    // Only production hosts are committed, because this repo is public. Internal hosts come from
+    // the gitignored Env.swift through `localEnvironments`, so a local build can still offer them.
+    static var all: [CourierEnvironment] {
+        [.production, .productionEU] + Env.localEnvironments + [.custom]
+    }
+
+    static func named(_ name: String) -> CourierEnvironment? {
+        all.first { $0.name == name }
+    }
+
+    static func == (lhs: CourierEnvironment, rhs: CourierEnvironment) -> Bool {
+        lhs.name == rhs.name
     }
 }
+
+/**
+ Extra environments for local builds. Declare them in the gitignored Env.swift, and the
+ environment picker lists them between Production EU and Custom:
+
+ ```swift
+ static let localEnvironments: [CourierEnvironment] = [
+     CourierEnvironment(name: "My Environment", urls: CourierClient.ApiUrls(
+         rest: "https://…", graphql: "https://…/client/q",
+         inboxGraphql: "https://…/q", inboxWebSocket: "wss://…"
+     ))
+ ]
+ ```
+
+ Env.swift files that don't declare it, like the copy CI makes from EnvSample.swift, fall back to
+ the empty default below and keep compiling.
+ */
+protocol LocalEnvironmentProviding {
+    static var localEnvironments: [CourierEnvironment] { get }
+}
+
+extension LocalEnvironmentProviding {
+    static var localEnvironments: [CourierEnvironment] { [] }
+}
+
+extension Env: LocalEnvironmentProviding {}
 
 class AuthViewController: UIViewController, UICollectionViewDelegate {
     
@@ -79,11 +95,13 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
         let userManager = UserManager.shared
         let credentials = userManager.getCredentials()
         
-        let envName = credentials["environment"] ?? CourierEnvironment.production.rawValue
-        selectedEnvironment = CourierEnvironment(rawValue: envName) ?? .production
+        // A saved environment this build doesn't define (a local one, removed from Env.swift) keeps
+        // its saved URLs, so it's labeled Custom rather than Production.
+        let envName = credentials["environment"] ?? CourierEnvironment.production.name
+        selectedEnvironment = CourierEnvironment.named(envName) ?? .custom
         
         return [
-            ("Environment", selectedEnvironment.rawValue),
+            ("Environment", selectedEnvironment.name),
             ("User ID", credentials["userId"] ?? ""),
             ("Tenant ID (Optional)", credentials["tenantId"] ?? ""),
             ("API Key", credentials["apiKey"] ?? Env.COURIER_AUTH_KEY),
@@ -273,8 +291,8 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
     }
     
     private func environmentMenu() -> UIMenu {
-        return UIMenu(children: CourierEnvironment.allCases.map { env in
-            UIAction(title: env.rawValue, state: env == selectedEnvironment ? .on : .off) { [weak self] _ in
+        return UIMenu(children: CourierEnvironment.all.map { env in
+            UIAction(title: env.name, state: env == selectedEnvironment ? .on : .off) { [weak self] _ in
                 self?.applyEnvironment(env)
             }
         })
@@ -343,10 +361,10 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
     
     private func applyEnvironment(_ env: CourierEnvironment) {
         selectedEnvironment = env
-        options[0].1 = env.rawValue
+        options[0].1 = env.name
         
         let userManager = UserManager.shared
-        userManager.setCredential(key: "environment", value: env.rawValue)
+        userManager.setCredential(key: "environment", value: env.name)
         
         if let urls = env.urls {
             options[4].1 = urls.rest
@@ -380,8 +398,8 @@ class AuthViewController: UIViewController, UICollectionViewDelegate {
         
         if row >= 4 && selectedEnvironment != .custom {
             selectedEnvironment = .custom
-            options[0].1 = CourierEnvironment.custom.rawValue
-            userManager.setCredential(key: "environment", value: CourierEnvironment.custom.rawValue)
+            options[0].1 = CourierEnvironment.custom.name
+            userManager.setCredential(key: "environment", value: CourierEnvironment.custom.name)
         }
         
         reloadItems()
