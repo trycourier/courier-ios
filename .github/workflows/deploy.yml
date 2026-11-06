@@ -113,10 +113,11 @@ jobs:
           git fetch origin main
           git checkout main
 
-          # Single-quoted podspec: s.dependency 'Courier_iOS', 'x.y.z'
-          CURRENT=$(grep -oP "Courier_iOS',\\s*'\\K[^']+" ios/courier_flutter.podspec | head -1)
+          # Swift Package Manager gets every release: .package(url: ".../courier-ios", exact: "x.y.z").
+          # The podspec stays on 6.0.7, the last Courier_iOS on CocoaPods trunk, so it isn't bumped.
+          CURRENT=$(grep -oP 'courier-ios", exact: "\K[^"]+' ios/courier_flutter/Package.swift | head -1 || true)
           if [ -z "$CURRENT" ]; then
-            echo "::error::Could not read Courier_iOS version from ios/courier_flutter.podspec"
+            echo "::error::Could not read the Courier_iOS version from ios/courier_flutter/Package.swift"
             exit 1
           fi
           if [ "$CURRENT" = "$VERSION" ]; then
@@ -126,12 +127,7 @@ jobs:
           echo "courier-flutter: bumping Courier_iOS $CURRENT -> $VERSION"
 
           git checkout -b "bump-courier-ios-$VERSION"
-          # Flutter podspec uses single quotes: s.dependency 'Courier_iOS', '5.7.14'
-          sed -i "s/s.dependency 'Courier_iOS', '[^']*'/s.dependency 'Courier_iOS', '$VERSION'/" ios/courier_flutter.podspec
-          # Swift Package Manager pins the same version: .package(url: ".../courier-ios", exact: "5.9.0")
-          if [ -f ios/courier_flutter/Package.swift ]; then
-            sed -i 's/\(courier-ios", exact: "\)[^"]*"/\1'"$VERSION"'"/' ios/courier_flutter/Package.swift
-          fi
+          sed -i 's/\(courier-ios", exact: "\)[^"]*"/\1'"$VERSION"'"/' ios/courier_flutter/Package.swift
           # The example's notification service extension links Courier_iOS through SPM too.
           perl -0pi -e 's/(repositoryURL = "https:\/\/github\.com\/trycourier\/courier-ios";\s*requirement = \{[^}]*minimumVersion = )[0-9.]+;/${1}'"$VERSION"';/' example/ios/Runner.xcodeproj/project.pbxproj
 
@@ -166,13 +162,11 @@ jobs:
           git fetch origin main
           git checkout main
 
-          # The podspec pins `courier_ios_version = "x.y.z"` (used by spm_dependency and the
-          # CocoaPods fallback). Older releases used s.dependency "Courier_iOS", "x.y.z".
+          # The podspec pins `courier_ios_version = "x.y.z"` for spm_dependency, which gets every
+          # release. The CocoaPods fallback (`courier_ios_trunk_version`) stays on 6.0.7, the last
+          # Courier_iOS on trunk, so it isn't bumped.
           # `|| true`: under pipefail a grep that matches nothing would end the step.
           CURRENT=$(grep -oP 'courier_ios_version = "\K[^"]+' courier-react-native.podspec | head -1 || true)
-          if [ -z "$CURRENT" ]; then
-            CURRENT=$(grep -oP 'Courier_iOS",\s*"\K[^"]+' courier-react-native.podspec | head -1 || true)
-          fi
           if [ -z "$CURRENT" ]; then
             echo "::error::Could not read Courier_iOS version from courier-react-native.podspec"
             exit 1
@@ -188,7 +182,6 @@ jobs:
 
           git checkout -b "bump-courier-ios-$VERSION"
           sed -i 's/courier_ios_version = "[^"]*"/courier_ios_version = "'"$VERSION"'"/' courier-react-native.podspec
-          sed -i 's/s.dependency "Courier_iOS", "[^"]*"/s.dependency "Courier_iOS", "'"$VERSION"'"/' courier-react-native.podspec
 
           git add -A
           git commit -m "Bump Courier_iOS to $VERSION"
