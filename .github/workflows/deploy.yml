@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
 
       # A release is a git tag: Swift Package Manager resolves versions from tags. CocoaPods
-      # trunk goes read-only on Dec 2, 2026, and 6.0.6 is the last version published there.
+      # trunk goes read-only on Dec 2, 2026, and 6.0.7 is the last version published there.
       # CocoaPods users on later versions point the pod at a tag instead.
       - name: Check version
         id: check

@@ -47,9 +47,10 @@ open class CourierDelegate: UIResponder, UIApplicationDelegate {
 
         Task {
             let message = notification.request.content.userInfo
-            await message.trackingUrl?.track(with: .delivered)
+            // Present first: the banner shouldn't wait on the tracking request
             let presentationOptions = pushNotificationDeliveredInForeground(message: message)
             completionHandler(presentationOptions)
+            await message.trackingUrl?.track(with: .delivered)
         }
         
     }

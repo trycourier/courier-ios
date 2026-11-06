@@ -59,9 +59,9 @@ internal extension CourierClient.Options {
         Method: \(request.httpMethod ?? "")
         """
         
-        // Headers
+        // Headers, without the credentials. Logs end up in consoles, sysdiagnoses and log collectors.
         if let headers = request.allHTTPHeaderFields {
-            let preview = headers.toPreview()
+            let preview = Self.redactingCredentials(headers).toPreview()
             message += "\nHeaders: \(preview)"
         }
         
@@ -75,6 +75,16 @@ internal extension CourierClient.Options {
         
     }
     
+    static let credentialHeaders: Set<String> = ["authorization", "x-courier-client-key"]
+
+    static func redactingCredentials(_ headers: [String: String]) -> [String: String] {
+        var redacted = headers
+        for key in headers.keys where credentialHeaders.contains(key.lowercased()) {
+            redacted[key] = "<redacted>"
+        }
+        return redacted
+    }
+
     func log(response: (Data, URLResponse)) throws {
         
         if (!showLogs) {
