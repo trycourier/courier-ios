@@ -222,6 +222,7 @@ class ThreadingTests: XCTestCase {
     /// Counts listener callbacks on the main actor, where they are delivered, so no extra hop is needed.
     @MainActor final class CallbackCounter {
         var count = 0
+        var receivedIds = Set<String>()
     }
 
     actor FetchCounter {
@@ -363,30 +364,46 @@ class ThreadingTests: XCTestCase {
         try await UserBuilder.authenticate()
         let callbackCounter = CallbackCounter()
 
+        // Every live test shares one user, so only this test's own messages count. Before, it
+        // removed the listener as soon as the sends were accepted, which is seconds before any of
+        // them is delivered, and passed only when another test's message happened to land.
         let listener = await Courier.shared.addInboxListener(onMessageEvent: { message, index, feed, event in
             if event == .added {
                 callbackCounter.count += 1
+                callbackCounter.receivedIds.insert(message.messageId)
             }
         })
 
-        try await withThrowingTaskGroup(of: Void.self) { group in
+        let sentIds = try await withThrowingTaskGroup(of: String.self) { group in
             for _ in 0..<100 {
                 group.addTask {
-                    _ = try? await ExampleServer.sendTest(
+                    try await ExampleServer.sendTest(
                         authKey: Env.COURIER_AUTH_KEY,
                         userId: Env.COURIER_USER_ID,
                         channel: "inbox"
                     )
                 }
             }
-            try await group.waitForAll()
+            var ids = Set<String>()
+            for try await id in group where id != "Error" {
+                ids.insert(id)
+            }
+            return ids
+        }
+        Self.log("\(sentIds.count) of 100 sends accepted")
+        XCTAssertFalse(sentIds.isEmpty, "No send was accepted")
+
+        try await Utils.withTimeout(seconds: 30, description: "one of this test's messages to arrive") {
+            while await MainActor.run(body: { callbackCounter.receivedIds.isDisjoint(with: sentIds) }) {
+                try await Task.sleep(nanoseconds: 250_000_000)
+            }
         }
 
         await Courier.shared.removeInboxListener(listener)
 
-        let callbackCount = await callbackCounter.count
-        XCTAssertGreaterThan(callbackCount, 0, "Listener should have been triggered at least once")
-        Self.log("Listener callback stress test completed")
+        let ownCount = await MainActor.run { callbackCounter.receivedIds.intersection(sentIds).count }
+        XCTAssertGreaterThan(ownCount, 0, "Listener should have been triggered at least once")
+        Self.log("Listener callback stress test completed: \(ownCount) of this test's messages arrived")
     }
 
     func testChaosMonkey() async throws {
