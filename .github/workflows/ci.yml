@@ -49,7 +49,7 @@ jobs:
             echo "$CHANGED"
           fi
 
-          # Releases are the x.y.z tags Deploy creates. CocoaPods trunk stopped at 6.0.5, so it no
+          # Releases are the x.y.z tags Deploy creates. CocoaPods trunk stopped at 6.0.6, so it no
           # longer lists every release.
           PUBLISHED=$(git tag --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' || true)
 

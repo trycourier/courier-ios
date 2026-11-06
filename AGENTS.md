@@ -25,7 +25,7 @@ on UIKit. Everything builds and tests through `xcodebuild` against a simulator.
 and **must agree**. A release is the version's git tag, which can't be reused: shipping
 source changes without a bump makes Deploy skip releasing *successfully*, so the changes
 never reach Swift Package Manager or the wrappers. CI's `Version guard` job blocks that —
-see the `release` skill. 6.0.5 is the last version on CocoaPods trunk (read-only from
+see the `release` skill. 6.0.6 is the last version on CocoaPods trunk (read-only from
 Dec 2, 2026); the podspec stays in step so CocoaPods users can install later versions by tag.
 
 ## Swift 6
