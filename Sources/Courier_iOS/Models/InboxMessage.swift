@@ -53,7 +53,9 @@ public class InboxMessage: Codable, @unchecked Sendable {
     }
     
     public func copy() -> InboxMessage {
-        return InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data, trackingIds: trackingIds)
+        let message = InboxMessage(messageId: messageId, title: title, body: body, preview: preview, created: created, archived: archived, read: read, actions: actions, data: data, trackingIds: trackingIds)
+        message.opened = opened
+        return message
     }
     
     public var subtitle: String? {
