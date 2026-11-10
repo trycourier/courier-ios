@@ -37,9 +37,14 @@ class RequestHardeningUnitTests: XCTestCase {
         XCTAssertEqual("a/b".urlPathSegment, "a%2Fb")
         XCTAssertEqual("a?b".urlPathSegment, "a%3Fb")
         XCTAssertEqual("a#b".urlPathSegment, "a%23b")
-        XCTAssertEqual("a+b".urlPathSegment, "a%2Bb")
         XCTAssertEqual("a b".urlPathSegment, "a%20b")
         XCTAssertEqual("../tokens".urlPathSegment, "..%2Ftokens")
+    }
+
+    // The API keeps `%2B`, `%40` and `%3A` encoded in a path, so encoding them changes the user or token
+    func testPathSegmentKeepsPlusAtAndColon() {
+        XCTAssertEqual("a+b@example.com".urlPathSegment, "a+b@example.com")
+        XCTAssertEqual("fcm-1:APA91b_x-y".urlPathSegment, "fcm-1:APA91b_x-y")
     }
 
     func testQueryValueEncodesSeparators() {
