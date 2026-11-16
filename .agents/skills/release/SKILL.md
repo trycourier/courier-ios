@@ -77,10 +77,14 @@ a rubber stamp, particularly for a release that changes concurrency or public AP
 
 ## CocoaPods trunk
 
-6.0.7 is the last version on CocoaPods trunk, which goes read-only on December 2, 2026,
-so Deploy no longer pushes there. Keep `Courier_iOS.podspec` in step anyway: CocoaPods
+Deploy doesn't push to CocoaPods trunk, which goes read-only on December 2, 2026. 6.0.9 and
+6.0.10 were pushed by hand with `./Scripts/manually_release_pod.sh`, so 6.0.10 is the latest
+version there. Keep `Courier_iOS.podspec` in step anyway: CocoaPods
 users install later versions by tag (`pod 'Courier_iOS', :git => …, :tag => 'x.y.z'`),
 which reads the podspec at that tag.
 
 `./Scripts/manually_release_pod.sh` still runs `pod trunk push`, which only works until
-trunk goes read-only and needs trunk auth.
+trunk goes read-only and needs trunk auth. The wrappers' CocoaPods fallbacks
+(`courier_ios_trunk_version` in courier-react-native, the `s.dependency` pin in
+courier-flutter's podspec) point at the latest version on trunk, and Deploy leaves them
+alone. If you push a newer version to trunk by hand, bump those two pins by hand too.
