@@ -8,26 +8,9 @@ Requires iOS 15.0+ and Xcode 16+.
 
 ## Installation
 
-### Swift Package Manager
+In Xcode, go to **File > Add Package Dependencies**, paste `https://github.com/trycourier/courier-ios`, and pick **Up to Next Major Version**.
 
-In Xcode, go to **File > Add Packages** and paste:
-
-```
-https://github.com/trycourier/courier-ios
-```
-
-### CocoaPods
-
-```ruby
-pod 'Courier_iOS'
-```
-
-CocoaPods trunk goes read-only on December 2, 2026, and 6.0.10 is the latest version published
-there. To use a later version, point the pod at its release tag:
-
-```ruby
-pod 'Courier_iOS', :git => 'https://github.com/trycourier/courier-ios.git', :tag => 'x.y.z'
-```
+6.0.10 is the last version on CocoaPods. Newer versions ship through Swift Package Manager only.
 
 ## Quick Start
 
