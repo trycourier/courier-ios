@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
 
       # A release is a git tag: Swift Package Manager resolves versions from tags. CocoaPods
-      # trunk goes read-only on Dec 2, 2026, and 6.0.7 is the last version published there.
+      # trunk goes read-only on Dec 2, 2026, and 6.0.10 is the latest version published there.
       # CocoaPods users on later versions point the pod at a tag instead.
       - name: Check version
         id: check
@@ -114,7 +114,7 @@ jobs:
           git checkout main
 
           # Swift Package Manager gets every release: .package(url: ".../courier-ios", exact: "x.y.z").
-          # The podspec stays on 6.0.7, the last Courier_iOS on CocoaPods trunk, so it isn't bumped.
+          # The podspec stays on the latest Courier_iOS on CocoaPods trunk, so it isn't bumped.
           CURRENT=$(grep -oP 'courier-ios", exact: "\K[^"]+' ios/courier_flutter/Package.swift | head -1 || true)
           if [ -z "$CURRENT" ]; then
             echo "::error::Could not read the Courier_iOS version from ios/courier_flutter/Package.swift"
@@ -163,7 +163,7 @@ jobs:
           git checkout main
 
           # The podspec pins `courier_ios_version = "x.y.z"` for spm_dependency, which gets every
-          # release. The CocoaPods fallback (`courier_ios_trunk_version`) stays on 6.0.7, the last
+          # release. The CocoaPods fallback (`courier_ios_trunk_version`) stays on the latest
           # Courier_iOS on trunk, so it isn't bumped.
           # `|| true`: under pipefail a grep that matches nothing would end the step.
           CURRENT=$(grep -oP 'courier_ios_version = "\K[^"]+' courier-react-native.podspec | head -1 || true)
