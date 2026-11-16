@@ -447,4 +447,50 @@ class ThreadingTests: XCTestCase {
     }
 
     
+    @MainActor final class AddedMessages {
+        private(set) var counts: [String: Int] = [:]
+        func add(_ messageId: String) { counts[messageId, default: 0] += 1 }
+    }
+
+    // Loads that overlap, like the app returning to the foreground during a pull to refresh,
+    // must leave one socket connected. A second socket delivers every message twice.
+    func testOverlappingInboxLoadsDeliverEachMessageOnce() async throws {
+        let userId = "thread-safety-\(UUID().uuidString)"
+        let jwt = try await ExampleServer.generateJwt(authKey: Env.COURIER_AUTH_KEY, userId: userId)
+        await Courier.shared.signOut()
+        await Courier.shared.signIn(userId: userId, accessToken: jwt)
+
+        let added = await AddedMessages()
+        let listener = await Courier.shared.addInboxListener(
+            onMessageEvent: { message, _, feed, event in
+                if event == .added && feed == .feed {
+                    added.add(message.messageId)
+                }
+            }
+        )
+
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<6 {
+                group.addTask { await Courier.shared.refreshInbox() }
+            }
+        }
+
+        // Give the socket time to subscribe
+        try await Task.sleep(nanoseconds: 3_000_000_000)
+
+        let messageId = try await ExampleServer.sendTest(authKey: Env.COURIER_AUTH_KEY, userId: userId, channel: "inbox")
+
+        for _ in 0..<240 where await added.counts[messageId] == nil {
+            try await Task.sleep(nanoseconds: 250_000_000)
+        }
+
+        // A second socket would deliver the same message again in this window
+        try await Task.sleep(nanoseconds: 5_000_000_000)
+
+        listener.remove()
+        await Courier.shared.signOut()
+        let count = await added.counts[messageId]
+        XCTAssertEqual(count, 1)
+    }
+
 }

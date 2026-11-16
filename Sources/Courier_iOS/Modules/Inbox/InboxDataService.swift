@@ -55,13 +55,26 @@
             receivedMessage: onReceivedMessage,
             receivedMessageEvent: onReceivedMessageEvent
         )
+        guard await dropIfReplaced(socket) == false else { return }
         
         try await socket.sendSubscribe()
+        guard await dropIfReplaced(socket) == false else { return }
         
         // Ensure the socket is kept alive
         // Will ping every 5 minutes
         await socket.keepAlive()
         
+    }
+    
+    // This actor runs other work at each await, so another load or a stop can replace or close
+    // this socket while it connects. Closing it before its task exists does nothing, so a socket
+    // that's no longer current is closed here. Otherwise it stays connected, untracked, and every
+    // message arrives twice.
+    private func dropIfReplaced(_ socket: InboxSocket) async -> Bool {
+        guard inboxSocketManager.socket !== socket else { return false }
+        await socket.disconnect()
+        await socket.clearHandlers()
+        return true
     }
     
     func getNextFeedPage(client: CourierClient, paginationLimit: Int, paginationCursor: String) async throws -> InboxMessageSet {

@@ -127,6 +127,31 @@ class InboxSessionUnitTests: XCTestCase {
         XCTAssertEqual(feed.map(\.messageId), [existing.messageId], "A page for the signed-out session was added")
     }
 
+    func testOlderLoadDoesNotOverwriteANewerOne() async throws {
+        _ = await signIn("user-a")
+        let module = await Courier.shared.inboxModule
+
+        // An older load is still in flight
+        let olderGate = Gate()
+        let older = InboxMessage.new()
+        await setLoadInbox(module, gate: olderGate, messages: [older])
+        let olderRequest = Task { await module.getInbox(isRefresh: false) }
+        await waitForRequest(olderGate)
+
+        // A newer load for the same user, like a pull to refresh, finishes first
+        let newerGate = Gate()
+        let newer = InboxMessage.new()
+        await setLoadInbox(module, gate: newerGate, messages: [newer])
+        await newerGate.open()
+        await module.getInbox(isRefresh: true)
+
+        await olderGate.open()
+        await olderRequest.value
+
+        let feed = await module.dataStore.feed.messages
+        XCTAssertEqual(feed.map(\.messageId), [newer.messageId], "An older load overwrote a newer one")
+    }
+
     // MARK: Seams
 
     @CourierActor
