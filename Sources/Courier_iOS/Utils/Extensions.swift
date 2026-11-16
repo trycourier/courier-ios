@@ -315,10 +315,12 @@ internal extension String {
         return literal
     }
 
-    // One URL path segment. Ids can contain `/`, `?`, `#` or `+`, which would otherwise change the path.
+    // One URL path segment. Ids can contain `/`, `?` or `#`, which would otherwise change the path.
+    // The API doesn't decode `%2B`, `%40` or `%3A` in a path, so `+`, `@` and `:` must go as they are
+    // or the request names a different user.
     var urlPathSegment: String {
         var allowed = CharacterSet.urlPathAllowed
-        allowed.remove(charactersIn: "/?#+")
+        allowed.remove(charactersIn: "/?#")
         return addingPercentEncoding(withAllowedCharacters: allowed) ?? self
     }
 

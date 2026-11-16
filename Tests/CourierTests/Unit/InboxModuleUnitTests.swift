@@ -270,4 +270,38 @@ class InboxModuleUnitTests: XCTestCase {
     }
 
     
+    // The UI holds the store's message objects on main while the store changes them on
+    // CourierActor, so the store replaces a message with a changed copy instead of editing it
+    func testStoreReplacesMessagesInsteadOfChangingThem() async {
+        let dataStore = await Courier.shared.inboxModule.dataStore
+        let message = InboxMessage.new()
+        await dataStore.updateDataSet(InboxMessageSet(messages: [message], totalCount: 1), for: .feed)
+        await dataStore.updateUnreadCount(1)
+
+        _ = await dataStore.readMessage(message, from: .feed, client: nil)
+        _ = await dataStore.openMessage(message, from: .feed, client: nil)
+
+        XCTAssertFalse(message.isRead, "The store changed a message the UI may be reading")
+        XCTAssertFalse(message.isOpened, "The store changed a message the UI may be reading")
+
+        let stored = await dataStore.feed.messages.first
+        XCTAssertEqual(stored?.isRead, true)
+        XCTAssertEqual(stored?.isOpened, true)
+
+        await dataStore.readAllMessages(client: nil)
+        _ = await dataStore.unreadMessage(message, from: .feed, client: nil)
+        XCTAssertFalse(message.isRead)
+
+        _ = await dataStore.archiveMessage(message, from: .feed, client: nil)
+        XCTAssertFalse(message.isArchived, "Archiving changed the original message")
+        let archived = await dataStore.archive.messages.first
+        XCTAssertEqual(archived?.isArchived, true)
+    }
+
+    func testCopyKeepsOpened() {
+        let message = InboxMessage.new()
+        message.setOpened()
+        XCTAssertTrue(message.copy().isOpened)
+    }
+
 }

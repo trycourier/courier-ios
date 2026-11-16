@@ -29,6 +29,10 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     var state: State = .uninitialized
     var paginationLimit: Int = Pagination.default.rawValue
 
+    // Each load takes a generation. A load that finishes after a newer one started, or after a
+    // kill, drops its result. isCurrent alone can't tell two loads for the same client apart.
+    private var loadGeneration = 0
+
     // The network loads, as replaceable closures so tests can hold one open across a sign-out
     lazy var loadInbox: @CourierActor (CourierClient, Int, Int, Bool) async throws -> (feed: InboxMessageSet, archive: InboxMessageSet, unreadCount: Int) = { [dataService] client, feedLimit, archiveLimit, isRefresh in
         try await dataService.getInboxData(
@@ -75,6 +79,9 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     
     func getInbox(isRefresh: Bool) async {
         
+        loadGeneration += 1
+        let generation = loadGeneration
+        
         do {
             
             self.state = .uninitialized
@@ -108,12 +115,12 @@ internal class InboxModule: InboxDataStoreEventDelegate {
             
             // Get the inbox data
             let snapshot = try await loadInbox(client, feedPaginationLimit, archivePaginationLimit, isRefresh)
-            guard isCurrent(client) else { return }
+            guard isCurrent(client), generation == loadGeneration else { return }
 
             // Connect the socket
             // If this fails, it will fail silently
             await connectSocketIfPossible(client)
-            guard isCurrent(client) else { return }
+            guard isCurrent(client), generation == loadGeneration else { return }
 
             // Post the data
             await dataStore.reloadSnapshot(snapshot)
@@ -121,6 +128,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
             
         } catch {
             
+            guard generation == loadGeneration else { return }
             await dataStore.delegate?.onError(error)
             self.state = .uninitialized
             
@@ -238,6 +246,7 @@ internal class InboxModule: InboxDataStoreEventDelegate {
     
     // Clears out the current user data and returns an error
     func kill() async {
+        loadGeneration += 1
         self.state = .uninitialized
         await self.dataStore.dispose()
         await dataService.stop()

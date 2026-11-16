@@ -127,13 +127,13 @@ internal class InboxDataStore {
                 return canUpdate
             }
             
-            let message = feed.messages[index]
-            
             // Read the message
-            if !message.isRead {
+            if !feed.messages[index].isRead {
                 
-                // Toggle read
+                // Toggle read on a copy. The UI on main may still be reading the old object
+                let message = feed.messages[index].copy()
                 message.setRead()
+                feed.messages[index] = message
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .read)
                 
                 // Update unread count
@@ -150,11 +150,12 @@ internal class InboxDataStore {
                 return canUpdate
             }
             
-            let message = archive.messages[index]
-            
             // Read the message
-            if !message.isRead {
+            if !archive.messages[index].isRead {
+                // Change a copy. The UI on main may still be reading the old object
+                let message = archive.messages[index].copy()
                 message.setRead()
+                archive.messages[index] = message
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .read)
                 await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
                 canUpdate = true
@@ -191,13 +192,13 @@ internal class InboxDataStore {
                 return canUpdate
             }
             
-            let message = feed.messages[index]
-            
             // Read the message
-            if message.isRead {
+            if feed.messages[index].isRead {
                 
-                // Toggle read
+                // Toggle read on a copy. The UI on main may still be reading the old object
+                let message = feed.messages[index].copy()
                 message.setUnread()
+                feed.messages[index] = message
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .unread)
                 
                 // Update unread count
@@ -214,11 +215,12 @@ internal class InboxDataStore {
                 return canUpdate
             }
             
-            let message = archive.messages[index]
-            
             // Read the message
-            if message.isRead {
+            if archive.messages[index].isRead {
+                // Change a copy. The UI on main may still be reading the old object
+                let message = archive.messages[index].copy()
                 message.setUnread()
+                archive.messages[index] = message
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .unread)
                 await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
                 canUpdate = true
@@ -312,9 +314,9 @@ internal class InboxDataStore {
             await delegate?.onTotalCountUpdated(totalCount: feed.totalCount, to: .feed)
             await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: .feed)
             
-            // Create copy
-            message.setArchived()
+            // Archive a copy. The original isn't changed, since the UI may still be reading it
             let newMessage = message.copy()
+            newMessage.setArchived()
             
             // Add the item to the archive
             let insertIndex = findInsertIndex(for: newMessage, in: archive.messages)
@@ -361,11 +363,12 @@ internal class InboxDataStore {
                 return canUpdate
             }
             
-            let message = feed.messages[index]
-            
             // Read the message
-            if !message.isOpened {
+            if !feed.messages[index].isOpened {
+                // Change a copy. The UI on main may still be reading the old object
+                let message = feed.messages[index].copy()
                 message.setOpened()
+                feed.messages[index] = message
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
                 await delegate?.onMessagesChanged(feed.messages, feed.canPaginate, for: feedType)
                 canUpdate = true
@@ -377,11 +380,12 @@ internal class InboxDataStore {
                 return canUpdate
             }
             
-            let message = archive.messages[index]
-            
             // Read the message
-            if !message.isOpened {
+            if !archive.messages[index].isOpened {
+                // Change a copy. The UI on main may still be reading the old object
+                let message = archive.messages[index].copy()
                 message.setOpened()
+                archive.messages[index] = message
                 await delegate?.onMessageEvent(message, at: index, to: feedType, event: .opened)
                 await delegate?.onMessagesChanged(archive.messages, archive.canPaginate, for: feedType)
                 canUpdate = true
@@ -408,19 +412,18 @@ internal class InboxDataStore {
         
         let snapshot = getSnapshot()
         
-        // Read all messages
-        for (index, message) in feed.messages.enumerated() {
-            if !message.isRead {
-                message.setRead()
-                await delegate?.onMessageEvent(message, at: index, to: .feed, event: .read)
-            }
+        // Read all messages. Unread ones are replaced with read copies before any event goes
+        // out, since the UI on main may still be reading the old objects and each await below
+        // lets other work change the lists
+        let readFeed = Self.readCopies(of: &feed.messages)
+        let readArchive = Self.readCopies(of: &archive.messages)
+        
+        for (index, message) in readFeed {
+            await delegate?.onMessageEvent(message, at: index, to: .feed, event: .read)
         }
         
-        for (index, message) in archive.messages.enumerated() {
-            if !message.isRead {
-                message.setRead()
-                await delegate?.onMessageEvent(message, at: index, to: .archive, event: .read)
-            }
+        for (index, message) in readArchive {
+            await delegate?.onMessageEvent(message, at: index, to: .archive, event: .read)
         }
         
         // Update unread count
@@ -509,6 +512,19 @@ internal class InboxDataStore {
         // Fallback
         return 0
         
+    }
+    
+
+    /// Replaces each unread message with a read copy and returns the copies with their indexes
+    private static func readCopies(of messages: inout [InboxMessage]) -> [(Int, InboxMessage)] {
+        var changed: [(Int, InboxMessage)] = []
+        for (index, message) in messages.enumerated() where !message.isRead {
+            let copy = message.copy()
+            copy.setRead()
+            messages[index] = copy
+            changed.append((index, copy))
+        }
+        return changed
     }
     
 }
