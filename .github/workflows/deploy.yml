@@ -182,6 +182,10 @@ jobs:
 
           git checkout -b "bump-courier-ios-$VERSION"
           sed -i 's/courier_ios_version = "[^"]*"/courier_ios_version = "'"$VERSION"'"/' courier-react-native.podspec
+          # React Native's SwiftPM mode reads ios/Package.swift, which pins the same version
+          if [ -f ios/Package.swift ]; then
+            sed -i 's/\(courier-ios", exact: "\)[^"]*"/\1'"$VERSION"'"/' ios/Package.swift
+          fi
 
           git add -A
           git commit -m "Bump Courier_iOS to $VERSION"
