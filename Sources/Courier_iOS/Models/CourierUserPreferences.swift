@@ -52,7 +52,22 @@ public final class CourierUserPreferencesTopic: Codable, Sendable {
         self.sectionName = sectionName
         self.sectionId = sectionId
     }
-    
+
+    // The single-topic read leaves out section_id and section_name when the topic isn't in a
+    // section, and the API doesn't promise the routing fields either. Missing ones fall back to
+    // empty values instead of failing the whole response.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.customRouting = try container.decodeIfPresent([CourierUserPreferencesChannel].self, forKey: .customRouting) ?? []
+        self.defaultStatus = try container.decode(CourierUserPreferencesStatus.self, forKey: .defaultStatus)
+        self.status = try container.decode(CourierUserPreferencesStatus.self, forKey: .status)
+        self.hasCustomRouting = try container.decodeIfPresent(Bool.self, forKey: .hasCustomRouting) ?? false
+        self.topicId = try container.decode(String.self, forKey: .topicId)
+        self.topicName = try container.decode(String.self, forKey: .topicName)
+        self.sectionName = try container.decodeIfPresent(String.self, forKey: .sectionName) ?? ""
+        self.sectionId = try container.decodeIfPresent(String.self, forKey: .sectionId) ?? ""
+    }
+
 }
 
 extension CourierUserPreferencesTopic {

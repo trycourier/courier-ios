@@ -102,4 +102,29 @@ class PreferencesLoadingUnitTests: XCTestCase {
         XCTAssertEqual(sections.first?.title, "Section b")
     }
 
+    // MARK: Decoding
+
+    // The single-topic read leaves out the section fields for a topic that isn't in a section
+    func testTopicWithoutASectionDecodes() throws {
+        let json = #"{"topic":{"default_status":"OPTED_IN","has_custom_routing":false,"custom_routing":[],"status":"OPTED_OUT","topic_id":"t","topic_name":"Topic"}}"#
+        let topic = try JSONDecoder().decode(CourierUserPreferencesTopicResponse.self, from: Data(json.utf8)).topic
+        XCTAssertEqual(topic.topicId, "t")
+        XCTAssertEqual(topic.status, .optedOut)
+        XCTAssertEqual(topic.sectionName, "")
+        XCTAssertEqual(topic.sectionId, "")
+    }
+
+    func testTopicWithoutRoutingFieldsDecodes() throws {
+        let json = #"{"default_status":"OPTED_IN","status":"OPTED_IN","topic_id":"t","topic_name":"Topic","section_name":"S","section_id":"s"}"#
+        let topic = try JSONDecoder().decode(CourierUserPreferencesTopic.self, from: Data(json.utf8))
+        XCTAssertEqual(topic.customRouting, [])
+        XCTAssertFalse(topic.hasCustomRouting)
+        XCTAssertEqual(topic.sectionName, "S")
+    }
+
+    func testTopicWithoutAnIdFailsToDecode() {
+        let json = #"{"default_status":"OPTED_IN","status":"OPTED_IN","topic_name":"Topic"}"#
+        XCTAssertThrowsError(try JSONDecoder().decode(CourierUserPreferencesTopic.self, from: Data(json.utf8)))
+    }
+
 }
