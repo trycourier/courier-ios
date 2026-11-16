@@ -238,7 +238,9 @@ class InboxClientTests: XCTestCase {
         
         func increment() -> Bool {
             count += 1
-            return count >= maxCount
+            // True only once. Other tests' messages to the shared user can arrive in the same
+            // window, and a second true would resume the continuation twice
+            return count == maxCount
         }
     }
 
