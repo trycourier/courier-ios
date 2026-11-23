@@ -154,7 +154,7 @@ With Courier MCP, issue a two-day inbox token for user_123.
 > **Note:** **The `user_id` is yours, not Courier's.**
 > Use whatever your app already calls this user, such as a database id or your auth provider's `sub`. Nothing has to exist in Courier first, since signing in registers the user. The same id goes in two places, `user_id:` in the scope and the `userId` you pass to `signIn`, and they have to match.
 
-**Inbox and Toasts**
+**Inbox**
 
 ```text
 user_id:user_123 inbox:read:messages inbox:write:events
