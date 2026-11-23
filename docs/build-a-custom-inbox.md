@@ -2,7 +2,7 @@
 
 # Build a custom inbox
 
-> Swap parts of the inbox for your own renderers on the web SDKs, or build the whole UI on any platform from the SDK's messages, unread counts, and actions.
+> Build your own inbox UI from the SDK's messages, unread counts, and actions.
 
 Source: https://www.courier.com/docs/in-app/build-a-custom-inbox
 
