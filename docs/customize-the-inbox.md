@@ -2,7 +2,7 @@
 
 # Customize the inbox
 
-> Theme the inbox for light and dark mode, handle clicks, action clicks, and long presses, pick header and message actions, or replace parts of the UI.
+> Theme the inbox for light and dark mode, and handle clicks, action clicks, and long presses.
 
 Source: https://www.courier.com/docs/in-app/customize-the-inbox
 

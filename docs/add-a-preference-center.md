@@ -2,7 +2,7 @@
 
 # Add a preference center
 
-> Embed the Courier Preferences component so users pick their topics and channels, with the JWT scopes it needs, mobile display modes.
+> Embed the Courier Preferences component so users pick their topics and channels, with the JWT scopes it needs and the mobile display modes.
 
 Source: https://www.courier.com/docs/in-app/add-a-preference-center
 
